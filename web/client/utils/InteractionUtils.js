@@ -826,7 +826,7 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
             targetType: TARGET_TYPES.APPLY_DIMENSION,
             glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_DIMENSION],
             expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_DIMENSION],
-            constraints: createDimensionConstraints(layerInvolved, false)
+            constraints: createDimensionConstraints(layerInvolved, true)
         }
         ];
     }
