@@ -12,7 +12,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { textSearch } from '../WFS';
+import { textSearch, getCatalogRecords } from '../WFS';
 import axios from '../../../libs/ajax';
 import expect from 'expect';
 
@@ -89,6 +89,29 @@ describe('WFS (Abstraction) API', () => {
                 done(ex);
             }
         });
+    });
+    it('getCatalogRecords sets identifier from record.name', () => {
+        const records = getCatalogRecords({
+            records: [
+                { name: 'topp:states', url: 'http://wfs' },
+                { name: 'topp:cities', url: 'http://wfs' }
+            ]
+        });
+        expect(records.length).toBe(2);
+        expect(records[0].identifier).toBe('topp:states');
+        expect(records[1].identifier).toBe('topp:cities');
+    });
+    it('getCatalogRecords falls back to a unique identifier when name is missing', () => {
+        const records = getCatalogRecords({
+            records: [
+                { url: 'http://wfs' },
+                { url: 'http://wfs' }
+            ]
+        });
+        expect(records.length).toBe(2);
+        expect(records[0].identifier).toBeTruthy();
+        expect(records[1].identifier).toBeTruthy();
+        expect(records[0].identifier).toNotEqual(records[1].identifier);
     });
     it('WFS text filter', (done) => {
         mockAxios.onGet().reply(200, PAGINATION_CAPABILITIES);
