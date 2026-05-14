@@ -108,20 +108,23 @@ describe('interactionHelpers', () => {
             });
         });
 
-        it('should disable non-map-time targets when map time is already connected from the same source', () => {
+        it('should disable non-map-time targets when map time has two way synchronization enabled from the same source', () => {
             const result = getInteractionTargetNodeDisabled({
                 item: elementItem,
                 target: applyDimensionTarget,
                 targetNodePath: 'map.layers[layer-1].params.elevation',
                 sourceNodePath,
                 alreadyExistingInteractions: [{
-                    plugged: true,
+                    plugged: false,
                     targetType: 'applyDimension',
                     source: {
                         nodePath: sourceNodePath
                     },
                     target: {
                         nodePath: 'map.time'
+                    },
+                    configuration: {
+                        twoWaySynchronization: true
                     }
                 }]
             });

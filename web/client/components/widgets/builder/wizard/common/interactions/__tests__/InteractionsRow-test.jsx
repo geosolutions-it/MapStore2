@@ -74,11 +74,9 @@ describe('InteractionsRow component', () => {
 
         const row = container.querySelector('.ms-connection-row');
         const buttonsContainer = container.querySelector('.ms-interaction-buttons');
-        const plugButton = buttonsContainer.querySelector('button');
 
         expect(row.classList.contains('is-disabled')).toBe(true);
-        expect(buttonsContainer.classList.contains('is-disabled')).toBe(true);
-        expect(plugButton.disabled).toBe(true);
+        expect(buttonsContainer).toBe(null);
     });
 
     it('should call onPlugChange with the next plugged value', () => {

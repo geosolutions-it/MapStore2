@@ -111,7 +111,7 @@ describe('InteractionTargetsList component', () => {
         const row = container.querySelector('.ms-connection-row');
 
         expect(row.classList.contains('is-disabled')).toBe(true);
-        expect(row.querySelector('.ms-interaction-buttons button').disabled).toBe(true);
+        expect(row.querySelector('.ms-interaction-buttons')).toBe(null);
     });
 
     it('should disable a layer dimension target connected from another filter', () => {
@@ -133,7 +133,7 @@ describe('InteractionTargetsList component', () => {
         const row = container.querySelector('.ms-connection-row');
 
         expect(row.classList.contains('is-disabled')).toBe(true);
-        expect(row.querySelector('.ms-interaction-buttons button').disabled).toBe(true);
+        expect(row.querySelector('.ms-interaction-buttons')).toBe(null);
     });
 
     it('should create an interaction when a target node is plugged', () => {
