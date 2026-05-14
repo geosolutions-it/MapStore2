@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
 
 import uuid from 'uuid';
-import CatalogServiceEditorComponent from '../../components/catalog/CatalogServiceEditor';
-import { DEFAULT_ALLOWED_PROVIDERS } from '../MetadataExplorer';
+import CatalogServiceEditorComponent from '../../components/catalog/datasets/CatalogServiceEditor';
+
+export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
 const emptyService = {
     url: "",
@@ -74,7 +75,7 @@ const CatalogServiceEditor = ({
             onToggleTemplate={() => setService({...service, showTemplate: !service.showTemplate})}
             onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
             serviceTypes={[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" },
-                { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}]}
+                { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}, {name: "geonode", label: "GeoNode"}]}
             onChangeMetadataTemplate={(metadataTemplate) => setService({...service, metadataTemplate})}
             services={existingServices}
             {...props}
