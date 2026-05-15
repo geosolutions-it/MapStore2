@@ -40,6 +40,7 @@ const recordToLayer = (record, { layerBaseConfig }) => {
             ? {
                 ...(record.geometryType && { geometryType: record.geometryType }),
                 ...(record.maxRecordCount && { maxRecordCount: record.maxRecordCount }),
+                ...(record.fields && { fields: record.fields }),
                 strategy: 'tile'
             }
             : {

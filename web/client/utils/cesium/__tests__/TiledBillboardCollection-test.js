@@ -321,6 +321,27 @@ describe('TiledBillboardCollection', () => {
         expect(collection._style).toEqual(newStyle);
     });
 
+    it('should sync style on newly loaded tiles', () => {
+        const initialStyle = { symbolizers: [{ kind: 'Fill', color: '#ff0000' }] };
+        const styleOptions = { geometryType: 'MultiPolygon', style: initialStyle };
+        const collection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'feature',
+            style: initialStyle,
+            styleOptions
+        });
+        expect(collection._styleOptions.style).toEqual(initialStyle);
+
+        const newStyle = { symbolizers: [{ kind: 'Fill', color: '#00ff00' }] };
+        collection.setStyleFunction(newStyle);
+        expect(collection._style).toEqual(newStyle);
+        expect(collection._styleOptions.style).toEqual(newStyle);
+        // other styleOptions keys must be preserved
+        expect(collection._styleOptions.geometryType).toBe('MultiPolygon');
+        // caller's original styleOptions object must NOT be mutated
+        expect(styleOptions.style).toEqual(initialStyle);
+    });
+
     it('should clean up on destroy', () => {
         const collection = new TiledBillboardCollection({
             map: mockMap,

@@ -44,6 +44,51 @@ const ESRI_GEOMETRY_TYPE_MAP = {
  */
 export const esriGeometryTypeToGeoJSON = (esriType) => ESRI_GEOMETRY_TYPE_MAP[esriType] || 'GeometryCollection';
 
+const ESRI_NUMERIC_FIELD_TYPES = [
+    'esriFieldTypeOID',
+    'esriFieldTypeSmallInteger',
+    'esriFieldTypeInteger',
+    'esriFieldTypeBigInteger',
+    'esriFieldTypeSingle',
+    'esriFieldTypeDouble'
+];
+const ESRI_STRING_FIELD_TYPES = [
+    'esriFieldTypeString',
+    'esriFieldTypeGUID',
+    'esriFieldTypeGlobalID',
+    'esriFieldTypeXML'
+];
+
+/**
+ * Map an ESRI field type to primitive type
+ * @param {string} esriFieldType ESRI field type
+ * @return {'number'|'string'|null}
+ */
+export const esriFieldTypeToPrimitive = (esriFieldType) => {
+    if (ESRI_NUMERIC_FIELD_TYPES.includes(esriFieldType)) {
+        return 'number';
+    }
+    if (ESRI_STRING_FIELD_TYPES.includes(esriFieldType)) {
+        return 'string';
+    }
+    return null;
+};
+
+/**
+ * Build an attribute list from an ESRI FeatureService fields.
+ * @param {Object[]} fields ESRI fields metadata
+ * @return {Object[]} attributes with `attribute`, `label`, and `type`
+ */
+export const esriFieldsToAttributes = (fields = []) => {
+    return fields
+        .map((f) => {
+            const type = esriFieldTypeToPrimitive(f?.type);
+            if (!type) return null;
+            return { attribute: f.name, label: f.alias || f.name, type };
+        })
+        .filter(Boolean);
+};
+
 /**
  * Return all the sub layers ids given a layer id and layers structure
  * @param {string|number} id identifier of the starting layer

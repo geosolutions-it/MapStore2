@@ -30,6 +30,7 @@ import url from 'url';
 import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
 import { getStyleParser } from './VectorStyleUtils';
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
+import { esriFieldsToAttributes } from './ArcGISUtils';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
 
@@ -627,6 +628,9 @@ export function getAttributes(properties, fields = []) {
  * @return {array|null} returns an array of attributes
  */
 export function getVectorLayerAttributes(layer) {
+    if (layer?.type === 'arcgis-feature' && Array.isArray(layer?.fields) && layer.fields.length) {
+        return esriFieldsToAttributes(layer.fields);
+    }
     if (!layer?.properties) {
         return null;
     }
