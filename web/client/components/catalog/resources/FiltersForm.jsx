@@ -1,5 +1,5 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -17,6 +17,7 @@ import Button from '../../../components/layout/Button';
 import Message from '../../../components/I18N/Message';
 import FilterItems from './FilterItems';
 import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 /**
  * FilterForm component allows to configure a list of field that can be used to apply filter on the page
@@ -40,27 +41,6 @@ function FiltersForm({
     setFilters
 }) {
 
-    const actions = (
-        <FlexBox centerChildrenVertically gap="sm">
-            <Button
-                size="sm"
-                variant="default"
-                onClick={onClear}
-                disabled={isEmpty(omit(query, ['d', 'page', 'sort', ...Object.keys(defaultQuery)]))}
-            >
-                <Message msgId="resourcesCatalog.clearFilters"/>
-            </Button>
-            <Button
-                variant="default"
-                onClick={() => onClose()}
-                square
-                borderTransparent
-            >
-                <Glyphicon glyph="1-close" />
-            </Button>
-        </FlexBox>
-    );
-
     const handleFieldChange = (newParam) => {
         onChange(newParam);
     };
@@ -70,12 +50,35 @@ function FiltersForm({
             className="ms-filters-form"
             style={styleContainerForm}
         >
+            <FlexBox classNames={['ms-main-colors', '_padding-md', '_sticky', '_corner-tl']} centerChildrenVertically gap="sm">
+                <FlexBox.Fill>
+                    <Text ellipsis fontSize="md">
+                        <Message msgId="resourcesCatalog.filters" />
+                    </Text>
+                </FlexBox.Fill>
+                <Button
+                    size="sm"
+                    variant="default"
+                    onClick={onClear}
+                    disabled={isEmpty(omit(query, ['d', 'page', 'sort', ...Object.keys(defaultQuery)]))}
+                >
+                    <Message msgId="resourcesCatalog.clearFilters"/>
+                </Button>
+                <Button
+                    variant="default"
+                    onClick={() => onClose()}
+                    square
+                    borderTransparent
+                >
+                    <Glyphicon glyph="1-close" />
+                </Button>
+            </FlexBox>
             <FlexBox
                 component="form"
                 column
                 gap="sm"
                 style={style}
-                classNames={['_padding-lr-md', '_padding-t-sm']}
+                classNames={['_padding-lr-md']}
             >
                 <FilterItems
                     id={id}
@@ -86,9 +89,7 @@ function FiltersForm({
                     filters={filters}
                     setFilters={setFilters}
                     root
-                    tabsHeaderExtra={actions}
                 />
-                {!fields?.length ? actions : null}
             </FlexBox>
         </div>
     );

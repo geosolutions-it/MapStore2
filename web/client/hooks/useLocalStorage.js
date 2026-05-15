@@ -7,7 +7,7 @@
  */
 
 import { useState } from 'react';
-import { getApi, getItemKey } from '../../../api/userPersistedStorage';
+import { getApi, getItemKey } from '../api/userPersistedStorage';
 
 export const USE_LOCAL_STORAGE_SECTION = 'useLocalStorageHook';
 export const removeValue = (key) => {

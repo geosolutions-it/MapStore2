@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import FlexBox from "../../../components/layout/FlexBox";
-import InputControl from './InputControl';
+import InputControl from '../../../components/catalog/resources/InputControl';
 import Message from '../../../components/I18N/Message';
 import Text from '../../../components/layout/Text';
 import ColorSelector from '../../../components/style/ColorSelector';

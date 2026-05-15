@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import useLocalStorage, { removeValue, USE_LOCAL_STORAGE_SECTION } from '../useLocalStorage';
 import { Simulate, act } from 'react-dom/test-utils';
-import { getApi, getItemKey } from '../../../../api/userPersistedStorage';
+import { getApi, getItemKey } from '../../api/userPersistedStorage';
 
 const VALUE_KEY = 'test';
 
