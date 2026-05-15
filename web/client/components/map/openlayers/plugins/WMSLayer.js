@@ -34,7 +34,15 @@ import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/Vect
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
 
+const failTiles = new Set(); // registry of fail tile urls to prevent reloading loops
+
 const loadFunction = (options, headers) => function(image, src) {
+
+    if (failTiles.has(src)) {  // avoids custom reload in cases of tiles that have already returned exceptions
+        image.setState(3);
+        return;
+    }
+
     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
     let img = image.getImage();
     let newSrc = proxySource(options.forceProxy, src);
@@ -67,6 +75,7 @@ const loadFunction = (options, headers) => function(image, src) {
             }
         }).catch(e => {
             image.setState(3);
+            failTiles.add(src);
             console.error(e);
         });
     } else {
@@ -89,6 +98,7 @@ const loadFunction = (options, headers) => function(image, src) {
                 }).catch(errorMessage => {
                     image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
                     image.setState(3);            // set error state for tile and removed from the queue to prevent reloading loops
+                    failTiles.add(src);           // indexing fail url tile to prevent reloading loops
                     console.error(errorMessage);  // show ogc exception in console for debugging
                 });
         } else {
