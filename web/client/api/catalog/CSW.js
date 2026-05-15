@@ -7,7 +7,6 @@
  */
 
 import { head, isString, includes, castArray, sortBy, uniq, isEmpty } from 'lodash';
-import uuidv1 from 'uuid/v1';
 import { getLayerFromRecord as getLayerFromWMSRecord } from './WMS';
 import { getMessageById } from '../../utils/LocaleUtils';
 import { transformExtentToObj} from '../../utils/CoordinatesUtils';
@@ -16,7 +15,8 @@ import CSW, { getLayerReferenceFromDc } from '../CSW';
 import {
     validate as commonValidate,
     testService as commonTestService,
-    preprocess as commonPreprocess
+    preprocess as commonPreprocess,
+    getRecordIdentifier
 } from './common';
 import { THREE_D_TILES } from '../ThreeDTiles';
 import { MODEL } from '../Model';
@@ -132,7 +132,7 @@ function getCatalogRecord3DTiles(record, metadata) {
         isValid: true,
         description: dc && isString(dc.abstract) && dc.abstract || '',
         title: dc && isString(dc.title) && dc.title || '',
-        identifier: dc && isString(dc.identifier) && dc.identifier || uuidv1(),
+        identifier: isString(dc?.identifier) ? dc.identifier : getRecordIdentifier({ title: dc?.title, desc: dc?.abstract, url }),
         url,
         thumbnail: null,
         bbox: getBoundingBox(record),
@@ -289,7 +289,7 @@ export const getCatalogRecords = (records, options, locales) => {
                     boundingBox: record.boundingBox,
                     description: dc && isString(dc.abstract) && dc.abstract || '',
                     layerOptions: options && options.layerOptions || {},
-                    identifier: dc && isString(dc.identifier) && dc.identifier || uuidv1(),
+                    identifier: isString(dc?.identifier) ? dc.identifier : getRecordIdentifier({ title: dc?.title, desc: dc?.abstract, references }),
                     references: references,
                     thumbnail: getThumbnailFromDc(dc, options),
                     title: dc && isString(dc.title) && dc.title || '',
