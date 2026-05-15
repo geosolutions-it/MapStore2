@@ -183,8 +183,41 @@ const restoreExportDataResultsFromCookie = (state) => {
     return Rx.Observable.empty();
 };
 
+const getVectorLayerGeoJSON = (layer = {}) => ({
+    type: 'FeatureCollection',
+    features: layer?.features || []
+});
+
+const getVectorLayerDownloadFileName = (layer = {}) => {
+    const fileName = layer?.name || layer?.title || layer?.id || 'vector-layer';
+    return `${fileName}.geojson`;
+};
+
+export const downloadVectorLayerAsGeoJSON = (action$) =>
+    action$.ofType(DOWNLOAD)
+        .filter(({ layer }) => layer?.type === 'vector')
+        .switchMap(({ layer }) => {
+            try {
+                const geoJSON = getVectorLayerGeoJSON(layer);
+                saveAs(
+                    new Blob([JSON.stringify(geoJSON)], { type: 'application/geo+json;charset=utf-8' }),
+                    getVectorLayerDownloadFileName(layer)
+                );
+                return Rx.Observable.empty();
+            } catch (e) {
+                return Rx.Observable.of(error({
+                    error: e,
+                    title: 'layerdownload.error.title',
+                    message: 'layerdownload.error.invalidOutputFormat',
+                    autoDismiss: 5,
+                    position: 'tr'
+                }));
+            }
+        });
+
 export const openDownloadTool = (action$) =>
     action$.ofType(DOWNLOAD)
+        .filter(({ layer }) => layer?.type !== 'vector')
         .switchMap((action) => {
             return Rx.Observable.from([
                 toggleControl("layerdownload"),
