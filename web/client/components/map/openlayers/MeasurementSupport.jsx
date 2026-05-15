@@ -737,9 +737,6 @@ export default class MeasurementSupport extends React.Component {
                                 stroke: new Stroke({
                                     color: '#ff0000',
                                     width: 3
-                                }),
-                                fill: new Fill({
-                                    color: 'rgba(255,0,0,0.2)'
                                 })
                             })
                         ];
