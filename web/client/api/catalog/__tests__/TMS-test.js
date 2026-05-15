@@ -112,7 +112,7 @@ describe('TMS (Abstraction) API', () => {
             const res = getCatalogRecords({
                 records: [
                     { provider: 'OpenStreetMap.Mapnik' },
-                    { provider: 'OpenStreetMap.Mapnik' }
+                    { provider: 'OtherProvider' }
                 ]
             }, OPTIONS_TILEPROVIDER);
             expect(res[0].identifier).toBeTruthy();
@@ -131,16 +131,15 @@ describe('TMS (Abstraction) API', () => {
             expect(rec.references[0].version).toBe("1.0.0");
             expect(rec.identifier).toBeTruthy();
         });
-        it('getCatalogRecords TMS 1.0.0 assigns unique identifiers across records', () => {
+        it('getCatalogRecords TMS 1.0.0 uses href as identifier', () => {
             const res = getCatalogRecords({
                 records: [
-                    { title: 'A', href: 'http://same', srs: 'EPSG:4326' },
-                    { title: 'B', href: 'http://same', srs: 'EPSG:4326' }
+                    { title: 'A', href: 'http://tms/a', srs: 'EPSG:4326' },
+                    { title: 'B', href: 'http://tms/b', srs: 'EPSG:4326' }
                 ]
             }, OPTIONS_TMS);
-            expect(res[0].identifier).toBeTruthy();
-            expect(res[1].identifier).toBeTruthy();
-            expect(res[0].identifier).toNotEqual(res[1].identifier);
+            expect(res[0].identifier).toBe('http://tms/a');
+            expect(res[1].identifier).toBe('http://tms/b');
         });
         it('getCatalogRecords TMS 1.0.0 (optional format in description)', () => {
             const res = getCatalogRecords({...TMS_DATA, records: [{
