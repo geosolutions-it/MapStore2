@@ -47,3 +47,6 @@ In production a PostgreSQL database is recommended:
 | Tool     | Link                                               | Minimum | Recommended | Maximum    |
 |----------|----------------------------------------------------|---------|-------------|------------|
 | Postgres | [link](https://www.postgresql.org/)                | 13      | 17          | 18         |
+
+!!! tip
+    If you need to configure the database connection (and other settings) for a production deployment, it is recommended to use the [externalized configuration](externalized-configuration.md) (`-Ddatadir.location=`) instead of setting only the database override file. This allows you to manage all MapStore configuration files (database, proxy, JSON configs, etc.) in a single external directory that persists across updates.
