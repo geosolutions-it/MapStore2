@@ -2509,6 +2509,8 @@
         "onSelectionChange": "On Selection Change",
 
         "applyFilter": "Apply Filter",
+        "applyDimension": "Apply Dimension",
+        "noConnectableNodesAvailable": "No connectable nodes available",
 
         "selectAll": "Select All",
         "clear": "Clear",
@@ -2528,6 +2530,7 @@
         "tickAngle": "Tick Label Angle",
         "tickAngleTooltip": "Sets the tick label rotation angle in degrees.",
         "fillTickValuesTooltip": "Fill with available filter values",
+        "fillTickLabelsTooltip": "Autofill respective label of tick values",
         "showNoTargetsInfoLabel": "No target message",
         "showNoTargetsInfoDescription": "When no target is connected to the filter, or the layers/widgets connected are not visible, a message appears to notify the user that the filter will have no effect.",
         "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",
@@ -2537,6 +2540,8 @@
         "styleChangedByWidgetInfo": "One or more connected layers use a different style than the one selected here. Click the button below to apply the selected style to all connected layers.",
         "styleChangedByWidgetBanner": "Style has been changed on layer settings for this layer. Click to apply style to all connected layers from this widget.",
         "applyStyleFromWidgetButton": "Apply style to all connected layers from this widget",
+        "dimensionChangedByWidgetInfo": "One or more connected nodes use a different dimension value than the one selected here. Click the button below to apply the selected value to all connected nodes.",
+        "applyDimensionFromWidgetButton": "Apply value from this filter to all connected nodes",
 
         "defaultFilter": "Default Filter",
         "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
@@ -2556,6 +2561,7 @@
         "missingParametersMessage": "Please select required fields to generate the filter list",
         "fetchError": "Failed to fetch data",
         "unsupportedVariantMessage": "Unsupported filter variant: {variant}.",
+        "mapTimeRangeDisabledMessage": "Cannot be used when range is enabled.",
         "sliderSingleItemError": "Slider filter requires at least two selectable values.",
         "noSelectableItems": "No selectable filter items.",
         "filters": "Filters",
@@ -2563,6 +2569,8 @@
 
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
+        "twoWaySynchronizationLabel": "2 way synchronization",
+        "twoWaySynchronizationInfo": "Sync with the current Map timeline connection. This cannot be enabled when other non Map timeline connection nodes are connected.",
         "filterForcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
         "styleForcePlugInfo": "Check to confirm that the style can be applied to this layer, even if different from the original. This means that this layer should have a list of style with the same names of the ones configured for this tool",
         "addUserDefinedFilterTooltip": "Click to add filter",
@@ -2573,8 +2581,17 @@
         "filterTitlePlaceholder": "Filter title...",
         "editFilterTitleTooltip": "Click to edit filter title",
         "addNewFilterTooltip": "Click to add new filter",
+        "addOptionalTargetTooltip": "Add optional target",
+        "removeOptionalTargetConfirmTitle": "Delete target?",
+        "removeOptionalTargetConfirmContent": "All connected interactions from this target will be deleted.",
         "applyStyle": "Apply Style",
-        "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time"
+        "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "This target is already connected from another source. It can not be connected from multiple sources at the same time",
+        "applyDimensionSelectionModeDisabledTooltip": "Multiple selection is disabled because this filter is connected to Apply Dimension. Disconnect Apply Dimension to use Multiple selection mode.",
+        "applyDimensionMultipleSelectionDisabledTooltip": "Apply Dimension can only be connected when the filter selection mode is Single. Switch the layout selection mode to Single to connect this target.",
+        "layerTimeControlledByTimelineTooltip": "Layer time is controlled by the main map Timeline. Connect to the Timeline target instead.",
+        "timelineTargetUnavailableTooltip": "Timeline is not available in this context.",
+        "targetAlreadyConnectedToTimeTooltip": "Map timeline connection with 2 way synchronization enabled can only be connected alone. Disable 2 way synchronization or disconnect Map timeline connection to connect other targets."
       }
     },
     "dashboard": {

@@ -11,12 +11,15 @@ import { testEpic } from './epicTestUtils';
 import { applyFilterWidgetInteractionsEpic, cleanupAndReapplyFilterWidgetInteractionsEpic } from '../interactions';
 import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import { UPDATE_PROPERTY, DELETE } from '../../actions/widgets';
-import { CHANGE_LAYER_PROPERTIES, removeNode } from '../../actions/layers';
+import { CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, removeNode } from '../../actions/layers';
 
 const FILTER_ID = 'filter-1';
 const FILTER_WIDGET_ID = 'filter-widget-1';
 const CHART_WIDGET_ID = 'chart-widget-1';
 const TABLE_WIDGET_ID = 'table-widget-1';
+const MAP_WIDGET_ID = 'map-widget-1';
+const MAP_ID = 'map-1';
+const MAP_LAYER_ID = 'layer-1';
 const TRACE_ID = 'trace-1';
 const CHART_ID = 'chart-1';
 
@@ -65,6 +68,23 @@ const makeTableWidget = (overrides = {}) => ({
     widgetType: 'table',
     title: 'Table Widget',
     layer: { name: 'test:layer', id: 'layer-1' },
+    ...overrides
+});
+
+const makeMapWidget = (overrides = {}) => ({
+    id: MAP_WIDGET_ID,
+    widgetType: 'map',
+    title: 'Map Widget',
+    maps: [{
+        mapId: MAP_ID,
+        name: 'Map 1',
+        layers: [{
+            id: MAP_LAYER_ID,
+            name: 'test:layer',
+            type: 'wms',
+            group: 'overlay'
+        }]
+    }],
     ...overrides
 });
 
@@ -178,6 +198,119 @@ describe('interactions epics', () => {
                     expect(Array.isArray(actions[0].value)).toBe(true);
                     expect(actions[0].value.length).toBeGreaterThan(0);
                     expect(actions[0].value[0].appliedFromWidget).toBe(FILTER_WIDGET_ID);
+                },
+                state,
+                done
+            );
+        });
+
+        it('dispatches updateWidgetProperty with maps for layer time dimension target when timeline is unavailable', (done) => {
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: ['2020-01-01T00:00:00Z'] },
+                interactions: [{
+                    id: 'int-dim',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${MAP_WIDGET_ID}].maps[${MAP_ID}].layers[${MAP_LAYER_ID}].params.time`,
+                        metaData: {
+                            dimension: 'time'
+                        }
+                    }
+                }]
+            });
+            const mapWidget = makeMapWidget();
+            const state = {
+                ...makeState([filterWidget, mapWidget]),
+                context: {
+                    currentContext: {
+                        plugins: {
+                            desktop: []
+                        }
+                    }
+                }
+            };
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(MAP_WIDGET_ID);
+                    expect(actions[0].key).toBe('maps[0].layers[0].params.time');
+                    expect(actions[0].value).toBe('2020-01-01T00:00:00Z');
+                },
+                state,
+                done
+            );
+        });
+
+        it('dispatches updateWidgetProperty with maps for elevation dimension target on map layer', (done) => {
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: [200] },
+                interactions: [{
+                    id: 'int-elev',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${MAP_WIDGET_ID}].maps[${MAP_ID}].layers[${MAP_LAYER_ID}].params.elevation`,
+                        metaData: {
+                            dimension: 'elevation'
+                        }
+                    }
+                }]
+            });
+            const mapWidget = makeMapWidget();
+            const state = makeState([filterWidget, mapWidget]);
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(MAP_WIDGET_ID);
+                    expect(actions[0].key).toBe('maps[0].layers[0].params.elevation');
+                    expect(actions[0].value).toBe(200);
+                },
+                state,
+                done
+            );
+        });
+
+        it('dispatches changeLayerParams for elevation dimension target on main map layer', (done) => {
+            const LAYER_ID = 'mapstore:elevation_test__094852c0-0585-11f1-bc35-ed1a4c87fb4e';
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: [200] },
+                interactions: [{
+                    id: 'int-main-map-elev',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `map.layers[${LAYER_ID}].params.elevation`,
+                        metaData: {
+                            dimension: 'elevation'
+                        }
+                    }
+                }]
+            });
+            const state = makeState([filterWidget]);
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(CHANGE_LAYER_PARAMS);
+                    expect(actions[0].layer).toBe(LAYER_ID);
+                    expect(actions[0].params).toEqual({ elevation: 200 });
                 },
                 state,
                 done
