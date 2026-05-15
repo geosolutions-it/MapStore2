@@ -19,7 +19,7 @@ on:
 
 jobs:
   check-backports:
-    name: Verifica backport milestone
+    name: Check backports for milestone
     runs-on: ubuntu-latest
 
     steps:
