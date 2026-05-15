@@ -12,11 +12,25 @@ import {
     FGB_VERSION,
     getCapabilities,
     createFlatGeobufGeometryTypeResolver,
-    sniffFlatGeobufFirstGeometryType
+    sniffFlatGeobufFirstGeometryType,
+    sniffFlatGeobufFirstFeature
 } from '../FlatGeobuf';
 
 const FGB_FILE = 'base/web/client/test-resources/flatgeobuf/UScounties_subset.fgb';
-
+const FGB_FILE_FIRST_FEATURE_PROPS = {
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [[], []]
+    },
+    "properties": {
+        "STATE_FIPS": "40",
+        "COUNTY_FIP": "133",
+        "FIPS": "40133",
+        "STATE": "OK",
+        "NAME": "Seminole",
+        "LSAD": "County"
+    }
+};
 describe('Test FlatGeobuf API', () => {
     it('getCapabilities from FlatGeobuf file', (done) => {
         getCapabilities(FGB_FILE).then(({ bbox, format, version, title}) => {
@@ -98,6 +112,21 @@ describe('Test FlatGeobuf API', () => {
             expect(calls).toEqual(['Point']);
         });
     });
+    describe('sniffFlatGeobufFirstFeature', () => {
+        it('reads the first feature properties from a real FGB file', (done) => {
+            sniffFlatGeobufFirstFeature(FGB_FILE).then((feature) => {
+                try {
+                    expect(feature).toBeTruthy();
+                    expect(feature.properties).toBeTruthy();
+                    expect(feature.properties).toEqual(FGB_FILE_FIRST_FEATURE_PROPS.properties);
+                } catch (e) {
+                    done(e);
+                    return;
+                }
+                done();
+            }, done);
+        });
+    });
     describe('sniffFlatGeobufFirstGeometryType', () => {
         it('reads the first feature geometry type from a real FGB file', (done) => {
             // Guards against two real bugs surfaced during development:
@@ -108,7 +137,7 @@ describe('Test FlatGeobuf API', () => {
             // The fixture's header reports geometryType=3 (Polygon).
             sniffFlatGeobufFirstGeometryType(FGB_FILE).then((type) => {
                 try {
-                    expect(type).toBe('Polygon');
+                    expect(type).toBe(FGB_FILE_FIRST_FEATURE_PROPS.geometry.type);
                 } catch (e) {
                     done(e);
                     return;

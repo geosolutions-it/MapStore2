@@ -9,7 +9,7 @@
 
 import join from 'lodash/join';
 import isEmpty from 'lodash/isEmpty';
-import { reprojectBbox, getViewportGeometry } from '../../../utils/CoordinatesUtils';
+import { reprojectBbox, getViewportGeometry } from './CoordinatesUtils';
 /**
  * Given an extent it returns a GeoJSON MultiPolygon feature
  * @param {string} extent `minx,miny,maxx,maxy` or `aMinx,aMiny,aMaxx,aMaxy,bMinx,bMiny,bMaxx,bMaxy` incase of split extent (international date line)

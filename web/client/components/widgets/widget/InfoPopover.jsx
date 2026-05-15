@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Popover, Glyphicon } from 'react-bootstrap';
 import Overlay from '../../misc/Overlay';
 import OverlayTrigger from '../../misc/OverlayTrigger';
+
 /**
  * InfoPopover. A component that renders a icon with a Popover.
  * @prop {string} title the title of popover
@@ -24,71 +25,95 @@ import OverlayTrigger from '../../misc/OverlayTrigger';
  * @prop {object} popoverStyle style for popover wrapper
  * @prop {boolean|String[]} trigger ['hover', 'focus'] by default. false always show the popover. Array with hover, focus and/or click string to specify events that trigger popover to show.
  */
-class InfoPopover extends React.Component {
+const InfoPopover = ({
+    id,
+    title,
+    text,
+    glyph,
+    bsStyle,
+    placement,
+    left,
+    top,
+    trigger,
+    popoverStyle
+}) => {
+    const targetRef = useRef(null);
+    // bumped on window resize to force Overlay/Position to recompute layout
+    const [, setResizeTick] = useState(0);
 
-    static propTypes = {
-        id: PropTypes.string,
-        title: PropTypes.string,
-        text: PropTypes.string,
-        glyph: PropTypes.string,
-        bsStyle: PropTypes.string,
-        placement: PropTypes.string,
-        left: PropTypes.number,
-        top: PropTypes.number,
-        trigger: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
-        popoverStyle: PropTypes.object
-    };
+    useEffect(() => {
+        let timeoutId;
+        const onResize = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => setResizeTick(t => t + 1), 100);
+        };
+        window.addEventListener('resize', onResize);
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener('resize', onResize);
+        };
+    }, []);
 
-    static defaultProps = {
-        id: '',
-        title: '',
-        text: '',
-        placement: 'right',
-        left: 200,
-        top: 50,
-        glyph: "question-sign",
-        bsStyle: 'info',
-        trigger: ['hover', 'focus']
-    };
+    const renderPopover = () => (
+        <Popover
+            id={id}
+            placement={placement}
+            positionLeft={left}
+            positionTop={top}
+            title={title}
+            style={popoverStyle}>
+            {text}
+        </Popover>
+    );
 
-    renderPopover() {
-        return (
-            <Popover
-                id={this.props.id}
-                placement={this.props.placement}
-                positionLeft={this.props.left}
-                positionTop={this.props.top}
-                title={this.props.title}
-                style={this.props.popoverStyle}>
-                {this.props.text}
-            </Popover>
-        );
-    }
-    renderContent() {
-        return (<Glyphicon
-            ref={button => {
-                this.target = button;
-            }}
-            className={`text-${this.props.bsStyle}`}
-            glyph={this.props.glyph} />);
-    }
-    render() {
-        const trigger = this.props.trigger === true ? ['hover', 'focus'] : this.props.trigger;
-        return (
-            <span className="mapstore-info-popover">
-                {this.props.trigger
-                    ? (<OverlayTrigger trigger={trigger} placement={this.props.placement} overlay={this.renderPopover()}>
-                        {this.renderContent()}
-                    </OverlayTrigger>)
-                    : [
-                        this.renderContent(),
-                        <Overlay placement={this.props.placement} show target={() => ReactDOM.findDOMNode(this.target)}>
-                            {this.renderPopover()}
-                        </Overlay>
-                    ]}
-            </span>
-        );
-    }
-}
+    const renderContent = () => (
+        <Glyphicon
+            ref={button => { targetRef.current = button; }}
+            className={`text-${bsStyle}`}
+            glyph={glyph} />
+    );
+
+    const effectiveTrigger = trigger === true ? ['hover', 'focus'] : trigger;
+
+    return (
+        <span className="mapstore-info-popover">
+            {trigger
+                ? (<OverlayTrigger trigger={effectiveTrigger} placement={placement} shouldUpdatePosition overlay={renderPopover()}>
+                    {renderContent()}
+                </OverlayTrigger>)
+                : [
+                    renderContent(),
+                    <Overlay placement={placement} show shouldUpdatePosition target={() => ReactDOM.findDOMNode(targetRef.current)}>
+                        {renderPopover()}
+                    </Overlay>
+                ]}
+        </span>
+    );
+};
+
+InfoPopover.propTypes = {
+    id: PropTypes.string,
+    title: PropTypes.string,
+    text: PropTypes.string,
+    glyph: PropTypes.string,
+    bsStyle: PropTypes.string,
+    placement: PropTypes.string,
+    left: PropTypes.number,
+    top: PropTypes.number,
+    trigger: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
+    popoverStyle: PropTypes.object
+};
+
+InfoPopover.defaultProps = {
+    id: '',
+    title: '',
+    text: '',
+    placement: 'right',
+    left: 200,
+    top: 50,
+    glyph: "question-sign",
+    bsStyle: 'info',
+    trigger: ['hover', 'focus']
+};
 
 export default InfoPopover;

@@ -79,8 +79,13 @@ export const getRecordLinks = ({ references = [] } = {}) => {
 
 export const buildServiceUrl = (service) => {
     switch (service.type) {
-    case "wms":
-        return [service.url, ...(service.domainAliases ?? [])].join(',');
+    case "wms": {
+        const aliases = service.domainAliases;
+        const aliasArray = Array.isArray(aliases)
+            ? aliases
+            : (aliases ? Object.values(aliases).filter(Boolean) : []);
+        return [service.url, ...aliasArray].join(',');
+    }
     default:
         return service.url;
     }

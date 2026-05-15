@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import {
-    preprocess as commonPreprocess
+    preprocess as commonPreprocess,
+    getRecordIdentifier
 } from './common';
 import axios from '../../libs/ajax';
 
@@ -27,7 +28,13 @@ export const textSearch = (url, startPosition, maxRecords, text) => {
 };
 
 export const getCatalogRecords = (result) => {
-    return result.records;
+    if (result && result.records) {
+        return result.records.map(record => ({
+            ...record,
+            identifier: record.name ? record.name : getRecordIdentifier({ url: record.url, title: record.title })
+        }));
+    }
+    return null;
 };
 
 export const getLayerFromRecord = (record, options, asPromise) => {

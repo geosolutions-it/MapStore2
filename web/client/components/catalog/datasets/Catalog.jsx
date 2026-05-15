@@ -16,7 +16,7 @@ import Message from '../../I18N/Message';
 import CatalogContentView from './CatalogContentView';
 import CatalogServiceSelect from './CatalogServiceSelect';
 import CatalogSearchInput from './CatalogSearchInput';
-import PaginationCustom from '../resources/Pagination';
+import PaginationCustom from '../resources/PaginationCustom';
 import CatalogServiceEditor from './CatalogServiceEditor';
 import FlexBox, { FlexFill } from '../../layout/FlexBox';
 import './Catalog.less';
@@ -38,7 +38,6 @@ const shouldAutoload = (service, services) => {
 const Catalog = ({
     serviceTypes = [
         { name: "csw", label: "CSW" },
-        { name: "cog", label: "COG" },
         { name: "wms", label: "WMS" },
         { name: "wmts", label: "WMTS" },
         { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS },
@@ -46,6 +45,7 @@ const Catalog = ({
         { name: "3dtiles", label: "3D Tiles" },
         { name: "model", label: "IFC Model" },
         { name: "arcgis", label: "ArcGIS" },
+        { name: "flatgeobuf", label: "FlatGeobuf" },
         { name: "geonode", label: "GeoNode" }
     ],
     result,
