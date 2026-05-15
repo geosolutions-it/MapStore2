@@ -85,7 +85,7 @@ function measurement(state = defaultState, action) {
                 feature
             );
         }
-    
+
         return {
             ...state,
             ...action,

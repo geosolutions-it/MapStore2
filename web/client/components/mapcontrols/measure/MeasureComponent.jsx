@@ -174,7 +174,7 @@ class MeasureComponent extends React.Component {
     onGeomClick = (geomType) => {
         this.props.geomType !== geomType && this.props.toggleMeasure({geomType});
     }
-    
+
     onResetClick = () => {
         this.props.changeMeasurementState({
             mode: 'line',

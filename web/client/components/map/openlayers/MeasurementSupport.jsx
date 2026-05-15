@@ -128,7 +128,7 @@ export default class MeasurementSupport extends React.Component {
             this.restoreDrawState();
             this.addDrawInteraction(newProps);
         }
-        
+
         if (!newProps.measurement.geomType && newProps.measurement.mode !== 'select') {
             this.cleanupMeasures(newProps);
             if (newProps.measurement.features && newProps.measurement.features.length > 0) {
@@ -140,7 +140,6 @@ export default class MeasurementSupport extends React.Component {
         }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
-         
         if (
             oldFt && oldFt.length > 0 &&
             (!newFt || newFt.length === 0)
@@ -178,14 +177,14 @@ export default class MeasurementSupport extends React.Component {
         } else if (newProps.measurement.updatedByUI && !isEqual(this.props.uom, newProps.uom)) {
             this.updateMeasures(newProps);
         }
-        
+
         if (newProps.measurement.selectedMeasureIds !== this.props.measurement.selectedMeasureIds) {
             if (this.vector) {
                 this.vector.changed();
-                this.vector.getSource().changed(); 
+                this.vector.getSource().changed();
             }
         }
-        
+
         if (newProps.measurement.mode !== this.props.measurement.mode) {
 
             if (this.pointerMoveSelectListener) {
@@ -196,7 +195,7 @@ export default class MeasurementSupport extends React.Component {
             if (newProps.measurement.mode === 'select') {
                 this.removeDrawInteraction();
                 this.createHelpTooltip();
-      
+
                 this.pointerMoveSelectListener = this.props.map.on('pointermove', (evt) => {
 
                     if (this.props.measurement.mode !== 'select') {
@@ -230,7 +229,7 @@ export default class MeasurementSupport extends React.Component {
 
             if (isDelete) {
                 this.removeMeasureTooltips();
-                this.removeSegmentLengthOverlays();         
+                this.removeSegmentLengthOverlays();
                 this.removeHelpTooltip();
                 this.createHelpTooltip();
                 this.textLabels = [];
@@ -297,16 +296,16 @@ export default class MeasurementSupport extends React.Component {
             this.source.clear();
             this.source = null;
         }
-        
+
         if (this.selectClickListener) {
             unByKey(this.selectClickListener);
         }
-        
+
         if (this.pointerMoveSelectListener) {
             unByKey(this.pointerMoveSelectListener);
             this.pointerMoveSelectListener = null;
         }
-        
+
         if (this.pointerMoveKey) {
             unByKey(this.pointerMoveKey);
             this.pointerMoveKey = null;
@@ -809,7 +808,7 @@ export default class MeasurementSupport extends React.Component {
         if (this.props.updateOnMouseMove) {
             this.props.map.on('pointermove', this.updateMeasurementResults.bind(this));
         }
- 
+
         this.pointerMoveKey = this.props.map.on('pointermove', (evt) =>
             this.pointerMoveHandler(evt)
         );
@@ -818,7 +817,7 @@ export default class MeasurementSupport extends React.Component {
             if (this.props.measurement.mode !== 'select') {
                 return;
             }
-                
+
             let selectedIds = new Set(this.props.measurement.selectedMeasureIds || []);
             const isMulti = evt.originalEvent.ctrlKey || evt.originalEvent.metaKey;
 
