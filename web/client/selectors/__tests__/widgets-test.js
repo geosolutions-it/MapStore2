@@ -35,7 +35,9 @@ import {
     interactionsNodesSelector,
     interactionTargetVisibilitySelector,
     interactionTargetsFilterDisabledSelector,
-    getApplyStyleOutOfSyncForFilterWidget
+    getApplyStyleOutOfSyncForFilterWidget,
+    getApplyDimensionOutOfSyncForFilterWidget,
+    isTimelineEnabledForInteractions
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -752,6 +754,23 @@ describe('widgets selectors', () => {
         const editingWidget = widgetsCollection.children.find(w => w.id === 'widget2');
         expect(editingWidget).toExist();
     });
+    it('isTimelineEnabledForInteractions', () => {
+        expect(isTimelineEnabledForInteractions({})).toBe(true);
+        expect(isTimelineEnabledForInteractions({
+            context: {
+                currentContext: {
+                    plugins: {
+                        desktop: []
+                    }
+                }
+            }
+        })).toBe(false);
+        expect(isTimelineEnabledForInteractions({
+            dashboard: {
+                editing: true
+            }
+        })).toBe(false);
+    });
     it('interactionTargetVisibilitySelector', () => {
 
         const tests = [
@@ -768,6 +787,17 @@ describe('widgets selectors', () => {
         tests.forEach(({path}) => {
             expect(map.get(path)).toExist();
         });
+    });
+    it('interactionsNodesSelector should resolve layer dimension target to layer object when param value exists', () => {
+        const path = 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.time';
+        const stateWithTimeDimension = set(
+            'layers.flat[0].params.time',
+            '2026-05-13T00:00:00.000Z',
+            set('layers.flat[0].dimensions', [{ name: 'time' }], STATE_INTERACTION_MAP_1)
+        );
+        const state = set('widgets.containers.floating.widgets[0].interactions[0].target.nodePath', path, stateWithTimeDimension);
+        const map = interactionsNodesSelector(state);
+        expect(map.get(path)?.id).toBe('test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce');
     });
     describe("interactionTargetVisibilitySelector", () => {
         const tests = [
@@ -792,6 +822,25 @@ describe('widgets selectors', () => {
                 name: "check layer visibility with group visibility set to false",
                 path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce]',
                 expected: false
+            }, {
+                state: set('layers.flat[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_MAP_1),
+                name: "check main map layer dimension visibility from parent layer",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.elevation',
+                expected: true
+            }, {
+                state: set('layers.flat[0].visibility', false, set('layers.flat[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_MAP_1)),
+                name: "check main map layer dimension visibility false when parent layer is hidden",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.elevation',
+                expected: false
+            }, {
+                state: set(
+                    'widgets.containers.floating.widgets[0].interactions[0].target.nodePath',
+                    'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.time',
+                    set('layers.flat[0].params.time', '2026-05-13T00:00:00.000Z', set('layers.flat[0].dimensions', [{ name: 'time' }], STATE_INTERACTION_MAP_1))
+                ),
+                name: "check main map layer time dimension visibility when param value exists",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.time',
+                expected: true
             }, {
                 state: set('widgets.containers.floating.collapsed["746e1fb0-fac9-11f0-b714-1b62e8a515ce"]', {
                     "layout": {
@@ -835,6 +884,18 @@ describe('widgets selectors', () => {
                 state: set('widgets.containers.floating.widgets[1].maps[0].groups[0].visibility', false, STATE_INTERACTION_DASH_1),
                 path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f]',
                 name: "dashboard visibility of map layers in map layers when GROUP has visibility false",
+                expected: false
+            },
+            {
+                state: set('widgets.containers.floating.widgets[1].maps[0].layers[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_DASH_1),
+                path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f].params.elevation',
+                name: "dashboard visibility of map layer dimension from parent layer",
+                expected: true
+            },
+            {
+                state: set('widgets.containers.floating.widgets[1].maps[0].layers[0].visibility', false, set('widgets.containers.floating.widgets[1].maps[0].layers[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_DASH_1)),
+                path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f].params.elevation',
+                name: "dashboard visibility of map layer dimension false when parent layer is hidden",
                 expected: false
             }
         ];
@@ -906,6 +967,52 @@ describe('widgets selectors', () => {
             const existingInteractions = get(stateWithSelection, 'widgets.containers.floating.widgets[0].interactions') || [];
             const stateWithInteraction = set('widgets.containers.floating.widgets[0].interactions', [...existingInteractions, applyStyleInteraction], stateWithSelection);
             const result = getApplyStyleOutOfSyncForFilterWidget(stateWithInteraction, widgetId);
+            expect(result[filterId]).toExist();
+            expect(result[filterId].showBanner).toBe(true);
+            expect(result[filterId].actionParams).toEqual({ widgetId, filterId, target: 'floating' });
+        });
+    });
+
+    describe('getApplyDimensionOutOfSyncForFilterWidget', () => {
+        const widgetId = '53b5cfc0-fac9-11f0-b714-1b62e8a515ce';
+        const filterId = '54955a50-fac9-11f0-b714-1b62e8a515ce';
+        const layerId = 'test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce';
+
+        it('returns empty object when layer elevation matches selected value', () => {
+            const state = set('layers.flat[0].params.elevation', '100', STATE_INTERACTION_MAP_1);
+            const stateWithSelection = set(`widgets.containers.floating.widgets[0].selections.${filterId}`, ['100'], state);
+            const applyDimensionInteraction = {
+                id: 'apply-dimension-1',
+                plugged: true,
+                targetType: 'applyDimension',
+                source: { nodePath: `widgets[${widgetId}].filters[${filterId}]` },
+                target: {
+                    nodePath: `map.layers[${layerId}].params.elevation`,
+                    metaData: { dimension: 'elevation' }
+                }
+            };
+            const existingInteractions = get(stateWithSelection, 'widgets.containers.floating.widgets[0].interactions') || [];
+            const stateWithInteraction = set('widgets.containers.floating.widgets[0].interactions', [...existingInteractions, applyDimensionInteraction], stateWithSelection);
+            expect(getApplyDimensionOutOfSyncForFilterWidget(stateWithInteraction, widgetId)).toEqual({});
+        });
+
+        it('returns showBanner when layer time is out of sync', () => {
+            const state = set('layers.flat[0].params.time', '2020-01-01T00:00:00.000Z', STATE_INTERACTION_MAP_1);
+            const stateWithSelection = set(`widgets.containers.floating.widgets[0].selections.${filterId}`, ['2021-01-01T00:00:00.000Z'], state);
+            const applyDimensionInteraction = {
+                id: 'apply-dimension-1',
+                plugged: true,
+                targetType: 'applyDimension',
+                source: { nodePath: `widgets[${widgetId}].filters[${filterId}]` },
+                target: {
+                    nodePath: `map.layers[${layerId}].params.time`,
+                    metaData: { dimension: 'time' }
+                }
+            };
+            const existingInteractions = get(stateWithSelection, 'widgets.containers.floating.widgets[0].interactions') || [];
+            const stateWithInteraction = set('widgets.containers.floating.widgets[0].interactions', [...existingInteractions, applyDimensionInteraction], stateWithSelection);
+            const stateWithTimelineUnavailable = set('context.currentContext.plugins.desktop', [], stateWithInteraction);
+            const result = getApplyDimensionOutOfSyncForFilterWidget(stateWithTimelineUnavailable, widgetId);
             expect(result[filterId]).toExist();
             expect(result[filterId].showBanner).toBe(true);
             expect(result[filterId].actionParams).toEqual({ widgetId, filterId, target: 'floating' });

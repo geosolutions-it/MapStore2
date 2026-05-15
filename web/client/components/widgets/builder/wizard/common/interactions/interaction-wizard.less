@@ -38,6 +38,19 @@
     .ms-interactions-event {
         background-color: var(--ms-main-variant-bg);
     }
+    .ms-connection-row.is-disabled,
+    .ms-interaction-buttons.is-disabled {
+        opacity: 0.28;
+        filter: grayscale(1);
+        cursor: not-allowed;
+    }
+    .ms-connection-row.is-disabled .btn,
+    .ms-interaction-buttons.is-disabled .btn {
+        cursor: not-allowed;
+    }
+    .ms-interactions-empty-state {
+        margin-left: 17px;
+    }
     .ms-interaction-target {
         border: 1px solid var(--ms-main-border-color);
         padding: 0 2px;
@@ -59,4 +72,3 @@
     }
 
 }
-
