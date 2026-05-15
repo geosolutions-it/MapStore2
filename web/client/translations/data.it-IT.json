@@ -2611,7 +2611,7 @@
         "targetAutomaticallyNotConnectableTooltip": "Il target non è collegabile automaticamente, configurarlo per collegarlo",
         "forcePlugLabel": "Applica indipendentemente dalla fonte dati",
         "twoWaySynchronizationLabel": "Sincronizzazione bidirezionale",
-        "twoWaySynchronizationInfo": "Sincronizza con l'ora attuale della mappa. Non può essere abilitato quando sono connessi altri nodi non Map-time.",
+        "twoWaySynchronizationInfo": "Sincronizza con la connessione alla timeline della mappa corrente. Non può essere abilitato quando sono connessi altri nodi non relativi alla connessione alla timeline della mappa.",
         "filterForcePlugInfo": "Seleziona per confermare che il filtro può essere applicato a questa fonte dati, anche se diversa dall'originale",
         "styleForcePlugInfo": "Seleziona per confermare che lo stile può essere applicato a questo layer, anche se diverso dall'originale. Ciò significa che questo layer dovrebbe avere un elenco di stili con gli stessi nomi di quelli configurati per questo strumento",
         "addUserDefinedFilterTooltip": "Clicca per aggiungere filtro",
@@ -2632,7 +2632,7 @@
         "applyDimensionMultipleSelectionDisabledTooltip": "«Applica dimensione» può essere collegato solo quando la modalità di selezione del filtro è «Singola». Imposta la modalità di selezione del layout su «Singola» per collegare questo target.",
         "layerTimeControlledByTimelineTooltip": "Il tempo del layer è controllato dalla Timeline della mappa principale. Collega invece il target Timeline.",
         "timelineTargetUnavailableTooltip": "La Timeline non è disponibile in questo contesto.",
-        "targetAlreadyConnectedToTimeTooltip": "L'ora della mappa con la sincronizzazione a 2 vie abilitata può essere collegata solo da sola. Disabilita la sincronizzazione a 2 vie o scollega l'ora della mappa per collegare altri obiettivi."
+        "targetAlreadyConnectedToTimeTooltip": "La connessione alla timeline della mappa con la sincronizzazione a 2 vie abilitata può essere collegata solo da sola. Disabilita la sincronizzazione a 2 vie o scollega la connessione alla timeline della mappa per collegare altri obiettivi."
       },
       "tray": {
         "title": "widget",

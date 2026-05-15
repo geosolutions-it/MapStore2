@@ -2607,7 +2607,7 @@
         "targetAutomaticallyNotConnectableTooltip": "El destino no es conectable automáticamente, por favor configúrelo para conectarlo",
         "forcePlugLabel": "Aplicar independientemente de la fuente de datos",
         "twoWaySynchronizationLabel": "Sincronización bidireccional",
-        "twoWaySynchronizationInfo": "Sincronizar con el tiempo actual del mapa. No se puede activar cuando hay otros nodos que no son Map-time conectados.",
+        "twoWaySynchronizationInfo": "Sincronizar con la conexión actual de la línea de tiempo del mapa. No se puede activar cuando hay otros nodos que no son de conexión de la línea de tiempo del mapa conectados.",
         "filterForcePlugInfo": "Marque para confirmar que el filtro puede aplicarse a esta fuente de datos, incluso si es diferente de la original",
         "styleForcePlugInfo": "Marque para confirmar que el estilo puede aplicarse a esta capa, incluso si es diferente de la original. Esto significa que esta capa debe tener una lista de estilos con los mismos nombres que los configurados para esta herramienta",
         "addUserDefinedFilterTooltip": "Haga clic para agregar filtro",
@@ -2628,7 +2628,7 @@
         "applyDimensionMultipleSelectionDisabledTooltip": "«Aplicar dimensión» solo puede conectarse cuando el modo de selección del filtro es «Única». Cambie el modo de selección del diseño a «Única» para conectar este objetivo.",
         "layerTimeControlledByTimelineTooltip": "La hora de la capa la controla la línea de tiempo principal del mapa. Conéctese al objetivo Línea de tiempo en su lugar.",
         "timelineTargetUnavailableTooltip": "La línea de tiempo no está disponible en este contexto.",
-        "targetAlreadyConnectedToTimeTooltip": "La hora del mapa con sincronización bidireccional activada solo puede conectarse sola. Desactiva la sincronización bidireccional o desconecta la hora del mapa para conectar otros objetivos."
+        "targetAlreadyConnectedToTimeTooltip": "La conexión de la línea de tiempo del mapa con sincronización bidireccional activada solo puede conectarse sola. Desactiva la sincronización bidireccional o desconecta la conexión de la línea de tiempo del mapa para conectar otros objetivos."
       },
       "tray": {
         "title": "Widgets",

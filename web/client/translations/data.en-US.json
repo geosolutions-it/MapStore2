@@ -2626,7 +2626,7 @@
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
         "twoWaySynchronizationLabel": "2 way synchronization",
-        "twoWaySynchronizationInfo": "Sync with current Map time. This cannot be enabled when other non Map-time nodes are connected.",
+        "twoWaySynchronizationInfo": "Sync with the current Map timeline connection. This cannot be enabled when other non Map timeline connection nodes are connected.",
         "filterForcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
         "styleForcePlugInfo": "Check to confirm that the style can be applied to this layer, even if different from the original. This means that this layer should have a list of style with the same names of the ones configured for this tool",
         "addUserDefinedFilterTooltip": "Click to add filter",
@@ -2647,7 +2647,7 @@
         "applyDimensionMultipleSelectionDisabledTooltip": "Apply Dimension can only be connected when the filter selection mode is Single. Switch the layout selection mode to Single to connect this target.",
         "layerTimeControlledByTimelineTooltip": "Layer time is controlled by the main map Timeline. Connect to the Timeline target instead.",
         "timelineTargetUnavailableTooltip": "Timeline is not available in this context.",
-        "targetAlreadyConnectedToTimeTooltip": "Map time with 2 way synchronization enabled can only be connected alone. Disable 2 way synchronization or disconnect Map time to connect other targets."
+        "targetAlreadyConnectedToTimeTooltip": "Map timeline connection with 2 way synchronization enabled can only be connected alone. Disable 2 way synchronization or disconnect Map timeline connection to connect other targets."
       }
     },
     "dashboard": {
