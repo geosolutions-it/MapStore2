@@ -36,7 +36,8 @@ import {
     interactionTargetVisibilitySelector,
     interactionTargetsFilterDisabledSelector,
     getApplyStyleOutOfSyncForFilterWidget,
-    getApplyDimensionOutOfSyncForFilterWidget
+    getApplyDimensionOutOfSyncForFilterWidget,
+    isTimelineEnabledForInteractions
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -753,6 +754,23 @@ describe('widgets selectors', () => {
         const editingWidget = widgetsCollection.children.find(w => w.id === 'widget2');
         expect(editingWidget).toExist();
     });
+    it('isTimelineEnabledForInteractions', () => {
+        expect(isTimelineEnabledForInteractions({})).toBe(true);
+        expect(isTimelineEnabledForInteractions({
+            context: {
+                currentContext: {
+                    plugins: {
+                        desktop: []
+                    }
+                }
+            }
+        })).toBe(false);
+        expect(isTimelineEnabledForInteractions({
+            dashboard: {
+                editing: true
+            }
+        })).toBe(false);
+    });
     it('interactionTargetVisibilitySelector', () => {
 
         const tests = [
@@ -993,7 +1011,8 @@ describe('widgets selectors', () => {
             };
             const existingInteractions = get(stateWithSelection, 'widgets.containers.floating.widgets[0].interactions') || [];
             const stateWithInteraction = set('widgets.containers.floating.widgets[0].interactions', [...existingInteractions, applyDimensionInteraction], stateWithSelection);
-            const result = getApplyDimensionOutOfSyncForFilterWidget(stateWithInteraction, widgetId);
+            const stateWithTimelineUnavailable = set('context.currentContext.plugins.desktop', [], stateWithInteraction);
+            const result = getApplyDimensionOutOfSyncForFilterWidget(stateWithTimelineUnavailable, widgetId);
             expect(result[filterId]).toExist();
             expect(result[filterId].showBanner).toBe(true);
             expect(result[filterId].actionParams).toEqual({ widgetId, filterId, target: 'floating' });

@@ -76,9 +76,11 @@ export const getFloatingWidgetsPerView = createSelector(
 );
 
 export const isTimelineEnabledForInteractions = createSelector(
+    isDashboardAvailable,
     isDashboardEditing,
     isPluginInContext('Timeline'),
-    (dashboardEditing, isTimelineInContext) => !dashboardEditing && isTimelineInContext
+    (dashboardAvailable, dashboardEditing, isTimelineInContext) =>
+        !dashboardAvailable && !dashboardEditing && isTimelineInContext
 );
 
 const shouldSkipInteractionForTimelineAvailability = (interaction, state) => {
