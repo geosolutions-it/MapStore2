@@ -14,7 +14,7 @@ import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
-import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector } from '../../../selectors/widgets';
 import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
 import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
@@ -34,6 +34,7 @@ const FilterWidget = ({
     selections = {},
     currentTime,
     timelineRangeEnabled,
+    inactiveInteractionIds = [],
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
     icons,
@@ -102,6 +103,7 @@ const FilterWidget = ({
                         >
                             <FilterView
                                 interactions={filterInteractions}
+                                inactiveInteractionIds={inactiveInteractionIds}
                                 activeTargets={activeTargets}
                                 targetsWithDisabledFilter={targetsWithDisabledFilter}
                                 applyStyleOutOfSync={applyStyleOutOfSyncForWidget[filter.id] || {}}
@@ -150,6 +152,7 @@ FilterWidget.propTypes = {
     onDelete: PropTypes.func,
     dispatch: PropTypes.func,
     timelineRangeEnabled: PropTypes.bool,
+    inactiveInteractionIds: PropTypes.array,
     target: PropTypes.string
 };
 
@@ -158,6 +161,7 @@ export default connect(createStructuredSelector({
     targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
     applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
     applyDimensionOutOfSyncForWidget: (state, ownProps) => getApplyDimensionOutOfSyncForFilterWidget(state, ownProps?.id),
+    inactiveInteractionIds: (state, ownProps) => inactiveInteractionIdsForWidgetSelector(state, ownProps?.id),
     currentTime: currentTimeSelector,
     timelineRangeEnabled: offsetEnabledSelector
 }))(FilterWidget);

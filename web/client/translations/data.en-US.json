@@ -2645,6 +2645,8 @@
         "targetAlreadyConnectedToAnotherFilterTooltip": "This target is already connected from another source. It can not be connected from multiple sources at the same time",
         "applyDimensionSelectionModeDisabledTooltip": "Multiple selection is disabled because this filter is connected to Apply Dimension. Disconnect Apply Dimension to use Multiple selection mode.",
         "applyDimensionMultipleSelectionDisabledTooltip": "Apply Dimension can only be connected when the filter selection mode is Single. Switch the layout selection mode to Single to connect this target.",
+        "layerTimeControlledByTimelineTooltip": "Layer time is controlled by the main map Timeline. Connect to the Timeline target instead.",
+        "timelineTargetUnavailableTooltip": "Timeline is not available in this context.",
         "targetAlreadyConnectedToTimeTooltip": "Map time with 2 way synchronization enabled can only be connected alone. Disable 2 way synchronization or disconnect Map time to connect other targets."
       }
     },

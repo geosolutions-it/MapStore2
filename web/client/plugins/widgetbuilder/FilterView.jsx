@@ -37,10 +37,10 @@ const toIsoTime = (value) => {
     return normalized.isValid() ? normalized.toISOString() : String(value);
 };
 
-const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
+const NoTargetInfo = ({ interactions = [], inactiveInteractionIds = [], activeTargets = {} }) => {
     const connectedActiveTargets = useMemo(() => {
         const interactionTargetPaths = interactions
-            .filter(({plugged}) => plugged) // get only plugged interactions
+            .filter(({plugged, id}) => plugged && !inactiveInteractionIds.includes(id)) // get only plugged active interactions
             .map(interaction => cleanPaths(interaction.target.nodePath)); // get target paths;
         return interactionTargetPaths
             .filter(path =>
@@ -48,7 +48,7 @@ const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
                     return (visibility && path === cleanPaths(activePath)) || isMapTimeTarget(path);
                 })
             );
-    }, [activeTargets, interactions]);
+    }, [activeTargets, inactiveInteractionIds, interactions]);
 
     // display the list of layers/widgets affected by the filter when there are active interactions
     const hasActiveInteractions = connectedActiveTargets.length > 0;
@@ -211,6 +211,7 @@ const FilterView = ({
     syncCurrentTime = false,
     timelineRangeEnabled = false,
     interactions = [],
+    inactiveInteractionIds = [],
     activeTargets = {},
     targetsWithDisabledFilter = {},
     applyStyleOutOfSync = {},
@@ -454,6 +455,7 @@ const FilterView = ({
                         ? <NoTargetInfo
                             key={filterData.id + '-no-targets-info'}
                             interactions={interactions}
+                            inactiveInteractionIds={inactiveInteractionIds}
                             activeTargets={activeTargets}
                         />
                         : null

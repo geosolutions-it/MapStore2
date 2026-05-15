@@ -279,7 +279,7 @@ function createMapTimeLeafNode(layer) {
     return {
         type: 'element',
         id: 'time',
-        title: 'Time',
+        title: 'Timeline',
         icon: 'time',
         nodePathMode: 'dot',
         interactionMetadata: {
@@ -288,9 +288,9 @@ function createMapTimeLeafNode(layer) {
     };
 }
 
-function createLayerDimensionNodes(layer, { timelineEnabled = false } = {}) {
+function createLayerDimensionNodes(layer) {
     const dimensionNodes = [];
-    if (!timelineEnabled && hasTimeDimension(layer)) {
+    if (hasTimeDimension(layer)) {
         dimensionNodes.push(createDimensionLeafNode(layer, 'time'));
     }
     if (hasElevationDimension(layer)) {
@@ -333,9 +333,9 @@ export function generateLayerMetadataTree(layer) {
     };
 }
 
-function createLayerTreeNode(layer, { timelineEnabled = false } = {}) {
+function createLayerTreeNode(layer) {
     const layerNode = generateLayerMetadataTree(layer);
-    const dimensionNodes = createLayerDimensionNodes(layer, { timelineEnabled });
+    const dimensionNodes = createLayerDimensionNodes(layer);
     const dimensionCollection = createLayerDimensionCollection(layerNode, dimensionNodes);
     return [layerNode, dimensionCollection].filter(Boolean);
 }
@@ -346,14 +346,11 @@ function createLayerNodesForLayers(layers = [], options = {}) {
         .flatMap(layer => createLayerTreeNode(layer, options));
 }
 
-function createMapTimeNode(layers = [], { timelineEnabled = false } = {}) {
+function createMapTimeNode(layers = []) {
     const supportedLayers = layers.filter(isInteractionSupported);
-
-    if (timelineEnabled) {
-        const timeLayer = supportedLayers.find(hasTimeDimension);
-        if (timeLayer) {
-            return createMapTimeLeafNode(timeLayer);
-        }
+    const timeLayer = supportedLayers.find(hasTimeDimension);
+    if (timeLayer) {
+        return createMapTimeLeafNode(timeLayer);
     }
 
     return null;
@@ -907,6 +904,15 @@ export function isMapTimeTarget(nodePath) {
  */
 export function isLayerDimensionTarget(nodePath) {
     return isAnyLayerPath(nodePath) && /(?:^|\.)params\.(?:time|elevation)$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a layer time dimension.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isLayerTimeDimensionTarget(nodePath) {
+    return isAnyLayerPath(nodePath) && /(?:^|\.)params\.time$/.test(nodePath);
 }
 
 /**

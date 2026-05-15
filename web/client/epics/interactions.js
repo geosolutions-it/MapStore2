@@ -26,6 +26,7 @@ import { processFilterToCQL, buildExcludeCQLFilter, buildDefaultCQLFilter } from
 import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 import { getMapDependencyPath } from '../utils/WidgetsUtils';
+import { shouldSkipInteraction } from '../selectors/widgets';
 
 // ============================================================================
 // Node Path Utilities
@@ -347,6 +348,10 @@ function updateMapLayerWithDimension(interaction) {
 
 function applyInteractionEffectForApplyDimension(interaction, state, targetContainer = 'floating') {
     if (!interaction?.target?.nodePath) {
+        return null;
+    }
+
+    if (shouldSkipInteraction(interaction, state)) {
         return null;
     }
 

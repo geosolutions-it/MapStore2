@@ -11,7 +11,7 @@ import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
-import { getWidgetInteractionTreeGenerated, getEditingWidget, getAllInteractionsWhileEditingSelector } from '../../../../../../selectors/widgets';
+import { getWidgetInteractionTreeGenerated, getEditingWidget, getAllInteractionsWhileEditingSelector, isTimelineEnabledForInteractions } from '../../../../../../selectors/widgets';
 import InteractionTargetsList from './InteractionTargetsList';
 import './interaction-wizard.less';
 import { getDisplayInteractionTargetTree } from '../../../../../../utils/InteractionUtils';
@@ -20,7 +20,7 @@ import tooltip from '../../../../../misc/enhancers/tooltip';
 
 const TButton = tooltip(Button);
 
-export const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions, valueAttributeType, sourceSelectionMode, targetTitleMsgIds = {}, removable = false, onRemove = () => {}}) => {
+export const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions, valueAttributeType, sourceSelectionMode, timelineEnabled = false, targetTitleMsgIds = {}, removable = false, onRemove = () => {}}) => {
 
     const filteredInteractionTree = useMemo(() => {
         return getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType);
@@ -65,6 +65,7 @@ export const InteractionEventsSelector = ({target, expanded, toggleExpanded = ()
                         filteredInteractionTree={filteredInteractionTree}
                         alreadyExistingInteractions={alreadyExistingInteractions}
                         sourceSelectionMode={sourceSelectionMode}
+                        timelineEnabled={timelineEnabled}
                     />
                 ) : (
                     <FlexBox component="li" className="ms-interactions-empty-state">
@@ -88,6 +89,7 @@ export default connect((state) => {
         // for editing widget
         interactions,
         // for all widget
-        alreadyExistingInteractions: getAllInteractionsWhileEditingSelector(state)
+        alreadyExistingInteractions: getAllInteractionsWhileEditingSelector(state),
+        timelineEnabled: isTimelineEnabledForInteractions(state)
     };
 }, null)(InteractionEventsSelector);

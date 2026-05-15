@@ -2630,6 +2630,8 @@
         "targetAlreadyConnectedToAnotherFilterTooltip": "Cette cible est déjà connectée depuis une autre source. Impossible de la connecter depuis plusieurs sources en même temps",
         "applyDimensionSelectionModeDisabledTooltip": "La sélection multiple est désactivée car ce filtre est connecté à « Appliquer la dimension ». Déconnectez « Appliquer la dimension » pour utiliser le mode de sélection multiple.",
         "applyDimensionMultipleSelectionDisabledTooltip": "« Appliquer la dimension » ne peut être connecté que lorsque le mode de sélection du filtre est « Unique ». Passez le mode de sélection de la mise en page sur « Unique » pour connecter cette cible.",
+        "layerTimeControlledByTimelineTooltip": "Le temps de la couche est contrôlé par la frise chronologique (Timeline) de la carte principale. Connectez plutôt la cible Timeline.",
+        "timelineTargetUnavailableTooltip": "La frise chronologique n'est pas disponible dans ce contexte.",
         "targetAlreadyConnectedToTimeTooltip": "Le temps de la carte avec la synchronisation bidirectionnelle activée ne peut être connecté que seul. Désactivez la synchronisation bidirectionnelle ou déconnectez le temps de la carte pour connecter d'autres cibles."
       },
       "tray": {

@@ -302,6 +302,7 @@ describe('FilterView component', () => {
         const filterData = createMockFilterData('button');
         const MOCK_PATH = "map.layers['456']";
         const MOCK_INTERACTIONS = [{
+            id: 'interaction-1',
             plugged: true,
             target: {nodePath: MOCK_PATH}
 
@@ -325,6 +326,18 @@ describe('FilterView component', () => {
             renderWithProvider(<FilterView
                 interactions={MOCK_INTERACTIONS}
                 activeTargets={{}}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toExist();
+
+        });
+        it('show no target info when connected interactions are inactive', () => {
+            const container = document.getElementById("container");
+            renderWithProvider(<FilterView
+                interactions={MOCK_INTERACTIONS}
+                inactiveInteractionIds={MOCK_INTERACTIONS.map(interaction => interaction.id)}
+                activeTargets={MOCK_ACTIVE_TARGETS}
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
             />, container);

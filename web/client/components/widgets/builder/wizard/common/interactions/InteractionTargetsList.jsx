@@ -14,7 +14,7 @@ import InteractionsRow from './InteractionsRow';
 import { buildInteractionObject, findInteraction, getInteractionTargetNodeDisabled } from './interactionHelpers';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 
-const InteractionTargetsList = ({target, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, filteredInteractionTree, alreadyExistingInteractions, sourceSelectionMode}) => {
+const InteractionTargetsList = ({target, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, filteredInteractionTree, alreadyExistingInteractions, sourceSelectionMode, timelineEnabled = false}) => {
     const sourceNodePath = React.useMemo(() => {
         const sourceNode = findNodeById(interactionTree, currentSourceId);
         return sourceNode?.nodePath || null;
@@ -28,13 +28,14 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
             sourceNodePath: rowSourceNodePath,
             plugged,
             alreadyExistingInteractions,
-            sourceSelectionMode
+            sourceSelectionMode,
+            timelineEnabled
         });
         return {
             disabled: nodeDisabled.disabled,
             reason: nodeDisabled.reasonMsgId ? <Message msgId={nodeDisabled.reasonMsgId} /> : null
         };
-    }, [alreadyExistingInteractions, sourceSelectionMode]);
+    }, [alreadyExistingInteractions, sourceSelectionMode, timelineEnabled]);
 
     const setInteraction = React.useCallback(({
         targetNodePath,

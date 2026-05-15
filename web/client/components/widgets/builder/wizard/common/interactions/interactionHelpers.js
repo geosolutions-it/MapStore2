@@ -9,6 +9,7 @@ import uuid from 'uuid/v1';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 import {
     isLayerDimensionTarget,
+    isLayerTimeDimensionTarget,
     isMapTimeTarget,
     TARGET_TYPES
 } from '../../../../../../utils/InteractionUtils';
@@ -70,7 +71,8 @@ export const getInteractionTargetNodeDisabled = ({
     sourceNodePath,
     plugged,
     alreadyExistingInteractions = [],
-    sourceSelectionMode
+    sourceSelectionMode,
+    timelineEnabled = false
 }) => {
     if (item?.type !== 'element') {
         return DEFAULT_NODE_DISABLED;
@@ -93,6 +95,22 @@ export const getInteractionTargetNodeDisabled = ({
     }
 
     if (target.targetType === TARGET_TYPES.APPLY_DIMENSION) {
+        const layerTimeDisabledByTimeline = timelineEnabled && isLayerTimeDimensionTarget(targetNodePath);
+
+        if (layerTimeDisabledByTimeline) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.layerTimeControlledByTimelineTooltip'
+            };
+        }
+
+        if (!timelineEnabled && isMapTimeTarget(targetNodePath)) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.timelineTargetUnavailableTooltip'
+            };
+        }
+
         const layerDimensionAlreadyConnected = isLayerDimensionTarget(targetNodePath)
             && alreadyExistingInteractions
                 .filter(i => i?.source?.nodePath !== sourceNodePath)

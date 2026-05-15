@@ -9,7 +9,7 @@
 import { find, get, castArray, flatten } from 'lodash';
 import { mapSelector } from './map';
 import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
-import { generateRootTree, TARGET_TYPES, isAnyLayerPath, isLayerDimensionTarget, isMapTimeTarget } from '../utils/InteractionUtils';
+import { generateRootTree, TARGET_TYPES, isAnyLayerPath, isLayerDimensionTarget, isLayerTimeDimensionTarget, isMapTimeTarget } from '../utils/InteractionUtils';
 import { currentTimeSelector } from './dimension';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, LAYERS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
@@ -20,6 +20,7 @@ import { createShallowSelector } from '../utils/ReselectUtils';
 import { getAttributesNames } from "../utils/FeatureGridUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
 import { isFeatureGridOpen } from './featuregrid';
+import { isPluginInContext } from './context';
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -74,6 +75,34 @@ export const getFloatingWidgetsPerView = createSelector(
     }
 );
 
+export const isTimelineEnabledForInteractions = createSelector(
+    isDashboardEditing,
+    isPluginInContext('Timeline'),
+    (dashboardEditing, isTimelineInContext) => !dashboardEditing && isTimelineInContext
+);
+
+const shouldSkipInteractionForTimelineAvailability = (interaction, state) => {
+    if (interaction?.targetType !== TARGET_TYPES.APPLY_DIMENSION) {
+        return false;
+    }
+    const targetPath = interaction?.target?.nodePath;
+    const timelineEnabled = isTimelineEnabledForInteractions(state);
+    return timelineEnabled && isLayerTimeDimensionTarget(targetPath)
+        || !timelineEnabled && isMapTimeTarget(targetPath);
+};
+
+export const shouldSkipInteraction = (interaction, state) => {
+    return shouldSkipInteractionForTimelineAvailability(interaction, state);
+};
+
+export const inactiveInteractionIdsForWidgetSelector = (state, widgetId) => {
+    const widgets = getFloatingWidgetsPerView(state) || [];
+    const widget = widgets.find(w => w?.id === widgetId);
+    return (widget?.interactions || [])
+        .filter(interaction => shouldSkipInteraction(interaction, state))
+        .map(interaction => interaction.id);
+};
+
 /**
  * Generate widget interaction tree using generateRootTree
  * This selector generates the tree on-demand with access to full state
@@ -98,9 +127,7 @@ export const getWidgetInteractionTreeGenerated = createSelector(
 
         // Don't pass mapLayers if dashboard editing is true
         const layersToUse = dashboardEditing ? undefined : mapLayers;
-        return generateRootTree(combinedWidgets, layersToUse, {
-            timelineEnabled: !dashboardEditing
-        });
+        return generateRootTree(combinedWidgets, layersToUse);
     }
 );
 
@@ -635,6 +662,7 @@ export function getApplyDimensionOutOfSyncForFilterWidget(state, widgetId) {
                 && i.targetType === TARGET_TYPES.APPLY_DIMENSION
                 && i.source?.nodePath
                 && i.source.nodePath.includes(filterId)
+                && !shouldSkipInteraction(i, state)
                 && (
                     isLayerDimensionTarget(i.target?.nodePath)
                     || (

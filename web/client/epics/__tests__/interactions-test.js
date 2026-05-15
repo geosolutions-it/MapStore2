@@ -204,7 +204,7 @@ describe('interactions epics', () => {
             );
         });
 
-        it('dispatches updateWidgetProperty with maps for dimension target on map layer', (done) => {
+        it('dispatches updateWidgetProperty with maps for layer time dimension target when timeline is unavailable', (done) => {
             const filterWidget = makeFilterWidget({
                 selections: { [FILTER_ID]: ['2020-01-01T00:00:00Z'] },
                 interactions: [{
@@ -221,7 +221,16 @@ describe('interactions epics', () => {
                 }]
             });
             const mapWidget = makeMapWidget();
-            const state = makeState([filterWidget, mapWidget]);
+            const state = {
+                ...makeState([filterWidget, mapWidget]),
+                context: {
+                    currentContext: {
+                        plugins: {
+                            desktop: []
+                        }
+                    }
+                }
+            };
 
             testEpic(
                 applyFilterWidgetInteractionsEpic,

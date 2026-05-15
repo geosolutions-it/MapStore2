@@ -42,7 +42,7 @@ export const mergeLayerDimensions = (layer = {}, dimensions = []) => {
     const dimensionsToAdd = dimensions
         .filter(({ name } = {}) => SUPPORTED_LAYER_DIMENSIONS.includes(name))
         .filter(({ name }) => !find(existingDimensions, dimension => dimension?.name === name))
-        .map(({ name, source, values }) => ({ name, source, values }));
+        .map(({ name, source }) => ({ name, source }));
     return dimensionsToAdd.length
         ? {
             ...layer,

@@ -108,6 +108,39 @@ describe('interactionHelpers', () => {
             });
         });
 
+        it('should disable layer time targets when controlled by map time', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: elementItem,
+                target: applyDimensionTarget,
+                targetNodePath: 'map.layers[layer-1].params.time',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: true
+            });
+
+            expect(result).toEqual({
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.layerTimeControlledByTimelineTooltip'
+            });
+        });
+
+
+        it('should disable map time targets when timeline is unavailable', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: elementItem,
+                target: applyDimensionTarget,
+                targetNodePath: 'map.time',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: false
+            });
+
+            expect(result).toEqual({
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.timelineTargetUnavailableTooltip'
+            });
+        });
+
         it('should disable non-map-time targets when map time has two way synchronization enabled from the same source', () => {
             const result = getInteractionTargetNodeDisabled({
                 item: elementItem,

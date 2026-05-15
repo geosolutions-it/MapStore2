@@ -2626,6 +2626,8 @@
         "targetAlreadyConnectedToAnotherFilterTooltip": "Este objetivo ya está conectado desde otra fuente. No se puede conectar desde varias fuentes al mismo tiempo",
         "applyDimensionSelectionModeDisabledTooltip": "La selección múltiple está deshabilitada porque este filtro está conectado a «Aplicar dimensión». Desconecte «Aplicar dimensión» para usar el modo de selección múltiple.",
         "applyDimensionMultipleSelectionDisabledTooltip": "«Aplicar dimensión» solo puede conectarse cuando el modo de selección del filtro es «Única». Cambie el modo de selección del diseño a «Única» para conectar este objetivo.",
+        "layerTimeControlledByTimelineTooltip": "La hora de la capa la controla la línea de tiempo principal del mapa. Conéctese al objetivo Línea de tiempo en su lugar.",
+        "timelineTargetUnavailableTooltip": "La línea de tiempo no está disponible en este contexto.",
         "targetAlreadyConnectedToTimeTooltip": "La hora del mapa con sincronización bidireccional activada solo puede conectarse sola. Desactiva la sincronización bidireccional o desconecta la hora del mapa para conectar otros objetivos."
       },
       "tray": {

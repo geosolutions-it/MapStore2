@@ -14,6 +14,7 @@ import {
     hasAllowedDimensionTarget,
     isMapTimeTarget,
     isLayerDimensionTarget,
+    isLayerTimeDimensionTarget,
     getDisplayInteractionTargetTree,
     hasConnectableTargetNodes
 } from '../InteractionUtils';
@@ -156,6 +157,19 @@ describe('InteractionUtils', () => {
             expect(isLayerDimensionTarget('widgets[foo].params.time')).toBe(false);
             expect(isLayerDimensionTarget('map.layers[layer-1]')).toBe(false);
             expect(isLayerDimensionTarget('map.layers[layer-1].params.style')).toBe(false);
+        });
+    });
+
+    describe('isLayerTimeDimensionTarget', () => {
+        it('returns true for layer time target node paths', () => {
+            expect(isLayerTimeDimensionTarget('map.layers[layer-1].params.time')).toBe(true);
+            expect(isLayerTimeDimensionTarget('widgets[map-widget].maps[map-1].layers[layer-1].params.time')).toBe(true);
+        });
+
+        it('returns false for non-layer-time targets', () => {
+            expect(isLayerTimeDimensionTarget('map.layers[layer-1].params.elevation')).toBe(false);
+            expect(isLayerTimeDimensionTarget('map.time')).toBe(false);
+            expect(isLayerTimeDimensionTarget('widgets[foo].params.time')).toBe(false);
         });
     });
 
@@ -406,7 +420,7 @@ describe('InteractionUtils', () => {
             expect(counterWidget.type).toBe('element');
         });
 
-        it('places map time at the root map level when timeline is enabled', () => {
+        it('places timeline and layer time at the root map level when a time layer exists', () => {
             const rootTree = generateRootTree([], [{
                 name: 'layer-1',
                 id: 'layer-1',
@@ -415,15 +429,15 @@ describe('InteractionUtils', () => {
                 dimensions: [{
                     name: 'time'
                 }]
-            }], {
-                timelineEnabled: true
-            });
+            }]);
 
             const mapCollection = rootTree.children[1];
 
             expect(mapCollection.id).toBe('map');
             expect(mapCollection.children[0].id).toBe('time');
+            expect(mapCollection.children[0].title).toBe('Timeline');
             expect(mapCollection.children[1].id).toBe('layers');
+            expect(mapCollection.children[1].children[1].children[0].id).toBe('params.time');
         });
     });
 

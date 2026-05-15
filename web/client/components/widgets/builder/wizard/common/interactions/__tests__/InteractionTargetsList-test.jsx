@@ -70,6 +70,7 @@ const renderTargetsList = ({
     interactions = [],
     alreadyExistingInteractions = [],
     sourceSelectionMode,
+    timelineEnabled = false,
     onEditorChange = () => {}
 } = {}) => {
     const container = document.getElementById('container');
@@ -84,6 +85,7 @@ const renderTargetsList = ({
             filteredInteractionTree={{ children: [item] }}
             alreadyExistingInteractions={alreadyExistingInteractions}
             sourceSelectionMode={sourceSelectionMode}
+            timelineEnabled={timelineEnabled}
         />,
         container
     );
@@ -128,6 +130,19 @@ describe('InteractionTargetsList component', () => {
                     nodePath: 'map.layers[layer-1].params.elevation'
                 }
             }]
+        });
+
+        const row = container.querySelector('.ms-connection-row');
+
+        expect(row.classList.contains('is-disabled')).toBe(true);
+        expect(row.querySelector('.ms-interaction-buttons')).toBe(null);
+    });
+
+    it('should disable a layer time target when controlled by map time', () => {
+        const container = renderTargetsList({
+            item: createLayerDimensionItem('time'),
+            target: applyDimensionTarget,
+            timelineEnabled: true
         });
 
         const row = container.querySelector('.ms-connection-row');
