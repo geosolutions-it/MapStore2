@@ -6,13 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 import uuid from 'uuid/v1';
-import {
-    getDirectlyPluggableTargets,
-    getConfiguredTargets,
-    getItemPluggableStatus
-} from '../../../../../../utils/InteractionUtils';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
+import {
+    isLayerDimensionTarget,
+    isLayerTimeDimensionTarget,
+    isMapTimeTarget,
+    TARGET_TYPES
+} from '../../../../../../utils/InteractionUtils';
 
+const DEFAULT_NODE_DISABLED = {
+    disabled: false,
+    reasonMsgId: null
+};
 
 /**
  * Helper: Build interaction object from item, event, and target metadata
@@ -53,40 +58,99 @@ export function matchesInteraction(interaction, sourceNodePath, targetNodePath, 
         interaction.target.nodePath === targetNodePath && targetType === interaction.targetType;
 }
 
-/**
- * Helper: Recursively find all pluggable items in the tree
- * @param {object} node - The tree node to traverse
- * @param {object} event - The event object
- * @param {array} items - Accumulator array for pluggable items
- * @returns {array} Array of pluggable items with their metadata
- */
-export function findPluggableItems(node, event, items = []) {
-    if (!node) return items;
+export function findInteraction(interactions = [], sourceNodePath, targetNodePath, targetType) {
+    return interactions.find(interaction =>
+        matchesInteraction(interaction, sourceNodePath, targetNodePath, targetType)
+    );
+}
 
-    // Check if this node is an element with interaction metadata
-    if (node.type === 'element' && node.interactionMetadata) {
-        const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(node, event, DEFAULT_CONFIGURATION);
-        const isPluggable = directlyPluggable || configuredToForcePlug;
+export const getInteractionTargetNodeDisabled = ({
+    item,
+    target,
+    targetNodePath,
+    sourceNodePath,
+    plugged,
+    alreadyExistingInteractions = [],
+    sourceSelectionMode,
+    timelineEnabled = false
+}) => {
+    if (item?.type !== 'element') {
+        return DEFAULT_NODE_DISABLED;
+    }
 
-        if (isPluggable) {
-            const directlyPluggableTargets = getDirectlyPluggableTargets(node, event);
-            const configuredTargets = getConfiguredTargets(node, event, DEFAULT_CONFIGURATION);
-            const targetMetadata = directlyPluggableTargets[0] || configuredTargets[0];
-            items.push({
-                item: node,
-                targetMetadata,
-                configuration: DEFAULT_CONFIGURATION
-            });
+    const styleAlreadyConnected = alreadyExistingInteractions
+        .filter(i => i?.source?.nodePath !== sourceNodePath)
+        .some(i =>
+            i.targetType === TARGET_TYPES.APPLY_STYLE
+            && target.targetType === TARGET_TYPES.APPLY_STYLE
+            && i?.target?.nodePath === targetNodePath
+            && i.plugged
+        );
+
+    if (styleAlreadyConnected) {
+        return {
+            disabled: true,
+            reasonMsgId: 'widgets.filterWidget.targetAlreadyConnectedToAnotherFilterTooltip'
+        };
+    }
+
+    if (target.targetType === TARGET_TYPES.APPLY_DIMENSION) {
+        const layerTimeDisabledByTimeline = timelineEnabled && isLayerTimeDimensionTarget(targetNodePath);
+
+        if (layerTimeDisabledByTimeline) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.layerTimeControlledByTimelineTooltip'
+            };
+        }
+
+        if (!timelineEnabled && isMapTimeTarget(targetNodePath)) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.timelineTargetUnavailableTooltip'
+            };
+        }
+
+        const layerDimensionAlreadyConnected = isLayerDimensionTarget(targetNodePath)
+            && alreadyExistingInteractions
+                .filter(i => i?.source?.nodePath !== sourceNodePath)
+                .some(i =>
+                    i.targetType === TARGET_TYPES.APPLY_DIMENSION
+                    && i?.target?.nodePath === targetNodePath
+                    && i.plugged
+                );
+
+        if (layerDimensionAlreadyConnected) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.targetAlreadyConnectedToAnotherFilterTooltip'
+            };
+        }
+
+        if (sourceSelectionMode === 'multiple' && !plugged) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.applyDimensionMultipleSelectionDisabledTooltip'
+            };
         }
     }
 
-    // Recursively process children
-    if (node.children && Array.isArray(node.children)) {
-        node.children.forEach(child => {
-            findPluggableItems(child, event, items);
-        });
+    const sourceConnections = alreadyExistingInteractions.filter(i =>
+        i?.source?.nodePath === sourceNodePath
+    );
+    const hasTwoWayMapTimeConnection = sourceConnections.some(i =>
+        isMapTimeTarget(i?.target?.nodePath)
+        && i?.configuration?.twoWaySynchronization === true
+    );
+    const currentItemIsMapTime = isMapTimeTarget(targetNodePath);
+    const mapTimeLockConflict = hasTwoWayMapTimeConnection && !currentItemIsMapTime;
+
+    if (mapTimeLockConflict) {
+        return {
+            disabled: true,
+            reasonMsgId: 'widgets.filterWidget.targetAlreadyConnectedToTimeTooltip'
+        };
     }
 
-    return items;
-}
-
+    return DEFAULT_NODE_DISABLED;
+};

@@ -111,6 +111,23 @@ describe('FilterLayoutTab component', () => {
         expect(sliderOption).toNotExist();
     });
 
+    it('should hide direction control when variant is slider', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single'
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-filter-direction-form-group')).toNotExist();
+    });
+
     it('should call onChange when tick angle changes', (done) => {
         ReactDOM.render(
             <FilterLayoutTab
@@ -176,5 +193,54 @@ describe('FilterLayoutTab component', () => {
         expect(tickAngleNumberInput).toExist();
         tickAngleNumberInput.value = '45';
         Simulate.change(tickAngleNumberInput);
+    });
+
+    it('should hide tick labels autofill button when tick values are empty', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickValues: '   '
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-filter-slider-fill-tick-labels-btn')).toNotExist();
+    });
+
+    it('should fill tick labels from matching tick values', (done) => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickValues: '1, 3, 999'
+                    }
+                }}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '3', label: 'Three' }
+                ]}
+                onChange={(key, value) => {
+                    expect(key).toBe('layout.tickLabels');
+                    expect(value).toBe('One, Three, ');
+                    done();
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const fillTickLabelsButton = container.querySelector('.ms-filter-slider-fill-tick-labels-btn');
+        expect(fillTickLabelsButton).toExist();
+        Simulate.click(fillTickLabelsButton);
     });
 });

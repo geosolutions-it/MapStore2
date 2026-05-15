@@ -252,6 +252,32 @@ describe('FilterView component', () => {
         expect(container.textContent).toContain('Event');
     });
 
+    it('preserves blank tick labels when parsing slider tick labels', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showTicks: true,
+            tickValues: '1, 2, 3',
+            tickLabels: 'Start, , End'
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Middle Tick' },
+                    { id: '3', label: 'Three' }
+                ]}
+                selections={['1']}
+            />,
+            container
+        );
+
+        expect(container.textContent).toContain('Start');
+        expect(container.textContent).toContain('End');
+        expect(container.textContent).toNotContain('Middle Tick');
+    });
+
     it('shows missing parameters message when missingParameters is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
@@ -276,6 +302,7 @@ describe('FilterView component', () => {
         const filterData = createMockFilterData('button');
         const MOCK_PATH = "map.layers['456']";
         const MOCK_INTERACTIONS = [{
+            id: 'interaction-1',
             plugged: true,
             target: {nodePath: MOCK_PATH}
 
@@ -299,6 +326,18 @@ describe('FilterView component', () => {
             renderWithProvider(<FilterView
                 interactions={MOCK_INTERACTIONS}
                 activeTargets={{}}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toExist();
+
+        });
+        it('show no target info when connected interactions are inactive', () => {
+            const container = document.getElementById("container");
+            renderWithProvider(<FilterView
+                interactions={MOCK_INTERACTIONS}
+                inactiveInteractionIds={MOCK_INTERACTIONS.map(interaction => interaction.id)}
+                activeTargets={MOCK_ACTIVE_TARGETS}
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
             />, container);
@@ -356,6 +395,36 @@ describe('FilterView component', () => {
         expect(container.querySelector('.glyphicon-warning-sign')).toExist();
         // Check for the error message translation key
         expect(container.textContent).toContain('widgets.filterWidget.fetchError');
+    });
+
+    it('disables map.time apply dimension selection when timeline range is enabled', () => {
+        const container = document.getElementById("container");
+        const onSelectionChangeSpy = expect.createSpy();
+        const filterData = createMockFilterData('button');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '2024-01-01T00:00:00.000Z', label: '2024-01-01' }
+                ]}
+                currentTime="2024-01-01T00:00:00.000Z"
+                syncCurrentTime
+                timelineRangeEnabled
+                interactions={[{
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    target: { nodePath: 'map.time' }
+                }]}
+                onSelectionChange={onSelectionChangeSpy}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-view-map-time-range-disabled')).toExist();
+        expect(container.textContent).toContain('widgets.filterWidget.mapTimeRangeDisabledMessage');
+        expect(container.querySelector('.ms-filter-button-list-item')).toNotExist();
+
     });
 
     it('does not call onSelectionChange when forceSelection is true and user clicks checkbox with value 1 to deselect', () => {

@@ -48,11 +48,10 @@ const applyPercentageToLabel = (label, value, total) => {
 };
 
 const parseAxisTickValues = (tickValues) => {
-    const values = tickValues
+    const values = typeof tickValues === 'string' && tickValues.trim()
         ? tickValues
             .split(',')
             .map(value => value.trim())
-            .filter(Boolean)
         : undefined;
     return values?.length > 0 ? values : undefined;
 };
