@@ -40,6 +40,7 @@ export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, s
                 trigger={false}
                 glyph="warning-sign"
                 bsStyle="warning"
+                placement="left"
                 title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />}
                 text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
         </BuilderHeader>}

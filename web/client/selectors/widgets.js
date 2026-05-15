@@ -7,10 +7,10 @@
 */
 
 import { find, get, castArray, flatten } from 'lodash';
-
 import { mapSelector } from './map';
 import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
-import { generateRootTree, TARGET_TYPES, isAnyLayerPath } from '../utils/InteractionUtils';
+import { generateRootTree, TARGET_TYPES, isAnyLayerPath, isLayerDimensionTarget, isLayerTimeDimensionTarget, isMapTimeTarget } from '../utils/InteractionUtils';
+import { currentTimeSelector } from './dimension';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, LAYERS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
 import { cleanPaths, getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
@@ -20,6 +20,7 @@ import { createShallowSelector } from '../utils/ReselectUtils';
 import { getAttributesNames } from "../utils/FeatureGridUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
 import { isFeatureGridOpen } from './featuregrid';
+import { isPluginInContext } from './context';
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -73,6 +74,36 @@ export const getFloatingWidgetsPerView = createSelector(
         return widgets;
     }
 );
+
+export const isTimelineEnabledForInteractions = createSelector(
+    isDashboardAvailable,
+    isDashboardEditing,
+    isPluginInContext('Timeline'),
+    (dashboardAvailable, dashboardEditing, isTimelineInContext) =>
+        !dashboardAvailable && !dashboardEditing && isTimelineInContext
+);
+
+const shouldSkipInteractionForTimelineAvailability = (interaction, state) => {
+    if (interaction?.targetType !== TARGET_TYPES.APPLY_DIMENSION) {
+        return false;
+    }
+    const targetPath = interaction?.target?.nodePath;
+    const timelineEnabled = isTimelineEnabledForInteractions(state);
+    return timelineEnabled && isLayerTimeDimensionTarget(targetPath)
+        || !timelineEnabled && isMapTimeTarget(targetPath);
+};
+
+export const shouldSkipInteraction = (interaction, state) => {
+    return shouldSkipInteractionForTimelineAvailability(interaction, state);
+};
+
+export const inactiveInteractionIdsForWidgetSelector = (state, widgetId) => {
+    const widgets = getFloatingWidgetsPerView(state) || [];
+    const widget = widgets.find(w => w?.id === widgetId);
+    return (widget?.interactions || [])
+        .filter(interaction => shouldSkipInteraction(interaction, state))
+        .map(interaction => interaction.id);
+};
 
 /**
  * Generate widget interaction tree using generateRootTree
@@ -391,13 +422,15 @@ export const canEditLayoutView = createSelector(
  */
 export const interactionsNodePathsSelector = createSelector(
     getWidgetInteractionTreeGenerated,
-    (interactionTree) => {
-        const targetsPaths = [];
+    getFloatingWidgetsPerView,
+    getEditingWidget,
+    (interactionTree, widgets = [], editingWidget) => {
+        const targetsPaths = new Set();
         const traverseTree = (nodes) => {
             nodes.forEach((node) => {
                 const nodePath = cleanPaths(node?.nodePath);
                 if (nodePath) {
-                    targetsPaths.push(nodePath);
+                    targetsPaths.add(nodePath);
                 }
                 if (node.children) {
                     traverseTree(node.children);
@@ -409,9 +442,24 @@ export const interactionsNodePathsSelector = createSelector(
         };
 
         traverseTree(interactionTree ? [interactionTree] : []);
-        return targetsPaths;
+        [...widgets, editingWidget]
+            .filter(Boolean)
+            .forEach(widget => {
+                (widget.interactions || []).forEach(interaction => {
+                    const targetPath = cleanPaths(interaction?.target?.nodePath);
+                    if (targetPath) {
+                        targetsPaths.add(targetPath);
+                    }
+                });
+            });
+        return [...targetsPaths];
     }
 );
+
+const getLayerPathFromTargetPath = (path) => {
+    const match = path?.match(/^(map\.layers\[[^\]]+\]|widgets\[[^\]]+\]\.maps\[[^\]]+\]\.layers\[[^\]]+\])/);
+    return match ? match[1] : path;
+};
 
 /**
  * Get interaction data from the node paths available in the interaction tree.
@@ -431,6 +479,13 @@ export const interactionsNodesSelector = (state) => {
     const paths = interactionsNodePathsSelector(state);
     const map = new Map();
     paths.forEach((path) => {
+        if (isLayerDimensionTarget(path)) {
+            const layerObject = createPathSelector(getLayerPathFromTargetPath(path))(state);
+            if (layerObject) {
+                map.set(path, layerObject);
+            }
+            return;
+        }
         const object = createPathSelector(path)(state);
         if (object) {
             map.set(path, object);
@@ -449,7 +504,9 @@ export const interactionTargetVisibilitySelector = createSelector(
     (targetsData, visibleLayers, visibleWidgets) => {
         return targetsData.entries().reduce((acc, [path, value]) => {
             if (path.startsWith("map.layers[")) {
-                acc[path] = visibleLayers.some(l => l.id === value.id);
+                const layerTargetPath = getLayerPathFromTargetPath(path);
+                const layerTargetValue = targetsData.get(layerTargetPath) || value;
+                acc[path] = visibleLayers.some(l => l.id === layerTargetValue?.id);
             }
             if (path.startsWith("widgets[")) {
                 // need to check visibility, and if contains layer, also effective visibility for the map
@@ -458,20 +515,19 @@ export const interactionTargetVisibilitySelector = createSelector(
                     const match = pp.match(/widgets\[(.*?)\]/);
                     return match ? match[1] : null;
                 };
-                if (visibleWidgets.some(w => w.id === getWidgetIdFromPath(path))) {
-                    acc[path] = true;
-                } else {
-                    acc[path] = false;
-                }
-                if (path.includes(".layers[")) {
+                const widgetVisible = visibleWidgets.some(w => w.id === getWidgetIdFromPath(path));
+                acc[path] = widgetVisible;
+                if (isAnyLayerPath(path)) {
+                    const layerTargetPath = getLayerPathFromTargetPath(path);
+                    const layerTargetValue = targetsData.get(layerTargetPath) || value;
                     // for the moment we only support there is no path nesting beyond layers
-                    const layerId = value.id;
+                    const layerId = layerTargetValue?.id;
                     // get map of the layer from the path and the targetsData
-                    const mapPath = path.substring(0, path.indexOf(".layers["));
+                    const mapPath = layerTargetPath.substring(0, layerTargetPath.indexOf(".layers["));
                     const mapObject = targetsData.get(mapPath);
-                    getDerivedLayersVisibility(mapObject.layers, mapObject.groups).forEach(l => {
+                    getDerivedLayersVisibility(mapObject?.layers, mapObject?.groups).forEach(l => {
                         if (l.id === layerId) {
-                            acc[path] = l.visibility === true;
+                            acc[path] = widgetVisible && l.visibility === true;
                         }
                     });
                 }
@@ -564,6 +620,83 @@ export function getApplyStyleOutOfSyncForFilterWidget(state, widgetId) {
             const expectedStyleName = (selectedItem?.style?.name !== null && selectedItem?.style?.name !== undefined) ? selectedItem.style.name : '';
 
             if (currentStyle !== expectedStyleName) {
+                result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
+                break;
+            }
+        }
+    });
+
+    return result;
+}
+
+/**
+ * Returns out-of-sync APPLY_DIMENSION state per filter for a filter widget.
+ * Layer dimensions are compared with their target layer params. map.time is compared
+ * with currentTime only when two-way synchronization is disabled.
+ * @param {object} state - Redux state
+ * @param {string} widgetId - Filter widget id
+ * @returns {{ [filterId]: { showBanner: boolean, actionParams: { widgetId: string, target: string, filterId: string }|null } }}
+ */
+export function getApplyDimensionOutOfSyncForFilterWidget(state, widgetId) {
+    const result = {};
+    if (!widgetId) return result;
+
+    const getSelectedDimensionValue = (selections, filterId) => {
+        const selectedValue = selections?.[filterId]?.[0];
+        return selectedValue?.value ?? selectedValue ?? null;
+    };
+    const normalizeDimensionValue = value => value === null || value === undefined ? '' : String(value);
+
+    const target = DEFAULT_TARGET;
+    const widget = (getFloatingWidgets(state) || []).find(w => w && w.id === widgetId);
+    if (!widget || widget.widgetType !== 'filter') return result;
+
+    const filters = widget.filters || [];
+    const interactions = widget.interactions || [];
+    const selections = widget.selections || {};
+    const targetsData = interactionsNodesSelector(state);
+    const currentTime = currentTimeSelector(state);
+
+    filters.forEach((filter) => {
+        const filterId = filter.id;
+        const pluggedDimensionInteractions = interactions.filter(
+            i => i.plugged
+                && i.targetType === TARGET_TYPES.APPLY_DIMENSION
+                && i.source?.nodePath
+                && i.source.nodePath.includes(filterId)
+                && !shouldSkipInteraction(i, state)
+                && (
+                    isLayerDimensionTarget(i.target?.nodePath)
+                    || (
+                        isMapTimeTarget(i.target?.nodePath)
+                        && i?.configuration?.twoWaySynchronization !== true
+                    )
+                )
+        );
+        for (const interaction of pluggedDimensionInteractions) {
+            const targetPath = interaction.target?.nodePath;
+            const dimension = interaction.target?.metaData?.dimension;
+            if (!dimension) continue;
+
+            if (isMapTimeTarget(targetPath)) {
+                const expectedValue = getSelectedDimensionValue(selections, filterId);
+                if (
+                    normalizeDimensionValue(expectedValue)
+                    && normalizeDimensionValue(currentTime) !== normalizeDimensionValue(expectedValue)
+                ) {
+                    result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
+                    break;
+                }
+                continue;
+            }
+
+            const layer = targetsData.get(cleanPaths(targetPath));
+            if (!layer || typeof layer !== 'object') continue;
+
+            const currentValue = layer.params?.[dimension];
+            const expectedValue = getSelectedDimensionValue(selections, filterId);
+
+            if (normalizeDimensionValue(currentValue) !== normalizeDimensionValue(expectedValue)) {
                 result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
                 break;
             }

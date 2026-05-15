@@ -7,6 +7,7 @@
  */
 import { compose, withState, withHandlers, withProps, lifecycle } from 'recompose';
 import debounce from 'lodash/debounce';
+import moment from 'moment';
 import { getLayerJSONFeature } from '../../../observables/wfs';
 import axios from '../../../libs/ajax';
 import { getWpsUrl } from '../../../utils/LayersUtils';
@@ -17,6 +18,18 @@ import { isFilterValid, composeAttributeFilters } from '../../../utils/FilterUti
 const CancelToken = axios.CancelToken;
 const DEBOUNCE_TIME = 100; // 1 second
 
+const normalizeSelectableItemValue = (value, valueAttributeType) => {
+    const stringValue = String(value !== undefined && value !== null ? value : '');
+    if (!stringValue) {
+        return '';
+    }
+    if (valueAttributeType === 'date' || valueAttributeType === 'date-time') {
+        const normalized = moment.utc(stringValue);
+        return normalized.isValid() ? normalized.toISOString() : stringValue;
+    }
+    return stringValue;
+};
+
 /**
  * Fetches filter items from WPS service using distinct values operation
  * @param {object} filterData - The filter.data object containing layer, valueAttribute, etc.
@@ -24,7 +37,7 @@ const DEBOUNCE_TIME = 100; // 1 second
  * @returns {Promise} Promise that resolves to filter items array
  */
 const fetchWPSFilterData = (filterData, options = {}) => {
-    const { layer, valueAttribute, maxFeatures = 20, sortByAttribute, sortOrder = 'ASC' } = filterData || {};
+    const { layer, valueAttribute, valueAttributeType, maxFeatures = 20, sortByAttribute, sortOrder = 'ASC' } = filterData || {};
 
     if (!layer || !valueAttribute) {
         return Promise.resolve([]);
@@ -71,7 +84,8 @@ const fetchWPSFilterData = (filterData, options = {}) => {
             // For grouped values, the value itself is used as both id and label
             const items = values
                 .map((value) => ({
-                    id: String(value !== undefined && value !== null ? value : ''),
+                    id: normalizeSelectableItemValue(value, valueAttributeType),
+                    value: normalizeSelectableItemValue(value, valueAttributeType),
                     label: String(value !== undefined && value !== null ? value : '')
                 }))
                 .filter((item) => item.id !== '');
@@ -95,7 +109,7 @@ const fetchWPSFilterData = (filterData, options = {}) => {
  * @returns {Promise} Promise that resolves to filter items array
  */
 const fetchWFSFilterData = (filterData, options = {}) => {
-    const { layer, valueAttribute, labelAttribute, maxFeatures = 20, sortByAttribute, sortOrder = 'ASC' } = filterData || {};
+    const { layer, valueAttribute, valueAttributeType, labelAttribute, maxFeatures = 20, sortByAttribute, sortOrder = 'ASC' } = filterData || {};
 
     if (!layer || !valueAttribute) {
         return Promise.resolve([]);
@@ -155,9 +169,11 @@ const fetchWFSFilterData = (filterData, options = {}) => {
                     const label = labelAttribute
                         ? feature.properties?.[labelAttribute]
                         : value;
+                    const normalizedValue = normalizeSelectableItemValue(value, valueAttributeType);
 
                     return {
-                        id: String(value !== undefined && value !== null ? value : ''),
+                        id: normalizedValue,
+                        value: normalizedValue,
                         label: String(label !== undefined && label !== null ? label : value || '')
                     };
                 })

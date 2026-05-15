@@ -1,0 +1,44 @@
+name: Check Milestone Backports
+
+on:
+  workflow_dispatch:
+    inputs:
+      milestone_title:
+        description: "Milestone title to check (e.g. 2026.01.01)"
+        required: true
+        type: string
+      target_branch:
+        description: "Release/backport branch to verify (e.g. 2026.01.xx)"
+        required: true
+        type: string
+      main_branch:
+        description: "Main development branch"
+        required: false
+        default: "master"
+        type: string
+
+jobs:
+  check-backports:
+    name: Check backports for milestone
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run backport check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          MILESTONE_TITLE: ${{ inputs.milestone_title }}
+          TARGET_BRANCH: ${{ inputs.target_branch }}
+          MAIN_BRANCH: ${{ inputs.main_branch }}
+        run: python utility/automation/check_milestone.py

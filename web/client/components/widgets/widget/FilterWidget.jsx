@@ -14,7 +14,9 @@ import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
-import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector } from '../../../selectors/widgets';
+import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
+import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -28,7 +30,11 @@ const FilterWidget = ({
     activeTargets = {},
     targetsWithDisabledFilter = {},
     applyStyleOutOfSyncForWidget = {},
+    applyDimensionOutOfSyncForWidget = {},
     selections = {},
+    currentTime,
+    timelineRangeEnabled,
+    inactiveInteractionIds = [],
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
     icons,
@@ -82,7 +88,12 @@ const FilterWidget = ({
                     </div>
                 ) : (
                     filters.map((filter, index) => {
-                        const filterInteractions = interactions.filter(i => i.source.nodePath.includes(filter.id));
+                        const filterInteractions = (interactions || []).filter(i => i?.source?.nodePath?.includes(filter.id));
+                        const syncCurrentTime = filterInteractions.some(interaction =>
+                            interaction?.plugged === true
+                            && isMapTimeTarget(interaction?.target?.nodePath)
+                            && interaction?.configuration?.twoWaySynchronization === true
+                        );
                         return (<div
                             key={filter.id}
                             className="ms-filter-widget-item"
@@ -92,11 +103,16 @@ const FilterWidget = ({
                         >
                             <FilterView
                                 interactions={filterInteractions}
+                                inactiveInteractionIds={inactiveInteractionIds}
                                 activeTargets={activeTargets}
                                 targetsWithDisabledFilter={targetsWithDisabledFilter}
                                 applyStyleOutOfSync={applyStyleOutOfSyncForWidget[filter.id] || {}}
+                                applyDimensionOutOfSync={applyDimensionOutOfSyncForWidget[filter.id] || {}}
                                 filterData={filter}
                                 selections={selections[filter.id] || []}
+                                currentTime={currentTime}
+                                syncCurrentTime={syncCurrentTime}
+                                timelineRangeEnabled={timelineRangeEnabled}
                                 onSelectionChange={handleSelectionChange(filter.id)}
                             />
                         </div>);
@@ -135,11 +151,17 @@ FilterWidget.propTypes = {
     confirmDelete: PropTypes.bool,
     onDelete: PropTypes.func,
     dispatch: PropTypes.func,
+    timelineRangeEnabled: PropTypes.bool,
+    inactiveInteractionIds: PropTypes.array,
     target: PropTypes.string
 };
 
 export default connect(createStructuredSelector({
     activeTargets: interactionTargetVisibilitySelector,
     targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
-    applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id)
+    applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
+    applyDimensionOutOfSyncForWidget: (state, ownProps) => getApplyDimensionOutOfSyncForFilterWidget(state, ownProps?.id),
+    inactiveInteractionIds: (state, ownProps) => inactiveInteractionIdsForWidgetSelector(state, ownProps?.id),
+    currentTime: currentTimeSelector,
+    timelineRangeEnabled: offsetEnabledSelector
 }))(FilterWidget);
