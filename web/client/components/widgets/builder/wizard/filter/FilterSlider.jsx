@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup } from 'react-bootstrap';
-import Slider from 'react-nouislider';
+import Slider from '../../../../misc/Slider';
 import Message from '../../../../I18N/Message';
 
 const parseList = (value) => {
