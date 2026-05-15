@@ -20,7 +20,8 @@ const getLayerKey = (layer, layerId = null) => {
 const mapAttributesToOptions = (attributes = []) => {
     return attributes.map(attribute => ({
         value: attribute.value || attribute.attribute || attribute.name,
-        label: attribute.label || attribute.alias || attribute.value || attribute.attribute || attribute.name
+        label: attribute.label || attribute.alias || attribute.value || attribute.attribute || attribute.name,
+        type: attribute.type
     }));
 };
 
@@ -110,4 +111,3 @@ export const useLayerAttributes = (selectedLayer, hasLayerSelection = false) => 
         error: attributesError
     };
 };
-
