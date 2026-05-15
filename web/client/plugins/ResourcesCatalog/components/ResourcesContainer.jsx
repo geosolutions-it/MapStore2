@@ -8,7 +8,7 @@
 
 import React from 'react';
 import HTML from '../../../components/I18N/HTML';
-import ResourceCard from './ResourceCard';
+import ResourceCard from '../../../components/catalog/resources/ResourceCard';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';

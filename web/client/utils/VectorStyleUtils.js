@@ -10,6 +10,7 @@ import { isNil, flatten, isEmpty, castArray, max, isArray } from 'lodash';
 
 import { set } from './ImmutableUtils';
 import { colorToRgbaStr } from './ColorUtils';
+import { hashCode } from './StringUtils';
 import axios from 'axios';
 import MarkerUtils from './MarkerUtils';
 
@@ -192,27 +193,6 @@ export const registerGeometryFunctions = (functionName, func, type) => {
  * @return {object} color updated
 */
 export const addOpacityToColor = (color = "#FFCC33", opacity = 0.2) => (set("a", opacity, color));
-
-/**
- * creates an has string from a string
- * https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
- * @param {string} str to hash
- * @return the hash number
-*/
-export const hashCode = function(str) {
-    let hash = 0;
-    let i;
-    let chr;
-    if (str.length === 0) {
-        return hash;
-    }
-    for (i = 0; i < str.length; i++) {
-        chr = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-};
 
 /**
  * SymbolsStyles local cache

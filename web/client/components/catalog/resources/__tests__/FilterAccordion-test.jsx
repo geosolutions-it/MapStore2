@@ -13,7 +13,7 @@ import expect from 'expect';
 import FilterAccordion from '../FilterAccordion';
 import { waitFor } from '@testing-library/react';
 import { Simulate } from 'react-dom/test-utils';
-import { removeValue } from '../../hooks/useLocalStorage';
+import { removeValue } from '../../../../hooks/useLocalStorage';
 
 describe('FilterAccordion component', () => {
     beforeEach((done) => {

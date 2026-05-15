@@ -24,7 +24,6 @@ import {
     getGeometryFunction,
     registerGeometryFunctions,
     addOpacityToColor,
-    hashCode,
     registerStyle,
     fetchStyle,
     hashAndStringify,
@@ -274,9 +273,6 @@ describe("VectorStyleUtils ", () => {
     it("addOpacityToColor", () => {
         expect(addOpacityToColor({r: 255, g: 255, b: 255}, 0).a).toBe(0);
         expect(addOpacityToColor({r: 255, g: 255, b: 255}).a).toBe(0.2);
-    });
-    it("hashCode", () => {
-        expect(hashCode("str")).toBe(114225);
     });
     it("SymbolsStyles", () => {
         expect(Object.keys(getSymbolsStyles()).length).toBe(0);

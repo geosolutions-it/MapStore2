@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import useLocalStorage from './useLocalStorage';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 export const STORAGE_FRAGMENT = 'layoutCardsStyle';
 /**
  * menage the card layout using the localStorage

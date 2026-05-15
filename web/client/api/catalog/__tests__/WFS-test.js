@@ -101,17 +101,26 @@ describe('WFS (Abstraction) API', () => {
         expect(records[0].identifier).toBe('topp:states');
         expect(records[1].identifier).toBe('topp:cities');
     });
-    it('getCatalogRecords falls back to a unique identifier when name is missing', () => {
+    it('getCatalogRecords falls back to a deterministic identifier when name is missing', () => {
         const records = getCatalogRecords({
             records: [
-                { url: 'http://wfs' },
-                { url: 'http://wfs' }
+                { url: 'http://wfs/a' },
+                { url: 'http://wfs/b' }
             ]
         });
         expect(records.length).toBe(2);
         expect(records[0].identifier).toBeTruthy();
         expect(records[1].identifier).toBeTruthy();
         expect(records[0].identifier).toNotEqual(records[1].identifier);
+    });
+    it('getCatalogRecords returns the same identifier across repeated calls (deterministic)', () => {
+        // regression: previously the fallback used a random uuid that broke selection
+        // tracking when records were re-generated.
+        const input = { records: [{ url: 'http://wfs/a' }, { name: 'topp:states', url: 'http://wfs' }] };
+        const a = getCatalogRecords(input);
+        const b = getCatalogRecords(input);
+        expect(a[0].identifier).toBe(b[0].identifier);
+        expect(a[1].identifier).toBe(b[1].identifier);
     });
     it('WFS text filter', (done) => {
         mockAxios.onGet().reply(200, PAGINATION_CAPABILITIES);

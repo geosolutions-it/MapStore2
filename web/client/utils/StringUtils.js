@@ -14,6 +14,27 @@ import isEmpty from "lodash/isEmpty";
  */
 
 /**
+ * Creates a deterministic 32-bit integer hash from a string.
+ * Port of Java's String.hashCode (https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/).
+ * @param {string} str to hash
+ * @return {number} the hash
+*/
+export const hashCode = function(str) {
+    let hash = 0;
+    let i;
+    let chr;
+    if (str.length === 0) {
+        return hash;
+    }
+    for (i = 0; i < str.length; i++) {
+        chr = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
+
+/**
  * Tests if a string contains html tags
  * @param {string} str string to parse with regex
  * @return {bool} the result of the test
