@@ -28,3 +28,21 @@ site
 .DS_Store
 venv
 __pycache__
+
+# AI tools
+.claude/
+CLAUDE.md
+.gemini/
+.geminiignore
+GEMINI.md
+.cursor/
+.cursorignore
+.cursorindexingignore
+.aider*
+.continue/
+.codeium/
+.tabnine/
+.supermaven/
+AGENTS.md
+.copilot/
+.github/copilot-instructions.md
