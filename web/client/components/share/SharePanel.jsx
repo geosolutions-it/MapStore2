@@ -7,35 +7,35 @@
  */
 
 
-import React from 'react';
+import { inRange, isEmpty, isEqual, isNil, join, omit, pick } from 'lodash';
 import PropTypes from 'prop-types';
-import ShareSocials from './ShareSocials';
-import ShareLink from './ShareLink';
-import ShareEmbed from './ShareEmbed';
-import ShareApi from './ShareApi';
-import ShareQRCode from './ShareQRCode';
+import React from 'react';
 import {
-    Glyphicon,
-    Tabs,
-    Tab,
     Checkbox,
+    ControlLabel,
     FormControl,
     FormGroup,
-    ControlLabel,
+    Glyphicon,
+    Tab,
+    Tabs,
     Tooltip
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join, isNil, isEqual, inRange, isEmpty, pick, omit } from 'lodash';
-import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
-import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian } from '../../utils/CoordinatesUtils';
+import { convertDegreesToRadian, convertRadianToDegrees, getLonLatFromPoint } from '../../utils/CoordinatesUtils';
+import { set } from '../../utils/ImmutableUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
-import SwitchPanel from '../misc/switch/SwitchPanel';
-import Editor from '../data/identify/coordinates/Editor';
-import {set} from '../../utils/ImmutableUtils';
-import OverlayTrigger from '../misc/OverlayTrigger';
-import ResizableModal from '../misc/ResizableModal';
 import { MapLibraries } from '../../utils/MapTypeUtils';
+import { BBOX, CENTERANDZOOM, getSharedGeostoryUrl, MARKERANDZOOM, removeQueryFromUrl, SHARE_TABS } from '../../utils/ShareUtils';
+import Editor from '../data/identify/coordinates/Editor';
+import OverlayTrigger from '../misc/OverlayTrigger';
 import Portal from '../misc/Portal';
+import ResizableModal from '../misc/ResizableModal';
+import SwitchPanel from '../misc/switch/SwitchPanel';
+import ShareApi from './ShareApi';
+import ShareEmbed from './ShareEmbed';
+import ShareLink from './ShareLink';
+import ShareQRCode from './ShareQRCode';
+import ShareSocials from './ShareSocials';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -239,17 +239,16 @@ class SharePanel extends React.Component {
         return orig;
     };
 
-    getEmbedEventKey = (itemTabs = []) => {
-        return itemTabs.length + 3; // 2 Default panels (direct, social)
-    }
+    getEmbedEventKey = (tabs = []) => {
+        return tabs.length + 1;
+    };
 
-    getShareTabs = (itemTabs = []) => {
-        return  {
-            ...SHARE_TABS,
-            ...itemTabs?.map(({tabName} = {}, index) => ({[tabName]: 2 + (index + 1)})).reduce((f, c) => ({...f, ...c}), {}),
-            embed: this.getEmbedEventKey(itemTabs)
-        };
-    }
+    getShareTabs = (tabs = []) => {
+        return tabs.reduce((acc, tab) => {
+            acc[tab.key] = tab.eventKey;
+            return acc;
+        }, {});
+    };
 
     getHideIntabs = (itemTabs = []) => {
         return [
@@ -258,13 +257,21 @@ class SharePanel extends React.Component {
         ];
     }
 
-    getCurrenTab = (itemTabs = []) => {
-        const embedEventKey = this.getEmbedEventKey(itemTabs);
-        return (
-            (!this.props.embedPanel && this.state.eventKey === embedEventKey)
-            || (isEmpty(itemTabs) && this.state.eventKey > (this.props.embedPanel ? 3 : 2))
-        ) ? 1 : this.state.eventKey; // fallback to tab link if embed is disabled and selected at the same time
-    }
+    prepareTabs = (tabs, { hideTabs = [], tabsOrder = [] }) => {
+        const normalizedOrder = tabsOrder.map(t => t.toLowerCase());
+
+        return tabs
+            .filter(tab => !hideTabs.includes(tab.key.toLowerCase()))
+            .sort((a, b) => {
+                const ia = normalizedOrder.indexOf(a.key.toLowerCase());
+                const ib = normalizedOrder.indexOf(b.key.toLowerCase());
+                return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+            })
+            .map((tab, index) => ({
+                ...tab,
+                eventKey: index + 1
+            }));
+    };
 
     render() {
         // ************************ CHANGE URL PARAMETER FOR EMBED CODE ****************************
@@ -276,30 +283,79 @@ class SharePanel extends React.Component {
             shareEmbeddedUrl = this.generateUrl(shareEmbeddedUrl, this.props.shareUrlRegex, this.props.shareUrlReplaceString);
         }
 
-        const itemTabs = this.props.items?.filter(({target} = {}) => target === 'tabs') ?? [];
-        const embedEventKey = this.getEmbedEventKey(itemTabs);
-        const currentTab = this.getCurrenTab(itemTabs);
         const shareApiUrl = this.props.shareApiUrl || cleanShareUrl || location.href;
         const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = <div><ShareLink shareUrl={shareUrl} bbox={this.props.bbox}/><ShareQRCode shareUrl={shareUrl}/></div>;
         const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
             {this.props.showAPI ? <ShareApi baseUrl={shareApiUrl} shareUrl={shareUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
-
-        const SHARE_TABS_UPDATED = this.getShareTabs(itemTabs);
-        const tabs = (<Tabs defaultActiveKey={currentTab} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
-            <Tab eventKey={1} title={<Message msgId="share.direct" />}>{currentTab === 1 && direct}</Tab>
-            <Tab eventKey={2} title={<Message msgId="share.social" />}>{currentTab === 2 && social}</Tab>
-            {!isEmpty(itemTabs)
-                ? itemTabs.map(({title, component: Component}, index) => {
-                    const eventKey = 2 + (index + 1);
-                    return <Tab eventKey={eventKey} title={title}>{currentTab === eventKey && <Component shareUrl={shareUrl} />}</Tab>;
-                })
-                : null
-            }
-            {/* Keep embed panel at the last */}
-            {this.props.embedPanel ? <Tab eventKey={embedEventKey} title={<Message msgId="share.code" />}>{currentTab === embedEventKey && code}</Tab> : null}
-        </Tabs>);
+        const itemTabs = this.props.items?.filter(({ target }) => target === 'tabs') ?? [];
         const hideInTabs = this.getHideIntabs(itemTabs);
+
+        const {
+            tabsOrder = ["permalink", "direct", "social", "embed"],
+            hideTabs = []
+        } = this.props.options || {};
+
+        let baseTabs = [
+            {
+                key: "direct",
+                label: <Message msgId="share.direct" />,
+                content: direct
+            },
+            {
+                key: "social",
+                label: <Message msgId="share.social" />,
+                content: social
+            }
+        ];
+
+        let allTabs = [
+            ...baseTabs,
+            ...itemTabs.map(({ title, tabName, component: Component }, index) => ({
+                key: (tabName || `custom-tab-${index}`),
+                label: title,
+                content: <Component shareUrl={shareUrl} />
+            }))
+        ];
+
+        allTabs = this.prepareTabs(allTabs, { hideTabs, tabsOrder });
+
+        const embedEventKey = this.getEmbedEventKey(allTabs);
+
+        const isValidTab =
+            allTabs.some(t => t.eventKey === this.state.eventKey) ||
+            this.state.eventKey === embedEventKey;
+
+        const currentTab = isValidTab
+            ? this.state.eventKey
+            : allTabs[0]?.eventKey || 1;
+
+        const SHARE_TABS_UPDATED = this.getShareTabs(allTabs);
+
+        const tabs = (
+            <Tabs
+                activeKey={currentTab}
+                id="sharePanel-tabs"
+                onSelect={(eventKey) => this.setState({ eventKey })}
+            >
+                {allTabs.map(tab => (
+                    <Tab key={tab.key} eventKey={tab.eventKey} title={tab.label}>
+                        {currentTab === tab.eventKey && tab.content}
+                    </Tab>
+                ))}
+
+                {this.props.embedPanel && (
+                    <Tab
+                        key="embed"
+                        eventKey={embedEventKey}
+                        title={<Message msgId="share.code" />}
+                    >
+                        {currentTab === embedEventKey && code}
+                    </Tab>
+                )}
+            </Tabs>
+        );
+
         let sharePanel =
             (<Portal><ResizableModal
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
