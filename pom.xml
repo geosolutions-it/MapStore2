@@ -13,9 +13,8 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>10.1.54</tomcat.version>
+        <tomcat.version>11.0.22</tomcat.version>
         <jackson.version>2.16.1</jackson.version>
-        <gt.version>31.3</gt.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
@@ -29,27 +28,24 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.14.0</commons-io.version>
         <commons-logging.version>1.2</commons-logging.version>
-        <commons-pool.version>1.5.4</commons-pool.version>
-        <httpclient.version>4.5.14</httpclient.version>
-        <javax.servlet-api.version>6.1.0</javax.servlet-api.version>
+        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
         <jaxws-api.version>4.0.3</jaxws-api.version>
         <json-lib.version>2.4.2-geoserver</json-lib.version>
         <json-patch.version>1.13</json-patch.version>
         <junit.version>4.13.2</junit.version>
-        <log4j.version>2.19.0</log4j.version>
+        <log4j.version>2.26.0</log4j.version>
         <mime-util.version>2.1.3</mime-util.version>
         <mockito-core.version>4.0.0</mockito-core.version>
         <slf4j.version>1.7.25</slf4j.version>
         <cargo.version>1.10.27</cargo.version>
 
         <!-- MapStore‑specific -->
-        <geostore-webapp.version>2.5-SNAPSHOT</geostore-webapp.version>
+        <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
         <print-lib.version>2.3.4</print-lib.version>
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
 
         <!-- Commons extras -->
-        <commons-lang-version>2.3</commons-lang-version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <commons-text.version>1.13.0</commons-text.version>
     </properties>
 
@@ -139,13 +135,6 @@
                 </exclusions>
             </dependency>
 
-            <!-- HTTPClient: drop the bundled old HttpCore -->
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -161,17 +150,7 @@
             <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-pool</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${commons-pool.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons-lang-version}</version>
+                <version>${jakarta.servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -274,7 +253,7 @@
                 </exclusions>
             </dependency>
 
-            <!-- GeoStore Webapp: drop all the old Spring 5.3.18 bits -->
+            <!-- GeoStore Webapp -->
             <dependency>
                 <groupId>it.geosolutions.geostore</groupId>
                 <artifactId>geostore-webapp</artifactId>
