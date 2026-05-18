@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useState } from 'react';
 import castArray from 'lodash/castArray';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 import { Checkbox } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
 import Button from '../../../components/layout/Button';
 import Tabs from './Tabs';
@@ -29,12 +30,44 @@ const replaceTemplateString = (properties, str) => {
     }, str);
 };
 
-const getDateRangeValue = (startValue, endValue, format) => {
-    if (startValue && endValue) {
-        return `${moment(startValue).format(format)} - ${moment(endValue).format(format)}`;
+const normalizeMomentLocale = (locale) => {
+    if (!locale) {
+        return 'en';
     }
-    return moment(startValue ? startValue : endValue).format(format);
+    const normalizedLocale = locale.toLowerCase();
+    if (moment.locales().includes(normalizedLocale)) {
+        return normalizedLocale;
+    }
+    const baseLocale = normalizedLocale.split('-')[0];
+    if (moment.locales().includes(baseLocale)) {
+        return baseLocale;
+    }
+    return normalizedLocale;
 };
+
+const getDefaultDateFormat = (locale) => {
+    const normalizedLocale = normalizeMomentLocale(locale);
+    return normalizedLocale.startsWith('en') ? 'MMMM Do YYYY' : 'LL';
+};
+
+const getDateRangeValue = (startValue, endValue, format, locale) => {
+    const normalizedLocale = normalizeMomentLocale(locale);
+    const dateFormat = format || getDefaultDateFormat(normalizedLocale);
+    let result;
+    if (startValue && endValue) {
+        result = `${moment(startValue).locale(normalizedLocale).format(dateFormat)} - ${moment(endValue).locale(normalizedLocale).format(dateFormat)}`;
+    } else {
+        result = moment(startValue ? startValue : endValue).locale(normalizedLocale).format(dateFormat);
+    }
+    return result;
+};
+
+const getDateValue = (value, format, locale) => {
+    const normalizedLocale = normalizeMomentLocale(locale);
+    const dateFormat = format || getDefaultDateFormat(normalizedLocale);
+    return moment(value).locale(normalizedLocale).format(dateFormat);
+};
+
 const isEmptyValue = (value) => {
     if (Array.isArray(value)) {
         return isEmpty(value);
@@ -160,7 +193,7 @@ function DetailsInfoFieldEditing({ field, onChange }) {
     return null;
 }
 
-function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, enableFilters }) {
+function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, enableFilters, locale }) {
     return (<FlexBox
         gap="xs"
         column
@@ -213,9 +246,12 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
             if (field.type === 'date') {
                 return (
                     <DetailsInfoField key={filedIndex} field={field}>
-                        {(values) => values.map((value, idx) => (
-                            <span key={idx}>{(value?.start || value?.end) ? getDateRangeValue(value.start, value.end, field.format || 'MMMM Do YYYY') : moment(value).format(field.format || 'MMMM Do YYYY')}</span>
-                        ))}
+                        {(values) => values.map((value, idx) => {
+                            const dateStr = (value?.start || value?.end)
+                                ? getDateRangeValue(value.start, value.end, field.format, locale)
+                                : getDateValue(value, field.format, locale);
+                            return <span key={idx}>{dateStr}</span>;
+                        })}
                     </DetailsInfoField>
                 );
             }
@@ -274,8 +310,10 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
     </FlexBox>);
 }
 
+const ConnectedDetailsInfoFields = connect(state => ({ locale: state?.locale?.current }))(DetailsInfoFields);
+
 const defaultTabComponents = {
-    'tab': DetailsInfoFields
+    'tab': ConnectedDetailsInfoFields
 };
 
 const parseTabItems = (items) => {
