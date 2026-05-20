@@ -2086,8 +2086,7 @@
       "error": "Erro ao carregar o catálogo",
       "pageInfo": "Resultados {start}-{end} de {total}",
       "resultInfo": "{total, plural, =0 {Sem itens} =1 {{total} Item de {total}} other {{start}-{end} de {total}}}",
-      "pageInfoInfinite": "{total, plural, =undefined {} =0 {Sem resultados} =1 {{total} de {total} correspondentes} other
-  {Carregados {loaded} de {total} correspondentes}}",
+      "pageInfoInfinite": "{total, plural, =undefined {} =0 {Sem resultados} =1 {{total} de {total} correspondentes} other {Carregados {loaded} de {total} correspondentes}}",
       "noRecordsMatched": "Nenhum registo encontrado",
       "wmsGetCapLink": "WMS",
       "wfsGetCapLink": "WFS",
