@@ -9,7 +9,7 @@ import expect from 'expect';
 
 import { testEpic } from './epicTestUtils';
 import { applyFilterWidgetInteractionsEpic, cleanupAndReapplyFilterWidgetInteractionsEpic } from '../interactions';
-import { applyFilterWidgetInteractions } from '../../actions/interactions';
+import {  applyFilterWidgetInteractions } from '../../actions/interactions';
 import { UPDATE_PROPERTY, DELETE } from '../../actions/widgets';
 import { CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, removeNode } from '../../actions/layers';
 
@@ -316,6 +316,60 @@ describe('interactions epics', () => {
                 done
             );
         });
+
+        it('dispatches updateWidgetProperty for chart axis applied current time dimension target', (done) => {
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: ['2020-01-01T00:00:00Z'] },
+                interactions: [{
+                    id: 'int-chart-axis-time',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${CHART_WIDGET_ID}].charts[${CHART_ID}].traces[${TRACE_ID}].xAxisOpts[x-axis-1].appliedCurrentTime`,
+                        metaData: {
+                            dimension: 'time'
+                        }
+                    }
+                }]
+            });
+            const chartWidget = makeChartWidget({
+                charts: [{
+                    chartId: CHART_ID,
+                    xAxisOpts: [{ id: 0 }, { id: 'x-axis-1', type: 'date', showCurrentTime: true }],
+                    yAxisOpts: [{ id: 0 }],
+                    traces: [{
+                        id: TRACE_ID,
+                        type: 'bar',
+                        xaxis: 'x-axis-1',
+                        layer: { name: 'test:layer', id: 'layer-1' }
+                    }]
+                }]
+            });
+            const state = makeState([filterWidget, chartWidget]);
+            state.context = {
+                currentContext: {
+                    plugins: {
+                        desktop: []
+                    }
+                }
+            };
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(CHART_WIDGET_ID);
+                    expect(actions[0].key).toBe('charts[0].xAxisOpts[1].appliedCurrentTime');
+                    expect(actions[0].value).toBe('2020-01-01T00:00:00Z');
+                },
+                state,
+                done
+            );
+        });
     });
 
     describe('cleanupAndReapplyFilterWidgetInteractionsEpic', () => {
@@ -421,6 +475,50 @@ describe('interactions epics', () => {
                     const tableUpdate = updateActions.find(a => a.key === 'interactionFilters' && a.id === TABLE_WIDGET_ID);
                     expect(tableUpdate).toBeTruthy();
                     expect(tableUpdate.value).toEqual([]);
+                },
+                state,
+                done
+            );
+        });
+
+        it('on DELETE filter widget, resets connected chart axis applied current time', (done) => {
+            const filterWidget = makeFilterWidget({
+                interactions: [{
+                    id: 'int-chart-axis-time',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${CHART_WIDGET_ID}].charts[${CHART_ID}].traces[${TRACE_ID}].xAxisOpts[x-axis-1].appliedCurrentTime`,
+                        metaData: { dimension: 'time' }
+                    }
+                }]
+            });
+            const chartWidget = makeChartWidget({
+                charts: [{
+                    chartId: CHART_ID,
+                    xAxisOpts: [{ id: 0 }, { id: 'x-axis-1', type: 'date', showCurrentTime: true, appliedCurrentTime: '2020-01-01T00:00:00Z' }],
+                    traces: [{
+                        id: TRACE_ID,
+                        type: 'bar',
+                        xaxis: 'x-axis-1'
+                    }]
+                }]
+            });
+            const state = makeState([chartWidget]);
+
+            testEpic(
+                cleanupAndReapplyFilterWidgetInteractionsEpic,
+                1,
+                [{ type: DELETE, widget: filterWidget, target: 'floating' }],
+                (actions) => {
+                    const axisUpdate = actions.find(a =>
+                        a.type === UPDATE_PROPERTY
+                        && a.id === CHART_WIDGET_ID
+                        && a.key === 'charts[0].xAxisOpts[1].appliedCurrentTime'
+                    );
+                    expect(axisUpdate).toBeTruthy();
+                    expect(axisUpdate.value).toBe(null);
                 },
                 state,
                 done

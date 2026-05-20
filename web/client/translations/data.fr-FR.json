@@ -2631,6 +2631,8 @@
         "applyDimensionSelectionModeDisabledTooltip": "La sélection multiple est désactivée car ce filtre est connecté à « Appliquer la dimension ». Déconnectez « Appliquer la dimension » pour utiliser le mode de sélection multiple.",
         "applyDimensionMultipleSelectionDisabledTooltip": "« Appliquer la dimension » ne peut être connecté que lorsque le mode de sélection du filtre est « Unique ». Passez le mode de sélection de la mise en page sur « Unique » pour connecter cette cible.",
         "layerTimeControlledByTimelineTooltip": "Le temps de la couche est contrôlé par la frise chronologique (Timeline) de la carte principale. Connectez plutôt la cible Timeline.",
+        "axisCurrentTimeControlledByTimelineTooltip": "Le temps actuel de l’axe est contrôlé par la frise chronologique (Timeline) de la carte principale. Connectez plutôt la cible Timeline.",
+        "axisCurrentTimeDisabledTooltip": "Définissez le type d’axe sur Date et activez \"Afficher l’heure actuelle\" dans les options du graphique avant de le connecter.",
         "timelineTargetUnavailableTooltip": "La frise chronologique n'est pas disponible dans ce contexte.",
         "targetAlreadyConnectedToTimeTooltip": "La connexion à la frise chronologique de la carte avec la synchronisation bidirectionnelle activée ne peut être connectée que seule. Désactivez la synchronisation bidirectionnelle ou déconnectez la connexion à la frise chronologique de la carte pour connecter d'autres cibles."
       },

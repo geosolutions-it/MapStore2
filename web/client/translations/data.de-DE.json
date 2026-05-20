@@ -2670,6 +2670,8 @@
         "applyDimensionSelectionModeDisabledTooltip": "Die Mehrfachauswahl ist deaktiviert, weil dieser Filter mit „Dimension anwenden“ verbunden ist. Trennen Sie „Dimension anwenden“, um den Mehrfachauswahlmodus zu verwenden.",
         "applyDimensionMultipleSelectionDisabledTooltip": "„Dimension anwenden“ kann nur verbunden werden, wenn der Auswahlmodus des Filters „Einzel“ ist. Stellen Sie den Layout-Auswahlmodus auf „Einzel“, um dieses Ziel zu verbinden.",
         "layerTimeControlledByTimelineTooltip": "Die Layer-Zeit wird von der Timeline der Hauptkarte gesteuert. Verbinden Sie stattdessen das Timeline-Ziel.",
+        "axisCurrentTimeControlledByTimelineTooltip": "Die aktuelle Achsenzeit wird von der Timeline der Hauptkarte gesteuert. Verbinden Sie stattdessen das Timeline-Ziel.",
+        "axisCurrentTimeDisabledTooltip": "Setzen Sie den Achsentyp auf Datum und aktivieren Sie \"Aktuelle Zeit anzeigen\" in den Diagrammoptionen, bevor Sie sie verbinden.",
         "timelineTargetUnavailableTooltip": "Die Timeline ist in diesem Kontext nicht verfügbar.",
         "targetAlreadyConnectedToTimeTooltip": "Die Verbindung zur Karten-Timeline mit aktivierter 2-Wege-Synchronisierung kann nur allein verbunden werden. Deaktivieren Sie die 2-Wege-Synchronisierung oder trennen Sie die Verbindung zur Karten-Timeline, um andere Ziele zu verbinden."
       },

@@ -9,7 +9,7 @@
 import { find, get, castArray, flatten } from 'lodash';
 import { mapSelector } from './map';
 import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
-import { generateRootTree, TARGET_TYPES, isAnyLayerPath, isLayerDimensionTarget, isLayerTimeDimensionTarget, isMapTimeTarget } from '../utils/InteractionUtils';
+import { generateRootTree, TARGET_TYPES, getChartAxisFromCurrentTimeTargetPath, isAnyLayerPath, isChartAxisDateType, isChartAxisDimensionTarget, isLayerDimensionTarget, isLayerTimeDimensionTarget, isMapTimeTarget } from '../utils/InteractionUtils';
 import { currentTimeSelector } from './dimension';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, LAYERS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
@@ -89,20 +89,36 @@ const shouldSkipInteractionForTimelineAvailability = (interaction, state) => {
     }
     const targetPath = interaction?.target?.nodePath;
     const timelineEnabled = isTimelineEnabledForInteractions(state);
-    return timelineEnabled && isLayerTimeDimensionTarget(targetPath)
+    return timelineEnabled && (
+        isLayerTimeDimensionTarget(targetPath)
+        || isChartAxisDimensionTarget(targetPath)
+    )
         || !timelineEnabled && isMapTimeTarget(targetPath);
 };
 
+const shouldSkipInteractionForChartAxisAvailability = (interaction, state) => {
+    if (interaction?.targetType !== TARGET_TYPES.APPLY_DIMENSION) {
+        return false;
+    }
+    const targetPath = interaction?.target?.nodePath;
+    if (!isChartAxisDimensionTarget(targetPath)) {
+        return false;
+    }
+    const axis = getChartAxisFromCurrentTimeTargetPath(targetPath, getFloatingWidgetsPerView(state) || []);
+    return axis?.showCurrentTime !== true || !isChartAxisDateType(axis);
+};
+
 export const shouldSkipInteraction = (interaction, state) => {
-    return shouldSkipInteractionForTimelineAvailability(interaction, state);
+    return shouldSkipInteractionForTimelineAvailability(interaction, state)
+        || shouldSkipInteractionForChartAxisAvailability(interaction, state);
 };
 
 export const inactiveInteractionIdsForWidgetSelector = (state, widgetId) => {
     const widgets = getFloatingWidgetsPerView(state) || [];
     const widget = widgets.find(w => w?.id === widgetId);
-    return (widget?.interactions || [])
-        .filter(interaction => shouldSkipInteraction(interaction, state))
-        .map(interaction => interaction.id);
+    const inactiveInteractions = (widget?.interactions || [])
+        .filter(interaction => shouldSkipInteraction(interaction, state));
+    return inactiveInteractions.map(interaction => interaction.id);
 };
 
 /**
@@ -487,7 +503,10 @@ export const interactionsNodesSelector = (state) => {
             return;
         }
         const object = createPathSelector(path)(state);
-        if (object) {
+        // Chart axis dimension targets point to a scalar value. An empty
+        // appliedCurrentTime is still a valid target and must keep the path
+        // available for parent widget visibility checks.
+        if (object || isChartAxisDimensionTarget(path)) {
             map.set(path, object);
         }
     });
@@ -510,7 +529,6 @@ export const interactionTargetVisibilitySelector = createSelector(
             }
             if (path.startsWith("widgets[")) {
                 // need to check visibility, and if contains layer, also effective visibility for the map
-                // // TODO check for widget visibility
                 const getWidgetIdFromPath = (pp) => {
                     const match = pp.match(/widgets\[(.*?)\]/);
                     return match ? match[1] : null;
@@ -667,6 +685,7 @@ export function getApplyDimensionOutOfSyncForFilterWidget(state, widgetId) {
                 && !shouldSkipInteraction(i, state)
                 && (
                     isLayerDimensionTarget(i.target?.nodePath)
+                    || isChartAxisDimensionTarget(i.target?.nodePath)
                     || (
                         isMapTimeTarget(i.target?.nodePath)
                         && i?.configuration?.twoWaySynchronization !== true
@@ -684,6 +703,17 @@ export function getApplyDimensionOutOfSyncForFilterWidget(state, widgetId) {
                     normalizeDimensionValue(expectedValue)
                     && normalizeDimensionValue(currentTime) !== normalizeDimensionValue(expectedValue)
                 ) {
+                    result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
+                    break;
+                }
+                continue;
+            }
+
+            if (isChartAxisDimensionTarget(targetPath)) {
+                const currentValue = targetsData.get(cleanPaths(targetPath));
+                const expectedValue = getSelectedDimensionValue(selections, filterId);
+
+                if (normalizeDimensionValue(currentValue) !== normalizeDimensionValue(expectedValue)) {
                     result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
                     break;
                 }
