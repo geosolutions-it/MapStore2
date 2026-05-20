@@ -2573,7 +2573,7 @@
         "showSelectAllClear": "Show Select All / Clear",
         "showValueLabel": "Show Value Label",
         "showSelectedValue": "Show Selected Value",
-        "showSelectedValueTooltip": "Shows the currently selected value above the slider.",
+        "showSelectedValueTooltip": "Shows the currently selected tick value above the slider.",
         "sliderNotSelected": "Not selected",
         "showTicks": "Show Ticks",
         "showTicksTooltip": "Shows or hides tick marks on the slider.",

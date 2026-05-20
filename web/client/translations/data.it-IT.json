@@ -2557,7 +2557,7 @@
         "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
         "showValueLabel": "Mostra etichetta valore",
         "showSelectedValue": "Mostra valore selezionato",
-        "showSelectedValueTooltip": "Mostra il valore attualmente selezionato sopra lo slider.",
+        "showSelectedValueTooltip": "Mostra il valore del tick attualmente selezionato sopra lo slider.",
         "sliderNotSelected": "Non selezionato",
         "showTicks": "Mostra tacche",
         "showTicksTooltip": "Mostra o nasconde le tacche sullo slider.",

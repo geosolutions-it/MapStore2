@@ -2557,7 +2557,7 @@
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
         "showValueLabel": "Afficher le libellé de la valeur",
         "showSelectedValue": "Afficher la valeur sélectionnée",
-        "showSelectedValueTooltip": "Affiche la valeur actuellement sélectionnée au-dessus du curseur.",
+        "showSelectedValueTooltip": "Affiche la valeur de graduation actuellement sélectionnée au-dessus du curseur.",
         "sliderNotSelected": "Non sélectionné",
         "showTicks": "Afficher les repères",
         "showTicksTooltip": "Affiche ou masque les repères sur le curseur.",

@@ -2596,7 +2596,7 @@
         "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
         "showValueLabel": "Wertbeschriftung anzeigen",
         "showSelectedValue": "Ausgewählten Wert anzeigen",
-        "showSelectedValueTooltip": "Zeigt den aktuell ausgewählten Wert oberhalb des Schiebereglers an.",
+        "showSelectedValueTooltip": "Zeigt den aktuell ausgewählten Skalenwert oberhalb des Schiebereglers an.",
         "sliderNotSelected": "Nicht ausgewählt",
         "showTicks": "Markierungen anzeigen",
         "showTicksTooltip": "Zeigt die Markierungen auf dem Schieberegler an oder blendet sie aus.",

@@ -58,7 +58,7 @@ const FilterSlider = ({
         && itemMatchIndex >= 0;
     const sliderStartIndex = hasExplicitSelection ? itemMatchIndex : 0;
     const selectedItem = hasExplicitSelection ? normalizedItems[itemMatchIndex] : null;
-    const selectedDisplayValue = selectedItem ? String(selectedItem.id) : '';
+    const selectedDisplayValue = selectedItem ? String(selectedItem.label) : '';
 
     const tickEntries = useMemo(() => {
         const labels = parseList(tickLabels);
