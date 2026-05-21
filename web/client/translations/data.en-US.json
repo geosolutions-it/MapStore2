@@ -2446,6 +2446,8 @@
         "axisTickValsTooltip": "Optional. If set, forces the axis to show only these comma-separated tick values. If Tick Text is also set, each value is replaced by the label at the same index.",
         "axisTickText": "Axis Tick Text",
         "axisTickTextTooltip": "Comma-separated custom labels shown at the tick positions defined in Tick Values, matched by index (one label per value).",
+        "showHoverOnlyOnTickValues": "Hover only on tick values",
+        "showHoverOnlyOnTickValuesTooltip": "If enabled, chart hover tooltips are shown only when the hovered x value matches one of the configured Tick Values.",
         "formatExamples": "<div><ul><li><code>.0%</code>: rounded percentage, '12%'</li><li><code>.2s</code>:SI-prefix with two significant digits, '42M'</li><li><code>,.2r</code>: grouped thousands with two significant digits '4,200'</li></ul><em>More information about formatting syntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">here</a>.</em></div>",
         "formula": "Formula",
         "formulaExamples": "<div>Transform the value using a formula. Use the variable <code>value</code> in the expression:<h5>Examples</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em>More information about the syntax <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">here</a>.</em></div>",
@@ -2497,7 +2499,7 @@
           "log": "Log",
           "date": "Date"
         },
-        "showCurrentTime": "Show current time on the axis",
+        "showCurrentTime": "Highlight selected time",
         "type": "Type"
       },
       "tray": {
@@ -2514,6 +2516,9 @@
         "userDefined": "User Defined",
         "maps": "Maps",
         "map": "Map",
+        "time": "Time",
+        "timeline": "Timeline",
+        "elevation": "Elevation",
 
         "valuesFrom": "Values From",
         "uniqueAttributes": "Unique values",
@@ -2573,7 +2578,7 @@
         "showSelectAllClear": "Show Select All / Clear",
         "showValueLabel": "Show Value Label",
         "showSelectedValue": "Show Selected Value",
-        "showSelectedValueTooltip": "Shows the currently selected value above the slider.",
+        "showSelectedValueTooltip": "Shows the currently selected tick value above the slider.",
         "sliderNotSelected": "Not selected",
         "showTicks": "Show Ticks",
         "showTicksTooltip": "Shows or hides tick marks on the slider.",
@@ -2641,11 +2646,14 @@
         "removeOptionalTargetConfirmTitle": "Delete target?",
         "removeOptionalTargetConfirmContent": "All connected interactions from this target will be deleted.",
         "applyStyle": "Apply Style",
+        "timeSelectionHighlight": "Time selection highlight",
         "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time",
         "targetAlreadyConnectedToAnotherFilterTooltip": "This target is already connected from another source. It can not be connected from multiple sources at the same time",
         "applyDimensionSelectionModeDisabledTooltip": "Multiple selection is disabled because this filter is connected to Apply Dimension. Disconnect Apply Dimension to use Multiple selection mode.",
         "applyDimensionMultipleSelectionDisabledTooltip": "Apply Dimension can only be connected when the filter selection mode is Single. Switch the layout selection mode to Single to connect this target.",
         "layerTimeControlledByTimelineTooltip": "Layer time is controlled by the main map Timeline. Connect to the Timeline target instead.",
+        "axisCurrentTimeControlledByTimelineTooltip": "Axis current time is controlled by the main map Timeline. Connect to the Timeline target instead.",
+        "axisCurrentTimeDisabledTooltip": "Set the axis type to Date and enable \"Show current time\" in chart options before connecting it.",
         "timelineTargetUnavailableTooltip": "Timeline is not available in this context.",
         "targetAlreadyConnectedToTimeTooltip": "Map timeline connection with 2 way synchronization enabled can only be connected alone. Disable 2 way synchronization or disconnect Map timeline connection to connect other targets."
       }

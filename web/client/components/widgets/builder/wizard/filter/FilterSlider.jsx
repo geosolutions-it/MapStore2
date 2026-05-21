@@ -58,7 +58,7 @@ const FilterSlider = ({
         && itemMatchIndex >= 0;
     const sliderStartIndex = hasExplicitSelection ? itemMatchIndex : 0;
     const selectedItem = hasExplicitSelection ? normalizedItems[itemMatchIndex] : null;
-    const selectedDisplayValue = selectedItem ? String(selectedItem.id) : '';
+    const selectedDisplayValue = selectedItem ? String(selectedItem.label) : '';
 
     const tickEntries = useMemo(() => {
         const labels = parseList(tickLabels);
@@ -91,6 +91,12 @@ const FilterSlider = ({
         },
         from: (value) => value
     }), [tickEntries]);
+    const sliderKey = useMemo(() => JSON.stringify({
+        items: normalizedItems.map(({ id, label }) => [id, label ?? '']),
+        tickValues: requestedTickValues,
+        tickLabels: parseList(tickLabels),
+        showTicks
+    }), [normalizedItems, requestedTickValues, tickLabels, showTicks]);
 
     if (normalizedItems.length === 0) {
         return null;
@@ -145,6 +151,7 @@ const FilterSlider = ({
                 )}
                 <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle}>
                     <Slider
+                        key={sliderKey}
                         start={[sliderStartIndex]}
                         range={{
                             min: 0,

@@ -35,7 +35,8 @@ const FilterBuilderContent = ({
         filters = [],
         selectedFilterId = null,
         selections = {},
-        interactions = []
+        interactions = [],
+        deletedInteractions = []
     } = editorData;
 
     // Initialize filters
@@ -119,10 +120,17 @@ const FilterBuilderContent = ({
             onChangeEditor('selectedFilterId', nextFilters[0]?.id || null);
         }
         if (interactions && interactions.length > 0) {
-            const nextInteractions = interactions.filter(interaction => !interaction.source.nodePath.includes(filterId));
+            const removedInteractions = interactions.filter(interaction => interaction?.source?.nodePath?.includes(filterId));
+            const nextInteractions = interactions.filter(interaction => !interaction?.source?.nodePath?.includes(filterId));
             onChangeEditor('interactions', nextInteractions);
+            if (removedInteractions.length > 0) {
+                onChangeEditor('deletedInteractions', [
+                    ...(deletedInteractions || []),
+                    ...removedInteractions
+                ]);
+            }
         }
-    }, [filters, selections, selectedFilterId, interactions, onChangeEditor]);
+    }, [filters, selections, selectedFilterId, interactions, deletedInteractions, onChangeEditor]);
 
     const handleRenameFilter = useCallback((filterId, label) => {
         const nextFilters = filters.map(filter => {

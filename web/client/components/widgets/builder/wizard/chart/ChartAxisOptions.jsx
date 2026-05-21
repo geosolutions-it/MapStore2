@@ -42,6 +42,7 @@ const AXIS_TYPES = [{
 }];
 
 const MAX_X_AXIS_LABELS = 200;
+const hasCustomTickValues = (tickVals) => typeof tickVals === 'string' && tickVals.trim();
 const getSelectedAxisId = ({
     axisKey,
     chart = {}
@@ -233,6 +234,15 @@ function AxisOptions({
                     />
                 </InputGroup>
             </FormGroup>
+            {axisKey === 'x' && !options?.hide && hasCustomTickValues(options?.tickvals) && <FormGroup className="form-group-flex" style={{ marginBottom: 0 }}>
+                <Checkbox
+                    checked={options?.showHoverOnlyOnTickValues ?? false}
+                    onChange={(event) => { handleChange('showHoverOnlyOnTickValues', event?.target?.checked); }}
+                >
+                    <Message msgId="widgets.advanced.showHoverOnlyOnTickValues" /> {' '}
+                    {!(options?.hide ?? false) && <InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.showHoverOnlyOnTickValuesTooltip" />} />}
+                </Checkbox>
+            </FormGroup>}
             <FormGroup className="form-group-flex">
                 <ControlLabel>
                     <Message msgId="widgets.advanced.side" />
