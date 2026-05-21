@@ -7,6 +7,18 @@
  */
 import axios from '../../libs/ajax';
 import Rx from 'rxjs';
+import { hashCode } from '../../utils/StringUtils';
+
+/**
+ * Build a deterministic identifier for a catalog record without a natural unique field.
+ * Same input returns the same identifier across regenerations of the records list, so
+ * selection state (tracked by `identifier`) survives re-fetches. Callers should pass a
+ * small identity slice (string or object with a handful of stable fields), NOT the full
+ * record. Some records embed large payloads (e.g. GeoJSON features) that would make the
+ * hash expensive.
+ */
+export const getRecordIdentifier = (slice) =>
+    `_h${hashCode(typeof slice === 'string' ? slice : JSON.stringify(slice))}`;
 
 /**
  * Service validation or test exception

@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import Rx from 'rxjs';
 import { connect } from 'react-redux';
 import { branch, compose, renderComponent, withHandlers, withProps, withState } from 'recompose';
 import find from 'lodash/find';
+import castArray from 'lodash/castArray';
 import { onEditorChange } from '../../actions/widgets';
 
 import BorderLayout from '../../components/layout/BorderLayout';
@@ -29,7 +31,39 @@ import { getLayerTileMatrixSetsInfo } from '../../api/WMTS';
 import { generateGeoServerWMTSUrl } from '../../utils/WMTSUtils';
 import { isProjectionAvailable } from '../../utils/ProjectionUtils';
 import { normalizeSRS } from '../../utils/CoordinatesUtils';
+import { describeDomains, getMultidimURL } from '../../api/MultiDim';
+import { domainsToDimensionsObject } from '../../utils/TimeUtils';
+import { normalizeLayer } from '../../utils/LayersUtils';
 
+const SUPPORTED_LAYER_DIMENSIONS = ['time', 'elevation'];
+
+export const mergeLayerDimensions = (layer = {}, dimensions = []) => {
+    const existingDimensions = castArray(layer.dimensions || []);
+    const dimensionsToAdd = dimensions
+        .filter(({ name } = {}) => SUPPORTED_LAYER_DIMENSIONS.includes(name))
+        .filter(({ name }) => !find(existingDimensions, dimension => dimension?.name === name))
+        .map(({ name, source }) => ({ name, source }));
+    return dimensionsToAdd.length
+        ? {
+            ...layer,
+            dimensions: [
+                ...existingDimensions,
+                ...dimensionsToAdd
+            ]
+        }
+        : layer;
+};
+
+export const getLayerWithDimensions = (layer = {}) => {
+    if (!(layer.type === 'wms' && layer.url && layer.name)) {
+        return Promise.resolve(layer);
+    }
+    const multidimURL = getMultidimURL(layer);
+    return describeDomains(multidimURL, layer.name)
+        .map(domains => mergeLayerDimensions(layer, domainsToDimensionsObject(domains, multidimURL) || []))
+        .catch(() => Rx.Observable.of(layer))
+        .toPromise();
+};
 
 const Toolbar = mapToolbar(ToolbarComp);
 
@@ -54,7 +88,7 @@ const chooseMapEnhancer = compose(
             compose(
                 manageLayers,
                 withHandlers({
-                    onLayerChoice: ({ toggleLayerSelector = () => { }, addLayer = () => { } }) => (layer) => {
+                    onLayerChoice: ({ toggleLayerSelector = () => { }, addLayer = () => { }, updateLayerProperties = () => {} }) => (layer) => {
                         // fetching 'tileGridData' if layer has truthy flag 'remoteTileGrids' and adding the required props to layer object
                         let tileGridPromise = layer.type === 'wms' && layer.remoteTileGrids ? getLayerTileMatrixSetsInfo(generateGeoServerWMTSUrl(layer), layer.name, layer) : new Promise((resolve) => resolve(null));
                         tileGridPromise.then((tileGridData) => {
@@ -69,8 +103,16 @@ const chooseMapEnhancer = compose(
                                         : undefined
                                 } : {};
                             }
-                            addLayer({...layer, ...tileGridProperties});
+                            const layerToAdd = normalizeLayer({...layer, ...tileGridProperties});
+                            addLayer(layerToAdd);
                             toggleLayerSelector(false);
+                            getLayerWithDimensions(layerToAdd).then((layerWithDimensions) => {
+                                if (layerWithDimensions !== layerToAdd && layerWithDimensions.dimensions) {
+                                    updateLayerProperties(layerToAdd.id, {
+                                        dimensions: layerWithDimensions.dimensions
+                                    });
+                                }
+                            });
                         });
                     }
                 }),

@@ -13,7 +13,8 @@ import { getCapabilities, getCapabilitiesURL } from '../WFS';
 import {
     validate as commonValidate,
     testService as commonTestService,
-    preprocess as commonPreprocess
+    preprocess as commonPreprocess,
+    getRecordIdentifier
 } from './common';
 import { get, castArray, isEmpty } from 'lodash';
 
@@ -127,7 +128,8 @@ export const getCatalogRecords = ({records} = {}) => {
                 serviceType: 'wfs',
                 isValid: !!ogcReferences,
                 references,
-                ogcReferences
+                ogcReferences,
+                identifier: record.name ? record.name : getRecordIdentifier({ url: record.url, title: record.title })
             };
         });
     }

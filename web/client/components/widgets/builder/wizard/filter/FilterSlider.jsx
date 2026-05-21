@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup } from 'react-bootstrap';
-import Slider from 'react-nouislider';
+import Slider from '../../../../misc/Slider';
 import Message from '../../../../I18N/Message';
 
 const parseList = (value) => {
@@ -16,10 +16,12 @@ const parseList = (value) => {
         return value;
     }
     if (typeof value === 'string') {
+        if (!value.trim()) {
+            return [];
+        }
         return value
-            .split(/[,\n;]+/)
-            .map(item => item.trim())
-            .filter(Boolean);
+            .split(',')
+            .map(item => item.trim());
     }
     return [];
 };
@@ -56,7 +58,7 @@ const FilterSlider = ({
         && itemMatchIndex >= 0;
     const sliderStartIndex = hasExplicitSelection ? itemMatchIndex : 0;
     const selectedItem = hasExplicitSelection ? normalizedItems[itemMatchIndex] : null;
-    const selectedDisplayValue = selectedItem ? String(selectedItem.id) : '';
+    const selectedDisplayValue = selectedItem ? String(selectedItem.label) : '';
 
     const tickEntries = useMemo(() => {
         const labels = parseList(tickLabels);
@@ -66,18 +68,15 @@ const FilterSlider = ({
                 label: item.label ?? item.id
             }));
         }
-        return requestedTickValues
-            .map((value, tickIndex) => {
-                const index = normalizedItems.findIndex(item => String(item.id) === String(value));
-                if (index < 0) {
-                    return null;
-                }
-                return {
-                    index,
-                    label: labels[tickIndex] ?? (normalizedItems[index].label ?? normalizedItems[index].id)
-                };
-            })
-            .filter(Boolean);
+        return normalizedItems.map((item, index) => {
+            const tickIndex = requestedTickValues.findIndex(value => String(item.id) === String(value));
+            return {
+                index,
+                label: tickIndex >= 0
+                    ? labels[tickIndex] ?? (item.label ?? item.id)
+                    : ''
+            };
+        });
     }, [normalizedItems, requestedTickValues, tickLabels]);
 
     const pipValues = useMemo(() => {
@@ -92,6 +91,12 @@ const FilterSlider = ({
         },
         from: (value) => value
     }), [tickEntries]);
+    const sliderKey = useMemo(() => JSON.stringify({
+        items: normalizedItems.map(({ id, label }) => [id, label ?? '']),
+        tickValues: requestedTickValues,
+        tickLabels: parseList(tickLabels),
+        showTicks
+    }), [normalizedItems, requestedTickValues, tickLabels, showTicks]);
 
     if (normalizedItems.length === 0) {
         return null;
@@ -146,6 +151,7 @@ const FilterSlider = ({
                 )}
                 <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle}>
                     <Slider
+                        key={sliderKey}
                         start={[sliderStartIndex]}
                         range={{
                             min: 0,

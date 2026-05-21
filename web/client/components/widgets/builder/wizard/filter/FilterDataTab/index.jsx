@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import UserDefinedValuesDataGrid from '../UserDefinedValuesDataGrid';
 import { useFilterData } from './hooks/useFilterData';
@@ -22,6 +22,36 @@ import FilterSelectionModeSelector from './components/FilterSelectionModeSelecto
 import { VALUES_FROM_TYPES, USER_DEFINED_TYPES } from './constants';
 import { isFilterValid } from '../../../../../../utils/FilterUtils';
 
+const getMissingAttributeTypeUpdates = ({
+    attributeOptions = [],
+    valueAttribute,
+    valueAttributeType,
+    labelAttribute,
+    labelAttributeType
+}) => {
+    const updates = [];
+
+    if (valueAttribute && !valueAttributeType) {
+        const valueAttributeOption = attributeOptions.find(option =>
+            option?.value === valueAttribute
+        );
+        if (valueAttributeOption?.type) {
+            updates.push(['data.valueAttributeType', valueAttributeOption.type]);
+        }
+    }
+
+    if (labelAttribute && !labelAttributeType) {
+        const labelAttributeOption = attributeOptions.find(option =>
+            option?.value === labelAttribute
+        );
+        if (labelAttributeOption?.type) {
+            updates.push(['data.labelAttributeType', labelAttributeOption.type]);
+        }
+    }
+
+    return updates;
+};
+
 const FilterDataTab = ({
     data = {},
     onChange: onChangeProp = () => {},
@@ -29,7 +59,8 @@ const FilterDataTab = ({
     openFilterEditor,
     onEditorChange = () => {},
     dashBoardEditing,
-    selections = {}
+    selections = {},
+    interactions = []
 }) => {
     // Normalize and derive filter data
     const filterDataState = useFilterData(data);
@@ -45,7 +76,31 @@ const FilterDataTab = ({
     );
 
     // Enhanced onChange handler with auto-sync
-    const onChange = useAttributeSync(data, onChangeProp, onEditorChange, selections);
+    const onChange = useAttributeSync(data, onChangeProp, onEditorChange, selections, interactions);
+
+    // Backward compatibility: Back fill missing attribute types for older saved filters
+    useEffect(() => {
+        if (!attributeOptions?.length) {
+            return;
+        }
+
+        getMissingAttributeTypeUpdates({
+            attributeOptions,
+            valueAttribute: filterDataState.valueAttribute,
+            valueAttributeType: filterDataState.valueAttributeType,
+            labelAttribute: filterDataState.labelAttribute,
+            labelAttributeType: filterDataState.labelAttributeType
+        }).forEach(([key, value]) => {
+            onChangeProp(key, value);
+        });
+    }, [
+        attributeOptions,
+        filterDataState.valueAttribute,
+        filterDataState.valueAttributeType,
+        filterDataState.labelAttribute,
+        filterDataState.labelAttributeType,
+        onChangeProp
+    ]);
 
     // Generic handler factory for simple onChange handlers
     const createChangeHandler = (key) => (value) => {
@@ -212,7 +267,8 @@ FilterDataTab.propTypes = {
     onOpenLayerSelector: PropTypes.func,
     openFilterEditor: PropTypes.func,
     onEditorChange: PropTypes.func,
-    dashBoardEditing: PropTypes.bool
+    dashBoardEditing: PropTypes.bool,
+    interactions: PropTypes.array
 };
 
 export default FilterDataTab;

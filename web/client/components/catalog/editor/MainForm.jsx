@@ -7,7 +7,7 @@
  */
 import React, { useState } from 'react';
 import {get, find} from 'lodash';
-import { Button, InputGroup, FormControl as FC, Form, Col, FormGroup, ControlLabel, Alert, Glyphicon } from "react-bootstrap";
+import { Button, InputGroup, FormControl as FC, Form, FormGroup, ControlLabel, Alert, Glyphicon } from "react-bootstrap";
 
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
@@ -81,9 +81,8 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
     const selectedProvider = service === TMS ? service : service?.provider?.split?.(".")?.[0];
     const isCustom = !selectedProvider || selectedProvider === CUSTOM;
     const isTMS = selectedProvider === TMS;
-    const needURL = isTMS || isCustom;
-    return (<FormGroup>
-        <Col xs={12} sm={isCustom ? 3 : 12} md={needURL ? 3 : 12}>
+    return (<div>
+        <FormGroup>
             <ControlLabel><Message msgId="catalog.tms.provider" /></ControlLabel>
             <FormControl
                 onChange={(e) => {
@@ -101,8 +100,8 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                 componentClass="select">
                 {[CUSTOM, TMS, ...providers].map(k => ({ name: k, label: getProviderLabel(k) })).map((format) => <option value={format.name} key={format.name}>{format.label}</option>)}
             </FormControl>
-        </Col>
-        <Col xs={12} sm={9} md={9}>
+        </FormGroup>
+        <FormGroup>
             {isCustom
                 ? <React.Fragment>
                     <ControlLabel><Message msgId="catalog.tms.urlTemplate" />&nbsp;&nbsp;<InfoPopover text={<HTML msgId="catalog.tms.urlTemplateHint" />} /></ControlLabel>
@@ -129,8 +128,8 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                     </React.Fragment>
                     : null
             }
-        </Col>
-    </FormGroup>);
+        </FormGroup>
+    </div>);
 };
 
 const COGEditor = ({ service = {}, onChangeServiceProperty = () => { } }) => {

@@ -1653,14 +1653,7 @@
         "expandTray": "Proširi traku s widgetima",
         "collapseTray": "Sažmi traku s widgetima",
         "expandAll": "Proširi sve widgete",
-        "collapseAll": "Sažmi sve widgete",
-        "notifications": {
-          "collapsed": {
-            "message": "Vremenska crta i widgeti ne mogu biti prikazani u isto vrijeme. Koristi traku s widgetima za prebacivanje između vremenske crte i widgeta",
-            "timelineTitle": "Vremenska crta je sažeta",
-            "widgetsTitle": "Widgeti su sažeti"
-          }
-        }
+        "collapseAll": "Sažmi sve widgete"
       }
     },
     "dashboard": {

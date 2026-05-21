@@ -503,7 +503,10 @@
       "glyph": "time",
       "title": "plugins.Timeline.title",
       "description": "plugins.Timeline.description",
-      "dependencies": ["Playback"]
+      "dependencies": ["Playback"],
+      "defaultConfig": {
+        "containerPosition": "bottom"
+      }
     },
     {
       "name": "Playback",

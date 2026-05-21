@@ -2426,14 +2426,7 @@
         "expandTray": "Expandir bandeja de widgets",
         "collapseTray": "Recolher bandeja de widgets",
         "expandAll": "Expandir todos os widgets",
-        "collapseAll": "Recolher todos os widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "Linha do tempo e widgets não podem ficar ao mesmo tempo. Use na bandeja do widget para alternar entre linha do tempo e widgets",
-            "timelineTitle": "A linha do tempo foi recolhida",
-            "widgetsTitle": "Os widgets foram recolhidos"
-          }
-        }
+        "collapseAll": "Recolher todos os widgets"
       }
     },
     "dashboard": {

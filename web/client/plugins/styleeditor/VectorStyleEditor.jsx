@@ -8,6 +8,7 @@
 
 import React, { useEffect, useRef, useState }  from 'react';
 import uniq from 'lodash/uniq';
+import isEmpty from 'lodash/isEmpty';
 import { StyleEditor } from './StyleCodeEditor';
 import TextareaEditor from '../../components/styleeditor/Editor';
 import VisualStyleEditor from '../../components/styleeditor/VisualStyleEditor';
@@ -37,7 +38,7 @@ import { getFlatGeobufGeometryTypeFromOptions } from '../../utils/FlatGeobufLaye
 
 import {
     getCapabilities as getFlatGeobufCapabilities,
-    sniffFlatGeobufFirstGeometryType
+    sniffFlatGeobufFirstFeature
 } from '../../api/FlatGeobuf';
 import { getRequestConfigurationByUrl } from '../../utils/SecurityUtils';
 import { updateUrlParams } from '../../utils/URLUtils';
@@ -61,27 +62,53 @@ const capabilitiesRequest = {
         });
     },
     'flatgeobuf': (layer) => {
+        // Priority to check geometryType:
+        //  1. explicit layer.geometryType
+        //  2. FGB header from capabilities
+        //  3. then sniff the first feature from remote file header
+        const layerGeometryType = getFlatGeobufGeometryTypeFromOptions(layer);
+        const geometryType = getGeometryType({ localType: layerGeometryType });
+
+        if (layer?.sourceMetadata?.columns) {
+            const properties = layer?.sourceMetadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            return {
+                geometryType,
+                properties
+            };
+        }
+
         return getFlatGeobufCapabilities(layer.url).then((capabilities) => {
-            const properties = capabilities?.metadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
-            // Priority: explicit layer.geometryType, then FGB header from
-            // capabilities, then sniff the first feature when the header
-            // declares Unknown (id 0). Normalize through getGeometryType so
-            // the result matches the WFS/vector convention (lowercase,
-            // Multi prefix collapsed).
-            const fromOptions = getFlatGeobufGeometryTypeFromOptions({
+            const optionsProperties = capabilities?.metadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            const optionsGeometryType = getFlatGeobufGeometryTypeFromOptions({
                 geometryType: layer.geometryType,
-                metadata: capabilities.metadata
+                sourceMetadata: capabilities.metadata
             });
-            const finalize = (rawType) => ({
-                properties,
-                geometryType: getGeometryType({ localType: rawType || '' })
+            const optionsFirstFeature = {   // hipotetical feature with geometry type from options and properties from metadata, used when sniffing is not needed
+                geometry: { type: optionsGeometryType },
+                properties: optionsProperties
+            };
+            const finalize = (firstFeature) => ({
+                geometryType: getGeometryType({ localType: firstFeature?.geometry?.type || '' }),
+                properties: optionsProperties || firstFeature?.properties || {}
             });
-            if (fromOptions) {
-                return finalize(fromOptions);
+            if (optionsGeometryType && !isEmpty(optionsProperties)) {
+                return finalize(optionsFirstFeature);
             }
             const { headers, params } = getRequestConfigurationByUrl(layer.url, layer?.security?.sourceId);
-            return sniffFlatGeobufFirstGeometryType(updateUrlParams(layer.url, params), headers)
-                .then(finalize);
+            return sniffFlatGeobufFirstFeature(updateUrlParams(layer.url, params), headers)
+                .then(finalize)
+                .catch(() => {
+                    return {
+                        geometryType: optionsGeometryType,
+                        properties: optionsProperties
+                    };
+                });
+
+        }).catch(() => {
+            return {
+                geometryType: layer.geometryType,
+                properties: layer.properties
+            };
         });
     },
     'wfs': (layer) => layer.url
