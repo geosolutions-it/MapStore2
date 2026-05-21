@@ -19,7 +19,11 @@ import LocalizedString from '../../../../../I18N/LocalizedString';
 
 const itemTitleTranslationMap = {
     "Maps": "widgets.filterWidget.maps",
-    "Map": "widgets.filterWidget.map"
+    "Map": "widgets.filterWidget.map",
+    "Time": "widgets.filterWidget.time",
+    "Timeline": "widgets.filterWidget.timeline",
+    "Elevation": "widgets.filterWidget.elevation",
+    "Time selection highlight": "widgets.filterWidget.timeSelectionHighlight"
 };
 
 const TFlexBox = tooltip(FlexBox);

@@ -456,7 +456,7 @@ function createChartAxisCurrentTimeNode(axis) {
     return {
         type: 'element',
         id: 'appliedCurrentTime',
-        title: 'Time',
+        title: 'Time selection highlight',
         icon: 'time',
         nodePathMode: 'dot',
         interactionMetadata: {

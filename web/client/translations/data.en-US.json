@@ -2499,7 +2499,7 @@
           "log": "Log",
           "date": "Date"
         },
-        "showCurrentTime": "Show current time on the axis",
+        "showCurrentTime": "Highlight selected time",
         "type": "Type"
       },
       "tray": {
@@ -2516,6 +2516,9 @@
         "userDefined": "User Defined",
         "maps": "Maps",
         "map": "Map",
+        "time": "Time",
+        "timeline": "Timeline",
+        "elevation": "Elevation",
 
         "valuesFrom": "Values From",
         "uniqueAttributes": "Unique values",
@@ -2643,6 +2646,7 @@
         "removeOptionalTargetConfirmTitle": "Delete target?",
         "removeOptionalTargetConfirmContent": "All connected interactions from this target will be deleted.",
         "applyStyle": "Apply Style",
+        "timeSelectionHighlight": "Time selection highlight",
         "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time",
         "targetAlreadyConnectedToAnotherFilterTooltip": "This target is already connected from another source. It can not be connected from multiple sources at the same time",
         "applyDimensionSelectionModeDisabledTooltip": "Multiple selection is disabled because this filter is connected to Apply Dimension. Disconnect Apply Dimension to use Multiple selection mode.",
