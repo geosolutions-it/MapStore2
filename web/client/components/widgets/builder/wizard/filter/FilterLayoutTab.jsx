@@ -443,10 +443,25 @@ const FilterLayoutTab = ({
                                 </ControlLabel>
                                 <InputGroup>
                                     <LocalizedFormControl
+                                        className="ms-filter-layout-max-height"
                                         type="number"
+                                        min={0}
                                         value={layout.maxHeight || ''}
                                         placeholder={layout.variant === 'slider' ? 'styleeditor.placeholderInput' : 'widgets.filterWidget.maxHeightPlaceholder'}
+                                        onKeyDown={(e) => {
+                                            if (e.key === '-' || e.key === 'Subtract') {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        onPaste={(e) => {
+                                            if (e.clipboardData?.getData('text')?.includes('-')) {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                         onChange={(e) => {
+                                            if (e.target.value.includes('-')) {
+                                                return;
+                                            }
                                             const value = e.target.value === '' ? undefined : parseInt(e.target.value, 10);
                                             onChange('layout.maxHeight', value);
                                         }}
