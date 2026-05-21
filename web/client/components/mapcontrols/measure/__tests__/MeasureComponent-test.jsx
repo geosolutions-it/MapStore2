@@ -43,9 +43,9 @@ describe("test the MeasureComponent", () => {
         expect(domNode).toExist();
         const domButtons = domNode.getElementsByTagName('button');
         expect(domButtons).toExist();
-        expect(domButtons.length).toBe(6);
+        expect(domButtons.length).toBe(8);
         const disabledButtons = domNode.querySelectorAll('button.disabled');
-        expect(disabledButtons.length).toBe(2);
+        expect(disabledButtons.length).toBe(3);
     });
 
 
@@ -68,7 +68,7 @@ describe("test the MeasureComponent", () => {
             <MeasureComponent
                 measurement={measurement}
                 geomType={'Polygon'}
-                toggleMeasure={(data) => {
+                changeMeasurementState={(data) => {
                     newMeasureState = data;
                 }}
                 lineMeasureEnabled={false} />, document.getElementById("container")
@@ -79,9 +79,9 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(6);
+        expect(buttons.length).toBe(8);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
-        expect(disabledButtons.length).toBe(2);
+        expect(disabledButtons.length).toBe(3);
 
         const lineBtn = buttons.item(0);
         lineBtn.click();
@@ -98,7 +98,7 @@ describe("test the MeasureComponent", () => {
         const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
-                toggleMeasure={(data) => {
+                changeMeasurementState={(data) => {
                     newMeasureState = data;
                 }}
                 areaMeasureEnabled={false} />, document.getElementById("container")
@@ -109,9 +109,9 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(6);
+        expect(buttons.length).toBe(8);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
-        expect(disabledButtons.length).toBe(2);
+        expect(disabledButtons.length).toBe(3);
 
         const areaBtn = buttons.item(1);
         areaBtn.click();
@@ -128,7 +128,7 @@ describe("test the MeasureComponent", () => {
         const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
-                toggleMeasure={(data) => {
+                changeMeasurementState={(data) => {
                     newMeasureState = data;
                 }}
                 bearingMeasureEnabled={false} />, document.getElementById("container")
@@ -139,9 +139,9 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(6);
+        expect(buttons.length).toBe(8);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
-        expect(disabledButtons.length).toBe(2);
+        expect(disabledButtons.length).toBe(3);
 
         const bearingBtn = buttons.item(2);
         bearingBtn.click();
@@ -158,7 +158,7 @@ describe("test the MeasureComponent", () => {
         const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
-                toggleMeasure={(data) => {
+                changeMeasurementState={(data) => {
                     newMeasureState = data;
                 }}
                 withReset
@@ -170,9 +170,9 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(6);
+        expect(buttons.length).toBe(8);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
-        expect(disabledButtons.length).toBe(2);
+        expect(disabledButtons.length).toBe(3);
 
         const resetBtn = buttons.item(3);
 
@@ -180,7 +180,7 @@ describe("test the MeasureComponent", () => {
         resetBtn.click();
 
         expect(newMeasureState).toExist();
-        expect(newMeasureState.geomType).toBe(null);
+        expect(newMeasureState.geomType).toBe('LineString');
     });
 
     it('test bearing format', () => {
@@ -463,21 +463,23 @@ describe("test the MeasureComponent", () => {
         const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
         const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
         expect(toolbar).toExist();
-        expect(toolBarGroup.length).toBe(3);
+        expect(toolBarGroup.length).toBe(4);
 
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(7);
+        expect(buttons.length).toBe(9);
         expect(buttons[0].classList.contains('disabled')).toBe(false);
         expect(buttons[1].classList.contains('disabled')).toBe(false);
         expect(buttons[2].classList.contains('disabled')).toBe(false);
         expect(buttons[3].classList.contains('disabled')).toBe(false);
-        expect(buttons[4].classList.contains('disabled')).toBe(false);
-        expect(buttons[5].classList.contains('disabled')).toBe(true); // Add as layer button
-        expect(buttons[6].classList.contains('disabled')).toBe(false);
-        expect(buttons[6].childNodes[0].className).toContain('floppy-disk');
+        expect(buttons[4].classList.contains('disabled')).toBe(false); // select button
+        expect(buttons[5].classList.contains('disabled')).toBe(true); // delete selected button (no selection)
+        expect(buttons[6].classList.contains('disabled')).toBe(false); // export JSON button
+        expect(buttons[7].classList.contains('disabled')).toBe(true); // Add as layer button (exportToAnnotation=true)
+        expect(buttons[8].classList.contains('disabled')).toBe(false);
+        expect(buttons[8].childNodes[0].className).toContain('floppy-disk');
 
         // Save annotation
-        TestUtils.Simulate.click(buttons[6]);
+        TestUtils.Simulate.click(buttons[8]);
         expect(spyOnAddAnnotation).toHaveBeenCalled();
         expect(spyOnAddAnnotation.calls[0].arguments).toBeTruthy();
         expect(spyOnAddAnnotation.calls[0].arguments.length).toBe(5);
@@ -491,6 +493,7 @@ describe("test the MeasureComponent", () => {
     it("test Measurement default", () =>{
         let measurement = {
             lineMeasureEnabled: true,
+            mode: 'line',
             features: [{
                 type: "Feature",
                 geometry: {
@@ -513,16 +516,17 @@ describe("test the MeasureComponent", () => {
                 useSingleFeature
                 lineMeasureEnabled
                 showAddAsAnnotation
+                changeMeasurementState={() => {}}
             />, document.getElementById("container")
         );
         expect(cmp).toExist();
         const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
         const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
         expect(toolbar).toExist();
-        expect(toolBarGroup.length).toBe(3);
+        expect(toolBarGroup.length).toBe(4);
 
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(7);
+        expect(buttons.length).toBe(9);
         // By default LineString is selected
         expect(buttons[0].className).toContain('active');
 
@@ -533,6 +537,7 @@ describe("test the MeasureComponent", () => {
     it("test Measurement with invalid features", () =>{
         let measurement = {
             lineMeasureEnabled: true,
+            mode: 'line',
             features: [{
                 type: "Feature",
                 geometry: {
@@ -564,7 +569,7 @@ describe("test the MeasureComponent", () => {
         const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
         const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
         expect(toolbar).toExist();
-        expect(toolBarGroup.length).toBe(3);
+        expect(toolBarGroup.length).toBe(4);
         const geomTypeButtons = toolBarGroup[0].querySelectorAll('button');
         expect(geomTypeButtons.length).toBe(3);
         geomTypeButtons.forEach((btn, i)=> {
@@ -572,7 +577,7 @@ describe("test the MeasureComponent", () => {
             return expect(btn.className).toContain('disabled');
         });
 
-        const exportTools = toolBarGroup[2].querySelectorAll('button');
+        const exportTools = toolBarGroup[3].querySelectorAll('button');
         expect(exportTools.length).toBe(3);
         exportTools.forEach((btn)=> expect(btn.className).toContain('disabled'));
     });

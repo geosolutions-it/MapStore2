@@ -106,9 +106,10 @@ describe('Openlayers MeasurementSupport', () => {
         expect(getMapLayersNum(map)).toBe(initialLayersNum);
     });
     it('test drawInteraction callbacks for a distance (LineString)', () => {
-        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
-        const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
         let cmp = renderMeasurement();
+        expect.restoreSpies();
+        const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
+        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         cmp = renderMeasurement({
             measurement: {
                 geomType: "LineString",
@@ -116,9 +117,11 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 disableLabels: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: new Feature({
@@ -151,8 +154,10 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 disableLabels: true
             },
-            uom
+            uom,
+            enabled: true
         });
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: new Feature({
@@ -182,8 +187,10 @@ describe('Openlayers MeasurementSupport', () => {
                 disableLabels: true,
                 features: [changedFeatures[0]]
             },
-            uom
+            uom,
+            enabled: true
         });
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: new Feature({
@@ -220,7 +227,8 @@ describe('Openlayers MeasurementSupport', () => {
                 showLabel: true,
                 showLengthAndBearingLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
         const geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
@@ -229,6 +237,7 @@ describe('Openlayers MeasurementSupport', () => {
             name: 'My line'
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -262,7 +271,8 @@ describe('Openlayers MeasurementSupport', () => {
             uom: {
                 length: {unit: 'km', label: 'km'},
                 area: {unit: 'sqm', label: 'm²'}
-            }
+            },
+            enabled: true
         });
 
         expect(cmp.outputValues).toExist();
@@ -338,7 +348,8 @@ describe('Openlayers MeasurementSupport', () => {
                 showLengthAndBearingLabel: true,
                 features: []
             },
-            uom
+            uom,
+            enabled: true
         });
         cmp = renderMeasurement({
             measurement: {
@@ -349,7 +360,8 @@ describe('Openlayers MeasurementSupport', () => {
                 showLengthAndBearingLabel: true,
                 features
             },
-            uom
+            uom,
+            enabled: true
         });
 
         expect(cmp.outputValues).toExist();
@@ -373,26 +385,28 @@ describe('Openlayers MeasurementSupport', () => {
         let cmp = renderMeasurement();
         cmp = renderMeasurement({
             measurement: {
-                geomType: "LineString",
-                lineMeasureEnabled: true,
+                geomType: "Polygon",
+                areaMeasureEnabled: true,
                 updatedByUI: false,
                 showLabel: true,
                 showLengthAndBearingLabel: true,
                 features: []
             },
-            uom
+            uom,
+            enabled: true
         });
         cmp = renderMeasurement({
             measurement: {
                 geomType: "Polygon",
-                lineMeasureEnabled: true,
+                areaMeasureEnabled: true,
                 updatedByUI: true,
                 showLabel: true,
                 showLengthAndBearingLabel: true,
                 features,
                 currentFeature: 0
             },
-            uom
+            uom,
+            enabled: true
         });
 
         expect(cmp.outputValues).toExist();
@@ -419,7 +433,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 showLengthAndBearingLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
         let geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
@@ -428,6 +443,7 @@ describe('Openlayers MeasurementSupport', () => {
             name: 'My line'
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -493,7 +509,8 @@ describe('Openlayers MeasurementSupport', () => {
                     }
                 }]
             },
-            uom
+            uom,
+            enabled: true
         });
 
         geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
@@ -502,6 +519,7 @@ describe('Openlayers MeasurementSupport', () => {
             name: 'My line'
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -540,7 +558,8 @@ describe('Openlayers MeasurementSupport', () => {
                 showLengthAndBearingLabel: true,
                 trueBearing: {measureTrueBearing: true}
             },
-            uom
+            uom,
+            enabled: true
         });
 
         let geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
@@ -549,6 +568,7 @@ describe('Openlayers MeasurementSupport', () => {
             name: 'My line'
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -579,7 +599,8 @@ describe('Openlayers MeasurementSupport', () => {
                 showLengthAndBearingLabel: false,
                 features: changedFeatures
             },
-            uom
+            uom,
+            enabled: true
         });
 
         geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
@@ -611,9 +632,10 @@ describe('Openlayers MeasurementSupport', () => {
     });
 
     it('test drawInteraction callbacks for a distance (Bearing)', () => {
-        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
-        const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
         let cmp = renderMeasurement();
+        expect.restoreSpies();
+        const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
+        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         cmp = renderMeasurement({
             measurement: {
                 geomType: "Bearing",
@@ -622,9 +644,11 @@ describe('Openlayers MeasurementSupport', () => {
                 bearingMeasureEnabled: true,
                 trueBearing: {measureTrueBearing: true}
             },
-            uom
+            uom,
+            enabled: true
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: new Feature({
@@ -659,7 +683,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 showLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
         const initialOverlayCount = map.getOverlays().getLength();
@@ -670,6 +695,7 @@ describe('Openlayers MeasurementSupport', () => {
             name: 'My line'
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -691,7 +717,8 @@ describe('Openlayers MeasurementSupport', () => {
                 bearingMeasureEnabled: true,
                 trueBearing: {measureTrueBearing: true}
             },
-            uom
+            uom,
+            enabled: true
         });
 
         expect(cmp.savedDrawState).toBe(null);
@@ -713,7 +740,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 showLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
         let geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
@@ -722,6 +750,7 @@ describe('Openlayers MeasurementSupport', () => {
             name: 'My line'
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -751,7 +780,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 showLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
         geometry = new LineString([[10.0, 15.0], [10.0, 15.0]]);
@@ -762,6 +792,7 @@ describe('Openlayers MeasurementSupport', () => {
 
         const savedOverlayCount = map.getOverlays().getLength();
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -786,7 +817,8 @@ describe('Openlayers MeasurementSupport', () => {
                 bearingMeasureEnabled: true,
                 trueBearing: {measureTrueBearing: true}
             },
-            uom
+            uom,
+            enabled: true
         });
 
         expect(cmp.savedDrawState).toBe(null);
@@ -811,7 +843,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 showLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
         const feature = new Feature({
@@ -820,6 +853,7 @@ describe('Openlayers MeasurementSupport', () => {
         });
         const savedOverlayCount = map.getOverlays().getLength();
         const savedInteractionsCount = map.getInteractions().getLength();
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -867,7 +901,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 showLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
         const feature = new Feature({
@@ -875,6 +910,7 @@ describe('Openlayers MeasurementSupport', () => {
             name: 'My line 1'
         });
         const savedInteractionsCount = map.getInteractions().getLength();
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature
@@ -894,7 +930,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: true,
                 features
             },
-            uom
+            uom,
+            enabled: true
         });
         // Remove drawInteraction when feature has disabled property
         expect(cmp.drawInteraction).toBe(null);
@@ -920,7 +957,8 @@ describe('Openlayers MeasurementSupport', () => {
                     properties: {values: [{value: 1154.583, formattedValue: "10 m", position: [1, 2], type: "length"}], disabled: false}
                 }]
             },
-            uom
+            uom,
+            enabled: true
         });
         // Restore drawInteraction when feature is valid
         expect(cmp.drawInteraction).toBeTruthy();
@@ -936,9 +974,11 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: false,
                 showLabel: true
             },
-            uom
+            uom,
+            enabled: true
         });
 
+        expect(cmp.drawInteraction).toExist();
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: new Feature({
@@ -959,7 +999,8 @@ describe('Openlayers MeasurementSupport', () => {
                 features: [ftLineString],
                 currentFeature: 0
             },
-            uom
+            uom,
+            enabled: true
         });
         expect(cmp.source.getFeatures().length).toBe(1);
         let feature = cmp.source.getFeatures()[0];
@@ -983,7 +1024,8 @@ describe('Openlayers MeasurementSupport', () => {
                     properties: {disabled: true}
                 }]
             },
-            uom
+            uom,
+            enabled: true
         });
 
         // Generate Linestring geometry for unformed Polygon

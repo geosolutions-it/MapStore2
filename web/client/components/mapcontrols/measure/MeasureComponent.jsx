@@ -128,7 +128,7 @@ class MeasureComponent extends React.Component {
         },
         geomType: "LineString",
         measurement: {
-                mode: 'line'
+            mode: 'line'
         },
         defaultOptions: {
             geomType: "LineString"
@@ -323,10 +323,10 @@ class MeasureComponent extends React.Component {
                                 buttons={
                                     [
                                         {
-                                            glyph: this.props.lineGlyph,                                 
+                                            glyph: this.props.lineGlyph,
                                             active: this.props.measurement.mode === 'line',
                                             bsStyle: this.props.measurement.mode === 'line' ? 'success' : 'primary',
-                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),                     
+                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
                                             onClick: () => this.props.changeMeasurementState({
                                                 mode: 'line',
                                                 geomType: this.getGeomType('line')
@@ -372,23 +372,23 @@ class MeasureComponent extends React.Component {
                                             onClick: () => this.onResetClick()
                                         }
                                     ]
-                                }/>                      
+                                }/>
                             <Toolbar
                                 btnDefaultProps={{
                                     className: 'square-button-md',
                                     bsStyle: 'primary'
                                 }}
-                                buttons={[                          
+                                buttons={[
                                     {
                                         glyph: 'glyphicon glyphicon-hand-up',
                                         active: this.props.measurement.mode === 'select',
                                         bsStyle: this.props.measurement.mode === 'select' ? 'success' : 'primary',
                                         tooltip: <Message msgId="measureComponent.selectMeasures"/>,
                                         onClick: () => this.props.changeMeasurementState({
-                                                mode: 'select',
-                                                geomType: this.getGeomType('select')
+                                            mode: 'select',
+                                            geomType: this.getGeomType('select')
                                         })
-                                    },                             
+                                    },
                                     {
                                         glyph: 'glyphicon glyphicon-remove',
                                         disabled: !(this.props.measurement.selectedMeasureIds || []).length,

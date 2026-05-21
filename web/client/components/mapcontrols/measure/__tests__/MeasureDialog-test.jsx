@@ -59,7 +59,7 @@ describe("test the MeasureDialog", () => {
         expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
-        expect(btnGroups.length).toBe(3);
+        expect(btnGroups.length).toBe(4);
 
         const dialog = document.getElementById('measure-container');
         expect(dialog).toBeTruthy();
@@ -95,7 +95,7 @@ describe("test the MeasureDialog", () => {
         expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
-        expect(btnGroups.length).toBe(3);
+        expect(btnGroups.length).toBe(4);
 
         const dialog = document.getElementById('measure-container');
         expect(dialog).toBeTruthy();
@@ -131,7 +131,7 @@ describe("test the MeasureDialog", () => {
         expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
-        expect(btnGroups.length).toBe(3);
+        expect(btnGroups.length).toBe(4);
 
         const dialog = document.getElementById('measure-panel');
         expect(dialog).toBeTruthy();

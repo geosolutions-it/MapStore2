@@ -171,7 +171,8 @@ export default class MeasurementSupport extends React.Component {
         if (
             newProps.measurement.updatedByUI &&
             !isEqual(oldFt, newFt) &&
-            newProps.measurement.features.length >= this.props.measurement.features.length
+            newProps.measurement.features &&
+            newProps.measurement.features.length >= ((this.props.measurement.features || []).length)
         ) {
             this.updateFeatures(newProps);
         } else if (newProps.measurement.updatedByUI && !isEqual(this.props.uom, newProps.uom)) {
@@ -224,7 +225,7 @@ export default class MeasurementSupport extends React.Component {
             }
         }
 
-        if (!isEqual(oldFt, newFt)) {
+        if (!isEqual(oldFt, newFt) && newFt && oldFt) {
             const isDelete = newFt.length < oldFt.length;
 
             if (isDelete) {
@@ -601,8 +602,22 @@ export default class MeasurementSupport extends React.Component {
             this.props.setTextLabels([...this.textLabels]);
         }
 
+        let currentTextLabelIndex = 0;
         const newFeatures = (props.measurement.features || []).map(feature => ({
             ...feature,
+            ...(feature.geometry ? {
+                geometry: {
+                    ...feature.geometry,
+                    textLabels: (feature.geometry.textLabels || []).map(label => {
+                        const text = this.textLabels[currentTextLabelIndex]?.text ?? label.text;
+                        currentTextLabelIndex++;
+                        return {
+                            ...label,
+                            text
+                        };
+                    })
+                }
+            } : {}),
             ...(feature.properties ? {
                 properties: {
                     ...feature.properties,
@@ -685,7 +700,7 @@ export default class MeasurementSupport extends React.Component {
         this.savedDrawState = null;
     };
 
-    addDrawInteraction = (newProps) => { 
+    addDrawInteraction = (newProps) => {
         let draw;
         let {startEndPoint} = newProps.measurement;
         this.continueLineMsg = getMessageById(this.context.messages, "measureSupport.continueLine");
@@ -727,7 +742,7 @@ export default class MeasurementSupport extends React.Component {
 
             this.vector = new VectorLayer({
                 source: this.source,
-                zIndex: 1000000,      
+                zIndex: 1000000,
                 style: (feature) => {
                     const selectedIds = this.props.measurement.selectedMeasureIds || [];
                     if (selectedIds.includes(feature.getId())) {
@@ -756,23 +771,29 @@ export default class MeasurementSupport extends React.Component {
             });
 
             this.props.map.addLayer(this.vector);
+            this.measureLayer = this.vector;
         }
 
         let geometryType;
+        const mode = newProps.measurement.mode || (
+            newProps.measurement.geomType === 'Polygon' ? 'polygon' :
+                newProps.measurement.geomType === 'Bearing' ? 'bearing' :
+                    newProps.measurement.geomType === 'LineString' ? 'line' : null
+        );
 
-        switch (newProps.measurement.mode) {
-            case 'line':
-                geometryType = 'LineString';
-                break;
-            case 'polygon':
-                geometryType = 'Polygon';
-                break;
-            case 'bearing':
-                geometryType = 'LineString';
-                break;
-            default:
-                // mode = select
-                return;
+        switch (mode) {
+        case 'line':
+            geometryType = 'LineString';
+            break;
+        case 'polygon':
+            geometryType = 'Polygon';
+            break;
+        case 'bearing':
+            geometryType = 'LineString';
+            break;
+        default:
+            // mode = select
+            return;
         }
 
         // create an interaction to draw with
@@ -824,7 +845,7 @@ export default class MeasurementSupport extends React.Component {
 
             this.props.map.forEachFeatureAtPixel(
                 evt.pixel,
-                (feature) => {                 
+                (feature) => {
                     if (!feature) return;
 
                     const id = feature.getId();
@@ -1104,7 +1125,6 @@ export default class MeasurementSupport extends React.Component {
         this.createHelpTooltip();
 
         this.drawInteraction = draw;
-        this.measureLayer = this.vector;
     };
 
     removeLastSegment = () => {

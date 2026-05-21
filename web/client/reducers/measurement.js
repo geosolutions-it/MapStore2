@@ -134,7 +134,7 @@ function measurement(state = defaultState, action) {
 
         features = features.map(f => ({
             ...f,
-            id: f.id
+            ...(f.id && { id: f.id })
         }));
 
         const geomTypeSelected = getGeomTypeSelected(features);
@@ -146,8 +146,8 @@ function measurement(state = defaultState, action) {
             geomTypeSelected,
             updatedByUI: false,
             isDrawing: false,
-            selectedMeasureIds: state.selectedMeasureIds
-                    .filter(id => features.find(f => f.id === id)),
+            selectedMeasureIds: (state.selectedMeasureIds || [])
+                .filter(id => features.find(f => f.id === id)),
             ...(isEmpty(features) && {exportToAnnotation: false})
         };
     }
@@ -295,7 +295,7 @@ function measurement(state = defaultState, action) {
             ],
             updatedByUI: true
         };
-    }  
+    }
     case 'SET_MEASURE_MODE': {
         return {
             ...state,

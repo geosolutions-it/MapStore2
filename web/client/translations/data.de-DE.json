@@ -944,7 +944,7 @@
       "selectTool": "Wählen Sie ein Messwerkzeug aus",
       "exportToGeoJSON": "Export als GeoJSON",
       "saveMeasure": "Speichern Sie die Messungen in Notizen / Zeichnungen",
-      "resetTooltip": "Messung entfernen",  
+      "resetTooltip": "Messung entfernen",
       "selectMeasures": "Messungen zum Löschen auswählen",
       "deleteSelected": "Ausgewählte Messungen löschen",
       "addAsLayer": "Als Ebene hinzufügen",

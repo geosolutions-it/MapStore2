@@ -143,7 +143,7 @@ export function updateMeasures(measures) {
         measures
     };
 }
-export function changeMeasurementState(measureState) { 
+export function changeMeasurementState(measureState) {
     return {
         type: CHANGE_MEASUREMENT_STATE,
         ...measureState
