@@ -12,6 +12,7 @@ import { get } from 'lodash';
 import {
     extractTraceFromWidgetByNodePath,
     extractLayerIdFromNodePath,
+    isChartAxisDimensionTarget,
     isLayerDimensionTarget,
     isMapLayerPath,
     isMapTimeTarget,
@@ -25,7 +26,7 @@ import { defaultLayerFilter } from '../utils/FilterUtils';
 import { processFilterToCQL, buildExcludeCQLFilter, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
 import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
-import { getMapDependencyPath } from '../utils/WidgetsUtils';
+import { getChartAxisDependencyPath, getMapDependencyPath } from '../utils/WidgetsUtils';
 import { shouldSkipInteraction } from '../selectors/widgets';
 
 // ============================================================================
@@ -346,12 +347,35 @@ function updateMapLayerWithDimension(interaction) {
         : null;
 }
 
-function applyInteractionEffectForApplyDimension(interaction, state, targetContainer = 'floating') {
+function getChartAxisDimensionPath(widgetId, nodePath, widgets) {
+    if (!nodePath || !Array.isArray(widgets)) {
+        return null;
+    }
+
+    const nodePathMatch = nodePath.match(/(?:^|\.)widgets\[[^\]]+\]\.(charts\[.*)$/);
+    if (!nodePathMatch) {
+        return null;
+    }
+
+    const resolvedPath = getChartAxisDependencyPath(nodePathMatch[1], widgetId, widgets);
+    return resolvedPath && resolvedPath !== nodePathMatch[1]
+        ? resolvedPath
+        : null;
+}
+
+function updateChartAxisWithDimension(interaction, widgetId, widgets) {
+    const path = getChartAxisDimensionPath(widgetId, interaction?.target?.nodePath, widgets);
+    return path
+        ? updateWidgetProperty(widgetId, path, interaction.appliedData)
+        : null;
+}
+
+function applyInteractionEffectForApplyDimension(interaction, state, targetContainer = 'floating', options = {}) {
     if (!interaction?.target?.nodePath) {
         return null;
     }
 
-    if (shouldSkipInteraction(interaction, state)) {
+    if (!options.forceReset && shouldSkipInteraction(interaction, state)) {
         return null;
     }
 
@@ -363,6 +387,14 @@ function applyInteractionEffectForApplyDimension(interaction, state, targetConta
     if (isMapTimeTarget(interaction?.target?.nodePath)) {
         return dimension === 'time'
             ? setCurrentTime(interaction.appliedData)
+            : null;
+    }
+
+    if (isChartAxisDimensionTarget(interaction?.target?.nodePath)) {
+        const widgetId = extractWidgetIdFromNodePath(interaction.target.nodePath);
+        const widgets = get(state, `widgets.containers[${targetContainer}].widgets`) || [];
+        return widgetId
+            ? updateChartAxisWithDimension(interaction, widgetId, widgets)
             : null;
     }
 
@@ -704,6 +736,55 @@ function cleanupFiltersFromWidgets(widgetId, state, targetContainer = 'floating'
     return actions;
 }
 
+function cleanupChartAxisDimensionsByWidgetId(widgetId, state, targetContainer = 'floating', sourceWidget) {
+    const actions = [];
+    const allWidgets = get(state, `widgets.containers[${targetContainer}].widgets`) || [];
+    const filterWidget = sourceWidget || allWidgets.find(widget => widget?.id === widgetId);
+    const cleanedTargetPaths = [];
+
+    (filterWidget?.interactions || [])
+        .filter(interaction =>
+            interaction?.plugged === true
+            && interaction?.targetType === TARGET_TYPES.APPLY_DIMENSION
+            && isChartAxisDimensionTarget(interaction?.target?.nodePath)
+        )
+        .forEach(interaction => {
+            const targetWidgetId = extractWidgetIdFromNodePath(interaction.target.nodePath);
+            const path = getChartAxisDimensionPath(targetWidgetId, interaction.target.nodePath, allWidgets);
+            if (targetWidgetId && path && !cleanedTargetPaths.includes(`${targetWidgetId}.${path}`)) {
+                cleanedTargetPaths.push(`${targetWidgetId}.${path}`);
+                actions.push(updateWidgetProperty(targetWidgetId, path, null, 'replace', targetContainer));
+            }
+        });
+
+    return actions;
+}
+
+function createApplyDimensionResetAction(interaction, state, targetContainer = 'floating') {
+    return applyInteractionEffectForApplyDimension(
+        {
+            ...interaction,
+            appliedData: null
+        },
+        state,
+        targetContainer,
+        { forceReset: true }
+    );
+}
+
+// Deleted filters have their interactions removed from the widget editor state,
+// but chart-axis dimension interactions can still leave appliedCurrentTime on
+// the target axis. Filter effects are cleaned separately via appliedFromWidget.
+function cleanupEffectsOfDeletedInteractions(deletedInteractions = [], state, targetContainer = 'floating') {
+    return deletedInteractions
+        .filter(interaction =>
+            interaction?.targetType === TARGET_TYPES.APPLY_DIMENSION
+            && isChartAxisDimensionTarget(interaction?.target?.nodePath)
+        )
+        .map(interaction => createApplyDimensionResetAction(interaction, state, targetContainer))
+        .filter(Boolean);
+}
+
 /**
  * Cleanup filters applied by a specific filter widget
  * Removes all filters with appliedFromWidget === widgetId from map layers and widget layers
@@ -712,15 +793,16 @@ function cleanupFiltersFromWidgets(widgetId, state, targetContainer = 'floating'
  * @param {string} targetContainer - The widget container target (default: 'floating')
  * @returns {array} Array of actions to update affected layers and widgets
  */
-function cleanupFiltersByWidgetId(widgetId, state, targetContainer = 'floating') {
+function cleanupFiltersByWidgetId(widgetId, state, targetContainer = 'floating', sourceWidget) {
     if (!widgetId) {
         return [];
     }
 
     const layerActions = cleanupFiltersFromMapLayers(widgetId, state);
     const widgetActions = cleanupFiltersFromWidgets(widgetId, state, targetContainer);
+    const chartAxisDimensionActions = cleanupChartAxisDimensionsByWidgetId(widgetId, state, targetContainer, sourceWidget);
 
-    return [...layerActions, ...widgetActions];
+    return [...layerActions, ...widgetActions, ...chartAxisDimensionActions];
 }
 
 /**
@@ -1000,7 +1082,7 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
 
                 // If deleted widget is a filter widget, also cleanup filters applied by it
                 if (widget && widget.widgetType === 'filter') {
-                    const filterCleanupActions = cleanupFiltersByWidgetId(widgetId, state, target);
+                    const filterCleanupActions = cleanupFiltersByWidgetId(widgetId, state, target, widget);
                     const allCleanupActions = [...interactionCleanupActions, ...filterCleanupActions];
                     return allCleanupActions.length > 0
                         ? Rx.Observable.from(allCleanupActions)
@@ -1034,8 +1116,14 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
                 return Rx.Observable.empty();
             }
 
-            // Cleanup filters applied by this widget
-            const cleanupActions = cleanupFiltersByWidgetId(widgetId, state, target);
+            // Cleanup filters applied by this widget and effects from interactions removed while editing.
+            const deletedInteractionCleanupActions = action.deletedInteractions
+                ? cleanupEffectsOfDeletedInteractions(action.deletedInteractions, state, target)
+                : [];
+            const cleanupActions = [
+                ...cleanupFiltersByWidgetId(widgetId, state, target),
+                ...deletedInteractionCleanupActions
+            ];
 
             // For INSERT/UPDATE: cleanup first, then reapply
             const cleanupObservable = cleanupActions.length > 0

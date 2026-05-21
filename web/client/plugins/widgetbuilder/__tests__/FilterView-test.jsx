@@ -201,7 +201,7 @@ describe('FilterView component', () => {
         expect(container.querySelector('.ms-filter-view-slider-error')).toExist();
     });
 
-    it('shows selected value outside the slider', () => {
+    it('shows selected label outside the slider', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('slider', 'single', {
             showSelectedValue: true
@@ -221,7 +221,7 @@ describe('FilterView component', () => {
 
         const selectedValue = container.querySelector('.ms-filter-slider-selected-value');
         expect(selectedValue).toExist();
-        expect(selectedValue.textContent).toContain('2');
+        expect(selectedValue.textContent).toContain('Two');
     });
 
     it('renders tick labels in the slider', () => {
