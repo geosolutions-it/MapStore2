@@ -370,12 +370,12 @@ function updateChartAxisWithDimension(interaction, widgetId, widgets) {
         : null;
 }
 
-function applyInteractionEffectForApplyDimension(interaction, state, targetContainer = 'floating') {
+function applyInteractionEffectForApplyDimension(interaction, state, targetContainer = 'floating', options = {}) {
     if (!interaction?.target?.nodePath) {
         return null;
     }
 
-    if (shouldSkipInteraction(interaction, state)) {
+    if (!options.forceReset && shouldSkipInteraction(interaction, state)) {
         return null;
     }
 
@@ -760,6 +760,31 @@ function cleanupChartAxisDimensionsByWidgetId(widgetId, state, targetContainer =
     return actions;
 }
 
+function createApplyDimensionResetAction(interaction, state, targetContainer = 'floating') {
+    return applyInteractionEffectForApplyDimension(
+        {
+            ...interaction,
+            appliedData: null
+        },
+        state,
+        targetContainer,
+        { forceReset: true }
+    );
+}
+
+// Deleted filters have their interactions removed from the widget editor state,
+// but chart-axis dimension interactions can still leave appliedCurrentTime on
+// the target axis. Filter effects are cleaned separately via appliedFromWidget.
+function cleanupEffectsOfDeletedInteractions(deletedInteractions = [], state, targetContainer = 'floating') {
+    return deletedInteractions
+        .filter(interaction =>
+            interaction?.targetType === TARGET_TYPES.APPLY_DIMENSION
+            && isChartAxisDimensionTarget(interaction?.target?.nodePath)
+        )
+        .map(interaction => createApplyDimensionResetAction(interaction, state, targetContainer))
+        .filter(Boolean);
+}
+
 /**
  * Cleanup filters applied by a specific filter widget
  * Removes all filters with appliedFromWidget === widgetId from map layers and widget layers
@@ -1091,8 +1116,14 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
                 return Rx.Observable.empty();
             }
 
-            // Cleanup filters applied by this widget
-            const cleanupActions = cleanupFiltersByWidgetId(widgetId, state, target);
+            // Cleanup filters applied by this widget and effects from interactions removed while editing.
+            const deletedInteractionCleanupActions = action.deletedInteractions
+                ? cleanupEffectsOfDeletedInteractions(action.deletedInteractions, state, target)
+                : [];
+            const cleanupActions = [
+                ...cleanupFiltersByWidgetId(widgetId, state, target),
+                ...deletedInteractionCleanupActions
+            ];
 
             // For INSERT/UPDATE: cleanup first, then reapply
             const cleanupObservable = cleanupActions.length > 0
