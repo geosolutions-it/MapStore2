@@ -8,6 +8,7 @@
 import uuid from 'uuid/v1';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 import {
+    isChartAxisDimensionTarget,
     isLayerDimensionTarget,
     isLayerTimeDimensionTarget,
     isMapTimeTarget,
@@ -95,6 +96,29 @@ export const getInteractionTargetNodeDisabled = ({
     }
 
     if (target.targetType === TARGET_TYPES.APPLY_DIMENSION) {
+        const chartAxisCurrentTimeDisabledByTimeline = timelineEnabled && isChartAxisDimensionTarget(targetNodePath);
+
+        if (chartAxisCurrentTimeDisabledByTimeline) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.axisCurrentTimeControlledByTimelineTooltip'
+            };
+        }
+
+        const chartAxisCurrentTimeTarget = isChartAxisDimensionTarget(targetNodePath);
+        const chartAxisDimensionTargetMetadata = item?.interactionMetadata?.targets
+            ?.find(t => t?.targetType === TARGET_TYPES.APPLY_DIMENSION)
+            || {};
+        const chartAxisCurrentTimeEnabled = chartAxisDimensionTargetMetadata?.showCurrentTimeEnabled === true;
+        const chartAxisDateType = chartAxisDimensionTargetMetadata?.dateType === true;
+
+        if (chartAxisCurrentTimeTarget && (!chartAxisCurrentTimeEnabled || !chartAxisDateType)) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.axisCurrentTimeDisabledTooltip'
+            };
+        }
+
         const layerTimeDisabledByTimeline = timelineEnabled && isLayerTimeDimensionTarget(targetNodePath);
 
         if (layerTimeDisabledByTimeline) {

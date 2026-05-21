@@ -128,6 +128,55 @@ describe('FilterLayoutTab component', () => {
         expect(container.querySelector('.ms-filter-direction-form-group')).toNotExist();
     });
 
+    it('should prevent typing negative max height values without changing existing negative values', () => {
+        const changes = [];
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        maxHeight: -10
+                    }
+                }}
+                onChange={(key, value) => changes.push({ key, value })}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const maxHeightInput = container.querySelector('.ms-filter-layout-max-height');
+        expect(maxHeightInput).toExist();
+        expect(maxHeightInput.min).toBe('0');
+        expect(maxHeightInput.value).toBe('-10');
+
+        let defaultPrevented = false;
+        Simulate.keyDown(maxHeightInput, {
+            key: '-',
+            preventDefault: () => {
+                defaultPrevented = true;
+            }
+        });
+        expect(defaultPrevented).toBe(true);
+
+        defaultPrevented = false;
+        Simulate.paste(maxHeightInput, {
+            clipboardData: {
+                getData: () => '-20'
+            },
+            preventDefault: () => {
+                defaultPrevented = true;
+            }
+        });
+        expect(defaultPrevented).toBe(true);
+
+        maxHeightInput.value = '-20';
+        Simulate.change(maxHeightInput);
+        expect(changes.length).toBe(0);
+
+        maxHeightInput.value = '20';
+        Simulate.change(maxHeightInput);
+        expect(changes).toEqual([{ key: 'layout.maxHeight', value: 20 }]);
+    });
+
     it('should call onChange when tick angle changes', (done) => {
         ReactDOM.render(
             <FilterLayoutTab

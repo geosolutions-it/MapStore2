@@ -13,8 +13,10 @@ const getShapesFromDependencies = ({ dependencies = {}, xAxisOpts, yAxisOpts, la
         start: dependencies["dimension.currentTime"],
         end: dependencies["dimension.offsetTime"]
     };
+    const hasAxisTime = [...(xAxisOpts || []), ...(yAxisOpts || [])]
+        .some(axis => axis?.appliedCurrentTime || axis?.appliedOffsetTime);
     // If resolvedTimeRange is not set or invalid, return data as is
-    if (!resolvedTimeRange || (!resolvedTimeRange.start && !resolvedTimeRange.end)) {
+    if (!resolvedTimeRange || (!resolvedTimeRange.start && !resolvedTimeRange.end && !hasAxisTime)) {
         return { layout };
     }
     const currentTimeShapes = addCurrentTimeShapes({ xAxisOpts, yAxisOpts }, resolvedTimeRange);
