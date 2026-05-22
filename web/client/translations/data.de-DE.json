@@ -4476,7 +4476,9 @@
         "playback": "Wiedergabekonfiguration",
         "mapTemplates": "Kartenvorlagen",
         "userPlugins": "Benutzer-Plugins",
-        "mapViews": "Kartenansichten"
+        "mapViews": "Kartenansichten",
+        "swipe": "Schwenken",
+        "crsSelector": "CRS-Selektor"
       }
     },
     "streetView": {

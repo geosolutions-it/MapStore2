@@ -4218,7 +4218,9 @@
         "playback": "Uppspelningskonfiguration",
         "mapTemplates": "Kartmallar",
         "userPlugins": "Användarplugins",
-        "mapViews": "Kartvyer"
+        "mapViews": "Kartvyer",
+        "swipe": "Swipa",
+        "crsSelector": "CRS-väljare"
       }
     },
     "streetView": {
