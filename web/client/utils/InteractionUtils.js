@@ -1,6 +1,7 @@
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
-    LAYER_STYLE: 'LAYER_STYLE'
+    LAYER_STYLE: 'LAYER_STYLE',
+    LAYER_DIMENSION: 'LAYER_DIMENSION'
 };
 
 export const EVENTS = {
@@ -9,19 +10,22 @@ export const EVENTS = {
 
 export const TARGET_TYPES = {
     APPLY_FILTER: 'applyFilter',
-    APPLY_STYLE: 'applyStyle'
+    APPLY_STYLE: 'applyStyle',
+    APPLY_DIMENSION: 'applyDimension'
 };
 
 // Human-readable labels for target types
 export const TARGET_TYPE_LABELS = {
     [TARGET_TYPES.APPLY_FILTER]: 'Apply filter',
-    [TARGET_TYPES.APPLY_STYLE]: 'Apply style'
+    [TARGET_TYPES.APPLY_STYLE]: 'Apply style',
+    [TARGET_TYPES.APPLY_DIMENSION]: 'Apply dimension'
 };
 
 // Glyph icons for target types
 export const TARGET_TYPE_GLYPHS = {
     [TARGET_TYPES.APPLY_FILTER]: 'filter',
-    [TARGET_TYPES.APPLY_STYLE]: 'style'
+    [TARGET_TYPES.APPLY_STYLE]: 'style',
+    [TARGET_TYPES.APPLY_DIMENSION]: 'record'
 };
 
 /**
@@ -29,12 +33,13 @@ export const TARGET_TYPE_GLYPHS = {
  * Values are arrays to support multiple targets per event.
  */
 export const EVENT_TARGET_MAP = {
-    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER, TARGET_TYPES.APPLY_STYLE]
+    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER, TARGET_TYPES.APPLY_STYLE, TARGET_TYPES.APPLY_DIMENSION]
 };
 
 export const TARGET_EVENT_DATA_TYPES = {
     [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER,
-    [TARGET_TYPES.APPLY_STYLE]: DATATYPES.LAYER_STYLE
+    [TARGET_TYPES.APPLY_STYLE]: DATATYPES.LAYER_STYLE,
+    [TARGET_TYPES.APPLY_DIMENSION]: DATATYPES.LAYER_DIMENSION
 };
 
 // Events available by widget type
@@ -103,34 +108,253 @@ export function createLayerConstraint(name) {
     };
 }
 
-export const getDirectlyPluggableTargets = (item, event) => {
-    const interactionMetadata = item?.interactionMetadata;
-    if (!interactionMetadata) return [];
-    return (interactionMetadata?.targets || []).filter( t =>{
-        return t.expectedDataType === event.dataType &&
-        JSON.stringify(t.constraints) === JSON.stringify(event?.constraints);
+
+/**
+ * Creates base properties shared by both element and collection nodes.
+ * @param {string} title the title
+ * @param {string} icon the icon identifier
+ * @param {string} id optional id
+ * @returns {object} base properties object
+ */
+function createBaseProperties(title, icon, id) {
+    return {
+        title,
+        ...(icon ? {icon} : {}),
+        ...(id ? {id} : {})
+    };
+}
+
+/**
+ * Creates a base collection tree node structure.
+ * @param {string} title the collection title
+ * @param {array} children the children array
+ * @param {string} icon optional icon identifier
+ * @param {string} id optional id
+ * @returns {object} the base collection tree node
+ */
+function createBaseCollectionNode(title, children = [], icon, id) {
+    return {
+        type: "collection",
+        ...createBaseProperties(title, icon, id),
+        staticallyNamedCollection: true,
+        ...(children.length > 0 ? {children} : {})
+    };
+}
+/**
+ * Creates a base element tree node structure.
+ * @param {object} item the item object (widget, trace, etc.)
+ * @param {string} icon the icon identifier
+ * @param {string} title optional title override
+ * @returns {object} the base element tree node
+ */
+function createBaseElementNode(item, icon, title) {
+    return {
+        type: "element",
+        ...createBaseProperties(title || item?.title || "No title", icon, item?.id)
+    };
+}
+
+/**
+ * Returns true if the layer supports interactions
+ * @param {object} layer the layer
+ * @returns {boolean}
+ */
+export function isInteractionSupported(layer) {
+    return ['wms', 'wfs'].includes(layer?.type) && layer.group !== "background";
+}
+
+
+function hasDimension(layer, dimensionNames = []) {
+    return (layer?.dimensions || []).some(dim => {
+        const dimName = (dim?.name || '').toLowerCase();
+        return dimensionNames.includes(dimName);
+    });
+}
+
+function hasTimeDimension(layer) {
+    return hasDimension(layer, ['time']);
+}
+
+function hasElevationDimension(layer) {
+    return hasDimension(layer, ['elevation']);
+}
+
+function normalizeValueAttributeType(valueAttributeType) {
+    return (valueAttributeType || '').toLowerCase();
+}
+
+function getAllowedDimensionNames(valueAttributeType) {
+    const normalizedType = normalizeValueAttributeType(valueAttributeType);
+    const allowedDimensions = new Set();
+
+    if (['date', 'date-time', 'datetime'].includes(normalizedType)) {
+        allowedDimensions.add('time');
     }
-    );
-};
-export const getConfigurableTargets = (item, event) => {
-    const interactionMetadata = item?.interactionMetadata;
-    if (!interactionMetadata) return [];
-    return (interactionMetadata?.targets || []).filter( t =>
-        t.expectedDataType === event.dataType &&
-        JSON.stringify(t.constraints) !== JSON.stringify(event?.constraints)
-    );
-};
 
-export const isConfigurationValidForTarget = () => true; // TODO: implement configuration validation rules
+    if (normalizedType === 'number') {
+        allowedDimensions.add('elevation');
+    }
 
-export const getConfiguredTargets = (item, event, configuration) => {
-    const interactionMetadata = item?.interactionMetadata;
-    if (!interactionMetadata) return [];
-    return (interactionMetadata?.targets || []).filter( t =>
-        t.expectedDataType === event.dataType &&
-        isConfigurationValidForTarget(configuration, t, event)
-    );
-};
+    return allowedDimensions;
+}
+
+export function hasAllowedDimensionTarget(layer, valueAttributeType) {
+    const allowedDimensions = getAllowedDimensionNames(valueAttributeType);
+    if (allowedDimensions.size === 0) {
+        return false;
+    }
+    return (layer?.dimensions || []).some(dim => allowedDimensions.has((dim?.name || '').toLowerCase()));
+}
+
+export function filterDimensionTreeByValueAttributeType(tree, valueAttributeType) {
+    const allowedDimensions = getAllowedDimensionNames(valueAttributeType);
+    if (allowedDimensions.size === 0) {
+        return null;
+    }
+
+    const getNodeDimensionName = (node) => {
+        const nodeId = (node?.id || '').toLowerCase();
+        if (nodeId.includes('elevation')) {
+            return 'elevation';
+        }
+        if (nodeId.includes('time')) {
+            return 'time';
+        }
+        return null;
+    };
+
+    const pruneNode = (node) => {
+        if (!node) {
+            return null;
+        }
+
+        const children = Array.isArray(node.children)
+            ? node.children.map(pruneNode).filter(Boolean)
+            : [];
+
+        const nodeDimension = getNodeDimensionName(node);
+        if (nodeDimension && !allowedDimensions.has(nodeDimension)) {
+            return null;
+        }
+
+        if (node.type === 'collection' && children.length === 0) {
+            return null;
+        }
+
+        return children.length > 0
+            ? { ...node, children }
+            : { ...node };
+    };
+
+    return pruneNode(tree);
+}
+
+function createDimensionTargetMetadata(layer, dimension) {
+    return {
+        targetType: TARGET_TYPES.APPLY_DIMENSION,
+        expectedDataType: DATATYPES.LAYER_DIMENSION,
+        constraints: {},
+        layer: {
+            name: layer?.name
+        },
+        dimension
+    };
+}
+
+function createDimensionLeafNode(layer, dimension) {
+    const icon = dimension === 'time' ? 'time' : 'arrow-up';
+    return {
+        type: 'element',
+        id: `params.${dimension}`,
+        title: dimension === 'time' ? 'Time' : 'Elevation',
+        icon,
+        nodePathMode: 'dot',
+        interactionMetadata: {
+            targets: [createDimensionTargetMetadata(layer, dimension)]
+        }
+    };
+}
+
+function createMapTimeLeafNode(layer) {
+    return {
+        type: 'element',
+        id: 'time',
+        title: 'Timeline',
+        icon: 'time',
+        nodePathMode: 'dot',
+        interactionMetadata: {
+            targets: [createDimensionTargetMetadata(layer, 'time')]
+        }
+    };
+}
+
+function createLayerDimensionNodes(layer) {
+    const dimensionNodes = [];
+    if (hasTimeDimension(layer)) {
+        dimensionNodes.push(createDimensionLeafNode(layer, 'time'));
+    }
+    if (hasElevationDimension(layer)) {
+        dimensionNodes.push(createDimensionLeafNode(layer, 'elevation'));
+    }
+    return dimensionNodes;
+}
+
+function createLayerDimensionCollection(layerNode, dimensionNodes) {
+    return dimensionNodes.length > 0 ? {
+        type: 'collection',
+        title: layerNode.title,
+        icon: '1-layer',
+        id: layerNode.id,
+        preserveWhenSingleChild: true,
+        children: dimensionNodes
+    } : null;
+}
+
+/**
+ * Generates collection nodes for each map config, where each collection contains layer nodes.
+ * Each map config contains a layers array property.
+ * @param {object[]} maps array of map configs, each containing a layers array property
+ * @returns {object} a collection tree node named "maps" containing all map collection nodes
+ */
+export function generateLayerMetadataTree(layer) {
+    const baseNode = createBaseElementNode(layer, '1-layer');
+    return {
+        ...baseNode,
+        interactionMetadata: {
+            targets: WIDGET_TARGETS_BY_TYPE.layer.map(t => {
+                return {
+                    ...t,
+                    constraints: {
+                        layer: createLayerConstraint(layer.name)
+                    }
+                };
+            })
+        }
+    };
+}
+
+function createLayerTreeNode(layer) {
+    const layerNode = generateLayerMetadataTree(layer);
+    const dimensionNodes = createLayerDimensionNodes(layer);
+    const dimensionCollection = createLayerDimensionCollection(layerNode, dimensionNodes);
+    return [layerNode, dimensionCollection].filter(Boolean);
+}
+
+function createLayerNodesForLayers(layers = [], options = {}) {
+    return layers
+        .filter(isInteractionSupported)
+        .flatMap(layer => createLayerTreeNode(layer, options));
+}
+
+function createMapTimeNode(layers = []) {
+    const supportedLayers = layers.filter(isInteractionSupported);
+    const timeLayer = supportedLayers.find(hasTimeDimension);
+    if (timeLayer) {
+        return createMapTimeLeafNode(timeLayer);
+    }
+
+    return null;
+}
 
 /**
  * Determines if an item is directly pluggable or configured to force plug.
@@ -163,100 +387,26 @@ export function getItemPluggableStatus(node, target, configuration = {}) {
     };
 }
 
-/**
- * Creates base properties shared by both element and collection nodes.
- * @param {string} title the title
- * @param {string} icon the icon identifier
- * @param {string} id optional id
- * @returns {object} base properties object
- */
-function createBaseProperties(title, icon, id) {
-    return {
-        title,
-        ...(icon ? {icon} : {}),
-        ...(id ? {id} : {})
-    };
-}
-
-/**
- * Creates a base element tree node structure.
- * @param {object} item the item object (widget, trace, etc.)
- * @param {string} icon the icon identifier
- * @param {string} title optional title override
- * @returns {object} the base element tree node
- */
-function createBaseElementNode(item, icon, title) {
-    return {
-        type: "element",
-        ...createBaseProperties(title || item?.title || "No title", icon, item?.id)
-    };
-}
-
-/**
- * Creates a base collection tree node structure.
- * @param {string} title the collection title
- * @param {array} children the children array
- * @param {string} icon optional icon identifier
- * @param {string} id optional id
- * @returns {object} the base collection tree node
- */
-function createBaseCollectionNode(title, children = [], icon, id) {
-    return {
-        type: "collection",
-        ...createBaseProperties(title, icon, id),
-        staticallyNamedCollection: true,
-        ...(children.length > 0 ? {children} : {})
-    };
-}
-
-export function generateLayerMetadataTree(layer) {
-    const baseNode = createBaseElementNode(layer, '1-layer');
-    return {
-        ...baseNode,
-        interactionMetadata: {
-            targets: WIDGET_TARGETS_BY_TYPE.layer.map(t => {
-                return {
-                    ...t,
-                    constraints: {
-                        layer: createLayerConstraint(layer.name)
-                    }
-                };
-            })
-        }
-    };
-}
-/**
- * Returns true if the layer supports interactions
- * @param {object} layer the layer
- * @returns {boolean}
- */
-export function isInteractionSupported(layer) {
-    return ['wms', 'wfs'].includes(layer?.type) && layer.group !== "background";
-}
 
 /**
  * Returns the layers metadata tree array.
+ * Each supported layer expands into a layer element node and, when needed,
+ * a sibling dimension collection node.
  * @param {object[]} layers array of layers
  * @returns {object[]}
  */
 export function generateLayersMetadataTree(layers) {
-    return layers.filter(isInteractionSupported).map(generateLayerMetadataTree);
+    return createLayerNodesForLayers(layers);
 }
 
-/**
- * Generates collection nodes for each map config, where each collection contains layer nodes.
- * Each map config contains a layers array property.
- * @param {object[]} maps array of map configs, each containing a layers array property
- * @returns {object} a collection tree node named "maps" containing all map collection nodes
- */
-export function generateMapWidgetLayersTree(maps) {
+export function generateMapWidgetLayersTree(maps, options = {}) {
     if (!maps || !Array.isArray(maps)) {
         return createBaseCollectionNode("Maps", [], "1-map", "maps");
     }
     const mapCollectionNodes = maps
         .filter(map => map?.layers && Array.isArray(map.layers))
         .map(map => {
-            const layerNodes = generateLayersMetadataTree(map.layers);
+            const layerNodes = createLayerNodesForLayers(map.layers, options);
             const layersCollection = createBaseCollectionNode(
                 "Layers",
                 layerNodes,
@@ -396,8 +546,8 @@ export function generateCounterWidgetTreeNode(widget) {
  * @param {object} widget the map widget object
  * @returns {object} the map widget metadata tree node
  */
-export function generateMapWidgetTreeNode(widget) {
-    const mapsCollection = generateMapWidgetLayersTree(widget.maps);
+export function generateMapWidgetTreeNode(widget, options = {}) {
+    const mapsCollection = generateMapWidgetLayersTree(widget.maps, options);
     const baseNode = createBaseElementNode(widget, '1-map');
     return {
         ...baseNode,
@@ -442,7 +592,7 @@ export function generateDynamicFilterWidgetTreeNode(widget) {
  * @param {object} widget the widget object
  * @returns {object} the widget metadata tree node
  */
-export function generateWidgetTreeNode(widget) {
+export function generateWidgetTreeNode(widget, options = {}) {
     switch (widget?.widgetType) {
     case "chart":
         return generateChartWidgetTreeNode(widget);
@@ -451,7 +601,7 @@ export function generateWidgetTreeNode(widget) {
     case "counter":
         return generateCounterWidgetTreeNode(widget);
     case "map":
-        return generateMapWidgetTreeNode(widget);
+        return generateMapWidgetTreeNode(widget, options);
     case "filter":
         return generateDynamicFilterWidgetTreeNode(widget);
     default:
@@ -483,6 +633,9 @@ export function addNodePathToTree(node, currentPath = "") {
     } else if (node.staticallyNamedCollection && node.id) {
         // Statically named collection (widgets, traces, layers, etc.): use dot notation
         nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
+    } else if (node.nodePathMode === 'dot' && node.id) {
+        // Explicit dot-path nodes (e.g. dimension nodes under a layer)
+        nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
     } else if (node.id) {
         // Element (widget, chart, trace, etc.): use brackets with id
         nodePath = `${currentPath}[${node.id}]`;
@@ -509,20 +662,21 @@ export function addNodePathToTree(node, currentPath = "") {
  * @param {array} widgets array of widget objects
  * @returns {object} the root tree node with widgets collection as child TODO: CONSIDER FOR MAP also
  */
-export function generateRootTree(widgets, mapLayers) {
+export function generateRootTree(widgets, mapLayers, options = {}) {
     const widgetsArray = widgets || [];
     const widgetNodes = widgetsArray
         .filter(widget => widget !== null && widget !== undefined)
-        .map(widget => generateWidgetTreeNode(widget));
+        .map(widget => generateWidgetTreeNode(widget, options));
 
     const mapLayersNodes = mapLayers?.length > 0 ? [
-        createBaseCollectionNode("Layers", generateLayersMetadataTree(mapLayers), "1-layer", "layers")
+        createBaseCollectionNode("Layers", createLayerNodesForLayers(mapLayers, options), "1-layer", "layers")
     ] : [];
+    const mapTimeNode = createMapTimeNode(mapLayers || [], options);
 
     const widgetsCollection = createBaseCollectionNode("Widgets", widgetNodes, "widgets", "widgets");
     const collections = [widgetsCollection];
     if (mapLayersNodes.length > 0) {
-        const mapsCollection = createBaseCollectionNode("Map", mapLayersNodes, "1-map", "map");
+        const mapsCollection = createBaseCollectionNode("Map", [mapTimeNode, ...mapLayersNodes].filter(Boolean), "1-map", "map");
         collections.push(mapsCollection);
     }
 
@@ -563,6 +717,8 @@ export function detachSingleChildCollections(tree, excludeChecksOn = []) {
         if (node.type === 'collection' &&
             processedChildren.length === 1 &&
             processedChildren[0]?.type === 'collection' &&
+            !node.preserveWhenSingleChild &&
+            !processedChildren[0]?.preserveWhenSingleChild &&
             shouldDetach(processedChildren[0].id)) {
             // Move the child collection's children to this node
             const singleChild = processedChildren[0];
@@ -616,6 +772,19 @@ export function filterTreeWithTarget(tree, target) {
     return cloneWithFilteredChildren(tree);
 }
 
+export function getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType) {
+    const filteredTree = filterTreeWithTarget(interactionTree, target) || { children: [] };
+    const targetTree = target?.targetType === TARGET_TYPES.APPLY_DIMENSION
+        ? filterDimensionTreeByValueAttributeType(filteredTree, valueAttributeType)
+        : filteredTree;
+    return detachSingleChildCollections(targetTree, ['widgets', 'traces', 'map', 'layers']) || { children: [] };
+}
+
+export function hasConnectableTargetNodes(interactionTree, target, valueAttributeType) {
+    const displayTree = getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType);
+    return (displayTree?.children || []).length > 0;
+}
+
 /**
  * Gets possible targets for editing a widget of the specified widgetType.
  * Currently only supports filter widget type.
@@ -642,11 +811,20 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
             constraints: layerInvolved ? {
                 layer: createLayerConstraint(layerInvolved.name)
             } : {}
+        },
+        {
+            title: TARGET_TYPE_LABELS[TARGET_TYPES.APPLY_DIMENSION],
+            targetType: TARGET_TYPES.APPLY_DIMENSION,
+            glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_DIMENSION],
+            expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_DIMENSION],
+            constraints: {}
         }
         ];
     }
     return [];
 }
+
+export const FILTER_WIDGET_OPTIONAL_TARGET_TYPES = [TARGET_TYPES.APPLY_DIMENSION];
 
 /**
  * Finds a node by its id in the tree and returns the node object.
@@ -708,6 +886,33 @@ export function isMapLayerPath(nodePath) {
 export function isAnyLayerPath(nodePath) {
     if (!nodePath) return false;
     return /^map\.layers/.test(nodePath) || /\.maps\[[^\]]+\]\.layers\[[^\]]+\]/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to the global map time field.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isMapTimeTarget(nodePath) {
+    return !!nodePath && /(?:^|\.)map\.time$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a layer time or elevation dimension.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isLayerDimensionTarget(nodePath) {
+    return isAnyLayerPath(nodePath) && /(?:^|\.)params\.(?:time|elevation)$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a layer time dimension.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isLayerTimeDimensionTarget(nodePath) {
+    return isAnyLayerPath(nodePath) && /(?:^|\.)params\.time$/.test(nodePath);
 }
 
 /**

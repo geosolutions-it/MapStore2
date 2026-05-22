@@ -64,17 +64,13 @@ const LayerDownloadButton = connect(() => ({}), {
 }) => {
     const ItemComponent = itemComponent;
     const layer = selectedNodes?.[0]?.node;
-    if ([statusTypes.LAYER].includes(status) && (layer?.type === 'wms' || layer?.search) && !layer?.error) {
+    if ([statusTypes.LAYER].includes(status) && (layer?.type === 'wms' || layer?.search || (layer?.type === 'vector' && layer?.rowViewer !== 'annotations')) && !layer?.error) {
         return (
             <ItemComponent
                 {...props}
                 glyph="download"
                 tooltipId={'toc.toolDownloadTooltip'}
-                onClick={() => onClick({
-                    url: layer.search?.url || layer.url,
-                    name: layer.name,
-                    id: layer.id
-                })}
+                onClick={() => onClick(layer)}
             />
         );
     }

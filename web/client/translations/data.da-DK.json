@@ -2464,7 +2464,8 @@
         "editFilterTitleTooltip": "Klik for at redigere filtertitel",
         "addNewFilterTooltip": "Klik for at tilføje nyt filter",
         "applyStyle": "Anvend stil",
-        "targetAlreadyConnectedToStyleTooltip": "Målet er allerede forbundet til en stil. Kan ikke forbinde til flere stile samtidigt"
+        "targetAlreadyConnectedToStyleTooltip": "Målet er allerede forbundet til en stil. Kan ikke forbinde til flere stile samtidigt",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "Dette mål er allerede forbundet fra en anden kilde. Det kan ikke forbindes fra flere kilder samtidigt"
       }
     },
     "dashboard": {

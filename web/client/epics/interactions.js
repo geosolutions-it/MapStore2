@@ -9,14 +9,24 @@
 import Rx from 'rxjs';
 import { get } from 'lodash';
 
-import { extractTraceFromWidgetByNodePath, extractLayerIdFromNodePath, isMapLayerPath, TARGET_TYPES } from '../utils/InteractionUtils';
+import {
+    extractTraceFromWidgetByNodePath,
+    extractLayerIdFromNodePath,
+    isLayerDimensionTarget,
+    isMapLayerPath,
+    isMapTimeTarget,
+    TARGET_TYPES
+} from '../utils/InteractionUtils';
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
-import { changeLayerProperties, REMOVE_NODE } from '../actions/layers';
+import { changeLayerProperties, changeLayerParams, REMOVE_NODE } from '../actions/layers';
+import { setCurrentTime } from '../actions/dimension';
 import { defaultLayerFilter } from '../utils/FilterUtils';
 import { processFilterToCQL, buildExcludeCQLFilter, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
 import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
+import { getMapDependencyPath } from '../utils/WidgetsUtils';
+import { shouldSkipInteraction } from '../selectors/widgets';
 
 // ============================================================================
 // Node Path Utilities
@@ -286,6 +296,97 @@ function updateMapWidgetWithStyle(widget, interaction, widgetId) {
     targetLayer.style = interaction.appliedData;
 
     return updateWidgetProperty(widgetId, 'maps', updatedWidget.maps);
+}
+
+function getSelectedDimensionValue(filterWidget, filterId) {
+    const selectedValue = filterWidget?.selections?.[filterId]?.[0];
+    return selectedValue?.value ?? selectedValue ?? null;
+}
+
+function getDimensionTargetInfo(interaction) {
+    return {
+        dimension: interaction?.target?.metaData?.dimension || null
+    };
+}
+
+function getMapWidgetDimensionPath(widgetId, nodePath, widgetMaps) {
+    if (!nodePath || !Array.isArray(widgetMaps)) {
+        return null;
+    }
+
+    const nodePathMatch = nodePath.match(/(?:^|\.)widgets\[[^\]]+\]\.(maps\[.*)$/);
+    if (!nodePathMatch) {
+        return null;
+    }
+
+    const resolvedPath = getMapDependencyPath(nodePathMatch[1], widgetId, widgetMaps);
+    return resolvedPath && resolvedPath !== nodePathMatch[1]
+        ? resolvedPath
+        : null;
+}
+
+function updateMapWidgetWithDimension(widget, interaction, widgetId) {
+    if (!interaction?.target?.nodePath) {
+        return null;
+    }
+
+    const nodePath = interaction.target.nodePath;
+    const path = getMapWidgetDimensionPath(widgetId, nodePath, [widget]);
+    return path
+        ? updateWidgetProperty(widgetId, path, interaction.appliedData)
+        : null;
+}
+
+function updateMapLayerWithDimension(interaction) {
+    const layerId = extractLayerIdFromNodePath(interaction?.target?.nodePath);
+    const { dimension } = getDimensionTargetInfo(interaction);
+
+    return layerId && dimension
+        ? changeLayerParams(layerId, { [dimension]: interaction.appliedData })
+        : null;
+}
+
+function applyInteractionEffectForApplyDimension(interaction, state, targetContainer = 'floating') {
+    if (!interaction?.target?.nodePath) {
+        return null;
+    }
+
+    if (shouldSkipInteraction(interaction, state)) {
+        return null;
+    }
+
+    const { dimension } = getDimensionTargetInfo(interaction);
+    if (!dimension) {
+        return null;
+    }
+
+    if (isMapTimeTarget(interaction?.target?.nodePath)) {
+        return dimension === 'time'
+            ? setCurrentTime(interaction.appliedData)
+            : null;
+    }
+
+    if (!isLayerDimensionTarget(interaction?.target?.nodePath)) {
+        return null;
+    }
+
+    if (isMapLayerPath(interaction.target.nodePath)) {
+        return updateMapLayerWithDimension(interaction);
+    }
+
+    const nodePath = interaction.target.nodePath;
+    const widgetId = extractWidgetIdFromNodePath(nodePath);
+    if (!widgetId) {
+        return null;
+    }
+
+    const widgets = get(state, `widgets.containers[${targetContainer}].widgets`) || [];
+    const targetWidget = widgets.find(w => w.id === widgetId);
+    if (targetWidget?.widgetType === 'map') {
+        return updateMapWidgetWithDimension(targetWidget, interaction, widgetId);
+    }
+
+    return null;
 }
 
 // ============================================================================
@@ -829,6 +930,18 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                             ? Rx.Observable.of(action)
                             : Rx.Observable.empty();
                     }
+
+                    if (interaction.targetType === TARGET_TYPES.APPLY_DIMENSION) {
+                        const updatedInteraction = {
+                            ...interaction,
+                            appliedData: getSelectedDimensionValue(filterWidget, filterId)
+                        };
+                        const action = applyInteractionEffectForApplyDimension(updatedInteraction, currentState, target);
+                        return action
+                            ? Rx.Observable.of(action)
+                            : Rx.Observable.empty();
+                    }
+
                     // Find the specific filter and process it to CQL
                     const filterSelections = selections[filterId];
                     const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
@@ -858,7 +971,6 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                 });
         });
 };
-
 /**
  * Epic to cleanup and reapply filter widget interactions
  * For DELETE: only cleanup filters

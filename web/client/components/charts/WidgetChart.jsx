@@ -46,6 +46,27 @@ const applyPercentageToLabel = (label, value, total) => {
     }
     return label;
 };
+
+const parseAxisTickValues = (tickValues) => {
+    const values = typeof tickValues === 'string' && tickValues.trim()
+        ? tickValues
+            .split(',')
+            .map(value => value.trim())
+        : undefined;
+    return values?.length > 0 ? values : undefined;
+};
+
+const getAxisTickOptions = (options = {}) => {
+    const tickvals = parseAxisTickValues(options?.tickvals);
+    const ticktext = parseAxisTickValues(options?.ticktext);
+    if (tickvals && ticktext) {
+        return { tickvals, ticktext };
+    }
+    if (tickvals) {
+        return { tickvals };
+    }
+    return {};
+};
 /**
  * Returns the labels for the pie chart, adds % to the labels, for legend, if the prop `includeLegendPercent` is true
  * @param {string|number[]} labels the values of the chart ["California", "Ohio", ...]
@@ -462,6 +483,7 @@ function getLayoutOptions({
         return {
             ...acc,
             [`yaxis${idx === 0 ? '' : idx + 1}`]: {
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',
@@ -505,6 +527,7 @@ function getLayoutOptions({
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',

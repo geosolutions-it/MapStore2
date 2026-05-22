@@ -11,28 +11,26 @@ import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
-import { getWidgetInteractionTreeGenerated, getEditingWidget, getAllInteractionsWhileEditingSelector } from '../../../../../../selectors/widgets';
+import { getWidgetInteractionTreeGenerated, getEditingWidget, getAllInteractionsWhileEditingSelector, isTimelineEnabledForInteractions } from '../../../../../../selectors/widgets';
 import InteractionTargetsList from './InteractionTargetsList';
 import './interaction-wizard.less';
-import { detachSingleChildCollections, filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
+import { getDisplayInteractionTargetTree } from '../../../../../../utils/InteractionUtils';
 import Message from '../../../../../I18N/Message';
+import tooltip from '../../../../../misc/enhancers/tooltip';
 
-const targetTitleTranslationMap = {
-    "Apply filter": "widgets.filterWidget.applyFilter",
-    "Apply style": "widgets.filterWidget.applyStyle"
-};
+const TButton = tooltip(Button);
 
-
-const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions}) => {
+export const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions, valueAttributeType, sourceSelectionMode, timelineEnabled = false, targetTitleMsgIds = {}, removable = false, onRemove = () => {}}) => {
 
     const filteredInteractionTree = useMemo(() => {
-        const filteredTree = filterTreeWithTarget(interactionTree, target) || [];
-        return detachSingleChildCollections(filteredTree, ['widgets', 'traces', "layers"]);
-    }, [interactionTree]);
+        return getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType);
+    }, [interactionTree, target, valueAttributeType]);
+    const hasConnectableNodes = (filteredInteractionTree?.children || []).length > 0;
+    const targetTitleMsgId = targetTitleMsgIds[target.targetType];
 
     return (<FlexBox className="ms-interactions-container" component="ul" column gap="sm">
         <FlexBox component="li" gap="xs" column>
-            <FlexBox className="ms-interactions-event"gap="sm" centerChildrenVertically >
+            <FlexBox className="ms-interactions-event" gap="sm" centerChildrenVertically >
                 <Button
                     onClick={() => toggleExpanded()}
                     borderTransparent
@@ -42,21 +40,38 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
                     }
                 </Button>
                 <Glyphicon glyph={target?.glyph} />
-                <Text className="ms-flex-fill"><Message msgId={targetTitleTranslationMap[target.title] || ""} /></Text>
-
-
+                <Text className="ms-flex-fill">
+                    {targetTitleMsgId ? <Message msgId={targetTitleMsgId} /> : target.title}
+                </Text>
+                {removable && (
+                    <TButton
+                        onClick={onRemove}
+                        borderTransparent
+                        tooltip={<Message msgId="widgets.filterWidget.delete" />}
+                        style={{ padding: 0, background: 'transparent' }}>
+                        <Glyphicon glyph="trash" />
+                    </TButton>
+                )}
             </FlexBox>
             {expanded && <FlexBox className="ms-interactions-targets" component="ul" column gap="sm" >
-                <InteractionTargetsList
-                    target={target}
-                    interactionTree={interactionTree}
-                    interactions={interactions}
-                    sourceWidgetId={sourceWidgetId}
-                    currentSourceId={currentSourceId}
-                    onEditorChange={onEditorChange}
-                    filteredInteractionTree={filteredInteractionTree}
-                    alreadyExistingInteractions={alreadyExistingInteractions}
-                />
+                {hasConnectableNodes ? (
+                    <InteractionTargetsList
+                        target={target}
+                        interactionTree={interactionTree}
+                        interactions={interactions}
+                        sourceWidgetId={sourceWidgetId}
+                        currentSourceId={currentSourceId}
+                        onEditorChange={onEditorChange}
+                        filteredInteractionTree={filteredInteractionTree}
+                        alreadyExistingInteractions={alreadyExistingInteractions}
+                        sourceSelectionMode={sourceSelectionMode}
+                        timelineEnabled={timelineEnabled}
+                    />
+                ) : (
+                    <FlexBox component="li" className="ms-interactions-empty-state">
+                        <Text><Message msgId="widgets.filterWidget.noConnectableNodesAvailable" /></Text>
+                    </FlexBox>
+                )}
             </FlexBox>}
         </FlexBox>
     </FlexBox>);
@@ -74,6 +89,7 @@ export default connect((state) => {
         // for editing widget
         interactions,
         // for all widget
-        alreadyExistingInteractions: getAllInteractionsWhileEditingSelector(state)
+        alreadyExistingInteractions: getAllInteractionsWhileEditingSelector(state),
+        timelineEnabled: isTimelineEnabledForInteractions(state)
     };
 }, null)(InteractionEventsSelector);

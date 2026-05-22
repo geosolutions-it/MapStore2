@@ -183,7 +183,8 @@ Layers.registerType('wfs', {
         if (
             needsReload(oldOptions, newOptions) ||
             oldOptions.forceProxy !== newOptions.forceProxy ||
-            !isEqual(oldOptions.security, newOptions.security)
+            !isEqual(oldOptions.security, newOptions.security) ||
+            !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
         ) {
             return createLayer(newOptions, map);
         }

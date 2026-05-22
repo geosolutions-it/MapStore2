@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import FilterWizard from '../../components/widgets/builder/wizard/FilterWizard';
 
 import useBatchedUpdates from '../../hooks/useBatchedUpdates';
@@ -60,6 +60,7 @@ const FilterBuilderContent = ({
     }, [enabled, widgetType, filters.length, layer, onChangeEditor]);
 
 
+    const [selectableItems, setSelectableItems] = useState([]);
     const selectedFilter = useMemo(
         () => filters.find(filter => filter.id === selectedFilterId) || null,
         [filters, selectedFilterId]
@@ -70,6 +71,16 @@ const FilterBuilderContent = ({
         }
         return null;
     }, [selectedFilter, filters]);
+    const selectableItemsSignatureRef = useRef('');
+    const handleSelectableItemsChange = useCallback((nextSelectableItems = []) => {
+        const nextSignature = nextSelectableItems
+            .map(item => `${item?.id ?? ''}|${item?.label ?? ''}`)
+            .join('||');
+        if (nextSignature !== selectableItemsSignatureRef.current) {
+            selectableItemsSignatureRef.current = nextSignature;
+            setSelectableItems(nextSelectableItems);
+        }
+    }, []);
 
     const handleFilterSelect = useCallback((filterId) => {
         onChangeEditor('selectedFilterId', filterId || null);
@@ -180,6 +191,7 @@ const FilterBuilderContent = ({
         <FilterWizard
             filterData={data}
             editorData={editorData}
+            selectableItems={selectableItems}
             onChange={handleChange}
             onOpenLayerSelector={handleOpenLayerSelector}
             openFilterEditor={openFilterEditor}
@@ -197,9 +209,10 @@ const FilterBuilderContent = ({
             onDeleteFilter={handleDeleteFilter}
             onRenameFilter={handleRenameFilter}
             onSelectionChange={handleSelectionChange}
+            onSelectableItemsChange={handleSelectableItemsChange}
         />
     );
 };
+FilterBuilderContent.defaultProps = {};
 
 export default FilterBuilderContent;
-
