@@ -3429,7 +3429,9 @@
         "playback": "Konfigurácia prehrávania",
         "mapTemplates": "Šablóny mapy",
         "userPlugins": "Pluginy používateľa",
-        "mapViews": "Zobrazenia mapy"
+        "mapViews": "Zobrazenia mapy",
+        "swipe": "Škrtiť",
+        "crsSelector": "Výber CRS"
       }
     },
     "resourcesCatalog": {
