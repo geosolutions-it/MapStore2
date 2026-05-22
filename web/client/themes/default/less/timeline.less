@@ -368,6 +368,9 @@
     }
 }
 .timeline-plugin {
+    position: relative;
+    width: 100%;
+    background-color: @ms-main-bg;
     * {
         font-size: @font-size-small;
         h4 {
@@ -376,15 +379,10 @@
         }
     }
     .ms-timeline-expand {
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translate(-50%, -100%);
-        border-radius: 0;
-        border-top-left-radius: 50%;
-        border-top-right-radius: 50%;
-        height: 20px;
-        width: 22px;
+        flex-shrink: 0;
+        border-radius: 4px;
+        height: 30px;
+        width: 30px;
     }
 
     /* local mixin to highlight handlers on timeline, used on active and over */
@@ -665,18 +663,12 @@
         .btn-group {
             margin-right: 4px;
         }
-
-        .timeline-plugin-toolbar-right {
-            margin-right: 2px;
-            margin-left: auto;
-        }
         &.ms-collapsed {
-            flex-direction: column;
+            flex-wrap: wrap;
             .ms-inline-datetime {
                 margin-right: 0;
                 padding-right: 8px;
                 border-right: none;
-                align-self: flex-start;
                 + .timeline-plugin-btn-group {
                     margin-top: 2px;
                     padding-top: 2px;
@@ -685,6 +677,17 @@
                     justify-content: center;
                     border-top: 1px solid @ms-main-border-color;
                 }
+            }
+        }
+    }
+
+    // When range is enabled, display both start and end date selectors side by side
+    &.with-time-offset {
+        .timeline-plugin-toolbar {
+            .ms-inline-datetime:first-child {
+                border-right: 1px solid @ms-main-border-color;
+                margin-right: 2px;
+                padding-right: 4px;
             }
         }
     }
@@ -929,7 +932,7 @@
         height: 100%;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-end;
     }
 }
 

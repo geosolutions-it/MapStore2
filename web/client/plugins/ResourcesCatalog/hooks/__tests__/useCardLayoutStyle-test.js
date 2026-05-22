@@ -12,7 +12,7 @@ import useCardLayoutStyle, { STORAGE_FRAGMENT } from '../useCardLayoutStyle';
 import expect from 'expect';
 import { Simulate, act } from 'react-dom/test-utils';
 import { getApi, getItemKey } from '../../../../api/userPersistedStorage';
-import { removeValue, USE_LOCAL_STORAGE_SECTION } from '../useLocalStorage';
+import { removeValue, USE_LOCAL_STORAGE_SECTION } from '../../../../hooks/useLocalStorage';
 
 const Component = (props) => {
     const { cardLayoutStyle, setCardLayoutStyle, hideCardLayoutButton } = useCardLayoutStyle(props);

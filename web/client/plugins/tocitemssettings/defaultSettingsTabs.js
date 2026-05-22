@@ -49,7 +49,7 @@ const isCOGStylableLayer = ({element = {}} = {}) => element.type === "cog";
 const isWMS = ({element = {}} = {}) => element.type === "wms";
 const isWFS = ({element = {}} = {}) => element.type === "wfs";
 const isVectorStylableLayer = ({element = {}} = {}) =>
-    ["wfs", "3dtiles", "vector", "flatgeobuf"].includes(element.type)
+    ["wfs", "3dtiles", "vector", "flatgeobuf", "arcgis-feature"].includes(element.type)
     && !isAnnotationLayer(element);
 
 const isStylableLayer = (props) =>

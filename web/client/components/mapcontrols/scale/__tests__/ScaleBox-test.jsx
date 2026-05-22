@@ -225,4 +225,24 @@ describe('ScaleBox', () => {
         // the custom scale must appear in component state
         expect(sb.state.scales.some(s => s.value === 75000)).toBe(true);
     });
+
+    it('custom scales survive a re-render', () => {
+        const customScales = [5000, 10000, 50000, 100000, 500000];
+        TestUtils.act(() => {
+            ReactDOM.render(
+                <ScaleBox scales={customScales} currentZoomLvl={0} />,
+                document.getElementById("container")
+            );
+        });
+        expect(document.querySelectorAll('option').length).toBe(5);
+        TestUtils.act(() => {
+            ReactDOM.render(
+                <ScaleBox scales={customScales} currentZoomLvl={1} />,
+                document.getElementById("container")
+            );
+        });
+        expect(document.querySelectorAll('option').length).toBe(5);
+        const select = document.querySelector('select');
+        expect(select.value).toBe('1');
+    });
 });

@@ -8,7 +8,7 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom';
-import SharingLinks from '../SharingLinks.jsx';
+import SharingLinks from '../datasets/SharingLinks.jsx';
 import expect from 'expect';
 
 describe('Tests for SharingLinks', () => {
@@ -43,11 +43,13 @@ describe('Tests for SharingLinks', () => {
         const shareButtons = document.getElementsByTagName('button');
         expect(shareButtons.length).toBe(1);
         shareButtons[0].click();
+        const popover = document.querySelector('.ms-popover-overlay');
+        expect(popover).toExist();
         // we should have two buttons now
-        const buttons = document.getElementById('links-popover').getElementsByTagName('button');
+        const buttons = popover.getElementsByTagName('button');
         expect(buttons.length).toBe(2);
         // we should have two inputs now
-        const inputs = document.getElementById('links-popover').getElementsByTagName('input');
+        const inputs = popover.getElementsByTagName('input');
         expect(inputs.length).toBe(2);
         // check that the inputs contain the correct url values
         let values = [];

@@ -140,7 +140,16 @@ export const reproject = (point, source, dest, normalize = true) => {
     if (sourceProj && destProj) {
         let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
 
-        const transformed = Object.assign({}, source === dest ? numberize(p) : Proj4js.transform(sourceProj, destProj, numberize(p)), {srs: dest});
+        let transformed;
+        try {
+            const result = source === dest ? numberize(p) : Proj4js.transform(sourceProj, destProj, numberize(p));
+            if (!result || !isFinite(result.x) || !isFinite(result.y)) {
+                return null;
+            }
+            transformed = Object.assign({}, result, {srs: dest});
+        } catch (e) {
+            return null;
+        }
         if (normalize) {
             return normalizePoint(transformed);
         }

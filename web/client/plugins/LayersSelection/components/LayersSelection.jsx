@@ -145,7 +145,9 @@ const LayersSelection = ({
         );
     };
 
-    useEffect(() => storeConfiguration({ highlightOptions, queryOptions }), []);
+    useEffect(() => {
+        storeConfiguration({ highlightOptions, queryOptions });
+    }, []);
 
     const [selectedTool, setSelectedTool] = useState(null);
 

@@ -11,7 +11,7 @@ import expect from 'expect';
 import {
     convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
     getConnectionList, getDependantWidget,
-    getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
+    getChartAxisDependencyPath, getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
     shortenLabel, updateDependenciesMapOfMapList,
     defaultChartStyle,
@@ -170,6 +170,29 @@ describe('Test WidgetsUtils', () => {
                 }]
             }];
             expect(getTracesDependencyPath('charts[chart_1].traces[trace_99].filter', 'w_1', chartWidgets)).toEqual('charts[0].traces[trace_99].filter');
+        });
+    });
+    describe('getChartAxisDependencyPath', () => {
+        const chartWidgets = [{
+            id: 'w_1',
+            charts: [{
+                chartId: 'chart_1',
+                xAxisOpts: [{ id: 0 }, { id: 'x-axis-1' }],
+                yAxisOpts: [{ id: 0 }, { id: 'y-axis-1' }],
+                traces: [{ id: 'trace_1', xaxis: 'x-axis-1', yaxis: 'y-axis-1' }]
+            }]
+        }];
+        it('replaces chartId and axisId with indices', () => {
+            expect(getChartAxisDependencyPath('charts[chart_1].xAxisOpts[x-axis-1].appliedCurrentTime', 'w_1', chartWidgets))
+                .toEqual('charts[0].xAxisOpts[1].appliedCurrentTime');
+        });
+        it('supports axis paths displayed under traces', () => {
+            expect(getChartAxisDependencyPath('charts[chart_1].traces[trace_1].yAxisOpts[y-axis-1].appliedCurrentTime', 'w_1', chartWidgets))
+                .toEqual('charts[0].yAxisOpts[1].appliedCurrentTime');
+        });
+        it('returns path unchanged when axis is not found', () => {
+            expect(getChartAxisDependencyPath('charts[chart_1].xAxisOpts[missing].appliedCurrentTime', 'w_1', chartWidgets))
+                .toEqual('charts[chart_1].xAxisOpts[missing].appliedCurrentTime');
         });
     });
     it('getWidgetDependency', () => {
@@ -1019,6 +1042,33 @@ describe('Test WidgetsUtils', () => {
             expect(shapes[1].line.color).toBe('blue');
             expect(shapes[1].line.dash).toBe('longdash');
             expect(shapes[1].line.width).toBe(2);
+        });
+        it('uses timeline time range instead of axis appliedCurrentTime when provided', () => {
+            const data = {
+                xAxisOpts: [{ type: 'date', showCurrentTime: true, appliedCurrentTime: '2025-07-24' }],
+                yAxisOpts: [{ type: 'date', showCurrentTime: true }]
+            };
+            const shapes = addCurrentTimeShapes(data, { start: '2025-07-22' });
+            expect(shapes.length).toBe(2);
+            expect(shapes[0].x0).toBe('2025-07-22');
+            expect(shapes[1].y0).toBe('2025-07-22');
+        });
+        it('uses axis appliedCurrentTime when no timeline time range is provided', () => {
+            const data = {
+                xAxisOpts: [{ type: 'date', showCurrentTime: true, appliedCurrentTime: '2025-07-24' }],
+                yAxisOpts: [{ type: 'date', showCurrentTime: true }]
+            };
+            const shapes = addCurrentTimeShapes(data, {});
+            expect(shapes.length).toBe(1);
+            expect(shapes[0].x0).toBe('2025-07-24');
+        });
+        it('does not add current time shapes for non-date axes', () => {
+            const data = {
+                xAxisOpts: [{ type: 'linear', showCurrentTime: true, appliedCurrentTime: '2025-07-24' }],
+                yAxisOpts: [{ type: 'linear', showCurrentTime: true }]
+            };
+            const shapes = addCurrentTimeShapes(data, { start: '2025-07-22' });
+            expect(shapes).toEqual([]);
         });
     });
     describe('getWidgetByDependencyPath', () => {

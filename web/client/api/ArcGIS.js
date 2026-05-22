@@ -7,8 +7,10 @@
  */
 
 import axios from '../libs/ajax';
+import Proj4js from 'proj4';
 import { reprojectBbox } from '../utils/CoordinatesUtils';
 import trimEnd from 'lodash/trimEnd';
+import { isFeatureServerUrl, esriGeometryTypeToGeoJSON } from '../utils/ArcGISUtils';
 
 let _cache = {};
 
@@ -31,6 +33,47 @@ const extentToBoundingBox = (extent) => {
                 maxy: projectedExtent[3]
             },
             crs: `EPSG:${wkid}`
+        };
+    }
+    return null;
+};
+
+const extentToBoundingBox4326 = (extent) => {
+    if (!extent) return null;
+
+    const wkt = extent?.spatialReference?.wkt;
+    const wkid = extent?.spatialReference?.latestWkid || extent?.spatialReference?.wkid;
+    const rawBbox = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];
+
+    let projectedExtent = null;
+
+    if (wkt) {
+        // ArcGIS services may use custom/non-EPSG projections defined only by WKT;
+        // register under a synthetic name so Proj4js can resolve it for reprojection
+        const projName = 'ESRI_WKT_' + (wkid || 'custom');
+        if (!Proj4js.defs(projName)) {
+            Proj4js.defs(projName, wkt);
+        }
+        projectedExtent = reprojectBbox(rawBbox, projName, 'EPSG:4326');
+    } else if (wkid && String(wkid) !== '4326') {
+        try {
+            projectedExtent = reprojectBbox(rawBbox, `EPSG:${wkid}`, 'EPSG:4326');
+        } catch (e) {
+            projectedExtent = rawBbox;
+        }
+    } else {
+        projectedExtent = rawBbox;
+    }
+
+    if (projectedExtent) {
+        return {
+            bounds: {
+                minx: projectedExtent[0],
+                miny: projectedExtent[1],
+                maxx: projectedExtent[2],
+                maxy: projectedExtent[3]
+            },
+            crs: 'EPSG:4326'
         };
     }
     return null;
@@ -104,7 +147,7 @@ const getData = (url, params = {}) => {
             const { layers, services } = data || {};
             if (services) {
                 return searchAndPaginate(
-                    services.filter(service => ['MapServer', 'ImageServer'].includes(service.type)).map((service) => {
+                    services.filter(service => ['MapServer', 'ImageServer', 'FeatureServer'].includes(service.type)).map((service) => {
                         return {
                             url: `${trimEnd(url, '/')}/${service.name}/${service.type}`,
                             version: data.currentVersion,
@@ -113,6 +156,27 @@ const getData = (url, params = {}) => {
                         };
                     }), params);
             }
+
+            if (isFeatureServerUrl(url)) {
+                const bbox = extentToBoundingBox4326(data?.initialExtent) || extentToBoundingBox4326(data?.fullExtent);
+                const queryCapable = (data?.capabilities || '').includes('Query');
+                const maxRecordCount = data?.maxRecordCount;
+                const featureRecords = (layers || [])
+                    .filter(() => queryCapable)
+                    .map((layer) => ({
+                        ...layer,
+                        url,
+                        version: data?.currentVersion,
+                        queryable: true,
+                        geometryType: layer.geometryType
+                            ? esriGeometryTypeToGeoJSON(layer.geometryType)
+                            : undefined,
+                        ...(maxRecordCount && { maxRecordCount }),
+                        bbox
+                    }));
+                return searchAndPaginate(featureRecords, params);
+            }
+
             // Map is similar to WMS GetMap capability for MapServer
             const mapExportSupported = (data?.capabilities || '').includes('Map') || (data?.capabilities || '').includes('Image');
             const commonProperties = {

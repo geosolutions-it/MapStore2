@@ -27,10 +27,18 @@ export const SAVE_GS_INSTANCE = "RULES_MANAGER:SAVE_GS_INSTANCE";
 export const GS_INSTSANCE_SAVED = "RULES_MANAGER:GS_INSTSANCE_SAVED";
 export const CLEAN_EDITING_GS_INSTANCE = "RULES_MANAGER:CLEAN_EDITING_GS_INSTANCE";
 export const STORING_GS_INSTANCES_DD =  "RULES_MANAGER:STORING_GS_INSTANCES_DD";
+export const CACHE_CLEAN_MULTI = 'RULES_MANAGER:CACHE_CLEAN_MULTI';
 
-export function onCacheClean() {
+export function onCacheClean(url) {
     return {
-        type: CACHE_CLEAN
+        type: CACHE_CLEAN,
+        gsInstanceUrl: url
+    };
+}
+export function onCacheCleanMulti(gsInstances) {
+    return {
+        type: CACHE_CLEAN_MULTI,
+        gsInstances
     };
 }
 export function delRules(ids) {

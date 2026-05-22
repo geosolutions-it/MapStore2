@@ -77,7 +77,8 @@ describe('comparePendingChanges', () => {
                         "useForElevation": false,
                         "hidden": false,
                         "params": {},
-                        "expanded": false
+                        "expanded": false,
+                        "cropToProjectionExtent": undefined
                     }
                 ],
                 "groups": [],

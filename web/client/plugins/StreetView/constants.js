@@ -10,7 +10,8 @@ export const STREET_VIEW_DATA_LAYER_ID = "street-view-data";
 export const PROVIDERS = {
     GOOGLE: 'google',
     CYCLOMEDIA: 'cyclomedia',
-    MAPILLARY: "mapillary"
+    MAPILLARY: "mapillary",
+    PANORAMAX: "panoramax"
 };
 
 // ///////////////////////////////
@@ -24,3 +25,9 @@ export const CYCLOMEDIA_DEFAULT_MAX_RESOLUTION = 1;
  * Unique key to find the credentials in the global state
  */
 export const CYCLOMEDIA_CREDENTIALS_REFERENCE = "__cycloMedia_streetView_source_credential__";
+
+
+// ///////////////////////////////
+// PANORAMAX SPECIFIC CONSTANTS
+// ///////////////////////////////
+export const PANORAMAX_DEFAULT_API_URL = "https://api.panoramax.xyz/api";
