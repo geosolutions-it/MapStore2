@@ -26,6 +26,7 @@ import { configureMap, mapInfoLoaded } from '../actions/config';
 import { wrapStartStop } from '../observables/epics';
 import { toMapConfig } from '../utils/ogc/WMC';
 import {hideMapinfoMarker, purgeMapInfoResults} from "../actions/mapInfo";
+import { dynamicProjectionDefsSelector } from '../selectors/projections';
 
 const errorToMessageId = (e = {}, getState = () => {}) => {
     let message = `context.errors.template.unknownError`;
@@ -117,8 +118,9 @@ export const mergeTemplateEpic = (action$, store) => action$
                 const textSearchConfig = textSearchConfigSelector(state);
                 const bookmarkSearchConfig = bookmarkSearchConfigSelector(state);
                 const additionalOptions = mapOptionsToSaveSelector(state);
+                const projectionDefs = dynamicProjectionDefsSelector(state);
 
-                const currentConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
+                const currentConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs);
 
                 return (isString(data) ? Observable.defer(() => toMapConfig(data, false)) : Observable.of(data))
                     .switchMap(config => Observable.of(

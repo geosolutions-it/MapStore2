@@ -18,7 +18,8 @@ import WizardContainer from '../../../misc/wizard/WizardContainer';
 import { wizardHandlers } from '../../../misc/wizard/enhancers';
 import WidgetOptions from './common/WidgetOptions';
 import Message from '../../../I18N/Message';
-import { areAllForceSelectionsValid } from '../../../../plugins/widgetbuilder/utils/filterBuilder';
+import { areAllForceSelectionsValid, areAllCustomNoSelectionFiltersValid } from '../../../../plugins/widgetbuilder/utils/filterBuilder';
+import { isFilterValid } from '../../../../utils/FilterUtils';
 
 
 const Wizard = wizardHandlers(WizardContainer);
@@ -56,6 +57,7 @@ const isFilterConfigValid = (editorData = {}) => {
 const FilterWizard = ({
     filterData = {},
     editorData = {},
+    selectableItems = [],
     onChange = () => {},
     onOpenLayerSelector = () => {},
     openFilterEditor = () => {},
@@ -73,7 +75,8 @@ const FilterWizard = ({
     onAddFilter = () => {},
     onDeleteFilter = () => {},
     onRenameFilter = () => {},
-    onSelectionChange = () => {}
+    onSelectionChange = () => {},
+    onSelectableItemsChange = () => {}
 }) => {
     const [activeTab, setActiveTab] = useState('data');
 
@@ -87,12 +90,13 @@ const FilterWizard = ({
     useEffect(() => {
         const isConfigValid = isFilterConfigValid(editorData);
         const isSelectionValid = areAllForceSelectionsValid(editorData.filters, editorData.selections);
-        setValid(isConfigValid && isSelectionValid);
+        const isCustomFilterValid = areAllCustomNoSelectionFiltersValid(editorData.filters, isFilterValid);
+        setValid(isConfigValid && isSelectionValid && isCustomFilterValid);
     }, [editorData, setValid]);
 
     const tabContents = {
-        data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} selections={selections} />,
-        layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange}  />,
+        data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} selections={selections} interactions={editorData?.interactions || []} />,
+        layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange} selectableItems={selectableItems} interactions={editorData?.interactions || []}  />,
         actions: <FilterActionsTab data={filterData} onChange={onChange} onEditorChange={onEditorChange}  />
     };
 
@@ -106,6 +110,7 @@ const FilterWizard = ({
                     selections={selections}
                     getSelectionHandler={onSelectionChange}
                     selectedFilterId={selectedFilterId}
+                    onSelectableItemsChange={onSelectableItemsChange}
                 />
             </div>
             <FilterSelector
@@ -156,7 +161,9 @@ const FilterWizard = ({
             onFinish={onFinish}
             isStepValid={(n) =>
                 n === 0
-                    ? isFilterConfigValid(editorData) && areAllForceSelectionsValid(editorData.filters, editorData.selections)
+                    ? isFilterConfigValid(editorData)
+                        && areAllForceSelectionsValid(editorData.filters, editorData.selections)
+                        && areAllCustomNoSelectionFiltersValid(editorData.filters, isFilterValid)
                     : true
             }
             hideButtons
@@ -172,4 +179,3 @@ const FilterWizard = ({
 };
 
 export default FilterWizard;
-

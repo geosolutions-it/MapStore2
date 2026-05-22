@@ -143,7 +143,7 @@ class SettingsButton extends React.Component {
                         {settings}
                     </Panel>);
                 }
-                return (<Portal><Dialog id={this.props.id} style={{...this.props.panelStyle, display: this.props.visible ? 'block' : 'none'}} className={this.props.panelClassName} draggable={false} modal>
+                return (<Portal><Dialog id={this.props.id} style={{...this.props.panelStyle, display: this.props.visible ? 'block' : 'none'}} className={this.props.panelClassName} containerClassName="settings-panel-container" draggable={false} modal>
                     <span role="header">
                         <span className="modal-title settings-panel-title"><Message msgId="settings"/></span>
                         <button onClick={this.props.toggleControl} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>

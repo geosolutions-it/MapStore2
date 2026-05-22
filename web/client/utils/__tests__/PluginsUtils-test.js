@@ -92,7 +92,7 @@ describe('PluginsUtils', () => {
         expect(domElement.innerText).toBe("plugintest");
     });
     it('handleExpression', () => {
-        expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
+        expect(PluginsUtils.handleExpression(() => ("test1"), {context1: "test2"}, "{state('state1') + ' ' + context.context1}")).toBe("test1 test2");
     });
     it('filterState', () => {
         expect(PluginsUtils.filterState({state1: "test1"}, [{name: "A", path: "state1"}]).A).toBe("test1");
@@ -100,7 +100,7 @@ describe('PluginsUtils', () => {
     it('filterDisabledPlugins', () => {
         expect(PluginsUtils.filterDisabledPlugins(
             {plugin: {
-                disablePluginIf: "{true}"
+                disablePluginIf: true
             }},
             {},
             {}
@@ -116,21 +116,45 @@ describe('PluginsUtils', () => {
     it('getMonitoredState', () => {
         expect(PluginsUtils.getMonitoredState({maptype: {mapType: "leaflet"}}).mapType).toBe("leaflet");
     });
-
-    it('handleExpression', () => {
-        expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
+    it('getMonitoredState includes usergroups from security state', () => {
+        const state = {
+            security: {
+                user: {
+                    groups: {
+                        group: [
+                            {groupName: "everyone", enabled: true},
+                            {groupName: "editors", enabled: true},
+                            {groupName: "disabled-group", enabled: false}
+                        ]
+                    }
+                }
+            }
+        };
+        const monitored = PluginsUtils.getMonitoredState(state);
+        expect(monitored.usergroups).toExist();
+        expect(monitored.usergroups.length).toBe(2);
+        expect(monitored.usergroups).toInclude("everyone");
+        expect(monitored.usergroups).toInclude("editors");
+        expect(monitored.usergroups).toExclude("disabled-group");
     });
+    it('getMonitoredState returns empty usergroups when user has no groups', () => {
+        const state = { security: { user: {} } };
+        const monitored = PluginsUtils.getMonitoredState(state);
+        expect(monitored.usergroups).toExist();
+        expect(monitored.usergroups.length).toBe(0);
+    });
+
     it('handleExpression in case there is a chaining within the expression that needs to access available state', () => {
         const state = {groups: ["ADMIN", "NORMAL_USER"]};
         const getState = (path) => state[path];
-        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['ADMIN'].includes(gr)).length}")).toBe(1);
-        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['NORMAL_USER'].includes(gr)).length}")).toBe(1);
-        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['NOT_ADMIN'].includes(gr)).length}")).toBe(0);
+        expect(PluginsUtils.handleExpression(getState, {}, "{includes(state('groups'),'ADMIN')}")).toBe(true);
+        expect(PluginsUtils.handleExpression(getState, {}, "{includes(state('groups'),'NORMAL_USER')}")).toBe(true);
+        expect(PluginsUtils.handleExpression(getState, {}, "{includes(state('groups'),'NOT_ADMIN')}")).toBe(false);
     });
     it('handleExpression in case there is a chaining within the expression that needs to access unavailable state', () => {
         const state = {groups: undefined};
         const getState = (path) => state[path];
-        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['ADMIN'].includes(gr))}")).toBe(undefined);
+        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{includes(state('groups'),'ADMIN')}")).toBe(false);
     });
     it('getPluginItems', () => {
         const plugins = {
@@ -407,7 +431,7 @@ describe('PluginsUtils', () => {
         const pluginsConfig = [{
             name: "Test1",
             "cfg": {
-                disablePluginIf: "{true}"
+                disablePluginIf: "{1==1}"
             }
         }, "Container1", "Container2"];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
@@ -432,7 +456,7 @@ describe('PluginsUtils', () => {
 
         const pluginsConfig = [{
             name: "Test1",
-            disablePluginIf: "{true}"
+            disablePluginIf: "{1==1}"
         }, "Container1", "Container2"];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, [], () => false);
         expect(items1.length).toBe(0);
@@ -440,13 +464,10 @@ describe('PluginsUtils', () => {
         expect(items2.length).toBe(0);
     });
 
-    it('dispatch', () => {
-        const expr = PluginsUtils.handleExpression(() => ({
-            dispatch: (action) => action
-        }), {context1: "test2"}, "{dispatch((function() { return 'test'; }))}");
+    it('custom functions from context', () => {
+        const result = PluginsUtils.handleExpression(() => {}, {fun: v => v + "-" + v}, "{fun('test')}");
 
-        expect(expr).toExist();
-        expect(expr()).toBe("test");
+        expect(result).toBe("test-test");
     });
 
     it('createPlugin', () => {

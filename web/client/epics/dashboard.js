@@ -101,14 +101,13 @@ export const handleDashboardWidgetsFilterPanel = (action$, {getState = () => {}}
 
                     if (action.filterObj) {
                         actions.push(onEditorChange(getWidgetFilterKey(currentState), action.filterObj));
-                        // Reset editingUserDefinedItemId after saving filter
-                        if (editingWidget.editingUserDefinedItemId) {
-                            actions.push(onEditorChange('editingUserDefinedItemId', null));
-                        }
-                        // Reset editingDefaultFilter after saving filter
-                        if (editingWidget.editingDefaultFilter) {
-                            actions.push(onEditorChange('editingDefaultFilter', false));
-                        }
+                    }
+                    // Reset edit context when query panel closes (save or cancel)
+                    if (editingWidget.editingUserDefinedItemId) {
+                        actions.push(onEditorChange('editingUserDefinedItemId', null));
+                    }
+                    if (editingWidget.editingDefaultFilter) {
+                        actions.push(onEditorChange('editingDefaultFilter', false));
                     }
 
                     return Rx.Observable.merge(

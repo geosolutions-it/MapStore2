@@ -21,17 +21,20 @@ const OFFSET = DEFAULT_PANEL_WIDTH;
  */
 export const dynamicLegendMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
-        .filter(({source}) => !isFloatingSelector(store.getState()) && enabledSelector(store.getState()) && isNil(source))
+        .filter(({source}) => {
+            return !isFloatingSelector(store.getState()) && enabledSelector(store.getState()) && isNil(source);
+        })
         .map(({layout}) => {
-            const action = updateMapLayout({
+            const newLayout = {
                 ...layout,
                 right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET
                 },
                 rightPanel: true
-            });
+            };
+            const action = updateMapLayout(newLayout);
             return { ...action, source: CONTROL_NAME };
         });
 

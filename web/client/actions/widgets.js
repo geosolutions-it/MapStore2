@@ -49,6 +49,15 @@ export const REPLACE_LAYOUT_VIEW = "WIDGET:REPLACE_LAYOUT_VIEW";
 export const SET_SELECTED_LAYOUT_VIEW_ID = "WIDGET:SET_SELECTED_LAYOUT_VIEW_ID";
 export const SET_LINKED_DASHBOARD_DATA = "WIDGET:SET_LINKED_DASHBOARD_DATA";
 
+const splitDeletedInteractionsFromWidget = (widget) => {
+    const hasDeletedInteractions = Object.prototype.hasOwnProperty.call(widget || {}, 'deletedInteractions');
+    const deletedInteractions = hasDeletedInteractions ? widget.deletedInteractions : undefined;
+    const widgetToPersist = hasDeletedInteractions
+        ? Object.keys(widget).reduce((acc, key) => key === 'deletedInteractions' ? acc : { ...acc, [key]: widget[key] }, {})
+        : widget;
+    return { deletedInteractions, hasDeletedInteractions, widgetToPersist };
+};
+
 /**
  * Intent to create a new Widgets
  * @param  {object} widget The widget template to start with
@@ -74,18 +83,22 @@ export const createChart = () => ({
  * @return {object}        action with type `WIDGETS:INSERT`, the widget and the target
  */
 export const insertWidget = (widget, target = DEFAULT_TARGET) => {
+    const { deletedInteractions, hasDeletedInteractions, widgetToPersist } = splitDeletedInteractionsFromWidget(widget);
     // Use existing ID if widget already has one (from editNewWidget), otherwise generate new one
-    const widgetId = widget.id || uuid();
-    return {
+    const widgetId = widgetToPersist.id || uuid();
+    const action = {
         type: INSERT,
         target,
         id: widgetId,
         // Ensure widget object also has the ID set (preserves existing ID)
         widget: {
-            ...widget,
+            ...widgetToPersist,
             id: widgetId
         }
     };
+    return hasDeletedInteractions
+        ? { ...action, deletedInteractions }
+        : action;
 };
 
 /**

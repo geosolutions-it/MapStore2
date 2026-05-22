@@ -42,6 +42,7 @@ const AXIS_TYPES = [{
 }];
 
 const MAX_X_AXIS_LABELS = 200;
+const hasCustomTickValues = (tickVals) => typeof tickVals === 'string' && tickVals.trim();
 const getSelectedAxisId = ({
     axisKey,
     chart = {}
@@ -199,6 +200,49 @@ function AxisOptions({
                 hideFormula
                 onChange={handleChange}
             />}
+            <FormGroup className="form-group-flex">
+                <ControlLabel>
+                    <Message msgId={`widgets.advanced.axisTickVals`} />&nbsp;
+                    <InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.axisTickValsTooltip" />} />
+                </ControlLabel>
+                <InputGroup>
+                    <DebouncedFormControl
+                        type="text"
+                        disabled={!!options.hide}
+                        value={options?.tickvals || ''}
+                        placeholder="e.g. 1,2,3,4"
+                        onChange={(value) => {
+                            handleChange('tickvals', value);
+                        }}
+                    />
+                </InputGroup>
+            </FormGroup>
+            <FormGroup className="form-group-flex">
+                <ControlLabel>
+                    <Message msgId={`widgets.advanced.axisTickText`} />&nbsp;
+                    <InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.axisTickTextTooltip" />} />
+                </ControlLabel>
+                <InputGroup>
+                    <DebouncedFormControl
+                        type="text"
+                        disabled={!!options.hide}
+                        value={options?.ticktext || ''}
+                        placeholder="e.g. A,B,C,D"
+                        onChange={(value) => {
+                            handleChange('ticktext', value);
+                        }}
+                    />
+                </InputGroup>
+            </FormGroup>
+            {axisKey === 'x' && !options?.hide && hasCustomTickValues(options?.tickvals) && <FormGroup className="form-group-flex" style={{ marginBottom: 0 }}>
+                <Checkbox
+                    checked={options?.showHoverOnlyOnTickValues ?? false}
+                    onChange={(event) => { handleChange('showHoverOnlyOnTickValues', event?.target?.checked); }}
+                >
+                    <Message msgId="widgets.advanced.showHoverOnlyOnTickValues" /> {' '}
+                    {!(options?.hide ?? false) && <InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.showHoverOnlyOnTickValuesTooltip" />} />}
+                </Checkbox>
+            </FormGroup>}
             <FormGroup className="form-group-flex">
                 <ControlLabel>
                     <Message msgId="widgets.advanced.side" />

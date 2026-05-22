@@ -10,8 +10,9 @@ import CoordinatesUtils from '../utils/CoordinatesUtils';
 
 import { createSelector } from 'reselect';
 import {get, memoize, round} from 'lodash';
-import {detectIdentifyInMapPopUp} from "../utils/MapUtils";
+import {detectIdentifyInMapPopUp, getResolutions} from "../utils/MapUtils";
 import { isLoggedIn } from './security';
+import { allProjectionDefsSelector } from './projections';
 
 /**
  * selects map state
@@ -66,7 +67,11 @@ export const showEditableFeatureCheckboxSelector = state => {
 };
 
 // TODO: move these in selectors/localConfig.js or selectors/config.js
-export const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
+
+// Re-export of allProjectionDefsSelector for backward compatibility:
+// historical consumers imported projectionDefsSelector from selectors/map.
+export const projectionDefsSelector = (state) => allProjectionDefsSelector(state);
+
 export const mapConstraintsSelector = state => state.localConfig && state.localConfig.mapConstraints || {};
 export const configuredRestrictedExtentSelector = (state) => mapConstraintsSelector(state).restrictedExtent;
 export const configuredExtentCrsSelector = (state) => mapConstraintsSelector(state).crs;
@@ -80,7 +85,7 @@ export const configuredMinZoomSelector = state => {
 export const mapLimitsSelector = state => get(mapSelector(state), "limits");
 export const mapBboxSelector = state => get(mapSelector(state), "bbox");
 export const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom");
-export const resolutionsSelector = state => get(mapSelector(state), "resolutions");
+export const resolutionsSelector = state => get(mapSelector(state), "resolutions") || getResolutions();
 export const currentZoomLevelSelector = state => get(mapSelector(state), "zoom");
 export const currentResolutionSelector = createSelector(
     resolutionsSelector,
@@ -156,3 +161,9 @@ export const identifyFloatingToolSelector = (state) => {
     return mouseMoveListenerSelector(state).includes('identifyFloatingTool') || state.mode === "embedded" || (state.mapPopups?.popups && detectIdentifyInMapPopUp(state));
 };
 
+export const mapOptionsSelector = (state) => {
+    let options = {};
+    if (state?.map?.present?.visualizationMode === "3D") options = state?.map?.present?.mapOptions;
+    return options;
+};
+export const mapEnableImageryOverlaySelector = (state) => mapOptionsSelector(state)?.enableImageryLayersOverlay;

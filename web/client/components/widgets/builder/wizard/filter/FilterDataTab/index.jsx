@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import UserDefinedValuesDataGrid from '../UserDefinedValuesDataGrid';
 import { useFilterData } from './hooks/useFilterData';
@@ -18,8 +18,39 @@ import ValuesFromSelector from './components/ValuesFromSelector';
 import FilterAttributesSection from './components/FilterAttributesSection';
 import MaxFeaturesInput from './components/MaxFeaturesInput';
 import FilterCompositionSelector from './components/FilterCompositionSelector';
-import DefaultFilterInput from './components/DefaultFilterInput';
+import FilterSelectionModeSelector from './components/FilterSelectionModeSelector';
 import { VALUES_FROM_TYPES, USER_DEFINED_TYPES } from './constants';
+import { isFilterValid } from '../../../../../../utils/FilterUtils';
+
+const getMissingAttributeTypeUpdates = ({
+    attributeOptions = [],
+    valueAttribute,
+    valueAttributeType,
+    labelAttribute,
+    labelAttributeType
+}) => {
+    const updates = [];
+
+    if (valueAttribute && !valueAttributeType) {
+        const valueAttributeOption = attributeOptions.find(option =>
+            option?.value === valueAttribute
+        );
+        if (valueAttributeOption?.type) {
+            updates.push(['data.valueAttributeType', valueAttributeOption.type]);
+        }
+    }
+
+    if (labelAttribute && !labelAttributeType) {
+        const labelAttributeOption = attributeOptions.find(option =>
+            option?.value === labelAttribute
+        );
+        if (labelAttributeOption?.type) {
+            updates.push(['data.labelAttributeType', labelAttributeOption.type]);
+        }
+    }
+
+    return updates;
+};
 
 const FilterDataTab = ({
     data = {},
@@ -28,7 +59,8 @@ const FilterDataTab = ({
     openFilterEditor,
     onEditorChange = () => {},
     dashBoardEditing,
-    selections = {}
+    selections = {},
+    interactions = []
 }) => {
     // Normalize and derive filter data
     const filterDataState = useFilterData(data);
@@ -44,7 +76,31 @@ const FilterDataTab = ({
     );
 
     // Enhanced onChange handler with auto-sync
-    const onChange = useAttributeSync(data, onChangeProp, onEditorChange, selections);
+    const onChange = useAttributeSync(data, onChangeProp, onEditorChange, selections, interactions);
+
+    // Backward compatibility: Back fill missing attribute types for older saved filters
+    useEffect(() => {
+        if (!attributeOptions?.length) {
+            return;
+        }
+
+        getMissingAttributeTypeUpdates({
+            attributeOptions,
+            valueAttribute: filterDataState.valueAttribute,
+            valueAttributeType: filterDataState.valueAttributeType,
+            labelAttribute: filterDataState.labelAttribute,
+            labelAttributeType: filterDataState.labelAttributeType
+        }).forEach(([key, value]) => {
+            onChangeProp(key, value);
+        });
+    }, [
+        attributeOptions,
+        filterDataState.valueAttribute,
+        filterDataState.valueAttributeType,
+        filterDataState.labelAttribute,
+        filterDataState.labelAttributeType,
+        onChangeProp
+    ]);
 
     // Generic handler factory for simple onChange handlers
     const createChangeHandler = (key) => (value) => {
@@ -71,9 +127,8 @@ const FilterDataTab = ({
     };
 
     const handleEditUserDefinedItemFilter = useCallback((itemId) => {
-        // Store which user-defined item is being edited
+        onEditorChange('editingDefaultFilter', false);
         onEditorChange('editingUserDefinedItemId', itemId);
-        // Small delay to ensure state is updated before opening filter editor
         setTimeout(() => {
             openFilterEditor();
         }, 0);
@@ -85,12 +140,22 @@ const FilterDataTab = ({
     }, [onEditorChange]);
 
     // Generic handlers using the factory function
-    const handleValueAttributeChange = createChangeHandler('data.valueAttribute');
-    const handleLabelAttributeChange = createChangeHandler('data.labelAttribute');
+    const handleValueAttributeChange = useCallback((option) => {
+        onChange('data.valueAttribute', option?.value);
+        onChange('data.valueAttributeType', option?.type);
+        if (!filterDataState.labelAttribute) {
+            onChange('data.labelAttributeType', option?.type);
+        }
+    }, [onChange, filterDataState.labelAttribute]);
+    const handleLabelAttributeChange = useCallback((option) => {
+        onChange('data.labelAttribute', option?.value);
+        onChange('data.labelAttributeType', option?.type);
+    }, [onChange]);
     const handleSortByAttributeChange = createChangeHandler('data.sortByAttribute');
     const handleSortOrderChange = createChangeHandler('data.sortOrder');
     const handleMaxFeaturesChange = createChangeHandler('data.maxFeatures');
     const handleFilterCompositionChange = createChangeHandler('data.filterComposition');
+    const handleNoSelectionModeChange = createChangeHandler('data.noSelectionMode');
     const handleUserDefinedTypeChange = useCallback((value) => {
         onChange('data.userDefinedType', value);
         // Clear userDefinedItems when type changes
@@ -102,9 +167,8 @@ const FilterDataTab = ({
     }, [onChange]);
 
     const handleEditDefaultFilter = useCallback(() => {
-        // Store flag indicating we're editing the defaultFilter
+        onEditorChange('editingUserDefinedItemId', null);
         onEditorChange('editingDefaultFilter', true);
-        // Small delay to ensure state is updated before opening filter editor
         setTimeout(() => {
             openFilterEditor();
         }, 0);
@@ -184,9 +248,12 @@ const FilterDataTab = ({
                         onChange={handleFilterCompositionChange}
                     />
 
-                    <DefaultFilterInput
+                    <FilterSelectionModeSelector
+                        value={filterDataState.noSelectionMode}
+                        onChange={handleNoSelectionModeChange}
                         defaultFilter={filterDataState?.defaultFilter}
                         onDefineFilter={handleEditDefaultFilter}
+                        isFilterValid={isFilterValid}
                     />
                 </>
             )}
@@ -200,8 +267,8 @@ FilterDataTab.propTypes = {
     onOpenLayerSelector: PropTypes.func,
     openFilterEditor: PropTypes.func,
     onEditorChange: PropTypes.func,
-    dashBoardEditing: PropTypes.bool
+    dashBoardEditing: PropTypes.bool,
+    interactions: PropTypes.array
 };
 
 export default FilterDataTab;
-

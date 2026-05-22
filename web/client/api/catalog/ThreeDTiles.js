@@ -22,11 +22,13 @@ function validateUrl(serviceUrl) {
     return false;
 }
 
-const recordToLayer = (record) => {
+const recordToLayer = (record, options = {}) => {
     if (!record) {
         return null;
     }
     const { bbox, format, properties } = record;
+    // extract 'enableImageryOverlay' of mapOptions
+    const {enableImageryOverlay} = options;
     return {
         type: '3dtiles',
         url: record.url,
@@ -34,7 +36,8 @@ const recordToLayer = (record) => {
         visibility: true,
         ...(bbox && { bbox }),
         ...(format && { format }),
-        ...(properties && { properties })
+        ...(properties && { properties }),
+        ...(enableImageryOverlay && {enableImageryOverlay})
     };
 };
 

@@ -813,6 +813,7 @@ export const getCQLGeometryElement = function(coordinates, type) {
         geometry += coordinates.join(" ");
         break;
     case "MultiPoint":
+    case "LineString":
         coordinates.forEach((position, index) => {
             geometry += position.join(" ");
             geometry += index < coordinates.length - 1 ? ", " : "";

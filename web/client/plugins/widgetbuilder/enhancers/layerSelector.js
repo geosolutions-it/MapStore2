@@ -7,7 +7,7 @@
  */
 import Rx from 'rxjs';
 
-import { compose, withState, mapPropsStream } from 'recompose';
+import { compose, withState, mapPropsStream, withProps } from 'recompose';
 import isUndefined from 'lodash/isUndefined';
 import { addSearch } from '../../../observables/wms';
 import API from '../../../api/catalog';
@@ -56,5 +56,12 @@ export default compose(
                 ...props
             })
             )
-    )
+    ),
+    withProps(({ selected, setSelected }) => ({
+        onItemClick: ({ record } = {}) => {
+            const present = selected?.identifier === record?.identifier;
+            const nextSelected = present ? null : record;
+            setSelected(nextSelected);
+        }
+    }))
 );

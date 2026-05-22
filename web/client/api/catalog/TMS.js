@@ -10,7 +10,7 @@ import { get, castArray } from 'lodash';
 import * as TMS100 from './TMS_1_0_0';
 
 import * as tileProvider from './tileProvider';
-import { validate as defaultValidate, testService as defaultTestService } from './common';
+import { validate as defaultValidate, testService as defaultTestService, getRecordIdentifier } from './common';
 import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
 import { getTileMap } from '../TMS';
 import { extractOGCServicesReferences } from '../../utils/CatalogUtils';
@@ -71,7 +71,8 @@ export const getCatalogRecords = (data, options) => {
                 description: `${record.srs}${record.format ? ", " + record.format : ""}`,
                 tmsUrl: options.tmsUrl,
                 references,
-                ogcReferences
+                ogcReferences,
+                identifier: record.href ? record.href : getRecordIdentifier({ title: record.title, srs: record.srs })
             }));
         }
         // custom or static tile provider
@@ -85,7 +86,8 @@ export const getCatalogRecords = (data, options) => {
                 attribution: record.attribution,
                 options: record.options,
                 provider: record.provider, // "ProviderName.VariantName"
-                references: []
+                references: [],
+                identifier: getRecordIdentifier({ provider: record.provider, url: record.url, title: record.title })
             };
         });
     }

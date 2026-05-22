@@ -95,6 +95,16 @@ describe('Test correctness of the widgets actions', () => {
         expect(newval.target).toBe(DEFAULT_TARGET);
 
     });
+    it('insertWidget strips deletedInteractions from widget and keeps them on action', () => {
+        const deletedInteractions = [{ id: 'deleted-interaction' }];
+        const retval = insertWidget({
+            id: 'filter-widget',
+            widgetType: 'filter',
+            deletedInteractions
+        });
+        expect(retval.deletedInteractions).toBe(deletedInteractions);
+        expect(retval.widget.deletedInteractions).toBeFalsy();
+    });
     it('updateWidget', () => {
         const widget = {};
         const retval = updateWidget(widget);

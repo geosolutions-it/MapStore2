@@ -8,6 +8,7 @@
 
 import React, { useEffect, useRef, useState }  from 'react';
 import uniq from 'lodash/uniq';
+import isEmpty from 'lodash/isEmpty';
 import { StyleEditor } from './StyleCodeEditor';
 import TextareaEditor from '../../components/styleeditor/Editor';
 import VisualStyleEditor from '../../components/styleeditor/VisualStyleEditor';
@@ -30,6 +31,17 @@ import { classificationVector } from '../../api/StyleEditor';
 import SLDService from '../../api/SLDService';
 import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassification';
 import { getLayerJSONFeature } from '../../observables/wfs';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
+import { getFlatGeobufGeometryTypeFromOptions } from '../../utils/FlatGeobufLayerUtils';
+
+import {
+    getCapabilities as getFlatGeobufCapabilities,
+    sniffFlatGeobufFirstFeature
+} from '../../api/FlatGeobuf';
+import { getRequestConfigurationByUrl } from '../../utils/SecurityUtils';
+import { updateUrlParams } from '../../utils/URLUtils';
 
 const { getColors } = SLDService;
 
@@ -49,10 +61,54 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
-    'flatgeobuf': () => {
-        return Promise.resolve({
-            properties: {},
-            geometryType: 'polygon'
+    'flatgeobuf': (layer) => {
+        // Priority to check geometryType:
+        //  1. explicit layer.geometryType
+        //  2. FGB header from capabilities
+        //  3. then sniff the first feature from remote file header
+        const layerGeometryType = getFlatGeobufGeometryTypeFromOptions(layer);
+        const geometryType = getGeometryType({ localType: layerGeometryType });
+
+        if (layer?.sourceMetadata?.columns) {
+            const properties = layer?.sourceMetadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            return {
+                geometryType,
+                properties
+            };
+        }
+
+        return getFlatGeobufCapabilities(layer.url).then((capabilities) => {
+            const optionsProperties = capabilities?.metadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            const optionsGeometryType = getFlatGeobufGeometryTypeFromOptions({
+                geometryType: layer.geometryType,
+                sourceMetadata: capabilities.metadata
+            });
+            const optionsFirstFeature = {   // hipotetical feature with geometry type from options and properties from metadata, used when sniffing is not needed
+                geometry: { type: optionsGeometryType },
+                properties: optionsProperties
+            };
+            const finalize = (firstFeature) => ({
+                geometryType: getGeometryType({ localType: firstFeature?.geometry?.type || '' }),
+                properties: optionsProperties || firstFeature?.properties || {}
+            });
+            if (optionsGeometryType && !isEmpty(optionsProperties)) {
+                return finalize(optionsFirstFeature);
+            }
+            const { headers, params } = getRequestConfigurationByUrl(layer.url, layer?.security?.sourceId);
+            return sniffFlatGeobufFirstFeature(updateUrlParams(layer.url, params), headers)
+                .then(finalize)
+                .catch(() => {
+                    return {
+                        geometryType: optionsGeometryType,
+                        properties: optionsProperties
+                    };
+                });
+
+        }).catch(() => {
+            return {
+                geometryType: layer.geometryType,
+                properties: layer.properties
+            };
         });
     },
     'wfs': (layer) => layer.url
@@ -66,7 +122,11 @@ const capabilitiesRequest = {
                 });
                 return featureProps;
             })
-        : Promise.resolve({})
+        : Promise.resolve({}),
+    'arcgis-feature': (layer) => Promise.resolve({
+        geometryType: layer.geometryType,
+        properties: {}
+    })
 };
 
 function VectorStyleEditor({
@@ -84,7 +144,9 @@ function VectorStyleEditor({
         'Courier New',
         'Brush Script MT'
     ],
-    onUpdateNode = () => {}
+    onUpdateNode = () => {},
+    scales = [],
+    zoom = 0
 }) {
 
     const request = capabilitiesRequest[layer?.type];
@@ -217,8 +279,13 @@ function VectorStyleEditor({
                 return geojson.current;
             });
         }
+        if (layer.type === 'arcgis-feature') {
+            return Promise.resolve({ type: 'FeatureCollection', features: layer.features || [] });
+        }
         return Promise.resolve({ type: 'FeatureCollection', features: [] });
     }
+
+    const supportedLayers = ['vector', 'wfs', 'arcgis-feature'];
 
     return (
         <StyleEditor
@@ -250,12 +317,18 @@ function VectorStyleEditor({
                 }
             }}
             config={{
-                simple: !['vector', 'wfs'].includes(layer?.type),
+                simple: !supportedLayers.includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
+                enableFieldExpression: supportedLayers.includes(layer.type),
+                scales,
+                zoom: Math.round(zoom)   // passing this for showing arrow of current scale for ScaleDenominator
             }}
         />
     );
 }
-export default VectorStyleEditor;
+const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector, currentZoomLevelSelector], (scales, zoom) => ({
+    scales: scales.map(scale => Math.round(scale)),
+    zoom
+})))(VectorStyleEditor);
+export default ConnectedVectorStyleEditor;

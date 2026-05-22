@@ -11,11 +11,11 @@ import { Alert, Glyphicon } from 'react-bootstrap';
 
 import FlexBox from "../../../components/layout/FlexBox";
 import ButtonComponent from '../../../components/layout/Button';
-import InputControl from './InputControl';
+import InputControl from '../../../components/catalog/resources/InputControl';
 import Message from '../../../components/I18N/Message';
 import Text from '../../../components/layout/Text';
 import tinycolor from 'tinycolor2';
-import PaginationCustom from './PaginationCustom';
+import PaginationCustom from '../../../components/catalog/resources/PaginationCustom';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import Spinner from '../../../components/layout/Spinner';
 import TagsManagerEntry from './TagsManagerEntry';

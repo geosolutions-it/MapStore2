@@ -85,6 +85,10 @@
       "style": "Stil",
       "transparent": "Transparent",
       "singleTile": "Single tile",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "Använd cachealternativ",
       "styleCustom": "Använd stil med namnet {value}",
       "styleListLoadError": "Ett fel uppstod när formatlistan skulle laddas",
@@ -1620,6 +1624,20 @@
       "wmcNoLayersError": "Minst ett WMS-lager behövs för att exportera till WMC, hittade inget"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "yp av taggfilter",
+        "category": "Kategori",
+        "keyword": "Nyckelord"
+      },
+      "listView": "Listvy",
+      "gridView": "Rutnätsvy",
+      "selectAll": "Markera alla",
+      "layers": "Lager",
+      "edit": "Redigera",
+      "backToList": "Tillbaka till katalogen",
+      "close": "Stäng",
+      "showFullContent": "Visa hela innehållet",
+      "hideFullContent": "Dölj hela innehållet",
       "start": "Startdatum",
       "end": "Slutdatum",
       "notAvailable": "Inte tillgängligt",
@@ -1670,7 +1688,8 @@
         "cog": "t.ex. https://mydomain.com/cog.tif",
         "model": "t.ex. https://mydomain.com/filename.ifc",
         "arcgis": "t.ex. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2023,7 +2042,8 @@
         "title": "Fel vid export",
         "invalidOutputFormat": "Det valda exportformatet är inte tillgängligt",
         "downloadEstimatorTitle": "Fel i DownloadEstimator",
-        "downloadEstimatorFailed": "DownloadEstimator-begäran misslyckades, vilket innebär att den exporterade filen överskrider konfigurerade servergränser. Försök att ändra nedladdningsalternativ eller lägg till filter i ditt lager och försök igen."
+        "downloadEstimatorFailed": "DownloadEstimator-begäran misslyckades, vilket innebär att den exporterade filen överskrider konfigurerade servergränser. Försök att ändra nedladdningsalternativ eller lägg till filter i ditt lager och försök igen.",
+        "fetchFormatsFailed": "Det gick inte att hämta tillgängliga format för lagret. Försök igen senare."
       },
       "exportResultsMessages": {
         "newExport": "Filen är tillgänglig här när exporten är klar",
@@ -2228,14 +2248,14 @@
         "placeholder": "Ange kartnamn",
         "selectLabel": "Välj en karta",
         "infoOnHide": "Expandera widgeten för att se kartväljaren",
-        "subTitle": "<p>För flerval,<br>på Windows använd CTRL + klick <br> och på Mac använd control + klick</p>"
+        "subTitle": "<p>Du kan välja flera lager</p>"
       },
       "chartSwitcher": {
         "noResults": "Inget lager hittades",
         "placeholder": "Ange diagramnamn",
         "selectLabel": "Diagram",
         "infoOnHide": "Expandera widgeten för att se diagramväljaren",
-        "subTitle": "<p>För flerval,<br>på Windows använd CTRL + klick <br> och på Mac använd control + klick</p>"
+        "subTitle": "<p>Du kan välja flera lager</p>"
       },
       "chartType": {
         "bar": {
@@ -2383,14 +2403,7 @@
         "expandTray": "Utöka widgetfacket",
         "collapseTray": "Dölj widgetfack",
         "expandAll": "Utöka alla widgets",
-        "collapseAll": "Dölj alla widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "Tidslinje och widgetar kan inte finnas samtidigt. Använd widgetens fack för att växla mellan tidslinje och widgets",
-            "timelineTitle": "Tidslinjen har dolts",
-            "widgetsTitle": "Widgets har dolts"
-          }
-        }
+        "collapseAll": "Dölj alla widgets"
       }
     },
     "dashboard": {
@@ -2791,6 +2804,8 @@
       "msExtrudedHeight": "Extruderad höjd",
       "msExtrusionColor": "Extruderingsfärg",
       "msExtrusionType": "Typ av extrudering",
+      "msExtrusionOutlineColor": "Extruderingskonturfärg",
+      "msExtrusionOutlineWidth": "Extruderingskonturbredd",
       "wall": "Vägg",
       "enableBanding": "Bandstil",
       "selectChannel": "Välj ett band",
@@ -3043,6 +3058,8 @@
       "addWebPageContent": "Lägg till innehåll på webbsidan",
       "zoomToContent": "Zooma till innehåll",
       "delete": "Ta bort geostory",
+      "duplicateSection": "Duplidera avsnitt",
+      "copyOfPrefix": "Kopiera av",
       "emptyTitle": "Den här historien är tom",
       "emptyDescription": "Börja skapa en fantastisk kartberättelse genom att lägga till nytt innehåll",
       "closeFullscreenMap": "Stäng helskärmskarta",
@@ -3183,6 +3200,10 @@
         "toc": "Lager",
         "pan": "Pan interaktion",
         "zoom": "Zooma in/ut-interaktioner",
+        "center": "Centrum",
+        "scale": "Skala",
+        "applyToOtherMaps": "Applikat på andra kartor",
+        "appliedSuccessfully": "Applikat på andra kartor",
         "topLeft": "Överst till vänster",
         "topRight": "Överst till höger",
         "bottomLeft": "Nedre vänster",

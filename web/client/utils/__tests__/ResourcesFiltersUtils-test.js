@@ -10,7 +10,8 @@ import {
     hashLocationToHref,
     clearQueryParams,
     splitFilterValue,
-    getTagColorVariables
+    getTagColorVariables,
+    mergeDefaultQuery
 } from '../ResourcesFiltersUtils';
 import expect from 'expect';
 
@@ -93,5 +94,23 @@ describe('ResourcesFiltersUtils', () => {
             '--tag-color-g': 0,
             '--tag-color-b': 255
         });
+    });
+    it('mergeDefaultQuery', () => {
+        expect(mergeDefaultQuery({}, {})).toEqual({});
+        expect(mergeDefaultQuery({}, undefined)).toEqual({});
+        expect(mergeDefaultQuery({ q: 'test' }, {})).toEqual({ q: 'test' });
+        expect(mergeDefaultQuery({}, { f: 'dataset' })).toEqual({ f: 'dataset' });
+        expect(mergeDefaultQuery({ q: 'test' }, { f: 'dataset' }))
+            .toEqual({ q: 'test', f: 'dataset' });
+        expect(mergeDefaultQuery({ f: 'remote' }, { f: 'dataset' }))
+            .toEqual({ f: ['dataset', 'remote'] });
+        expect(mergeDefaultQuery({ f: ['remote', 'featured'] }, { f: 'dataset' }))
+            .toEqual({ f: ['dataset', 'remote', 'featured'] });
+        expect(mergeDefaultQuery({ f: ['dataset', 'remote'] }, { f: 'dataset' }))
+            .toEqual({ f: ['dataset', 'remote'] });
+        expect(mergeDefaultQuery(
+            { f: ['remote'], 'filter{category.in}': 'boundaries' },
+            { f: 'dataset' }
+        )).toEqual({ f: ['dataset', 'remote'], 'filter{category.in}': 'boundaries' });
     });
 });

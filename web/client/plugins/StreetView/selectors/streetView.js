@@ -95,6 +95,7 @@ const getVectorStyle = (overrides) => ({
         ]
     }
 });
+
 const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
     type: "tileprovider",
@@ -120,6 +121,61 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
 const MAPILLARY_DATA_LAYER_DEFAULTS = {
     type: 'vector'
 };
+
+const PANORAMAX_DATA_LAYER_DEFAULTS = {
+    type: 'tileprovider',       // use the TileProvider OpenLayers plugin
+    provider: 'custom',         // "custom" provider allows to specify a custom URL template for the tiles
+    url: 'https://panoramax.openstreetmap.fr/api/map/{z}/{x}/{y}.mvt',
+    format: 'application/vnd.mapbox-vector-tile', // indicates that the format is MVT (Mapbox Vector Tile)
+    name: 'panoramax:sequences',
+    visibility: true,
+    // optional: zoom bounds
+    minimumLevel: 0,
+    // Panoramax instances such as IGN and openstreetmap don't have tiles above zoom level 15
+    // By setting 15 as max zoom level, if the map is at a level above 15, the tiles at level 15 will be loaded and then overzoomed
+    maximumLevel: 15,
+    style: {
+        "format": "geostyler",
+        "body": {
+            "rules": [
+
+                {
+                    "name": "Circle",
+                    "ruleId": "df213eb0-3a3d-11f1-b4d4-ab64b0b28d51",
+                    "symbolizers": [
+                        {
+                            "kind": "Mark",
+                            "wellKnownName": "Circle",
+                            "color": "#3165EF",
+                            "fillOpacity": 0.6,
+                            "strokeColor": "#3165EF",
+                            "strokeOpacity": 0.8,
+                            "strokeWidth": 0,
+                            "radius": 6,
+                            "rotate": 0,
+                            "msBringToFront": false,
+                            "msHeightReference": "none",
+                            "symbolizerId": "df2165c0-3a3d-11f1-b4d4-ab64b0b28d51"
+                        }
+                    ]
+                }, {
+                    "name": "Line",
+                    "ruleId": "dfs21w5c0-3a3d-11f1-b4d4-ab64b0b28d51",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": "#3165EF",
+                            "opacity": 1,
+                            "width": 2,
+                            "symbolizerId": "df21w5c0-3a3d-11f1-b4d4-ab64b0b28d51"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    attribution: 'Panoramax'
+};
 /**
  * Gets the default data layer configuration for the current provider.
  * @memberof selectors.streetview
@@ -143,6 +199,16 @@ const providerDataLayerDefaultsSelector = createSelector(
                 ...MAPILLARY_DATA_LAYER_DEFAULTS,
                 style: getVectorStyle({ msHeightReference }),
                 url: configuration?.providerSettings?.ApiURL
+            };
+        case PROVIDERS.PANORAMAX:
+            const tilesUrl =  configuration?.providerSettings?.PanoramaxApiURL ? configuration?.providerSettings?.PanoramaxApiURL + '/map/{z}/{x}/{y}.mvt' : PANORAMAX_DATA_LAYER_DEFAULTS.url;
+            const tilesZoomLevel = {min: configuration?.providerSettings?.minimumLevel, max: configuration?.providerSettings?.maximumLevel};
+            return {
+                ...PANORAMAX_DATA_LAYER_DEFAULTS,
+                // Use specific url or default layer url
+                url: tilesUrl,
+                minimumLevel: tilesZoomLevel.min ?? PANORAMAX_DATA_LAYER_DEFAULTS.minimumLevel,
+                maximumLevel: tilesZoomLevel.max ?? PANORAMAX_DATA_LAYER_DEFAULTS.maximumLevel
             };
         default:
             return {};

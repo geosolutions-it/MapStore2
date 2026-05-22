@@ -168,9 +168,10 @@ export default class OpenlayersLayer extends React.Component {
                 const parentMap = this.props.map;
                 const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
                 const layerExtent = options && options.bbox && options.bbox.bounds;
+                const layerExtentCRS = options && options.bbox && options.bbox.crs;
                 const mapBboxPolygon = mapExtent && reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
                 let layerBboxPolygon = layerExtent && reprojectBbox(
-                    getExtentFromNormalized(layerExtent, this.props.srs).extent,
+                    getExtentFromNormalized(layerExtent, layerExtentCRS || this.props.srs).extent,
                     'EPSG:4326'
                 );
                 if (layerBboxPolygon && layerBboxPolygon.length === 2 && isArray(layerBboxPolygon[1])) {
@@ -323,6 +324,25 @@ export default class OpenlayersLayer extends React.Component {
 
             this.layer.getSource().on('vectorerror', () => {
                 this.props.onLayerLoad(options.id, {error: true});
+            });
+            this.featurestoload = 0;
+            this.layer.getSource().on('featuresloadstart', () => {
+                if (this.featurestoload === 0) {
+                    this.props.onLayerLoading(options.id);
+                }
+                this.featurestoload++;
+            });
+            this.layer.getSource().on('featuresloadend', () => {
+                this.featurestoload--;
+                if (this.featurestoload === 0) {
+                    this.props.onLayerLoad(options.id);
+                }
+            });
+            this.layer.getSource().on('featuresloaderror', () => {
+                this.featurestoload--;
+                if (this.featurestoload === 0) {
+                    this.props.onLayerLoad(options.id, {error: true});
+                }
             });
 
             if (options.refresh) {

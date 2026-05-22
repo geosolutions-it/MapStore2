@@ -25,7 +25,8 @@
           "scalebar": {
             "container": "#footer-scalebar-container"
           }
-        }
+        },
+        "containerPosition": "background"
       }
     },
     {
@@ -82,7 +83,9 @@
       "dependencies": ["QueryPanel"],
       "children": ["LayerDownload"],
       "autoEnableChildren": ["LayerDownload"],
-      "defaultConfig": {}
+      "defaultConfig": {
+        "containerPosition": "bottom"
+      }
     },
     {
       "name": "TOCItemsSettings",
@@ -154,6 +157,13 @@
       "glyph": "link",
       "title": "plugins.Permalink.title",
       "description": "plugins.Permalink.description"
+    },
+    {
+      "name": "LayersSelection",
+      "glyph": "hand-down",
+      "title": "plugins.LayersSelection.title",
+      "description": "plugins.LayersSelection.description",
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "BackgroundSelector",
@@ -303,13 +313,10 @@
       }
     },
     {
-      "name": "MetadataExplorer",
+      "name": "Catalog",
       "glyph": "folder-open",
       "title": "plugins.MetadataExplorer.title",
-      "description": "plugins.MetadataExplorer.description",
-      "defaultConfig": {
-        "wrap": true
-      }
+      "description": "plugins.MetadataExplorer.description"
     },
     {
       "name": "About",
@@ -496,7 +503,10 @@
       "glyph": "time",
       "title": "plugins.Timeline.title",
       "description": "plugins.Timeline.description",
-      "dependencies": ["Playback"]
+      "dependencies": ["Playback"],
+      "defaultConfig": {
+        "containerPosition": "bottom"
+      }
     },
     {
       "name": "Playback",

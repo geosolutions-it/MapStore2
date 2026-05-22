@@ -104,6 +104,7 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats
   * @prop {object} cfg.dateFormats Allows to specify custom date formats ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format) to use to display dates in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
+  * @prop {boolean} cfg.resizable default true. Enable resizable feature grid.
   * ```
   * "dateFormats": {
   *    "date-time": "MM DD YYYY - HH:mm:ss",

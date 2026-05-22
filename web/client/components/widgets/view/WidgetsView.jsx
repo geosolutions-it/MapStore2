@@ -30,6 +30,7 @@ export default pure(({
     cols = { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 },
     // eslint-disable-next-line no-unused-vars
     widgetOpts = {},
+    customWidgets = [],
     widgets = [],
     layouts,
     dependencies,
@@ -109,6 +110,7 @@ export default pure(({
         {
             widgets.map(w => (<div key={w.id} data-grid={w.dataGrid} onClick={() => onWidgetClick(w)} className={getWidgetClass(w)}><DefaultWidget
                 data-grid={w.dataGrid}
+                customWidgets={customWidgets}
                 {...actions}
                 {...w}
                 widgets={widgets}

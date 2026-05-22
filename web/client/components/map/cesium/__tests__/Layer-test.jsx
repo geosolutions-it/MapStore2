@@ -27,6 +27,7 @@ import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
 import '../plugins/ModelLayer';
+import '../plugins/FlatGeobufLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1887,5 +1888,64 @@ describe('Cesium layer', () => {
                 done();
             })
             .catch(done);
+    });
+
+    describe('FlatGeobuf', () => {
+        // Use a test fixture URL but don't depend on the load completing.
+        // The tests below verify the plugin's surface (accessors) and the
+        // update-handler behavior (style change reuses the existing
+        // GeoJSONStyledFeatures instead of recreating the layer).
+        const baseOptions = {
+            type: 'flatgeobuf',
+            url: 'base/web/client/test-resources/flatgeobuf/UScounties_subset.fgb',
+            title: 'us-counties',
+            name: 'us-counties',
+            visibility: true,
+            metadata: { geometryType: 3 } // Polygon
+        };
+
+        it('exposes getStyledFeatures and getInferredGeometryType accessors', () => {
+            const cmp = ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={baseOptions}
+                    map={map}
+                />, document.getElementById('container'));
+            expect(cmp).toBeTruthy();
+            expect(cmp.layer).toBeTruthy();
+            expect(cmp.layer.detached).toBe(true);
+            expect(typeof cmp.layer.getStyledFeatures).toBe('function');
+            expect(typeof cmp.layer.getInferredGeometryType).toBe('function');
+            expect(cmp.layer.getStyledFeatures()).toBeTruthy();
+        });
+
+        it('reuses the same styledFeatures instance on style-only change (no recreate)', () => {
+            const cmp = ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={baseOptions}
+                    map={map}
+                />, document.getElementById('container'));
+            const layerBefore = cmp.layer;
+            const styledFeaturesBefore = cmp.layer.getStyledFeatures();
+            expect(styledFeaturesBefore).toBeTruthy();
+
+            // Re-render with a style change. The update handler must
+            // reapply the style on the existing styledFeatures rather
+            // than recreating the layer (which would refetch features).
+            ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={{
+                        ...baseOptions,
+                        style: { format: 'geostyler', body: { rules: [] } }
+                    }}
+                    map={map}
+                />, document.getElementById('container'));
+            // Same wrapper-held layer object: update returned null.
+            expect(cmp.layer).toBe(layerBefore);
+            // Same GeoJSONStyledFeatures instance: features stay loaded.
+            expect(cmp.layer.getStyledFeatures()).toBe(styledFeaturesBefore);
+        });
     });
 });

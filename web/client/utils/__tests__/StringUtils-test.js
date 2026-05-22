@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { containsHTML, removeDuplicateLines } from '../StringUtils';
+import { containsHTML, removeDuplicateLines, hashCode } from '../StringUtils';
 
 describe('StringUtils test', () => {
     it('test contains html', () => {
@@ -38,6 +38,9 @@ describe('StringUtils test', () => {
 
         test = "";
         expect(removeDuplicateLines(test)).toBe(test);
+    });
+    it("hashCode", () => {
+        expect(hashCode("str")).toBe(114225);
     });
 
 });

@@ -113,4 +113,9 @@ describe('Test correctness of the close actions', () => {
         const action = security.refreshSecurityLayers();
         expect(action.type).toBe(security.REFRESH_SECURITY_LAYERS);
     });
+    it('setLoginLoading', () => {
+        const action = security.setLoginLoading(true);
+        expect(action.loading).toBe(true);
+        expect(action.type).toBe(security.LOGIN_LOADING);
+    });
 });

@@ -40,6 +40,11 @@
       "depthTestAgainstTerrain": false,
       "terrainProvider": {
         "type": "ellipsoid"
+      },
+      "zoomToExtentSettings": {
+        "minRadius": 10,
+        "fitFactor": 2.0,
+        "maxZoom": 20
       }
     },
     "floatingIdentifyDelay": 1000
@@ -61,22 +66,7 @@
       }
     }
   ],
-  "monitorState": [
-    { "name": "router", "path": "router.location.pathname" },
-    { "name": "browser", "path": "browser" },
-    { "name": "geostorymode", "path": "geostory.mode" },
-    { "name": "featuregridmode", "path": "featuregrid.mode" },
-    { "name": "userrole", "path": "security.user.role" },
-    { "name": "printEnabled", "path": "print.capabilities" },
-    {
-      "name": "resourceCanEdit",
-      "path": "resources.initialSelectedResource.canEdit"
-    },
-    {
-      "name": "resourceDetails",
-      "path": "resources.initialSelectedResource.attributes.details"
-    }
-  ],
+  "monitorState": [],
   "userSessions": {
     "enabled": true
   },
@@ -250,7 +240,8 @@
                 }
               ]
             }
-          }
+          },
+          "tagFilterType": "category"
         }
       },
       "locales": {
@@ -561,10 +552,7 @@
         }
       },
       {
-        "name": "MetadataExplorer",
-        "cfg": {
-          "wrap": true
-        }
+        "name": "Catalog"
       },
       {
         "name": "About",
@@ -669,7 +657,8 @@
       {
         "name": "Timeline",
         "cfg": {
-          "expandLimit": 20
+          "expandLimit": 20,
+          "containerPosition": "bottom"
         }
       },
       "Playback",

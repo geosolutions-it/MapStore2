@@ -7,7 +7,7 @@
  */
 
 import { reproject, getUnits } from './CoordinatesUtils';
-import { METERS_PER_UNIT } from './MapUtils';
+import { getMetersPerUnit } from './MapUtils';
 
 const DEFAULT_RADIUS = 6371008.8;
 
@@ -45,7 +45,7 @@ function circle(_center, _radius, { sides = 128, projection = 'EPSG:3857' } = {}
     const projectedCenter = reproject(_center, 'EPSG:4326', projection);
     const center = [projectedCenter.x, projectedCenter.y];
     const units = getUnits(projection);
-    const radius = _radius / METERS_PER_UNIT[units];
+    const radius = _radius / getMetersPerUnit(units);
     const stride = 2;
     const arrayLength = stride * (sides + 1);
     const flatCoordinates = new Array(arrayLength);

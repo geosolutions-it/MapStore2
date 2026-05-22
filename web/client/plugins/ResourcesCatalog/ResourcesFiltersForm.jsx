@@ -13,12 +13,12 @@ import url from 'url';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import resourcesReducer from './reducers/resources';
-import FiltersForm from './components/FiltersForm';
+import FiltersForm from '../../components/catalog/resources/FiltersForm';
 import { getAvailableResourceTypes, getMonitoredStateSelector, getRouterLocation, getShowFiltersForm } from './selectors/resources';
 import { searchResources, setShowFiltersForm  } from './actions/resources';
 import ResourcesFiltersFormButton from './containers/ResourcesFiltersFormButton';
 import useParsePluginConfigExpressions from './hooks/useParsePluginConfigExpressions';
-import useFilterFacets from './hooks/useFilterFacets';
+import useFilterFacets from '../../components/catalog/hooks/useFilterFacets';
 import ResourcesPanelWrapper from './components/ResourcesPanelWrapper';
 import TargetSelectorPortal from './components/TargetSelectorPortal';
 import useResourcePanelWrapper from './hooks/useResourcePanelWrapper';
@@ -26,6 +26,7 @@ import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '../../selectors/security';
 import { getCatalogFacets } from '../../api/persistence';
 import { isMenuItemSupportedSupported } from '../../utils/ResourcesUtils';
+import { mergeDefaultQuery } from '../../utils/ResourcesFiltersUtils';
 
 /**
  * This plugin renders a side panel with configurable input filters
@@ -37,6 +38,7 @@ import { isMenuItemSupportedSupported } from '../../utils/ResourcesUtils';
  * @prop {string} cfg.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
  * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
  * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
+ * @prop {object} cfg.defaultQuery optional default query to be applied to the filter form
  * @prop {object[]} cfg.fields array of filter object configurations
  * @example
  * {
@@ -105,6 +107,7 @@ function ResourcesFiltersForm({
     resourcesGridId,
     onClose,
     onSearch,
+    defaultQuery,
     extent = {
         layers: [
             {
@@ -206,6 +209,7 @@ function ResourcesFiltersForm({
 }, context) {
 
     const { query } = url.parse(location.search, true);
+    const updatedQuery = defaultQuery ? mergeDefaultQuery(query, defaultQuery) : query;
 
     const parsedConfig = useParsePluginConfigExpressions(monitoredState, {
         extent,
@@ -230,7 +234,7 @@ function ResourcesFiltersForm({
     const {
         fields
     } = useFilterFacets({
-        query,
+        query: updatedQuery,
         fields: parsedConfig.fields,
         request: (...args) => getCatalogFacets(...args).toPromise(),
         monitoredState,
@@ -250,7 +254,8 @@ function ResourcesFiltersForm({
                     id={id}
                     extentProps={parsedConfig.extent}
                     fields={fields}
-                    query={query}
+                    query={updatedQuery}
+                    defaultQuery={defaultQuery}
                     onChange={(params) => onSearch({ params }, resourcesGridId)}
                     onClear={() => onSearch({ clear: true }, resourcesGridId)}
                     onClose={() => onClose(resourcesGridId)}

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { useMemo } from 'react';
-import { DATA_SOURCE_TYPES, VALUES_FROM_TYPES, USER_DEFINED_TYPES } from '../constants';
+import { DATA_SOURCE_TYPES, VALUES_FROM_TYPES, USER_DEFINED_TYPES, FILTER_SELECTION_MODES } from '../constants';
 
 // Inline layer utility functions
 const normalizeLayer = (layer) => {
@@ -80,7 +80,9 @@ export const useFilterData = (data = {}) => {
 
         // Attributes
         const valueAttribute = filterData.valueAttribute ?? null;
+        const valueAttributeType = filterData.valueAttributeType ?? null;
         const labelAttribute = filterData.labelAttribute ?? null;
+        const labelAttributeType = filterData.labelAttributeType ?? null;
         const sortByAttribute = filterData.sortByAttribute ?? null;
         const sortOrder = filterData.sortOrder;
 
@@ -92,6 +94,7 @@ export const useFilterData = (data = {}) => {
         // User defined items
         const userDefinedItems = normalizeUserDefinedItems(filterData.userDefinedItems);
         const defaultFilter = filterData.defaultFilter;
+        const noSelectionMode = filterData.noSelectionMode ?? FILTER_SELECTION_MODES.NO_FILTER;
 
         return {
             // Raw data
@@ -110,7 +113,9 @@ export const useFilterData = (data = {}) => {
 
             // Attributes
             valueAttribute,
+            valueAttributeType,
             labelAttribute,
+            labelAttributeType,
             sortByAttribute,
             sortOrder,
 
@@ -120,10 +125,10 @@ export const useFilterData = (data = {}) => {
             userDefinedType,
             userDefinedItems,
             defaultFilter,
+            noSelectionMode,
 
             // Flags
             hasLayerSelection: !!selectedLayerObject
         };
     }, [data]);
 };
-

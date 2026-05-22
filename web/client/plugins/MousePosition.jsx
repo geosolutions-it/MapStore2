@@ -97,8 +97,9 @@ MousePosition.propTypes = {
   * @prop {boolean} cfg.showElevation shows elevation in addition to planar coordinates (requires a WMS layer with useElevation: true to be configured in the map)
   * @prop {function} cfg.elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
   * @prop {object[]} projectionDefs list of additional project definitions
-  * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
-  * @prop {object} cfg.additionalCRS additional crs added to the list. The label param is used after in the combobox.
+    * @prop {object[]} cfg.availableProjections list of the available projections to be displayed in the combobox.
+    * @prop {string[]} cfg.filterAllowedCRS (deprecated) list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
+    * @prop {object} cfg.additionalCRS (deprecated) additional crs added to the list. The label param is used after in the combobox.
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
   * // Put the following lines at the first level of the localconfig
@@ -111,13 +112,14 @@ MousePosition.propTypes = {
   *   }]
   * }
   * @example
-  * // And configure the mouse position plugin as below:
+    * // And configure the mouse position plugin as below:
   * {
   *   "cfg": {
-  *     "additionalCRS": {
-  *       "EPSG:3003": { "label": "EPSG:3003" }
-  *     },
-  *     "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"]
+    *     "availableProjections": [
+    *       { "value": "EPSG:4326", "label": "EPSG:4326" },
+    *       { "value": "EPSG:3857", "label": "EPSG:3857" },
+    *       { "value": "EPSG:3003", "label": "EPSG:3003" }
+    *     ]
   *   }
   * }
   * @example

@@ -189,6 +189,47 @@ describe('Test 3D tiles catalog API', () => {
             }
         });
     });
+    it('should extract the layer config from a catalog record with enableImageryOverlay option', () => {
+        const catalogRecord = {
+            serviceType: '3dtiles',
+            isValid: true,
+            description: 'v. 1.0',
+            title: 'Title',
+            identifier: 'http://service.org/tileset.json',
+            url: 'http://service.org/tileset.json',
+            thumbnail: null,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            },
+            references: []
+        };
+        const options = {
+            enableImageryOverlay: true
+        };
+        const layer = getLayerFromRecord(catalogRecord, options);
+        expect(layer).toEqual({
+            type: '3dtiles',
+            url: 'http://service.org/tileset.json',
+            title: 'Title',
+            visibility: true,
+            enableImageryOverlay: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        });
+    });
     it('should validate if the service url ends with .json', (done) => {
         const service = { title: '3D Tile Service', url: 'http://service.org/tileset.json' };
         validate(service)

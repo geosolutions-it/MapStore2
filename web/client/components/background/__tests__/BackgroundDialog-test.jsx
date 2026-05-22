@@ -83,4 +83,64 @@ describe('test BackgroundDialog', () => {
         const wmsCacheOptionsToolbar = document.querySelector('.ms-wms-cache-options-toolbar');
         expect(wmsCacheOptionsToolbar).toBeTruthy();
     });
+
+    it('should render crop to projection checkbox enabled and unchecked by default', () => {
+        ReactDOM.render(<BackgroundDialog
+            layer={{
+                type: 'wms',
+                url: '/geoserver/wms',
+                name: 'workspace:name'
+            }}
+        />,
+        document.getElementById("container"));
+
+        const cropToProjectionExtent = document.querySelector('input[value="cropToProjectionExtent"]');
+        expect(cropToProjectionExtent).toBeTruthy();
+        expect(cropToProjectionExtent.disabled).toBe(false);
+        expect(cropToProjectionExtent.checked).toBe(false);
+    });
+
+    it('should not render crop to projection checkbox when disabled via props', () => {
+        ReactDOM.render(<BackgroundDialog
+            disableCropToProjectionExtent
+            layer={{
+                type: 'wms',
+                url: '/geoserver/wms',
+                name: 'workspace:name'
+            }}
+        />,
+        document.getElementById("container"));
+
+        const cropToProjectionExtent = document.querySelector('input[value="cropToProjectionExtent"]');
+        expect(cropToProjectionExtent).toBeFalsy();
+    });
+
+    it('should save cropToProjectionExtent as false when unchecked', () => {
+        const actions = {
+            updateThumbnail: () => {},
+            onSave: () => {}
+        };
+        const onSaveSpy = expect.spyOn(actions, 'onSave');
+
+        ReactDOM.render(<BackgroundDialog
+            layer={{
+                type: 'wms',
+                url: '/geoserver/wms',
+                name: 'workspace:name'
+            }}
+            updateThumbnail={actions.updateThumbnail}
+            onSave={actions.onSave}
+        />,
+        document.getElementById("container"));
+
+        const cropToProjectionExtent = document.querySelector('input[value="cropToProjectionExtent"]');
+        expect(cropToProjectionExtent).toBeTruthy();
+        TestUtils.Simulate.change(cropToProjectionExtent, { target: { checked: false } });
+
+        const saveButton = document.querySelector('.modal-footer .btn');
+        TestUtils.Simulate.click(saveButton);
+
+        expect(onSaveSpy).toHaveBeenCalled();
+        expect(onSaveSpy.calls[0].arguments[0].cropToProjectionExtent).toBe(false);
+    });
 });

@@ -192,9 +192,10 @@ describe('TiledBillboardCollection', () => {
     });
 
 
-    it('should create TiledBillboardCollection with custom options', () => {
+    it('should create TiledBillboardCollection with billboard tileType and custom options', () => {
         const customCollection = new TiledBillboardCollection({
             map: mockMap,
+            tileType: 'billboard',
             debugTiles: true,
             tileWidth: 256,
             minimumLevel: 5,
@@ -208,11 +209,21 @@ describe('TiledBillboardCollection', () => {
         });
         customCollection.load();
 
+        expect(customCollection._tileType).toBe('billboard');
         expect(customCollection._debugTiles).toBe(true);
         expect(customCollection._tileWidth).toBe(256);
         expect(customCollection._minimumLevel).toBe(5);
         expect(customCollection._maximumLevel).toBe(15);
         expect(customCollection._style).toEqual({ symbolizers: [{ kind: 'Icon' }] });
+    });
+
+    it('should default to feature tileType', () => {
+        const collection = new TiledBillboardCollection({
+            map: mockMap,
+            style: { symbolizers: [{ kind: 'Icon' }] }
+        });
+
+        expect(collection._tileType).toBe('feature');
     });
 
     it('should handle loadTile function that returns features', (done) => {
@@ -226,17 +237,99 @@ describe('TiledBillboardCollection', () => {
 
         const customCollection = new TiledBillboardCollection({
             map: mockMap,
+            tileType: 'billboard',
             loadTile: () => Promise.resolve({ features: mockFeatures }),
             style: { symbolizers: [{ kind: 'Icon' }] }
         });
 
         expect(customCollection._loadTile).toBeTruthy();
 
-        // Test the loadTile function with a mock tile
         const mockTile = { id: 'test-tile', x: 0, y: 0, z: 10 };
         customCollection._loadTile(mockTile).then((result) => {
             expect(result).toEqual({ features: mockFeatures });
             done();
         }).catch(done);
+    });
+
+    it('should only create BillboardCollection when tileType is billboard', () => {
+        const billboardCollection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'billboard',
+            style: { symbolizers: [{ kind: 'Icon' }] }
+        });
+        expect(billboardCollection._staticBillboardCollection).toBeTruthy();
+
+        const featureCollection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'feature',
+            style: { symbolizers: [{ kind: 'Fill' }] }
+        });
+        expect(featureCollection._staticBillboardCollection).toBeFalsy();
+    });
+
+    it('should create BillboardsTile via _createTile when tileType is billboard', () => {
+        const collection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'billboard',
+            style: { symbolizers: [{ kind: 'Icon' }] },
+            msId: 'test-layer',
+            opacity: 0.8
+        });
+        const tile = collection._createTile({ id: 'test-tile' });
+        expect(tile).toBeTruthy();
+        expect(tile._collection).toBe(collection._staticBillboardCollection);
+        expect(tile._style).toEqual({ symbolizers: [{ kind: 'Icon' }] });
+        expect(tile._opacity).toBe(0.8);
+        expect(tile._msId).toBe('test-layer');
+    });
+
+    it('should create FeaturesTile via _createTile when tileType is feature', () => {
+        const collection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'feature',
+            style: { symbolizers: [{ kind: 'Fill' }] },
+            msId: 'test-layer',
+            opacity: 0.7
+        });
+        const tile = collection._createTile({ id: 'test-tile' });
+        expect(tile).toBeTruthy();
+        expect(tile._style).toEqual({ symbolizers: [{ kind: 'Fill' }] });
+        expect(tile._map).toBe(mockMap);
+        expect(tile._opacity).toBe(0.7);
+        expect(tile._msId).toBe('test-layer');
+    });
+
+    it('should store styleOptions for feature tileType', () => {
+        const styleOptions = { geometryType: 'MultiPolygon' };
+        const collection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'feature',
+            style: { symbolizers: [{ kind: 'Fill' }] },
+            styleOptions
+        });
+        expect(collection._styleOptions).toEqual(styleOptions);
+    });
+
+    it('should update style via setStyleFunction', () => {
+        const collection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'feature',
+            style: { symbolizers: [{ kind: 'Fill', color: '#ff0000' }] }
+        });
+        const newStyle = { symbolizers: [{ kind: 'Fill', color: '#00ff00' }] };
+        collection.setStyleFunction(newStyle);
+        expect(collection._style).toEqual(newStyle);
+    });
+
+    it('should clean up on destroy', () => {
+        const collection = new TiledBillboardCollection({
+            map: mockMap,
+            tileType: 'billboard',
+            style: { symbolizers: [{ kind: 'Icon' }] }
+        });
+        collection.destroy();
+        expect(collection._removed).toBe(true);
+        expect(Object.keys(collection._tileCache).length).toBe(0);
+        expect(collection._prevTiles.length).toBe(0);
     });
 });

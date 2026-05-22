@@ -18,6 +18,7 @@ import SettingsPanelComp from "../../plugins/settings/SettingsPanel";
 import {
     isParametersOpenSelector
 } from '../../selectors/longitudinalProfile';
+import Portal from '../../components/misc/Portal';
 
 const Panel = ({
     isParametersOpen,
@@ -25,7 +26,7 @@ const Panel = ({
     onToggleParameters
 }) => {
 
-    return (<Dialog
+    return (<Portal><Dialog
         id={"LongitudinalSettingsPanel"}
         style={{...panelStyle, display: isParametersOpen ? 'block' : 'none'}}
         draggable={false}
@@ -45,7 +46,7 @@ const Panel = ({
         <SettingsPanelComp key="LongitudinalSettingsPanel" role="body">
             <Properties />
         </SettingsPanelComp>
-    </Dialog>);
+    </Dialog></Portal>);
 };
 
 const PanelConnected = connect(

@@ -226,7 +226,7 @@ describe('Print Plugin', () => {
             try {
                 ReactDOM.render(<Plugin
                     projectionOptions={{
-                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                        "availableProjections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
                     printingService={printingService}
                     useFixedScales mapPreviewOptions={{
@@ -268,7 +268,7 @@ describe('Print Plugin', () => {
             try {
                 ReactDOM.render(<Plugin
                     projectionOptions={{
-                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                        "availableProjections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
                     printingService={printingService}
                     useFixedScales mapPreviewOptions={{
@@ -310,7 +310,7 @@ describe('Print Plugin', () => {
             try {
                 ReactDOM.render(<Plugin
                     projectionOptions={{
-                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                        "availableProjections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
                     printingService={printingService}
                     editScale mapPreviewOptions={{
@@ -321,6 +321,47 @@ describe('Print Plugin', () => {
                     expect(comp).toExist();
                     const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
                     expect(scaleBoxComp).toNotExist();
+                    done();
+                });
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it('uses availableProjections config with label/value entries for print projection', (done) => {
+        const printingService = {
+            getMapConfiguration() {
+                return {
+                    layers: [],
+                    center: {
+                        x: 0,
+                        y: 0,
+                        crs: "EPSG:4326"
+                    }
+                };
+            },
+            validate() { return {}; }
+        };
+        getPrintPlugin().then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    projectionOptions={{
+                        availableProjections: [
+                            { label: "Web Mercator", value: "EPSG:3857" },
+                            { label: "WGS84", value: "EPSG:4326" }
+                        ],
+                        defaultProjection: "EPSG:4326"
+                    }}
+                    printingService={printingService}
+                />, document.getElementById("container"));
+                const comp = document.getElementById("container");
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(() => {
+                    const projSelect = Array.from(document.querySelectorAll('.form-group select'))
+                        .find(sel => Array.from(sel.options).some(o => o.value.startsWith("EPSG:")));
+                    expect(projSelect).toExist();
+                    const optionTexts = Array.from(projSelect.options).map(o => o.text);
+                    expect(optionTexts).toContain("Web Mercator");
+                    expect(optionTexts).toContain("WGS84");
                     done();
                 });
             } catch (ex) {

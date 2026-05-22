@@ -14,6 +14,26 @@ import {
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import { createVectorFeatureFilter } from '../../../../utils/FilterUtils';
+import { DEFAULT_SCREEN_DPI, getScale } from '../../../../utils/MapUtils';
+import { geoStylerScaleDenominatorFilter } from '../../../../utils/styleparser/StyleParserUtils';
+
+/**
+ * Check if layer should be visible at current scale
+ */
+const checkScaleVisibility = (options) => {
+    const styleRules = options?.style?.body?.rules || [];
+    if (styleRules.length === 0) {
+        return true; // No scale rules means always visible
+    }
+
+    const scale = getScale(options.srs, DEFAULT_SCREEN_DPI, options?.resolution) || 0;
+    if (!scale || isNaN(scale)) return true;
+    const validRules = styleRules.filter(rule =>
+        geoStylerScaleDenominatorFilter(rule, Math.round(scale))
+    );
+
+    return validRules.length > 0;
+};
 
 const setOpacity = (layer, opacity) => {
     if (layer.eachLayer) {
@@ -56,12 +76,16 @@ const createLayerLegacy = (options) => {
 const createLayer = (options) => {
     const { hideLoading } = options;
     const vectorFeatureFilter = createVectorFeatureFilter(options);
-    const featuresToRender = options.features.filter(vectorFeatureFilter);        // make filter for features if filter is existing
-
+    const isScaleVisible = checkScaleVisibility(options);
+    let featuresToRender = isScaleVisible
+        ? options.features.filter(vectorFeatureFilter)
+        : [];
     const layer = L.geoJson(featuresToRender, {
         hideLoading: hideLoading
     });
-
+    if (!isScaleVisible) {
+        layer._filteredWithScaleLimits = true;
+    }
     getStyle(applyDefaultStyleToVectorLayer(options), 'leaflet')
         .then((styleUtils) => {
             styleUtils({ opacity: options.opacity, layer, features: featuresToRender })
@@ -97,8 +121,18 @@ const updateLayer = (layer, newOptions, oldOptions) => {
         layer.remove();
         return createLayer(newOptions);
     }
+    const isScaleVisible = checkScaleVisibility(newOptions);
+    if (!isScaleVisible) {
+        if (!layer._filteredWithScaleLimits) {
+            layer.clearLayers();
+            layer._filteredWithScaleLimits = true;
+        }
+        return null;
+    }
+
     if (!isEqual(oldOptions.style, newOptions.style)
-    || newOptions.opacity !== oldOptions.opacity) {
+    || newOptions.opacity !== oldOptions.opacity || layer._filteredWithScaleLimits) {
+        layer._filteredWithScaleLimits = false;
         getStyle(applyDefaultStyleToVectorLayer(newOptions), 'leaflet')
             .then((styleUtils) => {
                 styleUtils({ opacity: newOptions.opacity, layer, features: newOptions.features })
