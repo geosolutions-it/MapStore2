@@ -21,8 +21,6 @@ import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
 import { registerGridFiles } from '../../utils/ProjectionUtils';
 
-import url from 'url';
-
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 
