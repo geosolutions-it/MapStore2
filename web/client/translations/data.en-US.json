@@ -4478,7 +4478,9 @@
         "playback": "Playback Configuration",
         "mapTemplates": "Map Templates",
         "userPlugins": "User Plugins",
-        "mapViews": "Map Views"
+        "mapViews": "Map Views",
+        "swipe": "Swipe",
+        "crsSelector": "CRS Selector"
       }
     },
     "streetView": {

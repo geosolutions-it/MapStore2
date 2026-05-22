@@ -4470,7 +4470,9 @@
         "playback": "Configuration de la lecture",
         "mapTemplates": "Modèles de cartes",
         "userPlugins": "Extensions utilisateur",
-        "mapViews": "Vues de carte"
+        "mapViews": "Vues de carte",
+        "swipe": "Glisser",
+        "crsSelector": "Sélecteur de CRS"
       }
     },
     "streetView": {
