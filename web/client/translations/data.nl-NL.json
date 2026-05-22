@@ -4230,7 +4230,9 @@
         "playback": "Afspeelconfiguratie",
         "mapTemplates": "Kaartsjablonen",
         "userPlugins": "Gebruikersplugins",
-        "mapViews": "Kaartweergaven"
+        "mapViews": "Kaartweergaven",
+        "swipe": "Schuiven",
+        "crsSelector": "CRS-kiezer"
       }
     },
     "streetView": {
