@@ -113,4 +113,27 @@ describe("mapinfo COG utils", () => {
 
         expect(request).toEqual(expectedRequest);
     });
+
+    it("should use sources[0].url as fallback when layer.url is not set", () => {
+        const layerId = "6ba42670-f3c-21f0-8e1f-dd66f6ae634d";
+        const sourceUrl = "https://mydomain.com/cog.tif";
+        const layer = {
+            "id": layerId,
+            "format": "cog",
+            "title": "Cloud layer title",
+            "type": "cog",
+            "sources": [{ "url": sourceUrl, "nodata": 0 }],
+            "visibility": true
+        };
+        const latlng = { "lat": 40.19133465092119, "lng": -92.60925292968749 };
+        const point = {
+            "latlng": latlng,
+            "intersectedPixels": {
+                "0": { "id": layerId, "bands": { "1": 140 } }
+            }
+        };
+
+        const request = cog.buildRequest(layer, { point, currentLocale: "en-US" });
+        expect(request.url).toBe(sourceUrl);
+    });
 });

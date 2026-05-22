@@ -364,8 +364,10 @@ export const resourceToLayerConfig = (resource, options) => {
             id: uuid(),
             type: 'cog',
             title,
+            url: cogUrl,
             sources: [{
-                url: cogUrl
+                url: cogUrl,
+                nodata: 0
             }],
             ...(bbox && { bbox }),
             visibility: true,
