@@ -124,6 +124,71 @@ describe('interactionHelpers', () => {
             });
         });
 
+        it('should disable chart axis applied current time targets when controlled by map time', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: elementItem,
+                target: applyDimensionTarget,
+                targetNodePath: 'widgets[chart-widget].charts[chart-1].traces[trace-1].yAxisOpts[0].appliedCurrentTime',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: true
+            });
+
+            expect(result).toEqual({
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.axisCurrentTimeControlledByTimelineTooltip'
+            });
+        });
+
+        it('should disable chart axis applied current time targets when axis current time is not enabled', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: {
+                    ...elementItem,
+                    interactionMetadata: {
+                        targets: [{
+                            targetType: 'applyDimension',
+                            showCurrentTimeEnabled: false,
+                            dateType: true
+                        }]
+                    }
+                },
+                target: applyDimensionTarget,
+                targetNodePath: 'widgets[chart-widget].charts[chart-1].traces[trace-1].yAxisOpts[0].appliedCurrentTime',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: false
+            });
+
+            expect(result).toEqual({
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.axisCurrentTimeDisabledTooltip'
+            });
+        });
+
+        it('should disable chart axis applied current time targets when axis is not date type', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: {
+                    ...elementItem,
+                    interactionMetadata: {
+                        targets: [{
+                            targetType: 'applyDimension',
+                            showCurrentTimeEnabled: true,
+                            dateType: false
+                        }]
+                    }
+                },
+                target: applyDimensionTarget,
+                targetNodePath: 'widgets[chart-widget].charts[chart-1].traces[trace-1].yAxisOpts[0].appliedCurrentTime',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: false
+            });
+
+            expect(result).toEqual({
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.axisCurrentTimeDisabledTooltip'
+            });
+        });
 
         it('should disable map time targets when timeline is unavailable', () => {
             const result = getInteractionTargetNodeDisabled({

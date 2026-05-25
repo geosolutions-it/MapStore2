@@ -154,6 +154,19 @@ describe('GeoNodeUtils', () => {
                 expect(newLayer.extendedParams).toEqual({ pk: 3, alternate: 'geonode:cog_layer' });
             });
 
+            it('cog layer has top-level url, sources url, and nodata', () => {
+                const newLayer = resourceToLayerConfig({
+                    alternate: 'geonode:cog_layer',
+                    subtype: 'cog',
+                    links: [{ extension: 'cog', url: '/raster.tif' }],
+                    title: 'COG',
+                    perms: [],
+                    pk: 3
+                });
+                expect(newLayer.url).toBe('/raster.tif');
+                expect(newLayer.sources).toEqual([{ url: '/raster.tif', nodata: 0 }]);
+            });
+
             it('flatgeobuf layer includes alternate in extendedParams', () => {
                 const newLayer = resourceToLayerConfig({
                     alternate: 'geonode:fgb_layer',

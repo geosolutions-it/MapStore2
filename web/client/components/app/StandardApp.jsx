@@ -22,9 +22,6 @@ import PluginsUtils from '../../utils/PluginsUtils';
 import ProjectionRegistry from '../../utils/ProjectionRegistry';
 import { registerStaticProjectionDefs } from '../../actions/projections';
 
-import url from 'url';
-const urlQuery = url.parse(window.location.href, true).query;
-
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 
@@ -94,9 +91,6 @@ class StandardApp extends React.Component {
             this.init(config);
         };
 
-        if (urlQuery.localConfig) {
-            ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
-        }
         ConfigUtils.loadConfiguration().then((config) => {
             const opts = {
                 ...this.props.storeOpts,

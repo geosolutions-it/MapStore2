@@ -334,7 +334,7 @@ const Catalog = ({
                         fields={effectiveFilterFormFields}
                     />
                         : null}
-                    <FlexFill flexBox className="_relative ms-catalog-results-panel">
+                    <FlexFill flexBox className="_relative ms-catalog-results-panel" column>
                         {!loadingError && result?.numberOfRecordsMatched !== 0 && (
                             <CatalogContentView
                                 hideIdentifier={hideIdentifier}
