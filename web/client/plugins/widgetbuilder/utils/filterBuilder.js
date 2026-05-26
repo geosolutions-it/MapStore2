@@ -52,6 +52,7 @@ export const createNewFilter = (filtersCount = 0) => {
             forceSelection: false
         },
         items: [],
+        addedOptionalTargets: [],
         data: createEmptyFilterData()
     };
 };

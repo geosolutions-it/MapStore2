@@ -1,10 +1,11 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Glyphicon, MenuItem } from 'react-bootstrap';
@@ -37,7 +38,6 @@ function ResourceCardActionButtons({
     const containerNode = useRef();
     const dropdownClassName = 'ms-card-dropdown';
     const [isDropdownEmpty, setIsDropdownEmpty] = useState(true);
-    const [isOpen, setIsOpen] = useState(false);
     useLayoutEffect(() => {
         const dropdownNode = containerNode?.current?.querySelector(`.${dropdownClassName}`);
         setIsDropdownEmpty((dropdownNode?.children?.length || 0) === 0);
@@ -51,8 +51,6 @@ function ResourceCardActionButtons({
             style={isDropdownEmpty ? { display: 'none' } : {}}
         >
             <Dropdown
-                open={isOpen}
-                onToggle={(nextOpen) => setIsOpen(nextOpen)}
                 pullRight
                 id={`ms-resource-card-action-buttons-${resource?.id}`}
             >
@@ -68,7 +66,7 @@ function ResourceCardActionButtons({
                     {options.map((option) => {
                         if (option.Component) {
                             const { Component } = option;
-                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem} onClose={() => setIsOpen(false)}/>;
+                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem}/>;
                         }
                         return null;
                     })}

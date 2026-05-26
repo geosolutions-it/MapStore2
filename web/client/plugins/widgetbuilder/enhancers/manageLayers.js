@@ -27,6 +27,12 @@ export default compose(
         addLayer: ({ layers = [], setLayers = () => { }, catalog = {}, selectedMapId}) => layer => catalog.localizedLayerStyles ?
             setLayers([...layers, normalizeLayer({...layer, localizedLayerStyles: catalog.localizedLayerStyles})], selectedMapId)
             : setLayers([...layers, normalizeLayer(layer)], selectedMapId),
+        updateLayerProperties: ({ layers = [], setLayers = () => { }, selectedMapId }) => (id, properties = {}) => {
+            if (!find(layers, layer => layer.id === id)) {
+                return null;
+            }
+            return setLayers(layers.map(layer => layer.id === id ? {...layer, ...properties} : layer), selectedMapId);
+        },
         removeLayersById: ({ layers = [], setLayers = () => { }, selectedMapId }) => (ids = []) => setLayers(layers.filter(l => !find(castArray(ids), id => id === l.id)), selectedMapId)
     })
 );

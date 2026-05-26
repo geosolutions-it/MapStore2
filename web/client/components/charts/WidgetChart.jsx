@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useCallback, useMemo, useRef } from 'react';
 import { isArray, castArray, max, isNaN, isNumber, isNull } from 'lodash';
 import LoadingView from '../misc/LoadingView';
 import { parseExpression } from '../../utils/ExpressionUtils';
@@ -48,11 +48,10 @@ const applyPercentageToLabel = (label, value, total) => {
 };
 
 const parseAxisTickValues = (tickValues) => {
-    const values = tickValues
+    const values = typeof tickValues === 'string' && tickValues.trim()
         ? tickValues
             .split(',')
             .map(value => value.trim())
-            .filter(Boolean)
         : undefined;
     return values?.length > 0 ? values : undefined;
 };
@@ -68,6 +67,69 @@ const getAxisTickOptions = (options = {}) => {
     }
     return {};
 };
+
+/**
+ * Returns x-axis options where hover should be limited to custom tick values.
+ */
+const getHoverOnlyOnTickValuesAxisOptions = (axisOptions) => castArray(axisOptions || [])
+    .map((options, idx) => ({
+        ...options,
+        axisIndex: idx,
+        tickValues: parseAxisTickValues(options?.tickvals)
+    }))
+    .filter((options) => !options?.hide && options?.showHoverOnlyOnTickValues && options.tickValues);
+
+/**
+ * Finds the Plotly x-axis object for the current hover event.
+ */
+const getHoverAxis = ({ event, graphDiv, axisIndex }) => event?.xaxes?.[axisIndex]
+    || event?.points?.[0]?.xaxis
+    || graphDiv?._fullLayout?.[`xaxis${axisIndex === 0 ? '' : axisIndex + 1}`];
+
+/**
+ * Converts the current hover x position to pixels in the plot area.
+ */
+const getHoverPixel = ({ event, axis, axisIndex }) => {
+    const axisValue = event?.xvals?.[axisIndex];
+    if (axisValue !== undefined) {
+        return axis.c2p?.(axisValue);
+    }
+    const targetBounds = event?.target?.getBoundingClientRect?.();
+    return event?.clientX !== undefined && targetBounds
+        ? event.clientX - targetBounds.left
+        : event?.points?.[0]?.x !== undefined
+            ? axis.d2p?.(event.points[0].x)
+            : undefined;
+};
+
+/**
+ * Checks whether the current hover x position is near a configured tick value.
+ */
+const isHoverOnAxisTickValues = ({ event, graphDiv, options }) => {
+    const axis = getHoverAxis({ event, graphDiv, axisIndex: options.axisIndex });
+    if (!axis) {
+        return false;
+    }
+    const hoverPixel = getHoverPixel({ event, axis, axisIndex: options.axisIndex });
+    const hoverDistance = Math.min(axis._fullLayout?.hoverdistance ?? 20, 6);
+    return options.tickValues.some((value) => {
+        const tickPixel = axis.d2p ? axis.d2p(value) : undefined;
+        return hoverPixel !== undefined && tickPixel !== undefined && Math.abs(hoverPixel - tickPixel) <= hoverDistance;
+    });
+};
+
+/**
+ * Allows hover only when all active x-axis tick constraints match.
+ */
+export const isHoverOnTickValues = (event, hoverOnlyOnTickValuesAxisOptions = [], graphDiv) => {
+    if (hoverOnlyOnTickValuesAxisOptions.length === 0) {
+        return true;
+    }
+    return hoverOnlyOnTickValuesAxisOptions.every((options) => (
+        isHoverOnAxisTickValues({ event, graphDiv, options })
+    ));
+};
+
 /**
  * Returns the labels for the pie chart, adds % to the labels, for legend, if the prop `includeLegendPercent` is true
  * @param {string|number[]} labels the values of the chart ["California", "Ohio", ...]
@@ -774,11 +836,30 @@ function WidgetChart({
     onHover,
     ...props
 }) {
+    const graphDiv = useRef();
+    const hoverOnlyOnTickValuesAxisOptions = useMemo(() => getHoverOnlyOnTickValuesAxisOptions(props.xAxisOpts), [props.xAxisOpts]);
+    const handleInitialized = useCallback((figure, gd) => {
+        graphDiv.current = gd;
+        onInitialized?.(figure, gd);
+    }, [onInitialized]);
+    const clearHover = useCallback(() => {
+        import('./PlotlyChart').then(({ Plotly }) => {
+            Plotly.Fx.unhover(graphDiv.current);
+        });
+    }, []);
+    const handleBeforeHover = useCallback((event) => {
+        if (!isHoverOnTickValues(event, hoverOnlyOnTickValuesAxisOptions, graphDiv.current)) {
+            clearHover();
+            return false;
+        }
+        return true;
+    }, [clearHover, hoverOnlyOnTickValuesAxisOptions]);
     const { data, layout, config } = toPlotly(props);
     return (
         <Suspense fallback={<LoadingView />}>
             <Plot
-                onInitialized={onInitialized}
+                onInitialized={handleInitialized}
+                onBeforeHover={handleBeforeHover}
                 onHover={onHover}
                 data={data.flat()}
                 layout={layout}
