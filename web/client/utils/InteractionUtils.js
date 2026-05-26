@@ -183,6 +183,10 @@ function normalizeValueAttributeType(valueAttributeType) {
     return (valueAttributeType || '').toLowerCase();
 }
 
+export function isChartAxisDateType(axis) {
+    return normalizeValueAttributeType(axis?.type) === 'date';
+}
+
 function getAllowedDimensionNames(valueAttributeType) {
     const normalizedType = normalizeValueAttributeType(valueAttributeType);
     const allowedDimensions = new Set();
@@ -258,6 +262,17 @@ function createDimensionTargetMetadata(layer, dimension) {
             name: layer?.name
         },
         dimension
+    };
+}
+
+function createChartAxisDimensionTargetMetadata({ showCurrentTimeEnabled, dateType }) {
+    return {
+        targetType: TARGET_TYPES.APPLY_DIMENSION,
+        expectedDataType: DATATYPES.LAYER_DIMENSION,
+        constraints: {},
+        dimension: 'time',
+        showCurrentTimeEnabled,
+        dateType
     };
 }
 
@@ -437,12 +452,61 @@ function getTraceIcon(traceType) {
     return 'bar-chart'; // default
 }
 
+function createChartAxisCurrentTimeNode(axis) {
+    return {
+        type: 'element',
+        id: 'appliedCurrentTime',
+        title: 'Time selection highlight',
+        icon: 'time',
+        nodePathMode: 'dot',
+        interactionMetadata: {
+            targets: [createChartAxisDimensionTargetMetadata({
+                showCurrentTimeEnabled: axis?.showCurrentTime === true,
+                dateType: isChartAxisDateType(axis)
+            })]
+        }
+    };
+}
+
+function createChartAxisNode(axis, axisKey) {
+    const axisOptsKey = `${axisKey}AxisOpts`;
+    const axisTitle = `${axisKey.toUpperCase()} Axis${axis?.title ? ` - ${axis.title}` : ''}`;
+    return {
+        type: 'collection',
+        id: `${axisOptsKey}[${axis?.id}]`,
+        title: axisTitle,
+        icon: axisKey === 'x' ? 'arrow-right' : 'arrow-up',
+        nodePathMode: 'dot',
+        preserveWhenSingleChild: true,
+        children: [createChartAxisCurrentTimeNode(axis)]
+    };
+}
+
+function getTraceDateAxisNodes(trace = {}, chart = {}, axisKey) {
+    const axisOptsKey = `${axisKey}AxisOpts`;
+    const traceAxisKey = `${axisKey}axis`;
+    const axisId = trace?.[traceAxisKey] ?? 0;
+    const chartAxisOpts = chart?.[axisOptsKey];
+    const axisOpts = Array.isArray(chartAxisOpts) ? chartAxisOpts : [chartAxisOpts || { id: 0 }];
+    return axisOpts
+        .map((axis, index) => ({ axis, index }))
+        .filter(({ axis }) => String(axis?.id) === String(axisId))
+        .map(({ axis }) => createChartAxisNode(axis, axisKey));
+}
+
+function createChartTraceAxisNodes(trace, chart) {
+    if (trace?.type === 'pie') {
+        return [];
+    }
+    return ['x', 'y'].flatMap(axisKey => getTraceDateAxisNodes(trace, chart, axisKey));
+}
+
 /**
  * Generates a tree node for a chart trace element.
  * @param {object} trace the chart trace object
  * @returns {object} the chart trace metadata tree node
  */
-export function generateChartTraceTreeNode(trace) {
+export function generateChartTraceElementNode(trace) {
     const traceIcon = getTraceIcon(trace?.type);
     const baseNode = createBaseElementNode(trace, traceIcon);
     return {
@@ -460,6 +524,27 @@ export function generateChartTraceTreeNode(trace) {
     };
 }
 
+function generateChartTraceAxisCollectionNode(trace, chart) {
+    const axisNodes = createChartTraceAxisNodes(trace, chart);
+    if (axisNodes.length === 0) {
+        return null;
+    }
+    const traceIcon = getTraceIcon(trace?.type);
+    return {
+        type: 'collection',
+        ...createBaseProperties(trace?.title || trace?.name || 'No title', traceIcon, trace?.id),
+        preserveWhenSingleChild: true,
+        children: axisNodes
+    };
+}
+
+export function generateChartTraceTreeNode(trace, chart) {
+    return [
+        generateChartTraceElementNode(trace),
+        generateChartTraceAxisCollectionNode(trace, chart)
+    ].filter(Boolean);
+}
+
 /**
  * Generates a tree node for a chart element.
  * @param {object} chart the chart object
@@ -469,7 +554,7 @@ export function generateChartTraceTreeNode(trace) {
 function generateChartElementNode(chart) {
     const tracesCollection = createBaseCollectionNode(
         "Traces",
-        (chart?.traces || []).map(generateChartTraceTreeNode),
+        (chart?.traces || []).flatMap(trace => generateChartTraceTreeNode(trace, chart)),
         undefined,
         "traces"
     );
@@ -626,17 +711,18 @@ export function addNodePathToTree(node, currentPath = "") {
 
     // Build path segment based on staticallyNamedCollection property
     let nodePath = currentPath;
+    const hasNodeId = node.id !== undefined && node.id !== null;
 
     // Special case: root node should be empty string
     if (currentPath === "" && node?.id === "root") {
         nodePath = "";
-    } else if (node.staticallyNamedCollection && node.id) {
+    } else if (node.staticallyNamedCollection && hasNodeId) {
         // Statically named collection (widgets, traces, layers, etc.): use dot notation
         nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
-    } else if (node.nodePathMode === 'dot' && node.id) {
+    } else if (node.nodePathMode === 'dot' && hasNodeId) {
         // Explicit dot-path nodes (e.g. dimension nodes under a layer)
         nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
-    } else if (node.id) {
+    } else if (hasNodeId) {
         // Element (widget, chart, trace, etc.): use brackets with id
         nodePath = `${currentPath}[${node.id}]`;
     }
@@ -913,6 +999,39 @@ export function isLayerDimensionTarget(nodePath) {
  */
 export function isLayerTimeDimensionTarget(nodePath) {
     return isAnyLayerPath(nodePath) && /(?:^|\.)params\.time$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a chart axis current time.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isChartAxisDimensionTarget(nodePath) {
+    return !!nodePath && /(?:^|\.)charts\[[^\]]+\]\.(?:traces\[[^\]]+\]\.)?(?:xAxisOpts|yAxisOpts)\[[^\]]+\]\.appliedCurrentTime$/.test(nodePath);
+}
+
+const CHART_AXIS_CURRENT_TIME_TARGET_REGEX = /^widgets\["?([^"\]]*)"?\]\.charts\["?([^"\]]*)"?\]\.(?:traces\["?([^"\]]*)"?\]\.)?(xAxisOpts|yAxisOpts)\["?([^"\]]*)"?\]\.appliedCurrentTime$/;
+
+/**
+ * Returns the chart axis object referenced by a chart axis current time target path.
+ * Missing axis options are treated as the default axis `{ id: 0 }`, matching chart rendering behavior.
+ * @param {string} targetPath the chart axis current time target path
+ * @param {object[]} widgets the widget collection to search
+ * @returns {object|null}
+ */
+export function getChartAxisFromCurrentTimeTargetPath(targetPath, widgets = []) {
+    const [, widgetId, chartId, , axisOptsKey, axisId] = CHART_AXIS_CURRENT_TIME_TARGET_REGEX.exec(targetPath) || [];
+    if (!widgetId || !chartId || !axisOptsKey) {
+        return null;
+    }
+    const widget = widgets.find(w => String(w?.id) === String(widgetId));
+    const chart = (widget?.charts || []).find(c => String(c?.chartId || c?.id) === String(chartId));
+    if (!chart) {
+        return null;
+    }
+    const chartAxisOpts = chart?.[axisOptsKey];
+    const axisOpts = Array.isArray(chartAxisOpts) ? chartAxisOpts : [chartAxisOpts || { id: 0 }];
+    return axisOpts.find(axis => String(axis?.id) === String(axisId)) || null;
 }
 
 /**
