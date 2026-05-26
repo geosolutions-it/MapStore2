@@ -14,15 +14,23 @@ import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
+import { updateUrlParams } from '../../../../utils/URLUtils';
 
 function create(options) {
+    let sources = [];
     let sourceOptions = {};
-    if (options.security && options.sources && options.sources.length > 0) {
+    if (options.sources && options.sources.length > 0) {
         const firstSource = options.sources[0];
-        const requestConfig = getRequestConfigurationByUrl(firstSource.url, null, options.security?.sourceId);
-        if (requestConfig.headers) {
-            sourceOptions.headers = requestConfig.headers;
+        const {headers, params} = getRequestConfigurationByUrl(firstSource.url, null, options.security?.sourceId);
+        if (headers) {
+            sourceOptions.headers = headers;
         }
+        sources = options.sources.map((source) => {
+            return {
+                ...source,
+                url: updateUrlParams(source.url, params)
+            };
+        });
     }
     const layerOl = new TileLayer({
         msId: options.id,
@@ -31,9 +39,9 @@ function create(options) {
         visible: options.visibility,
         source: new GeoTIFF({
             convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
-            sources: options.sources,
-            wrapX: true,
-            sourceOptions
+            sourceOptions,
+            sources,
+            wrapX: true
         }),
         enablePickFeatures: true,
         zIndex: options.zIndex,

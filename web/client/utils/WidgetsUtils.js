@@ -116,6 +116,34 @@ export const getTracesDependencyPath = (k, widgetId, widgets) => {
 };
 
 /**
+ * Get a chart axis dependency path (resolves charts[chartId].xAxisOpts[axisId] to indices).
+ * It also supports axis paths displayed under a trace node, resolving them to the chart-level axis.
+ * @param {string} k - The dependency path
+ * @param {string} widgetId - The ID of the widget
+ * @param {object[]} widgets - The list of widgets
+ * @returns {string} The modified dependency path
+ */
+export const getChartAxisDependencyPath = (k, widgetId, widgets) => {
+    const axisPathRegex = /^charts\["?([^"\]]*)"?\]\.(?:traces\["?([^"\]]*)"?\]\.)?(xAxisOpts|yAxisOpts)\["?([^"\]]*)"?\]\.?(.*)$/;
+    const [, chartId, , axisOptsKey, axisId, rest] = axisPathRegex.exec(k) || [];
+    if (!chartId || !axisOptsKey) {
+        return k;
+    }
+    const widget = find(widgets, { id: widgetId });
+    const charts = get(widget, 'charts', []) || [];
+    const chartIndex = findIndex(charts, { chartId });
+    if (chartIndex === -1) {
+        return k;
+    }
+    const chart = charts[chartIndex] || {};
+    const axisIndex = findIndex(chart[axisOptsKey] || [], axis => String(axis?.id) === String(axisId));
+    if (axisIndex === -1) {
+        return k;
+    }
+    return `charts[${chartIndex}].${axisOptsKey}[${axisIndex}]${rest ? `.${rest}` : ''}`;
+};
+
+/**
  * Get a widget dependency
  * @param {string} k - The dependency path
  * @param {object[]} widgets - The list of widgets
@@ -128,6 +156,8 @@ export const getWidgetDependency = (k, widgets, maps) => {
     const widgetId = regRes[1];
     // in case of Map and layers regex matches, we need to extract the layer part.
     rest = getMapDependencyPath(rest, widgetId, maps);
+    // in case of chart axis paths, resolve chart and axis ids to array indices.
+    rest = getChartAxisDependencyPath(rest, widgetId, widgets);
     // in case of traces regex matches, we need to extract the trace part.
     rest = getTracesDependencyPath(rest, widgetId, widgets);
 
@@ -1264,12 +1294,32 @@ export const DEFAULT_CURRENT_TIME_SHAPE_VALUES = {
     style: DEFAULT_CURRENT_TIME_SHAPE_STYLE[2]
 };
 
+const getAxisTimes = (axis, dependencyTimes) => {
+    if (dependencyTimes.startTime || dependencyTimes.endTime) {
+        return dependencyTimes;
+    }
+    const hasAxisTime = axis.appliedCurrentTime || axis.appliedOffsetTime;
+    if (!hasAxisTime) {
+        return dependencyTimes;
+    }
+    const startTime = axis.appliedCurrentTime;
+    const endTime = axis.appliedOffsetTime;
+    return {
+        startTime,
+        endTime,
+        hasBothDates: startTime && endTime
+    };
+};
+
 const addAxisShapes = (axisOpts, axisType, times) => {
     const shapes = [];
-    const { startTime, endTime, hasBothDates } = times;
 
     axisOpts.forEach((axis, index) => {
         if (axis.type === 'date' && axis.showCurrentTime === true) {
+            const { startTime, endTime, hasBothDates } = getAxisTimes(axis, times);
+            if (!startTime && !endTime) {
+                return;
+            }
             const axisId = index === 0 ? axisType : `${axisType}${index + 1}`;
             if (hasBothDates) {
                 shapes.push(createRectShape(axisId, axisType, startTime, endTime, {
@@ -1301,9 +1351,10 @@ const addAxisShapes = (axisOpts, axisType, times) => {
  * @returns {Array<Object>} Array of shape objects for the current time range on both axes.
  */
 export const addCurrentTimeShapes = (data, timeRange) => {
-    if (!timeRange.start && !timeRange.end) return [];
     const xAxisOpts = data.xAxisOpts || [];
     const yAxisOpts = data.yAxisOpts || [];
+    const hasAxisTime = [...xAxisOpts, ...yAxisOpts].some(axis => axis?.appliedCurrentTime || axis?.appliedOffsetTime);
+    if (!timeRange.start && !timeRange.end && !hasAxisTime) return [];
 
     // Split the time range
     const startTime = timeRange.start;

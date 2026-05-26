@@ -1272,7 +1272,7 @@ layouts:
           items:
             - !image
               maxWidth: 1105
-              url: '/${configDir}/print_header.png'
+              url: 'file://${configDir}/print_header.png'
         - !map
           width: 837
           height: 1340
@@ -1390,7 +1390,7 @@ layouts:
           items:
             - !image
               maxWidth: 1563
-              url: '/${configDir}/print_header.png'
+              url: 'file://${configDir}/print_header.png'
         - !map
           width: 1184
           height: 840
@@ -1490,7 +1490,7 @@ layouts:
           items:
             - !image
               maxWidth: 1105
-              url: '/${configDir}/print_header.png'
+              url: 'file://${configDir}/print_header.png'
         - !map
           width: 1111
           height: 1340
@@ -1581,7 +1581,7 @@ layouts:
           items:
             - !image
               maxWidth: 1563
-              url: '/${configDir}/print_header.png'
+              url: 'file://${configDir}/print_header.png'
         - !map
           width: 1600
           height: 840
@@ -1654,7 +1654,7 @@ layouts:
           items:
             - !image
               maxWidth: 1105
-              url: '/${configDir}/print_header.png'
+              url: 'file://${configDir}/print_header.png'
         - !map
           width: 1111
           height: 1340
@@ -1782,7 +1782,7 @@ layouts:
           items:
             - !image
               maxWidth: 1563
-              url: '/${configDir}/print_header.png'
+              url: 'file://${configDir}/print_header.png'
         - !map
           width: 1600
           height: 840

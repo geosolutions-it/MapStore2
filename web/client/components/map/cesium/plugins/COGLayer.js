@@ -7,6 +7,8 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
+import { updateUrlParams } from '../../../../utils/URLUtils';
 
 import isEqual from 'lodash/isEqual';
 import proj4 from 'proj4';
@@ -89,11 +91,17 @@ const createLayer = (options) => {
     if (!options.visibility) {
         return null;
     }
-    const url = options.url || options?.sources[0]?.url;
 
+    const url = options.url || options?.sources[0]?.url;
+    const {headers, params} = getRequestConfigurationByUrl(url, options?.security?.sourceId);
+    const secureUrl = updateUrlParams(url, params);
     const renderOptions = buildRenderOptions(options);
 
-    return TIFFImageryProvider.fromUrl(url, {
+    // https://github.com/hongfaqiu/TIFFImageryProvider?tab=readme-ov-file#api
+    return TIFFImageryProvider.fromUrl(secureUrl, {
+        requestOptions: {
+            headers
+        },
         projFunc: (code) => {
             const epsgCode = `EPSG:${code}`;
             if (isProjectionAvailable(epsgCode)) {
@@ -113,7 +121,9 @@ Layers.registerType(COG_LAYER_TYPE, {
     create: createLayer,
     update: (layer, newOptions, oldOptions) => {
         if (!isEqual(newOptions.sources, oldOptions.sources) ||
-            !isEqual(newOptions.style, oldOptions.style) ) {
+            !isEqual(newOptions.style, oldOptions.style) ||
+            !isEqual(oldOptions.security, newOptions.security) ||
+            !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             // TODO check if stileeditor change newOptions.sources and newOptions.style
             return createLayer(newOptions);
         }

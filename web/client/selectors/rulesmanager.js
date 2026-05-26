@@ -20,9 +20,9 @@ export const rulesSelector = (state) => {
         Object.assign(formattedRule, {'id': rule.id});
         Object.assign(formattedRule, {'priority': rule.priority});
         Object.assign(formattedRule, {'roleName': rule.roleName ? rule.roleName : '*'});
-        Object.assign(formattedRule, {'roleAny': rule.roleAny ? rule.roleAny : '*'});
+        Object.assign(formattedRule, {'rolenameAny': rule.rolenameAny ? rule.rolenameAny : '*'});
         Object.assign(formattedRule, {'userName': rule.userName ? rule.userName : '*'});
-        Object.assign(formattedRule, {'userAny': rule.userAny ? rule.userAny : '*'});
+        Object.assign(formattedRule, {'usernameAny': rule.usernameAny ? rule.usernameAny : '*'});
         Object.assign(formattedRule, {'service': rule.service ? rule.service : '*'});
         Object.assign(formattedRule, {'serviceAny': rule.serviceAny ? rule.serviceAny : '*'});
         Object.assign(formattedRule, {'request': rule.request ? rule.request : '*'});
@@ -68,7 +68,17 @@ export const activeGridSelector = state => state.rulesmanager && state.rulesmana
 // for GS Instances
 export const selectedGSInstances = (state) => state.rulesmanager && state.rulesmanager.selectedGSInstances || [];
 
-export const rulesEditorToolbarSelector = createSelector(selectedRules, selectedGSInstances, targetPositionSelector, activeGridSelector, (sel, selGSInstances, {offsetFromTop}, activeGrid) => {
+export const isRulesManagerConfigured = state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins.rulesmanager;
+export const isEditorActive = state => state.rulesmanager && !!state.rulesmanager.activeRule;
+export const triggerLoadSel = state => state.rulesmanager && state.rulesmanager.triggerLoad;
+export const isLoading = state => state.rulesmanager && state.rulesmanager.loading;
+export const geometryStateSel = state => state.rulesmanager && state.rulesmanager.geometryState;
+// for gs instance
+export const isEditorActiveGSInstance = state => state.rulesmanager && !!state.rulesmanager.activeGSInstance;
+export const activeGSInstanceSelector = (state) => state.rulesmanager && state.rulesmanager.activeGSInstance;
+export const gsInstancesDDListSelector = (state) => state.rulesmanager && state.rulesmanager.instances || [];
+
+export const rulesEditorToolbarSelector = createSelector(selectedRules, selectedGSInstances, targetPositionSelector, activeGridSelector, gsInstancesDDListSelector, (sel, selGSInstances, {offsetFromTop}, activeGrid, gsInstances) => {
     return {
         showAdd: sel.length === 0,
         showEdit: sel.length === 1,
@@ -80,15 +90,8 @@ export const rulesEditorToolbarSelector = createSelector(selectedRules, selected
         // for GS Instances
         showAddGSInstance: selGSInstances.length === 0,
         showEditGSInstance: selGSInstances.length === 1,
-        showDelGSInstance: selGSInstances.length > 0
+        showDelGSInstance: selGSInstances.length > 0,
+        isStandAloneGeofence: Api.getRuleServiceType() === 'geofence',
+        gsInstances: gsInstances
     };
 });
-export const isRulesManagerConfigured = state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins.rulesmanager;
-export const isEditorActive = state => state.rulesmanager && !!state.rulesmanager.activeRule;
-export const triggerLoadSel = state => state.rulesmanager && state.rulesmanager.triggerLoad;
-export const isLoading = state => state.rulesmanager && state.rulesmanager.loading;
-export const geometryStateSel = state => state.rulesmanager && state.rulesmanager.geometryState;
-// for gs instance
-export const isEditorActiveGSInstance = state => state.rulesmanager && !!state.rulesmanager.activeGSInstance;
-export const activeGSInstanceSelector = (state) => state.rulesmanager && state.rulesmanager.activeGSInstance;
-export const gsInstancesDDListSelector = (state) => state.rulesmanager && state.rulesmanager.instances || [];

@@ -23,6 +23,7 @@ import {backgroundListSelector} from '../../../selectors/backgroundselector';
 import {mapOptionsToSaveSelector} from '../../../selectors/mapsave';
 import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../../../selectors/searchconfig';
 import MapUtils from '../../../utils/MapUtils';
+import { dynamicProjectionDefsSelector } from '../../../selectors/projections';
 
 
 const saveSelector = createSelector(
@@ -33,8 +34,9 @@ const saveSelector = createSelector(
     textSearchConfigSelector,
     bookmarkSearchConfigSelector,
     mapSelector,
-    (layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map) =>
-        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map})
+    dynamicProjectionDefsSelector,
+    (layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map, projectionDefs) =>
+        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map, projectionDefs})
 );
 
 
@@ -48,9 +50,9 @@ export default compose(
         onClick: ({hide, owner}) => () => {
             hide(owner);
         },
-        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions}) => () => {
+        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs}) => () => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
-                backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
+                backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs);
 
             return save({
                 ...mapData.map,

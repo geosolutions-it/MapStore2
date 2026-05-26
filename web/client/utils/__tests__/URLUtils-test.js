@@ -196,6 +196,11 @@ describe('URLUtils', () => {
         const updatedUrl = updateUrlParams(url, { newParam: 'newValue' });
         expect(updatedUrl).toBe('https://my-site.com/some/path/to/resouce?newParam=newValue');
     });
+    it("add new Url param empty", () => {
+        const url = 'https://my-site.com/some/path/to/resouce';
+        const updatedUrl = updateUrlParams(url, {});
+        expect(updatedUrl).toBe('https://my-site.com/some/path/to/resouce');
+    });
 });
 
 

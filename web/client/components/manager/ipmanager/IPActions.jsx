@@ -9,7 +9,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import Message from '../../I18N/Message';
-import InputControl from '../../../plugins/ResourcesCatalog/components/InputControl';
+import InputControl from '../../catalog/resources/InputControl';
 
 /**
  * New IP button component for toolbar

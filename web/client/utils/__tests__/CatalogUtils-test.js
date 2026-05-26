@@ -46,6 +46,24 @@ describe('Test the CatalogUtils', () => {
         expect(mergedURL3).toBe("https://a.example.com/wms,https://b.example.com/wms,https://c.example.com/wms");
         expect(mergedURL4).toBe("https://a.example.com/wms,https://b.example.com/wms");
     });
+    it('buildServiceUrl accepts object-shape domainAliases (legacy data)', () => {
+        const serviceObjectShape = {
+            type: "wms",
+            url: "https://a.example.com/wms",
+            domainAliases: { 0: "https://b.example.com/wms", 1: "https://c.example.com/wms" }
+        };
+        expect(CatalogUtils.buildServiceUrl(serviceObjectShape))
+            .toBe("https://a.example.com/wms,https://b.example.com/wms,https://c.example.com/wms");
+    });
+    it('buildServiceUrl drops empty values from object-shape domainAliases', () => {
+        const serviceObjectShape = {
+            type: "wms",
+            url: "https://a.example.com/wms",
+            domainAliases: { 0: "", 1: "https://b.example.com/wms", 2: "" }
+        };
+        expect(CatalogUtils.buildServiceUrl(serviceObjectShape))
+            .toBe("https://a.example.com/wms,https://b.example.com/wms");
+    });
     it("updateServiceData", () => {
         let records = [{"url": "https://example.tif", sourceMetadata: {crs: "EPSG:3003"}}];
         let options = {service: {type: CatalogUtils.COG_LAYER_TYPE, records: [{url: "https://example.tif"}]}};

@@ -159,7 +159,7 @@ const createLayer = options => {
     const cesiumOptions = wmtsToCesiumOptions(options);
     layer = new Cesium.WebMapTileServiceImageryProvider(cesiumOptions);
     const orig = layer.requestImage;
-    layer.requestImage = (x, y, level) => cesiumOptions.isValid(x, y, level) ? orig.bind(layer)( x, y, level) : new Promise( () => undefined);
+    layer.requestImage = (x, y, level) => cesiumOptions.isValid(x, y, level) ? orig.bind(layer)( x, y, level) : undefined;
     layer.updateParams = (params) => {
         const newOptions = Object.assign({}, options, {
             params: Object.assign({}, options.params || {}, params)
@@ -173,6 +173,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.format !== newOptions.format
     || !isEqual(oldOptions.security, newOptions.security)
+    || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
     || oldOptions.credits !== newOptions.credits || newOptions.forceProxy !== oldOptions.forceProxy) {
         return createLayer(newOptions);
     }

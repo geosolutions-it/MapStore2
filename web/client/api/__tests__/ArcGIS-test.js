@@ -185,5 +185,90 @@ describe('Test ArcGIS API', () => {
                 })
                 .catch(done);
         });
+        it('should include FeatureServer in services list', (done) => {
+            mockAxios.onGet().reply(() => [200, {
+                currentVersion: 10.91,
+                services: [
+                    { name: 'Features', type: 'FeatureServer' },
+                    { name: 'Map', type: 'MapServer' }
+                ]
+            }]);
+            getCapabilities('/arcgis/rest/services-fs/', 1, 30, '')
+                .then((data) => {
+                    expect(data.numberOfRecordsMatched).toBe(2);
+                    expect(data.records.find(r => r.description === 'FeatureServer')).toBeTruthy();
+                    expect(data.records.find(r => r.description === 'FeatureServer').url).toBe('/arcgis/rest/services-fs/Features/FeatureServer');
+                    done();
+                })
+                .catch(done);
+        });
+        it('should parse FeatureServer sub-layers with geometry type and maxRecordCount', (done) => {
+            mockAxios.onGet().reply(() => [200, {
+                currentVersion: 10.91,
+                capabilities: 'Query',
+                maxRecordCount: 2000,
+                layers: [
+                    { id: 0, name: 'Points', geometryType: 'esriGeometryPoint' },
+                    { id: 1, name: 'Polygons', geometryType: 'esriGeometryPolygon' }
+                ],
+                initialExtent: {
+                    xmin: -10, ymin: -5, xmax: 10, ymax: 5,
+                    spatialReference: { wkid: 4326 }
+                }
+            }]);
+            getCapabilities('/arcgis/rest/services/Test/FeatureServer', 1, 30, '')
+                .then((data) => {
+                    expect(data.numberOfRecordsMatched).toBe(2);
+                    const [pointLayer, polygonLayer] = data.records;
+                    expect(pointLayer.geometryType).toBe('Point');
+                    expect(pointLayer.queryable).toBe(true);
+                    expect(pointLayer.maxRecordCount).toBe(2000);
+                    expect(polygonLayer.geometryType).toBe('MultiPolygon');
+                    expect(pointLayer.bbox).toBeTruthy();
+                    expect(pointLayer.bbox.crs).toBe('EPSG:4326');
+                    done();
+                })
+                .catch(done);
+        });
+        it('should prefer initialExtent over fullExtent for FeatureServer', (done) => {
+            mockAxios.onGet().reply(() => [200, {
+                capabilities: 'Query',
+                layers: [{ id: 0, name: 'Layer0', geometryType: 'esriGeometryPoint' }],
+                initialExtent: {
+                    xmin: -10, ymin: -5, xmax: 10, ymax: 5,
+                    spatialReference: { wkid: 4326 }
+                },
+                fullExtent: {
+                    xmin: -180, ymin: -90, xmax: 180, ymax: 90,
+                    spatialReference: { wkid: 4326 }
+                }
+            }]);
+            getCapabilities('/arcgis/rest/services/ExtentPref/FeatureServer', 1, 30, '')
+                .then((data) => {
+                    expect(data.records[0].bbox.bounds.minx).toBe(-10);
+                    expect(data.records[0].bbox.bounds.maxx).toBe(10);
+                    done();
+                })
+                .catch(done);
+        });
+        it('should reproject non-4326 extent to EPSG:4326', (done) => {
+            mockAxios.onGet().reply(() => [200, {
+                capabilities: 'Query',
+                layers: [{ id: 0, name: 'Layer0', geometryType: 'esriGeometryPoint' }],
+                initialExtent: {
+                    xmin: -8238310, ymin: 4969609, xmax: -8227517, ymax: 4981706,
+                    spatialReference: { wkid: 3857 }
+                }
+            }]);
+            getCapabilities('/arcgis/rest/services/Reprojected/FeatureServer', 1, 30, '')
+                .then((data) => {
+                    const { bounds, crs } = data.records[0].bbox;
+                    expect(crs).toBe('EPSG:4326');
+                    expect(bounds.minx).toBeLessThan(0);
+                    expect(bounds.miny).toBeGreaterThan(0);
+                    done();
+                })
+                .catch(done);
+        });
     });
 });

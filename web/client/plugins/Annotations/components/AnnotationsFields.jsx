@@ -97,6 +97,7 @@ function AnnotationsFields({
                             </ControlLabel>}
                             {isEditable
                                 ? <DescriptionEditor
+                                    linkModalDirection={'left'}
                                     editorState={editorState[field.name]}
                                     onEditorStateChange={(newEditorState) => {
                                         const previousHTML = draftJSEditorStateToHtml(editorState[field.name]);

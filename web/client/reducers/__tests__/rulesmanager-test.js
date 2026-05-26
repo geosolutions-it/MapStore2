@@ -172,7 +172,51 @@ describe('test rules manager reducer', () => {
             layer: "layer1"
         });
     });
+    it('test SET_FILTER: reset rolename field also resets rolenameAny', () => {
+        const oldState = {
+            filters: {
+                rolename: "admin_role",
+                rolenameAny: false,
+                workspace: "workspace1"
+            }
+        };
 
+        const state = rulesmanager(oldState, {
+            type: 'RULES_MANAGER:SET_FILTER',
+            key: "rolename",
+            value: undefined,
+            isResetField: true
+        });
+
+        expect(state.filters).toEqual({
+            rolename: undefined,
+            rolenameAny: undefined,
+            workspace: "workspace1"
+        });
+    });
+
+    it('test SET_FILTER: reset username field also resets usernameAny', () => {
+        const oldState = {
+            filters: {
+                username: "admin",
+                usernameAny: true,
+                layer: "layer1"
+            }
+        };
+
+        const state = rulesmanager(oldState, {
+            type: 'RULES_MANAGER:SET_FILTER',
+            key: "username",
+            value: undefined,
+            isResetField: true
+        });
+
+        expect(state.filters).toEqual({
+            username: undefined,
+            usernameAny: undefined,
+            layer: "layer1"
+        });
+    });
     it('options loaded', () => {
         const oldState = {
             options: {

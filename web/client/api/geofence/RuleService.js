@@ -50,13 +50,20 @@ const removeUnusedFieldsForGFRule = (rule) => {
 const normalizeFilterValue = (value) => {
     return value === "*" ? undefined : value;
 };
+/**
+ * normalize keys to be sent with requests -> based of ref: https://github.com/geoserver/geofence/wiki/REST-API#retrieve-list-3
+ * Returns the parameter for REST standalone GeoFence
+ * @param {string} key the key of the filter map
+ */
 const normalizeKey = (key) => {
     switch (key) {
     case 'username':
         return 'userName';
+    case 'usernameAny':
+        return 'userAny';
     case 'rolename':
         return 'groupName';
-    case 'roleAny':
+    case 'rolenameAny':
         return 'groupAny';
     case 'instance':
         return 'instanceName';
@@ -101,8 +108,8 @@ const processFilterValues = (rulesFiltersValues) => {
  * @param {function} config.getGeoServerInstance function that returns the instance object `{id: 1, url: "some-url"}`
  */
 const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
-    cleanCache: () => {
-        return axios.get('rest/geofence/ruleCache/invalidate', addBaseUrlGS())
+    cleanCache: (gsInstanceURL) => {
+        return axios.get('rest/geofence/ruleCache/invalidate', addBaseUrlGS({}, gsInstanceURL))
             .then((response) => {
                 return response.data;
             }
@@ -154,7 +161,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
     addRule: (rule) => {
         const newRule = { ...rule };
         if (!newRule.instance) {
-            const { id: instanceId } = getGeoServerInstance();
+            const { id: instanceId } = getGeoServerInstance() || {};
             newRule.instance = { id: instanceId };
         }
         if (!newRule.grant) {

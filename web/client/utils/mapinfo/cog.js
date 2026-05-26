@@ -40,7 +40,7 @@ export default {
                     ? layer.title[currentLocale] || layer.title.default
                     : layer.title
             },
-            url: layer.url
+            url: layer.url || layer?.sources?.[0]?.url
         };
     },
     getIdentifyFlow: (layer, basePath, {features = []} = {}) => {

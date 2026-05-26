@@ -66,6 +66,7 @@ import { drawIcons } from './IconUtils';
 
 import isString from 'lodash/isString';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+import { DEFAULT_SCREEN_DPI, getScale } from '../MapUtils';
 
 const getGeometryFunction = geometryFunctionsLibrary.openlayers({
     Point: OlGeomPoint,
@@ -443,14 +444,9 @@ export class OlStyleParser {
                     this._getMap = () => map;
                     const styles = [];
 
-                    // calculate scale for resolution (from ol-util MapUtil)
-                    const units = map
-                        ? map.getView().getProjection().getUnits()
-                        : 'm';
-                    const dpi = 25.4 / 0.28;
-                    const mpu = METERS_PER_UNIT[units];
-                    const inchesPerMeter = 39.37;
-                    const scale = resolution * mpu * inchesPerMeter * dpi;
+                    // instead of using ol0util MapUtil -> calc. scale value using getScale() to be matched with the predefined scale list values
+                    const projection = map?.getView()?.getProjection()?.getCode() || "EPSG:3857";
+                    const scale = Math.round(getScale(projection, DEFAULT_SCREEN_DPI, resolution));
 
                     rules.forEach((rule) => {
                         // handling scale denominator

@@ -442,7 +442,7 @@ export const geoStylerScaleDenominatorFilter = (rule = {}, mapViewScale) => {
     if (rule?.scaleDenominator && mapViewScale) {
         const {min, max} = rule?.scaleDenominator;
         if ((min !== undefined && mapViewScale < min) ||
-        (max !== undefined && mapViewScale > max)) {
+        (max !== undefined && mapViewScale >= max)) {
             return false;
         }
     }
