@@ -3,6 +3,8 @@
     "dependabot[bot]",
     "dependabot-preview[bot]",
     "github-actions[bot]",
+    "Copilot",
+    "copilot-swe-agent[bot]",
     "afabiani",
     "giohappy",
     "allyoucanmap",
