@@ -44,6 +44,7 @@ import { widthProvider, heightProvider } from '../components/layout/enhancers/gr
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import { autorefreshTicksSelector } from './AutoRefresh/selectors/autorefresh';
 
 const WidgetsView =
 compose(
@@ -58,7 +59,8 @@ compose(
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
             getTblWidgetZoomLoader,
-            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading) => ({
+            autorefreshTicksSelector,
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading, autorefreshTicks) => ({
                 id,
                 widgets,
                 layouts,
@@ -67,7 +69,8 @@ compose(
                 mapLayout,
                 isMobileAgent,
                 dropdownWidgets,
-                recordZoomLoading
+                recordZoomLoading,
+                autorefreshTicks
             })
         ), {
             editWidget,
