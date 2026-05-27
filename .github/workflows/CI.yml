@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java-version: ['11.x', '17.x', '21.x']
+        java-version: ['17.x', '21.x']
       fail-fast: false
     steps:
       - name: "checking out"
@@ -110,7 +110,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['20.x', '22.x', '24.x']
-        java-version: ['11.x', '17.x', '21.x']
+        java-version: ['17.x', '21.x']
         # Reduce the combinations to reduce the total number of jobs
         exclude:
           - node-version: '20.x'
@@ -118,11 +118,7 @@ jobs:
           - node-version: '20.x'
             java-version: '21.x'
           - node-version: '22.x'
-            java-version: '11.x'
-          - node-version: '22.x'
             java-version: '21.x'
-          - node-version: '24.x'
-            java-version: '11.x'
           - node-version: '24.x'
             java-version: '17.x'
       fail-fast: false
@@ -200,14 +196,14 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11.x'
+          java-version: '21.x'
       ############
       # Publish
       ##########
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '21'
           distribution: 'temurin'
           server-id: geosolutions
           server-username: MAVEN_USERNAME

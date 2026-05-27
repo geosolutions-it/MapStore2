@@ -61,13 +61,7 @@
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
-        <version>${javax.servlet-api.version}</version>
-    </dependency>
-    <!-- gzip compression filter -->
-    <dependency>
-        <groupId>net.sf.ehcache</groupId>
-        <artifactId>ehcache-web</artifactId>
-        <version>${ehcache-web.version}</version>
+        <version>${jakarta.servlet-api.version}</version>
     </dependency>
     <!-- misc -->
     <dependency>
@@ -494,13 +488,7 @@
                     <dependency>
                         <groupId>javax.servlet</groupId>
                         <artifactId>javax.servlet-api</artifactId>
-                        <version>${javax.servlet-api.version}</version>
-                    </dependency>
-                    <!-- gzip compression filter -->
-                    <dependency>
-                        <groupId>net.sf.ehcache</groupId>
-                        <artifactId>ehcache-web</artifactId>
-                        <version>${ehcache-web.version}</version>
+                        <version>${jakarta.servlet-api.version}</version>
                     </dependency>
                     <!-- misc -->
                     <dependency>
