@@ -1,10 +1,10 @@
 import React from 'react';
-import { Glyphicon, ControlLabel, Form, FormGroup, FormControl, Col, InputGroup  } from "react-bootstrap";
+import { Glyphicon, ControlLabel, Form, FormGroup, FormControl, InputGroup  } from "react-bootstrap";
 
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import ButtonRB from '../../../components/misc/Button';
 import Message from '../../../components/I18N/Message';
-import { AUTOREFRESH_STEP_INTERVAL_IN_SECONDS } from '../constants';
+import { AUTOREFRESH_STEP_INTERVAL_IN_SECONDS, formatDate } from '../constants';
 
 const Button = tooltip(ButtonRB);
 
@@ -13,6 +13,7 @@ const AutoRefreshForm = ({
     minRefreshInterval,
     availableLayers = {},
     activeLayers = {},
+    ticks = {},
     handleAddLayer,
     handleRemoveLayer,
     handleIntervalChange
@@ -49,42 +50,37 @@ const AutoRefreshForm = ({
                     </FormControl>
                 </FormGroup>
             </Form>
-            <Form horizontal>
-
+            <form>
                 {Object.values(activeLayers).map(layer => {
 
                     return (
-                        <FormGroup key={`autorefresh-form-group-${layer.id}`}>
-                            <Col sm={2}>
-                                <Button bsSize="small" bsStyle="primary"
-                                    onClick={() => handleRemoveLayer(layer.id)}
-                                    className="square-button-sm"
-                                    tooltipPosition="top"
-                                    tooltip={<Message msgId="autorefresh.label.removeLayer"/>}>
-                                    <Glyphicon glyph="trash" />
-                                </Button>
-                            </Col>
-                            <Col className="ms-autorefresh-layer-title" sm={5}>
-                                <span title={layer.title}>{layer.title}</span>
-                            </Col>
-                            <Col sm={5}>
-                                <InputGroup>
-                                    <FormControl
-                                        type="number"
-                                        value={layer.autorefreshInterval ?? defaultRefreshInterval}
-                                        onChange={(e) => onIntervalChange(e, layer)}
-                                        min={minRefreshInterval}
-                                        step={AUTOREFRESH_STEP_INTERVAL_IN_SECONDS}
-                                    />
-                                    <InputGroup.Addon>
-                                        s
-                                    </InputGroup.Addon>
-                                </InputGroup>
-                            </Col>
-                        </FormGroup>
+                        <section className={"ms-autorefresh-form-group" + (layer.visibility ? '' : ' ms-autorefresh-form-group-hidden') + (layer.visibility && ticks[layer.id] ? '' : ' ms-autorefresh-form-group-inactive')}
+                            key={`autorefresh-form-group-${layer.id}`}>
+                            <Button bsSize="small" bsStyle="primary"
+                                onClick={() => handleRemoveLayer(layer.id)}
+                                className="square-button-sm ms-autorefresh-form-group__button"
+                                tooltipPosition="top"
+                                tooltip={<Message msgId="autorefresh.label.removeLayer"/>}>
+                                <Glyphicon glyph="trash" />
+                            </Button>
+                            <span className="ms-autorefresh-form-group__title">{layer.title}</span>
+                            <InputGroup className="ms-autorefresh-form-group__input">
+                                <FormControl
+                                    type="number"
+                                    value={layer.autorefreshInterval ?? defaultRefreshInterval}
+                                    onChange={(e) => onIntervalChange(e, layer)}
+                                    min={minRefreshInterval}
+                                    step={AUTOREFRESH_STEP_INTERVAL_IN_SECONDS}
+                                />
+                                <InputGroup.Addon>
+                                    s
+                                </InputGroup.Addon>
+                            </InputGroup>
+                            {ticks[layer.id] && layer.visibility && <em className="ms-autorefresh-form-group__summary">{ formatDate(ticks[layer.id]) }</em>}
+                        </section>
                     );
                 })}
-            </Form>
+            </form>
         </div>
     );
 };

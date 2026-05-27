@@ -19,7 +19,7 @@ import { userRoleSelector } from '../../selectors/security';
 import { CONTROL_NAME } from './constants';
 import { autorefreshUpdateAvailableLayers, autorefreshStart, autorefreshStop, autorefreshUpdateActiveLayer } from './actions/autorefresh';
 import { updateNode } from '../../actions/layers';
-import { autorefreshAvailableLayersSelector, autorefreshEnabledSelector, autorefreshLayersSelector } from './selectors/autorefresh';
+import { autorefreshArchivedTicksSelector, autorefreshAvailableLayersSelector, autorefreshEnabledSelector, autorefreshLayersSelector } from './selectors/autorefresh';
 import autorefresh from './reducers/autorefresh';
 import {
     autorefreshStartEpicCreation,
@@ -54,7 +54,8 @@ const autoRefreshConnect = connect(
 
         enabled: autorefreshEnabledSelector,
         availableLayers: autorefreshAvailableLayersSelector,
-        activeLayers: autorefreshLayersSelector
+        activeLayers: autorefreshLayersSelector,
+        ticks: autorefreshArchivedTicksSelector
     }), {
         onStart: autorefreshStart,
         onStop: autorefreshStop,
@@ -78,10 +79,10 @@ export default createPlugin(
             autorefresh
         },
         epics: {
-            autorefreshSartEpicCreator: autorefreshStartEpicCreation,
+            autorefreshStartEpicCreation,
             autorefreshUpdateNodeEpicCreation,
             autorefreshRemoveNodeEpicCreation,
-            autorefreshActiveLayerChangeEpicCreattion: autorefreshActiveLayerChangeEpicCreation,
+            autorefreshActiveLayerChangeEpicCreation,
             autorefreshMapVisualisationModeChangeEpicCreation
         },
         containers: {

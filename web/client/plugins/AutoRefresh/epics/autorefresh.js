@@ -14,7 +14,6 @@ import { AUTOREFRESH_TICK,
 } from "../actions/autorefresh";
 import { REMOVE_NODE, UPDATE_NODE } from '../../../actions/layers';
 import { hasAutoRefreshCapability, NodeTypes } from '../../../utils/LayersUtils';
-import { isNumber } from 'lodash';
 import { VISUALIZATION_MODE_CHANGED } from '../../../actions/maptype';
 import { layersSelector } from '../../../selectors/layers';
 import { mapTypeSelector } from '../../../selectors/maptype';
@@ -59,17 +58,24 @@ export const autorefreshActiveLayerChangeEpicCreation = (action$, store) => acti
 
 export const autorefreshUpdateNodeEpicCreation = (action$, store) => action$
     .ofType(UPDATE_NODE)
+    .filter(nodeConfig => nodeConfig.nodeType === NodeTypes.LAYER)
     .filter(nodeConfig => {
         const activeLayers = store.getState()?.autorefresh.activeLayers || {};
-        return nodeConfig.nodeType === NodeTypes.LAYER &&
-            isNumber(nodeConfig.options?.autorefreshInterval) &&
-            activeLayers[nodeConfig.node];
+        const isActiveLayer = activeLayers[nodeConfig.node] !== undefined;
+        const isAutorefreshIntervalChange = 'autorefreshInterval' in nodeConfig.options;
+
+        return isActiveLayer && isAutorefreshIntervalChange;
     })
     .switchMap((nodeConfig) => {
+        const autorefreshInterval = 'autorefreshInterval' in nodeConfig.options ?
+            nodeConfig.options.autorefreshInterval :
+            layersSelector(store.getState())
+                .find(l => l.id === nodeConfig.node)?.autorefreshInterval || -1;
+
         return Observable.of(
             autorefreshUpdateActiveLayer({
                 id: nodeConfig.node,
-                autorefreshInterval: nodeConfig.options.autorefreshInterval
+                autorefreshInterval
             })
         );
     });

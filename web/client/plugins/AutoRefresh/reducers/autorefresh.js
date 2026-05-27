@@ -20,7 +20,8 @@ const defaultState = {
     enabled: false,
     availableLayers: {},
     activeLayers: {},
-    ticks: {}
+    ticks: {},
+    archivedTicks: {}
 };
 
 const autorefresh = (state = {...defaultState}, action) => {
@@ -30,18 +31,26 @@ const autorefresh = (state = {...defaultState}, action) => {
     case AUTOREFRESH_START:
         return {
             ...state,
-            enabled: true
+            enabled: true,
+            ticks: {}
         };
     case AUTOREFRESH_STOP:
         return {
             ...state,
             enabled: false,
-            ticks: {}
+            archivedTicks: {
+                ...state.archivedTicks,
+                ...state.ticks
+            }
         };
     case AUTOREFRESH_TICK:
         return {
             ...state,
-            ticks: action.ticks
+            ticks: action.ticks,
+            archivedTicks: {
+                ...state.archivedTicks,
+                ...action.ticks
+            }
         };
     case AUTOREFRESH_UPDATE_ACTIVE_LAYERS:
         return {

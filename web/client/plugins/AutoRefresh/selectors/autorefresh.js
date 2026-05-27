@@ -10,5 +10,7 @@ export const autorefreshLayersSelector = (state) => get(state, `${CONTROL_NAME}.
 
 export const autorefreshTicksSelector = (state) => get(state, `${CONTROL_NAME}.ticks`, {});
 
+export const autorefreshArchivedTicksSelector = (state) => get(state, `${CONTROL_NAME}.archivedTicks`, {});
+
 export const autorefreshAvailableLayersSelector = (state) => get(state, `${CONTROL_NAME}.availableLayers`, {});
 

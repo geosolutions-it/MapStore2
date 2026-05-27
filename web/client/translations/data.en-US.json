@@ -52,12 +52,13 @@
       "selector":"Set layers auto refresh interval",
       "label": {
         "default":"Activate AutoRefresh" ,
-        "lastUpdated": "Last Refresh",        
+        "lastUpdated": "Last Refresh",
         "addLayer": "Add layer",
         "addLayerPlaceholder": "Select...",
         "removeLayer": "Remove layer",
         "layersSummary": "Layers automatically refreshed",
-        "noLayers":"None found"
+        "noLayers":"None found",
+        "informations": "Which layers are configured"
       },
       "of": "of",
       "updating": "Updating...",
