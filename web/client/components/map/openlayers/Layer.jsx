@@ -359,7 +359,7 @@ export default class OpenlayersLayer extends React.Component {
     };
 
     tryAutorefresh = (layerId, autorefreshTicks) => {
-        if (isNumber(autorefreshTicks[layerId]) && this.autorefreshTick < autorefreshTicks[layerId]) {
+        if (this.layer?.getVisible() && isNumber(autorefreshTicks[layerId]) && this.autorefreshTick < autorefreshTicks[layerId]) {
             this.autorefreshTick = autorefreshTicks[layerId];
             Layers.refreshLayer(this.props.type, this.layer);
         }

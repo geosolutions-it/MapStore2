@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import Layers from '../../../utils/leaflet/Layers';
 import isEqual from 'lodash/isEqual';
 import isNil from 'lodash/isNil';
+import { isNumber } from 'lodash';
 class LeafletLayer extends React.Component {
     static propTypes = {
         map: PropTypes.object,
@@ -32,6 +33,7 @@ class LeafletLayer extends React.Component {
 
     componentDidMount() {
         this.valid = true;
+        this.autorefreshTick = -1;
         this.createLayer(
             this.props.type,
             this.props.options,
@@ -55,6 +57,10 @@ class LeafletLayer extends React.Component {
             this.updateZIndex(newProps.position);
         }
         this.updateLayer(newProps, this.props);
+
+        if (newProps.autorefreshTicks) {
+            this.tryAutorefresh(newProps);
+        }
     }
 
     shouldComponentUpdate(newProps) {
@@ -220,6 +226,17 @@ class LeafletLayer extends React.Component {
             return valid;
         }
         return false;
+    };
+
+    tryAutorefresh = (newProps) => {
+        const layerId = newProps.options.id;
+        const autorefreshTicks = newProps.autorefreshTicks;
+        const visible = this.getVisibilityOption(newProps);
+
+        if (visible && isNumber(autorefreshTicks[layerId]) && this.autorefreshTick < autorefreshTicks[layerId]) {
+            this.autorefreshTick = autorefreshTicks[layerId];
+            Layers.refreshLayer(this.props.type, this.layer);
+        }
     };
 }
 

@@ -20,14 +20,6 @@ export const createLayer = function(type, options, map, mapId) {
     return null;
 };
 
-export const refreshLayer = function(type, layer) {
-    var layerCreator = layerTypes[type];
-    if (layerCreator && layerCreator.refresh) {
-        return layerCreator.refresh(layer);
-    }
-    return null;
-};
-
 export const updateLayer = function(type, layer, newOptions, oldOptions, map, mapId) {
     var layerCreator = layerTypes[type];
     if (layerCreator && layerCreator.update) {
@@ -90,6 +82,28 @@ export const isCompatible = function(type, options) {
     return true;
 };
 
+/**
+ * Call the refresh method of the layer implementation located in web/client/components/map/openlayers/plugins/[layerType]
+ * where layerType = WMSLayer, WFSLayer, WMTSLayer, ArcGISLayer, etc
+ * if implemented, that is used for autorefresh of layers.
+ * @param {string} type
+ * @param {object} layer
+ * @returns {void}
+ */
+export const refreshLayer = function(type, layer) {
+    var layerCreator = layerTypes[type];
+    if (layerCreator && layerCreator.refresh) {
+        layerCreator.refresh(layer);
+    }
+};
+
+/**
+ * Check if the layer implementation located in web/client/components/map/openlayers/plugins/[layerType]
+ * where layerType = WMSLayer, WFSLayer, WMTSLayer, ArcGISLayer, etc
+ * implements the refresh method, that is used for autorefresh of layers.
+ * @param {string} type
+ * @returns {boolean}
+ */
 export const hasAutoRefreshCapability = function(type) {
     const layerCreator = layerTypes[type];
     if (layerCreator && layerCreator.refresh) {
