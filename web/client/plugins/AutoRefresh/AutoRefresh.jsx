@@ -17,7 +17,6 @@ import { createStructuredSelector } from 'reselect';
 import { layersSelector } from '../../selectors/layers';
 import { userRoleSelector } from '../../selectors/security';
 import { CONTROL_NAME } from './constants';
-import { registerCustomSaveHandler } from '../../selectors/mapsave';
 import { autorefreshUpdateAvailableLayers, autorefreshStart, autorefreshStop, autorefreshUpdateActiveLayer } from './actions/autorefresh';
 import { updateNode } from '../../actions/layers';
 import { autorefreshAvailableLayersSelector, autorefreshEnabledSelector, autorefreshLayersSelector } from './selectors/autorefresh';
@@ -30,8 +29,6 @@ import {
     autorefreshMapVisualisationModeChangeEpicCreation
 } from './epics/autorefresh';
 import { mapTypeSelector } from '../../selectors/maptype';
-
-registerCustomSaveHandler(CONTROL_NAME, (state) => (state?.[CONTROL_NAME]));
 
 const AutoRefresh = ({ items, ...props }, context) => {
     const { loadedPlugins } = context;
