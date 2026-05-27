@@ -8,7 +8,6 @@
 
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
-import trimEnd from 'lodash/trimEnd';
 
 import Layers from '../../../../utils/cesium/Layers';
 import {
@@ -18,50 +17,7 @@ import {
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from '../../../../utils/cesium/GeoJSONStyledFeatures';
 import TiledBillboardCollection from '../../../../utils/cesium/TiledBillboardCollection';
-import axios from '../../../../libs/ajax';
-
-const buildQueryUrl = (options) => {
-    const baseUrl = trimEnd(options.url, '/');
-    const layerId = options.name !== undefined ? options.name : '0';
-    return `${baseUrl}/${layerId}/query`;
-};
-
-const DEFAULT_PAGE_SIZE = 1000;
-
-const fetchPaginatedFeatures = (url, baseParams, authSourceId, pageSize) => {
-    const recordCount = pageSize || DEFAULT_PAGE_SIZE;
-    const allFeatures = [];
-    const seenIds = new Set();
-    const fetchPage = (offset) => {
-        return axios.get(url, {
-            params: { ...baseParams, resultOffset: offset, resultRecordCount: recordCount },
-            _msAuthSourceId: authSourceId
-        }).then(({ data }) => {
-            const newFeatures = (data?.features || []).filter(f => {
-                const id = f.id ?? f.properties?.OBJECTID;
-                if (id !== null && id !== undefined && seenIds.has(id)) return false;
-                if (id !== null && id !== undefined) seenIds.add(id);
-                return true;
-            });
-            if (newFeatures.length) {
-                allFeatures.push(...newFeatures);
-            }
-            const exceeded = data?.exceededTransferLimit
-                || data?.properties?.exceededTransferLimit;
-            if (exceeded && newFeatures.length > 0) {
-                return fetchPage(offset + (data?.features?.length || 0));
-            }
-            return {
-                type: 'FeatureCollection',
-                features: allFeatures
-            };
-        }).catch(() => ({
-            type: 'FeatureCollection',
-            features: allFeatures
-        }));
-    };
-    return fetchPage(0);
-};
+import { fetchFeatureLayerCollection } from '../../../../api/ArcGIS';
 
 const getEffectiveStrategy = (options) => options?.strategy || 'tile';
 
@@ -69,28 +25,26 @@ const isPointGeometry = (options) => !options?.geometryType || ['Point', 'MultiP
 
 const createLoader = (options) => {
     const strategy = getEffectiveStrategy(options);
-    const baseParams = {
-        where: '1=1',
-        outFields: '*',
-        outSR: 4326,
-        f: 'geojson'
+    const callOptions = {
+        authSourceId: options.security?.sourceId,
+        maxRecordCount: options.maxRecordCount
     };
-
     if (strategy === 'bbox' || strategy === 'tile') {
         return (extent) => {
             const [xmin, ymin, xmax, ymax] = extent;
-            return fetchPaginatedFeatures(buildQueryUrl(options), {
-                ...baseParams,
-                geometry: `${xmin},${ymin},${xmax},${ymax}`,
-                geometryType: 'esriGeometryEnvelope',
-                spatialRel: 'esriSpatialRelIntersects',
-                inSR: 4326
-            }, options.security?.sourceId, options.maxRecordCount).then((data) => ({ data }));
+            return fetchFeatureLayerCollection(options.url, options.name, {
+                ...callOptions,
+                params: {
+                    geometry: `${xmin},${ymin},${xmax},${ymax}`,
+                    geometryType: 'esriGeometryEnvelope',
+                    spatialRel: 'esriSpatialRelIntersects',
+                    inSR: 4326
+                }
+            }).then((data) => ({ data }));
         };
     }
-    return () => fetchPaginatedFeatures(
-        buildQueryUrl(options), baseParams, options.security?.sourceId, options.maxRecordCount
-    ).then((data) => ({ data }));
+    return () => fetchFeatureLayerCollection(options.url, options.name, callOptions)
+        .then((data) => ({ data }));
 };
 
 const applyStyle = (styledFeatures, options, features) => {
