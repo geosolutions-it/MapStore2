@@ -34,7 +34,15 @@ import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/Vect
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
 
+const failTiles = new Set(); // registry of fail tile urls to prevent reloading loops
+
 const loadFunction = (options, headers) => function(image, src) {
+
+    if (failTiles.has(src)) {  // avoids custom reload in cases of tiles that have already returned exceptions
+        image.setState(3);
+        return;
+    }
+
     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
     let img = image.getImage();
     let newSrc = proxySource(options.forceProxy, src);
@@ -66,27 +74,33 @@ const loadFunction = (options, headers) => function(image, src) {
                 }
             }
         }).catch(e => {
+            image.setState(3);
+            failTiles.add(src);
             console.error(e);
         });
     } else {
-        if (headers) {
+        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
             axios.get(newSrc, {
                 headers,
                 responseType: 'blob'
-            }).then(response => {
-                if (isValidResponse(response)) {
-                    image.getImage().src = URL.createObjectURL(response.data);
-                } else {
-                    // #10701 this is needed to trigger the imageloaderror event
-                    // in ol otherwise this event is not triggered if you assign
-                    // the xml content of the exception to the src attribute
-                    image.getImage().src = null;
-                    console.error("error: " + response.data);
-                }
-            }).catch(e => {
-                image.getImage().src = null;
-                console.error(e);
-            });
+            })
+                .then((response) => {
+                    return response.data.type === "text/xml"
+                        ? response.data.text().then(dataText => ({...response, dataText}))
+                        : response;
+                })
+                .then(response => {
+                    if (isValidResponse(response)) { // not contains OGC exception
+                        image.getImage().src = URL.createObjectURL(response.data);
+                    } else {
+                        throw new Error(response.dataText);
+                    }
+                }).catch(errorMessage => {
+                    image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
+                    image.setState(3);            // set error state for tile and removed from the queue to prevent reloading loops
+                    failTiles.add(src);           // indexing fail url tile to prevent reloading loops
+                    console.error(errorMessage);  // show ogc exception in console for debugging
+                });
         } else {
             img.src = newSrc;
         }
@@ -108,7 +122,6 @@ const createLayer = (options, map, mapId) => {
     queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
-
     if (options.singleTile && !vectorFormat) {
         return new ImageLayer({
             msId: options.id,
@@ -176,6 +189,7 @@ const createLayer = (options, map, mapId) => {
 
 const mustCreateNewLayer = (oldOptions, newOptions) => {
     return (oldOptions.singleTile !== newOptions.singleTile
+        || oldOptions.cropToProjectionExtent !== newOptions.cropToProjectionExtent
         || oldOptions.securityToken !== newOptions.securityToken
         || oldOptions.ratio !== newOptions.ratio
         // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
@@ -249,7 +263,7 @@ Layers.registerType('wms', {
             }
             oldParams = wmsToOpenlayersOptions(oldOptions);
             newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS", "SRS", "CRS"].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }

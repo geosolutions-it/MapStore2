@@ -92,17 +92,15 @@ export const mapSaveDataSelector = createSelector(
         mapOptionsToSaveSelector,
         dynamicProjectionDefsSelector
     ],
-    (map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, dynamicDefs) => ({
-        map: {
-            ...(map || {}),
-            ...(dynamicDefs?.length && { projections: { defs: dynamicDefs } })
-        },
+    (map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs) => ({
+        map: map || {},
         layers,
         groups,
         backgrounds,
         textSearchConfig,
         bookmarkSearchConfig,
-        additionalOptions
+        additionalOptions,
+        projectionDefs
     })
 );
 
@@ -114,8 +112,17 @@ export const mapSaveDataSelector = createSelector(
  * @return the map to save
  */
 export const mapSaveSelector = state => {
-    const { map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions } = mapSaveDataSelector(state);
-    return MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
+    const { map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs } = mapSaveDataSelector(state);
+    return MapUtils.saveMapConfiguration(
+        map,
+        layers,
+        groups,
+        backgrounds,
+        textSearchConfig,
+        bookmarkSearchConfig,
+        additionalOptions,
+        projectionDefs
+    );
 };
 /**
  * Selector to identify pending changes.

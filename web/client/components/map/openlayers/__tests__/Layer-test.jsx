@@ -23,6 +23,7 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
+import '../plugins/FlatGeobufLayer';
 
 import {
     setStore,
@@ -1825,6 +1826,63 @@ describe('Openlayers layer', () => {
         // this prevents old cache to be rendered while loading
         expect(spy).toHaveBeenCalled();
     });
+    it('wms layer is recreated when cropToProjectionExtent changes', () => {
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "cropToProjectionExtent": true
+        };
+        // create initial layer
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map} />,
+            document.getElementById("container")
+        );
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+        const originalSource = map.getLayers().item(0).getSource();
+
+        // update with cropToProjectionExtent: false: must trigger layer recreation
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{ ...options, cropToProjectionExtent: false }} map={map} />,
+            document.getElementById("container")
+        );
+        expect(map.getLayers().getLength()).toBe(1);
+        // a new source is created when the layer is recreated
+        expect(map.getLayers().item(0).getSource()).toNotBe(originalSource);
+    });
+
+    it('wms layer is recreated when cropToProjectionExtent is re-enabled', () => {
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "cropToProjectionExtent": false
+        };
+        // create layer with cropToProjectionExtent disabled
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map} />,
+            document.getElementById("container")
+        );
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+        const originalSource = map.getLayers().item(0).getSource();
+
+        // re-enable cropToProjectionExtent: must trigger layer recreation
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{ ...options, cropToProjectionExtent: true }} map={map} />,
+            document.getElementById("container")
+        );
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource()).toNotBe(originalSource);
+    });
+
     it('dimensions triggers params change', () => {
         // this tests if dimension parameter changes, this triggers updateParams
         var options = {
@@ -3571,5 +3629,89 @@ describe('Openlayers layer', () => {
         expect(loadCount).toBe(0);
         source.dispatchEvent('featuresloadend');
         expect(loadCount).toBe(1);
+    });
+
+    describe('FlatGeobuf', () => {
+        // The fixture's FGB header reports geometryType=3 (Polygon) and
+        // covers central US (-106.2..-95.9, 34.6..42.0). The shared
+        // `map` in the outer beforeEach is centered at [0, 0] in EPSG:3857
+        // (Atlantic, doesn't intersect the fixture), so we set up a
+        // dedicated map at an EPSG:4326 view over the data extent.
+        const FGB_URL = 'base/web/client/test-resources/flatgeobuf/UScounties_subset.fgb';
+        let fgbMap;
+        beforeEach(() => {
+            document.body.innerHTML = '<div id="fgb-map" style="width:200px;height:200px;"></div><div id="container"></div>';
+            fgbMap = new Map({
+                layers: [],
+                target: 'fgb-map',
+                view: new View({
+                    projection: 'EPSG:4326',
+                    center: [-101, 38],
+                    zoom: 4
+                })
+            });
+        });
+        afterEach(() => {
+            fgbMap.setTarget(null);
+            document.body.innerHTML = '';
+        });
+
+        it('loads features from a real FGB and stores them in the source', (done) => {
+            const options = {
+                type: 'flatgeobuf',
+                visibility: true,
+                url: FGB_URL,
+                name: 'us-counties',
+                metadata: { geometryType: 3 }
+            };
+            let layer;
+            const onAddFeature = (e) => {
+                try {
+                    expect(['Polygon', 'MultiPolygon']).toContain(e.feature.getGeometry().getType());
+                } catch (err) {
+                    layer.layer.getSource().un('addfeature', onAddFeature);
+                    done(err);
+                    return;
+                }
+                layer.layer.getSource().un('addfeature', onAddFeature);
+                done();
+            };
+            layer = ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={options}
+                map={fgbMap}/>, document.getElementById("container"));
+            expect(layer.layer.getSource()).toBeTruthy();
+            layer.layer.getSource().on('addfeature', onAddFeature);
+        }).timeout(15000);
+
+        it('clears the source on CRS change instead of in-place transform', () => {
+            // The OL plugin update handler must clear+refresh on CRS change
+            // (not call geometry.transform), because dynamic projections are
+            // registered async by initOLProjectionAdapter. Asserts that
+            // changing crs empties the source synchronously.
+            const baseOptions = {
+                type: 'flatgeobuf',
+                visibility: true,
+                url: FGB_URL,
+                name: 'us-counties',
+                metadata: { geometryType: 3 },
+                crs: 'EPSG:4326'
+            };
+            const layer = ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={baseOptions}
+                map={fgbMap}/>, document.getElementById("container"));
+            // Inject a feature so we can observe clear()
+            const Feature = require('ol/Feature').default;
+            const Point = require('ol/geom/Point').default;
+            layer.layer.getSource().addFeature(new Feature({ geometry: new Point([0, 0]) }));
+            expect(layer.layer.getSource().getFeatures().length).toBe(1);
+            // Re-render with a new CRS to trigger update
+            ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={{ ...baseOptions, crs: 'EPSG:3857' }}
+                map={fgbMap}/>, document.getElementById("container"));
+            expect(layer.layer.getSource().getFeatures().length).toBe(0);
+        });
     });
 });

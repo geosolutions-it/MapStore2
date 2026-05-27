@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
-import CatalogServiceEditor from '../CatalogServiceEditor';
+import CatalogServiceEditor from '../datasets/CatalogServiceEditor';
 
 const givenWmsService = {
     url: "url",
@@ -145,7 +145,7 @@ describe('Test CatalogServiceEditor', () => {
             layerOptions={{tileSize: 256}}
             saving
         />, document.getElementById("container"));
-        let buttons = document.querySelectorAll('.form-group button');
+        let buttons = document.querySelectorAll('.ms-catalog-service-editor-footer button');
         let saveBtn; let deleteBtn;
         buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
         buttons.forEach(btn => {if (btn.textContent === 'catalog.delete') deleteBtn = btn;});
@@ -163,7 +163,7 @@ describe('Test CatalogServiceEditor', () => {
             format="cog"
             onAddService={actions.onAddService}
         />, document.getElementById("container"));
-        let buttons = document.querySelectorAll('.form-group button');
+        let buttons = document.querySelectorAll('.ms-catalog-service-editor-footer button');
         let saveBtn;
         buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
         expect(saveBtn).toBeTruthy();
@@ -177,7 +177,7 @@ describe('Test CatalogServiceEditor', () => {
             format="csw"
             onAddService={actions.onAddService}
         />, document.getElementById("container"));
-        buttons = document.querySelectorAll('.form-group button');
+        buttons = document.querySelectorAll('.ms-catalog-service-editor-footer button');
         buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
         expect(saveBtn).toBeTruthy();
         TestUtils.Simulate.click(saveBtn);
@@ -196,7 +196,7 @@ describe('Test CatalogServiceEditor', () => {
             format="csw"
             onChangeCatalogMode={actions.onChangeCatalogMode}
         />, document.getElementById("container"));
-        let buttons = document.querySelectorAll('.form-group button');
+        let buttons = document.querySelectorAll('.ms-catalog-service-editor-footer button');
         let cancelBtn;
         buttons.forEach(btn => {if (btn.textContent === 'cancel') cancelBtn = btn;});
         expect(cancelBtn).toBeTruthy();
@@ -211,7 +211,7 @@ describe('Test CatalogServiceEditor', () => {
             onChangeCatalogMode={actions.onChangeCatalogMode}
             onAddService={actions.onAddService}
         />, document.getElementById("container"));
-        buttons = document.querySelectorAll('.form-group button');
+        buttons = document.querySelectorAll('.ms-catalog-service-editor-footer button');
         let saveBtn;
         buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
         TestUtils.Simulate.click(saveBtn);
@@ -223,7 +223,7 @@ describe('Test CatalogServiceEditor', () => {
             onChangeCatalogMode={actions.onChangeCatalogMode}
             onAddService={actions.onAddService}
         />, document.getElementById("container"));
-        buttons = document.querySelectorAll('.form-group button');
+        buttons = document.querySelectorAll('.ms-catalog-service-editor-footer button');
         buttons.forEach(btn => {if (btn.textContent === 'cancel') cancelBtn = btn;});
         TestUtils.Simulate.click(cancelBtn);
         expect(spyOnCancel.calls[1]).toBeFalsy();

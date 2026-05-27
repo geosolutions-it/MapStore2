@@ -1791,6 +1791,33 @@ describe('Test the MapUtils', () => {
             });
         });
 
+        it('should include projectionDefs in map.projections when provided', () => {
+            const mapConfig = {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                units: 'm',
+                mapInfoControl: true,
+                zoom: 10
+            };
+            const projectionDefs = [
+                { code: 'EPSG:3003', def: '+proj=tmerc', label: 'Monte Mario' }
+            ];
+            const saved = saveMapConfiguration(mapConfig, [], [], [], '', {}, {}, projectionDefs);
+            expect(saved.map.projections).toEqual({ defs: projectionDefs });
+        });
+        it('should not include projections in map when projectionDefs is empty', () => {
+            const mapConfig = {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                units: 'm',
+                mapInfoControl: true,
+                zoom: 10
+            };
+            const saved = saveMapConfiguration(mapConfig, [], [], [], '', {}, {}, []);
+            expect(saved.map.projections).toNotExist();
+        });
     });
 
     it('test getIdFromUri ', () => {

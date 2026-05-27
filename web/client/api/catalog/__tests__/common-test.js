@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { validate, testService } from '../common';
+import { validate, testService, getRecordIdentifier } from '../common';
 import axios from '../../../libs/ajax';
 import expect from 'expect';
 
@@ -29,6 +29,25 @@ describe('common', () => {
                 () => done(),
                 () => done("Validation should fail but passes")
             );
+        });
+    });
+    describe("getRecordIdentifier", () => {
+        it('returns the same identifier for the same slice content (deterministic)', () => {
+            const slice = { url: 'http://a', title: 'A' };
+            expect(getRecordIdentifier(slice)).toBe(getRecordIdentifier(slice));
+            expect(getRecordIdentifier({ ...slice })).toBe(getRecordIdentifier(slice));
+        });
+        it('returns different identifiers for different slice content', () => {
+            expect(getRecordIdentifier({ url: 'http://a' })).toNotEqual(getRecordIdentifier({ url: 'http://b' }));
+        });
+        it('accepts a string slice', () => {
+            expect(getRecordIdentifier('layer-a')).toBe(getRecordIdentifier('layer-a'));
+            expect(getRecordIdentifier('layer-a')).toNotEqual(getRecordIdentifier('layer-b'));
+        });
+        it('returns a non-empty string', () => {
+            const id = getRecordIdentifier({ url: 'http://a' });
+            expect(typeof id).toBe('string');
+            expect(id.length).toBeGreaterThan(0);
         });
     });
     describe("testService", () => {

@@ -9,14 +9,17 @@ import expect from 'expect';
 
 import { testEpic } from './epicTestUtils';
 import { applyFilterWidgetInteractionsEpic, cleanupAndReapplyFilterWidgetInteractionsEpic } from '../interactions';
-import { applyFilterWidgetInteractions } from '../../actions/interactions';
-import { UPDATE_PROPERTY, DELETE } from '../../actions/widgets';
-import { CHANGE_LAYER_PROPERTIES, removeNode } from '../../actions/layers';
+import {  applyFilterWidgetInteractions } from '../../actions/interactions';
+import { UPDATE_PROPERTY, DELETE, insertWidget } from '../../actions/widgets';
+import { CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, removeNode } from '../../actions/layers';
 
 const FILTER_ID = 'filter-1';
 const FILTER_WIDGET_ID = 'filter-widget-1';
 const CHART_WIDGET_ID = 'chart-widget-1';
 const TABLE_WIDGET_ID = 'table-widget-1';
+const MAP_WIDGET_ID = 'map-widget-1';
+const MAP_ID = 'map-1';
+const MAP_LAYER_ID = 'layer-1';
 const TRACE_ID = 'trace-1';
 const CHART_ID = 'chart-1';
 
@@ -65,6 +68,23 @@ const makeTableWidget = (overrides = {}) => ({
     widgetType: 'table',
     title: 'Table Widget',
     layer: { name: 'test:layer', id: 'layer-1' },
+    ...overrides
+});
+
+const makeMapWidget = (overrides = {}) => ({
+    id: MAP_WIDGET_ID,
+    widgetType: 'map',
+    title: 'Map Widget',
+    maps: [{
+        mapId: MAP_ID,
+        name: 'Map 1',
+        layers: [{
+            id: MAP_LAYER_ID,
+            name: 'test:layer',
+            type: 'wms',
+            group: 'overlay'
+        }]
+    }],
     ...overrides
 });
 
@@ -183,6 +203,173 @@ describe('interactions epics', () => {
                 done
             );
         });
+
+        it('dispatches updateWidgetProperty with maps for layer time dimension target when timeline is unavailable', (done) => {
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: ['2020-01-01T00:00:00Z'] },
+                interactions: [{
+                    id: 'int-dim',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${MAP_WIDGET_ID}].maps[${MAP_ID}].layers[${MAP_LAYER_ID}].params.time`,
+                        metaData: {
+                            dimension: 'time'
+                        }
+                    }
+                }]
+            });
+            const mapWidget = makeMapWidget();
+            const state = {
+                ...makeState([filterWidget, mapWidget]),
+                context: {
+                    currentContext: {
+                        plugins: {
+                            desktop: []
+                        }
+                    }
+                }
+            };
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(MAP_WIDGET_ID);
+                    expect(actions[0].key).toBe('maps[0].layers[0].params.time');
+                    expect(actions[0].value).toBe('2020-01-01T00:00:00Z');
+                },
+                state,
+                done
+            );
+        });
+
+        it('dispatches updateWidgetProperty with maps for elevation dimension target on map layer', (done) => {
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: [200] },
+                interactions: [{
+                    id: 'int-elev',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${MAP_WIDGET_ID}].maps[${MAP_ID}].layers[${MAP_LAYER_ID}].params.elevation`,
+                        metaData: {
+                            dimension: 'elevation'
+                        }
+                    }
+                }]
+            });
+            const mapWidget = makeMapWidget();
+            const state = makeState([filterWidget, mapWidget]);
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(MAP_WIDGET_ID);
+                    expect(actions[0].key).toBe('maps[0].layers[0].params.elevation');
+                    expect(actions[0].value).toBe(200);
+                },
+                state,
+                done
+            );
+        });
+
+        it('dispatches changeLayerParams for elevation dimension target on main map layer', (done) => {
+            const LAYER_ID = 'mapstore:elevation_test__094852c0-0585-11f1-bc35-ed1a4c87fb4e';
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: [200] },
+                interactions: [{
+                    id: 'int-main-map-elev',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `map.layers[${LAYER_ID}].params.elevation`,
+                        metaData: {
+                            dimension: 'elevation'
+                        }
+                    }
+                }]
+            });
+            const state = makeState([filterWidget]);
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(CHANGE_LAYER_PARAMS);
+                    expect(actions[0].layer).toBe(LAYER_ID);
+                    expect(actions[0].params).toEqual({ elevation: 200 });
+                },
+                state,
+                done
+            );
+        });
+
+        it('dispatches updateWidgetProperty for chart axis applied current time dimension target', (done) => {
+            const filterWidget = makeFilterWidget({
+                selections: { [FILTER_ID]: ['2020-01-01T00:00:00Z'] },
+                interactions: [{
+                    id: 'int-chart-axis-time',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${CHART_WIDGET_ID}].charts[${CHART_ID}].traces[${TRACE_ID}].xAxisOpts[x-axis-1].appliedCurrentTime`,
+                        metaData: {
+                            dimension: 'time'
+                        }
+                    }
+                }]
+            });
+            const chartWidget = makeChartWidget({
+                charts: [{
+                    chartId: CHART_ID,
+                    xAxisOpts: [{ id: 0 }, { id: 'x-axis-1', type: 'date', showCurrentTime: true }],
+                    yAxisOpts: [{ id: 0 }],
+                    traces: [{
+                        id: TRACE_ID,
+                        type: 'bar',
+                        xaxis: 'x-axis-1',
+                        layer: { name: 'test:layer', id: 'layer-1' }
+                    }]
+                }]
+            });
+            const state = makeState([filterWidget, chartWidget]);
+            state.context = {
+                currentContext: {
+                    plugins: {
+                        desktop: []
+                    }
+                }
+            };
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(CHART_WIDGET_ID);
+                    expect(actions[0].key).toBe('charts[0].xAxisOpts[1].appliedCurrentTime');
+                    expect(actions[0].value).toBe('2020-01-01T00:00:00Z');
+                },
+                state,
+                done
+            );
+        });
     });
 
     describe('cleanupAndReapplyFilterWidgetInteractionsEpic', () => {
@@ -288,6 +475,96 @@ describe('interactions epics', () => {
                     const tableUpdate = updateActions.find(a => a.key === 'interactionFilters' && a.id === TABLE_WIDGET_ID);
                     expect(tableUpdate).toBeTruthy();
                     expect(tableUpdate.value).toEqual([]);
+                },
+                state,
+                done
+            );
+        });
+
+        it('on DELETE filter widget, resets connected chart axis applied current time', (done) => {
+            const filterWidget = makeFilterWidget({
+                interactions: [{
+                    id: 'int-chart-axis-time',
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: {
+                        nodePath: `widgets[${CHART_WIDGET_ID}].charts[${CHART_ID}].traces[${TRACE_ID}].xAxisOpts[x-axis-1].appliedCurrentTime`,
+                        metaData: { dimension: 'time' }
+                    }
+                }]
+            });
+            const chartWidget = makeChartWidget({
+                charts: [{
+                    chartId: CHART_ID,
+                    xAxisOpts: [{ id: 0 }, { id: 'x-axis-1', type: 'date', showCurrentTime: true, appliedCurrentTime: '2020-01-01T00:00:00Z' }],
+                    traces: [{
+                        id: TRACE_ID,
+                        type: 'bar',
+                        xaxis: 'x-axis-1'
+                    }]
+                }]
+            });
+            const state = makeState([chartWidget]);
+
+            testEpic(
+                cleanupAndReapplyFilterWidgetInteractionsEpic,
+                1,
+                [{ type: DELETE, widget: filterWidget, target: 'floating' }],
+                (actions) => {
+                    const axisUpdate = actions.find(a =>
+                        a.type === UPDATE_PROPERTY
+                        && a.id === CHART_WIDGET_ID
+                        && a.key === 'charts[0].xAxisOpts[1].appliedCurrentTime'
+                    );
+                    expect(axisUpdate).toBeTruthy();
+                    expect(axisUpdate.value).toBe(null);
+                },
+                state,
+                done
+            );
+        });
+
+        it('on INSERT filter widget, resets chart axis effects from deleted interactions', (done) => {
+            const deletedInteraction = {
+                id: 'deleted-chart-axis-time',
+                plugged: true,
+                targetType: 'applyDimension',
+                source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[deleted-filter]` },
+                target: {
+                    nodePath: `widgets[${CHART_WIDGET_ID}].charts[${CHART_ID}].traces[${TRACE_ID}].xAxisOpts[x-axis-1].appliedCurrentTime`,
+                    metaData: { dimension: 'time' }
+                }
+            };
+            const filterWidget = makeFilterWidget({
+                filters: [],
+                selections: {},
+                interactions: [],
+                deletedInteractions: [deletedInteraction]
+            });
+            const chartWidget = makeChartWidget({
+                charts: [{
+                    chartId: CHART_ID,
+                    xAxisOpts: [{ id: 0 }, { id: 'x-axis-1', type: 'date', showCurrentTime: true, appliedCurrentTime: '2020-01-01T00:00:00Z' }],
+                    traces: [{
+                        id: TRACE_ID,
+                        type: 'bar',
+                        xaxis: 'x-axis-1'
+                    }]
+                }]
+            });
+            const state = makeState([{ ...filterWidget, deletedInteractions: undefined }, chartWidget]);
+
+            testEpic(
+                cleanupAndReapplyFilterWidgetInteractionsEpic,
+                1,
+                [insertWidget(filterWidget, 'floating')],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(CHART_WIDGET_ID);
+                    expect(actions[0].key).toBe('charts[0].xAxisOpts[1].appliedCurrentTime');
+                    expect(actions[0].value).toBe(null);
                 },
                 state,
                 done

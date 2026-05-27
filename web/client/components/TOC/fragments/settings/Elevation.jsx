@@ -9,6 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 import Slider from 'react-nouislider';
 import ElevationChart from './ElevationChart';
 import { Grid } from 'react-bootstrap';
@@ -36,7 +37,8 @@ export default class extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        return this.props.element.id !== nextProps.element.id;
+        return this.props.element.id !== nextProps.element.id
+            || !isEqual(this.props.element.params, nextProps.element.params);
     }
 
     renderElevationsChart = (elevations) => {

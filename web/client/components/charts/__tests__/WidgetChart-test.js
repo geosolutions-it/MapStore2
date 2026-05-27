@@ -219,6 +219,26 @@ describe('WidgetChart', () => {
         expect(layout.yaxis.tickvals).toEqual(['4', '5']);
         expect(layout.yaxis.ticktext).toEqual(['D', 'E']);
     });
+
+    it('preserves blank custom tick labels', () => {
+        const { layout } = toPlotly({
+            data: [DATASET_1.data],
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }],
+            xAxisOpts: [{
+                id: 0,
+                tickvals: ' 1, 2, 3 ',
+                ticktext: ' A,, C '
+            }]
+        });
+        expect(layout.xaxis.tickvals).toEqual(['1', '2', '3']);
+        expect(layout.xaxis.ticktext).toEqual(['A', '', 'C']);
+    });
 });
 
 const TYPES = ['pie', 'line', 'bar'];

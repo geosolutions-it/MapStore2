@@ -74,13 +74,16 @@ import { projectionSelector, mapSelector } from '../selectors/map';
 import { getResolutions, METERS_PER_UNIT } from "../utils/MapUtils";
 import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
-import { createDefaultStyle } from '../utils/StyleUtils';
+import { createDefaultStyle, simplifyGeometryType } from '../utils/StyleUtils';
 import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
 import { getCustomTileGridProperties } from '../utils/WMSUtils';
 import {getLayerTileMatrixSetsInfo} from '../api/WMTS';
 import { getLayerMetadata } from '../api/ArcGIS';
 import { flatGeobufExtractGeometryType } from '../utils/FlatGeobufLayerUtils';
+import { sniffFlatGeobufFirstGeometryType } from '../api/FlatGeobuf';
+import { getRequestConfigurationByUrl } from '../utils/SecurityUtils';
+import { updateUrlParams } from '../utils/URLUtils';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     logError({message: errObj});
@@ -309,10 +312,7 @@ export default (API) => ({
                 if (layer.type === 'wfs') {
                     return Rx.Observable.defer(() => describeFeatureType(layer.url, layer.name))
                         .switchMap((result) => {
-                            const extractedGeometryType = (extractGeometryType(result) || '').replace('Multi', '');
-                            const geometryType = ['Point', 'LineString', 'Polygon'].includes(extractedGeometryType)
-                                ? extractedGeometryType
-                                : 'GeometryCollection';
+                            const geometryType = simplifyGeometryType(extractGeometryType(result));
                             return Rx.Observable.of(changeLayerProperties(id, {
                                 style: createDefaultStyle({ geometryType })
                             }));
@@ -321,13 +321,21 @@ export default (API) => ({
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
                 if (layer.type === 'flatgeobuf') {
-                    return Rx.Observable.defer(() => describeFeatureType(layer.url, layer.name))
-                        .switchMap(() => {
-                            const extractedGeometryType = (flatGeobufExtractGeometryType(layer.metadata) || '').replace('Multi', '');
-                            const geometryType = ['Point', 'LineString', 'Polygon'].includes(extractedGeometryType)
-                                ? extractedGeometryType
-                                : 'GeometryCollection';
-
+                    // Resolve geometry type at catalog-add time so the layer
+                    // gets a default style stamped before reaching the runtime
+                    // plugin. Prefer the FGB header (already in layer.metadata
+                    // from getCapabilities); when the header declares Unknown
+                    // (heterogeneous datasets), sniff the first feature.
+                    return Rx.Observable.defer(() => {
+                        const fromMetadata = flatGeobufExtractGeometryType(layer.metadata);
+                        if (fromMetadata && fromMetadata !== 'Unknown') {
+                            return Promise.resolve(fromMetadata);
+                        }
+                        const { headers, params } = getRequestConfigurationByUrl(layer.url, layer?.security?.sourceId);
+                        return sniffFlatGeobufFirstGeometryType(updateUrlParams(layer.url, params), headers);
+                    })
+                        .switchMap((rawType) => {
+                            const geometryType = simplifyGeometryType(rawType);
                             return Rx.Observable.of(changeLayerProperties(id, {
                                 style: createDefaultStyle({ geometryType })
                             }));
@@ -476,7 +484,9 @@ export default (API) => ({
             */
     openCatalogEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-            .filter((action) => action.control === "metadataexplorer" && isActiveSelector(store.getState()))
+            .filter((action) => {
+                return action.control === "metadataexplorer" && isActiveSelector(store.getState());
+            })
             .switchMap(() => {
                 return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
             }),
@@ -600,6 +610,7 @@ export default (API) => ({
              */
     autoSearchEpic: (action$, { getState = () => { } } = {}) =>
         action$.ofType(CHANGE_TEXT)
+            .filter(({ skipAutoSearch }) => !skipAutoSearch)
             .debounce(() => {
                 const state = getState();
                 const delay = delayAutoSearchSelector(state);
@@ -609,7 +620,8 @@ export default (API) => ({
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
                 const service = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: service.type, url: buildServiceUrl(service), startPosition: 1, maxRecords: pageSize, text, options: { service }}));
+                const { filters, sort } = searchOptionsSelector(state) || {};
+                return Rx.Observable.of(textSearch({ format: service.type, url: buildServiceUrl(service), startPosition: 1, maxRecords: pageSize, text, options: { service, ...(filters !== undefined && { filters }), ...(sort !== undefined && { sort }) } }));
             }),
 
     catalogCloseEpic: (action$, store) =>
@@ -619,7 +631,7 @@ export default (API) => ({
                 const metadataSource = metadataSourceSelector(state);
                 const stashedService = stashedServiceSelector(state);
                 return Rx.Observable.of(...([
-                    setControlProperties('metadataexplorer', "enabled", false, "group", null),
+                    setControlProperties('metadataexplorer', "enabled", false, "group", null, "panel", true),
                     changeCatalogMode("view"),
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?

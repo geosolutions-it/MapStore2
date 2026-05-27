@@ -66,6 +66,10 @@
       "style": "Stýl",
       "transparent": "Priehľadný",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "Použiť možnosti medzipamäte",
       "styleCustom": "Použiť štýl s názvom \"{value}\"",
       "styleListLoadError": "Nastala chyba pri načítaní zoznamu štýlov",
@@ -1399,6 +1403,20 @@
       "wmcNoLayersError": "Na export do WMC bola potrebná najmenej jedna vrstva WMS, nenašla sa ani jedna"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Typ filtra značiek",
+        "category": "Kategória",
+        "keyword": "Kľúčové slovo"
+      },
+      "listView": "Zoznam",
+      "gridView": "Mriežka",
+      "selectAll": "Vybrať všetko",
+      "layers": "Vrstvy",
+      "edit": "Upraviť",
+      "backToList": "Späť do katalógu",
+      "close": "Zatvoriť",
+      "showFullContent": "Zobraziť celý obsah",
+      "hideFullContent": "Skryť celý obsah",
       "start": "Dátum začiatku ",
       "end": "Dátum skončenia ",
       "notAvailable": "Nie je k dispozícii",
@@ -1440,7 +1458,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Nadpis",
@@ -1968,14 +1987,7 @@
         "expandTray": "Expand widgets tray",
         "collapseTray": "Collapse widgets tray",
         "expandAll": "Expand all widgets",
-        "collapseAll": "Collapse all widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
-            "timelineTitle": "Timeline has been collapsed",
-            "widgetsTitle": "Widgets has been collapsed"
-          }
-        }
+        "collapseAll": "Collapse all widgets"
       }
     },
     "dashboard": {
@@ -3417,7 +3429,9 @@
         "playback": "Konfigurácia prehrávania",
         "mapTemplates": "Šablóny mapy",
         "userPlugins": "Pluginy používateľa",
-        "mapViews": "Zobrazenia mapy"
+        "mapViews": "Zobrazenia mapy",
+        "swipe": "Škrtiť",
+        "crsSelector": "Výber CRS"
       }
     },
     "resourcesCatalog": {

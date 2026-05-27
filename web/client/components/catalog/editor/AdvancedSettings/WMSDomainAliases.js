@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {FormControl, FormGroup, ControlLabel, Glyphicon, Button} from "react-bootstrap";
-import {debounce, size, map, omit, toInteger} from "lodash";
+import {debounce, size, map, omit, toInteger, values as toValues} from "lodash";
 import Message from "../../../I18N/Message";
 import InfoPopover from "../../../widgets/widget/InfoPopover";
 import React, {useState, useCallback, useEffect} from "react";
@@ -34,7 +34,10 @@ export default ({
     );
 
     useEffect(() => {
-        onDomainAliasChangeDebounced(aliases);
+        // Emit an array of non-empty strings. The internal `aliases` state uses
+        // a keyed object to keep React row keys stable across add/remove, but
+        // consumers (and buildServiceUrl) expect an array.
+        onDomainAliasChangeDebounced(toValues(aliases).filter(Boolean));
     }, [aliases]);
 
     const onChange = (k) => ({ target }) => setAliases((a) => ({...a, [k]: target.value}));

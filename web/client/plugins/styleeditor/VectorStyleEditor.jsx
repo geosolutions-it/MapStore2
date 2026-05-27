@@ -8,6 +8,7 @@
 
 import React, { useEffect, useRef, useState }  from 'react';
 import uniq from 'lodash/uniq';
+import isEmpty from 'lodash/isEmpty';
 import { StyleEditor } from './StyleCodeEditor';
 import TextareaEditor from '../../components/styleeditor/Editor';
 import VisualStyleEditor from '../../components/styleeditor/VisualStyleEditor';
@@ -33,6 +34,14 @@ import { getLayerJSONFeature } from '../../observables/wfs';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
+import { getFlatGeobufGeometryTypeFromOptions } from '../../utils/FlatGeobufLayerUtils';
+
+import {
+    getCapabilities as getFlatGeobufCapabilities,
+    sniffFlatGeobufFirstFeature
+} from '../../api/FlatGeobuf';
+import { getRequestConfigurationByUrl } from '../../utils/SecurityUtils';
+import { updateUrlParams } from '../../utils/URLUtils';
 
 const { getColors } = SLDService;
 
@@ -52,10 +61,54 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
-    'flatgeobuf': () => {
-        return Promise.resolve({
-            properties: {},
-            geometryType: 'polygon'
+    'flatgeobuf': (layer) => {
+        // Priority to check geometryType:
+        //  1. explicit layer.geometryType
+        //  2. FGB header from capabilities
+        //  3. then sniff the first feature from remote file header
+        const layerGeometryType = getFlatGeobufGeometryTypeFromOptions(layer);
+        const geometryType = getGeometryType({ localType: layerGeometryType });
+
+        if (layer?.sourceMetadata?.columns) {
+            const properties = layer?.sourceMetadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            return {
+                geometryType,
+                properties
+            };
+        }
+
+        return getFlatGeobufCapabilities(layer.url).then((capabilities) => {
+            const optionsProperties = capabilities?.metadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            const optionsGeometryType = getFlatGeobufGeometryTypeFromOptions({
+                geometryType: layer.geometryType,
+                sourceMetadata: capabilities.metadata
+            });
+            const optionsFirstFeature = {   // hipotetical feature with geometry type from options and properties from metadata, used when sniffing is not needed
+                geometry: { type: optionsGeometryType },
+                properties: optionsProperties
+            };
+            const finalize = (firstFeature) => ({
+                geometryType: getGeometryType({ localType: firstFeature?.geometry?.type || '' }),
+                properties: optionsProperties || firstFeature?.properties || {}
+            });
+            if (optionsGeometryType && !isEmpty(optionsProperties)) {
+                return finalize(optionsFirstFeature);
+            }
+            const { headers, params } = getRequestConfigurationByUrl(layer.url, layer?.security?.sourceId);
+            return sniffFlatGeobufFirstFeature(updateUrlParams(layer.url, params), headers)
+                .then(finalize)
+                .catch(() => {
+                    return {
+                        geometryType: optionsGeometryType,
+                        properties: optionsProperties
+                    };
+                });
+
+        }).catch(() => {
+            return {
+                geometryType: layer.geometryType,
+                properties: layer.properties
+            };
         });
     },
     'wfs': (layer) => layer.url
