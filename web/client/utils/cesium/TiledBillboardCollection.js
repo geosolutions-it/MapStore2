@@ -535,6 +535,7 @@ TiledBillboardCollection.prototype.setOpacity = function(opacity) {
 TiledBillboardCollection.prototype.setStyleFunction = function(newStyle) {
     // Update the stored style
     this._style = newStyle;
+    this._styleOptions = { ...this._styleOptions, style: newStyle };
 
     // Update existing billboards with new style
     Object.keys(this._tileCache).forEach(tileId => {
