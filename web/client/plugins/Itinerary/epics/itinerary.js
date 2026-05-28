@@ -54,13 +54,18 @@ export const itineraryMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
+            const boundingSidebarRect = {
+                ...(layout.boundingSidebarRect || {}),
+                right: layout?.boundingSidebarRect?.right ?? 40
+            };
             const action = updateMapLayout({
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             });
             return { ...action, source: CONTROL_NAME };
