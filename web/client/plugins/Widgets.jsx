@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {compose, defaultProps, withHandlers, withProps, withPropsOnChange, withState} from 'recompose';
-
+import { withResizeDetector } from 'react-resize-detector';
 import {createPlugin} from '../utils/PluginsUtils';
 import usePluginItems from '../hooks/usePluginItems';
 
@@ -40,7 +40,6 @@ import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
 
 const RIGHT_MARGIN = 55;
-import { widthProvider, heightProvider } from '../components/layout/enhancers/gridLayout';
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
@@ -82,8 +81,7 @@ compose(
     ),
     // functionalities concerning auto-resize, layout and style.
     compose(
-        heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
-        widthProvider({ overrideWidthProvider: false }),
+        withResizeDetector,
         withProps(({ isMobileAgent, width, mapLayout, singleWidgetLayoutBreakpoint = 1024 }) => {
             const rightOffset = mapLayout?.right ?? 0;
             const isSingleWidgetLayout = isMobileAgent || width <= singleWidgetLayoutBreakpoint;
@@ -113,57 +111,67 @@ compose(
             singleWidgetLayoutMinHeight = 200,
             backgroundSelectorOffset
         } = {}) => {
-            const divHeight = isSingleWidgetLayout
-                ? (height - backgroundSelectorOffset - 120) / 2
-                : height - backgroundSelectorOffset - 120;
-            const nRows = isSingleWidgetLayout ? 1 : 4;
-            const rowHeightRecalculated = !isSingleWidgetLayout
-                ? Math.floor(divHeight / nRows - rowHeightGap)
-                : divHeight > singleWidgetLayoutMaxHeight
-                    ? singleWidgetLayoutMaxHeight
-                    : divHeight < singleWidgetLayoutMinHeight
-                        ? singleWidgetLayoutMinHeight
-                        : singleWidgetLayoutMaxHeight;
-
-
-            const maximizedStyle = maximized?.widget ? {
-                width: '100%',
-                height: '100%',
-                marginTop: 0,
-                bottom: 'auto',
-                top: 0,
-                left: 0,
-                zIndex: 1330
-            } : {};
-            const maximizedProps = maximized?.widget ? {
-                width,
-                useDefaultWidthProvider: false,
-                rowHeight: height - 50,
-                breakpoints: { xxs: 0 },
-                cols: { xxs: 1 }
-            } : {};
-            const widthOptions = width ? {width: viewWidth - 1} : {};
-            const baseHeight = isSingleWidgetLayout
-                ? rowHeightRecalculated
-                : Math.floor((height - 100) / (rowHeightRecalculated + 10)) * (rowHeightRecalculated + 10);
-            return ({
-                rowHeight: isSingleWidgetLayout ? rowHeightRecalculated : rowHeight || rowHeightRecalculated,
+            const commonProps = {
                 className: "on-map",
-                breakpoints: isSingleWidgetLayout ? { xxs: 0 } : { md: 0 },
+                useDefaultWidthProvider: false
+            };
+            const baseStyle = {
+                left: leftOffset + 'px',
+                bottom: 35 + backgroundSelectorOffset,
+                width: viewWidth + 'px',
+                position: 'absolute',
+                zIndex: 50
+            };
+            const defaultLayoutProps = {
                 cols: cols || { md: 6, xxs: 1 },
-                ...widthOptions,
-                useDefaultWidthProvider: false,
-                style: {
-                    left: leftOffset + 'px',
-                    bottom: 35 + backgroundSelectorOffset,
-                    height: baseHeight,
-                    width: viewWidth + 'px',
-                    position: 'absolute',
-                    zIndex: 50,
-                    ...maximizedStyle
-                },
-                ...maximizedProps
-            });
+                ...(width ? { width: viewWidth - 1 } : {})
+            };
+
+            if (maximized?.widget) {
+                return {
+                    ...commonProps,
+                    width,
+                    rowHeight: height - 50,
+                    breakpoints: { xxs: 0 },
+                    cols: { xxs: 1 },
+                    style: {
+                        width: '100%',
+                        height: '100%',
+                        marginTop: 0,
+                        bottom: 'auto',
+                        top: 0,
+                        left: 0,
+                        position: 'absolute',
+                        zIndex: 1330
+                    }
+                };
+            }
+
+            const topOffset = 40;
+
+            if (isSingleWidgetLayout) {
+                const availableHeight = (height - backgroundSelectorOffset - topOffset) / 2;
+                const rowHeightRecalculated = Math.min(singleWidgetLayoutMaxHeight, Math.max(singleWidgetLayoutMinHeight, availableHeight));
+                return {
+                    ...commonProps,
+                    ...defaultLayoutProps,
+                    rowHeight: rowHeightRecalculated,
+                    breakpoints: { xxs: 0 },
+                    style: { ...baseStyle, height: rowHeightRecalculated }
+                };
+            }
+            const rowsCount = 4;
+            const availableHeight = height - backgroundSelectorOffset - topOffset;
+            const rowHeightRecalculated = Math.floor(availableHeight / rowsCount - rowHeightGap);
+            const rowSpacing = rowHeightGap / 2;
+            const baseHeight = Math.floor(height / (rowHeightRecalculated + rowSpacing)) * (rowHeightRecalculated + rowSpacing);
+            return {
+                ...commonProps,
+                ...defaultLayoutProps,
+                rowHeight: rowHeight || rowHeightRecalculated,
+                breakpoints: { md: 0 },
+                style: { ...baseStyle, height: baseHeight }
+            };
         })
     ),
     /* toolsOptions configurations support
@@ -320,6 +328,11 @@ Widgets.defaultProps = {
  * @prop {object} cfg.cols Number of columns in this layout. default is { md: 6, xxs: 1 }
  * @prop {object} cfg.defaults options that are used to initialize the plugin when mounted
  * @prop {object} cfg.defaults.initialSize new widget's default sizes in grid units. It contains 2 integers, `w` and `h`, representing the initial size of the new widget. This is useful when customizing `rowHeight` and/or `cols`, to generate a widget with a proportionated size.
+ * @prop {object[]} [items] additional plugin items that can be injected into the Widgets plugin.
+ * Items with `target: "widget"` provide custom widget components resolved by the plugin container system.
+ * @prop {string} [items[].target] item target. Use `widget` to register a custom widget component for the Widgets plugin.
+ * @prop {string} [items[].type] custom widget identifier used to match a custom widget configuration.
+ * @prop {React.Component} [items[].Component] React component rendered inside the standard widget frame for a matching custom widget.
  * @example
  * ```
  * {
@@ -344,7 +357,25 @@ Widgets.defaultProps = {
  *    "time": "HH:mm:ss"
  * }
  * ```
- *
+ * Custom widget support:
+ * @example
+ * ```
+ * {
+ *   "items": [
+ *     {
+ *       "target": "widget",
+ *       "type": "Type1",
+ *       "Component": CustomWidgetContent
+ *     }
+ *   ]
+ * }
+ * ```
+ * To render a custom widget, a widget entry with `widgetType: "custom"` and a `type`
+ * matching the injected item should exist in the widgets list. A custom widget entry
+ * can be added from any plugin using the `/actions/widgets/insertWidget` action.
+ * Custom widget content is managed by the external plugin that injects the component,
+ * while drag, visibility, header tools, and expand / minimize behavior are maintained
+ * by the shared widget frame.
  */
 
 const WidgetsPlugin = connect(null, {onMount: init}

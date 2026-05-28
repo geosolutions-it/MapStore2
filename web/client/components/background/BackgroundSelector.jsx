@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState, lazy } from 'react';
+import React, { useState, lazy, useEffect } from 'react';
 
 import ConfirmDialog from '../../components/layout/ConfirmDialog';
 import withSuspense from '../misc/withSuspense';
@@ -51,6 +51,7 @@ function BackgroundSelector({
     backgroundAdded,
     onUpdateThumbnail,
     disableTileGrids,
+    disableCropToProjectionExtent,
     backgroundList,
     enableTerrainList,
     alwaysVisible,
@@ -64,19 +65,12 @@ function BackgroundSelector({
         open: false,
         layer: undefined
     });
-    // handlers
-    const onToggleLayer =  (layer) => {
-        onPropertiesChange(layer.id ?? "ellipsoid", {visibility: true});
+    const getCurrentTerrainLayer = () => {
+        const terrainLayer = backgroundsProp.find(bg => bg.type === 'terrain');
+        const visibleTerrain = backgroundsProp.find(bg => bg.type === 'terrain' && bg.visibility === true);
+        if (visibleTerrain) return visibleTerrain;
+        return terrainLayer;
     };
-    const handleAddEditTerrainLayer = (layerToAdd) => {
-        if (showTerrainModal.layer) {
-            updateNode(layerToAdd.id, 'layers', layerToAdd);
-        } else {
-            addLayer(layerToAdd);
-            onPropertiesChange(layerToAdd.id, {visibility: true});
-        }
-    };
-
     // Get current selected background (that is not a terrain and with visibility: true)
     const getCurrentBackground = () => {
         const visibleBackground = backgroundsProp.find(bg => bg.type !== 'terrain' && bg.visibility === true);
@@ -89,14 +83,35 @@ function BackgroundSelector({
         }
         return backgroundsProp[0];
     };
-    const getCurrentTerrainLayer = () => {
-        const terrainLayers = backgroundsProp.find(bg => bg.type === 'terrain');
-        const visibleTerrain = backgroundsProp.find(bg => bg.type === 'terrain' && bg.visibility === true);
-        if (visibleTerrain) return visibleTerrain;
-        return terrainLayers?.[0];
+    const handleAddEditTerrainLayer = (layerToAdd) => {
+        if (showTerrainModal.layer) {
+            updateNode(layerToAdd.id, 'layers', layerToAdd);
+        } else {
+            addLayer(layerToAdd);
+            onPropertiesChange(layerToAdd.id, {visibility: true});
+        }
     };
     const currentBackground = getCurrentBackground();
     const currentTerrain = getCurrentTerrainLayer();
+    // Include the ellipsoidal terrain if missing
+    useEffect(() => {
+        const hasEllipsoidTerrain = backgroundsProp.some(bg => bg.type === 'terrain' && bg.provider === 'ellipsoid');
+        if (!hasEllipsoidTerrain) {
+            const newEllipsoidLayer = {
+                type: 'terrain',
+                visibility: !currentTerrain, // only visible if no other terrain is active
+                title: 'Ellipsoid',
+                provider: 'ellipsoid',
+                group: 'background',
+                id: "ellipsoid"
+            };
+            handleAddEditTerrainLayer(newEllipsoidLayer);
+        }
+    }, [backgroundsProp, currentTerrain]);
+    // handlers
+    const onToggleLayer =  (layer) => {
+        onPropertiesChange(layer.id ?? "ellipsoid", {visibility: true});
+    };
 
     const filteredBackgrounds = backgroundsProp.filter(({ type }) => type !== 'terrain');
     const backgrounds = filteredBackgrounds.map((background) => {
@@ -115,18 +130,6 @@ function BackgroundSelector({
             deletable: canEdit && allowDeletion && terrain.provider !== 'ellipsoid'
         };
     });
-
-    // include the ellipsoidal terrain if missing
-    const hasEllipsoidTerrain = terrains.some(terrain => terrain.provider === 'ellipsoid');
-    if (!hasEllipsoidTerrain) {
-        handleAddEditTerrainLayer({
-            type: 'terrain',
-            visibility: !currentTerrain,
-            title: 'Ellipsoid',
-            provider: 'ellipsoid',
-            group: "background"
-        });
-    }
 
     const {show: showConfirm, layerId: confirmLayerId, layerTitle: confirmLayerTitle} = confirmDeleteBackgroundModal || {show: false};
 
@@ -184,6 +187,7 @@ function BackgroundSelector({
                 updateThumbnail={onUpdateThumbnail}
                 projection={projection}
                 disableTileGrids={disableTileGrids}
+                disableCropToProjectionExtent={disableCropToProjectionExtent}
                 {...backgroundDialogParams}
                 {...modalParams}
             />}

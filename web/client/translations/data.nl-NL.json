@@ -85,6 +85,10 @@
       "style": "Stijl",
       "transparent": "Transparant",
       "singleTile": "Enkele tegel",
+      "cropToProjectionExtent": {
+        "label": "Roteer naar projectie-extensie",
+        "tooltip": "De laag wordt bijgesneden tot de projectie-extensie wanneer deze aan de kaart wordt toegevoegd met deze optie ingeschakeld"
+      },
       "cached": "Gebruik cache-opties",
       "styleCustom": "Gebruik een stijl genaamd \"{value}\"",
       "styleListLoadError": "Er is een fout opgetreden bij het laden van de lijst met stijlen",
@@ -1680,6 +1684,20 @@
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
       },
+      "tagFilterType": {
+        "label": "ype tagfilter",
+        "category": "Categorie",
+        "keyword": "Trefwoord"
+      },
+      "listView": "Lijstweergave",
+      "gridView": "Rasterweergave",
+      "selectAll": "Alles selecteren",
+      "layers": "Lagen",
+      "edit": "Bewerken",
+      "backToList": "Terug naar catalogus",
+      "close": "Sluiten",
+      "showFullContent": "Toon volledige inhoud",
+      "hideFullContent": "Verberg volledige inhoud",
       "clearValueText": "Selecties wissen",
       "noResultsText": "Geen resultaat",
       "addToMap": "Toevoegen aan kaart",
@@ -1720,7 +1738,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -2298,7 +2317,7 @@
         "placeholder": "Geef een kaartnaam",
         "selectLabel": "Selecteer een kaart",
         "infoOnHide": "Vergroot widget om de kaart switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Toon achtergrondselector",
@@ -2314,7 +2333,7 @@
         "placeholder": "Geef grafieknaam",
         "selectLabel": "Grafiek",
         "infoOnHide": "Vergroot widget om de grafiek switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartType": {
         "bar": {
@@ -2411,6 +2430,10 @@
         "prefix": "Prefix",
         "suffix": "Suffix",
         "examples": "Voorbeelden",
+        "axisTickVals": "Waarden van asmarkeringen",
+        "axisTickValsTooltip": "Optioneel. Dwingt de as om alleen de opgegeven waarden te tonen (komma-gescheiden). Als ook Tick-tekst is ingesteld, wordt elke waarde weergegeven met het bijbehorende label.",
+        "axisTickText": "Tekst van asmarkeringen",
+        "axisTickTextTooltip": "Aangepaste labels (komma-gescheiden) die in plaats van de waarden uit Tick-waarden worden weergegeven, in de bijbehorende volgorde.",
         "formatExamples": "<div><ul><li><code>.0%</code>: afgeronde percentage, '12%'</li><li><code>.2s</code>:SI-prefix met twee significante cijfers, '42M'</li><li><code>,.2r</code>: gegroepeerde duidendtallen met twee significante cijfers '4,200'</li></ul><em>Meer informatie over formattering syntaxis <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">hier</a>.</em></div>",
         "formula": "Formule",
         "formulaExamples": "<div>Transformeer de waarde met een formule. Gebruik een variabele <code>waarde</code> in de expressie:<h5>Voorbeelden</h5><ul><li><code>waarde + 2</code></li><li><code>waarde / 100</code></li></ul><em>Meer informatie over de syntaxis <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">hier</a>.</em></div>",
@@ -2585,7 +2608,8 @@
         "editFilterTitleTooltip": "Klik om filtertitel te bewerken",
         "addNewFilterTooltip": "Klik om nieuwe filter toe te voegen",
         "applyStyle": "Stijl toepassen",
-        "targetAlreadyConnectedToStyleTooltip": "Het kaartitem is al verbonden met een stijl. Het is niet mogelijk om met meerdere stijlselectors tegelijk te verbinden"
+        "targetAlreadyConnectedToStyleTooltip": "Het kaartitem is al verbonden met een stijl. Het is niet mogelijk om met meerdere stijlselectors tegelijk te verbinden",
+        "collapseAll": "Vouw alle widgets samen"
       }
     },
     "dashboard": {
@@ -4428,7 +4452,9 @@
         "playback": "Afspeelconfiguratie",
         "mapTemplates": "Kaartsjablonen",
         "userPlugins": "Gebruikersplugins",
-        "mapViews": "kaartoverzichten"
+        "mapViews": "kaartoverzichten",
+        "swipe": "Schuiven",
+        "crsSelector": "CRS-kiezer"
       }
     },
     "streetView": {

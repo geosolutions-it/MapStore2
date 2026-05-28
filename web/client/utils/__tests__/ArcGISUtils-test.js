@@ -10,9 +10,13 @@ import expect from 'expect';
 import {
     isImageServerUrl,
     isMapServerUrl,
+    isFeatureServerUrl,
     getLayerIds,
     getQueryLayerIds,
-    esriToGeoJSONFeature
+    esriToGeoJSONFeature,
+    esriGeometryTypeToGeoJSON,
+    esriFieldTypeToPrimitive,
+    esriFieldsToAttributes
 } from '../ArcGISUtils';
 
 const layers = [
@@ -86,6 +90,21 @@ describe('ArcGISUtils', () => {
         expect(isMapServerUrl('https://localhost/arcgis/rest/services/Name/ImageServer')).toBeFalsy();
         expect(isMapServerUrl('https://localhost/arcgis/rest/services/Name/MapServer')).toBeTruthy();
     });
+    it('isFeatureServerUrl', () => {
+        expect(isFeatureServerUrl()).toBeFalsy();
+        expect(isFeatureServerUrl('https://localhost/arcgis/rest/services/Name/MapServer')).toBeFalsy();
+        expect(isFeatureServerUrl('https://localhost/arcgis/rest/services/Name/FeatureServer')).toBeTruthy();
+        expect(isFeatureServerUrl('https://localhost/arcgis/rest/services/Name/FeatureServer/0')).toBeTruthy();
+    });
+    it('esriGeometryTypeToGeoJSON', () => {
+        expect(esriGeometryTypeToGeoJSON('esriGeometryPoint')).toBe('Point');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryMultipoint')).toBe('MultiPoint');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryPolyline')).toBe('MultiLineString');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryPolygon')).toBe('MultiPolygon');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryEnvelope')).toBe('Polygon');
+        expect(esriGeometryTypeToGeoJSON('unknownType')).toBe('GeometryCollection');
+        expect(esriGeometryTypeToGeoJSON(undefined)).toBe('GeometryCollection');
+    });
     it('getLayerIds', () => {
         expect(getLayerIds(1)).toEqual(['1']);
         expect(getLayerIds('1')).toEqual(['1']);
@@ -99,6 +118,43 @@ describe('ArcGISUtils', () => {
         expect(getQueryLayerIds(0, layers)).toEqual(['2', '3', '4', '5', '6', '8', '9']);
         expect(getQueryLayerIds(6, layers)).toEqual(['6']);
         expect(getQueryLayerIds(7, layers)).toEqual(['8', '9']);
+    });
+    it('esriFieldTypeToPrimitive', () => {
+        expect(esriFieldTypeToPrimitive('esriFieldTypeOID')).toBe('number');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeSmallInteger')).toBe('number');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeInteger')).toBe('number');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeBigInteger')).toBe('number');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeSingle')).toBe('number');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeDouble')).toBe('number');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeString')).toBe('string');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeGUID')).toBe('string');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeGlobalID')).toBe('string');
+        expect(esriFieldTypeToPrimitive('esriFieldTypeXML')).toBe('string');
+        // Geometry/Date/Blob/Raster/unknown - null
+        expect(esriFieldTypeToPrimitive('esriFieldTypeGeometry')).toBe(null);
+        expect(esriFieldTypeToPrimitive('esriFieldTypeDate')).toBe(null);
+        expect(esriFieldTypeToPrimitive('esriFieldTypeBlob')).toBe(null);
+        expect(esriFieldTypeToPrimitive('esriFieldTypeRaster')).toBe(null);
+        expect(esriFieldTypeToPrimitive(undefined)).toBe(null);
+        expect(esriFieldTypeToPrimitive('undefined')).toBe(null);
+    });
+    it('esriFieldsToAttributes', () => {
+        const fields = [
+            { name: 'OBJECTID', alias: 'OID', type: 'esriFieldTypeOID' },
+            { name: 'name', alias: 'Site name', type: 'esriFieldTypeString' },
+            { name: 'pop', type: 'esriFieldTypeInteger' },
+            // Geometry should be filtered out
+            { name: 'shape', type: 'esriFieldTypeGeometry' },
+            // Date should be filtered out
+            { name: 'date', type: 'esriFieldTypeDate' }
+        ];
+        expect(esriFieldsToAttributes(fields)).toEqual([
+            { attribute: 'OBJECTID', label: 'OID', type: 'number' },
+            { attribute: 'name', label: 'Site name', type: 'string' },
+            { attribute: 'pop', label: 'pop', type: 'number' }
+        ]);
+        expect(esriFieldsToAttributes()).toEqual([]);
+        expect(esriFieldsToAttributes([])).toEqual([]);
     });
     it('esriToGeoJSONFeature', () => {
         expect(esriToGeoJSONFeature())

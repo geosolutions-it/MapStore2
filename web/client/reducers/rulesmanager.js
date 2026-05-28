@@ -116,9 +116,9 @@ function rulesmanager(state = defaultState, action) {
         if (isResetField) {
             if (key === "rolename") {
 
-                return Object.assign({}, state, {filters: {...(state.filters || {}), [key]: value, ['roleAny']: undefined}});
+                return Object.assign({}, state, {filters: {...(state.filters || {}), [key]: value, ['rolenameAny']: undefined}});
             } else if (key === "username") {
-                return Object.assign({}, state, {filters: {...(state.filters || {}), [key]: value, ['userAny']: undefined}});
+                return Object.assign({}, state, {filters: {...(state.filters || {}), [key]: value, ['usernameAny']: undefined}});
             }
             return Object.assign({}, state, {filters: {...(state.filters || {}), [key]: value, [key + 'Any']: undefined}});
         }

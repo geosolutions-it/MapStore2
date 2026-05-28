@@ -24,38 +24,26 @@ const TButton = tooltip(Button);
  * @param {function} setShowConfiguration toggles the UI for configuration
  * @param {boolean} isPluggable tells if the interaction can be plugged or not
  * @param {boolean} isConfigurable tells if the interaction can be configured or not
+ * @param {object} plugConstraints describes whether plugging is disabled and why
  * @returns {React.ReactElement}
  */
-const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable, notConnectableForSpecialCase, notConnectableForSpecialCaseMsg}) => {
-
-    if (notConnectableForSpecialCase) {
-        return (
-            <FlexBox gap="xs" className="ms-interaction-buttons">
-                <TButton
-                    disabled
-                    borderTransparent
-                    tooltip={<Message msgId={notConnectableForSpecialCaseMsg} />}
-                    className="square-button"
-                >
-                    <Glyphicon glyph="ban-circle" />
-                </TButton>
-            </FlexBox>
-        );
-    }
+const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable, plugConstraints = {} }) => {
+    const { disabled: isPlugConstrained = false, reason: plugConstraintReason = null } = plugConstraints;
     return (
-        <FlexBox gap="xs" className="ms-interaction-buttons">
+        <FlexBox gap="xs" className={`ms-interaction-buttons${isPlugConstrained ? ' is-disabled' : ''}`}>
             {isConfigurable && <TButton
                 visible={isConfigurable}
                 onClick={() => setShowConfiguration(!showConfiguration)}
                 borderTransparent
-                tooltip={<Message msgId="widgets.filterWidget.targetAutomaticallyNotConnectableTooltip" />}
+                tooltip={plugConstraintReason || <Message msgId="widgets.filterWidget.targetAutomaticallyNotConnectableTooltip" />}
                 variant={showConfiguration ? "primary" : undefined}
 
             >
                 <Glyphicon glyph="cog" />
             </TButton>}
             <TButton
-                disabled={!isPluggable}
+                disabled={!isPluggable || isPlugConstrained}
+                tooltip={plugConstraintReason || undefined}
                 onClick={() => setPlugged(!plugged)}
                 borderTransparent
                 variant={plugged ? "success" : undefined}
@@ -67,4 +55,3 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
 };
 
 export default InteractionButtons;
-

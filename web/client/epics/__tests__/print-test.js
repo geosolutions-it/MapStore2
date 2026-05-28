@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import {
-    addPrintTransformer, PRINT_TRANSFORMER_ADDED
+    addPrintTransformer, PRINT_TRANSFORMER_ADDED, RESET_PRINT_SPEC
 } from '../../actions/print';
 
 import {
@@ -16,10 +16,12 @@ import {
 } from '../../utils/PrintUtils';
 
 import {
-    addPrintTransformerEpic
+    addPrintTransformerEpic,
+    resetMountPrintEpic
 } from '../print';
 
 import { testEpic } from './epicTestUtils';
+import { MAP_PLUGIN_LOAD } from '../../actions/map';
 
 
 describe('Test the print epics', () => {
@@ -65,6 +67,61 @@ describe('Test the print epics', () => {
                     done(e);
                 }
             }, {}
+        );
+    });
+    it('should dispatch RESET_PRINT_SPEC if print is mounted when MAP_PLUGIN_LOAD occurs', (done) => {
+        const mockState = {
+            print: {
+                isMounted: true,
+                spec: { sheet: 'A4' }
+            }
+        };
+
+        const triggerAction = {
+            type: MAP_PLUGIN_LOAD
+        };
+
+        testEpic(
+            resetMountPrintEpic,
+            1,
+            triggerAction,
+            (actions) => {
+                try {
+                    expect(actions.length).toEqual(1);
+                    expect(actions[0].type).toEqual(RESET_PRINT_SPEC);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            },
+            mockState
+        );
+    });
+
+    it('should NOT dispatch any action if print is NOT mounted when MAP_PLUGIN_LOAD occurs', (done) => {
+        const mockState = {
+            print: {
+                isMounted: false
+            }
+        };
+
+        const triggerAction = {
+            type: MAP_PLUGIN_LOAD
+        };
+
+        testEpic(
+            resetMountPrintEpic,
+            0,
+            triggerAction,
+            (actions) => {
+                try {
+                    expect(actions.length).toEqual(0);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            },
+            mockState
         );
     });
 });

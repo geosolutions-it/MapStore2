@@ -22,18 +22,21 @@ describe('ChartAxisOptions', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+    const getControlLabels = () => [...document.querySelectorAll('.control-label')]
+        .map(node => node.innerText.trim());
     it('should render with default', () => {
         ReactDOM.render(<ChartAxisOptions />, document.getElementById('container'));
-        const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
+        expect(getControlLabels()).toEqual([
             // y
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
             'widgets.advanced.prefix',
-            'widgets.advanced.format ',
+            'widgets.advanced.format',
             'widgets.advanced.suffix',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor',
             // x
@@ -41,6 +44,8 @@ describe('ChartAxisOptions', () => {
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);
@@ -75,16 +80,17 @@ describe('ChartAxisOptions', () => {
             }
             done();
         }}/>, document.getElementById('container'));
-        const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
+        expect(getControlLabels()).toEqual([
             // y
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
             'widgets.advanced.prefix',
-            'widgets.advanced.format ',
+            'widgets.advanced.format',
             'widgets.advanced.suffix',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor',
             // x
@@ -92,6 +98,8 @@ describe('ChartAxisOptions', () => {
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);
@@ -133,5 +141,54 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.showCurrentTime'
         ]);
         done();
+    });
+    it('should display hover only on tick values only for x axis with custom tick values', () => {
+        ReactDOM.render(<ChartAxisOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{
+                    type: 'line'
+                }],
+                yAxisOpts: [{ id: 0, tickvals: '1,2,3' }],
+                xAxisOpts: [{ id: 0, tickvals: 'A,B,C' }]
+            }]
+        }}/>, document.getElementById('container'));
+        const checkboxNodes = document.querySelectorAll('.checkbox');
+        expect([...checkboxNodes].map(node => node.innerText)).toEqual([
+            // y
+            'widgets.advanced.xAxisAngle',
+            'widgets.advanced.hideLabels',
+
+            // x
+            'widgets.advanced.showHoverOnlyOnTickValues',
+            'widgets.advanced.forceTicks',
+            'widgets.advanced.xAxisAngle',
+            'widgets.advanced.hideLabels'
+        ]);
+    });
+
+    it('should not display hover only on tick values when x axis labels are hidden', () => {
+        ReactDOM.render(<ChartAxisOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{
+                    type: 'line'
+                }],
+                xAxisOpts: [{ id: 0, tickvals: 'A,B,C', hide: true }]
+            }]
+        }}/>, document.getElementById('container'));
+        const checkboxNodes = document.querySelectorAll('.checkbox');
+        expect([...checkboxNodes].map(node => node.innerText)).toEqual([
+            // y
+            'widgets.advanced.xAxisAngle',
+            'widgets.advanced.hideLabels',
+
+            // x
+            'widgets.advanced.forceTicks',
+            'widgets.advanced.xAxisAngle',
+            'widgets.advanced.hideLabels'
+        ]);
     });
 });
