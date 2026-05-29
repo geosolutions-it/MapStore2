@@ -27,6 +27,7 @@ import {
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import { throttle, isEqual, debounce } from 'lodash';
 import TIFFImageryProvider from 'tiff-imagery-provider';
+import { getCOGPixelData } from '../../../utils/cog/IdentifyUtils';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -304,12 +305,8 @@ class CesiumMap extends React.Component {
                     resolution: getResolutions()[Math.round(this.props.zoom)]
                 };
 
-                this.getIntersectedPixels(map, {...movement.position, ...cartographic}).then(intersectedPixels => {
-
-                    pointToBuildRequest.intersectedPixels = intersectedPixels;
-
-                    this.props.onClick(pointToBuildRequest);
-                });
+                pointToBuildRequest.intersectedPixelsPromise = this.getIntersectedPixels(map, cartographic);
+                this.props.onClick(pointToBuildRequest);
             }
         }
     };
@@ -398,30 +395,35 @@ class CesiumMap extends React.Component {
     };
 
     /**
-     * wrapper for TIFFImageryProvider pickFeatures() is async operation and we need append results and call onClick
-     * https://github.com/hongfaqiu/TIFFImageryProvider/blob/v2.17.1/packages/TIFFImageryProvider/src/TIFFImageryProvider.ts#L768
-     * @param {zoom} map
-     * @param {x, y, longitude, latitude} position
-     * @returns Array of layers with relative intersected pixels
+     * Resolve COG pixel values for visible Cesium TIFF imagery layers.
+     * @param {object} map Cesium viewer
+     * @param {object} position cartographic click position
+     * @returns {Promise<Array>} layers with relative intersected pixels
      */
     getIntersectedPixels = (map, position) => {
 
         const tiffLayers = map.imageryLayers._layers.filter(layer =>
-            layer.rendered &&
+            layer.show &&
             layer.imageryProvider instanceof TIFFImageryProvider
         );
 
-        return Promise.all(tiffLayers.map(layer => {
-            return layer.imageryProvider.pickFeatures(position.x, position.y, map.zoom, position.longitude, position.latitude)
-                .then(pickedLayers => {
-                    const {data} = pickedLayers[0] || {};
+        return Promise.all(tiffLayers.map(layer =>
+            getCOGPixelData({
+                provider: layer.imageryProvider,
+                position,
+                zoom: this.props.zoom
+            })
+                .then(data => {
+                    if (!data) {
+                        return null;
+                    }
                     return {
                         id: layer._imageryProvider.layerId,
                         // remap bands index start from 1 instead of 0 to be consistent with 2D pick and avoid confusion with users
                         bands: Object.fromEntries(Object.entries(data).map(([key, value]) => [Number(key) + 1, value]))
                     };
-                });
-        }));
+                })
+        )).then(intersectedPixels => intersectedPixels.filter(Boolean));
     }
 
     getIntersectedFeatures = (map, position) => {
