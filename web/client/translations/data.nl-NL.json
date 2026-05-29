@@ -2591,7 +2591,6 @@
         "applyStyle": "Stijl toepassen",
         "targetAlreadyConnectedToStyleTooltip": "Het kaartitem is al verbonden met een stijl. Het is niet mogelijk om met meerdere stijlselectors tegelijk te verbinden",
         "collapseAll": "Vouw alle widgets samen"
->>>>>>> 71e3cc7 (NL translations update (#12300))
       }
     },
     "dashboard": {
