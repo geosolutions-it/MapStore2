@@ -1,19 +1,83 @@
 import { MAP_CONFIG_LOADED } from '../../../actions/config';
 import { setProjectionsConfig } from '../actions/crsselector';
+import Rx from 'rxjs';
+import {
+    CHANGE_MAP_CRS,
+    setMapResolutions,
+    updateMapOptions
+} from '../../../actions/map';
+import { mapSelector } from '../../../selectors/map';
+import { normalizeSRS } from '../../../utils/CoordinatesUtils';
+import { getResolutionsForProjection } from '../../../utils/MapUtils';
+import { customResolutionsForCrsSelector } from '../selectors/crsselector';
 
-// On MAP_CONFIG_LOADED, restore the plugin's quick-switch projectionList from
-// the persisted crsSelector config. Dynamic projection defs themselves are
-// restored at framework level by restoreDynamicProjectionDefsEpic.
+/**
+ * Returns the resolutions to apply for a given CRS, using the custom resolutions configured for that CRS when available, and falling back
+ * to the resolutions derived from the projection extent otherwise.
+ */
+const resolveResolutionsForCrs = (state, crs) => {
+    const custom = customResolutionsForCrsSelector(state, crs);
+    if (custom && custom.length) {
+        return custom;
+    }
+    return getResolutionsForProjection(crs);
+};
+
+/**
+ * When a map is loaded, restore the plugin configuration that was saved with it (the available projection list and any per-CRS custom
+ * resolutions). For maps saved before per-CRS custom resolutions were supported, align the active map resolutions with the configured ones
+ * so the map stays consistent on reload and on the next save.
+ */
 export const updateCrsSelectorConfigEpic = (action$) =>
     action$.ofType(MAP_CONFIG_LOADED)
-        .map((action) => {
+        .switchMap((action) => {
             const csConfig = action?.config?.crsSelector;
-            if (csConfig?.projectionList) {
-                return setProjectionsConfig({ projectionList: csConfig.projectionList });
+            const mapConfig = action?.config?.map;
+            const projection = mapConfig?.projection;
+            const view = mapConfig?.mapOptions?.view || {};
+            const customResolutions = csConfig?.customResolutions || {};
+
+            const setConfigAction = csConfig?.projectionList || csConfig?.customResolutions
+                ? setProjectionsConfig({ ...csConfig })
+                : setProjectionsConfig(undefined);
+
+            const customForCrs = projection ? customResolutions[projection] : undefined;
+            const resolutionsAreAlignedToCrs = !!view.resolutions
+                && !!view.projection
+                && normalizeSRS(view.projection) === normalizeSRS(projection);
+            const canUpdateMapOptions = !!customForCrs && customForCrs.length > 0 && !resolutionsAreAlignedToCrs;
+
+            if (canUpdateMapOptions) {
+                return Rx.Observable.of(
+                    setConfigAction,
+                    updateMapOptions({ view: { ...view, projection, resolutions: customForCrs } }),
+                    setMapResolutions(customForCrs)
+                );
             }
-            return setProjectionsConfig(undefined);
+            return Rx.Observable.of(setConfigAction);
+        });
+
+/**
+ * When the user changes the map CRS, update the map's resolutions to match: use the custom resolutions configured for the new CRS when
+ * available, otherwise compute them from the projection extent. The resolutions applied here are kept in sync with the active CRS so the
+ * map can be saved and reopened without misalignment.
+ */
+export const updateMapResolutionsOnCrsChangeEpic = (action$, store) =>
+    action$.ofType(CHANGE_MAP_CRS)
+        .switchMap(({ crs }) => {
+            if (!crs) {
+                return Rx.Observable.empty();
+            }
+            const state = store.getState();
+            const resolutions = resolveResolutionsForCrs(state, crs);
+            const currentView = mapSelector(state)?.mapOptions?.view || {};
+            return Rx.Observable.of(
+                updateMapOptions({ view: { ...currentView, projection: crs, resolutions } }),
+                setMapResolutions(resolutions)
+            );
         });
 
 export default {
-    updateCrsSelectorConfigEpic
+    updateCrsSelectorConfigEpic,
+    updateMapResolutionsOnCrsChangeEpic
 };

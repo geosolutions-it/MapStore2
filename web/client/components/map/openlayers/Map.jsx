@@ -361,8 +361,6 @@ class OpenlayersMap extends React.Component {
      * - custom grid set with custom extent. You need to customize the projection definition extent to make it work.
      * - custom grid set is partially supported by mapOptions.view.resolutions but this is not managed by projection change yet
      * - custom tile sizes
-     * ** NOTES**: If mapOptions.view.resolutions + mapOptions.view.projection are provided and match → will use them.
-     * - Else → will compute resolutions for provided/mapView projection.
      */
     getResolutions = (srs) => {
     // Resolve requested projection
@@ -626,12 +624,12 @@ class OpenlayersMap extends React.Component {
         const configuredProj = normalizeSRS(options?.projection);
 
         let resolutionsToUse;
-        if (configuredResolutions && configuredProj === normalizeSRS(projection)) {
+        if (configuredResolutions && configuredProj === srs) {
             // use provided resolutions (keep backward compatibility)
             resolutionsToUse = configuredResolutions;
         } else {
             // compute resolutions dynamically (e.g., EPSG:4326)
-            resolutionsToUse = this.getResolutions(normalizeSRS(projection));
+            resolutionsToUse = this.getResolutions(srs);
         }
         const newOptions = {
             ...options,
@@ -644,7 +642,7 @@ class OpenlayersMap extends React.Component {
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
         */
         const viewOptions = Object.assign({}, {
-            projection: normalizeSRS(projection),
+            projection: srs,
             center: [center?.x || 0, center?.y || 0],
             zoom: zoom,
             minZoom: limits.minZoom,
@@ -654,9 +652,7 @@ class OpenlayersMap extends React.Component {
             // we need this at true to set correctly the scale box
             constrainResolution: true,
             resolutions: this.getResolutions(srs)
-        },
-        newOptions || {}
-        );
+        }, newOptions || {});
         return new View(viewOptions);
     };
 
