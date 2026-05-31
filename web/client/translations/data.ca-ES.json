@@ -4144,7 +4144,9 @@
         "playback": "Configuraci\u00f3 de la reproducci\u00f3",
         "mapTemplates": "Plantilles de mapa",
         "userPlugins": "Plugins d'usuari",
-        "mapViews": "Vistes del mapa"
+        "mapViews": "Vistes del mapa",
+        "swipe": "Lliscar",
+        "crsSelector": "Selector de CRS"
       }
     },
     "streetView": {

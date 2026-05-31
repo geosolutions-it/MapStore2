@@ -1,12 +1,6 @@
 # Application configuration
 
-The application will load by default it will load the `localConfig.json` which is now stored in the configs\ folder
-
-You can load a custom configuration by passing the `localConfig` argument in query string:
-
-```text
-localhost:8081/?localConfig=myConfig#/viewer/openlayers/0
-```
+The application will load by default it will load the `localConfig.json` which is now stored in the `configs` folder
 
 The **localConfig** file contains the main information about URLs to load and plugins to load in the various modes.
 
@@ -171,7 +165,7 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 
   **Configuration options:**
   - `headers` - Object containing HTTP headers to add to matching requests. Example:
-  
+
     ```json
     {
       "urlPattern": ".*geostore.*",
@@ -180,9 +174,9 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
       }
     }
     ```
-  
+
   - `params` - Object containing query parameters to add to matching requests. Example:
-  
+
     ```json
     {
       "urlPattern": "\\/geoserver/.*",
@@ -191,18 +185,18 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
       }
     }
     ```
-  
+
   - `withCredentials` - Boolean to enable sending credentials with requests (useful with proxies):
-  
+
     ```json
     {
       "urlPattern": ".*internal-api.*",
       "withCredentials": true
     }
     ```
-  
+
   - `expires` - Optional Unix timestamp (in seconds) for automatic rule expiration. Example:
-  
+
     ```json
     {
       "urlPattern": ".*azure-blob.*",
