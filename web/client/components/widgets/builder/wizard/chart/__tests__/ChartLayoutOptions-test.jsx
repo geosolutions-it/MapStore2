@@ -72,7 +72,7 @@ describe('ChartLayoutOptions', () => {
             }]
         }}/>, document.getElementById('container'));
         const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([ 'widgets.advanced.barChartType', 'styleeditor.color', 'styleeditor.fontSize', 'styleeditor.fontFamily' ]);
+        expect([...controlLabelsNodes].map(node => node.innerText.trim())).toEqual([ 'widgets.advanced.barChartType', 'widgets.advanced.hovermode', 'styleeditor.color', 'styleeditor.fontSize', 'styleeditor.fontFamily' ]);
         const checkboxNodes = document.querySelectorAll('.checkbox');
         expect([...checkboxNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.displayCartesian',
@@ -122,5 +122,35 @@ describe('ChartLayoutOptions', () => {
         ]);
         const checkboxInputNodes = document.querySelectorAll('input[type=\'checkbox\']');
         Simulate.change(checkboxInputNodes[1], { target: { checked: true }});
+    });
+    it('should render hovermode value from layout', () => {
+        ReactDOM.render(<ChartLayoutOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                layout: {
+                    hovermode: 'closest'
+                },
+                traces: [{
+                    type: 'line'
+                }]
+            }]
+        }}/>, document.getElementById('container'));
+        expect(document.querySelector('.ms-chart-hovermode .Select-value-label').innerText).toBe('widgets.advanced.hovermodeClosest');
+    });
+    it('should render disabled hovermode value from layout', () => {
+        ReactDOM.render(<ChartLayoutOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                layout: {
+                    hovermode: false
+                },
+                traces: [{
+                    type: 'line'
+                }]
+            }]
+        }}/>, document.getElementById('container'));
+        expect(document.querySelector('.ms-chart-hovermode .Select-value-label').innerText).toBe('widgets.advanced.hovermodeFalse');
     });
 });

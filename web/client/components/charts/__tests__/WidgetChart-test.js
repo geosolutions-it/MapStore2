@@ -220,6 +220,60 @@ describe('WidgetChart', () => {
         expect(layout.yaxis.ticktext).toEqual(['D', 'E']);
     });
 
+    it('uses configured hovermode from layout options', () => {
+        const { data, layout } = toPlotly({
+            data: [DATASET_1.data],
+            layout: {
+                hovermode: 'closest'
+            },
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }]
+        });
+        expect(layout.hovermode).toBe('closest');
+        expect(data[0].hovertemplate).toBe('%{x}<br>%{y:d}<extra></extra>');
+    });
+
+    it('uses x values in trace rows for unified y hovermode', () => {
+        const { data, layout } = toPlotly({
+            data: [DATASET_1.data],
+            layout: {
+                hovermode: 'y unified'
+            },
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }]
+        });
+        expect(layout.hovermode).toBe('y unified');
+        expect(data[0].hovertemplate).toBe('%{x}<extra></extra>');
+    });
+
+    it('uses x values in trace labels for y hovermode', () => {
+        const { data, layout } = toPlotly({
+            data: [DATASET_1.data],
+            layout: {
+                hovermode: 'y'
+            },
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }]
+        });
+        expect(layout.hovermode).toBe('y');
+        expect(data[0].hovertemplate).toBe('%{x}<extra></extra>');
+    });
+
     it('preserves blank custom tick labels', () => {
         const { layout } = toPlotly({
             data: [DATASET_1.data],

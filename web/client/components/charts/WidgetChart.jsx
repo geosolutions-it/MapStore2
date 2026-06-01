@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Suspense, useCallback, useMemo, useRef } from 'react';
+import React, { Suspense, useCallback, useRef } from 'react';
 import { isArray, castArray, max, isNaN, isNumber, isNull } from 'lodash';
 import LoadingView from '../misc/LoadingView';
 import { parseExpression } from '../../utils/ExpressionUtils';
@@ -68,66 +68,22 @@ const getAxisTickOptions = (options = {}) => {
     return {};
 };
 
-/**
- * Returns x-axis options where hover should be limited to custom tick values.
- */
-const getHoverOnlyOnTickValuesAxisOptions = (axisOptions) => castArray(axisOptions || [])
-    .map((options, idx) => ({
-        ...options,
-        axisIndex: idx,
-        tickValues: parseAxisTickValues(options?.tickvals)
-    }))
-    .filter((options) => !options?.hide && options?.showHoverOnlyOnTickValues && options.tickValues);
-
-/**
- * Finds the Plotly x-axis object for the current hover event.
- */
-const getHoverAxis = ({ event, graphDiv, axisIndex }) => event?.xaxes?.[axisIndex]
-    || event?.points?.[0]?.xaxis
-    || graphDiv?._fullLayout?.[`xaxis${axisIndex === 0 ? '' : axisIndex + 1}`];
-
-/**
- * Converts the current hover x position to pixels in the plot area.
- */
-const getHoverPixel = ({ event, axis, axisIndex }) => {
-    const axisValue = event?.xvals?.[axisIndex];
-    if (axisValue !== undefined) {
-        return axis.c2p?.(axisValue);
+const getCartesianHoverTemplate = ({
+    layout,
+    tickPrefix,
+    format,
+    tickSuffix,
+    defaultFormat,
+    extra = ''
+}) => {
+    const yValue = `${tickPrefix ?? ""}%{y:${format ?? defaultFormat}}${tickSuffix ?? ""}`;
+    if (layout?.hovermode === 'closest') {
+        return `%{x}<br>${yValue}<extra>${extra}</extra>`;
     }
-    const targetBounds = event?.target?.getBoundingClientRect?.();
-    return event?.clientX !== undefined && targetBounds
-        ? event.clientX - targetBounds.left
-        : event?.points?.[0]?.x !== undefined
-            ? axis.d2p?.(event.points[0].x)
-            : undefined;
-};
-
-/**
- * Checks whether the current hover x position is near a configured tick value.
- */
-const isHoverOnAxisTickValues = ({ event, graphDiv, options }) => {
-    const axis = getHoverAxis({ event, graphDiv, axisIndex: options.axisIndex });
-    if (!axis) {
-        return false;
+    if (layout?.hovermode === 'y unified' || layout?.hovermode === 'y') {
+        return `%{x}<extra>${extra}</extra>`;
     }
-    const hoverPixel = getHoverPixel({ event, axis, axisIndex: options.axisIndex });
-    const hoverDistance = Math.min(axis._fullLayout?.hoverdistance ?? 20, 6);
-    return options.tickValues.some((value) => {
-        const tickPixel = axis.d2p ? axis.d2p(value) : undefined;
-        return hoverPixel !== undefined && tickPixel !== undefined && Math.abs(hoverPixel - tickPixel) <= hoverDistance;
-    });
-};
-
-/**
- * Allows hover only when all active x-axis tick constraints match.
- */
-export const isHoverOnTickValues = (event, hoverOnlyOnTickValuesAxisOptions = [], graphDiv) => {
-    if (hoverOnlyOnTickValuesAxisOptions.length === 0) {
-        return true;
-    }
-    return hoverOnlyOnTickValuesAxisOptions.every((options) => (
-        isHoverOnAxisTickValues({ event, graphDiv, options })
-    ));
+    return `${yValue}<extra>${extra}</extra>`;
 };
 
 /**
@@ -304,6 +260,7 @@ const chartDataTypes = {
         style: styleProperty,
         name: traceName,
         classifyGeoJSON,
+        layout,
         yAxisOpts,
         xAxisOpts,
         sortBy = 'groupBy',
@@ -349,7 +306,7 @@ const chartDataTypes = {
                     y: filteredData.map(({ properties }) => properties[yDataKey]),
                     name,
                     legendgrouptitle: { text },
-                    hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'g'}}${tickSuffix ?? ""}<extra>${name}</extra>`,
+                    hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'g', extra: name }),
                     marker: {
                         color,
                         ...(style?.marker?.line && {
@@ -373,7 +330,7 @@ const chartDataTypes = {
             name,
             ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
             ...(yAxisOpts.yaxis && { yaxis: yAxisOpts.yaxis }),
-            hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'g'}}${tickSuffix ?? ""}<extra></extra>`
+            hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'g' })
         };
     },
     line: ({
@@ -383,6 +340,7 @@ const chartDataTypes = {
         formula, // refers always to y
         style: styleProperty,
         name: traceName,
+        layout,
         yAxisOpts,
         xAxisOpts,
         tickPrefix: tickPrefixProp,
@@ -429,7 +387,7 @@ const chartDataTypes = {
                     y: filteredData.map(({ properties }) => properties[yDataKey]),
                     name,
                     legendgrouptitle: { text },
-                    hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'd'}}${tickSuffix ?? ""}<extra></extra>`,
+                    hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'd' }),
                     line: {
                         ...(style?.line || {}),
                         color
@@ -455,7 +413,7 @@ const chartDataTypes = {
             mode: mode || 'lines', // default mode should be lines
             ...style,
             name,
-            hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'd'}}${tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+            hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'd' }), // uses the format if passed, otherwise shows the full number.
             x,
             y,
             ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
@@ -722,7 +680,7 @@ export const toPlotly = (_props) => {
                         }
                     }
                     : {}),
-            hovermode: 'x unified',
+            hovermode: layout?.hovermode ?? 'x unified',
             uirevision: true,
             shapes: [...(layout?.shapes || [])],
             ...gridProperty
@@ -837,29 +795,15 @@ function WidgetChart({
     ...props
 }) {
     const graphDiv = useRef();
-    const hoverOnlyOnTickValuesAxisOptions = useMemo(() => getHoverOnlyOnTickValuesAxisOptions(props.xAxisOpts), [props.xAxisOpts]);
     const handleInitialized = useCallback((figure, gd) => {
         graphDiv.current = gd;
         onInitialized?.(figure, gd);
     }, [onInitialized]);
-    const clearHover = useCallback(() => {
-        import('./PlotlyChart').then(({ Plotly }) => {
-            Plotly.Fx.unhover(graphDiv.current);
-        });
-    }, []);
-    const handleBeforeHover = useCallback((event) => {
-        if (!isHoverOnTickValues(event, hoverOnlyOnTickValuesAxisOptions, graphDiv.current)) {
-            clearHover();
-            return false;
-        }
-        return true;
-    }, [clearHover, hoverOnlyOnTickValuesAxisOptions]);
     const { data, layout, config } = toPlotly(props);
     return (
         <Suspense fallback={<LoadingView />}>
             <Plot
                 onInitialized={handleInitialized}
-                onBeforeHover={handleBeforeHover}
                 onHover={onHover}
                 data={data.flat()}
                 layout={layout}
