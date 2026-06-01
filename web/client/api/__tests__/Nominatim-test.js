@@ -6,6 +6,7 @@ import Nominatim from '../Nominatim';
 import expect from 'expect';
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
+import urlUtil from 'url';
 
 let mockAxios;
 
@@ -103,6 +104,22 @@ describe('Test Nominatim API', () => {
             });
             Nominatim.geocode('Bern', {limit: 2, polygon_geojson: 1}).then(() => done()).catch(done);
         });
+
+        it('should allow overriding default options in geocode', (done) => {
+            mockAxios.onGet().reply(config => {
+                try {
+                    const parsed = urlUtil.parse(config.url, true);
+                    expect(parsed.query.priority).toBe('99');
+                } catch (e) {
+                    done(e);
+                }
+                return [200, []];
+            });
+            Nominatim.geocode('Bern', {
+                priority: 99
+            }).then(() => done()).catch(done);
+        });
+
     });
 
     describe('reverseGeocode', () => {
@@ -163,5 +180,21 @@ describe('Test Nominatim API', () => {
                 protocol: 'http'
             }).then(() => done()).catch(done);
         });
+
+        it('should allow overriding default options in reverse geocode', (done) => {
+            mockAxios.onGet().reply(config => {
+                try {
+                    const parsed = urlUtil.parse(config.url, true);
+                    expect(parsed.query.priority).toBe('99');
+                } catch (e) {
+                    done(e);
+                }
+                return [200, {}];
+            });
+            Nominatim.reverseGeocode({lat: 46.7, lng: 7.6}, {
+                priority: 99
+            }).then(() => done()).catch(done);
+        });
+
     });
 });
