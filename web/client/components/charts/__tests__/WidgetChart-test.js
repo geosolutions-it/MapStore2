@@ -223,6 +223,7 @@ describe('WidgetChart', () => {
     it('uses configured hovermode from layout options', () => {
         const { data, layout } = toPlotly({
             data: [DATASET_1.data],
+            classifyGeoJSONSync,
             layout: {
                 hovermode: 'closest'
             },
@@ -235,12 +236,13 @@ describe('WidgetChart', () => {
             }]
         });
         expect(layout.hovermode).toBe('closest');
-        expect(data[0].hovertemplate).toBe('%{x}<br>%{y:d}<extra></extra>');
+        expect(data[0].hovertemplate).toBe('%{y:d}<extra></extra>');
     });
 
     it('uses x values in trace rows for unified y hovermode', () => {
         const { data, layout } = toPlotly({
             data: [DATASET_1.data],
+            classifyGeoJSONSync,
             layout: {
                 hovermode: 'y unified'
             },
@@ -259,6 +261,7 @@ describe('WidgetChart', () => {
     it('uses x values in trace labels for y hovermode', () => {
         const { data, layout } = toPlotly({
             data: [DATASET_1.data],
+            classifyGeoJSONSync,
             layout: {
                 hovermode: 'y'
             },

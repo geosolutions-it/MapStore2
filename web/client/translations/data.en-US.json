@@ -2471,7 +2471,7 @@
         "hovermodeY": "Y tooltip",
         "hovermodeYDescription": "Labels for traces at the same Y value, showing X values.",
         "hovermodeClosest": "Individual tooltip",
-        "hovermodeClosestDescription": "Closest point only, showing both X and Y values.",
+        "hovermodeClosestDescription": "Closest point only, showing the Y value.",
         "hovermodeFalse": "No tooltip",
         "hovermodeFalseDescription": "Disables hover tooltips.",
         "valueFormatting": "Trace value formatting",

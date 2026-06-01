@@ -78,7 +78,7 @@ const getCartesianHoverTemplate = ({
 }) => {
     const yValue = `${tickPrefix ?? ""}%{y:${format ?? defaultFormat}}${tickSuffix ?? ""}`;
     if (layout?.hovermode === 'closest') {
-        return `%{x}<br>${yValue}<extra>${extra}</extra>`;
+        return `${yValue}<extra>${extra}</extra>`;
     }
     if (layout?.hovermode === 'y unified' || layout?.hovermode === 'y') {
         return `%{x}<extra>${extra}</extra>`;

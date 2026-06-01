@@ -2471,7 +2471,7 @@
         "hovermodeY": "Infobulle Y",
         "hovermodeYDescription": "Labels for traces at the same Y value, showing X values.",
         "hovermodeClosest": "Infobulle individuelle",
-        "hovermodeClosestDescription": "Closest point only, showing both X and Y values.",
+        "hovermodeClosestDescription": "Closest point only, showing the Y value.",
         "hovermodeFalse": "Aucune infobulle",
         "hovermodeFalseDescription": "Disables hover tooltips.",
         "valueFormatting": "Formatage des valeurs de trace",
