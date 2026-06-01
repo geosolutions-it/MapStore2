@@ -32,7 +32,7 @@ const Api = {
     },
     reverseGeocode: function(coords, options) {
         const {host, protocol, ...queryOptions} = options || {};
-        const params = Object.assign({lat: coords.lat, lon: coords.lng}, queryOptions, defaultOptions);
+        const params = Object.assign({lat: coords.lat, lon: coords.lng}, defaultOptions, queryOptions);
         const url = urlUtil.format({
             protocol: protocol || DEFAULT_PROTOCOL,
             host: host ? host + '/reverse' : DEFAULT_REVERSE_URL,
