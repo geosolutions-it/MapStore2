@@ -22,8 +22,8 @@ const defaultOptions = {
 const Api = {
     geocode: function(text, options) {
         const {host, protocol, ...queryOptions} = options || {};
-        var params = Object.assign({q: text}, defaultOptions, queryOptions);
-        var url = urlUtil.format({
+        const params = Object.assign({q: text}, defaultOptions, queryOptions);
+        const url = urlUtil.format({
             protocol: protocol || DEFAULT_PROTOCOL,
             host: host || DEFAULT_URL,
             query: params
