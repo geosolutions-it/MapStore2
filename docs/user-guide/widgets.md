@@ -643,7 +643,7 @@ A valid target is either a WMS layer exposing a `time` or `elevation` dimension,
 
 To enable the **Apply Dimension** option in a filter, follow these steps:
 
-* In the [Data](widgets.md#data) tab, set the *Values From* option to **Attributes** and add the `datetime` or `number` attribute to the *Value Attribute* field.
+* In the [Data](widgets.md#data) tab, set the *Values From* option to **Attributes** and select a `datetime` or `number` attribute in the *Value Attribute* field.
 
 <img src="../img/widgets/time-attribute.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
