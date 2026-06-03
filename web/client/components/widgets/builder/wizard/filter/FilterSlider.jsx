@@ -135,15 +135,7 @@ const FilterSlider = ({
         <FormGroup className={`ms-filter-slider${noSelectionClass}${showTicksClass}`}>
             <div className="ms-filter-slider-items" style={containerStyle}>
                 {showSelectedValue && (
-                    <div
-                        className="ms-filter-slider-selected-value"
-                        style={{
-                            marginBottom: 8,
-                            textAlign: 'right',
-                            fontSize: 10,
-                            fontWeight: 400
-                        }}
-                    >
+                    <div className="ms-filter-slider-selected-value">
                         {hasExplicitSelection
                             ? selectedDisplayValue
                             : <Message msgId="widgets.filterWidget.sliderNotSelected" />}
