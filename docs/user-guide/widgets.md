@@ -655,7 +655,7 @@ To enable the **Apply Dimension** option in a filter, follow these steps:
 
 <img src="../img/widgets/connect-dimension.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* To connect the filter to the map timeline, first click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, then enable the **2 way synchronization**.
+* To connect the filter to the map timeline, first click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, then enable the **2-way synchronization**.
 
 <img src="../img/widgets/connect-timeline.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
