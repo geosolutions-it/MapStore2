@@ -33,28 +33,28 @@ const AUTHORIZED_ACCESS_ROLES = ['ADMIN'];
  * @param {number} props.minimumRefreshInterval - The minimum refresh interval in milliseconds
  */
 const AutoRefreshContainer = ({
+    // Configured by the user when added to a Context
+    defaultRefreshInterval = AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
+    minimumRefreshInterval = AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,
+
     // Common store
     userRoles,
     mapType,
     layers,
 
-    // Configured by the user
-    defaultRefreshInterval = AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
-    minimumRefreshInterval = AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,
+    // Common actions
+    onUpdateNode,
 
-    // Local store
+    // AutoRefresh store
     enabled,
     availableLayers,
     activeLayers,
     ticks,
 
-    // Local actions
+    // AutoRefresh actions
     onStart,
     onStop,
-    onUpdateAvailableLayers,
-
-    // Common actions
-    onUpdateNode
+    onUpdateAvailableLayers
 }) => {
     const [lastUpdatedText] = useState(null);
 
@@ -78,13 +78,13 @@ const AutoRefreshContainer = ({
 
 
     return (<div className="ms-autorefresh-wrapper">
-        {/* Only show the layers summary to non-admin users,
-            since for admin users the summary is already visible in the settings dropdown
-        */}
         <Checkbox id="autorefresh" inline checked={enabled} onChange={handleAutorefreshActivated}>
             <Message msgId={lastUpdatedText ? 'autorefresh.label.lastUpdated' : 'autorefresh.label.default'}/>
         </Checkbox>
 
+        {/* Non-admin users see the layers information's panel,
+            Admin users see the settings panel
+        */}
         {AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <AutoRefreshSettings
             defaultRefreshInterval={defaultRefreshInterval / 1000}
             minimumRefreshInterval={minimumRefreshInterval / 1000}

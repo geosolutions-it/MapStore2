@@ -1,3 +1,11 @@
+/*
+ * Copyright 2026, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 export const CONTROL_NAME = "autorefresh";
 export const AUTOREFRESH_STEP_INTERVAL_IN_SECONDS = 5;
 export const AUTOREFRESH_MINIMUM_REFRESH_INTERVAL = 30000;

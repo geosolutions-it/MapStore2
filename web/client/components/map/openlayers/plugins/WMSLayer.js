@@ -307,6 +307,8 @@ Layers.registerType('wms', {
         return null;
     },
     refresh: (layer) => {
+        // *source.refresh() doesn't trigger an HTTPS request to reload tiles
+        // *source.updateParams() with a dummy parameter forces the source to reload tiles
         const wmsSource = layer.get('wmsSource');
         if (wmsSource) {
             wmsSource.updateParams(

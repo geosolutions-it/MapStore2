@@ -1,3 +1,11 @@
+/*
+ * Copyright 2026, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { Observable } from 'rxjs';
 
 import { AUTOREFRESH_TICK,
@@ -56,6 +64,13 @@ export const autorefreshActiveLayerChangeEpicCreation = (action$, store) => acti
         autorefreshStart()
     ) : Observable.of(autorefreshStop()));
 
+/**
+ * Follow update on nodes (layers) to update the AutoRefresh plugin accordingly
+ * (add/update layer on AutoRefresh)
+ * @param {*} action$
+ * @param {*} store
+ * @returns
+ */
 export const autorefreshUpdateNodeEpicCreation = (action$, store) => action$
     .ofType(UPDATE_NODE)
     .filter(nodeConfig => nodeConfig.nodeType === NodeTypes.LAYER)
@@ -80,6 +95,12 @@ export const autorefreshUpdateNodeEpicCreation = (action$, store) => action$
         );
     });
 
+/**
+ * Follow removal of nodes (layers) to update the AutoRefresh plugin accordingly
+ * (remove layer on AutoRefresh)
+ * @param {*} action$
+ * @returns
+ */
 export const autorefreshRemoveNodeEpicCreation = (action$) => action$
     .ofType(REMOVE_NODE)
     .filter(nodeConfig => nodeConfig.nodeType === NodeTypes.LAYER)
@@ -89,6 +110,13 @@ export const autorefreshRemoveNodeEpicCreation = (action$) => action$
         );
     });
 
+/**
+ * Follow changes in the map visualization mode (2D/3D) to update the AutoRefresh plugin accordingly
+ * (update available and active layers on AutoRefresh)
+ * @param {*} action$
+ * @param {*} store
+ * @returns
+ */
 export const autorefreshMapVisualisationModeChangeEpicCreation = (action$, store) => action$
     .ofType(VISUALIZATION_MODE_CHANGED)
     .switchMap(() => {
