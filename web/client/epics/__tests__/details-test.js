@@ -12,11 +12,13 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable';
 
 import {
     closeDetailsPanelEpic,
-    fetchDataForDetailsPanel
+    fetchDataForDetailsPanel,
+    openDetailsPanelOnStartup
 } from '../details';
 
 import {
     CLOSE_DETAILS_PANEL,
+    OPEN_DETAILS_PANEL,
     closeDetailsPanel,
     openDetailsPanel,
     UPDATE_DETAILS
@@ -26,6 +28,7 @@ import { testEpic, addTimeoutEpic } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { reducersLoaded } from '../../actions/storemanager';
 
 const baseUrl = "base/web/client/test-resources/geostore/";
 const mapId = 1;
@@ -153,6 +156,34 @@ describe('details epics tests for map', () => {
                 present: {
                     info: {}
                 }
+            }
+        });
+    });
+    it('test openDetailsPanelOnStartup opens details when context and details metadata are ready', (done) => {
+        testEpic(openDetailsPanelOnStartup, 1, reducersLoaded(['details']), ([action]) => {
+            expect(action.type).toBe(OPEN_DETAILS_PANEL);
+            done();
+        }, {
+            ...mapTestState,
+            map: {
+                present: {
+                    info: {
+                        attributes: {
+                            details: encodeURIComponent(detailsUri),
+                            detailsSettings: JSON.stringify({
+                                showAtStartup: true
+                            })
+                        }
+                    }
+                }
+            },
+            controls: {
+                details: {
+                    enabled: false
+                }
+            },
+            context: {
+                loading: false
             }
         });
     });
