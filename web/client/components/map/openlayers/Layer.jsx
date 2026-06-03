@@ -98,9 +98,7 @@ export default class OpenlayersLayer extends React.Component {
                 this.props.map.removeLayer(this.layer);
             }
         }
-        if (this.autorefreshTimer) {
-            clearInterval(this.autorefreshTimer);
-        }
+
         Layers.removeLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     }
 
