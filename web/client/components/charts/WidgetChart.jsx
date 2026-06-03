@@ -680,7 +680,7 @@ export const toPlotly = (_props) => {
                         }
                     }
                     : {}),
-            hovermode: layout?.hovermode ?? 'x unified',
+            hovermode: types.every(t => t === 'pie') ? 'closest' : layout?.hovermode ?? 'x unified',
             uirevision: true,
             shapes: [...(layout?.shapes || [])],
             ...gridProperty

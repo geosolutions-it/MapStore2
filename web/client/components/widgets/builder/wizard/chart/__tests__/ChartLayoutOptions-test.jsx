@@ -123,6 +123,26 @@ describe('ChartLayoutOptions', () => {
         const checkboxInputNodes = document.querySelectorAll('input[type=\'checkbox\']');
         Simulate.change(checkboxInputNodes[1], { target: { checked: true }});
     });
+    it('should not render hovermode dropdown for pie chart', () => {
+        ReactDOM.render(<ChartLayoutOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{ type: 'pie' }]
+            }]
+        }}/>, document.getElementById('container'));
+        expect(document.querySelector('.ms-chart-hovermode')).toBe(null);
+    });
+    it('should render hovermode dropdown for cartesian chart', () => {
+        ReactDOM.render(<ChartLayoutOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{ type: 'line' }]
+            }]
+        }}/>, document.getElementById('container'));
+        expect(document.querySelector('.ms-chart-hovermode')).toNotBe(null);
+    });
     it('should render hovermode value from layout', () => {
         ReactDOM.render(<ChartLayoutOptions data={{
             selectedChartId: 'chart-01',

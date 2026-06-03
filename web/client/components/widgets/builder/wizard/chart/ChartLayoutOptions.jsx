@@ -122,7 +122,7 @@ function ChartLayoutOptions({
                     ))}
                 </InputGroup>
             </FormGroup>}
-            <FormGroup className="form-group-flex">
+            {selectedTrace.type !== 'pie' && <FormGroup className="form-group-flex">
                 <ControlLabel>
                     <Message msgId="widgets.advanced.hovermode" />&nbsp;
                     <InfoPopover bsStyle="info" text={<HoverModeTooltip />} />
@@ -138,7 +138,7 @@ function ChartLayoutOptions({
                         }}
                     />
                 </InputGroup>
-            </FormGroup>
+            </FormGroup>}
             <div className="ms-wizard-form-separator"><Message msgId="widgets.advanced.font" /></div>
             <Font
                 options={selectedTrace.type !== 'pie' ? undefined : ["size", "family"] }
