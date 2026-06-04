@@ -271,6 +271,8 @@ Here the user can:
 
 * Enable the chart's legend by activating **Display Legend**
 
+* Select the **Tooltip Mode**, choosing how the tooltip on the chart will be shown, between *Unified X tooltip*, *Unified Y tooltip*, *X tooltip*, *Y tooltip*, *Individual tooltip* and *No tooltip*.
+
 * Choose the **Color** for all chart texts through the color picker (only for the *Bar Charts* and the *Line Charts*)
 
 * Change the **Font size** for all chart texts
