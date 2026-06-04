@@ -637,9 +637,9 @@ An example of filter selector widget could be:
 
 #### Applying Time and Elevation dimensions
 
-The dynamic filter tool can also drive the `time` and `elevation` dimensions of WMS layers, synchronize with the map timeline, or control the _Highlight Selected Time_ option of a chart (when not already driven by the timeline). If the value attribute is of type `datetime` or `number` and the selection mode is set to *Single*, the **Apply Dimension** option becomes available in the **Interactions** tab, given that there is at least one valid target available.
+The dynamic filter tool can also drive the `time` and `elevation` dimensions of WMS layers, synchronize with the map timeline, or control the *Highlight Selected Time* option of a chart (when not already driven by the timeline). If the value attribute is of type `datetime` or `number` and the selection mode is set to *Single*, the **Apply Dimension** option becomes available in the **Interactions** tab, given that there is at least one valid target available.
 
-A valid target is either a WMS layer exposing a `time` or `elevation` dimension, the _timeline_ plugin, if present in the current context, or a chart with the _Highlight Selected Time_ option enabled.
+A valid target is either a WMS layer exposing a `time` or `elevation` dimension, the *timeline* plugin, if present in the current context, or a chart with the *Highlight Selected Time* option enabled.
 
 To enable the **Apply Dimension** option in a filter, follow these steps:
 
