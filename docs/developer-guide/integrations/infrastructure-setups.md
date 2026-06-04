@@ -12,6 +12,19 @@ flowchart TB
       GeoServer <--> |authkey| MapStore
 ```
 
+## MapStore-Keycloak (OIDC) + MapStore-GeoServer
+
+```mermaid
+flowchart TB
+      Browser((Browser)) -->| Login | MapStore
+      MapStore <--> |OIDC login/logout| Keycloak[(Keycloak)]
+      MapStore -->|"Resources <br/> (e.g. maps)"| DB[(MapStore<br/> Database)]
+      MapStore -->| Sync Users, Groups, Roles| DB
+      MapStore -->| OGC requests with authkey| GeoServer
+      GeoServer -->| Resolve authkey user| MapStore
+      GeoServer -->| Users, Groups, Roles| DB
+```
+
 ## MapStore-LDAP + MapStore-GeoServer
 
 ```mermaid
