@@ -1,0 +1,16 @@
+dn: cn=ROLE_ADMIN,ou=groups,dc=acme,dc=org
+objectClass: groupOfNames
+cn: ROLE_ADMIN
+member: uid=msadmin,ou=people,dc=acme,dc=org
+
+dn: cn=mapstore-users,ou=groups,dc=acme,dc=org
+objectClass: groupOfNames
+cn: mapstore-users
+member: uid=msadmin,ou=people,dc=acme,dc=org
+member: uid=msuser,ou=people,dc=acme,dc=org
+member: uid=msdev,ou=people,dc=acme,dc=org
+
+dn: cn=mapstore-devs,ou=groups,dc=acme,dc=org
+objectClass: groupOfNames
+cn: mapstore-devs
+member: uid=msdev,ou=people,dc=acme,dc=org

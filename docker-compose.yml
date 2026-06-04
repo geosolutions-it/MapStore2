@@ -15,6 +15,7 @@ services:
       interval: 5s
       timeout: 10s
       retries: 120
+    platform: linux/amd64
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

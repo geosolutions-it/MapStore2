@@ -1,0 +1,29 @@
+dn: uid=msadmin,ou=people,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+uid: msadmin
+sn: Admin
+cn: MapStore Admin
+mail: msadmin@acme.org
+userPassword: admin123
+
+dn: uid=msuser,ou=people,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+uid: msuser
+sn: User
+cn: MapStore User
+mail: msuser@acme.org
+userPassword: user123
+
+dn: uid=msdev,ou=people,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+uid: msdev
+sn: Developer
+cn: MapStore Developer
+mail: msdev@acme.org
+userPassword: dev123
