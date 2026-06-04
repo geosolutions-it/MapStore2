@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
-
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,6 +6,8 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
+import SafeHtml from './SafeHtml';
 
 /**
  * Render the given html code into a <div>
@@ -16,28 +16,14 @@ import React from 'react';
  *  - html: {string} a html string
  *  - id: {string} a custom id for this component
  */
-class HtmlRenderer extends React.Component {
-    static propTypes = {
-        html: PropTypes.string,
-        id: PropTypes.string,
-        style: PropTypes.object
-    };
+const HtmlRenderer = ({ html, id, style = { color: '#000000' } }) => (
+    <SafeHtml html={html} id={id} style={style} />
+);
 
-    static defaultProps = {
-        // the content of an html is not dependent of the MapStore theme
-        // we should provide the default color of the browser
-        style: { color: '#000000' }
-    }
-
-    getSourceCode = () => {
-        return {
-            __html: this.props.html
-        };
-    };
-
-    render() {
-        return <div id={this.props.id} style={this.props.style} dangerouslySetInnerHTML={this.getSourceCode()} />;
-    }
-}
+HtmlRenderer.propTypes = {
+    html: PropTypes.string,
+    id: PropTypes.string,
+    style: PropTypes.object
+};
 
 export default HtmlRenderer;
