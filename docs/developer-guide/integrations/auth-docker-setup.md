@@ -33,6 +33,16 @@ Before starting the stack, make sure you have:
 
 For Keycloak OpenID login only, the sample datadir enables the Keycloak provider through `mapstore-ovr.properties`. For LDAP login, the MapStore backend must also include the LDAP security configuration.
 
+### MapStore WAR source
+
+The auth compose overlay builds the MapStore image with this default argument:
+
+```yaml
+MAPSTORE_WEBAPP_SRC: "mapstore.war"
+```
+
+This means Docker expects a `mapstore.war` file in the repository root. If the file is missing, the MapStore image build will fail. You can either copy your built WAR to `./mapstore.war` or edit `docker/docker-compose.auth.yml` to point `MAPSTORE_WEBAPP_SRC` to another local WAR path or a downloadable WAR URL.
+
 ## Prepare Environment Variables
 
 Copy the sample environment file to the repository root:
