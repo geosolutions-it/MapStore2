@@ -672,11 +672,9 @@ describe('Test security utils methods', () => {
     });
 
     describe('getBasicAuthHeader', () => {
-        it('should return basic auth header', () => {
-            const securityInfoWithAuth = { ...securityInfoToken, authHeader: 'Basic dGVzdDp0ZXN0' };
-            setSecurityInfo(securityInfoWithAuth);
-            const authHeader = SecurityUtils.getBasicAuthHeader();
-            expect(authHeader).toBe('Basic dGVzdDp0ZXN0');
+        it('should return undefined as authHeader is no longer stored in security state', () => {
+            setSecurityInfo(securityInfoToken);
+            expect(SecurityUtils.getBasicAuthHeader()).toBe(undefined);
         });
     });
 

@@ -92,32 +92,29 @@ describe('Test the security reducer', () => {
         "refresh_token": "abcdef"
     };
 
-    const testAuthHeader = "Basic dGVzdDp0ZXN0"; // test:test
     const testError = {state: 0};
     it('login state', () => {
-        let state = security({}, {type: LOGIN_SUCCESS, userDetails: testUser, authHeader: testAuthHeader});
+        let state = security({}, {type: LOGIN_SUCCESS, userDetails: testUser});
         expect(state).toExist();
         expect(state.user.name).toBe("user");
-        expect(state.authHeader).toBe(testAuthHeader);
+        expect(state.authHeader).toNotExist();
         expect(state.token).toBe(testToken);
     });
 
     it('login state when bearer is used', () => {
         let state = security(undefined, {type: LOGIN_SUCCESS, userDetails: userWithSecurityToken});
-        expect(state).toExist()
-            .toIncludeKey("authHeader");
+        expect(state).toExist();
         expect(state.user.name).toBe("secured");
         expect(state.token).toBe("1234567890");
-        expect(state.authHeader).toBe(undefined);
+        expect(state.authHeader).toNotExist();
     });
 
-    it('login state when bearer is used', () => {
+    it('login state when bearer is used with authProvider', () => {
         let state = security(undefined, {type: LOGIN_SUCCESS, userDetails: {...userWithSecurityToken, authProvider: "TEST"}});
-        expect(state).toExist()
-            .toIncludeKey("authHeader");
+        expect(state).toExist();
         expect(state.user.name).toBe("secured");
         expect(state.token).toBe("1234567890");
-        expect(state.authHeader).toBe(undefined);
+        expect(state.authHeader).toNotExist();
         expect(state.authProvider).toBe("TEST");
     });
 

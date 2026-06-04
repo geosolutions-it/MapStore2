@@ -62,7 +62,6 @@ function security(state = initialState, action) {
             token: (action.userDetails && action.userDetails.access_token) || (userUuid && userUuid.value),
             refresh_token: (action.userDetails && action.userDetails.refresh_token),
             expires: (action.userDetails && action.userDetails.expires) ? timestamp + action.userDetails.expires : timestamp + 48 * 60 * 60,
-            authHeader: action.authHeader,
             authProvider: action.userDetails?.authProvider,
             loginError: null
         });
@@ -96,7 +95,6 @@ function security(state = initialState, action) {
             token: null,
             refresh_token: null,
             expires: null,
-            authHeader: null,
             authProvider: null,
             loginError: null
         });
@@ -108,7 +106,6 @@ function security(state = initialState, action) {
     case CHANGE_PASSWORD_SUCCESS:
         return Object.assign({}, state, {
             user: Object.assign({}, state.user, Object.assign({}, action.user, {date: new Date().getTime()})),
-            authHeader: action.authHeader,
             passwordChanged: true,
             passwordError: null,
             changePasswordLoading: false
