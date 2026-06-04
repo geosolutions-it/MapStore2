@@ -12,7 +12,6 @@
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
-import {encodeUTF8} from '../utils/EncodeUtils';
 
 export const CHECK_LOGGED_USER = 'CHECK_LOGGED_USER';
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
@@ -43,9 +42,6 @@ export function loginSuccess(userDetails, username, password, authProvider) {
     return {
         type: LOGIN_SUCCESS,
         userDetails: userDetails,
-        // set here for compatibility reasons
-        // TODO: verify if the compatibility reasons still hold and remove otherwise
-        authHeader: 'Basic ' + btoa(encodeUTF8(username) + ':' + encodeUTF8(password)),
         username: username,
         password: password,
         authProvider: authProvider
@@ -117,11 +113,10 @@ export function login(username, password) {
     };
 }
 
-export function changePasswordSuccess(user, newPassword) {
+export function changePasswordSuccess(user) {
     return {
         type: CHANGE_PASSWORD_SUCCESS,
-        user: user,
-        authHeader: 'Basic ' + btoa(encodeUTF8(user.name) + ':' + encodeUTF8(newPassword))
+        user: user
     };
 }
 
