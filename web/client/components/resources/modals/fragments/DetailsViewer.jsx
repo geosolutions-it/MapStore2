@@ -10,6 +10,7 @@ import Spinner from 'react-spinkit';
 import { isNil } from 'lodash';
 
 import Message from '../../../I18N/Message';
+import SafeHtml from '../../../misc/SafeHtml';
 /**
  * @deprecated
  */
@@ -24,7 +25,7 @@ export default ({
             <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> :
             isNil(detailsText) ?
                 <div className={textContainerClassName}><Message msgId="maps.feedback.noDetailsAvailable" /></div> :
-                <div className={textContainerClassName} dangerouslySetInnerHTML={{ __html: detailsText || '' }} />
+                <SafeHtml className={textContainerClassName} html={detailsText} />
         }
     </div>
 );

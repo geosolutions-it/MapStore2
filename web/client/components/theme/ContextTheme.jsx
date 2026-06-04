@@ -87,6 +87,7 @@ function ContextTheme({
             </>,
             document.head
         ),
+        /* eslint-disable-next-line react/no-danger -- CSS compiled from Less/theme variables, not user input */
         variables ? createPortal(<style dangerouslySetInnerHTML={{ __html: variables }} />, document.head) : null
         ]}
 
