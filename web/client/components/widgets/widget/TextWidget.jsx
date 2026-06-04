@@ -9,7 +9,8 @@ import React from 'react';
 
 import WidgetContainer from './WidgetContainer';
 import emptyTextState from '../enhancers/emptyTextState';
-const TextView = emptyTextState(({ text } = {}) => <div className="mapstore-widget-default-content ql-editor" dangerouslySetInnerHTML={{__html: text}}></div>);
+import SafeHtml from '../../misc/SafeHtml';
+const TextView = emptyTextState(({ text } = {}) => <SafeHtml className="mapstore-widget-default-content ql-editor" html={text} />);
 
 export default ({
     toggleDeleteConfirm = () => {},

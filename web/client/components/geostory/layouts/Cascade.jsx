@@ -146,6 +146,7 @@ const Cascade = ({
                         ...storyTheme?.general,
                         ...(isContentFocused && { overflow: 'hidden' })
                     }}>
+                    {/* eslint-disable-next-line react/no-danger -- CSS generated from trusted theme configuration, not user input */}
                     {storyTheme?.link?.color && <style dangerouslySetInnerHTML={{__html: `
             .ms-sections-hyperlinks .ms-text-editor-main a,
             .ms-sections-hyperlinks .ms-text-wrapper a,

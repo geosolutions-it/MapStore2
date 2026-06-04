@@ -203,6 +203,7 @@ module.exports = {
         "react/react-in-jsx-scope": 2,   // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/react-in-jsx-scope.md
         "react/self-closing-comp": 2,    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md
         "react/wrap-multilines": 2,      // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md
+        "react/no-danger": 2,            // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-danger.md
         "no-restricted-imports": [2,
             {
                 "name": "lodash",

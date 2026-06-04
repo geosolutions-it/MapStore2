@@ -7,6 +7,7 @@
  */
 
 import React, { useRef, Suspense, lazy, useState, useCallback, useEffect, useReducer } from 'react';
+import SafeHtml from '../misc/SafeHtml';
 import {
     ButtonGroup,
     Glyphicon,
@@ -613,7 +614,7 @@ function MapViewsSupport({
                         </div>
                         {(!expanded && showDescription && selected?.description) && <div
                             className="ms-map-views-description">
-                            <div dangerouslySetInnerHTML={{ __html: selected.description }} />
+                            <SafeHtml html={selected.description} />
                         </div>
                         }
                     </div>

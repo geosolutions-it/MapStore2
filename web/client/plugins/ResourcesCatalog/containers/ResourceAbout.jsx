@@ -13,6 +13,7 @@ import { Glyphicon } from 'react-bootstrap';
 
 import axios from '../../../libs/ajax';
 import Message from '../../../components/I18N/Message';
+import SafeHtml from '../../../components/misc/SafeHtml';
 import { getInitialSelectedResource } from '../selectors/resources';
 import { parseNODATA, DETAILS_DATA_KEY } from '../../../utils/GeostoreUtils';
 import FlexBox from '../../../components/layout/FlexBox';
@@ -84,7 +85,7 @@ function ResourceAbout({
                         onChange={onChange}
                     />
                 </Suspense>
-                : <div dangerouslySetInnerHTML={{ __html: about || '' }} />}
+                : <SafeHtml html={about} />}
         </div>
     );
 }

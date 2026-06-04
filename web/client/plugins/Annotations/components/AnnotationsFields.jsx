@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import isFunction from 'lodash/isFunction';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from "react-bootstrap";
 import Message from '../../../components/I18N/Message';
+import SafeHtml from '../../../components/misc/SafeHtml';
 import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../utils/EditorUtils';
 import withDebounceOnCallback from '../../../components/misc/enhancers/withDebounceOnCallback';
 import CompactRichTextEditor from '../../../components/mapviews/settings/CompactRichTextEditor';
@@ -48,7 +49,7 @@ function AnnotationsFields({
                         {showLabel && <div className="ms-annotations-field-label">
                             <Message msgId={`annotations.field.${field.name}`} />
                         </div>}
-                        <div className="ms-annotations-field-value" dangerouslySetInnerHTML={{ __html: properties[field.name] }} />
+                        <SafeHtml className="ms-annotations-field-value" html={properties[field.name]} />
                     </div>
                 );
             })}
@@ -108,7 +109,7 @@ function AnnotationsFields({
                                         }
                                     }}
                                 />
-                                : <div dangerouslySetInnerHTML={{ __html: properties[field.name] }} />}
+                                : <SafeHtml html={properties[field.name]} />}
                             {validator && !isValid && <HelpBlock><Message msgId={validateError} /></HelpBlock>}
                         </FormGroup>
                     );
