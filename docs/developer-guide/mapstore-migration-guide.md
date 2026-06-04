@@ -451,7 +451,6 @@ As part of improving the authentication rules to make dynamic request configurat
 |------------|------------------|
 | `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
 | `authkey` | `params: { "authkey": "${securityToken}" }` |
-| `basic` | `headers: { "Authorization": "${authHeader}" }` |
 | `header` | `headers: { ... }` |
 | `browserWithCredentials` | `withCredentials: true` |
 
