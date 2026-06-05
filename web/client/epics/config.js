@@ -227,7 +227,7 @@ export const storeDetailsInfoEpic = (action$, store) =>
             let details = attributes?.details;
             let detailsSettings;
             try {
-                detailsSettings = JSON.parse(attributes?.detailsSettings);
+                detailsSettings = typeof attributes?.detailsSettings === 'string' ? JSON.parse(attributes?.detailsSettings) : attributes?.detailsSettings;
             } catch (e) {
                 detailsSettings = {};
             }
