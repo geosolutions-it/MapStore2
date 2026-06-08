@@ -3,8 +3,9 @@ objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
 uid: msadmin
+cn: msadmin
 sn: Admin
-cn: MapStore Admin
+givenName: MapStore Admin
 mail: msadmin@acme.org
 userPassword: admin123
 
@@ -13,8 +14,9 @@ objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
 uid: msuser
+cn: msuser
 sn: User
-cn: MapStore User
+givenName: MapStore User
 mail: msuser@acme.org
 userPassword: user123
 
@@ -23,7 +25,8 @@ objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
 uid: msdev
+cn: msdev
 sn: Developer
-cn: MapStore Developer
+givenName: MapStore Developer
 mail: msdev@acme.org
 userPassword: dev123
