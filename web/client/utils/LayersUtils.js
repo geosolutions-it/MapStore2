@@ -759,7 +759,10 @@ export const saveLayer = (layer) => {
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
     layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
     !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {},
-    layer?.enableImageryOverlay !== undefined ? { enableImageryOverlay: layer.enableImageryOverlay } : {});
+    layer?.enableImageryOverlay !== undefined ? { enableImageryOverlay: layer.enableImageryOverlay } : {},
+    layer.strategy ? { strategy: layer.strategy } : {},
+    layer.geometryType ? { geometryType: layer.geometryType } : {},
+    layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {});
 };
 
 /**

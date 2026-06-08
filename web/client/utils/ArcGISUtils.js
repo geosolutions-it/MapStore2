@@ -18,6 +18,77 @@ export const isImageServerUrl = (serviceUrl = '') => serviceUrl.includes('ImageS
  * @return {boolean}
  */
 export const isMapServerUrl = (serviceUrl = '') => serviceUrl.includes('MapServer');
+
+/**
+ * Check if a service url is of type FeatureServer
+ * @param {string} serviceUrl service url
+ * @return {boolean} true if the service url is of type FeatureServer
+ */
+export const isFeatureServerUrl = (serviceUrl = '') => serviceUrl.includes('FeatureServer');
+
+/**
+ * Map of ESRI geometry types to GeoJSON geometry types
+ */
+const ESRI_GEOMETRY_TYPE_MAP = {
+    esriGeometryPoint: 'Point',
+    esriGeometryMultipoint: 'MultiPoint',
+    esriGeometryPolyline: 'MultiLineString',
+    esriGeometryPolygon: 'MultiPolygon',
+    esriGeometryEnvelope: 'Polygon'
+};
+
+/**
+ * Convert ESRI geometry type string to GeoJSON geometry type
+ * @param {string} esriType ESRI geometry type
+ * @return {string} GeoJSON geometry type, or 'GeometryCollection' if unknown
+ */
+export const esriGeometryTypeToGeoJSON = (esriType) => ESRI_GEOMETRY_TYPE_MAP[esriType] || 'GeometryCollection';
+
+const ESRI_NUMERIC_FIELD_TYPES = [
+    'esriFieldTypeOID',
+    'esriFieldTypeSmallInteger',
+    'esriFieldTypeInteger',
+    'esriFieldTypeBigInteger',
+    'esriFieldTypeSingle',
+    'esriFieldTypeDouble'
+];
+const ESRI_STRING_FIELD_TYPES = [
+    'esriFieldTypeString',
+    'esriFieldTypeGUID',
+    'esriFieldTypeGlobalID',
+    'esriFieldTypeXML'
+];
+
+/**
+ * Map an ESRI field type to primitive type
+ * @param {string} esriFieldType ESRI field type
+ * @return {'number'|'string'|null}
+ */
+export const esriFieldTypeToPrimitive = (esriFieldType) => {
+    if (ESRI_NUMERIC_FIELD_TYPES.includes(esriFieldType)) {
+        return 'number';
+    }
+    if (ESRI_STRING_FIELD_TYPES.includes(esriFieldType)) {
+        return 'string';
+    }
+    return null;
+};
+
+/**
+ * Build an attribute list from an ESRI FeatureService fields.
+ * @param {Object[]} fields ESRI fields metadata
+ * @return {Object[]} attributes with `attribute`, `label`, and `type`
+ */
+export const esriFieldsToAttributes = (fields = []) => {
+    return fields
+        .map((f) => {
+            const type = esriFieldTypeToPrimitive(f?.type);
+            if (!type) return null;
+            return { attribute: f.name, label: f.alias || f.name, type };
+        })
+        .filter(Boolean);
+};
+
 /**
  * Return all the sub layers ids given a layer id and layers structure
  * @param {string|number} id identifier of the starting layer

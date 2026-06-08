@@ -11,7 +11,7 @@ import { getCurrentResolution } from '../MapUtils';
 import { reproject, getProjectedBBox, reprojectBbox, fitBoundsToProjectionExtent } from '../CoordinatesUtils';
 import { isObject, isNil, trimEnd } from 'lodash';
 import axios from '../../libs/ajax';
-import { esriToGeoJSONFeature, getQueryLayerIds } from '../ArcGISUtils';
+import { esriToGeoJSONFeature, getQueryLayerIds, isFeatureServerUrl } from '../ArcGISUtils';
 
 export default {
     buildRequest: (layer, { point, map, currentLocale } = {}) => {
@@ -46,6 +46,30 @@ export default {
         };
     },
     getIdentifyFlow: (layer, baseURL, { bounds } = {}) => {
+        const isFeatureServer = isFeatureServerUrl(baseURL);
+
+        if (isFeatureServer) {
+            const layerId = layer.name !== undefined ? `${layer.name}` : '0';
+            const params = {
+                f: 'geojson',
+                geometry: bounds.join(','),
+                geometryType: 'esriGeometryEnvelope',
+                spatialRel: 'esriSpatialRelIntersects',
+                inSR: 4326,
+                outSR: 4326,
+                outFields: '*'
+            };
+            return Observable.defer(() =>
+                axios.get(`${baseURL}/${layerId}/query`, { params })
+                    .then((response) => ({
+                        data: {
+                            crs: 'EPSG:4326',
+                            features: response?.data?.features || []
+                        }
+                    }))
+            );
+        }
+
         const params = {
             f: 'json',
             geometry: bounds.join(','),

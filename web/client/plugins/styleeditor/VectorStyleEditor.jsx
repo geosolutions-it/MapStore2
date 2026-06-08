@@ -27,6 +27,10 @@ import {
 import { getCapabilities } from '../../api/ThreeDTiles';
 import { describeFeatureType } from '../../api/WFS';
 import { classificationVector } from '../../api/StyleEditor';
+import {
+    getFeatureLayerSchema,
+    queryFeatureLayerForClassification
+} from '../../api/ArcGIS';
 import SLDService from '../../api/SLDService';
 import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassification';
 import { getLayerJSONFeature } from '../../observables/wfs';
@@ -69,7 +73,17 @@ const capabilitiesRequest = {
                 });
                 return featureProps;
             })
-        : Promise.resolve({})
+        : Promise.resolve({}),
+    'arcgis-feature': (layer) => getFeatureLayerSchema(layer.url, layer.name, {
+        authSourceId: layer?.security?.sourceId
+    }).then(({ properties, geometryType, fields }) => ({
+        properties,
+        geometryType: geometryType || layer.geometryType,
+        fields
+    })).catch(() => ({
+        geometryType: layer.geometryType,
+        properties: {}
+    }))
 };
 
 function VectorStyleEditor({
@@ -163,7 +177,7 @@ function VectorStyleEditor({
             (request
                 ? request(layer)
                 : Promise.resolve(layer))
-                .then(({ properties, format, geometryType } = {}) => {
+                .then(({ properties, format, geometryType, fields } = {}) => {
                     const newLayer = {
                         ...layer,
                         properties: {
@@ -171,7 +185,8 @@ function VectorStyleEditor({
                             ...layer.properties
                         },
                         format: format ? format : layer.format,
-                        geometryType: geometryType ? geometryType : layer.geometryType
+                        geometryType: geometryType ? geometryType : layer.geometryType,
+                        fields: fields || layer.fields
                     };
                     return newLayer;
                 })
@@ -180,6 +195,7 @@ function VectorStyleEditor({
                     properties,
                     format,
                     geometryType,
+                    fields,
                     style: updatedStyle
                 } = {}) => {
                     if (isMounted.current) {
@@ -190,6 +206,7 @@ function VectorStyleEditor({
                             properties,
                             format,
                             geometryType,
+                            ...(fields !== undefined && { fields }),
                             style: newStyle
                         });
                         setLoading(false);
@@ -222,8 +239,17 @@ function VectorStyleEditor({
                 return geojson.current;
             });
         }
+        if (layer.type === 'arcgis-feature') {
+            return queryFeatureLayerForClassification(layer)
+                .then((collection) => {
+                    geojson.current = collection;
+                    return collection;
+                });
+        }
         return Promise.resolve({ type: 'FeatureCollection', features: [] });
     }
+
+    const supportedLayers = ['vector', 'wfs', 'arcgis-feature'];
 
     return (
         <StyleEditor
@@ -255,10 +281,10 @@ function VectorStyleEditor({
                 }
             }}
             config={{
-                simple: !['vector', 'wfs'].includes(layer?.type),
+                simple: !supportedLayers.includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs'].includes(layer.type),
+                enableFieldExpression: supportedLayers.includes(layer.type),
                 scales,
                 zoom: Math.round(zoom)   // passing this for showing arrow of current scale for ScaleDenominator
             }}
