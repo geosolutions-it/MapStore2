@@ -13,11 +13,11 @@ services:
     environment:
       LDAP_ORGANISATION: "${LDAP_ORGANISATION:-Acme}"
       LDAP_DOMAIN: "${LDAP_DOMAIN:-acme.org}"
-      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-admin}"
-      LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD:-config}"
+      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD}"
+      LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD}"
       LDAP_READONLY_USER: "true"
       LDAP_READONLY_USER_USERNAME: "${LDAP_READONLY_USER_USERNAME:-readonly}"
-      LDAP_READONLY_USER_PASSWORD: "${LDAP_READONLY_PASSWORD:-readonly}"
+      LDAP_READONLY_USER_PASSWORD: "${LDAP_READONLY_PASSWORD}"
       LDAP_TLS: "${LDAP_TLS:-false}"
     volumes:
       - ldap_data:/var/lib/ldap
@@ -37,7 +37,7 @@ services:
     restart: on-failure
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: "${KEYCLOAK_ADMIN:-admin}"
-      KC_BOOTSTRAP_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD:-admin}"
+      KC_BOOTSTRAP_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
       KC_HTTP_ENABLED: "true"
       KC_HTTP_RELATIVE_PATH: "${KEYCLOAK_HTTP_RELATIVE_PATH:-/keycloak}"
       KC_HOSTNAME: "${KEYCLOAK_HOSTNAME:-http://localhost/keycloak}"

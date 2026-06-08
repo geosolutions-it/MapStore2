@@ -77,6 +77,9 @@ The sample datadir contains:
 - `geostore-datasource-ovr.properties`: sample PostgreSQL datasource configuration for GeoStore.
 - `configs/localConfig.json.patch`: adds Keycloak as an authentication provider in the login UI.
 
+!!! note
+    The sample Keycloak realm and LDAP credentials are intended for local testing only. Keep `docker/keycloak/realm-mapstore.sample.json` and the shipped LDIF data as local test data, and replace client secrets and user passwords before using the setup on another machine or in a shared environment.
+
 These files are regular MapStore externalized configuration files. See [configuration files](../configuration-files.md#configuration-files) and [externalized configuration](../externalized-configuration.md#externalized-configuration) for more details about datadir-based overrides.
 
 ## Prepare Keycloak
