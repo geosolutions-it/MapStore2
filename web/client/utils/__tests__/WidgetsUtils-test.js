@@ -9,6 +9,9 @@
 import expect from 'expect';
 
 import {
+    FILTER_PROPS,
+    CHART_PROPS,
+    isWidgetLayerSupported,
     convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
     getConnectionList, getDependantWidget,
     getChartAxisDependencyPath, getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
@@ -1243,6 +1246,35 @@ describe('Test WidgetsUtils', () => {
             const error = { status: 404 };
             const result = getErrorMessageId(error);
             expect(result).toBe("dashboard.errors.loading.dashboardDoesNotExist");
+        });
+    });
+
+    describe('FILTER_PROPS', () => {
+        it('does not carry the legacy transient builderEntry flag', () => {
+            expect(FILTER_PROPS.indexOf('builderEntry')).toBe(-1);
+        });
+        it('still exposes the core filter widget keys', () => {
+            ['filters', 'selections', 'interactions', 'title', 'description'].forEach(key => {
+                expect(FILTER_PROPS.indexOf(key)).toBeGreaterThanOrEqualTo(0);
+            });
+        });
+        it('includes globalWidgetMode', () => {
+            expect(FILTER_PROPS.indexOf('globalWidgetMode')).toBeGreaterThanOrEqualTo(0);
+        });
+    });
+
+    describe('CHART_PROPS', () => {
+        it('includes globalWidgetMode', () => {
+            expect(CHART_PROPS.indexOf('globalWidgetMode')).toBeGreaterThanOrEqualTo(0);
+        });
+    });
+
+    describe('isWidgetLayerSupported', () => {
+        it('is true only for searchable non-vector layers', () => {
+            expect(isWidgetLayerSupported({ search: { url: 'x' } })).toBe(true);
+            expect(isWidgetLayerSupported({ search: 'vector' })).toBe(false);
+            expect(isWidgetLayerSupported({})).toBe(false);
+            expect(isWidgetLayerSupported(undefined)).toBe(false);
         });
     });
 

@@ -9,7 +9,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
 import { buildServiceUrl } from '../../../utils/CatalogUtils';
-import API from '../../../api/catalog';
+import defaultAPI from '../../../api/catalog';
 import { Alert, Glyphicon } from 'react-bootstrap';
 import Message from '../../I18N/Message';
 
@@ -117,7 +117,8 @@ const Catalog = ({
     onAddSelected,
     onAddLayer,
     clearSelection,
-    filterFormFields
+    filterFormFields,
+    API = defaultAPI
 }, context) => {
     const { messages } = context;
     const [showFilters, setShowFilters] = useState(false);

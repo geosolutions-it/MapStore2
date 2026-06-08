@@ -28,6 +28,8 @@ import withConnectButton from './enhancers/connection/withConnectButton';
 import { wizardStateToProps, wizardSelector } from './commons';
 import ChartWizard from '../../components/widgets/builder/wizard/ChartWizard';
 import LayerSelector from './ChartLayerSelector';
+import MapCatalogLayerSelector from './MapCatalogLayerSelector';
+import withBackButton from './enhancers/withBackButton';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
@@ -92,6 +94,15 @@ const ChartToolbar = compose(
     withConnectButton(({step}) => step === 0)
 )(Toolbar);
 
+// Map-layers picker (current map layers only)
+const ChartMapLayerSelector = compose(
+    connect(() => ({}), {
+        onLayerChoice: onEditorChange,
+        onResetChange: onEditorChange
+    }),
+    withBackButton
+)(MapCatalogLayerSelector);
+
 /*
  * in case you don't have a layer selected (e.g. dashboard) the chart builder
  * prompts a catalog view to allow layer selection
@@ -102,6 +113,10 @@ const chooseLayerEnhancer = compose(
     connect(wizardSelector, null, wizardStateToProps),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
+    branch(
+        ({layer, showLayers, editorData} = {}) => (!layer || showLayers) && editorData?.globalWidgetMode === true,
+        renderComponent(ChartMapLayerSelector)
+    ),
     branch(
         ({layer, showLayers} = {}) => {
             return !layer || showLayers;

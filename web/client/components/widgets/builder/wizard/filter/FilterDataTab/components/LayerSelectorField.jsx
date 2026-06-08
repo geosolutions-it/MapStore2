@@ -31,10 +31,12 @@ const LayerSelectorField = ({
     onFilterLayer = () => {},
     onOpenLayerSelector,
     dashBoardEditing = false,
+    globalWidgetMode = false,
     hideFilter = false
 }) => {
     const layerTitle = getLayerTitle(layer);
-    const isDisabled = !dashBoardEditing && layer;
+    const allowLayerChange = dashBoardEditing || globalWidgetMode;
+    const isDisabled = !allowLayerChange && layer;
     const validationState = layerIsRequired && !layer ? 'error' : null;
 
     const hasFilter = useMemo(() =>{
@@ -90,6 +92,7 @@ LayerSelectorField.propTypes = {
     showEditFilter: PropTypes.bool,
     filter: PropTypes.object,
     dashBoardEditing: PropTypes.bool,
+    globalWidgetMode: PropTypes.bool,
     hideFilter: PropTypes.bool
 };
 
