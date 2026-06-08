@@ -88,10 +88,10 @@ describe('FilterDataTab component', () => {
             document.getElementById('container')
         );
         const container = document.getElementById('container');
-        const layerInput = container.querySelector('input[type="text"]');
-        expect(layerInput).toExist();
+        const layerInput = container.querySelector('input.form-control[readonly]');
+        expect(layerInput).toBeTruthy();
         // when globalWidgetMode is true the input must NOT be disabled
-        expect(layerInput.disabled).toBe(false);
+        expect(layerInput.disabled).toBeFalsy();
     });
 });
 
