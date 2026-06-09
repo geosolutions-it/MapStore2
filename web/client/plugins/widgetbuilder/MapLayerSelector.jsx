@@ -28,14 +28,14 @@ const Catalog = compose(
 /**
  * Builder page that allows layer's selection
  */
-export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer,
+export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer,
     catalog, onChangeSelectedService, defaultServices,
-    defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService} = {}) =>
+    defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService, defaultServiceFilters} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
             <Toolbar btnDefaultProps={{
-                className: "square-button-md",
+                className: "square-button",
                 bsStyle: "primary",
                 bsSize: "sm"
             }}
@@ -57,11 +57,14 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
         </BuilderHeader>}
     >
         <Catalog
+            {...defaultServiceFilters}
+            multiSelect={false}
+            includeAddToMap={false}
             onChangeCatalogMode={onChangeCatalogMode}
             selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices}
+            onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices}
             catalog={catalog}
             selected={selected}
-            onRecordSelected={r => setSelected(r)}
+            onSelect ={onItemClick}
             canEditService={canEditService} />
     </BorderLayout>);

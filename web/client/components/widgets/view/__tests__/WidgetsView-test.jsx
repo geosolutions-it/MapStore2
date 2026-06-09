@@ -28,6 +28,12 @@ const dummyWidget = {
         groupByAttributes: "test"
     }
 };
+const customWidget = {
+    id: "CUSTOM",
+    title: "Custom Widget",
+    type: "custom-widget",
+    widgetType: "custom"
+};
 describe('WidgetsView component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -111,6 +117,26 @@ describe('WidgetsView component', () => {
         expect(buttons.length).toBe(2);
         ReactTestUtils.Simulate.click(buttons[1]); // <-- trigger event callback
         expect(spyDeleteWidget).toHaveBeenCalled();
+    });
+    it('renders custom widgets with the provided custom component', () => {
+        const CustomComponent = ({ id, title }) => (
+            <div className="custom-widget-body">
+                <span id="custom-id">{id}</span>
+                <span id="custom-title">{title}</span>
+            </div>
+        );
+        ReactDOM.render(
+            <WidgetsView
+                widgets={[customWidget]}
+                customWidgets={[{ type: 'custom-widget', Component: CustomComponent }]}
+            />,
+            document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        expect(container.querySelector('.custom-widget-body')).toExist();
+        expect(container.querySelector('#custom-id').textContent).toBe('CUSTOM');
+        expect(container.querySelector('#custom-title').textContent).toBe('Custom Widget');
+        expect(container.querySelector('#widget-custom-CUSTOM')).toExist();
     });
     it('layouts', () => {
         ReactDOM.render(<WidgetsView layouts={{ md: [{ i: dummyWidget.id, w: 1, h: 1, x: 1, y: 1 }]}} widgets={[dummyWidget]} />, document.getElementById("container"));

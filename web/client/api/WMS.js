@@ -13,7 +13,6 @@ import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
-import { getAuthorizationBasic } from '../utils/SecurityUtils';
 const capabilitiesCache = {};
 
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
@@ -160,12 +159,12 @@ export const getDimensions = (layer) => {
  * - `Capability`: capability object that contains layers and requests formats
  * - `Service`: service information object
  */
-export const getCapabilities = (url, headers = {}) => {
+export const getCapabilities = (url, {headers, params, _msAuthSourceId} = {}) => {
     return axios.get(parseUrl(url, {
         service: "WMS",
         version: WMS_GET_CAPABILITIES_VERSION,
         request: "GetCapabilities"
-    }), {headers}).then((response) => {
+    }), {headers, params, _msAuthSourceId}).then((response) => {
         let json;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
             json = result;
@@ -204,8 +203,7 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
         });
     }
     const protectedId = options?.options?.service?.protectedId;
-    let headers = getAuthorizationBasic(protectedId);
-    return getCapabilities(url, headers)
+    return getCapabilities(url, {_msAuthSourceId: protectedId})
         .then((json) => {
             capabilitiesCache[url] = {
                 timestamp: new Date().getTime(),
@@ -215,13 +213,12 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
         });
 };
 export const describeLayers = (url, layers, security) => {
-    const headers = getAuthorizationBasic(security?.sourceId);
     return axios.get(parseUrl(url, {
         service: "WMS",
         version: WMS_DESCRIBE_LAYER_VERSION,
         layers: layers,
         request: "DescribeLayer"
-    }), {headers}).then((response) => {
+    }), {_msAuthSourceId: security?.sourceId}).then((response) => {
         let descriptions;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
             descriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;

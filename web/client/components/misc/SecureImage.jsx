@@ -7,9 +7,8 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-import { getAuthKeyParameter, getAuthenticationMethod, getAuthorizationBasic, getToken } from '../../utils/SecurityUtils';
+import axios from '../../libs/ajax';
+import { getAuthenticationMethod, getAuthKeyParameter, getToken } from '../../utils/SecurityUtils';
 import { updateUrlParams } from '../../utils/URLUtils';
 
 
@@ -53,10 +52,9 @@ const SecureImage = ({
             }
 
         } else if (props?.layer?.security?.sourceId) {
-            const headers = getAuthorizationBasic(props?.layer?.security?.sourceId);
             axios.get(src, {
                 responseType: 'blob',
-                headers
+                _msAuthSourceId: props?.layer?.security?.sourceId
             })
                 .then((response) => {
                     const imageUrl = URL.createObjectURL(response.data);

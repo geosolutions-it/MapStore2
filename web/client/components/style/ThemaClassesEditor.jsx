@@ -131,7 +131,7 @@ class ThemaClassesEditor extends React.Component {
                 }
                 <DropdownButton
                     style={{flex: 0}}
-                    className="square-button-md no-border add-rule"
+                    className="square-button no-border add-rule"
                     noCaret
                     pullRight
                     title={<Glyphicon glyph="option-vertical"/>}

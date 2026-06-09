@@ -43,6 +43,33 @@ describe('Test the WMSUtils', () => {
                 availableStyles: [{ name: 'generic' }]
             });
     });
+    it('test getLayerOptions with empty or no Abstract', () => {
+        expect(getLayerOptions()).toEqual({});
+        const capabilities = {
+            Style: { Name: 'generic' },
+            LatLonBoundingBox: {$: { minx: -180, miny: -90, maxx: 180, maxy: 90 }}
+        };
+
+        const capabilities2 = {
+            Style: { Name: 'generic' },
+            Abstract: '',
+            LatLonBoundingBox: {$: { minx: -180, miny: -90, maxx: 180, maxy: 90 }}
+        };
+        // should not contain description if Abstract is undefined
+        expect(getLayerOptions(capabilities))
+            .toEqual({
+                capabilities,
+                boundingBox: { minx: -180, miny: -90, maxx: 180, maxy: 90 },
+                availableStyles: [{ name: 'generic' }]
+            });
+        // should not contain description if Abstract is empty string
+        expect(getLayerOptions(capabilities2))
+            .toEqual({
+                capabilities: capabilities2,
+                boundingBox: { minx: -180, miny: -90, maxx: 180, maxy: 90 },
+                availableStyles: [{ name: 'generic' }]
+            });
+    });
     it('test getTileGridFromLayerOptions', () => {
         const tileGrids = [
             {

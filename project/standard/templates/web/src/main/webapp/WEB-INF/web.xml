@@ -72,6 +72,27 @@
 		<url-pattern>*.js</url-pattern>
 	</filter-mapping>
 
+    <!-- Cache management -->
+    <filter>
+        <filter-name>noCacheFilter</filter-name>
+        <filter-class>it.geosolutions.mapstore.filters.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>/</url-pattern> <!-- index.html -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.json</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.txt</url-pattern>
+    </filter-mapping>
     <!--  Backend Spring MVC controllers -->
     <!--  Backward compatibility -->
     <servlet>

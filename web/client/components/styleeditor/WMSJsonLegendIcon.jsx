@@ -11,37 +11,105 @@ import { Glyphicon } from 'react-bootstrap';
 import {
     getWellKnownNameImageFromSymbolizer
 } from '../../utils/styleparser/StyleParserUtils';
+import { colorToRgbaStr } from '../../utils/ColorUtils';
+import useGraphicPattern from './hooks/useGraphicPattern';
+
+function normalizeDashArray(dasharray) {
+    if (!dasharray) return null;
+    return Array.isArray(dasharray) ? dasharray.join(" ") : dasharray;
+}
+
+function getPolygonFill(symbolizer, graphicFill) {
+    const fillOpacity = Number(symbolizer["fill-opacity"]);
+    const baseFill = graphicFill?.fill || symbolizer.fill;
+
+    // If baseFill is a pattern URL (starts with "url("), return it as-is
+    // Pattern URLs can't be converted to rgba strings
+    if (baseFill && typeof baseFill === 'string' && baseFill.startsWith('url(')) {
+        return baseFill;
+    }
+
+    // Otherwise, convert the color with opacity
+    return colorToRgbaStr(baseFill, fillOpacity, baseFill);
+}
+
+function getLineStroke(symbolizer, graphicStroke) {
+    const strokeOpacity = Number(symbolizer["stroke-opacity"]);
+    const baseStroke = graphicStroke?.stroke || symbolizer.stroke;
+
+    // If baseStroke is a pattern URL (starts with "url("), return it as-is
+    // Pattern URLs can't be converted to rgba strings
+    if (baseStroke && typeof baseStroke === 'string' && baseStroke.startsWith('url(')) {
+        return baseStroke;
+    }
+
+    // Otherwise, convert the color with opacity
+    return colorToRgbaStr(baseStroke, strokeOpacity, baseStroke);
+}
 
 const icon = {
     Line: ({ symbolizer }) => {
-        const displayWidth = symbolizer['stroke-width'] ? symbolizer['stroke-width'] : symbolizer.width === 0
-            ? 1
-            : symbolizer.width > 7
-                ? 7
-                : symbolizer.width;
+        const symbolizers = Array.isArray(symbolizer) ? symbolizer : [symbolizer];
+        const allDefs = [];
+        const paths = symbolizers.map((sym, idx) => {
+            const { defs, stroke } = useGraphicPattern(sym, "line");
+            if (defs) {
+                allDefs.push(defs);
+            }
+            const displayWidth = sym['stroke-width'] || 1;
+            return (
+                <path
+                    key={idx}
+                    d={`M ${displayWidth} ${displayWidth} L ${50 - displayWidth} ${50 - displayWidth}`}
+                    stroke={getLineStroke(sym, { stroke })}
+                    strokeWidth={displayWidth}
+                    strokeDasharray={sym.dasharray ? "18 18" : normalizeDashArray(sym["stroke-dasharray"])}
+                    strokeLinecap={sym['stroke-linecap']}
+                    strokeLinejoin={sym['stroke-linejoin']}
+                    strokeOpacity={sym['stroke-opacity']}
+                />
+            );
+        });
         return (
             <svg viewBox="0 0 50 50">
-                <path d={`M ${displayWidth} ${displayWidth} L ${50 - displayWidth} ${50 - displayWidth}`}
-                    stroke={symbolizer.stroke || symbolizer.color}
-                    strokeWidth={displayWidth}
-                    strokeDasharray={symbolizer.dasharray ? "18 18" : null}
-                    strokeLinecap={symbolizer['stroke-linecap']}
-                    strokeLinejoin={symbolizer['stroke-linejoin']}
-                    strokeOpacity={symbolizer['stroke-opacity']}
-                />
+                {allDefs}
+                {paths}
             </svg>
         );
     },
     Polygon: ({ symbolizer }) => {
+        // Handle both single symbolizer and array of symbolizers
+        const symbolizers = Array.isArray(symbolizer) ? symbolizer : [symbolizer];
+        // Collect all defs and paths
+        const allDefs = [];
+        const paths = symbolizers.map((sym, idx) => {
+            const { defs, fill } = useGraphicPattern(sym, 'polygon');
+            if (defs) {
+                allDefs.push(defs);
+            }
+            const strokeDasharray = normalizeDashArray(
+                sym["stroke-dasharray"]
+            );
+            return (
+                <path
+                    key={idx}
+                    d="M 1 1 L 1 49 L 49 49 L 49 1 L 1 1"
+                    fill={getPolygonFill(sym, { fill })}
+                    stroke={sym.stroke}
+                    strokeWidth={sym["stroke-width"]}
+                    strokeOpacity={sym["stroke-opacity"]}
+                    strokeLinecap={sym["stroke-linecap"]}
+                    strokeLinejoin={sym["stroke-linejoin"]}
+                    strokeDasharray={strokeDasharray}
+                    strokeDashoffset={sym["stroke-dashoffset"]}
+                />
+            );
+        });
+
         return (
             <svg viewBox="0 0 50 50">
-                <path d="M 1 1 L 1 49 L 49 49 L 49 1 L 1 1"
-                    fill={symbolizer.fill}
-                    opacity={symbolizer['fill-opacity']}
-                    stroke={symbolizer.stroke}
-                    strokeWidth={symbolizer['stroke-width']}
-                    strokeOpacity={symbolizer['stroke-opacity']}
-                />
+                {allDefs}
+                {paths}
             </svg>
         );
     },
@@ -161,26 +229,63 @@ function createSymbolizerForPoint(pointSymbolizer) {
 function WMSJsonLegendIcon({
     rule
 }) {
-    const ruleSymbolizers = rule?.symbolizers;
+    const ruleSymbolizers = rule?.symbolizers || [];
+    const polygonSymbolizers = [];
+    const lineSymbolizers = [];
+    const pointSymbolizers = [];
     const icons = [];
+
     ruleSymbolizers.forEach((symbolizer) => {
         let symbolyzierKinds = Object.keys(symbolizer);
         const availableSymbolyzers = ['Point', 'Line', 'Polygon'];
         symbolyzierKinds.forEach(kind => {
             if (!availableSymbolyzers.includes(kind)) return;
             else if (kind === 'Point') {
-                let graphicSymbolyzer = symbolizer[kind]?.graphics?.find(gr => Object.keys(gr).includes('mark'));
-                const graphicType = graphicSymbolyzer ? 'Mark' : 'Icon';
-                if (graphicType === 'Mark') {
-                    symbolizer[kind] = createSymbolizerForPoint(symbolizer[kind]);
-                }
-                symbolizer[kind].wellKnownName = graphicType === 'Mark' ? graphicSymbolyzer.mark.charAt(0).toUpperCase() + graphicSymbolyzer.mark.slice(1) : '';
-                icons.push({Icon: icon[graphicType], symbolizer: symbolizer[kind]});
+                pointSymbolizers.push(symbolizer[kind]);
+                return;
+            } else if (kind === 'Line') {
+                lineSymbolizers.push(symbolizer[kind]);
+                return;
+            } else if (kind === 'Polygon') {
+                polygonSymbolizers.push(symbolizer[kind]);
                 return;
             }
             icons.push({Icon: icon[kind], symbolizer: symbolizer[kind]});
         });
     });
+
+    // Handle Line symbolizers (single or multiple)
+    if (lineSymbolizers.length > 0) {
+        icons.push({
+            Icon: icon.Line,
+            symbolizer: lineSymbolizers.length === 1 ? lineSymbolizers[0] : lineSymbolizers
+        });
+    }
+
+    // Handle Polygon symbolizers (single or multiple)
+    if (polygonSymbolizers.length > 0) {
+        icons.push({
+            Icon: icon.Polygon,
+            symbolizer: polygonSymbolizers.length === 1 ? polygonSymbolizers[0] : polygonSymbolizers
+        });
+    }
+
+    // Handle Point symbolizers (individual icons, not stacked)
+    pointSymbolizers.forEach((pointSym) => {
+        let graphicSymbolyzer = pointSym?.graphics?.find(gr => Object.keys(gr).includes('mark'));
+        const graphicType = graphicSymbolyzer ? 'Mark' : 'Icon';
+        const processedSymbolizer = graphicType === 'Mark'
+            ? createSymbolizerForPoint(pointSym)
+            : pointSym;
+        if (graphicType === 'Mark' && graphicSymbolyzer) {
+            processedSymbolizer.wellKnownName = graphicSymbolyzer.mark.charAt(0).toUpperCase() + graphicSymbolyzer.mark.slice(1);
+        }
+        icons.push({
+            Icon: icon[graphicType],
+            symbolizer: processedSymbolizer
+        });
+    });
+
     return icons.length ? <> {icons.map(({ Icon, symbolizer }, idx) => <div key={'icons-wms-json' + idx} className="ms-legend-icon"><Icon symbolizer={symbolizer}/></div>)} </> : null;
 }
 

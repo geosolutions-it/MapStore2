@@ -7,8 +7,8 @@
 */
 
 import Proj4js from 'proj4';
-import { getConfigProp } from './ConfigUtils';
 import axios from '../libs/ajax';
+import ProjectionRegistry from './ProjectionRegistry';
 
 const proj4 = Proj4js;
 
@@ -75,7 +75,7 @@ export const registerGridFiles = (gridFiles, proj4Instance) => {
  * @return {object} projection definitions
  */
 export const getProjections = () => {
-    return (getConfigProp('projectionDefs') || [])
+    return ProjectionRegistry.getAll()
         .reduce((acc, { code, ...options }) => ({
             ...acc,
             [code]: {
@@ -102,3 +102,79 @@ export const getProjection = (code = 'EPSG:3857') => {
  * @return {boolean} true if the projection is available
  */
 export const isProjectionAvailable = (code) => !!getProjections()[code];
+
+/**
+ * Build a list of available projections starting from `filterAllowedCRS`
+ * and `additionalCRS` configuration, using the same structure adopted by
+ * the `availableProjections` config of the `CRSSelector` plugin.
+ *
+ * @param {string[]} filterAllowedCRS array of CRS codes, e.g. ['EPSG:4326', 'EPSG:3857']
+ * @param {object} additionalCRS object of extra CRS definitions keyed by code,
+ *  e.g. { 'EPSG:3003': { label: 'Monte Mario' } }
+ * @returns {{ value: string, label: string }[]} list of projections
+ *
+ * The resulting array contains unique CRS codes. The label resolution logic is:
+ *  - use `additionalCRS[code].label` if present
+ *  - otherwise use the CRS code itself
+ */
+export const getAvailableProjectionsFromConfig = (filterAllowedCRS = [], additionalCRS = {}) => {
+    const codesSet = new Set([
+        ...(filterAllowedCRS || []),
+        ...Object.keys(additionalCRS || {})
+    ]);
+
+    return Array.from(codesSet).map((code) => ({
+        value: code,
+        label: additionalCRS?.[code]?.label || code
+    }));
+};
+
+/**
+ * @param {array} projectionList - array of available projections list
+ * @param {array} projectionDefs - array of additional projection definitions
+ * @returns {array} array of available projections
+ */
+export const getAvailableProjections = (projectionList = [], projectionDefs = []) => {
+    const list = [];
+    const addedCodes = new Set();
+    // Add projections from projectionList
+    for (const projection of projectionList) {
+        if (projection && projection.value) {
+            list.push(projection);
+            addedCodes.add(projection.value);
+        }
+    }
+    // Add projections from projectionDefs, skipping duplicates (if any present)
+    for (const projection of projectionDefs) {
+        if (projection && projection.code && !addedCodes.has(projection.code)) {
+            list.push({
+                value: projection.code,
+                label: projection?.label || projection?.code
+            });
+            addedCodes.add(projection.code);
+        }
+    }
+    return list;
+};
+
+
+export const wgs84EquivalentCrs = new Set([
+    'EPSG:4269', // NAD83
+    'EPSG:4258', // ETRS89
+    'EPSG:4283', // GDA94
+    'CRS:84'
+]);
+/**
+ * Geographic CRS codes that are practically equivalent to WGS84 (sub-metre
+ * difference) and safe to normalize to EPSG:4326.  Some of these are
+ * registered in OL/proj4 with axisOrientation "neu" (lat/lon instead of
+ * lon/lat), which makes olTransformExtent return a near-global rect when
+ * transforming a viewport extent to that CRS.  Since FGB stores coordinates
+ * in lon/lat order regardless of the declared CRS, using EPSG:4326 produces
+ * correct bbox transforms and correct GeoJSON reprojection.
+ * @param {string} code CRS identifier, e.g. 'EPSG:4269'
+ * @return {boolean} true if the code is in the set of WGS84-equivalent CRS
+ */
+export const isWGS84Equivalent = (code) => {
+    return wgs84EquivalentCrs.has(code);
+};

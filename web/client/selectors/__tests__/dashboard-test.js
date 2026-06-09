@@ -27,7 +27,8 @@ import {
     dashboardInfoDetailsUriFromIdSelector,
     dashboardInfoDetailsSettingsFromIdSelector,
     canEditServiceSelector,
-    dashboardTitleSelector
+    dashboardTitleSelector,
+    isSidebarFullHeightOnDashboard
 } from '../dashboard';
 
 describe('dashboard selectors', () => {
@@ -273,6 +274,125 @@ describe('dashboard selectors', () => {
                 }
             });
             expect(canEdit).toBe(false);
+        });
+    });
+    describe('isSidebarFullHeightOnDashboard', () => {
+        it('should return true when dashboard is available and map editor is not open', () => {
+            const state = {
+                dashboard: {
+                    editor: {
+                        available: true
+                    }
+                },
+                mapEditor: {
+                    open: false,
+                    owner: null
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(true);
+        });
+        it('should return false when dashboard is available but map editor is open with widgetInlineEditor owner', () => {
+            const state = {
+                dashboard: {
+                    editor: {
+                        available: true
+                    }
+                },
+                mapEditor: {
+                    open: true,
+                    owner: "widgetInlineEditor"
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(false);
+        });
+        it('should return true when dashboard is available and map editor is open with inlineEditor owner (geostory)', () => {
+            const state = {
+                dashboard: {
+                    editor: {
+                        available: true
+                    }
+                },
+                mapEditor: {
+                    open: true,
+                    owner: "inlineEditor"
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(true);
+        });
+        it('should return false when dashboard is not available and map editor is not open', () => {
+            const state = {
+                dashboard: {
+                    editor: {
+                        available: false
+                    }
+                },
+                mapEditor: {
+                    open: false,
+                    owner: null
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(false);
+        });
+        it('should return false when dashboard is not available and map editor is open with widgetInlineEditor owner', () => {
+            const state = {
+                dashboard: {
+                    editor: {
+                        available: false
+                    }
+                },
+                mapEditor: {
+                    open: true,
+                    owner: "widgetInlineEditor"
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(false);
+        });
+        it('should return false when dashboard state is missing', () => {
+            const state = {
+                mapEditor: {
+                    open: false,
+                    owner: null
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(false);
+        });
+        it('should return true when mapEditor state is missing (defaults to closed)', () => {
+            const state = {
+                dashboard: {
+                    editor: {
+                        available: true
+                    }
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(true);
+        });
+        it('should return false when state is empty', () => {
+            const state = {};
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(false);
+        });
+        it('should return false when dashboard editor state is missing', () => {
+            const state = {
+                dashboard: {},
+                mapEditor: {
+                    open: false,
+                    owner: null
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(false);
+        });
+        it('should return true when map editor is open but owner is not widgetInlineEditor', () => {
+            const state = {
+                dashboard: {
+                    editor: {
+                        available: true
+                    }
+                },
+                mapEditor: {
+                    open: true,
+                    owner: "someOtherOwner"
+                }
+            };
+            expect(isSidebarFullHeightOnDashboard(state)).toBe(true);
         });
     });
 });

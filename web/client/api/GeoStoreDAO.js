@@ -298,7 +298,7 @@ const Api = {
     },
     writeSecurityRules: function(SecurityRuleList = {}) {
         return "<SecurityRuleList>" +
-        (castArray(SecurityRuleList.SecurityRule) || []).map( rule => {
+        (castArray(SecurityRuleList.SecurityRule) || []).flatMap( rule => {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
                     return "<SecurityRule>"
@@ -312,8 +312,18 @@ const Api = {
                         + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
                         + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>"
                         + "</SecurityRule>";
+                } else if (rule.ipRanges) {
+                    // Create a separate SecurityRule for each IP range
+                    const ipRangesArray = castArray(rule.ipRanges.ipRange);
+                    return ipRangesArray.map(ipRange =>
+                        "<SecurityRule>"
+                        + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>"
+                        + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
+                        + "<ipRanges><ipRange><id>" + (ipRange.id) + "</id></ipRange></ipRanges>"
+                        + "</SecurityRule>"
+                    );
                 }
-                // NOTE: if rule has no group or user, it is skipped
+                // NOTE: if rule has no group, user, or ipRanges, it is skipped
                 // NOTE: if rule is "no read and no write", it is skipped
             }
             return "";
@@ -642,24 +652,58 @@ const Api = {
         return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
     },
     /**
-     * add a resource to user favorites
-     * @param  {string} userId user identifier
+     * add a resource to user favorites (current logged user)
      * @param  {string} resourceId resource identifier
      * @param  {object} options additional axios options
      */
-    addFavoriteResource: (userId, resourceId, options) => {
-        const url = `/users/user/${userId}/favorite/${resourceId}`;
+    addFavoriteResource: (resourceId, options) => {
+        const url = `/users/user/favorite/${resourceId}`;
         return axios.post(url, undefined, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
     },
     /**
-     * remove a resource from user favorites
-     * @param  {string} userId user identifier
+     * remove a resource from user favorites (current logged user)
      * @param  {string} resourceId resource identifier
      * @param  {object} options additional axios options
      */
-    removeFavoriteResource: (userId, resourceId, options) => {
-        const url = `/users/user/${userId}/favorite/${resourceId}`;
+    removeFavoriteResource: (resourceId, options) => {
+        const url = `/users/user/favorite/${resourceId}`;
         return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    getIPRanges: function(options = {}) {
+        const url = "ipranges/";
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data || []; });
+    },
+    createIPRange: function(ipRange, options) {
+        const url = "ipranges/";
+        const xmlPayload = [
+            '<IPRange>',
+            `<cidr><![CDATA[${ipRange.cidr || ''}]]></cidr>`,
+            `<description><![CDATA[${ipRange.description || ''}]]></description>`,
+            '</IPRange>'
+        ].join('');
+        return axios.post(url, xmlPayload, this.addBaseUrl(merge({
+            headers: {
+                'Content-Type': "application/xml"
+            }
+        }, parseOptions(options)))).then(function(response) {return response.data; });
+    },
+    updateIPRange: function(id, ipRange, options = {}) {
+        const url = "ipranges/" + id;
+        const xmlPayload = [
+            '<IPRange>',
+            `<cidr><![CDATA[${ipRange.cidr || ''}]]></cidr>`,
+            `<description><![CDATA[${ipRange.description || ''}]]></description>`,
+            '</IPRange>'
+        ].join('');
+        return axios.put(url, xmlPayload, this.addBaseUrl(merge({
+            headers: {
+                'Content-Type': "application/xml"
+            }
+        }, parseOptions(options)))).then(function(response) {return response.data; });
+    },
+    deleteIPRange: function(id, options = {}) {
+        const url = "ipranges/" + id;
+        return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     }
 };
 

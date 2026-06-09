@@ -18,7 +18,7 @@ describe('dashboardsave selectors', () => {
                     canEdit: true
                 },
                 originalData: {
-                    layouts: {
+                    layouts: [{
                         lg: {
                             w: 1,
                             x: 0,
@@ -26,7 +26,7 @@ describe('dashboardsave selectors', () => {
                             h: 1,
                             i: "252bb010-49f7-11e8-9f59-630c9298622e"
                         }
-                    },
+                    }],
                     widgets: [{
                         id: 'widget1',
                         dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -139,7 +139,7 @@ describe('dashboardsave selectors', () => {
             widgets: {
                 containers: {
                     floating: {
-                        layouts: {
+                        layouts: [{
                             lg: {
                                 w: 1,
                                 x: 0,
@@ -147,7 +147,7 @@ describe('dashboardsave selectors', () => {
                                 h: 1,
                                 i: "252bb010-49f7-11e8-9f59-630c9298622e"
                             }
-                        },
+                        }],
                         widgets: [{
                             id: 'widget1',
                             dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -268,7 +268,7 @@ describe('dashboardsave selectors', () => {
                     canEdit: true
                 },
                 originalData: {
-                    layouts: {
+                    layouts: [{
                         lg: {
                             w: 1,
                             x: 0,
@@ -276,7 +276,7 @@ describe('dashboardsave selectors', () => {
                             h: 1,
                             i: "252bb010-49f7-11e8-9f59-630c9298622e"
                         }
-                    },
+                    }],
                     widgets: [{
                         id: 'widget1',
                         dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -389,7 +389,7 @@ describe('dashboardsave selectors', () => {
             widgets: {
                 containers: {
                     floating: {
-                        layouts: {
+                        layouts: [{
                             lg: {
                                 w: 1,
                                 x: 0,
@@ -397,7 +397,7 @@ describe('dashboardsave selectors', () => {
                                 h: 1,
                                 i: "252bb010-49f7-11e8-9f59-630c9298622e"
                             }
-                        },
+                        }],
                         widgets: [{
                             id: 'widget1',
                             dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -524,7 +524,7 @@ describe('dashboardsave selectors', () => {
                     canEdit: true
                 },
                 originalData: {
-                    layouts: {
+                    layouts: [{
                         lg: {
                             w: 1,
                             x: 0,
@@ -532,7 +532,7 @@ describe('dashboardsave selectors', () => {
                             h: 1,
                             i: "252bb010-49f7-11e8-9f59-630c9298622e"
                         }
-                    },
+                    }],
                     widgets: [{
                         id: 'widget1',
                         dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -645,7 +645,7 @@ describe('dashboardsave selectors', () => {
             widgets: {
                 containers: {
                     floating: {
-                        layouts: {
+                        layouts: [{
                             lg: {
                                 w: 1,
                                 x: 0,
@@ -653,7 +653,7 @@ describe('dashboardsave selectors', () => {
                                 h: 1,
                                 i: "252bb010-49f7-11e8-9f59-630c9298622e"
                             }
-                        },
+                        }],
                         widgets: [{
                             id: 'widget1',
                             dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -755,7 +755,7 @@ describe('dashboardsave selectors', () => {
                     canEdit: true
                 },
                 originalData: {
-                    layouts: {
+                    layouts: [{
                         lg: {
                             w: 1,
                             x: 0,
@@ -763,7 +763,7 @@ describe('dashboardsave selectors', () => {
                             h: 1,
                             i: "252bb010-49f7-11e8-9f59-630c9298622e"
                         }
-                    },
+                    }],
                     widgets: [{
                         id: 'widget1',
                         dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -876,7 +876,7 @@ describe('dashboardsave selectors', () => {
             widgets: {
                 containers: {
                     floating: {
-                        layouts: {
+                        layouts: [{
                             lg: {
                                 w: 1,
                                 x: 0,
@@ -884,7 +884,7 @@ describe('dashboardsave selectors', () => {
                                 h: 1,
                                 i: "252bb010-49f7-11e8-9f59-630c9298622e"
                             }
-                        },
+                        }],
                         widgets: [{
                             id: 'widget1',
                             dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -1005,7 +1005,7 @@ describe('dashboardsave selectors', () => {
                     canEdit: true
                 },
                 originalData: {
-                    layouts: {
+                    layouts: [{
                         lg: {
                             w: 1,
                             x: 0,
@@ -1013,7 +1013,7 @@ describe('dashboardsave selectors', () => {
                             h: 1,
                             i: "252bb010-49f7-11e8-9f59-630c9298622e"
                         }
-                    },
+                    }],
                     widgets: [{
                         id: 'widget1',
                         dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -1126,7 +1126,7 @@ describe('dashboardsave selectors', () => {
             widgets: {
                 containers: {
                     floating: {
-                        layouts: {
+                        layouts: [{
                             lg: {
                                 w: 1,
                                 x: 0,
@@ -1134,7 +1134,7 @@ describe('dashboardsave selectors', () => {
                                 h: 1,
                                 i: "252bb010-49f7-11e8-9f59-630c9298622e"
                             }
-                        },
+                        }],
                         widgets: [{
                             id: 'widget1',
                             dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -1255,7 +1255,7 @@ describe('dashboardsave selectors', () => {
                     canEdit: true
                 },
                 originalData: {
-                    layouts: {
+                    layouts: [{
                         lg: {
                             w: 1,
                             x: 0,
@@ -1263,7 +1263,7 @@ describe('dashboardsave selectors', () => {
                             h: 1,
                             i: "252bb010-49f7-11e8-9f59-630c9298622e"
                         }
-                    },
+                    }],
                     widgets: [{
                         id: 'widget1',
                         dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -1376,7 +1376,7 @@ describe('dashboardsave selectors', () => {
             widgets: {
                 containers: {
                     floating: {
-                        layouts: {
+                        layouts: [{
                             lg: {
                                 w: 1,
                                 x: 0,
@@ -1384,7 +1384,7 @@ describe('dashboardsave selectors', () => {
                                 h: 1,
                                 i: "252bb010-49f7-11e8-9f59-630c9298622e"
                             }
-                        },
+                        }],
                         widgets: [{
                             id: 'widget1',
                             dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -1505,7 +1505,7 @@ describe('dashboardsave selectors', () => {
                     canEdit: true
                 },
                 originalData: {
-                    layouts: {
+                    layouts: [{
                         lg: {
                             w: 1,
                             x: 0,
@@ -1513,7 +1513,7 @@ describe('dashboardsave selectors', () => {
                             h: 1,
                             i: "252bb010-49f7-11e8-9f59-630c9298622e"
                         }
-                    },
+                    }],
                     widgets: [{
                         id: 'widget1',
                         dataGrid: {y: 0, x: 0, w: 1, h: 1},
@@ -1626,7 +1626,7 @@ describe('dashboardsave selectors', () => {
             widgets: {
                 containers: {
                     floating: {
-                        layouts: {
+                        layouts: [{
                             lg: {
                                 w: 1,
                                 x: 0,
@@ -1634,7 +1634,7 @@ describe('dashboardsave selectors', () => {
                                 h: 1,
                                 i: "252bb010-49f7-11e8-9f59-630c9298622e"
                             }
-                        },
+                        }],
                         widgets: [{
                             id: 'widget1',
                             dataGrid: {y: 0, x: 0, w: 1, h: 1},

@@ -416,7 +416,13 @@ export const LPdeactivateIdentifyEnabledEpic = (action$, store) =>
 export const LPclickToProfileEpic = (action$, {getState}) =>
     action$
         .ofType(CLICK_ON_MAP)
-        .filter(() => isListeningClickSelector(getState()))
+        .filter(() => {
+            const state = getState();
+            const isListeningClick = isListeningClickSelector(state);
+            const mode = dataSourceModeSelector(state);
+            // Only process clicks when in select mode to avoid triggering during drawing
+            return isListeningClick && mode === 'select';
+        })
         .switchMap(({point}) => {
             const state = getState();
             const map = mapSelector(state);

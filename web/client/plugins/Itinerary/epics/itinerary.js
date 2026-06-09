@@ -222,15 +222,31 @@ export const onItineraryRunEpic = (action$) =>
         });
 
 /**
+ * Handles toggling of itinerary control
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @return {external:Observable}
+ */
+export const onToggleControlItineraryEpic = (action$, {getState}) =>
+    action$.ofType(TOGGLE_CONTROL)
+        .filter(({control}) => control !== CONTROL_NAME && enabledSelector(getState()))
+        .switchMap(() => {
+            return Observable.of(setControlProperty(CONTROL_NAME, 'enabled', false));
+        });
+
+/**
  * Handles itinerary close
  * @memberof epics.itinerary
  * @param {external:Observable} action$ manages `SET_CONTROL_PROPERTY` | `RESET_ITINERARY` | `UPDATE_LOCATIONS` | `SET_ITINERARY_ERROR`
  * @return {external:Observable}
  */
-export const onCloseItineraryEpic = (action$) =>
-    action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR)
+export const onCloseItineraryEpic = (action$, {getState}) =>
+    action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR, TOGGLE_CONTROL)
         .filter(({control, value, type}) =>
-            control === CONTROL_NAME && !value ||
+            (control === CONTROL_NAME && (
+                (type === SET_CONTROL_PROPERTY && !value) ||
+                (type === TOGGLE_CONTROL && !enabledSelector(getState()))
+            )) ||
         [RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR].includes(type))
         .switchMap(({type, locations = []}) => {
             let $actions = [
@@ -240,7 +256,7 @@ export const onCloseItineraryEpic = (action$) =>
             ].concat(
                 // Add markers for locations based on updated locations to keep map and itinerary data consistent
                 locations.filter(Boolean).map((location, index) => addMarkerFeature(location, index))
-            );
+            ).concat([SET_CONTROL_PROPERTY, TOGGLE_CONTROL].includes(type) ? [changeMapInfoState(true)] : []);
 
             // Retain location when locations are updated or on itinerary run error
             if (![UPDATE_LOCATIONS, SET_ITINERARY_ERROR].includes(type)) {
@@ -310,11 +326,12 @@ export const itineraryUpdateLocationEpic = (action$) =>
     action$.ofType(UPDATE_LOCATIONS)
         .filter(({ locations = [] }) => locations.length > 0)
         .switchMap(({ locations }) => {
-            const features = locations.map((coordinates) => ({ type: 'Feature', geometry: { type: 'Point', coordinates} }));
+            const validLocations = locations.filter(Boolean);
+            const features = validLocations.map((coordinates) => ({ type: 'Feature', geometry: { type: 'Point', coordinates} }));
             const collection = { type: 'FeatureCollection', features };
-            const bbox = turfBbox(collection);
+            const bbox = features.length > 0 ? turfBbox(collection) : null;
             return Observable.of(
-                ...locations.map((location, index) => addMarkerFeature(location, index)),
-                ...(locations.length > 1 ? [zoomToExtent(bbox, "EPSG:4326")] : [])
+                ...validLocations.map((location, index) => addMarkerFeature(location, index)),
+                ...(bbox && validLocations.length > 1 ? [zoomToExtent(bbox, "EPSG:4326")] : [])
             );
         });

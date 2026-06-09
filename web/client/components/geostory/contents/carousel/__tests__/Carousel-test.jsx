@@ -64,7 +64,7 @@ describe('Carousel component', () => {
         // Carousel toolbar
         const [toolbar] = el.getElementsByClassName('ms-content-toolbar');
         expect(toolbar).toExist();
-        const buttons = toolbar.querySelectorAll('.btn-group span button');
+        const buttons = toolbar.querySelectorAll('.btn-group button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].querySelector('.glyphicon-plus')).toExist();
         expect(buttons[1].querySelector('.glyphicon-trash')).toExist();
@@ -72,7 +72,7 @@ describe('Carousel component', () => {
         // Carousel item toolbar
         const itemToolbar = container.querySelector('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar).toBeTruthy();
-        const itemButtons = itemToolbar.querySelectorAll('.btn-group span button');
+        const itemButtons = itemToolbar.querySelectorAll('.btn-group button');
         expect(itemButtons.length).toBe(3);
         expect(itemButtons[0].querySelector('.glyphicon-pencil')).toExist();
         expect(itemButtons[1].querySelector('.glyphicon-trash')).toExist();
@@ -94,7 +94,7 @@ describe('Carousel component', () => {
         // Carousel toolbar
         const [toolbar] = el.getElementsByClassName('ms-content-toolbar');
         expect(toolbar).toExist();
-        const buttons = toolbar.querySelectorAll('.btn-group span button');
+        const buttons = toolbar.querySelectorAll('.btn-group button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].classList.contains('disabled')).toBeTruthy();
         expect(buttons[1].classList.contains('disabled')).toBeFalsy();
@@ -102,7 +102,7 @@ describe('Carousel component', () => {
         // Carousel item toolbar
         const itemToolbar = container.querySelector('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar).toBeTruthy();
-        const itemButtons = itemToolbar.querySelectorAll('.btn-group span button');
+        const itemButtons = itemToolbar.querySelectorAll('.btn-group button');
         expect(itemButtons.length).toBe(3);
         expect(itemButtons[0].classList.contains('disabled')).toBeFalsy();
         expect(itemButtons[1].classList.contains('disabled')).toBeTruthy();
@@ -177,7 +177,7 @@ describe('Carousel component', () => {
         // Carousel toolbar
         const [toolbar] = el.getElementsByClassName('ms-content-toolbar');
         expect(toolbar).toExist();
-        const buttons = toolbar.querySelectorAll('.btn-group span button');
+        const buttons = toolbar.querySelectorAll('.btn-group button');
         expect(buttons.length).toBe(2);
         const [addButton] = buttons;
         expect(addButton.querySelector('.glyphicon-plus')).toExist();
@@ -202,7 +202,7 @@ describe('Carousel component', () => {
         // Carousel toolbar
         const [toolbar] = el.getElementsByClassName('ms-content-toolbar');
         expect(toolbar).toExist();
-        const buttons = toolbar.querySelectorAll('.btn-group span button');
+        const buttons = toolbar.querySelectorAll('.btn-group button');
         expect(buttons.length).toBe(2);
         const removeButton = buttons[1];
         expect(removeButton.querySelector('.glyphicon-trash')).toExist();
@@ -233,7 +233,7 @@ describe('Carousel component', () => {
         // Carousel item toolbar
         const itemToolbar = container.querySelectorAll('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar.length).toBeTruthy();
-        const itemButtons = itemToolbar[1].querySelectorAll('.btn-group span button');
+        const itemButtons = itemToolbar[1].querySelectorAll('.btn-group button');
         expect(itemButtons.length).toBe(3);
         const removeButton = itemButtons[1];
         TestUtils.Simulate.click(removeButton);
@@ -263,7 +263,7 @@ describe('Carousel component', () => {
         // Carousel item toolbar
         const itemToolbar = container.querySelector('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar).toBeTruthy();
-        const itemButtons = itemToolbar.querySelectorAll('.btn-group span button');
+        const itemButtons = itemToolbar.querySelectorAll('.btn-group button');
         expect(itemButtons.length).toBe(3);
         const markerButton = itemButtons[2];
         TestUtils.Simulate.click(markerButton);

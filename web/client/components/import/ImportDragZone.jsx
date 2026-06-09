@@ -13,6 +13,7 @@ import processFiles from './dragZone/enhancers/processFiles';
 import useFiles from './dragZone/enhancers/useFiles';
 import dropZoneHandlers from './dragZone/enhancers/dropZoneHandlers';
 import { compose } from 'recompose';
+import Portal from '../misc/Portal';
 
 export default compose(
     processFiles,
@@ -24,12 +25,14 @@ export default compose(
         onDrop = () => {},
         onRef = () => {},
         ...props
-    }) => <DragZone
-        onClose={onClose}
-        onDrop={(files) => {
-            return onDrop({ files, options: { importedVectorFileMaxSizeInMB: props.importedVectorFileMaxSizeInMB} });
-        }}
-        onRef={onRef}
-    >
-        <Content {...props} />
-    </DragZone>);
+    }) => <Portal>
+        <DragZone
+            onClose={onClose}
+            onDrop={(files) => {
+                return onDrop({ files, options: { importedVectorFileMaxSizeInMB: props.importedVectorFileMaxSizeInMB} });
+            }}
+            onRef={onRef}
+        >
+            <Content {...props} />
+        </DragZone>
+    </Portal>);

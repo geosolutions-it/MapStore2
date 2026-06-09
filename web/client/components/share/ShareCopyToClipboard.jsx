@@ -29,6 +29,7 @@ const ShareCopyToClipboard = ({
             onCopy={ () => onCopy(shareUrl) } >
             <Button
                 bsStyle="primary"
+                className="square-button"
                 onMouseLeave={() => onMouseLeave()} >
                 <Glyphicon glyph="copy"/>
             </Button>

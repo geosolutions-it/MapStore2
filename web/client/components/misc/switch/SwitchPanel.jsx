@@ -15,7 +15,7 @@ import Button from '../../misc/Button';
 import LoadingView from '../LoadingView';
 import Toolbar from '../toolbar/Toolbar';
 
-const ErrorIcon = () => <Button className="square-button-sm no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
+const ErrorIcon = () => <Button className="square-button no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
 const LoadingIcon = () => <div className="switch-loading"><LoadingView size="small"/></div>;
 class SwitchPanel extends React.Component {
 
@@ -61,7 +61,7 @@ class SwitchPanel extends React.Component {
                     }}/> : null}
                 {this.props.error ? <ErrorIcon /> : null}
                 {this.props.loading ? <LoadingIcon /> : null}
-                {this.props.buttons.length > 0 && this.props.expanded && <Toolbar btnDefaultProps={{ className: 'square-button-sm no-border'}} buttons={this.props.buttons}/>}
+                {this.props.buttons.length > 0 && this.props.expanded && <Toolbar btnDefaultProps={{ className: 'square-button no-border'}} buttons={this.props.buttons}/>}
             </div>
         </div>);
     }

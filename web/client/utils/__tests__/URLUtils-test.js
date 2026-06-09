@@ -127,6 +127,12 @@ describe('URLUtils', () => {
         expect(isValidURL('lorem-ipsum-dolor-sit-amet')).toBe(false);
         expect(isValidURL('lorem ipsum dolor sit amet')).toBe(false);
         expect(isValidURL('lorem')).toBe(false);
+        expect(isValidURL('data:text/html,<script>something;</script>')).toBe(false);
+        expect(isValidURL('javascript:something;')).toBe(false); // eslint-disable-line no-script-url
+        expect(isValidURL('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', undefined, {
+            allowedProtocols: ['data']
+        })).toBe(true);
+
     });
     const SAMPLE_URL_TEMPLATES = [
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -189,6 +195,11 @@ describe('URLUtils', () => {
         const url = 'https://my-site.com/some/path/to/resouce';
         const updatedUrl = updateUrlParams(url, { newParam: 'newValue' });
         expect(updatedUrl).toBe('https://my-site.com/some/path/to/resouce?newParam=newValue');
+    });
+    it("add new Url param empty", () => {
+        const url = 'https://my-site.com/some/path/to/resouce';
+        const updatedUrl = updateUrlParams(url, {});
+        expect(updatedUrl).toBe('https://my-site.com/some/path/to/resouce');
     });
 });
 

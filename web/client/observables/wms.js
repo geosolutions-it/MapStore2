@@ -17,7 +17,7 @@ import axios from '../libs/ajax';
 import { determineCrs, fetchProjRemotely, getProjUrl } from '../utils/CoordinatesUtils';
 import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
-import { cleanAuthParamsFromURL, getAuthorizationBasic  } from '../utils/SecurityUtils';
+import { cleanAuthParamsFromURL } from '../utils/SecurityUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
 
 const proj4 = Proj4js;
@@ -40,12 +40,10 @@ export const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
         });
 };
 export const describeLayer = l => {
-    const headers = getAuthorizationBasic(l?.security?.sourceId);
-    return Observable.defer( () => axios.get(toDescribeLayerURL(l), {headers})).let(interceptOGCError);
+    return Observable.defer( () => axios.get(toDescribeLayerURL(l), {_msAuthSourceId: l?.security?.sourceId})).let(interceptOGCError);
 };
 export const getLayerCapabilities = l => {
-    const headers = getAuthorizationBasic(l?.security?.sourceId);
-    return Observable.defer(() => WMS.getCapabilities(getCapabilitiesUrl(l), headers))
+    return Observable.defer(() => WMS.getCapabilities(getCapabilitiesUrl(l), {_msAuthSourceId: l?.security?.sourceId}))
         .let(interceptOGCError)
         .map(c => WMS.parseLayerCapabilities(c, l));
 };

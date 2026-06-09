@@ -46,7 +46,7 @@ const GSInstanceEditorComp = compose(
     gsInstanceEnhancer)(GSInstanceEditor);
 
 /**
- *  Rules-editor it's part of rules-manager page. It allow a admin user to add, modify and delete geofence rules
+ *  Rules-editor it's part of {@link api/framework#pages.RulesManager|rules-manager page}. It allow a admin user to add, modify and delete geofence rules
  * @name RulesEditor
  * @memberof plugins
  * @prop {boolean} cfg.disableDetails disable details tab. (Style/Filters/Attribute). Useful to avoid issues with GeoServer integrated version that do not full support this advanced features via REST
@@ -91,14 +91,14 @@ class RulesEditorComponent extends React.Component {
              return this.props.editing
                  ? <div className="rulesmanager-editor"><Editor disableDetails={this.props.disableDetails} loading={this.props.loading} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
                  : (<div className="ms-vertical-toolbar rules-editor re-toolbar" id={this.props.id}>
-                     <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
+                     <Toolbar loading={this.props.loading} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button', bsStyle: 'primary'}} />
                  </div>);
          }
          // render for gs instances
          return this.props.editingGSInstance
              ? <div className="rulesmanager-editor"><GSInstanceEditorComp disableDetails={this.props.disableDetails} loading={this.props.loading} enabled={this.props.editingGSInstance} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
              : (<div className="ms-vertical-toolbar rules-editor re-toolbar" id={this.props.id}>
-                 <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
+                 <Toolbar loading={this.props.loading} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button', bsStyle: 'primary'}} />
              </div>);
      }
 }

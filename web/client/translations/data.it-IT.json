@@ -72,7 +72,12 @@
       "hide": "Nascondi",
       "serviceUrl": "URL del servizio",
       "title": "Servizio protetto",
-      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale"
+      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale",
+      "validationErrs": {
+        "invalidCredentials": "Nome utente o password non validi",
+        "forbidden": "Accesso negato. Verifica le tue autorizzazioni",
+        "tryAgainLater": "Qualcosa è andato storto. Riprova più tardi"
+      }
     },
     "layerProperties": {
       "windowTitle": "Proprietà del livello",
@@ -85,6 +90,10 @@
       "style": "Stile",
       "transparent": "Trasparenza",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": {
+        "label": "Ritaglia all'estensione della proiezione",
+        "tooltip": "Il layer viene ritagliato all'estensione della proiezione quando aggiunto alla mappa con questa opzione abilitata"
+      },
       "cached": "Usa la cache",
       "styleCustom": "Usa stile con nome \"{value}\"",
       "styleListLoadError": "Si è verificato un errore durante il caricamento della lista degli stili",
@@ -181,7 +190,9 @@
           "eyeDomeLighting": "Abilita illuminazione",
           "eyeDomeLightingStrength": "Intensità luminosa",
           "eyeDomeLightingRadius": "Raggio di illuminazione"
-        }
+        },
+        "enableImageryOverlay": "Abilita la sovrapposizione dei livelli di immagini",
+        "enableImageryOverlayInfo": "Nota: Abilita i livelli di immagini come WMS, TMS o WMTS per essere renderizzati sopra il livello 3D Tiles, visualizzati in sequenza secondo l’ordine definito."
       },
       "modelLayer": {
         "modelCenterLat": "Latitudine del centro (DD)",
@@ -303,6 +314,7 @@
     "mousePositionCoordinates": "Indicatore di coordinate",
     "mouseCoordinates": "Coordinate:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Altezza:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "Non disp.",
     "elevationLoading": "Attendi...",
@@ -311,8 +323,26 @@
     "mapScale": "Scala:",
     "showMousePositionCoordinates": "Mostra/Nascondi Coordinate",
     "showCrsSelector": "Seleziona la proiezione",
-    "crsSelectorFilterPlaceholder": "Filtra la proiezione",
-    "crsSelectorSelectedCRS": "Selezionato:",
+    "crsSelector": {
+      "availableProjections": "Proiezioni disponibili",
+      "searchProjection": "Filtra le proiezioni configurate...",
+      "searchProjectionUnified": "Filtra le proiezioni configurate o cerca su GeoServer...",
+      "label": "Etichetta",
+      "authorityId": "ID autorità",
+      "selectedProjection": "La proiezione selezionata verrà utilizzata nella mappa",
+      "help": "Seleziona la casella per aggiungere una proiezione al cambio rapido. Fai clic su una riga per impostarla come proiezione predefinita.",
+      "remoteSuggestionsHeader": "Da GeoServer ({shown} di {total})",
+      "noRemoteResults": "Nessuna proiezione corrispondente sul server",
+      "noFilteredMatch": "Nessuna proiezione nell'elenco configurato corrisponde al filtro",
+      "loadMore": "Carica altri",
+      "alreadyAdded": "Già presente nell'elenco configurato",
+      "useAsMapProjection": "Usa come proiezione della mappa",
+      "removeProjection": "Rimuovi questa proiezione",
+      "loadingProjection": "Caricamento definizione proiezione...",
+      "failedToLoad": "Caricamento della proiezione non riuscito. Fai clic per riprovare",
+      "zoomToProjectionExtent": "Zoom all'estensione della proiezione",
+      "unregisteredProjections": "Le seguenti proiezioni sono state configurate ma non sono disponibili: {projections}"
+    },
     "menu": "Menu",
     "options": "Opzioni",
     "settings": "Impostazioni",
@@ -420,7 +450,8 @@
       "featuredMaps": "In Evidenza",
       "groupmanagerTab": "Gruppi",
       "usermanagerTab": "Utenti",
-      "tagsmanagerTab": "Tags"
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "Intervalli IP"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -546,7 +577,8 @@
           "dateTimeOption": "Data-Ora UTC specifica",
           "dateTimePlaceholder": "Seleziona la data e l'ora"
         },
-        "collisionDetection": "Attiva la rilevazione delle collisioni"
+        "collisionDetection": "Attiva la rilevazione delle collisioni",
+        "imageryLayersOverlay": "Abilita la sovrapposizione dei livelli di immagini"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",
@@ -1506,6 +1538,11 @@
         "height": "altezza"
       }
     },
+    "dynamiclegend": {
+      "title": "Legenda",
+      "tooltip": "Visualizza la legenda della mappa",
+      "emptyLegend": "Nessuna legenda da visualizzare"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generato",
@@ -1536,6 +1573,43 @@
           "categoryErrorAdmin": "Creazione della categoria mancante \"{categoryName}\" non riuscita",
           "categoryErrorNonAdmin": "Categoria mancante \"{categoryName}\", contattare l'amministratore per creare la categoria"
         }
+      }
+    },
+    "layersSelection": {
+      "title": "Selezionare",
+      "tooltip": "Mostra lo strumento di selezione",
+      "description": "Mostra lo strumento di selezione",
+      "hasReachMaxCount": "Numero massimo di elementi raggiunto",
+      "selection": "Selezione",
+      "allLayers": "Tutti i livelli",
+      "featuresCount": "Numero di entità",
+      "button": {
+        "select": "Modalità di selezione",
+        "chooseGeometry": "Scegliere",
+        "selectByPoint": "Punto",
+        "selectByLine": "Linea",
+        "selectByCircle": "Cerchio",
+        "selectByRectangle": "Rettangolo",
+        "selectByPolygon": "Poligono",
+        "clear": "Cancella",
+        "zoomTo": "Zoom su",
+        "statistics": "Statistiche",
+        "createLayer": "Crea livello",
+        "filterData": "Filtra dati",
+        "export": "Esporta",
+        "exportToCsv": "Esporta in CSV",
+        "exportToJson": "Esporta in JSON",
+        "exportToGeoJson": "Esporta in GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistiche",
+        "field": "Campo",
+        "count": "Numero di valori",
+        "sum": "Somma dei valori",
+        "min": "Minimo",
+        "max": "Massimo",
+        "avg": "Media",
+        "std": "Deviazione standard"
       }
     },
     "snapshot": {
@@ -1621,6 +1695,20 @@
         "label": "Scarica i metadati del file al salvataggio",
         "tooltip": "Questa opzione recupererà i metadati per supportare lo zoom a livello. Potrebbe rallentare l'operazione di ricerca se le immagini sono troppo grandi o troppe."
       },
+      "tagFilterType": {
+        "label": "Tipo di filtro per tag",
+        "category": "Categoria",
+        "keyword": "Parola chiave"
+      },
+      "listView": "Vista elenco",
+      "gridView": "Vista griglia",
+      "selectAll": "Seleziona tutto",
+      "layers": "Livelli",
+      "edit": "Modifica",
+      "backToList": "Torna al catalogo",
+      "close": "Chiudi",
+      "showFullContent": "Mostra tutto il contenuto",
+      "hideFullContent": "Nascondi tutto il contenuto",
       "clearValueText": "Cancella selezione",
       "noResultsText": "Nessun risultato trovato",
       "tooltip": "Sfoglia Catalogo",
@@ -1661,7 +1749,9 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipo",
       "serviceTitle": "Titolo",
@@ -1992,7 +2082,19 @@
           "loadingStrategy": "Strategia di caricamento"
         },
         "disableViewportFilter": "Non filtrare i dati in base alla vista corrente",
-        "enableViewportFilter": "Filtra i dati in base alla vista corrente"
+        "enableViewportFilter": "Filtra i dati in base alla vista corrente",
+        "validationError": "Ci sono errori di validazione nei cambiamenti applicati. Si prega di controllare attentamente i valori modificati prima di salvare."
+      },
+      "primaryKey": {
+        "tooltip": "Questo campo è una chiave primaria e non può essere modificato"
+      },
+      "restrictions": {
+        "required": "Questo attributo è richiesto.",
+        "range": "Il valore deve essere maggiore o uguale a {minimum} e minore o uguale a {maximum}.",
+        "greaterEqualThan": "Il valore deve essere maggiore o uguale a {minimum}.",
+        "lessEqualThan": "Il valore deve essere minore o uguale a {maximum}.",
+        "options": "Il valore deve essere uno dei seguenti: {options}.",
+        "nillable": "Il valore può essere null."
       }
     },
     "layerdownload": {
@@ -2014,7 +2116,8 @@
         "title": "Errore durante l'esportazione",
         "invalidOutputFormat": "Il formato selezionato non è disponibile",
         "downloadEstimatorTitle": "Errore DownloadEstimator",
-        "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova."
+        "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova.",
+        "fetchFormatsFailed": "Impossibile recuperare i formati disponibili per il layer. Riprova più tardi."
       },
       "exportResultsMessages": {
         "newExport": "Il file sarà disponibile qui al termine dell'esportazione",
@@ -2070,6 +2173,10 @@
         "counter": {
           "title": "Contatore",
           "caption": "aggiungi un contatore"
+        },
+        "filter": {
+          "title": "Selettore filtro",
+          "caption": "aggiungi selettori filtro dinamici"
         }
       },
       "selectWidgetType": "Seleziona il tipo di widget",
@@ -2114,12 +2221,14 @@
           "backToMapSelection": "Torna alla selezione della mappa",
           "backToPreview": "Torna all'anteprima",
           "backToChartOptions": "Torna alle opzioni del grafico",
+          "backToFilterOptions": "Torna alle opzioni filtro",
           "selectALayer": "Seleziona un livello",
           "selectLayers": "Seleziona uno o più livelli",
           "selectAMap": "Seleziona una o più mappe",
           "configureChartOptions": "Configura le opzioni del grafico",
           "configureWidgetOptions": "Configura le opzioni del widget",
           "errorChart": "Uno o più grafici non sono validi",
+          "errorFilter": "Uno o più filtri non sono validi",
           "backToTableOptions": "Torna alle opzioni della tabella",
           "configureTableOptions": "Configura le opzioni della tabella",
           "attributeEditorColumns": {
@@ -2156,12 +2265,10 @@
             "customLabels": "Etichette personalizzate",
             "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Attributo Y:</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per':</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
-
             "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per:'</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>attributo 'Raggruppa per'.</b></dt><dd>POPULATION</dd><dt><b>attributo Y:</b></dt><dd>LAND_KM</dd><dt><b>Valore massimo della Classe:</b></dt><dd>0</dd><dt><b>Valore minimo della Classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Risultato:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
             "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Example</h5><dl><dt><b>Attributo:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
-
             "defaultClassLabel": "Etichetta della Classe di Default",
             "defaultColorRamp": "Rampa di Colori di Default",
             "defaultColor": "Colore di Default",
@@ -2213,7 +2320,8 @@
           "hide": "Nascondi",
           "hideDescription": "Nascondi questo widget per altri utenti",
           "unhide": "Mostra",
-          "unhideDescription": "Mostra il widget ad altri utenti"
+          "unhideDescription": "Mostra il widget ad altri utenti",
+          "advancedMapEditor": "Apri editor di mappa"
         }
       },
       "mapSwitcher": {
@@ -2221,14 +2329,23 @@
         "placeholder": "Inserisci il nome della mappa",
         "selectLabel": "Seleziona una mappa",
         "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
-        "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+        "subTitle": "<p>Puoi selezionare più livelli</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostra il selettore di sfondo",
+        "showLegend": "Mostra la legenda",
+        "legendAlreadyExists": "Un widget di legenda esiste già per il widget di mappa",
+        "mapEditorTitle": "Editor di widget di mappa"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Il widget di mappa selezionato ha già una legenda visible in map viewer"
       },
       "chartSwitcher": {
         "noResults": "Nessun livello trovato",
         "placeholder": "Inserisci il nome del grafico",
         "selectLabel": "Grafico",
         "infoOnHide": "Espandi il widget per vedere il selettore del grafico",
-        "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+        "subTitle": "<p>Puoi selezionare più livelli</p>"
       },
       "chartType": {
         "bar": {
@@ -2325,6 +2442,10 @@
         "prefix": "Prefisso",
         "suffix": "Suffisso",
         "examples": "Esempi",
+        "axisTickVals": "Valori tacche asse",
+        "axisTickValsTooltip": "Opzionale. Forza l'asse a mostrare solo i valori indicati (separati da virgola). Se è presente anche il Testo Tacca, ogni valore viene visualizzato con l'etichetta corrispondente.",
+        "axisTickText": "Testo tacche asse",
+        "axisTickTextTooltip": "Etichette personalizzate (separate da virgola) da mostrare al posto dei valori definiti nei Valori Tacca, nell'ordine corrispondente.",
         "formatExamples": "<div><ul><li><code>.0%</code>: percentuale arrotondata, '12%'</li><li><code>.2s</code>:Sistema internazionale con due cifre siginificative, '42M'</li><li><code>,.2r</code>: Migliaia raggruppate con due cifre siginficative '4,200'</li></ul><em>Maggior informazioni sul formato <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">qui</a>.</em> </div>",
         "formula": "Formula",
         "formulaExamples": "<div>Trasforma il valore utilizzando una formula. Utilizza la variable <code>value</code> nell'espressione <h5>Esempi:</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em> Maggiori informazioni sulla sintassi <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">qui</a>.</em></div>",
@@ -2339,6 +2460,20 @@
         "barChartType": "Tipo di Grafico a Barre",
         "groupedBarChart": "Raggruppato",
         "stackedBarChart": "Impilato",
+        "hovermode": "Modalità tooltip",
+        "hovermodeTooltip": "Controlla come vengono visualizzati i tooltip nei grafici.",
+        "hovermodeXUnified": "Tooltip X unificato",
+        "hovermodeXUnifiedDescription": "Un tooltip per le tracce con lo stesso valore X. L'intestazione mostra X; le righe mostrano i valori Y.",
+        "hovermodeYUnified": "Tooltip Y unificato",
+        "hovermodeYUnifiedDescription": "Un tooltip per le tracce con lo stesso valore Y. L'intestazione mostra Y; le righe mostrano i valori X.",
+        "hovermodeX": "Tooltip X",
+        "hovermodeXDescription": "Etichette per le tracce con lo stesso valore X che mostrano i valori Y.",
+        "hovermodeY": "Tooltip Y",
+        "hovermodeYDescription": "Etichette per le tracce con lo stesso valore Y che mostrano i valori X.",
+        "hovermodeClosest": "Tooltip individuale",
+        "hovermodeClosestDescription": "Solo il punto più vicino, che mostra il valore Y.",
+        "hovermodeFalse": "Nessun tooltip",
+        "hovermodeFalseDescription": "Disabilita i tooltip al passaggio del mouse.",
         "valueFormatting": "Formattazione valore della traccia",
         "traceAxes": "Assi traccia",
         "traceData": "Dati traccia",
@@ -2376,21 +2511,155 @@
           "log": "Logaritmo",
           "date": "Data"
         },
-        "showCurrentTime": "Mostra l'ora corrente sull'asse"
+        "showCurrentTime": "Mostra l'ora corrente sull'asse",
+        "type": "Tipo"
+      },
+      "filterWidget": {
+        "dataTabLabel": "Dati",
+        "dataSource": "Fonte dati",
+        "features": "Feature",
+        "userDefined": "Definito dall'utente",
+        "maps": "Mappe",
+        "map": "Mappa",
+        "time": "Tempo",
+        "timeline": "Timeline",
+        "elevation": "Elevazione",
+        "valuesFrom": "Valori da",
+        "uniqueAttributes": "Valori univoci",
+        "attributes": "Attributi",
+        "matchAllFilter": "Corrispondi a tutti i filtri (E)",
+        "matchAnyFilter": "Corrispondi a qualsiasi filtro (O)",
+        "valueAttribute": "Attributo valore",
+        "sortByAttribute": "Ordina per attributo",
+        "maxFeatures": "Numero massimo di feature",
+        "filterComposition": "Composizione filtro",
+        "type": "Tipo",
+        "filterList": "Elenco filtri",
+        "styleList": "Elenco stili",
+        "typeTooltip": "<div><strong>Elenco filtri:</strong> L'utente può definire un filtro personalizzato</div><div><strong>Elenco stili:</strong> L'utente può selezionare uno stile già definito. Abilitato solo per layer WMS</div>",
+        "selectLayerStyle": "Seleziona stile layer",
+        "filterStylesPlaceholder": "Filtra stili...",
+        "selectStylePlaceholder": "Seleziona uno stile...",
+        "filter": "Filtro",
+        "style": "Stile",
+        "actions": "Azioni",
+
+        "layoutTabLabel": "Layout",
+        "title": "Titolo",
+        "label": "Etichetta",
+        "icon": "Icona",
+        "fontSize": "Dimensione carattere",
+        "fontWeight": "Spessore carattere",
+        "fontStyle": "Stile carattere",
+        "color": "Colore",
+
+        "items": "Elementi",
+        "variant": "Variante",
+
+        "selectionMode": "Modalità di selezione",
+        "multiple": "Multipla",
+        "single": "Singola",
+        "direction": "Direzione",
+        "directionHorizontal": "Orizzontale",
+        "directionVertical": "Verticale",
+        "maxHeight": "Altezza massima",
+        "interactionsTabLabel": "Interazioni",
+        "onSelectionChange": "Al cambio selezione",
+        "applyFilter": "Applica filtro",
+        "applyDimension": "Applica dimensione",
+        "noConnectableNodesAvailable": "Nessun nodo collegabile disponibile",
+
+        "selectAll": "Seleziona tutto",
+        "clear": "Cancella",
+        "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
+        "showValueLabel": "Mostra etichetta valore",
+        "showSelectedValue": "Mostra valore selezionato",
+        "showSelectedValueTooltip": "Mostra il valore del tick attualmente selezionato sopra lo slider.",
+        "sliderNotSelected": "Non selezionato",
+        "showTicks": "Mostra tacche",
+        "showTicksTooltip": "Mostra o nasconde le tacche sullo slider.",
+        "tickValues": "Valori per tacche",
+        "tickLabels": "Etichette per tacca",
+        "tickValuesPlaceholder": "Valori separati da virgole",
+        "tickLabelsPlaceholder": "Etichette separate da virgole",
+        "tickValuesTooltip": "Inserisci valori separati da virgole da considerare per le tacche. Verrà mostrata solo l'etichetta del valore corrispondente.",
+        "tickLabelsTooltip": "Inserisci etichette sostitutive per i valori di tacca elencati, nello stesso ordine dei valori di tacca.",
+        "tickAngle": "Angolo etichetta tacca",
+        "tickAngleTooltip": "Imposta l'angolo di rotazione dell'etichetta della tacca in gradi.",
+        "fillTickValuesTooltip": "Compila con i valori filtro disponibili",
+        "fillTickLabelsTooltip": "Compila automaticamente le etichette corrispondenti ai valori delle tacche",
+
+        "defaultFilter": "Filtro predefinito",
+        "defaultFilterInfo": "Definisci un filtro da applicare quando non è selezionato nulla. Suggerimento: se vuoi non mostrare nulla quando non è selezionato nulla, crea un filtro che non restituisce mai feature",
+        "noSelectionMode": "Modalità senza selezione",
+        "noSelectionModeTooltip": "<div><strong>Nessun filtro:</strong> Quando non è selezionato nulla, nessun filtro verrà applicato al layer da questo strumento.</div><div><strong>Escludi:</strong> Quando non è selezionato nulla, verrà applicato un filtro che esclude tutti i dati.</div><div><strong>Personalizzato:</strong> Quando non è selezionato nulla, verrà applicato un filtro definito dall'utente. Usa il pulsante filtro per definirlo.</div>",
+        "noFilter": "Nessun filtro",
+        "exclude": "Escludi",
+        "custom": "Personalizzato",
+        "customFilterRequiredWarning": "Quando la modalità senza selezione è 'Personalizzato', devi definire il filtro personalizzato. Clicca sull'icona filtro per definire il filtro.",
+        "forceSelection": "Forza selezione",
+        "forceSelectionTooltip": "Se abilitato, deve essere selezionato un elemento del filtro",
+        "forceSelectionEnabledTooltip": "Quando la selezione forzata è abilitata, deve essere selezionato almeno un elemento",
+        "showNoTargetsInfoLabel": "Mostra messaggio target attivi",
+        "showNoTargetsInfoDescription": "Quando nessuna target è connessa al filtro o i livelli/widget connessi non sono visibili, viene visualizzato un messaggio per avvisare l'utente che il filtro non avrà alcun effetto.",
+        "noInteractionsInfo": "Nessun target connesso. Utilizzare il pannello delle connessioni per connettere il filtro a livelli o widget.",
+        "noTargetsInfo": "Nessun livello/widget di target per questo strumento è effettivamente visibile. Abilitare almeno un livello/widget di target per far funzionare il filtro.",
+        "connectedLayerFilterDisabledInfo": "Uno o più livelli connessi hanno il filtro disabilitato. Abilitare il filtro del livello per applicare il filtro di questo widget.",
+        "clickToSeeInfo": "Fare clic per vedere le informazioni",
+        "styleChangedByWidgetInfo": "Uno o più livelli connessi utilizzano uno stile diverso da quello selezionato qui. Fare clic sul pulsante in basso per applicare lo stile selezionato a tutti i livelli connessi.",
+        "styleChangedByWidgetBanner": "Lo stile è stato modificato nelle impostazioni del livello per questo livello. Fare clic per applicare lo stile a tutti i livelli connessi da questo widget.",
+        "applyStyleFromWidgetButton": "Applica stile a tutti i livelli connessi da questo widget",
+        "dimensionChangedByWidgetInfo": "Uno o più nodi connessi utilizzano un valore di dimensione diverso da quello selezionato qui. Fare clic sul pulsante sottostante per applicare il valore selezionato a tutti i nodi connessi.",
+        "applyDimensionFromWidgetButton": "Applica il valore di questo filtro a tutti i nodi connessi",
+        "labelAttribute": "Attributo etichetta",
+        "maxHeightPlaceholder": "Inserisci altezza massima..",
+        "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",
+        "selectAttribute": "Seleziona Attributo",
+        "valueFromUniqueAttributeDescription": "Recupera tutte le feature con un valore univoco per l'attributo selezionato.",
+        "valueFromAttributeDescription": "Recupera tutte le feature esistenti inclusi i possibili valori duplicati per l'attributo selezionato.",
+        "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
+        "fetchError": "Impossibile recuperare i dati",
+        "unsupportedVariantMessage": "Variante filtro non supportata: {variant}.",
+        "mapTimeRangeDisabledMessage": "Non può essere utilizzato quando l'intervallo è abilitato.",
+        "sliderSingleItemError": "Il filtro con slider richiede almeno due valori selezionabili.",
+        "noSelectableItems": "Nessun elemento filtro selezionabile.",
+        "filters": "Filtri",
+        "styles": "Stili",
+        "targetAutomaticallyNotConnectableTooltip": "Il target non è collegabile automaticamente, configurarlo per collegarlo",
+        "forcePlugLabel": "Applica indipendentemente dalla fonte dati",
+        "twoWaySynchronizationLabel": "Sincronizzazione bidirezionale",
+        "twoWaySynchronizationInfo": "Sincronizza con la connessione alla timeline della mappa corrente. Non può essere abilitato quando sono connessi altri nodi non relativi alla connessione alla timeline della mappa.",
+        "filterForcePlugInfo": "Seleziona per confermare che il filtro può essere applicato a questa fonte dati, anche se diversa dall'originale",
+        "styleForcePlugInfo": "Seleziona per confermare che lo stile può essere applicato a questo layer, anche se diverso dall'originale. Ciò significa che questo layer dovrebbe avere un elenco di stili con gli stessi nomi di quelli configurati per questo strumento",
+        "addUserDefinedFilterTooltip": "Clicca per aggiungere filtro",
+        "addUserDefinedStyleTooltip": "Clicca per aggiungere stile",
+        "addUserDefinedFilterValueTooltip": "Clicca per definire filtro",
+        "addUserDefinedStyleValueTooltip": "Clicca per definire stile",
+        "delete": "Elimina",
+        "filterTitlePlaceholder": "Titolo filtro...",
+        "editFilterTitleTooltip": "Clicca per modificare il titolo del filtro",
+        "addNewFilterTooltip": "Clicca per aggiungere nuovo filtro",
+        "addOptionalTargetTooltip": "Aggiungi target opzionale",
+        "removeOptionalTargetConfirmTitle": "Eliminare il target?",
+        "removeOptionalTargetConfirmContent": "Tutte le interazioni collegate da questo target verranno eliminate.",
+        "applyStyle": "Applica stile",
+        "timeSelectionHighlight": "Evidenzia il tempo selezionato",
+        "targetAlreadyConnectedToStyleTooltip": "Il target è già connesso a uno stile. Non è possibile connettersi a più stili contemporaneamente",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "Questo target è già connesso da un'altra sorgente. Non può essere connesso da più sorgenti contemporaneamente",
+        "applyDimensionSelectionModeDisabledTooltip": "La selezione multipla è disabilitata perché questo filtro è collegato ad «Applica dimensione». Scollega «Applica dimensione» per usare la modalità di selezione multipla.",
+        "applyDimensionMultipleSelectionDisabledTooltip": "«Applica dimensione» può essere collegato solo quando la modalità di selezione del filtro è «Singola». Imposta la modalità di selezione del layout su «Singola» per collegare questo target.",
+        "layerTimeControlledByTimelineTooltip": "Il tempo del layer è controllato dalla Timeline della mappa principale. Collega invece il target Timeline.",
+        "axisCurrentTimeControlledByTimelineTooltip": "Il tempo corrente dell’asse è controllato dalla Timeline della mappa principale. Collega invece il target Timeline.",
+        "axisCurrentTimeDisabledTooltip": "Imposta il tipo di asse su Data e abilita \"Mostra ora corrente\" nelle opzioni del grafico prima di collegarlo.",
+        "timelineTargetUnavailableTooltip": "La Timeline non è disponibile in questo contesto.",
+        "targetAlreadyConnectedToTimeTooltip": "La connessione alla timeline della mappa con la sincronizzazione a 2 vie abilitata può essere collegata solo da sola. Disabilita la sincronizzazione a 2 vie o scollega la connessione alla timeline della mappa per collegare altri obiettivi."
       },
       "tray": {
         "title": "widget",
         "expandTray": "Espandi il vassoio dei widget",
         "collapseTray": "Minimizza vassoio dei widget",
         "expandAll": "Espandi tutti i widget",
-        "collapseAll": "Minimizza tutti i widget",
-        "notifications": {
-          "collapsed": {
-            "message": "La timeline e i widget non possono essere visualizzati allo stesso tempo. Utilizzare il la barra degli widget per visualizzare uno o l'altro",
-            "timelineTitle": "La timeline è stata minimizzata",
-            "widgetsTitle": "I widget sono stati minimizzati"
-          }
-        }
+        "collapseAll": "Minimizza tutti i widget"
       }
     },
     "dashboard": {
@@ -2415,7 +2684,8 @@
         },
         "resourceAlreadyExists": "Una risorsa con questo nome esiste già",
         "forbidden": "Si è verificato un errore imprevisto (403 vietato). Si prega di contattare l'amministratore",
-        "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore"
+        "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore",
+        "multipleDashboardError": "Questa dashboard contiene più viste, il che non è supportato. Seleziona una sola vista per continuare."
       },
       "editor": {
         "save": "Salva la dashboard",
@@ -2424,7 +2694,22 @@
         "hideConnections": "Nascondi connessioni"
       },
       "emptyTitle": "La dashboard è vuota",
-      "delete": "Cancellare la dashboard"
+      "delete": "Cancellare la dashboard",
+      "view": {
+        "delete": "Elimina",
+        "configure": "Configura",
+        "moveRight": "Sposta a destra",
+        "moveLeft": "Sposta a sinistra",
+        "removeConfirmTitle": "Sei sicuro?",
+        "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
+        "name": "Nome",
+        "color": "Colore",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Non puoi aggiungere un layout esistente alla vista perché contiene già dei layout.",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Caricamento Dashboard",
@@ -2566,7 +2851,6 @@
       "setDefaultStyleSuccessMessage": "Lo stile predefinito è stato aggiornato con successo",
       "setDefaultStyleErrorTitle": "Errore nell'aggiornamento dello stile predefinito",
       "setDefaultStyleErrorMessage": "Non è possibile aggiornare lo stile selezionato come predefinito",
-
       "enterLegendLabelPlaceholder": "Inserisci l'etichetta della legenda",
       "addMarkSymbolizer": "Aggiungi stile marker",
       "addMarkRule": "Aggiungi regola marker",
@@ -2776,6 +3060,8 @@
       "msExtrudedHeight": "Altezza estrusa",
       "msExtrusionColor": "Colore estrusione",
       "msExtrusionType": "Tipo estrusione",
+      "msExtrusionOutlineColor": "Colore contorno estrusione",
+      "msExtrusionOutlineWidth": "Larghezza contorno estrusione",
       "wall": "Muro",
       "enableBanding": "Stile a fascia",
       "selectChannel": "Seleziona una banda",
@@ -2980,6 +3266,13 @@
       "previous": "precedente",
       "next": "prossima",
       "cacheCleaned": "Cache eliminata",
+      "cacheConfirmSingle": "Sei sicuro di voler svuotare la cache delle regole per l'istanza: '{instanceName}'?",
+      "cacheConfirmAll": "Vuoi svuotare la cache delle regole di tutte le istanze Geoserver?",
+      "clearAllgsInstances": "Svuota per tutte le istanze",
+      "noAvailGsInstances": "Nessuna istanza disponibile",
+      "allCacheCleaned": "Cache svuotata con successo per tutte le istanze Geoserver",
+      "errorCleaningCacheFor": "Impossibile svuotare la cache per le seguenti istanze: {instancesNames}",
+      "cacheCleanedFor": "Cache svuotata con successo per le seguenti istanze: {instancesNames}",
       "errorTitle": "Geofence",
       "errorCQL": "Geometria non valida!",
       "errorCleaningCache": "Errore durante la pulizia della cache.",
@@ -3026,6 +3319,8 @@
       "addTextContent": "Aggiungi testo",
       "addMediaContent": "Aggiungi Media",
       "zoomToContent": "Zoom al contenuto",
+      "duplicateSection": "Duplica sezione",
+      "copyOfPrefix": "Copia di ",
       "addWebPageContent": "Aggiungi contenuto alla pagina Web",
       "emptyTitle": "Questa storia è vuota",
       "delete": "Cancellare geostory",
@@ -3166,6 +3461,10 @@
         "settings": "Impostazioni",
         "settingsSubTitle": "Gestisci le interazioni dell'utente",
         "toc": "Toc",
+        "center": "Centro",
+        "scale": "Scala",
+        "applyToOtherMaps": "Applica alle altre mappe",
+        "appliedSuccessfully": "Applicato con successo alle altre mappe",
         "pan": "Interazione di scorrimento",
         "zoom": "Interazione di zoom",
         "topLeft": "Angolo in alto a sinistra",
@@ -3471,6 +3770,12 @@
         "description": "Mostra le coordinate della punta del cursore del mouse",
         "title": "Posizione del mouse"
       },
+      "CameraPosition": {
+        "description": "Mostra la posizione della telecamera (longitudine, latitudine, altezza) nella visualizzazione 3D",
+        "title": "Posizione della telecamera",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Permette di stampare la mappa corrente con la legenda",
         "title": "Strumento di stampa"
@@ -3499,9 +3804,17 @@
         "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
         "title": "Strumento di condivisione"
       },
+      "DynamicLegend": {
+        "title": "Legenda",
+        "description": "Visualizza la legenda della mappa"
+      },
       "Permalink": {
         "description": "Permette di creare un permalink della risorsa attualmente in vista",
         "title": "Permalink"
+      },
+      "LayersSelection": {
+        "title": "Selezionare",
+        "description": "Mostra lo strumento di selezione"
       },
       "StreetView": {
         "title": "Street View",
@@ -4172,31 +4485,33 @@
       "tooltip": "Cancella la sessione utente corrente salvata",
       "successRemoved": "Sessione utente cancellata",
       "remove": "Reset Sessione Utente",
-      "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
-      "successUpdated": "User session Updated",
-      "warningTitle": "Clear user session",
+      "confirmRemove": "Sei sicuro di voler rimuovere la sessione utente corrente? Questo ripristinerà la configurazione originale della mappa/contesto, rimuovendo le modifiche correnti. Seleziona cosa vuoi rimuovere e deseleziona cosa vuoi conservare.",
+      "successUpdated": "Sessione utente aggiornata",
+      "warningTitle": "Cancella sessione utente",
       "sessionLabels": {
-        "everything": "Everything",
-        "map": "Map",
-        "map_pos": "Zoom and center",
-        "visualization_mode": "Visualization Mode (3D/2D)",
-        "layers": "Layers",
-        "annotations_layer": "Annotations Layer",
-        "measurements_layer": "Measurements Layer",
-        "background_layers": "Background Layers",
-        "other_layers": "Other Layers",
-        "catalog_services": "Catalog Services",
-        "widgets": "Widgets",
-        "search": "Search",
-        "text_search_services": "Text Search Services",
-        "bookmarks": "Bookmarks",
-        "feature_grid": "Feature Grid",
-        "other": "Other",
-        "toc": "Table of Contents Configuration",
-        "playback": "Playback Configuration",
-        "mapTemplates": "Map Templates",
-        "userPlugins": "User Plugins",
-        "mapViews": "Map Views"
+        "everything": "Tutto",
+        "map": "Mappa",
+        "map_pos": "Zoom e centro",
+        "visualization_mode": "Modalità di visualizzazione (3D/2D)",
+        "layers": "Livelli",
+        "annotations_layer": "Livello annotazioni",
+        "measurements_layer": "Livello misurazioni",
+        "background_layers": "Livelli di sfondo",
+        "other_layers": "Altri livelli",
+        "catalog_services": "Servizi catalogo",
+        "widgets": "Widget",
+        "search": "Ricerca",
+        "text_search_services": "Servizi di ricerca testuale",
+        "bookmarks": "Segnalibri",
+        "feature_grid": "Griglia degli attributi",
+        "other": "Altro",
+        "toc": "Configurazione del sommario",
+        "playback": "Configurazione riproduzione",
+        "mapTemplates": "Modelli di mappa",
+        "userPlugins": "Plugin utente",
+        "mapViews": "Viste mappa",
+        "swipe": "Swipe",
+        "crsSelector": "Selettore CRS"
       }
     },
     "streetView": {
@@ -4228,6 +4543,9 @@
           "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore."
         },
         "reloadAPI": "Ricarica API"
+      },
+      "panoramax": {
+        "emptySelection": "Non hai selezionato alcuna immagine."
       }
     },
     "sidebarMenu": {
@@ -4415,6 +4733,10 @@
         "noContentYetTitle": "Non ci sono gruppi",
         "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Nessun intervallo IP registrato ancora",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",
       "geostoriesFilter": "Geostories",
@@ -4441,6 +4763,7 @@
       "editPermission": "Modifica",
       "ownerPermission": "Proprietario",
       "groups": "Gruppi",
+      "ip": "Intervalli IP",
       "filterBy": "Filtra...",
       "about": "Informazioni",
       "readMore": "Leggi di più",
@@ -4471,12 +4794,10 @@
       "deleteResourceDescription": "Questa risorsa e tutte le risorse collegate verranno eliminate",
       "deleteResourceConfirm": "Elimina",
       "deleteResourceCancel": "Conserva",
-
       "copyResourceTitle": "Crea una copia della risorsa corrente",
       "copyResourceDescription": "Inserisci un nome valido per la nuova risorsa. Il nome deve essere univoco.",
       "copyResourceCancel": "Torna alla modifica",
       "copyResourceConfirm": "Crea",
-
       "createNewResourceTitle": "Crea una nuova risorsa",
       "createNewResourceDescription": "Inserisci un nome valido per la nuova risorsa. Il nome deve essere univoco.",
       "createNewResourceCancel": "Torna alla modifica",
@@ -4490,7 +4811,7 @@
         "errorDefault": "Errore di rete"
       },
       "resourceIssues": {
-        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
+        "dependencyMissing": "Autorizzazioni mancanti su una risorsa associata."
       },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
@@ -4527,6 +4848,7 @@
       "tagDescription": "Descrizione",
       "tagColor": "Colore",
       "manageTags": "Gestisci Tag",
+      "manageIPs": "Gestisci Intervalli IP",
       "errorLoadingTags": "Impossibile caricare i tag",
       "errorUpdatingTag": "Impossibile aggiornare il tag",
       "errorTagNameAlreadyExist": "Il tag che stai tentando di creare esiste già",
@@ -4537,6 +4859,42 @@
       "documentation": "Documentazione",
       "filterApplied": "Filtro applicato",
       "emptyFilterItems": "Nessun elemento da visualizzare"
+    },
+    "ipManager": {
+      "newIP": "Nuovo intervallo IP",
+      "editTitle": "Modifica intervallo IP",
+      "editTooltip": "Modifica intervallo IP",
+      "deleteTitle": "Elimina intervallo IP",
+      "deleteTooltip": "Elimina intervallo IP",
+      "deleteButton": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo intervallo IP?",
+      "ipAddress": "Intervallo IP (formato CIDR)",
+      "description": "Descrizione",
+      "search": "Cerca intervalli IP...",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "ipsFound": "{count, plural, =0 {0 intervalli IP trovati} =1 {1 intervallo IP trovato} other {# intervalli IP trovati}}",
+      "validation": {
+        "ipRequired": "L'intervallo IP è obbligatorio",
+        "cidrRequired": "Notazione CIDR richiesta (es., 192.168.1.1/32 o 192.168.1.0/24)",
+        "invalidMask": "La maschera di sottorete deve essere compresa tra 0 e 32",
+        "invalidFormat": "Formato intervallo IP non valido",
+        "invalidOctet": "Ogni ottetto deve essere compreso tra 0 e 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Successo",
+        "createSuccessMessage": "Intervallo IP creato con successo",
+        "createErrorTitle": "Errore",
+        "createErrorMessage": "Impossibile creare l'intervallo IP",
+        "updateSuccessTitle": "Successo",
+        "updateSuccessMessage": "Intervallo IP aggiornato con successo",
+        "updateErrorTitle": "Errore",
+        "updateErrorMessage": "Impossibile aggiornare l'intervallo IP",
+        "deleteSuccessTitle": "Successo",
+        "deleteSuccessMessage": "Intervallo IP eliminato con successo",
+        "deleteErrorTitle": "Errore",
+        "deleteErrorMessage": "Impossibile eliminare l'intervallo IP"
+      }
     },
     "itinerary": {
       "title": "Itinerario",

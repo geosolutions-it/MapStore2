@@ -69,7 +69,9 @@ const MapEditor = ({
     closeNodeEditor,
     CloseBtn = () => (null),
     isDrawEnabled,
-    hideIdentifyOptions
+    hideIdentifyOptions,
+    onApplyToMaps = () => {},
+    isCarouselSection = false
 }) => {
     return (mode === Modes.EDIT && isFocused ? <div
         key="left-column"
@@ -84,12 +86,11 @@ const MapEditor = ({
                         </Col>
                     </Row>
                     <Toolbar
-                        transitionProps={false}
                         btnGroupProps={{
                             className: "ms-geostory-map-editor-toolbar"
                         }}
                         btnDefaultProps={{
-                            className: "square-button-md no-border",
+                            className: "square-button no-border",
                             bsStyle: "primary",
                             noTooltipWhenDisabled: true
                         }}
@@ -121,6 +122,8 @@ const MapEditor = ({
                         selectedNodes={selectedNodes}
                         onSelect={onNodeSelect}
                         hideIdentifyOptions={hideIdentifyOptions}
+                        onApplyToMaps={onApplyToMaps}
+                        isCarouselSection={isCarouselSection}
                     />
                 ]}
         </BorderLayout>}

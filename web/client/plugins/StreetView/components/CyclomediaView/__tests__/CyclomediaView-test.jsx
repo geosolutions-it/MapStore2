@@ -122,4 +122,35 @@ describe('Cyclomedia CyclomediaView', () => {
         // check alert to exist
         expect(document.querySelector('.alert-danger')).toExist();
     });
+    it('shows credentials form automatically when 401 error occurs', (done) => {
+        window.__cyclomedia__mock__ = {
+            init: () => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject(new Error('Authentication failed: code 401 Unauthorized'));
+                }, 100);
+            }),
+            open: () => new Promise((resolve) => { resolve(); })
+        };
+
+        const props = {
+            apiKey: testAPIKey
+        };
+
+        act(() => {
+            ReactDOM.render(<CyclomediaView {...props} providerSettings={mockProviderSettings}/>, document.getElementById("container"));
+        });
+
+        // Wait for the error to be processed and displayed
+        setTimeout(() => {
+            // Check that credentials form is automatically shown
+            const credentialsForm = document.querySelector('.street-view-credentials');
+            expect(credentialsForm).toExist();
+
+            // Check that error alert is shown within the form
+            const errorAlert = document.querySelector('.street-view-credentials .alert-danger');
+            expect(errorAlert).toExist();
+
+            done();
+        }, 500);
+    });
 });

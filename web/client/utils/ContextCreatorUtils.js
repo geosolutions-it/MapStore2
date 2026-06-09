@@ -26,7 +26,8 @@ export const flattenPluginTree = (plugins = []) =>
  */
 export const migrateContextConfiguration = (context) => {
     const changedPluginsNames = {
-        'DeleteMap': 'DeleteResource'
+        'DeleteMap': 'DeleteResource',
+        'MetadataExplorer': 'Catalog'
     };
     return {
         ...context,
@@ -49,6 +50,30 @@ export const migrateContextConfiguration = (context) => {
                                     cfg: {
                                         ...plugin.cfg,
                                         containerPosition: 'footer'
+                                    }
+                                };
+                            }
+                        }
+                        // migration for FeatureEditor and Timeline to add containerPosition: 'bottom' if not present
+                        if (['FeatureEditor', 'Timeline'].includes(plugin.name)) {
+                            if (plugin?.cfg?.containerPosition !== 'bottom') {
+                                return {
+                                    ...plugin,
+                                    cfg: {
+                                        ...plugin.cfg,
+                                        containerPosition: 'bottom'
+                                    }
+                                };
+                            }
+                        }
+                        // migrate for Map to add containerPosition: 'background' if not present
+                        if (plugin.name === 'Map') {
+                            if (plugin?.cfg?.containerPosition !== 'background') {
+                                return {
+                                    ...plugin,
+                                    cfg: {
+                                        ...plugin.cfg,
+                                        containerPosition: 'background'
                                     }
                                 };
                             }

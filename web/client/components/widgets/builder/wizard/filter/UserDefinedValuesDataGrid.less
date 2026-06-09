@@ -1,0 +1,174 @@
+.ms-filter-datagrid-header {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-right: 8px;
+
+    .ms-filter-datagrid-title {
+        font-weight: 500;
+        font-size: 14px;
+        padding-left: 8px;
+    }
+
+    .ms-filter-datagrid-add-btn {
+        padding: 2px 6px;
+        font-size: 12px;
+        min-width: auto;
+        height: 24px;
+        line-height: 1;
+
+        .glyphicon {
+            font-size: 12px;
+        }
+    }
+}
+
+.ms-filter-user-defined-datagrid {
+    width: 100%;
+    margin-top: 10px;
+    overflow: hidden;
+    padding-left: 8px;
+    margin-bottom: 8px;
+    padding-right: 8px;
+
+    .ms-filter-datagrid-filter-cell {
+        // padding: 4px 8px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+
+        .ms-filter-datagrid-filter-btn {
+            padding: 4px 8px;
+            min-width: 36px;
+            height: 28px;
+            
+            .glyphicon {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .ms-filter-datagrid-actions-cell {
+        display: flex;
+        gap: 3px;
+        justify-content: center;
+        align-items: center;
+        padding: 4px;
+
+        .ms-filter-datagrid-action-btn {
+            padding: 3px 6px;
+            min-width: 28px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            color: #666;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+
+            &:hover,
+            &:focus {
+                color: #333;
+                background-color: #e8e8e8;
+            }
+
+            .glyphicon {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+// Reuse styles from UserDefinedValuesEditor for consistency
+.ms-filter-user-defined {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+
+    .control-label {
+        margin-bottom: 8px;
+        font-weight: 500;
+        font-size: 13px;
+    }
+
+    // Input Row
+    .ms-filter-user-defined-input-row {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: flex-end;
+        margin-bottom: 12px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+    }
+
+    .ms-filter-user-defined-input-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+        min-width: 0;
+        gap: 4px;
+
+        .ms-filter-user-defined-input-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 28px;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+            &:focus {
+                border-color: #66afe9;
+                outline: 0;
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px rgba(102, 175, 233, 0.5);
+            }
+
+            &::placeholder {
+                color: #999;
+            }
+        }
+    }
+
+    .ms-filter-user-defined-input-actions {
+        display: flex;
+        gap: 6px;
+        flex: 0 0 auto;
+        align-items: center;
+        flex-shrink: 0;
+        white-space: nowrap;
+
+        .btn {
+            min-width: 80px;
+            height: 28px;
+            padding: 4px 10px;
+            font-size: 12px;
+            white-space: nowrap;
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        }
+
+        .ms-filter-user-defined-cancel-btn {
+            min-width: 65px;
+        }
+    }
+}
+
+.ms-filter-user-defined-label {
+    margin-left: 8px;
+    font-size: 13px;
+}
+

@@ -108,6 +108,14 @@ export default ({
                 <Message msgId="layerProperties.singleTile" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
             </Checkbox>
         </FormGroup>}
+        {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="cropToProjectionExtent" key="cropToProjectionExtent">
+            <Checkbox
+                disabled={!!service?.layerOptions?.singleTile}
+                onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, cropToProjectionExtent: e.target.checked })}
+                checked={!!service?.layerOptions?.cropToProjectionExtent}>
+                <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
+            </Checkbox>
+        </FormGroup>}
         {(!isNil(service.type) ? (service.type === "csw" && !service.excludeShowTemplate) : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Checkbox
                 onChange={() => onToggleTemplate()}
@@ -191,7 +199,7 @@ export default ({
                     disabled={props.formatsLoading || !canLoadInfo
                     }
                     tooltipId="catalog.format.refresh"
-                    className="square-button-md no-border"
+                    className="square-button no-border"
                     onClick={() => onFormatOptionsFetch(service.url, true)}
                     key="format-refresh">
                     <Glyphicon glyph="refresh" />

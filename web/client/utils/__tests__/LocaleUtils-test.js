@@ -93,7 +93,17 @@ describe('LocaleUtils', () => {
         expect(LocaleUtils.getDateFormat("pt-PT")).toBe("DD/MM/YYYY");
     });
     it('test the defaults for DATE_FORMATS', () => {
-        expect(Object.keys(LocaleUtils.DATE_FORMATS).length).toBe(9);
-        expect(Object.keys(LocaleUtils.DATE_FORMATS)).toEqual(["default", "en-US", "it-IT", "nl-NL", "zh-ZH", "hr-HR", "pt-PT", "vi-VN", "fi-FI"]);
+        expect(Object.keys(LocaleUtils.DATE_FORMATS).length).toBe(10);
+        expect(Object.keys(LocaleUtils.DATE_FORMATS)).toEqual(["default", "en-US", "it-IT", "nl-NL", "zh-ZH", "hr-HR", "pt-PT", "pt-BR", "vi-VN", "fi-FI"]);
+    });
+    it('longLocale should return language-region format', () => {
+        expect(LocaleUtils.longLocale('en')).toMatch(/en-[A-Z]{2}/);
+        expect(LocaleUtils.longLocale('en-GB')).toBe('en-GB');
+        expect(LocaleUtils.longLocale('invalid code')).toBe('');
+    });
+    it('shortLocale should return the language component of a locale code', () => {
+        expect(LocaleUtils.shortLocale('en-US')).toBe('en');
+        expect(LocaleUtils.shortLocale('it-IT')).toBe('it');
+        expect(LocaleUtils.shortLocale('invalid code')).toBe('');
     });
 });

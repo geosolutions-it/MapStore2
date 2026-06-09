@@ -158,25 +158,30 @@ The last step is to configure MapStore to use the authkey with the configured in
 
 ```javascript
 //...
-"useAuthenticationRules": true,
-  "authenticationRules": [{
-    "urlPattern": ".*geostore.*",
-    "method": "bearer"
-  }, {
+"requestsConfigurationRules": [
+  {
+    "urlPattern": ".*rest/geostore.*",
+    "headers": {
+      "Authorization": "Bearer ${securityToken}"
+    }
+  },
+  {
     "urlPattern": "\\/geoserver/.*",
-    "authkeyParamName": "authkey",
-    "method": "authkey"
-  }],
+    "params": {
+      "authkey": "${securityToken}"
+    }
+  }
+],
 //...
 ```
 
-- Verify that "useAuthenticationRules" is set to `true`
-- `authenticationRules` array should contain 2 rules:
-       - The first rule should already be present, and defines the authentication method used internally in mapstore
+- Note: The new `requestsConfigurationRules` system is always active when rules are present, no flag needed
+- `requestsConfigurationRules` array should contain 2 rules:
+       - The first rule should already be present, and defines the authentication method used internally in mapstore (Bearer token)
        - The second rule (the one you need to add) should be added and defines how to authenticate to GeoServer:
          - `urlPattern`: is a regular expression that identifies the request url where to apply the rule
-         - `method`: set it to `authkey` to use the authentication filter you just created in Geoserver.
-         - `authkeyParamName`: is the name of the authkey parameter defined in GeoServer (set to `authkey` by default)
+         - `params`: use query parameters for authkey authentication
+           - `authkey`: the name of the parameter (must match the one in GeoServer configuration, default is `authkey`)
 
 ### Advantages of user integration
 

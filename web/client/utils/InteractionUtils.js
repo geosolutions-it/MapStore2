@@ -1,0 +1,1068 @@
+export const DATATYPES = {
+    LAYER_FILTER: 'LAYER_FILTER',
+    LAYER_STYLE: 'LAYER_STYLE',
+    LAYER_DIMENSION: 'LAYER_DIMENSION'
+};
+
+export const EVENTS = {
+    FILTER_CHANGE: 'filter_change'
+};
+
+export const TARGET_TYPES = {
+    APPLY_FILTER: 'applyFilter',
+    APPLY_STYLE: 'applyStyle',
+    APPLY_DIMENSION: 'applyDimension'
+};
+
+// Human-readable labels for target types
+export const TARGET_TYPE_LABELS = {
+    [TARGET_TYPES.APPLY_FILTER]: 'Apply filter',
+    [TARGET_TYPES.APPLY_STYLE]: 'Apply style',
+    [TARGET_TYPES.APPLY_DIMENSION]: 'Apply dimension'
+};
+
+// Glyph icons for target types
+export const TARGET_TYPE_GLYPHS = {
+    [TARGET_TYPES.APPLY_FILTER]: 'filter',
+    [TARGET_TYPES.APPLY_STYLE]: 'style',
+    [TARGET_TYPES.APPLY_DIMENSION]: 'record'
+};
+
+/**
+ * Map of events to the target types they typically emit/drive.
+ * Values are arrays to support multiple targets per event.
+ */
+export const EVENT_TARGET_MAP = {
+    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER, TARGET_TYPES.APPLY_STYLE, TARGET_TYPES.APPLY_DIMENSION]
+};
+
+export const TARGET_EVENT_DATA_TYPES = {
+    [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER,
+    [TARGET_TYPES.APPLY_STYLE]: DATATYPES.LAYER_STYLE,
+    [TARGET_TYPES.APPLY_DIMENSION]: DATATYPES.LAYER_DIMENSION
+};
+
+// Events available by widget type
+export const WIDGET_EVENTS_BY_WIDGET_TYPE = {
+    map: [
+        { eventType: EVENTS.VIEWPORT_CHANGE, dataType: DATATYPES.BBOX_COORDINATES },
+        { eventType: EVENTS.CENTER_CHANGE, dataType: DATATYPES.POINT },
+        { eventType: EVENTS.ZOOM_CHANGE, dataType: DATATYPES.NUMBER },
+        { eventType: EVENTS.FEATURE_CLICK, dataType: DATATYPES.FEATURE }
+    ],
+    table: [
+        { eventType: EVENTS.FILTER_CHANGE, dataType: DATATYPES.LAYER_FILTER }
+    ],
+    counter: [],
+    filter: [
+        {eventType: EVENTS.FILTER_CHANGE, dataType: DATATYPES.LAYER_FILTER }
+    ]
+};
+
+// Targets available by widget type (or sub-type)
+export const WIDGET_TARGETS_BY_TYPE = {
+    chartTrace: [
+        {
+            targetType: TARGET_TYPES.APPLY_FILTER,
+            expectedDataType: DATATYPES.LAYER_FILTER,
+            constraints: {}
+        }
+    ],
+    layer: [
+        {
+            targetType: TARGET_TYPES.APPLY_FILTER,
+            expectedDataType: DATATYPES.LAYER_FILTER,
+            constraints: {}
+        },
+        {
+            targetType: TARGET_TYPES.APPLY_STYLE,
+            expectedDataType: DATATYPES.LAYER_STYLE,
+            constraints: {}
+        }
+    ],
+    table: [
+        {
+            targetType: TARGET_TYPES.APPLY_FILTER,
+            expectedDataType: DATATYPES.LAYER_FILTER,
+            constraints: {}
+        }
+    ],
+    counter: [
+        {
+            targetType: TARGET_TYPES.APPLY_FILTER,
+            expectedDataType: DATATYPES.LAYER_FILTER,
+            constraints: {}
+        }
+    ]
+};
+
+/**
+ * Creates a layer constraint object with standardized name and id handling.
+ * @param {string|""} name - The layer name
+ * @param {string|""} id - The layer id
+ * @returns {object} Layer constraint object with name (defaults to "") and id (defaults to undefined)
+ */
+export function createLayerConstraint(name) {
+    return {
+        name: name
+    };
+}
+
+
+/**
+ * Creates base properties shared by both element and collection nodes.
+ * @param {string} title the title
+ * @param {string} icon the icon identifier
+ * @param {string} id optional id
+ * @returns {object} base properties object
+ */
+function createBaseProperties(title, icon, id) {
+    return {
+        title,
+        ...(icon ? {icon} : {}),
+        ...(id ? {id} : {})
+    };
+}
+
+/**
+ * Creates a base collection tree node structure.
+ * @param {string} title the collection title
+ * @param {array} children the children array
+ * @param {string} icon optional icon identifier
+ * @param {string} id optional id
+ * @returns {object} the base collection tree node
+ */
+function createBaseCollectionNode(title, children = [], icon, id) {
+    return {
+        type: "collection",
+        ...createBaseProperties(title, icon, id),
+        staticallyNamedCollection: true,
+        ...(children.length > 0 ? {children} : {})
+    };
+}
+/**
+ * Creates a base element tree node structure.
+ * @param {object} item the item object (widget, trace, etc.)
+ * @param {string} icon the icon identifier
+ * @param {string} title optional title override
+ * @returns {object} the base element tree node
+ */
+function createBaseElementNode(item, icon, title) {
+    return {
+        type: "element",
+        ...createBaseProperties(title || item?.title || "No title", icon, item?.id)
+    };
+}
+
+/**
+ * Returns true if the layer supports interactions
+ * @param {object} layer the layer
+ * @returns {boolean}
+ */
+export function isInteractionSupported(layer) {
+    return ['wms', 'wfs'].includes(layer?.type) && layer.group !== "background";
+}
+
+
+function hasDimension(layer, dimensionNames = []) {
+    return (layer?.dimensions || []).some(dim => {
+        const dimName = (dim?.name || '').toLowerCase();
+        return dimensionNames.includes(dimName);
+    });
+}
+
+function hasTimeDimension(layer) {
+    return hasDimension(layer, ['time']);
+}
+
+function hasElevationDimension(layer) {
+    return hasDimension(layer, ['elevation']);
+}
+
+function normalizeValueAttributeType(valueAttributeType) {
+    return (valueAttributeType || '').toLowerCase();
+}
+
+export function isChartAxisDateType(axis) {
+    return normalizeValueAttributeType(axis?.type) === 'date';
+}
+
+function getAllowedDimensionNames(valueAttributeType) {
+    const normalizedType = normalizeValueAttributeType(valueAttributeType);
+    const allowedDimensions = new Set();
+
+    if (['date', 'date-time', 'datetime'].includes(normalizedType)) {
+        allowedDimensions.add('time');
+    }
+
+    if (normalizedType === 'number') {
+        allowedDimensions.add('elevation');
+    }
+
+    return allowedDimensions;
+}
+
+export function hasAllowedDimensionTarget(layer, valueAttributeType) {
+    const allowedDimensions = getAllowedDimensionNames(valueAttributeType);
+    if (allowedDimensions.size === 0) {
+        return false;
+    }
+    return (layer?.dimensions || []).some(dim => allowedDimensions.has((dim?.name || '').toLowerCase()));
+}
+
+export function filterDimensionTreeByValueAttributeType(tree, valueAttributeType) {
+    const allowedDimensions = getAllowedDimensionNames(valueAttributeType);
+    if (allowedDimensions.size === 0) {
+        return null;
+    }
+
+    const getNodeDimensionName = (node) => {
+        const nodeId = (node?.id || '').toLowerCase();
+        if (nodeId.includes('elevation')) {
+            return 'elevation';
+        }
+        if (nodeId.includes('time')) {
+            return 'time';
+        }
+        return null;
+    };
+
+    const pruneNode = (node) => {
+        if (!node) {
+            return null;
+        }
+
+        const children = Array.isArray(node.children)
+            ? node.children.map(pruneNode).filter(Boolean)
+            : [];
+
+        const nodeDimension = getNodeDimensionName(node);
+        if (nodeDimension && !allowedDimensions.has(nodeDimension)) {
+            return null;
+        }
+
+        if (node.type === 'collection' && children.length === 0) {
+            return null;
+        }
+
+        return children.length > 0
+            ? { ...node, children }
+            : { ...node };
+    };
+
+    return pruneNode(tree);
+}
+
+function createDimensionTargetMetadata(layer, dimension) {
+    return {
+        targetType: TARGET_TYPES.APPLY_DIMENSION,
+        expectedDataType: DATATYPES.LAYER_DIMENSION,
+        constraints: {},
+        layer: {
+            name: layer?.name
+        },
+        dimension
+    };
+}
+
+function createChartAxisDimensionTargetMetadata({ showCurrentTimeEnabled, dateType }) {
+    return {
+        targetType: TARGET_TYPES.APPLY_DIMENSION,
+        expectedDataType: DATATYPES.LAYER_DIMENSION,
+        constraints: {},
+        dimension: 'time',
+        showCurrentTimeEnabled,
+        dateType
+    };
+}
+
+function createDimensionLeafNode(layer, dimension) {
+    const icon = dimension === 'time' ? 'time' : 'arrow-up';
+    return {
+        type: 'element',
+        id: `params.${dimension}`,
+        title: dimension === 'time' ? 'Time' : 'Elevation',
+        icon,
+        nodePathMode: 'dot',
+        interactionMetadata: {
+            targets: [createDimensionTargetMetadata(layer, dimension)]
+        }
+    };
+}
+
+function createMapTimeLeafNode(layer) {
+    return {
+        type: 'element',
+        id: 'time',
+        title: 'Timeline',
+        icon: 'time',
+        nodePathMode: 'dot',
+        interactionMetadata: {
+            targets: [createDimensionTargetMetadata(layer, 'time')]
+        }
+    };
+}
+
+function createLayerDimensionNodes(layer) {
+    const dimensionNodes = [];
+    if (hasTimeDimension(layer)) {
+        dimensionNodes.push(createDimensionLeafNode(layer, 'time'));
+    }
+    if (hasElevationDimension(layer)) {
+        dimensionNodes.push(createDimensionLeafNode(layer, 'elevation'));
+    }
+    return dimensionNodes;
+}
+
+function createLayerDimensionCollection(layerNode, dimensionNodes) {
+    return dimensionNodes.length > 0 ? {
+        type: 'collection',
+        title: layerNode.title,
+        icon: '1-layer',
+        id: layerNode.id,
+        preserveWhenSingleChild: true,
+        children: dimensionNodes
+    } : null;
+}
+
+/**
+ * Generates collection nodes for each map config, where each collection contains layer nodes.
+ * Each map config contains a layers array property.
+ * @param {object[]} maps array of map configs, each containing a layers array property
+ * @returns {object} a collection tree node named "maps" containing all map collection nodes
+ */
+export function generateLayerMetadataTree(layer) {
+    const baseNode = createBaseElementNode(layer, '1-layer');
+    return {
+        ...baseNode,
+        interactionMetadata: {
+            targets: WIDGET_TARGETS_BY_TYPE.layer.map(t => {
+                return {
+                    ...t,
+                    constraints: {
+                        layer: createLayerConstraint(layer.name)
+                    }
+                };
+            })
+        }
+    };
+}
+
+function createLayerTreeNode(layer) {
+    const layerNode = generateLayerMetadataTree(layer);
+    const dimensionNodes = createLayerDimensionNodes(layer);
+    const dimensionCollection = createLayerDimensionCollection(layerNode, dimensionNodes);
+    return [layerNode, dimensionCollection].filter(Boolean);
+}
+
+function createLayerNodesForLayers(layers = [], options = {}) {
+    return layers
+        .filter(isInteractionSupported)
+        .flatMap(layer => createLayerTreeNode(layer, options));
+}
+
+function createMapTimeNode(layers = []) {
+    const supportedLayers = layers.filter(isInteractionSupported);
+    const timeLayer = supportedLayers.find(hasTimeDimension);
+    if (timeLayer) {
+        return createMapTimeLeafNode(timeLayer);
+    }
+
+    return null;
+}
+
+/**
+ * Determines if an item is directly pluggable or configured to force plug.
+ * @param {object} node the node object with interactionMetadata from interactionTree
+ * @param {object} target the target object with expectedDataType and constraint
+ * @param {object} configuration the configuration object (default: {})
+ * @returns {object} object with directlyPluggable and configuredToForcePlug boolean flags
+ */
+export function getItemPluggableStatus(node, target, configuration = {}) {
+    const interactionMetadata = node?.interactionMetadata;
+    if (!interactionMetadata) {
+        return {
+            directlyPluggable: false,
+            configuredToForcePlug: false
+        };
+    }
+
+    // Check if directly pluggable: constraints match
+    const directlyPluggable = (interactionMetadata?.targets || []).find(t => {
+        return t.expectedDataType === target.expectedDataType &&
+            JSON.stringify(t.constraints) === JSON.stringify(target?.constraints);
+    }) !== undefined;
+
+    // Check if configured to force plug
+    const configuredToForcePlug = configuration?.forcePlug === true;
+
+    return {
+        directlyPluggable,
+        configuredToForcePlug
+    };
+}
+
+
+/**
+ * Returns the layers metadata tree array.
+ * Each supported layer expands into a layer element node and, when needed,
+ * a sibling dimension collection node.
+ * @param {object[]} layers array of layers
+ * @returns {object[]}
+ */
+export function generateLayersMetadataTree(layers) {
+    return createLayerNodesForLayers(layers);
+}
+
+export function generateMapWidgetLayersTree(maps, options = {}) {
+    if (!maps || !Array.isArray(maps)) {
+        return createBaseCollectionNode("Maps", [], "1-map", "maps");
+    }
+    const mapCollectionNodes = maps
+        .filter(map => map?.layers && Array.isArray(map.layers))
+        .map(map => {
+            const layerNodes = createLayerNodesForLayers(map.layers, options);
+            const layersCollection = createBaseCollectionNode(
+                "Layers",
+                layerNodes,
+                "1-layer",
+                "layers"
+            );
+            const baseNode = createBaseElementNode(map, '1-map');
+            return {
+                ...baseNode,
+                type: "collection",
+                ...createBaseProperties(map.name || "No Title", "1-map", map.mapId),
+                children: [layersCollection]
+            };
+        });
+
+    return createBaseCollectionNode("Maps", mapCollectionNodes, undefined, "maps");
+}
+
+/**
+ * Maps trace type to icon name.
+ * @param {string} traceType the trace type (bar, pie, line)
+ * @returns {string} the icon name
+ */
+function getTraceIcon(traceType) {
+    if (traceType === 'bar') return 'bar-chart';
+    if (traceType === 'pie') return 'pie-chart';
+    if (traceType === 'line') return 'line';
+    return 'bar-chart'; // default
+}
+
+function createChartAxisCurrentTimeNode(axis) {
+    return {
+        type: 'element',
+        id: 'appliedCurrentTime',
+        title: 'Time selection highlight',
+        icon: 'time',
+        nodePathMode: 'dot',
+        interactionMetadata: {
+            targets: [createChartAxisDimensionTargetMetadata({
+                showCurrentTimeEnabled: axis?.showCurrentTime === true,
+                dateType: isChartAxisDateType(axis)
+            })]
+        }
+    };
+}
+
+function createChartAxisNode(axis, axisKey) {
+    const axisOptsKey = `${axisKey}AxisOpts`;
+    const axisTitle = `${axisKey.toUpperCase()} Axis${axis?.title ? ` - ${axis.title}` : ''}`;
+    return {
+        type: 'collection',
+        id: `${axisOptsKey}[${axis?.id}]`,
+        title: axisTitle,
+        icon: axisKey === 'x' ? 'arrow-right' : 'arrow-up',
+        nodePathMode: 'dot',
+        preserveWhenSingleChild: true,
+        children: [createChartAxisCurrentTimeNode(axis)]
+    };
+}
+
+function getTraceDateAxisNodes(trace = {}, chart = {}, axisKey) {
+    const axisOptsKey = `${axisKey}AxisOpts`;
+    const traceAxisKey = `${axisKey}axis`;
+    const axisId = trace?.[traceAxisKey] ?? 0;
+    const chartAxisOpts = chart?.[axisOptsKey];
+    const axisOpts = Array.isArray(chartAxisOpts) ? chartAxisOpts : [chartAxisOpts || { id: 0 }];
+    return axisOpts
+        .map((axis, index) => ({ axis, index }))
+        .filter(({ axis }) => String(axis?.id) === String(axisId))
+        .map(({ axis }) => createChartAxisNode(axis, axisKey));
+}
+
+function createChartTraceAxisNodes(trace, chart) {
+    if (trace?.type === 'pie') {
+        return [];
+    }
+    return ['x', 'y'].flatMap(axisKey => getTraceDateAxisNodes(trace, chart, axisKey));
+}
+
+/**
+ * Generates a tree node for a chart trace element.
+ * @param {object} trace the chart trace object
+ * @returns {object} the chart trace metadata tree node
+ */
+export function generateChartTraceElementNode(trace) {
+    const traceIcon = getTraceIcon(trace?.type);
+    const baseNode = createBaseElementNode(trace, traceIcon);
+    return {
+        ...baseNode,
+        interactionMetadata: {
+            events: [
+            ],
+            targets: WIDGET_TARGETS_BY_TYPE.chartTrace.map(t => ({
+                ...t,
+                constraints: t.constraints?.layer ? t.constraints : {
+                    layer: createLayerConstraint(trace?.layer?.name)
+                }
+            }))
+        }
+    };
+}
+
+function generateChartTraceAxisCollectionNode(trace, chart) {
+    const axisNodes = createChartTraceAxisNodes(trace, chart);
+    if (axisNodes.length === 0) {
+        return null;
+    }
+    const traceIcon = getTraceIcon(trace?.type);
+    return {
+        type: 'collection',
+        ...createBaseProperties(trace?.title || trace?.name || 'No title', traceIcon, trace?.id),
+        preserveWhenSingleChild: true,
+        children: axisNodes
+    };
+}
+
+export function generateChartTraceTreeNode(trace, chart) {
+    return [
+        generateChartTraceElementNode(trace),
+        generateChartTraceAxisCollectionNode(trace, chart)
+    ].filter(Boolean);
+}
+
+/**
+ * Generates a tree node for a chart element.
+ * @param {object} chart the chart object
+ * @param {string} widgetTitle the widget title to use for the chart
+ * @returns {object} the chart element metadata tree node
+ */
+function generateChartElementNode(chart) {
+    const tracesCollection = createBaseCollectionNode(
+        "Traces",
+        (chart?.traces || []).flatMap(trace => generateChartTraceTreeNode(trace, chart)),
+        undefined,
+        "traces"
+    );
+    const baseNode = createBaseElementNode(chart, 'stats', chart?.name);
+    return {
+        ...baseNode,
+        type: "collection",
+        ...createBaseProperties(chart?.name, undefined, chart?.chartId || chart?.id),
+        children: [tracesCollection]
+    };
+}
+
+/**
+ * Generates a tree node for a chart widget element.
+ * @param {object} widget the chart widget object
+ * @returns {object} the chart widget metadata tree node
+ */
+export function generateChartWidgetTreeNode(widget) {
+    const charts = widget?.charts || [];
+    const chartNodes = charts.map(chart => generateChartElementNode(chart));
+    const chartsCollection = createBaseCollectionNode("Charts", chartNodes, undefined, "charts");
+    const baseNode = createBaseElementNode(widget, "chart");
+    return {
+        ...baseNode,
+        type: "collection",
+        children: [chartsCollection]
+    };
+}
+
+/**
+ * Generates a tree node for a table widget element.
+ * @param {object} widget the table widget object
+ * @returns {object} the table widget metadata tree node
+ */
+export function generateTableWidgetTreeNode(widget) {
+    const baseNode = createBaseElementNode(widget, 'features-grid');
+    return {
+        ...baseNode,
+        interactionMetadata: {
+            events: WIDGET_EVENTS_BY_WIDGET_TYPE.table,
+            targets: WIDGET_TARGETS_BY_TYPE.table.map(t => ({
+                ...t,
+                constraints: t.constraints?.layer ? t.constraints : {
+                    layer: createLayerConstraint(widget?.layer?.name)
+                }
+            }))
+        }
+    };
+}
+
+/**
+ * Generates a tree node for a counter widget element.
+ * @param {object} widget the counter widget object
+ * @returns {object} the counter widget metadata tree node
+ */
+export function generateCounterWidgetTreeNode(widget) {
+    const baseNode = createBaseElementNode(widget, 'counter');
+    return {
+        ...baseNode,
+        interactionMetadata: {
+            events: WIDGET_EVENTS_BY_WIDGET_TYPE.counter,
+            targets: WIDGET_TARGETS_BY_TYPE.counter.map(t => ({
+                ...t,
+                constraints: t.constraints?.layer ? t.constraints : {
+                    layer: createLayerConstraint(widget?.layer?.name)
+                }
+            }))
+        }
+    };
+}
+
+/**
+ * Generates a tree node for a map widget element.
+ * @param {object} widget the map widget object
+ * @returns {object} the map widget metadata tree node
+ */
+export function generateMapWidgetTreeNode(widget, options = {}) {
+    const mapsCollection = generateMapWidgetLayersTree(widget.maps, options);
+    const baseNode = createBaseElementNode(widget, '1-map');
+    return {
+        ...baseNode,
+        type: "collection",
+        children: [mapsCollection]
+    };
+}
+
+/**
+ * Generates a tree node for an individual filter element.
+ * @param {object} filter the filter object with id and title/label
+ * @returns {object} the filter metadata tree node
+ */
+export function generateFilterTreeNode(filter) {
+    const baseNode = createBaseElementNode(filter, 'filter', filter?.title);
+    return {
+        ...baseNode,
+        interactionMetadata: {
+            events: WIDGET_EVENTS_BY_WIDGET_TYPE.filter
+        }
+    };
+}
+
+/**
+ * Generates a tree node for a dynamic filter widget element.
+ * @param {object} widget the dynamic filter widget object
+ * @returns {object} the dynamic filter widget metadata tree node
+ */
+export function generateDynamicFilterWidgetTreeNode(widget) {
+    const filterNodes = widget?.filters?.map(generateFilterTreeNode) || [];
+    const baseNode = createBaseElementNode(widget, 'filter', "Filters");
+    return {
+        ...baseNode,
+        type: 'collection',
+        children: filterNodes
+    };
+}
+
+/**
+ * Generates a tree node for a generic widget element.
+ * Dispatches to the appropriate widget-specific function based on widget type.
+ * @param {object} widget the widget object
+ * @returns {object} the widget metadata tree node
+ */
+export function generateWidgetTreeNode(widget, options = {}) {
+    switch (widget?.widgetType) {
+    case "chart":
+        return generateChartWidgetTreeNode(widget);
+    case "table":
+        return generateTableWidgetTreeNode(widget);
+    case "counter":
+        return generateCounterWidgetTreeNode(widget);
+    case "map":
+        return generateMapWidgetTreeNode(widget, options);
+    case "filter":
+        return generateDynamicFilterWidgetTreeNode(widget);
+    default:
+        const baseNode = createBaseElementNode(widget, 'widget');
+        return {
+            ...baseNode
+        };
+    }
+}
+
+
+/**
+ * Recursively adds name (path) to all nodes in a tree.
+ * Path format matches: collectionId[elementId].collectionId[elementId]...
+ * Example: widgets[chart-1].traces[trace-1]
+ * @param {object} node the tree node
+ * @param {string} currentPath the current path for this node (default: "")
+ * @returns {object} the node with name added
+ */
+export function addNodePathToTree(node, currentPath = "") {
+    if (!node) return node;
+
+    // Build path segment based on staticallyNamedCollection property
+    let nodePath = currentPath;
+    const hasNodeId = node.id !== undefined && node.id !== null;
+
+    // Special case: root node should be empty string
+    if (currentPath === "" && node?.id === "root") {
+        nodePath = "";
+    } else if (node.staticallyNamedCollection && hasNodeId) {
+        // Statically named collection (widgets, traces, layers, etc.): use dot notation
+        nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
+    } else if (node.nodePathMode === 'dot' && hasNodeId) {
+        // Explicit dot-path nodes (e.g. dimension nodes under a layer)
+        nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
+    } else if (hasNodeId) {
+        // Element (widget, chart, trace, etc.): use brackets with id
+        nodePath = `${currentPath}[${node.id}]`;
+    }
+
+    // Add name to current node
+    const updatedNode = {
+        ...node,
+        nodePath
+    };
+
+    // Recursively process children
+    if (node.children && Array.isArray(node.children)) {
+        updatedNode.children = node.children.map(child =>
+            addNodePathToTree(child, nodePath)
+        );
+    }
+
+    return updatedNode;
+}
+
+/**
+ * Generates a root tree node containing all widget tree nodes.
+ * @param {array} widgets array of widget objects
+ * @returns {object} the root tree node with widgets collection as child TODO: CONSIDER FOR MAP also
+ */
+export function generateRootTree(widgets, mapLayers, options = {}) {
+    const widgetsArray = widgets || [];
+    const widgetNodes = widgetsArray
+        .filter(widget => widget !== null && widget !== undefined)
+        .map(widget => generateWidgetTreeNode(widget, options));
+
+    const mapLayersNodes = mapLayers?.length > 0 ? [
+        createBaseCollectionNode("Layers", createLayerNodesForLayers(mapLayers, options), "1-layer", "layers")
+    ] : [];
+    const mapTimeNode = createMapTimeNode(mapLayers || [], options);
+
+    const widgetsCollection = createBaseCollectionNode("Widgets", widgetNodes, "widgets", "widgets");
+    const collections = [widgetsCollection];
+    if (mapLayersNodes.length > 0) {
+        const mapsCollection = createBaseCollectionNode("Map", [mapTimeNode, ...mapLayersNodes].filter(Boolean), "1-map", "map");
+        collections.push(mapsCollection);
+    }
+
+    const tree = createBaseCollectionNode("Root", collections, undefined, "root");
+
+    // Add name (path) to all nodes in the tree
+    return addNodePathToTree(tree);
+}
+
+/**
+ * Detaches/flattens collections that have only one child collection.
+ * Moves the child collection's children directly into the parent and removes the intermediate collection.
+ * @param {object} tree the tree node to process
+ * @param {array} excludeChecksOn optional array of collection ids to exclude from detaching
+ * @returns {object} the tree with collections detached where applicable
+ */
+export function detachSingleChildCollections(tree, excludeChecksOn = []) {
+    if (!tree) return tree;
+
+    const shouldDetach = (collectionId) => {
+        // If excludeChecksOn is provided and id matches, don't detach
+        if (excludeChecksOn && Array.isArray(excludeChecksOn) && excludeChecksOn.length > 0) {
+            return !excludeChecksOn.includes(collectionId);
+        }
+        // Otherwise, detach by default
+        return true;
+    };
+
+    const processNode = (node) => {
+        if (!node || !node.children || !Array.isArray(node.children)) {
+            return node;
+        }
+
+        // Process children first
+        let processedChildren = node.children.map(child => processNode(child));
+
+        // Check if this is a collection with exactly one child that is also a collection
+        if (node.type === 'collection' &&
+            processedChildren.length === 1 &&
+            processedChildren[0]?.type === 'collection' &&
+            !node.preserveWhenSingleChild &&
+            !processedChildren[0]?.preserveWhenSingleChild &&
+            shouldDetach(processedChildren[0].id)) {
+            // Move the child collection's children to this node
+            const singleChild = processedChildren[0];
+            processedChildren = singleChild.children || [];
+        }
+
+        // Return updated node with processed children
+        return {
+            ...node,
+            children: processedChildren.length > 0 ? processedChildren : undefined
+        };
+    };
+
+    return processNode(tree);
+}
+
+
+/**
+ * Returns a pruned copy of the tree containing only nodes that declare a target with the given targetType.
+ * Ancestors are kept to preserve hierarchy; non-matching branches are removed.
+ * @param {object} tree root metadata tree
+ * @param {object} target target object containing targetType
+ * @returns {object|null} pruned tree or null if no matches
+ */
+export function filterTreeWithTarget(tree, target) {
+    const desiredTargetType = target?.targetType || target?.eventType;
+    if (!desiredTargetType) return null;
+
+    const matchTarget = node => {
+        const targets = node?.interactionMetadata?.targets;
+        if (!targets) return false;
+        const arr = Array.isArray(targets) ? targets : [targets];
+        return arr.some(t => t?.targetType === desiredTargetType);
+    };
+
+    const cloneWithFilteredChildren = node => {
+        if (!node) return null;
+        const filteredChildren = (node.children || [])
+            .map(child => cloneWithFilteredChildren(child))
+            .filter(Boolean);
+        const isMatch = node.type === 'element' && matchTarget(node);
+        if (!isMatch && filteredChildren.length === 0) {
+            return null;
+        }
+        const { children, ...rest } = node;
+        return filteredChildren.length > 0
+            ? { ...rest, children: filteredChildren }
+            : { ...rest };
+    };
+
+    return cloneWithFilteredChildren(tree);
+}
+
+export function getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType) {
+    const filteredTree = filterTreeWithTarget(interactionTree, target) || { children: [] };
+    const targetTree = target?.targetType === TARGET_TYPES.APPLY_DIMENSION
+        ? filterDimensionTreeByValueAttributeType(filteredTree, valueAttributeType)
+        : filteredTree;
+    return detachSingleChildCollections(targetTree, ['widgets', 'traces', 'map', 'layers']) || { children: [] };
+}
+
+export function hasConnectableTargetNodes(interactionTree, target, valueAttributeType) {
+    const displayTree = getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType);
+    return (displayTree?.children || []).length > 0;
+}
+
+/**
+ * Gets possible targets for editing a widget of the specified widgetType.
+ * Currently only supports filter widget type.
+ * @param {string} widgetType widget type (currently only 'filter' is supported)
+ * @param {object} layerInvolved optional layer object with name and id
+ * @returns {array} [{ title, targetType, glyph, expectedDataType, constraint }]
+ */
+export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
+    if (widgetType === 'filter') {
+        return [{
+            title: TARGET_TYPE_LABELS[TARGET_TYPES.APPLY_FILTER],
+            targetType: TARGET_TYPES.APPLY_FILTER,
+            glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_FILTER],
+            expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_FILTER],
+            constraints: layerInvolved ? {
+                layer: createLayerConstraint(layerInvolved.name)
+            } : {}
+        },
+        {
+            title: TARGET_TYPE_LABELS[TARGET_TYPES.APPLY_STYLE],
+            targetType: TARGET_TYPES.APPLY_STYLE,
+            glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_STYLE],
+            expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_STYLE],
+            constraints: layerInvolved ? {
+                layer: createLayerConstraint(layerInvolved.name)
+            } : {}
+        },
+        {
+            title: TARGET_TYPE_LABELS[TARGET_TYPES.APPLY_DIMENSION],
+            targetType: TARGET_TYPES.APPLY_DIMENSION,
+            glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_DIMENSION],
+            expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_DIMENSION],
+            constraints: {}
+        }
+        ];
+    }
+    return [];
+}
+
+export const FILTER_WIDGET_OPTIONAL_TARGET_TYPES = [TARGET_TYPES.APPLY_DIMENSION];
+
+/**
+ * Finds a node by its id in the tree and returns the node object.
+ * @param {object} tree root metadata tree
+ * @param {string} nodeId the id of the node to find
+ * @returns {object|null} the found node object, or null if not found
+ */
+export function findNodeById(tree, nodeId) {
+    if (!tree || !nodeId) {
+        return null;
+    }
+
+    const search = (node) => {
+        if (node?.id === nodeId) {
+            return node;
+        }
+
+        if (node?.children && Array.isArray(node.children)) {
+            for (const child of node.children) {
+                const found = search(child);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+
+        return null;
+    };
+
+    return search(tree);
+}
+
+/**
+ * Extracts layer ID from interaction target node path (map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]).
+ * @param {string} nodePath - The node path
+ * @returns {string|null} Layer ID or null
+ */
+export function extractLayerIdFromNodePath(nodePath) {
+    if (!nodePath) return null;
+    const match = nodePath.match(/\.layers\[([^\]]+)\]/);
+    return match ? match[1] : null;
+}
+
+/**
+ * Returns true if the node path refers to a map layer (map.layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isMapLayerPath(nodePath) {
+    return !!nodePath && /^map\.layers/.test(nodePath);
+}
+
+/**
+ * Returns true if the node path refers to a layer target, either main map (map.layers[...])
+ * or widget map (widgets[widgetId].maps[mapId].layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isAnyLayerPath(nodePath) {
+    if (!nodePath) return false;
+    return /^map\.layers/.test(nodePath) || /\.maps\[[^\]]+\]\.layers\[[^\]]+\]/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to the global map time field.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isMapTimeTarget(nodePath) {
+    return !!nodePath && /(?:^|\.)map\.time$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a layer time or elevation dimension.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isLayerDimensionTarget(nodePath) {
+    return isAnyLayerPath(nodePath) && /(?:^|\.)params\.(?:time|elevation)$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a layer time dimension.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isLayerTimeDimensionTarget(nodePath) {
+    return isAnyLayerPath(nodePath) && /(?:^|\.)params\.time$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a chart axis current time.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isChartAxisDimensionTarget(nodePath) {
+    return !!nodePath && /(?:^|\.)charts\[[^\]]+\]\.(?:traces\[[^\]]+\]\.)?(?:xAxisOpts|yAxisOpts)\[[^\]]+\]\.appliedCurrentTime$/.test(nodePath);
+}
+
+const CHART_AXIS_CURRENT_TIME_TARGET_REGEX = /^widgets\["?([^"\]]*)"?\]\.charts\["?([^"\]]*)"?\]\.(?:traces\["?([^"\]]*)"?\]\.)?(xAxisOpts|yAxisOpts)\["?([^"\]]*)"?\]\.appliedCurrentTime$/;
+
+/**
+ * Returns the chart axis object referenced by a chart axis current time target path.
+ * Missing axis options are treated as the default axis `{ id: 0 }`, matching chart rendering behavior.
+ * @param {string} targetPath the chart axis current time target path
+ * @param {object[]} widgets the widget collection to search
+ * @returns {object|null}
+ */
+export function getChartAxisFromCurrentTimeTargetPath(targetPath, widgets = []) {
+    const [, widgetId, chartId, , axisOptsKey, axisId] = CHART_AXIS_CURRENT_TIME_TARGET_REGEX.exec(targetPath) || [];
+    if (!widgetId || !chartId || !axisOptsKey) {
+        return null;
+    }
+    const widget = widgets.find(w => String(w?.id) === String(widgetId));
+    const chart = (widget?.charts || []).find(c => String(c?.chartId || c?.id) === String(chartId));
+    if (!chart) {
+        return null;
+    }
+    const chartAxisOpts = chart?.[axisOptsKey];
+    const axisOpts = Array.isArray(chartAxisOpts) ? chartAxisOpts : [chartAxisOpts || { id: 0 }];
+    return axisOpts.find(axis => String(axis?.id) === String(axisId)) || null;
+}
+
+/**
+ * Extracts a trace object from a widget object using a node path.
+ * Loops through all charts and traces to find the matching trace by ID.
+ * @param {object} widget the widget object containing charts and traces
+ * @param {string} nodePath the node path (e.g., "widgets[widgetId].traces[traceId]")
+ * @returns {object|null} the trace object if found, or null if not found
+ */
+export function extractTraceFromWidgetByNodePath(widget, nodePath) {
+    if (!widget || !nodePath || typeof nodePath !== 'string') {
+        return null;
+    }
+
+    // Extract traceId from the path - simple extraction of the last [id] after .traces
+    const tracesMatch = nodePath.match(/\.traces\[([^\]]+)\]/);
+    if (!tracesMatch) {
+        return null;
+    }
+    const traceId = tracesMatch[1];
+
+    // Loop through all charts and traces to find the matching trace
+    const charts = widget?.charts || [];
+    for (const chart of charts) {
+        const traces = chart?.traces || [];
+        for (const trace of traces) {
+            if (trace.id === traceId) {
+                return trace;
+            }
+        }
+    }
+
+    return null;
+}

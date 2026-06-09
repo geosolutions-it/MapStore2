@@ -14,9 +14,9 @@ import AuthenticationAPI from '../api/GeoStoreDAO';
 import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
 import {encodeUTF8} from '../utils/EncodeUtils';
 
-
 export const CHECK_LOGGED_USER = 'CHECK_LOGGED_USER';
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
+export const LOGIN_LOADING = 'LOGIN_LOADING';
 export const LOGIN_PROMPT_CLOSED = "LOGIN:LOGIN_PROMPT_CLOSED";
 export const LOGIN_REQUIRED = "LOGIN:LOGIN_REQUIRED";
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -34,6 +34,11 @@ export const SET_CREDENTIALS = 'SECURITY:SET_CREDENTIALS';
 export const CLEAR_SECURITY = 'SECURITY:CLEAR_SECURITY';
 export const SET_PROTECTED_SERVICES = 'SECURITY:SET_PROTECTED_SERVICES';
 export const REFRESH_SECURITY_LAYERS = 'SECURITY:REFRESH_SECURITY_LAYERS';
+
+export const UPDATE_REQUESTS_RULES = 'SECURITY:UPDATE_REQUESTS_RULES';
+export const LOAD_REQUESTS_RULES = 'SECURITY:LOAD_REQUESTS_RULES';
+export const LOAD_REQUESTS_RULES_ERROR = 'SECURITY:LOAD_REQUESTS_RULES_ERROR';
+
 export function loginSuccess(userDetails, username, password, authProvider) {
     return {
         type: LOGIN_SUCCESS,
@@ -44,6 +49,13 @@ export function loginSuccess(userDetails, username, password, authProvider) {
         username: username,
         password: password,
         authProvider: authProvider
+    };
+}
+
+export function setLoginLoading(loading) {
+    return {
+        type: LOGIN_LOADING,
+        loading
     };
 }
 
@@ -94,10 +106,13 @@ export function logoutWithReload() {
 
 export function login(username, password) {
     return (dispatch) => {
+        dispatch(setLoginLoading(true));
         return AuthenticationAPI.login(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
         }).catch((e) => {
             dispatch(loginFail(e));
+        }).finally(() => {
+            dispatch(setLoginLoading(false));
         });
     };
 }
@@ -229,3 +244,36 @@ export function refreshSecurityLayers() {
         type: REFRESH_SECURITY_LAYERS
     };
 }
+
+/**
+ * Updates the request configuration rules
+ * @param {Array} rules - Array of request configuration rules
+ * @param {boolean} enabled - Whether request configuration is enabled
+ */
+export const updateRequestsRules = (rules) => {
+    return {
+        type: UPDATE_REQUESTS_RULES,
+        rules
+    };
+};
+
+/**
+ * Starts loading request configuration rules
+ */
+export const loadRequestsRules = (rules) => {
+    return {
+        type: LOAD_REQUESTS_RULES,
+        rules
+    };
+};
+
+/**
+ * Error loading request configuration rules
+ * @param {Error} error - The error that occurred
+ */
+export const loadRequestsRulesError = (error) => {
+    return {
+        type: LOAD_REQUESTS_RULES_ERROR,
+        error
+    };
+};

@@ -303,7 +303,7 @@ function WMSCacheOptions({
                             ? 'layerProperties.updateTileGrids'
                             : 'layerProperties.checkAvailableTileGridsInfo'
                         }
-                        className="square-button-md no-border format-refresh"
+                        className="square-button no-border format-refresh"
                         onClick={() => {
                             onTileMatrixSetsFetch({ ...layer, force: true }).then((value) => handleOnChange(value, layer.tileGridStrategy !== 'custom'));
                         }}
@@ -319,7 +319,7 @@ function WMSCacheOptions({
                         active={layer.tileGridStrategy === 'custom'}
                         glyph={layer.tileGridStrategy === 'custom' ? 'grid-custom' : 'grid-regular'}
                         bsStyle={layer.tileGridStrategy === 'custom' ? 'success' : 'primary'}
-                        className="square-button-md"
+                        className="square-button"
                         onClick={() => {
                             const newTileGridStrategy = layer.tileGridStrategy !== 'custom'
                                 ? 'custom'

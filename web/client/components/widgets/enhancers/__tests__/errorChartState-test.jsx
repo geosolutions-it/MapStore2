@@ -31,12 +31,12 @@ describe('widgets errorChartState enhancer', () => {
         const Dummy = errorChartState(() => <div id="dummy"></div>);
         ReactDOM.render(<Dummy error={new Error()}/>, document.getElementById("container"));
         expect(document.getElementById("dummy")).toBeFalsy();
-        expect(document.querySelector(".glyphicon-stats")).toBeFalsy();
+        expect(document.querySelector(".glyphicon-chart")).toBeFalsy();
     });
     it('errorChartState rendering with error if layer is no longer available', () => {
         const Dummy = errorChartState(() => <div id="dummy"></div>);
         ReactDOM.render(<Dummy error={new Error("Could not locate etc")}/>, document.getElementById("container"));
         expect(document.getElementById("dummy")).toBeFalsy();
-        expect(document.querySelector(".glyphicon-stats")).toBeTruthy();
+        expect(document.querySelector(".glyphicon-chart")).toBeTruthy();
     });
 });

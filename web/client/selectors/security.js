@@ -8,6 +8,7 @@
 
 import castArray from "lodash/castArray";
 import get from 'lodash/get';
+import { createControlEnabledSelector } from "./controls";
 
 export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -53,7 +54,8 @@ export const securityTokenSelector = state => state.security && state.security.t
 export const isAdminUserSelector = (state) => userRoleSelector(state) === "ADMIN";
 export const isUserSelector = (state) => userRoleSelector(state) === "USER";
 export const authProviderSelector = state => state.security && state.security.authProvider;
-
+export const requestsRulesSelector = state => get(state, 'security.rules', []);
+export const requestsRulesEnabledSelector = state => get(state, 'security.rulesEnabled', false);
 /**
  * Creates a selector that checks if user is allowed to edit
  * something based on the user's role and groups
@@ -86,3 +88,8 @@ export const protectedServicesSelector = state => {
 export const dashboardProtectedIdSelector = state => {
     return state?.dashboard?.protectedId;
 };
+
+export const loginLoadingSelector = state => {
+    return state?.security?.loading ?? false;
+};
+export const isLoginWindowOpen = createControlEnabledSelector("LoginForm");

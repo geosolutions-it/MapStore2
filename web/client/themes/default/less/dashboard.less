@@ -13,6 +13,26 @@
     .dashboard-editor {
         .border-color-var(@theme-vars[main-border-color]);
     }
+    .view-switcher-container {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .ms-layout-view {
+        &.is-selected {
+            > button {
+                .background-color-var(@theme-vars[selected-bg]);
+            }
+        }
+        &:hover:not(.is-selected) {
+            > button {
+                .background-color-var(@theme-vars[selected-hover-bg]);
+            }
+        }
+    }
+    .configure-view-dialog-container {
+        .glyphicon-info-sign {
+            .color-var(@theme-vars[danger]);
+        }
+    }
 }
 
 // **************
@@ -55,5 +75,48 @@
 
     &.de-builder {
         width: 500px;
+    }
+}
+
+.dashboard-color-picker {
+    width: 100px;
+}
+
+.view-switcher-container {
+
+    width: 100%;
+    border-top: 1px solid transparent;
+    min-height: 40px;
+    
+    .ms-layout-view {
+        display: flex;
+        min-width: fit-content;
+    }
+    .ms-layout-view,
+    .ms-layout-view > button {
+        height: 100%;
+        position: relative;
+        border-top: none;
+        border-bottom: none;
+    }
+
+    .ms-layout-view .dropdown-toggle {
+        padding: 0.25rem;
+    }
+
+    .ms-layout-view:first-child > .dropdown-toggle,
+    .ms-layout-view + .ms-layout-view > button {
+        border-left: none;
+    }
+
+    .view-switcher-tabs::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.fade.in.modal.configure-view-dialog-container {
+    z-index: 150;
+    .modal-dialog.modal-dialog-container {
+        margin-top: 100px;
     }
 }

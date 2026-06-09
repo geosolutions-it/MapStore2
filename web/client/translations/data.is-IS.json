@@ -73,6 +73,10 @@
       "style": "Style",
       "transparent": "Transparent",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "Use cache options",
       "styleCustom": "Use style named \"{value}\"",
       "styleListLoadError": "There was an error loading the styles list",
@@ -243,6 +247,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -253,6 +258,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Tiltækar vörpanir",
+      "searchProjection": "Leita að vörpun...",
+      "label": "Merking",
+      "authorityId": "Auðkenni yfirvalds",
+      "selectedProjection": "Valin vörpun verður notuð á kortinu",
+      "quickSwitch": "Valin vörpun verður bætt við lista fyrir flýtiskipti",
+      "help": "Hakaðu við reitinn til að bæta vörpun við flýtiskipti. Smelltu á röð til að setja hana sem sjálfgefna vörpun.",
+      "save": "Vista",
+      "close": "Loka"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",
@@ -1465,6 +1481,20 @@
       "wmcNoLayersError": "At least one WMS layer needed to export to WMC, found zero"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Teg sía sía",
+        "category": "Flokkur",
+        "keyword": "Lykilorð"
+      },
+      "listView": "List View",
+      "gridView": "Grid View",
+      "selectAll": "Select All",
+      "layers": "Layers",
+      "edit": "Edit",
+      "backToList": "Back to Catalog",
+      "close": "Close",
+      "showFullContent": "Show full content",
+      "hideFullContent": "Hide full content",
       "start": "Start date ",
       "end": "End date ",
       "notAvailable": "Not Available",
@@ -1506,7 +1536,9 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -1839,7 +1871,8 @@
         "title": "Error during export",
         "invalidOutputFormat": "The selected export format is not available",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again.",
+        "fetchFormatsFailed": "Failed to fetch available formats for the layer. Please try again later."
       },
       "exportResultsMessages": {
         "newExport": "The file will be available here when the export completes",
@@ -2022,14 +2055,14 @@
         "placeholder": "Enter map name",
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartSwitcher": {
         "noResults": "No layer found",
         "placeholder": "Enter chart name",
         "selectLabel": "Chart",
         "infoOnHide": "Expand widget to see chart switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartType": {
         "bar": {
@@ -2143,21 +2176,15 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
         "expandTray": "Expand widgets tray",
         "collapseTray": "Collapse widgets tray",
         "expandAll": "Expand all widgets",
-        "collapseAll": "Collapse all widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
-            "timelineTitle": "Timeline has been collapsed",
-            "widgetsTitle": "Widgets has been collapsed"
-          }
-        }
+        "collapseAll": "Collapse all widgets"
       }
     },
     "dashboard": {
@@ -2182,7 +2209,8 @@
         },
         "resourceAlreadyExists": "A resource with this name already exists",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "This dashboard contains multiple views, which is not supported. Please select a single view to continue."
       },
       "editor": {
         "save": "Save the dashboard",
@@ -2191,7 +2219,21 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "The dashboard is empty",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Loading Dashboard",
@@ -3102,6 +3144,12 @@
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
       },
+      "CameraPosition": {
+        "description": "Shows the current camera position (coordinates and zoom level)",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Allows to print the current map with legend",
         "title": "Print Tool"
@@ -3815,7 +3863,9 @@
         "playback": "Playback Configuration",
         "mapTemplates": "Map Templates",
         "userPlugins": "User Plugins",
-        "mapViews": "Map Views"
+        "mapViews": "Map Views",
+        "swipe": "Swipe",
+        "crsSelector": "CRS Selector"
       }
     },
     "streetView": {
@@ -3985,12 +4035,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

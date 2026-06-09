@@ -215,6 +215,9 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setInitializing(false);
             setError(err);
             setReloadAllowed(true);
+            if (isInvalidCredentials(err) >= 0) {
+                setShowCredentialsForm(true);
+            }
             if (err) {
                 console.error('Cyclomedia API: init: error: ' + err);
             }
@@ -328,8 +331,11 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             showCredentialsForm={showCredentialsForm}
             setShowCredentialsForm={setShowCredentialsForm}
             credentials={credentials}
+            isCredentialsInvalid={isInvalidCredentials(error) >= 0}
             setCredentials={(newCredentials) => {
                 setCredentials(newCredentials);
+                setError(null);
+                setReload(prev => prev + 1);
             }}/>}
         {showLogout
             && initialized
@@ -368,7 +374,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             <Message msgId="streetView.cyclomedia.errorOccurred" />
             {getErrorMessage(error, {srs})}
             <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
-                {initialized || reloadAllowed ? <div><Button
+                {(initialized || reloadAllowed) && isInvalidCredentials(error) < 0 ? <div><Button
                     style={{margin: 10}}
                     onClick={() => {
                         setError(null);

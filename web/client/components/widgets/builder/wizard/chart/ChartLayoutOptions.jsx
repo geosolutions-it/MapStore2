@@ -7,13 +7,18 @@
  */
 import React from 'react';
 import { FormGroup, ControlLabel, InputGroup, Checkbox, Radio } from 'react-bootstrap';
+import Select from 'react-select';
 import Message from '../../../../I18N/Message';
+import localizedProps from '../../../../misc/enhancers/localizedProps';
 import {
     extractTraceData,
     enableBarChartStack,
     FONT
 } from '../../../../../utils/WidgetsUtils';
 import Font from '../common/Font';
+import InfoPopover from '../../../widget/InfoPopover';
+
+const HoverModeSelect = localizedProps('options')(Select);
 
 const BAR_CHART_TYPES = [{
     id: 'stacked',
@@ -24,6 +29,46 @@ const BAR_CHART_TYPES = [{
     value: 'group',
     labelId: 'widgets.advanced.groupedBarChart'
 }];
+
+const HOVER_MODE_OPTIONS = [{
+    value: 'x unified',
+    label: 'widgets.advanced.hovermodeXUnified'
+}, {
+    value: 'y unified',
+    label: 'widgets.advanced.hovermodeYUnified'
+}, {
+    value: 'x',
+    label: 'widgets.advanced.hovermodeX'
+}, {
+    value: 'y',
+    label: 'widgets.advanced.hovermodeY'
+}, {
+    value: 'closest',
+    label: 'widgets.advanced.hovermodeClosest'
+}, {
+    value: 'false',
+    label: 'widgets.advanced.hovermodeFalse'
+}];
+
+const HOVER_MODE_TOOLTIP_ITEMS = HOVER_MODE_OPTIONS.map(({ label }) => ({
+    label,
+    description: `${label}Description`
+}));
+
+const HoverModeTooltip = () => (
+    <div className="ms-chart-hovermode-tooltip">
+        <p><Message msgId="widgets.advanced.hovermodeTooltip" /></p>
+        <ul>
+            {HOVER_MODE_TOOLTIP_ITEMS.map(({ label, description }) => (
+                <li key={label}>
+                    <strong><Message msgId={label} /></strong>
+                    {': '}
+                    <Message msgId={description} />
+                </li>
+            ))}
+        </ul>
+    </div>
+);
 
 /**
  * ChartLayoutOptions. A component that renders field to change the chart layout
@@ -75,6 +120,23 @@ function ChartLayoutOptions({
                             <Message msgId={chartType.labelId}/>
                         </Radio>
                     ))}
+                </InputGroup>
+            </FormGroup>}
+            {selectedTrace.type !== 'pie' && <FormGroup className="form-group-flex">
+                <ControlLabel>
+                    <Message msgId="widgets.advanced.hovermode" />&nbsp;
+                    <InfoPopover bsStyle="info" text={<HoverModeTooltip />} />
+                </ControlLabel>
+                <InputGroup>
+                    <HoverModeSelect
+                        className="ms-chart-hovermode"
+                        value={selectedChart?.layout?.hovermode === false ? 'false' : selectedChart?.layout?.hovermode ?? 'x unified'}
+                        options={HOVER_MODE_OPTIONS}
+                        clearable={false}
+                        onChange={(option) => {
+                            onChange(`${chartPath}.layout.hovermode`, option?.value === 'false' ? false : option?.value);
+                        }}
+                    />
                 </InputGroup>
             </FormGroup>}
             <div className="ms-wizard-form-separator"><Message msgId="widgets.advanced.font" /></div>

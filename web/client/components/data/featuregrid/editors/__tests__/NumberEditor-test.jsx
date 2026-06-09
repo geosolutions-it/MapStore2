@@ -61,8 +61,9 @@ describe('FeatureGrid NumberEditor/IntegerEditor component', () => {
         expect(inputElement.value).toBe('1.1');
         TestUtils.Simulate.change(inputElement, {target: {value: '1.6'}});
 
-        expect(cmp.getValue().columnKey).toBe(1.1);
+        expect(cmp.getValue().columnKey).toBe(1.6);
         expect(cmp.state.isValid).toBe(false);
+        expect(cmp.state.validated).toBe(true);
     });
     it('Number Editor passed validation', () => {
         const cmp = ReactDOM.render(<NumberEditor

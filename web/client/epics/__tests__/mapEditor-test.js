@@ -11,16 +11,19 @@ import expect from 'expect';
 import {testEpic} from './epicTestUtils';
 
 import {
-    mapEditorConfigureMapState
+    mapEditorConfigureMapState,
+    mapEditorClose
 } from '../mapEditor';
 import {
-    show
+    show,
+    hide
 } from '../../actions/mapEditor';
 
 import { LOAD_MAP_CONFIG, MAP_CONFIG_LOADED } from '../../actions/config';
 import {REMOVE_ALL_ADDITIONAL_LAYERS} from '../../actions/additionallayers';
 import {RESET_CONTROLS} from '../../actions/controls';
 import {CLEAR_LAYERS} from '../../actions/layers';
+import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
 
 
 describe('MapEditor Epics', () => {
@@ -68,5 +71,27 @@ describe('MapEditor Epics', () => {
             });
             done();
         }, {});
+    });
+    describe('mapEditorClose', () => {
+        it('should close feature grid when map editor is hidden', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(mapEditorClose, NUM_ACTIONS, hide(), (actions) => {
+                expect(actions.length).toEqual(NUM_ACTIONS);
+                expect(actions[0].type).toBe(CLOSE_FEATURE_GRID);
+                expect(actions[0].closer).toBeFalsy();
+                done();
+            }, {});
+        });
+        it('should close feature grid when map editor is hidden with owner', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(mapEditorClose, NUM_ACTIONS, hide('widgetInlineEditor'), (actions) => {
+                expect(actions.length).toEqual(NUM_ACTIONS);
+                expect(actions[0].type).toBe(CLOSE_FEATURE_GRID);
+                expect(actions[0].closer).toBeFalsy();
+                done();
+            }, {});
+        });
     });
 });

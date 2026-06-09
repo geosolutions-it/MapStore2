@@ -36,7 +36,9 @@ import {
     scrollOnLoad,
     hideCarouselItemsOnUpdateCurrentPage,
     exportGeostory,
-    importGeostory
+    importGeostory,
+    applyToMapsEpic,
+    duplicateItemEpic
 } from '../geostory';
 import {
     ADD,
@@ -67,7 +69,9 @@ import {
     update,
     HIDE_CAROUSEL_ITEMS,
     geostoryExport,
-    geostoryImport
+    geostoryImport,
+    applyToMaps,
+    duplicateItem
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -81,7 +85,7 @@ import {
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
-import { Modes, ContentTypes, MediaTypes, Controls } from '../../utils/GeoStoryUtils';
+import { Modes, ContentTypes, MediaTypes, Controls, SectionTypes } from '../../utils/GeoStoryUtils';
 
 import {
     show as mapEditorShow,
@@ -1903,6 +1907,160 @@ describe('Geostory Epics', () => {
                 done();
             };
             testEpic(importGeostory, 2, startActions, epicResult, TEST_STORY, done);
+        });
+    });
+    describe('applyToMapsEpic', () => {
+        it('applies zoom to all other map contents', (done) => {
+            const state = {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                id: 's1',
+                                type: SectionTypes.TITLE,
+                                contents: [{
+                                    id: 'c1',
+                                    type: 'text',
+                                    background: {
+                                        type: 'map',
+                                        map: { zoom: 5, center: {x: 0, y: 0} }
+                                    }
+                                }]
+                            },
+                            {
+                                id: 's2',
+                                type: SectionTypes.PARAGRAPH,
+                                contents: [{
+                                    id: 'c2',
+                                    type: 'text',
+                                    background: {
+                                        type: 'map',
+                                        map: { zoom: 3, center: {x: 1, y: 1} }
+                                    }
+                                }]
+                            }
+                        ]
+                    }
+                }
+            };
+            const currentPath = 'sections[{"id":"s1"}].contents[{"id":"c1"}].background';
+            const action = applyToMaps('zoom', 10, currentPath);
+            testEpic(applyToMapsEpic, 2, action, (actions) => {
+                const updateActions = actions.filter(a => a.type === UPDATE);
+                const notifyActions = actions.filter(a => a.type === SHOW_NOTIFICATION);
+                expect(updateActions.length).toBe(1);
+                expect(notifyActions.length).toBe(1);
+                expect(updateActions[0].element).toBe(10);
+                expect(updateActions[0].path).toContain('s2');
+                expect(updateActions[0].path).toContain('.map.zoom');
+                done();
+            }, state);
+        });
+        it('skips carousel sections when applying center', (done) => {
+            const state = {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                id: 's1',
+                                type: SectionTypes.TITLE,
+                                contents: [{
+                                    id: 'c1',
+                                    type: 'text',
+                                    background: {
+                                        type: 'map',
+                                        map: { zoom: 5, center: {x: 0, y: 0} }
+                                    }
+                                }]
+                            },
+                            {
+                                id: 's-carousel',
+                                type: SectionTypes.CAROUSEL,
+                                contents: [{
+                                    id: 'cc1',
+                                    type: 'text',
+                                    background: {
+                                        type: 'map',
+                                        map: { zoom: 3, center: {x: 1, y: 1} }
+                                    }
+                                }]
+                            }
+                        ]
+                    }
+                }
+            };
+            const currentPath = 'sections[{"id":"s1"}].contents[{"id":"c1"}].background';
+            const action = applyToMaps('center', {x: 5, y: 5, crs: 'EPSG:4326'}, currentPath);
+            testEpic(applyToMapsEpic, 1, action, (actions) => {
+                expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+                expect(actions[0].message).toBe("geostory.mapEditor.appliedSuccessfully");
+                done();
+            }, state);
+        });
+    });
+    describe('duplicateItemEpic', () => {
+        it('duplicates a section with new IDs and prefixed title', (done) => {
+            const state = {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            { id: 'sec-1', type: SectionTypes.TITLE, title: 'My Section', contents: [{ id: 'c1' }] }
+                        ]
+                    }
+                },
+                locale: {
+                    messages: {
+                        geostory: {
+                            copyOfPrefix: 'Copy of'
+                        }
+                    }
+                }
+            };
+            const action = duplicateItem('sections', 'sec-1');
+            testEpic(duplicateItemEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(ADD);
+                expect(actions[0].element.title).toContain('Copy of');
+                expect(actions[0].element.title).toContain('My Section');
+                expect(actions[0].element.id).toNotBe('sec-1');
+                done();
+            }, state);
+        });
+        it('does nothing if container is not found', (done) => {
+            const state = {
+                geostory: {
+                    currentStory: {
+                        sections: []
+                    }
+                },
+                locale: {
+                    messages: {}
+                }
+            };
+            const action = duplicateItem('nonexistent', 'item-1');
+            testEpic(addTimeoutEpic(duplicateItemEpic, 100), 1, action, (actions) => {
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            }, state);
+        });
+        it('does nothing if item is not found in container', (done) => {
+            const state = {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            { id: 'sec-1', type: SectionTypes.TITLE, title: 'Section', contents: [] }
+                        ]
+                    }
+                },
+                locale: {
+                    messages: {}
+                }
+            };
+            const action = duplicateItem('sections', 'nonexistent-id');
+            testEpic(addTimeoutEpic(duplicateItemEpic, 100), 1, action, (actions) => {
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            }, state);
         });
     });
 });

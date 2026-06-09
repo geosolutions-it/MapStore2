@@ -790,8 +790,15 @@ export const processCQLFilterGroup = function(root, objFilter) {
     let subGroups = FilterUtils.findSubGroups(fixedRoot, objFilter.groupFields);
     if (subGroups.length > 0) {
         const subGroupCql = subGroups
-            .map((subGroup) => (fixedRoot.negateAll ? "NOT (" : "(") + FilterUtils.processCQLFilterGroup(subGroup, objFilter) + ")")
+            .map((subGroup) => {
+                const innerCql = FilterUtils.processCQLFilterGroup(subGroup, objFilter);
+                return innerCql ? fixedRoot.negateAll ? `NOT (${innerCql})` : `(${innerCql})` : null;
+            })
+            .filter(Boolean)
             .join(" " + fixedRoot.logic + " ");
+        if (!subGroupCql) {
+            return cql;
+        }
         return cql ? [cql, subGroupCql].join(" " + fixedRoot.logic + " ") : subGroupCql;
     }
 
@@ -806,6 +813,7 @@ export const getCQLGeometryElement = function(coordinates, type) {
         geometry += coordinates.join(" ");
         break;
     case "MultiPoint":
+    case "LineString":
         coordinates.forEach((position, index) => {
             geometry += position.join(" ");
             geometry += index < coordinates.length - 1 ? ", " : "";
@@ -1327,29 +1335,30 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
     return filterString;
 };
 
-export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
-    const defaultLayerFilter = {
-        groupFields: [
-            {
-                id: 1,
-                logic: 'OR',
-                index: 0
-            }
-        ],
-        filterFields: [],
-        attributePanelExpanded: true,
-        spatialPanelExpanded: true,
-        crossLayerExpanded: true,
-        crossLayerFilter: {
-            attribute: 'the_geom'
-        },
-        spatialField: {
-            method: null,
-            operation: 'INTERSECTS',
-            geometry: null,
-            attribute: 'the_geom'
+export const defaultLayerFilter = {
+    groupFields: [
+        {
+            id: 1,
+            logic: 'OR',
+            index: 0
         }
-    };
+    ],
+    filterFields: [],
+    attributePanelExpanded: true,
+    spatialPanelExpanded: true,
+    crossLayerExpanded: true,
+    crossLayerFilter: {
+        attribute: 'the_geom'
+    },
+    spatialField: {
+        method: null,
+        operation: 'INTERSECTS',
+        geometry: null,
+        attribute: 'the_geom'
+    }
+};
+
+export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendFilter) {
@@ -1403,28 +1412,6 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
  * @return {object} layerFilterObj updated the layer filter object
  */
 export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostylerFilter) => {
-    const defaultLayerFilter = {
-        groupFields: [
-            {
-                id: 1,
-                logic: 'OR',
-                index: 0
-            }
-        ],
-        filterFields: [],
-        attributePanelExpanded: true,
-        spatialPanelExpanded: true,
-        crossLayerExpanded: true,
-        crossLayerFilter: {
-            attribute: 'the_geom'
-        },
-        spatialField: {
-            method: null,
-            operation: 'INTERSECTS',
-            geometry: null,
-            attribute: 'the_geom'
-        }
-    };
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendGeostylerFilter) {

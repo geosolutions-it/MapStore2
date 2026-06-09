@@ -21,7 +21,7 @@ const Button = forwardRef(({
     return (
         <ButtonRB
             {...props}
-            className={`${square ? 'square-button-md' : ''}${className ? ` ${className}` : ''}${borderTransparent ? ' _border-transparent' : ''}`}
+            className={`${square ? 'square-button' : ''}${className ? ` ${className}` : ''}${borderTransparent ? ' _border-transparent' : ''}`}
             ref={ref}
             bsStyle={variant}
             bsSize={size}

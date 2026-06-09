@@ -215,4 +215,81 @@ describe("test the BackgroundSelector", () => {
         expect(editButtons.length).toBe(0);
         expect(deleteButtons.length).toBe(0);
     });
+
+    it('test BackgroundSelector displays regular background thumbnail when terrain layer is visible first', () => {
+        const layers = [
+            {
+                id: 'terrain_layer',
+                title: 'Terrain Layer',
+                type: 'terrain',
+                visibility: true,
+                group: 'background',
+                provider: 'ellipsoid'
+            },
+            {
+                id: 'regular_background',
+                title: 'Regular Background',
+                type: 'wms',
+                visibility: true,
+                group: 'background',
+                source: 'osm',
+                name: 'osm',
+                thumbURL: 'http://example.com/thumbnail.jpg'
+            }
+        ];
+
+        ReactDOM.render(<BackgroundSelector alwaysVisible enabled backgrounds={layers} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const previewButton = container.querySelector('.ms-background-selector-preview');
+        expect(previewButton).toExist();
+
+        // Verify that the thumbnail displayed is from the regular background, not the terrain
+        const thumbnailImg = previewButton.querySelector('img');
+        expect(thumbnailImg).toExist();
+        // The thumbnail should be from the regular background (which has thumbURL)
+        // or from the default thumbs, not from terrain (which doesn't have thumbnails)
+        expect(thumbnailImg.src).toContain('thumbnail.jpg');
+    });
+
+    it('test BackgroundSelector excludes terrain layers from current background selection', () => {
+        const layers = [
+            {
+                id: 'terrain_layer',
+                title: 'Terrain Layer',
+                type: 'terrain',
+                visibility: true,
+                group: 'background',
+                provider: 'ellipsoid'
+            },
+            {
+                id: 'regular_background',
+                title: 'Regular Background',
+                type: 'wms',
+                visibility: false,
+                group: 'background',
+                source: 'osm',
+                name: 'osm'
+            },
+            {
+                id: 'another_background',
+                title: 'Another Background',
+                type: 'wms',
+                visibility: true,
+                group: 'background',
+                source: 'mapbox',
+                name: 'streets'
+            }
+        ];
+
+        ReactDOM.render(<BackgroundSelector alwaysVisible enabled backgrounds={layers} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const previewButton = container.querySelector('.ms-background-selector-preview');
+        expect(previewButton).toExist();
+
+        const thumbnailImg = previewButton.querySelector('img');
+        expect(thumbnailImg).toExist();
+        // Should display the visible regular background (another_background), not the terrain
+        // Even though terrain appears first in the list and is visible
+        expect(thumbnailImg.alt).toBe('Another Background');
+    });
 });

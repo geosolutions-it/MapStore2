@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import isNil from 'lodash/isNil';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
@@ -20,6 +20,7 @@ import draggableContainer from '../../../../components/misc/enhancers/draggableC
 import { generateTemplateString } from '../../../../utils/TemplateUtils';
 import { WAYPOINT_MARKER_COLORS } from '../../constants';
 import { createMarkerSvgDataUrl } from '../../../../utils/StyleUtils';
+import { getDefaultWaypoints } from '../../utils/ItineraryUtils';
 
 /**
  * GeoSearchPicker component
@@ -59,6 +60,16 @@ const GeoSearchPicker = draggableContainer(({
         newWaypoints[idx] = { ...newWaypoints[idx], value };
         onSetWaypoints(newWaypoints);
     };
+
+    useEffect(() => {
+        return () => {
+            onSetWaypoints(getDefaultWaypoints());
+            onUpdateLocations([]);
+            onSearchByLocationName('');
+            onSelectLocationFromMap(null);
+            onToggleCoordinateEditor([]);
+        };
+    }, []);
 
     const handleLocationSelect = (idx, result) => {
         const newWaypoints = cloneDeep(waypoints);

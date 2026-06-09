@@ -30,7 +30,52 @@ describe('Test the ContextCreatorUtils', () => {
         });
         expect(newContext).toEqual({
             plugins: {
-                desktop: [{ name: 'Map' }, { name: 'DeleteResource' }, { name: 'MapFooter', cfg: { containerPosition: 'footer' }}]
+                desktop: [{ name: 'Map', cfg: { containerPosition: 'background' } }, { name: 'DeleteResource' }, { name: 'MapFooter', cfg: { containerPosition: 'footer' }}]
+            }
+        });
+    });
+    it('migrateContextConfiguration adds containerPosition bottom to FeatureEditor and Timeline', () => {
+        const newContext = migrateContextConfiguration({
+            plugins: {
+                desktop: [{ name: 'FeatureEditor' }, { name: 'Timeline' }]
+            }
+        });
+        expect(newContext).toEqual({
+            plugins: {
+                desktop: [
+                    { name: 'FeatureEditor', cfg: { containerPosition: 'bottom' } },
+                    { name: 'Timeline', cfg: { containerPosition: 'bottom' } }
+                ]
+            }
+        });
+    });
+    it('migrateContextConfiguration does not override existing containerPosition for FeatureEditor and Timeline', () => {
+        const newContext = migrateContextConfiguration({
+            plugins: {
+                desktop: [
+                    { name: 'FeatureEditor', cfg: { containerPosition: 'bottom' } },
+                    { name: 'Timeline', cfg: { containerPosition: 'bottom' } }
+                ]
+            }
+        });
+        expect(newContext).toEqual({
+            plugins: {
+                desktop: [
+                    { name: 'FeatureEditor', cfg: { containerPosition: 'bottom' } },
+                    { name: 'Timeline', cfg: { containerPosition: 'bottom' } }
+                ]
+            }
+        });
+    });
+    it('migrateContextConfiguration preserves existing cfg properties when migrating', () => {
+        const newContext = migrateContextConfiguration({
+            plugins: {
+                desktop: [{ name: 'FeatureEditor', cfg: { someOption: true } }]
+            }
+        });
+        expect(newContext).toEqual({
+            plugins: {
+                desktop: [{ name: 'FeatureEditor', cfg: { someOption: true, containerPosition: 'bottom' } }]
             }
         });
     });

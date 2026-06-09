@@ -18,6 +18,7 @@ import {
     closeIdentify,
     purgeMapInfoResults
 } from '../../../actions/mapInfo';
+import { MAP_SAVED } from '../../../actions/config';
 import {
     EDIT_ANNOTATION,
     DOWNLOAD,
@@ -26,7 +27,8 @@ import {
     CONFIRM_CLOSE_ANNOTATIONS,
     REMOVE_ANNOTATION,
     MERGE_ANNOTATIONS_FEATURES,
-    storeAnnotationsSession
+    storeAnnotationsSession,
+    confirmCloseAnnotations
 } from '../actions/annotations';
 import {
     ANNOTATIONS,
@@ -191,6 +193,20 @@ export const mergeAnnotationsFeaturesEpic = (action$, { getState }) =>
             );
         });
 
+/**
+ * Handles closing annotations when map info is loaded (e.g., after saving)
+ * This ensures annotations.editing is reset to fix layout calculation issues
+ */
+export const closeAnnotationsOnMapInfoLoadedEpic = (action$, { getState }) =>
+    action$.ofType(MAP_SAVED)
+        .switchMap(() => {
+            const selectedAnnotationLayer = getAnnotationsSession(getState());
+            if (selectedAnnotationLayer) {
+                return Rx.Observable.of(confirmCloseAnnotations(selectedAnnotationLayer));
+            }
+            return Rx.Observable.empty();
+        });
+
 export default {
     loadAnnotationsEpic,
     newAnnotationEpic,
@@ -198,5 +214,6 @@ export default {
     downloadAnnotationsEpic,
     confirmCloseAnnotationsEpic,
     removeAnnotationsEpic,
-    mergeAnnotationsFeaturesEpic
+    mergeAnnotationsFeaturesEpic,
+    closeAnnotationsOnMapInfoLoadedEpic
 };

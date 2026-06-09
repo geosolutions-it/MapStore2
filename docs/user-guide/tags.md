@@ -10,17 +10,17 @@ As an admin user, it is possible to manage **Tags** by selecting **Manage Tags**
 
 <img src="../img/tags/tags-manager.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-The *Tags panel* opens, allowing the admin user to:
+The *Manager* page opens on **Tags** tab, allowing the admin user to:
 
-<img src="../img/tags/tags-panel.jpg" class="ms-docimage" style="max-width:500px;"/>
+<img src="../img/tags/tags-panel.jpg" class="ms-docimage" />
 
 * Create a **New tag** through the <img src="../img/button/new_tag_button.jpg" class="ms-docbutton"/> button and customize it by adding a *Name*, a *Description* and choosing a *Color* for the label.
 
-<img src="../img/tags/new_tag.jpg" class="ms-docimage" style="max-width:500px;"/>
+<img src="../img/tags/new_tag.jpg" class="ms-docimage" />
 
 * **Search** for a tag using the search bar
 
-<img src="../img/tags/search_tag.jpg" class="ms-docimage" style="max-width:500px;"/>
+<img src="../img/tags/search_tag.jpg" class="ms-docimage" />
 
 * **Edit** a tag through the <img src="../img/button/edit_properties.jpg" class="ms-docbutton"/> button next to each tag in the list.
 

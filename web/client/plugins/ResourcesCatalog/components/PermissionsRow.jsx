@@ -18,7 +18,9 @@ import Text from '../../../components/layout/Text';
 function PermissionsRow({
     type,
     name,
+    description,
     options,
+    disabled,
     hideOptions,
     hideIcon,
     permissions,
@@ -34,7 +36,7 @@ function PermissionsRow({
         ? (
             <Select
                 clearable={clearable}
-                disabled={options?.length < 2}
+                disabled={disabled || options?.length < 2}
                 options={options.map(({ value, labelId, label }) => ({ value, label: label ? <span>{label}</span> : <Message msgId={labelId} />}))}
                 value={permissions}
                 onChange={(option) => onChange({ permissions: option?.value || '' })}
@@ -47,9 +49,16 @@ function PermissionsRow({
                 {(!hideIcon && (type || avatar)) && <Text component={FlexBox} centerChildren className="ms-permission-icon">
                     {avatar
                         ? <img src={avatar}/>
-                        : <Glyphicon glyph={type} />}
+                        : <Glyphicon glyph={type === "ip" ? "globe" : type} />}
                 </Text>}
-                <Text>{name}</Text>
+                <FlexBox column className="ms-permission-name-container">
+                    <Text className="ms-permission-name">{name}</Text>
+                    {description && type === 'ip' && (
+                        <Text className="ms-permission-description">
+                            {description}
+                        </Text>
+                    )}
+                </FlexBox>
             </FlexBox.Fill>
             <FlexBox gap="sm">
                 {children}

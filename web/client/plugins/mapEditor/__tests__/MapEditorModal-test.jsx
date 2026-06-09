@@ -11,6 +11,22 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import {Provider} from 'react-redux';
 import MapEditorModal from '../MapEditorModal';
+
+const store = {
+    subscribe: () => {},
+    dispatch: () => {},
+    getState: () => ({mapEditor: {open: true}}),
+    storeManager: {
+        reduce: () => {},
+        addReducer: () => {},
+        removeReducer: () => {},
+        addEpics: () => {},
+        muteEpics: () => {},
+        unmuteEpics: () => {},
+        rootEpic: () => {}
+    }
+};
+
 describe('MapEditorModal component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -24,24 +40,17 @@ describe('MapEditorModal component', () => {
 
     it('MapEditorModal rendering with defaults config',
         () => {
-            const store = {
-                subscribe: () => {},
-                dispatch: () => {},
-                getState: () => ({mapEditor: {open: true}}),
-                storeManager: {
-                    reduce: () => {},
-                    addReducer: () => {},
-                    removeReducer: () => {},
-                    addEpics: () => {},
-                    muteEpics: () => {},
-                    unmuteEpics: () => {},
-                    rootEpic: () => {}
-                }
-            };
             ReactDOM.render(
                 <Provider store={store}>
                     <MapEditorModal open/>
                 </Provider>, document.getElementById("container"));
             expect(document.querySelector('.modal-fixed')).toExist();
         });
+    it('MapEditorModal rendering with titleId', () => {
+        ReactDOM.render(
+            <Provider store={store}>
+                <MapEditorModal open titleMsgId="modalTitleModified"/>
+            </Provider>, document.getElementById("container"));
+        expect(document.querySelector('.modal-header span').textContent).toBe('modalTitleModified');
+    });
 });

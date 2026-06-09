@@ -133,13 +133,42 @@ describe('GeoSearchPicker component', () => {
         it('should toggle between search and coordinates editor', () => {
             const onSelectLocationFromMap = expect.createSpy();
             const onToggleCoordinateEditor = expect.createSpy();
-            renderComponent({ onSelectLocationFromMap, onToggleCoordinateEditor });
+            const onSearchByLocationName = expect.createSpy();
+            const onSetWaypoint = expect.createSpy();
+            renderComponent({
+                onSelectLocationFromMap,
+                onToggleCoordinateEditor,
+                onSearchByLocationName,
+                onSetWaypoint
+            });
 
             const toggleButton = container.querySelector('.ms-isochrone-waypoint-locate');
             TestUtils.Simulate.click(toggleButton);
 
             expect(onSelectLocationFromMap).toHaveBeenCalled();
             expect(onToggleCoordinateEditor).toHaveBeenCalledWith(true);
+            // Verify search is cleared when switching to coordinate editor
+            expect(onSearchByLocationName).toHaveBeenCalledWith('');
+            expect(onSetWaypoint).toHaveBeenCalled();
+        });
+
+        it('should clear search when switching back to search mode', () => {
+            const onSearchByLocationName = expect.createSpy();
+            const onSetWaypoint = expect.createSpy();
+            renderComponent({
+                onSearchByLocationName,
+                onSetWaypoint
+            });
+
+            const toggleButton = container.querySelector('.ms-isochrone-waypoint-locate');
+            // First click toggles to coordinate editor
+            TestUtils.Simulate.click(toggleButton);
+            // Second click toggles back to search
+            TestUtils.Simulate.click(toggleButton);
+
+            // Verify search is cleared when switching back to search
+            expect(onSearchByLocationName).toHaveBeenCalledWith('');
+            expect(onSetWaypoint).toHaveBeenCalled();
         });
 
         it('should show correct tooltip based on current state', () => {
@@ -172,6 +201,75 @@ describe('GeoSearchPicker component', () => {
             const location = [40.7128, -74.0060];
             renderComponent({ location });
             expect(container.querySelector('.ms-isochrone-geosearch-waypoint')).toBeTruthy();
+        });
+    });
+
+    describe('Input clearing behavior', () => {
+        it('should clear input when location is cleared', (done) => {
+            const waypoint = { value: 'Test Location' };
+            renderComponent({ waypoint, location: [40.7128, -74.0060] });
+
+            const input = container.querySelector('input');
+            expect(input.value).toBe('Test Location');
+
+            // Update location to null/empty
+            renderComponent({ waypoint, location: null });
+
+            setTimeout(() => {
+                const updatedInput = container.querySelector('input');
+                expect(updatedInput.value).toBe('');
+                done();
+            }, 100);
+        });
+
+        it('should clear input when waypoint value is cleared', (done) => {
+            const waypoint = { value: 'Test Location' };
+            renderComponent({ waypoint });
+
+            const input = container.querySelector('input');
+            expect(input.value).toBe('Test Location');
+
+            // Update waypoint with empty value
+            renderComponent({ waypoint: { value: null } });
+
+            setTimeout(() => {
+                const updatedInput = container.querySelector('input');
+                expect(updatedInput.value).toBe('');
+                done();
+            }, 100);
+        });
+
+        it('should clear input when waypoint value is empty string', (done) => {
+            const waypoint = { value: 'Test Location' };
+            renderComponent({ waypoint });
+
+            const input = container.querySelector('input');
+            expect(input.value).toBe('Test Location');
+
+            // Update waypoint with empty string
+            renderComponent({ waypoint: { value: '' } });
+
+            setTimeout(() => {
+                const updatedInput = container.querySelector('input');
+                expect(updatedInput.value).toBe('');
+                done();
+            }, 100);
+        });
+
+        it('should update input when waypoint value changes', (done) => {
+            renderComponent({ waypoint: { value: 'Initial' } });
+
+            const input = container.querySelector('input');
+            expect(input.value).toBe('Initial');
+
+            // Update waypoint with new value
+            renderComponent({ waypoint: { value: 'Updated Location' } });
+
+            setTimeout(() => {
+                const updatedInput = container.querySelector('input');
+                expect(updatedInput.value).toBe('Updated Location');
+                done();
+            }, 100);
         });
     });
 });

@@ -8,7 +8,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {isNumber} from 'lodash';
+import { isNumber, castArray } from 'lodash';
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import { editors } from 'react-data-grid';
 
@@ -29,7 +29,9 @@ export default class NumberEditor extends editors.SimpleTextEditor {
     static propTypes = {
         value: PropTypes.oneOfType([
             PropTypes.string,
-            PropTypes.number]),
+            PropTypes.number,
+            PropTypes.null
+        ]),
         inputProps: PropTypes.object,
         dataType: PropTypes.string,
         minValue: PropTypes.number,
@@ -45,11 +47,13 @@ export default class NumberEditor extends editors.SimpleTextEditor {
 
     constructor(props) {
         super(props);
-
-        this.state = {inputText: props.value?.toString?.() ?? ''};
+        const value = props.value?.toString?.() ?? '';
+        this.state = {
+            inputText: value,
+            isValid: this.validateTextValue(value),
+            validated: true
+        };
     }
-
-    state = {inputText: ''};
 
     componentDidMount() {
         this.props.onTemporaryChanges?.(true);
@@ -62,9 +66,9 @@ export default class NumberEditor extends editors.SimpleTextEditor {
 
     getValue() {
         try {
-            const numberValue = parsers[this.props.dataType](this.state.inputText);
+            const numberValue = this.state.inputText === '' ? null : parsers[this.props.dataType](this.state.inputText);
             return {
-                [this.props.column.key]: this.validateNumberValue(numberValue) ? numberValue : this.props.value
+                [this.props.column.key]: numberValue
             };
         } catch (e) {
             return {
@@ -73,16 +77,21 @@ export default class NumberEditor extends editors.SimpleTextEditor {
         }
     }
 
+    getMinValue() {
+        return this.props?.column?.schema?.minimum ?? this.props.minValue;
+    }
+
+    getMaxValue() {
+        return this.props?.column?.schema?.maximum ?? this.props.maxValue;
+    }
+
     render() {
-        return (<IntlNumberFormControl
+        return (<div className={`ms-cell-editor ${!this.state.validated || this.state.isValid ? '' : 'invalid'}`}><IntlNumberFormControl
             {...this.props.inputProps}
-            style={!this.state.validated || this.state.isValid ? {} : {
-                borderColor: 'red'
-            }}
             value={this.state.inputText}
             type="number"
-            min={this.props.minValue}
-            max={this.props.maxValue}
+            min={this.getMinValue()}
+            max={this.getMaxValue()}
             className="form-control"
             defaultValue={this.props.value}
             onKeyDown={this.props.onKeyDown}
@@ -94,14 +103,16 @@ export default class NumberEditor extends editors.SimpleTextEditor {
                     validated: true
                 });
             }}
-        />);
+        /></div>);
     }
 
     validateTextValue = (value) => {
+        if (value === '') {
+            return castArray(this.props?.column?.schema?.type || []).includes('null');
+        }
         if (!parsers[this.props.dataType]) {
             return false;
         }
-
         try {
             const numberValue = parsers[this.props.dataType](value);
 
@@ -112,9 +123,11 @@ export default class NumberEditor extends editors.SimpleTextEditor {
     };
 
     validateNumberValue = (value) => {
+        const minValue = this.getMinValue();
+        const maxValue = this.getMaxValue();
         return isNumber(value) &&
             !isNaN(value) &&
-            (!isNumber(this.props.minValue) || this.props.minValue <= value) &&
-            (!isNumber(this.props.maxValue) || this.props.maxValue >= value);
+            (!isNumber(minValue) || minValue <= value) &&
+            (!isNumber(maxValue) || maxValue >= value);
     };
 }

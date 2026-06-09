@@ -16,7 +16,7 @@ import { CustomThemePickerMenuItem } from '../common/CustomThemePicker';
 import isObject from "lodash/isObject";
 import isString from "lodash/isString";
 const DeleteButton = withConfirm(ToolbarButton);
-const BUTTON_CLASSES = 'square-button-md no-border';
+const BUTTON_CLASSES = 'square-button no-border';
 const BUTTON_BSSTYLE = { primary: 'btn-primary', "default": 'btn-default'};
 
 const getToolbarSizeProps = (size, sizeType) => {

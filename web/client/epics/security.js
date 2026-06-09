@@ -8,14 +8,32 @@
 import Rx from 'rxjs';
 import uniqBy from 'lodash/uniqBy';
 import isArray from 'lodash/isArray';
+import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
+import head from 'lodash/head';
+import castArray from 'lodash/castArray';
+import isEmpty from 'lodash/isEmpty';
+import { v4 as uuidv4 } from 'uuid';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { SET_CURRENT_STORY } from '../actions/geostory';
 import { EDITOR_CHANGE } from '../actions/widgets';
 import { UPDATE_ITEM } from '../actions/mediaEditor';
 import { currentMediaTypeSelector, selectedItemSelector } from '../selectors/mediaEditor';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import { setShowModalStatus, setProtectedServices } from '../actions/security';
-import { getCredentials } from '../utils/SecurityUtils';
+import {
+    setShowModalStatus,
+    setProtectedServices,
+    loadRequestsRules,
+    LOAD_REQUESTS_RULES,
+    UPDATE_REQUESTS_RULES
+} from '../actions/security';
+import {
+    getCredentials,
+    convertAuthenticationRulesToRequestConfiguration
+} from '../utils/SecurityUtils';
+import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
+import { layersSelector } from '../selectors/layers';
+import { changeLayerProperties } from '../actions/layers';
 
 /**
  * checks if a content is protected in a map
@@ -68,7 +86,7 @@ export const checkProtectedContentDashboardEpic = (action$) =>
                             return { protectedId: layer?.security?.sourceId, url: layer.url };
                         })
                         .filter(v => !!v.protectedId));
-                }, []);
+                }, []).filter(Boolean);
 
             const protectedServices = uniqBy(layers, "protectedId")
                 .map(({ protectedId, url }) => {
@@ -196,3 +214,72 @@ export const checkProtectedContentGeostoryEpic = (action$) =>
             return Rx.Observable.of(setShowModalStatus(false));
         });
 
+/**
+ * Epic to handle loading request configuration rules from config
+ */
+export const loadRequestsRulesFromConfigEpic = (action$) =>
+    action$.ofType(LOCAL_CONFIG_LOADED)
+        .switchMap((action) => {
+            const config = action.config;
+            let rules = config?.requestsConfigurationRules ?? [];
+            const legacyRules = config?.authenticationRules ?? [];
+            const useLegacyRules = config?.useAuthenticationRules ?? false;
+            if (isEmpty(rules) && !isEmpty(legacyRules) && useLegacyRules) {
+                rules = convertAuthenticationRulesToRequestConfiguration(legacyRules);
+            }
+            return Rx.Observable.of(loadRequestsRules(rules));
+        });
+
+/**
+ * Helper function to determine which rules have changed
+ * Returns an array of URL patterns from rules that have changed
+ */
+const getChangedRuleUrlPatterns = (oldRules, newRules) => {
+    const makeMap = (rules) => new Map(rules.filter(r => r?.urlPattern).map(r => [r.urlPattern, r]));
+    const [oldMap, newMap] = [makeMap(oldRules), makeMap(newRules)];
+    const changed = new Set([
+        ...[...newMap].filter(([p, n]) => !oldMap.has(p) || !isEqual(oldMap.get(p), n)).map(([p]) => p),
+        ...[...oldMap].filter(([p]) => !newMap.has(p)).map(([p]) => p)
+    ]);
+    return [...changed];
+};
+
+/**
+ * Epic to refresh layers when request configuration rules are updated
+ * This ensures that layers re-fetch tiles with the new authentication parameters
+ * Only refreshes layers whose URLs match changed rules
+ */
+export const refreshLayersOnRulesUpdateEpic = (action$, store) =>
+    action$.ofType(LOAD_REQUESTS_RULES, UPDATE_REQUESTS_RULES)
+        .switchMap((action) => {
+            const state = store.getState();
+            const newRules = get(action, 'rules', []);
+            const oldRules = state.security?.previousRules || [];
+
+            // Get URL patterns of rules that have changed
+            const changedPatterns = getChangedRuleUrlPatterns(oldRules, newRules);
+
+            if (isEmpty(changedPatterns)) {
+                // No rules changed, no need to refresh
+                return Rx.Observable.empty();
+            }
+
+            const layers = layersSelector(state) || [];
+
+            // Find layers that should be refreshed based on matching changed rules
+            const layersToUpdate = [];
+            layers.forEach(layer => {
+                const url = head(castArray(layer.url));
+
+                // Check if any layer URL matches any changed rule pattern
+                const shouldRefresh = changedPatterns.some(pattern => url?.match(new RegExp(pattern, "i")));
+                if (shouldRefresh) layersToUpdate.push(layer);
+            });
+
+            // Dispatch changeLayerProperties for each matching layer
+            const actions = layersToUpdate.map(layer => {
+                return changeLayerProperties(layer.id, { requestRuleRefreshHash: uuidv4() });
+            });
+
+            return actions.length > 0 ? Rx.Observable.from(actions) : Rx.Observable.empty();
+        });

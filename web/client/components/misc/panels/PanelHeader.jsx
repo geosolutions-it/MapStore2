@@ -59,23 +59,24 @@ export default ({
     showFullscreen = false,
     glyph = 'info-sign',
     additionalRows,
-    onFullscreen = () => {}
+    onFullscreen = () => {},
+    hideCloseButton = false
 }) => {
-    const closeButton = !onClose ? null : (
-        <Button key="ms-header-close" className="ms-close square-button-md _border-transparent" onClick={onClose}>
+    const closeButton = hideCloseButton || !onClose ? null : (
+        <Button key="ms-header-close" className="ms-close square-button _border-transparent" onClick={onClose}>
             <Glyphicon glyph="1-close"/>
         </Button>
     );
     const glyphButton = showFullscreen ? (
         <Button
             key="ms-header-glyph"
-            className="square-button-md _border-transparent"
+            className="square-button _border-transparent"
             onClick={() => onFullscreen(!fullscreen)}>
             <Glyphicon glyph={fullscreenGlyph[position] && fullscreenGlyph[position][fullscreen] || 'resize-full'}/>
         </Button>) : glyph ?
         (<div
             key="ms-header-glyph"
-            className={`square-button-md _border-transparent`}>
+            className={`square-button _border-transparent`}>
             <Glyphicon glyph={glyph}/>
         </div>
         ) : null;

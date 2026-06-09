@@ -1177,6 +1177,41 @@ describe('StyleEditorUtils test', () => {
             }
         ]);
     });
+    it('should return attributes for arcgis-feature using ESRI fields when present', () => {
+        const layer = {
+            type: 'arcgis-feature',
+            fields: [
+                { name: 'OBJECTID', alias: 'OID', type: 'esriFieldTypeOID' },
+                { name: 'name', alias: 'Site', type: 'esriFieldTypeString' },
+                { name: 'pop', type: 'esriFieldTypeInteger' },
+                // Geometry/Date filtered out
+                { name: 'shape', type: 'esriFieldTypeGeometry' },
+                { name: 'updated', type: 'esriFieldTypeDate' }
+            ]
+        };
+        expect(getVectorLayerAttributes(layer)).toEqual([
+            { attribute: 'OBJECTID', label: 'OID', type: 'number' },
+            { attribute: 'name', label: 'Site', type: 'string' },
+            { attribute: 'pop', label: 'pop', type: 'number' }
+        ]);
+    });
+    it('should return attributes for arcgis-feature falling back to properties when no fields present', () => {
+        const layer = {
+            type: 'arcgis-feature',
+            properties: {
+                name: 'Site A',
+                pop: 1234
+            }
+        };
+        expect(getVectorLayerAttributes(layer)).toEqual([
+            { attribute: 'name', label: 'name', type: 'string' },
+            { attribute: 'pop', label: 'pop', type: 'number' }
+        ]);
+    });
+    it('should return null for arcgis-feature with neither fields nor properties', () => {
+        expect(getVectorLayerAttributes({ type: 'arcgis-feature' })).toBe(null);
+        expect(getVectorLayerAttributes({ type: 'arcgis-feature', fields: [] })).toBe(null);
+    });
     it('should return the geometry type with getVectorLayerGeometryType function given a 3d tiles layer config with format', () => {
         expect(getVectorLayerGeometryType({ type: '3dtiles', format: 'pnts' })).toBe('pointcloud');
         expect(getVectorLayerGeometryType({ type: '3dtiles' })).toBe('polyhedron');

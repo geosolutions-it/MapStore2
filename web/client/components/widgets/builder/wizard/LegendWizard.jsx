@@ -53,7 +53,7 @@ export default ({
         <Row>
             <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
             <Col xs={12}>
-                <div style={{ marginBottom: "30px" }}>
+                <div className="legend-preview-container">
                     <LegendPreview
                         valid={valid}
                         dependencies={dependencies}
@@ -69,9 +69,6 @@ export default ({
                 </div>
             </Col>
         </Row>
-        <WidgetOptions
-            key="widget-options"
-            onChange={onChange}
-        />
+        <WidgetOptions key="widget-options" onChange={onChange} />
     </Wizard>
 );

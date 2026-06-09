@@ -232,7 +232,14 @@ describe('Test catalog selectors', () => {
         expect(retVal).toBe("someval");
     });
     it('test authkeyParamNameSelector with authkey params set', () => {
-        const authkeyParamNames = authkeyParamNameSelector(state);
+        const authkeyParamNames = authkeyParamNameSelector({security: {rules: [
+            {
+                urlPattern: ".*geoserver.*",
+                params: {
+                    "ms2-authkey": "${securityToken}"
+                }
+            }
+        ]}});
         expect(authkeyParamNames).toExist();
         expect(authkeyParamNames.length).toBe(1);
         expect(authkeyParamNames[0]).toBe("ms2-authkey");
@@ -253,7 +260,7 @@ describe('Test catalog selectors', () => {
     it('test pageSizeSelector', () => {
         let pageSize = pageSizeSelector({});
         expect(pageSize).toExist();
-        expect(pageSize).toBe(4);
+        expect(pageSize).toBe(12);
 
         pageSize = pageSizeSelector({catalog: {pageSize: 5}});
         expect(pageSize).toExist();

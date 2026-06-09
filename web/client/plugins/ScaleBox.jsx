@@ -17,14 +17,12 @@ import Message from './locale/Message';
 import ScaleBox from '../components/mapcontrols/scale/ScaleBox';
 import { getScales } from '../utils/MapUtils';
 
-const selector = createSelector([mapSelector, minZoomSelector], (map, minZoom) => ({
-    minZoom,
-    currentZoomLvl: map && map.zoom,
-    scales: getScales(
-        map && map.projection || 'EPSG:3857',
-        map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
-    )
-}));
+// exported for unit testing
+export const scaleBoxSelector = createSelector([mapSelector, minZoomSelector], (map, minZoom) => {
+    const { projection, mapOptions } = map || {};
+    const scales = mapOptions?.view?.scales || getScales(projection || 'EPSG:3857', mapOptions?.view?.DPI || null);
+    return { minZoom, currentZoomLvl: map && map.zoom, scales };
+});
 
 import './scalebox/scalebox.css';
 
@@ -47,10 +45,11 @@ class ScaleBoxTool extends React.Component {
   * @prop {object} cfg.style CSS to apply to the scalebox
   * @prop {Boolean} cfg.readOnly the selector is readonly
   * @prop {string} cfg.label label for the selector
+  * @prop {string} cfg.display can be "scale" or "zoom"
   * @prop {Boolean} cfg.useRawInput set true if you want to use an normal html input object
   *
   */
-const ScaleBoxPlugin = connect(selector, {
+const ScaleBoxPlugin = connect(scaleBoxSelector, {
     onChange: changeZoomLevel
 })(ScaleBoxTool);
 
@@ -60,7 +59,7 @@ export default {
     }, {
         MapFooter: {
             name: 'scale',
-            position: 1,
+            position: 2,
             target: 'right-footer',
             priority: 1
         }

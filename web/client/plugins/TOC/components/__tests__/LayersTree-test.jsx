@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import LayersTree from '../LayersTree';
 import { Simulate } from 'react-dom/test-utils';
+import { NodeTypes } from '../../../../utils/LayersUtils';
 
 describe('LayersTree', () => {
     beforeEach((done) => {
@@ -258,5 +259,35 @@ describe('LayersTree', () => {
         const nodeItem = [...document.querySelectorAll('.ms-node')];
         expect(nodeItem.length).toBe(4);
         Simulate.contextMenu(nodeItem[0]);
+    });
+    it('should apply specific style with getNodeStyle', () => {
+        ReactDOM.render(<LayersTree
+            config={{
+                sortable: false
+            }}
+            getNodeStyle={(node, nodeType) => {
+                return (nodeType === NodeTypes.LAYER) ? { background: 'red' } : { background: 'yellow' };
+            }}
+            tree={[
+                {
+                    id: 'group01',
+                    title: 'Group 01',
+                    nodes: [
+                        {
+                            id: 'layer01',
+                            name: 'Layer 01',
+                            group: 'group01'
+                        }
+                    ]
+                }
+            ]}
+        />, document.getElementById("container"));
+        expect(document.querySelector('.ms-layers-tree')).toBeTruthy();
+        const groups = [...document.querySelectorAll('.ms-node-group')];
+        expect(groups.length).toBe(1);
+        expect(groups.map((group) => group.style.background))
+            .toEqual([ 'yellow' ]);
+        expect(groups.map((group) => group.querySelector('.ms-node-layer').style.background))
+            .toEqual([ 'red' ]);
     });
 });

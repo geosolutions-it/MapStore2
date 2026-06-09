@@ -230,11 +230,38 @@ describe('GraphHopperProvider component', () => {
             const buttonGroup = container.querySelector('.ms-isochrone-direction');
             expect(buttonGroup).toBeTruthy();
             const buttons = container.querySelectorAll('.ms-isochrone-direction-btn');
-            expect(buttons[0].textContent).toBe('isochrone.departure');
-            expect(buttons[1].textContent).toBe('isochrone.arrival');
+            expect(buttons.length).toBe(2);
         });
 
-        it('should call handleProviderBodyChange when departure button is clicked', () => {
+        it('should highlight departure when reverseFlow is false', () => {
+            const props = {
+                currentRunParameters: { reverseFlow: false }
+            };
+            renderComponent(props);
+            const buttons = container.querySelectorAll('.ms-isochrone-direction-btn');
+            const departureButton = buttons[0];
+            const arrivalButton = buttons[1];
+
+            // Departure should be primary when reverseFlow is false
+            expect(departureButton.classList.contains('btn-primary')).toBe(true);
+            expect(arrivalButton.classList.contains('btn-primary')).toBe(false);
+        });
+
+        it('should highlight arrival when reverseFlow is true', () => {
+            const props = {
+                currentRunParameters: { reverseFlow: true }
+            };
+            renderComponent(props);
+            const buttons = container.querySelectorAll('.ms-isochrone-direction-btn');
+            const departureButton = buttons[0];
+            const arrivalButton = buttons[1];
+
+            // Arrival should be primary when reverseFlow is true
+            expect(arrivalButton.classList.contains('btn-primary')).toBe(true);
+            expect(departureButton.classList.contains('btn-primary')).toBe(false);
+        });
+
+        it('should call handleProviderBodyChange with reverseFlow false when departure button is clicked', () => {
             const props = {
                 currentRunParameters: { reverseFlow: true }
             };
@@ -245,10 +272,11 @@ describe('GraphHopperProvider component', () => {
 
             TestUtils.Simulate.click(departureButton);
 
+            // After clicking departure, it should be highlighted (reverseFlow = false)
             expect(departureButton.classList.contains('btn-primary')).toBe(true);
         });
 
-        it('should call handleProviderBodyChange when arrival button is clicked', () => {
+        it('should call handleProviderBodyChange with reverseFlow true when arrival button is clicked', () => {
             const props = {
                 currentRunParameters: { reverseFlow: false }
             };
@@ -258,7 +286,29 @@ describe('GraphHopperProvider component', () => {
 
             TestUtils.Simulate.click(arrivalButton);
 
+            // After clicking arrival, it should be highlighted (reverseFlow = true)
             expect(arrivalButton.classList.contains('btn-primary')).toBe(true);
+        });
+
+        it('should toggle between departure and arrival correctly', () => {
+            renderComponent({ currentRunParameters: { reverseFlow: false } });
+            const buttons = container.querySelectorAll('.ms-isochrone-direction-btn');
+            const departureButton = buttons[0];
+            const arrivalButton = buttons[1];
+
+            // Initially departure should be selected
+            expect(departureButton.classList.contains('btn-primary')).toBe(true);
+            expect(arrivalButton.classList.contains('btn-primary')).toBe(false);
+
+            // Click arrival
+            TestUtils.Simulate.click(arrivalButton);
+            expect(arrivalButton.classList.contains('btn-primary')).toBe(true);
+            expect(departureButton.classList.contains('btn-primary')).toBe(false);
+
+            // Click departure
+            TestUtils.Simulate.click(departureButton);
+            expect(departureButton.classList.contains('btn-primary')).toBe(true);
+            expect(arrivalButton.classList.contains('btn-primary')).toBe(false);
         });
     });
 });

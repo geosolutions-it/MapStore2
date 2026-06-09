@@ -72,7 +72,7 @@ export const getLayerOptions = function(capabilities) {
     return isObject(capabilities)
         ? {
             capabilities,
-            description: capabilities.Abstract,
+            ...(capabilities.Abstract && capabilities.Abstract !== '' && { description: capabilities.Abstract }),
             boundingBox: capabilities?.EX_GeographicBoundingBox
                 ? {
                     minx: capabilities.EX_GeographicBoundingBox?.westBoundLongitude,

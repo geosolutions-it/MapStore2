@@ -30,7 +30,6 @@
   "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
   "initialMapFilter": "",
   "ignoreMobileCss": false,
-  "useAuthenticationRules": true,
   "loadAfterTheme": true,
   "defaultMapOptions": {
     "cesium": {
@@ -41,6 +40,11 @@
       "depthTestAgainstTerrain": false,
       "terrainProvider": {
         "type": "ellipsoid"
+      },
+      "zoomToExtentSettings": {
+        "minRadius": 10,
+        "fitFactor": 2.0,
+        "maxZoom": 20
       }
     },
     "floatingIdentifyDelay": 1000
@@ -48,32 +52,21 @@
   "localizedLayerStyles": {
     "name": "mapstore_language"
   },
-  "authenticationRules": [
+  "requestsConfigurationRules": [
     {
-      "urlPattern": ".*geostore.*",
-      "method": "bearer"
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     },
     {
       "urlPattern": ".*rest/config.*",
-      "method": "bearer"
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     }
   ],
-  "monitorState": [
-    { "name": "router", "path": "router.location.pathname" },
-    { "name": "browser", "path": "browser" },
-    { "name": "geostorymode", "path": "geostory.mode" },
-    { "name": "featuregridmode", "path": "featuregrid.mode" },
-    { "name": "userrole", "path": "security.user.role" },
-    { "name": "printEnabled", "path": "print.capabilities" },
-    {
-      "name": "resourceCanEdit",
-      "path": "resources.initialSelectedResource.canEdit"
-    },
-    {
-      "name": "resourceDetails",
-      "path": "resources.initialSelectedResource.attributes.details"
-    }
-  ],
+  "monitorState": [],
   "userSessions": {
     "enabled": true
   },
@@ -247,7 +240,8 @@
                 }
               ]
             }
-          }
+          },
+          "tagFilterType": "category"
         }
       },
       "locales": {
@@ -409,6 +403,7 @@
       {
         "name": "Map",
         "cfg": {
+          "containerPosition": "background",
           "mapOptions": {
             "openlayers": {
               "interactions": {
@@ -475,7 +470,12 @@
         }
       },
       "Home",
-      "FeatureEditor",
+      {
+        "name": "FeatureEditor",
+        "cfg": {
+          "containerPosition": "bottom"
+        }
+      },
       "LayerDownload",
       {
         "name": "QueryPanel",
@@ -552,10 +552,7 @@
         }
       },
       {
-        "name": "MetadataExplorer",
-        "cfg": {
-          "wrap": true
-        }
+        "name": "Catalog"
       },
       {
         "name": "About",
@@ -576,9 +573,11 @@
       {
         "name": "CRSSelector",
         "cfg": {
-          "additionalCRS": {},
-          "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
-          "allowedRoles": ["ADMIN"]
+          "allowedRoles": ["ADMIN"],
+          "availableProjections": [
+            { "value": "EPSG:4326", "label": "EPSG:4326" },
+            { "value": "EPSG:3857", "label": "EPSG:3857" }
+          ]
         }
       },
       {
@@ -658,7 +657,8 @@
       {
         "name": "Timeline",
         "cfg": {
-          "expandLimit": 20
+          "expandLimit": 20,
+          "containerPosition": "bottom"
         }
       },
       "Playback",
@@ -964,6 +964,18 @@
       },
       "Notifications",
       {
+        "name": "MapEditor",
+        "cfg": {
+          "titleMsgId": "widgets.mapWidget.mapEditorTitle",
+          "overrideDefaultPlugins": [
+            {
+              "name": "FeatureEditor",
+              "cfg": { "containerPosition": "bottom" }
+            }
+          ]
+        }
+      },
+      {
         "name": "About",
         "cfg": {
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
@@ -1239,6 +1251,7 @@
       "UserManager",
       "GroupManager",
       "TagsManager",
+      "IPManager",
       "Footer",
       { "name": "About" }
     ]

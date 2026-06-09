@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import useLocalStorage from './useLocalStorage';
-
+import useLocalStorage from '../../../hooks/useLocalStorage';
+export const STORAGE_FRAGMENT = 'layoutCardsStyle';
 /**
  * menage the card layout using the localStorage
  * @param {string} props.cardLayoutStyle one of `list` or `grid`, if not `undefined` it forces the type of cards style
@@ -18,7 +18,7 @@ const useCardLayoutStyle = ({
     cardLayoutStyle,
     defaultCardLayoutStyle
 } = {}) => {
-    const [_cardLayoutStyleState, setCardLayoutStyle] = useLocalStorage('layoutCardsStyle', defaultCardLayoutStyle);
+    const [_cardLayoutStyleState, setCardLayoutStyle] = useLocalStorage(STORAGE_FRAGMENT, defaultCardLayoutStyle);
     const cardLayoutStyleState = cardLayoutStyle || _cardLayoutStyleState; // Force style when `cardLayoutStyle` is configured
     const hideCardLayoutButton = !!cardLayoutStyle;
     return {

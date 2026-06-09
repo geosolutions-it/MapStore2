@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useCallback, useRef } from 'react';
 import { isArray, castArray, max, isNaN, isNumber, isNull } from 'lodash';
 import LoadingView from '../misc/LoadingView';
 import { parseExpression } from '../../utils/ExpressionUtils';
@@ -46,6 +46,46 @@ const applyPercentageToLabel = (label, value, total) => {
     }
     return label;
 };
+
+const parseAxisTickValues = (tickValues) => {
+    const values = typeof tickValues === 'string' && tickValues.trim()
+        ? tickValues
+            .split(',')
+            .map(value => value.trim())
+        : undefined;
+    return values?.length > 0 ? values : undefined;
+};
+
+const getAxisTickOptions = (options = {}) => {
+    const tickvals = parseAxisTickValues(options?.tickvals);
+    const ticktext = parseAxisTickValues(options?.ticktext);
+    if (tickvals && ticktext) {
+        return { tickvals, ticktext };
+    }
+    if (tickvals) {
+        return { tickvals };
+    }
+    return {};
+};
+
+const getCartesianHoverTemplate = ({
+    layout,
+    tickPrefix,
+    format,
+    tickSuffix,
+    defaultFormat,
+    extra = ''
+}) => {
+    const yValue = `${tickPrefix ?? ""}%{y:${format ?? defaultFormat}}${tickSuffix ?? ""}`;
+    if (layout?.hovermode === 'closest') {
+        return `${yValue}<extra>${extra}</extra>`;
+    }
+    if (layout?.hovermode === 'y unified' || layout?.hovermode === 'y') {
+        return `%{x}<extra>${extra}</extra>`;
+    }
+    return `${yValue}<extra>${extra}</extra>`;
+};
+
 /**
  * Returns the labels for the pie chart, adds % to the labels, for legend, if the prop `includeLegendPercent` is true
  * @param {string|number[]} labels the values of the chart ["California", "Ohio", ...]
@@ -220,6 +260,7 @@ const chartDataTypes = {
         style: styleProperty,
         name: traceName,
         classifyGeoJSON,
+        layout,
         yAxisOpts,
         xAxisOpts,
         sortBy = 'groupBy',
@@ -265,7 +306,7 @@ const chartDataTypes = {
                     y: filteredData.map(({ properties }) => properties[yDataKey]),
                     name,
                     legendgrouptitle: { text },
-                    hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'g'}}${tickSuffix ?? ""}<extra>${name}</extra>`,
+                    hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'g', extra: name }),
                     marker: {
                         color,
                         ...(style?.marker?.line && {
@@ -289,20 +330,25 @@ const chartDataTypes = {
             name,
             ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
             ...(yAxisOpts.yaxis && { yaxis: yAxisOpts.yaxis }),
-            hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'g'}}${tickSuffix ?? ""}<extra></extra>`
+            hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'g' })
         };
     },
     line: ({
+        id,
         data: dataProp,
         options,
         formula, // refers always to y
-        style,
+        style: styleProperty,
         name: traceName,
+        layout,
         yAxisOpts,
         xAxisOpts,
         tickPrefix: tickPrefixProp,
         format: formatProp,
-        tickSuffix: tickSuffixProp
+        tickSuffix: tickSuffixProp,
+        sortBy = 'groupBy',
+        classifyGeoJSON,
+        classificationDataKey
     }) => {
         const tickPrefix = tickPrefixProp || yAxisOpts?.tickPrefix;
         const format = formatProp || yAxisOpts?.format;
@@ -310,15 +356,64 @@ const chartDataTypes = {
         const xDataKey = options?.groupByAttributes;
         const yDataKey = getAggregationAttributeDataKey(options);
         const data = formula ? processDataProperties(formula, yDataKey, dataProp) : dataProp;
+        const {
+            mode,
+            msMode,
+            msClassification,
+            ...style
+        } = styleProperty || {};
+
+        if (msMode === 'classification') {
+            const { sortByKey, classifiedData, classes } = generateClassifiedData({
+                type: 'line',
+                sortBy,
+                data,
+                options,
+                msClassification,
+                classifyGeoJSON
+            });
+            return classes.map(({ color, label: name }, idx) => {
+                const filteredData = classifiedData
+                    .filter((entry) => entry.index === idx)
+                    .sort((a, b) => a.properties[sortByKey] > b.properties[sortByKey] ? 1 : -1);
+                if (filteredData.length === 0) {
+                    return null;
+                }
+                const text = traceName || classificationDataKey;
+                return {
+                    mode: mode || 'lines',
+                    legendgroup: `${id}-${classificationDataKey}`,
+                    x: filteredData.map(({ properties }) => properties[xDataKey]),
+                    y: filteredData.map(({ properties }) => properties[yDataKey]),
+                    name,
+                    legendgrouptitle: { text },
+                    hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'd' }),
+                    line: {
+                        ...(style?.line || {}),
+                        color
+                    },
+                    ...(style?.marker && {
+                        marker: {
+                            ...style.marker,
+                            color,
+                            ...(style.marker.line && { line: style.marker.line })
+                        }
+                    }),
+                    ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
+                    ...(yAxisOpts.yaxis && { yaxis: yAxisOpts.yaxis })
+                };
+            }).filter(chart => chart !== null);
+        }
+
         const name = traceName || yDataKey;
         const sortedData = [...data].sort((a, b) => a[xDataKey] > b[xDataKey] ? 1 : -1);
         const x = sortedData.map(d => d[xDataKey]);
         const y = sortedData.map(d => d[yDataKey]);
         return {
-            mode: 'lines', // default mode should be lines
+            mode: mode || 'lines', // default mode should be lines
             ...style,
             name,
-            hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'd'}}${tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+            hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'd' }), // uses the format if passed, otherwise shows the full number.
             x,
             y,
             ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
@@ -409,6 +504,7 @@ function getLayoutOptions({
         return {
             ...acc,
             [`yaxis${idx === 0 ? '' : idx + 1}`]: {
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',
@@ -452,6 +548,7 @@ function getLayoutOptions({
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',
@@ -573,11 +670,17 @@ export const toPlotly = (_props) => {
             // for pie: Position legend to right and centered vertically
             // for bar: use groupclick to be for item toggle by overriding the default 'togglegroup' with 'toggleitem'
             // ** see: https://plotly.com/javascript/reference/layout/#layout-legend-groupclick
-            ...((types.includes('pie') && isModeBarVisible) ? { legend: {x: 1.05, y: 0.5} } : types.includes('bar') ? {legend: {
-                "tracegroupgap": 10,
-                "groupclick": "toggleitem"
-            }} : {}),
-            hovermode: 'x unified',
+            ...((types.includes('pie') && isModeBarVisible)
+                ? { legend: {x: 1.05, y: 0.5} }
+                : (types.includes('bar') || types.includes('line'))
+                    ? {
+                        legend: {
+                            "tracegroupgap": 10,
+                            "groupclick": "toggleitem"
+                        }
+                    }
+                    : {}),
+            hovermode: types.every(t => t === 'pie') ? 'closest' : layout?.hovermode ?? 'x unified',
             uirevision: true,
             shapes: [...(layout?.shapes || [])],
             ...gridProperty
@@ -691,11 +794,16 @@ function WidgetChart({
     onHover,
     ...props
 }) {
+    const graphDiv = useRef();
+    const handleInitialized = useCallback((figure, gd) => {
+        graphDiv.current = gd;
+        onInitialized?.(figure, gd);
+    }, [onInitialized]);
     const { data, layout, config } = toPlotly(props);
     return (
         <Suspense fallback={<LoadingView />}>
             <Plot
-                onInitialized={onInitialized}
+                onInitialized={handleInitialized}
                 onHover={onHover}
                 data={data.flat()}
                 layout={layout}

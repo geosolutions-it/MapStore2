@@ -6,7 +6,7 @@ export default emptyState(
     ({mapSync, iconFit} = {}) => ({
         iconFit,
         messageId: mapSync ? "widgets.errors.nodatainviewport" : "widgets.errors.nodata",
-        glyph: 'stats'
+        glyph: 'chart'
     }),
     WidgetEmptyMessage
 );

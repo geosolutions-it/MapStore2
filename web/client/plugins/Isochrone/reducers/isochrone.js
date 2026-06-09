@@ -9,6 +9,7 @@
 import {
     DELETE_ISOCHRONE_DATA,
     INIT_PLUGIN,
+    RESET_ISOCHRONE,
     SEARCH_ERROR,
     SEARCH_LOADING,
     SEARCH_RESULTS_LOADED,
@@ -74,6 +75,11 @@ const isochrone = (state = {
         return {
             ...state,
             currentRunParameters: action.parameters
+        };
+    case RESET_ISOCHRONE:
+        return {
+            ...state,
+            searchError: null
         };
     default:
         return state;

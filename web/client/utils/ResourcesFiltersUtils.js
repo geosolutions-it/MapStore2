@@ -9,6 +9,7 @@
 import url from 'url';
 import castArray from 'lodash/castArray';
 import omit from 'lodash/omit';
+import uniq from 'lodash/uniq';
 import tinycolor from 'tinycolor2';
 
 let filters = {};
@@ -149,5 +150,33 @@ export const splitFilterValue = (value = '') => {
         label: (parts.length <= 2
             ? parts[1]
             : parts.filter((p, idx) => idx > 0).join(':')) || ''
+    };
+};
+
+/**
+ * merge query parameters with a default query, combining array values for matching keys
+ * @param {object} params current query parameters
+ * @param {object} defaultQuery default query to merge
+ * @return {object} merged parameters
+ * @example
+ * mergeDefaultQuery({ f: ['remote'] }, { f: 'dataset' });
+ * // returns { f: ['dataset', 'remote'] }
+ */
+export const mergeDefaultQuery = (params, defaultQuery) => {
+    const updatedDefaultQuery = Object.keys(defaultQuery || {}).reduce((acc, key) => {
+        if (defaultQuery[key] && params[key]) {
+            return {
+                ...acc,
+                [key]: uniq([...castArray(defaultQuery[key]), ...castArray(params[key])])
+            };
+        }
+        return {
+            ...acc,
+            [key]: defaultQuery[key]
+        };
+    }, {});
+    return {
+        ...params,
+        ...updatedDefaultQuery
     };
 };

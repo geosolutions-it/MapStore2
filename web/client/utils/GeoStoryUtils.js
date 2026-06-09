@@ -683,3 +683,30 @@ export const getContentsFeatureStyle = (markerStyle, contents, content, contentI
     ...feature.style,
     highlight: contentId === content.id
 });
+
+/**
+ * Collects all content paths that have a map configuration (resourceId indicating a map).
+ * Returns an array of objects with `path` and `sectionType`.
+ * @param {object[]} sections the story sections
+ * @returns {object[]} paths to all map-containing contents
+ */
+export const collectMapContentPaths = (sections = []) => {
+    const paths = [];
+    const traverse = (items, basePath, sectionType) => {
+        (items || []).forEach(item => {
+            const itemPath = `${basePath}[{"id":"${item.id}"}]`;
+            const currentSectionType = sectionType || item.type;
+            if (item.resourceId || (item.map && (item.map.center || item.map.zoom !== undefined))) {
+                paths.push({ path: itemPath, sectionType: currentSectionType });
+            }
+            if (item.background && (item.background.resourceId || item.background.map)) {
+                paths.push({ path: itemPath + '.background', sectionType: currentSectionType });
+            }
+            if (item.contents) {
+                traverse(item.contents, itemPath + '.contents', currentSectionType);
+            }
+        });
+    };
+    traverse(sections, 'sections');
+    return paths;
+};

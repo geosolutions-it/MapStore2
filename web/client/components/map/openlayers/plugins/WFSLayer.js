@@ -23,35 +23,36 @@ import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { needsReload, needsCredentials, getConfig } from '../../../../utils/WFSLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
-const createLoader = (source, options) => (extent, resolution, projection) => {
+const createLoader = (source, options) => (extent, resolution, projection, success, failure) => {
     let proj = projection.getCode();
     let req;
     let filters = [];
     const onError = () => {
         source.removeLoadedExtent(extent);
         source.dispatchEvent('vectorerror');
+        failure && failure();
     };
     if (options.serverType === ServerTypes.NO_VENDOR) {
 
         if (needsCredentials(options)) {
-            req = new Promise((resolve, reject) => {reject();});
-        } else {
-            if (options?.strategy === 'bbox' || options?.strategy === 'tile') {
-            // here bbox filter is
-                const [left, bottom, right, top] = extent;
-
-                filters = [{
-                    spatialField: {
-                        operation: 'BBOX',
-                        geometry: {
-                            projection: proj,
-                            extent: [[left, bottom, right, top]] // use array because bbox is buggy
-                        }
-                    }
-                }];
-            }
-            req = getFeatureLayer(options, {filters, proj}, getConfig(options));
+            source.dispatchEvent('vectorerror');
+            failure && failure();
+            return;
         }
+        if (options?.strategy === 'bbox' || options?.strategy === 'tile') {
+            const [left, bottom, right, top] = extent;
+
+            filters = [{
+                spatialField: {
+                    operation: 'BBOX',
+                    geometry: {
+                        projection: proj,
+                        extent: [[left, bottom, right, top]] // use array because bbox is buggy
+                    }
+                }
+            }];
+        }
+        req = getFeatureLayer(options, {filters, proj}, getConfig(options));
     } else {
         const params = optionsToVendorParams(options);
         const config = getConfig(options);
@@ -66,10 +67,11 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
 
     req.then(response => {
         if (response.status === 200) {
-            source.addFeatures(
-                source.getFormat().readFeatures(response.data));
+            const features = source.getFormat().readFeatures(response.data);
+            source.addFeatures(features);
             source.set('@wfsFeatureCollection', response.data);
             options.onLoadEnd && options.onLoadEnd();
+            success && success(features);
         } else {
             onError();
         }
@@ -170,7 +172,10 @@ Layers.registerType('wfs', {
                 f.getGeometry().transform(oldCrs, newCrs);
             });
         }
-        if (needsReload(oldOptions, options) || !isEqual(oldOptions.security, options.security)) {
+        if (needsReload(oldOptions, options)
+            || !isEqual(oldOptions.security, options.security)
+            || !isEqual(oldOptions.requestRuleRefreshHash, options.requestRuleRefreshHash)
+        ) {
             source.setLoader(createLoader(source, options));
             source.clear();
             source.refresh();

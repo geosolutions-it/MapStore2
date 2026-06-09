@@ -5,39 +5,33 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import {connect} from 'react-redux';
-import {createSelector, createStructuredSelector} from 'reselect';
+import {createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
 import { get, pick, isEqual } from 'lodash';
 import {compose, lifecycle, defaultProps } from 'recompose';
-import ReactDock from 'react-dock';
 import ContainerDimensions from 'react-container-dimensions';
 
 import Grid from '../../components/data/featuregrid/FeatureGrid';
 import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
-import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
-import {mapLayoutValuesSelector} from '../../selectors/maplayout';
-import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
-import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
+import { setUp, setSyncTool } from '../../actions/featuregrid';
+import {paginationInfo, describeSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
+import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, hasNoGeometry as hasNoGeometrySelector} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
-import {gridTools, gridEvents, pageEvents, toolbarEvents} from './index';
+import {gridTools as defaultGridTools, gridEvents, pageEvents, toolbarEvents} from './index';
+import useFeatureValidation from './hooks/useFeatureValidation';
+import withResize from './hoc/withResize';
 
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 
+const filterGeometryToolColumn = (tools = EMPTY_ARR, hide = false) => {
+    return hide ? tools.filter((t) => t?.key !== 'geometry') : tools;
+};
 
-const Dock = connect(createSelector(
-    getDockSize,
-    state => mapLayoutValuesSelector(state, {transform: true}),
-    (size, dockStyle) => ({
-        size,
-        dockStyle
-    })
-)
-)(ReactDock);
 /**
   * @name FeatureEditor
   * @memberof plugins
@@ -97,6 +91,7 @@ const Dock = connect(createSelector(
   * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
   * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats, default is true
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
+  * @prop {string[]} cfg.primaryKeyAttributes array of attribute names that should be considered primary keys. Default is an empty array
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
@@ -170,92 +165,103 @@ const Dock = connect(createSelector(
   * ```
   *
 */
-const FeatureDock = (props = {
+const Editor = (props = {
     tools: EMPTY_OBJ,
     dialogs: EMPTY_OBJ,
     select: EMPTY_ARR
 }) => {
     const virtualScroll  = props.virtualScroll ?? true;
     const maxZoom  = props?.pluginCfg?.maxZoom;
-    const dockProps = {
-        dimMode: "none",
-        defaultSize: 0.35,
-        fluid: true,
-        isVisible: props.open,
-        maxDockSize: 0.7,
-        minDockSize: 0.1,
-        position: "bottom",
-        setDockSize: () => {},
-        zIndex: 1060
-    };
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
     const filterRenderers = useMemo(() => {
         return getFilterRenderers(props.describe, props.fields, props.isWithinAttrTbl);
     }, [props.describe, props.fields]);
-    return (
-        <div className={"feature-grid-wrapper"}>
-            <Dock  {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
-                {props.open &&
-                    (<ContainerDimensions>
-                        { ({ height }) =>
-                        // added height to solve resize issue in firefox, edge and ie
-                            <BorderLayout
-                                className="feature-grid-container"
-                                key={"feature-grid-container"}
-                                height={height - (42 + 32)}
-                                header={getHeader({
-                                    toolbarItems,
-                                    hideCloseButton: props.hideCloseButton,
-                                    hideLayerTitle: props.hideLayerTitle,
-                                    pluginCfg: props.pluginCfg
-                                })}
-                                columns={getPanels(props.tools)}
-                                footer={getFooter(props)}>
-                                {getDialogs(props.tools)}
-                                <Grid
-                                    isWithinAttrTbl
-                                    showCheckbox={props.showCheckbox}
-                                    editingAllowedRoles={props.editingAllowedRoles}
-                                    customEditorsOptions={props.customEditorsOptions}
-                                    autocompleteEnabled={props.autocompleteEnabled}
-                                    url={props.url}
-                                    typeName={props.typeName}
-                                    filterRenderers={filterRenderers}
-                                    enableColumnFilters={props.enableColumnFilters}
-                                    emptyRowsView={getEmptyRowsView()}
-                                    focusOnEdit={props.focusOnEdit}
-                                    newFeatures={props.newFeatures}
-                                    changes={props.changes}
-                                    mode={props.mode}
-                                    select={props.select}
-                                    key={"feature-grid-container"}
-                                    columnSettings={props.attributes}
-                                    fields={props.fields}
-                                    gridEvents={props.gridEvents}
-                                    pageEvents={props.pageEvents}
-                                    describeFeatureType={props.describe}
-                                    features={props.features}
-                                    minHeight={600}
-                                    tools={props.gridTools}
-                                    pagination={props.pagination}
-                                    pages={props.pages}
-                                    virtualScroll={virtualScroll}
-                                    maxStoredPages={props.maxStoredPages}
-                                    vsOverScan={props.vsOverScan}
-                                    scrollDebounce={props.scrollDebounce}
-                                    size={props.size}
-                                    actionOpts={{maxZoom}}
-                                    dateFormats={props.dateFormats}
-                                    useUTCOffset={props.useUTCOffset}
-                                />
-                            </BorderLayout> }
 
-                    </ContainerDimensions>)
-                }
-            </Dock>
-        </div>);
+    // If the dataset has no geometry, hide the geometry tool column
+    const hideGeometryColumn = props?.hasNoGeometry;
+    const gridTools = useMemo(() =>
+        filterGeometryToolColumn(props.gridTools, hideGeometryColumn),
+    [props.gridTools, hideGeometryColumn]);
+
+    // changes compute using useMemo to reduce the re-render of the component
+    const changes = useMemo(() => toChangesMap(props.changes), [props.changes]);
+
+    const primaryKeyAttributes = useMemo(() => props?.primaryKeyAttributes ?? [], [props?.primaryKeyAttributes]);
+    const validationErrors = useFeatureValidation({
+        featurePropertiesJSONSchema: props.featurePropertiesJSONSchema,
+        features: props.features,
+        newFeatures: props.newFeatures,
+        changes,
+        primaryKeyAttributes
+    });
+
+    return (
+        <ContainerDimensions>
+            {({ height }) => (
+                // added height to solve resize issue in firefox, edge and ie
+                <BorderLayout
+                    className="feature-grid-container"
+                    key={"feature-grid-container"}
+                    height={height - (42 + 32)}
+                    header={getHeader({
+                        toolbarItems,
+                        hideCloseButton: props.hideCloseButton,
+                        hideLayerTitle: props.hideLayerTitle,
+                        pluginCfg: props.pluginCfg,
+                        validationErrors
+                    })}
+                    columns={getPanels(props.tools)}
+                    footer={getFooter(props)}>
+                    {getDialogs(props.tools)}
+                    <Grid
+                        isWithinAttrTbl
+                        showCheckbox={props.showCheckbox}
+                        editingAllowedRoles={props.editingAllowedRoles}
+                        customEditorsOptions={props.customEditorsOptions}
+                        autocompleteEnabled={props.autocompleteEnabled}
+                        url={props.url}
+                        typeName={props.typeName}
+                        filterRenderers={filterRenderers}
+                        enableColumnFilters={props.enableColumnFilters}
+                        emptyRowsView={getEmptyRowsView()}
+                        focusOnEdit={props.focusOnEdit}
+                        newFeatures={props.newFeatures}
+                        changes={changes}
+                        mode={props.mode}
+                        select={props.select}
+                        key={"feature-grid-container"}
+                        columnSettings={props.attributes}
+                        fields={props.fields}
+                        gridEvents={props.gridEvents}
+                        pageEvents={props.pageEvents}
+                        describeFeatureType={props.describe}
+                        features={props.features}
+                        minHeight={600}
+                        tools={gridTools}
+                        pagination={props.pagination}
+                        pages={props.pages}
+                        virtualScroll={virtualScroll}
+                        maxStoredPages={props.maxStoredPages}
+                        vsOverScan={props.vsOverScan}
+                        scrollDebounce={props.scrollDebounce}
+                        size={props.size}
+                        actionOpts={{maxZoom}}
+                        dateFormats={props.dateFormats}
+                        useUTCOffset={props.useUTCOffset}
+                        validationErrors={validationErrors}
+                        featurePropertiesJSONSchema={props.featurePropertiesJSONSchema}
+                        primaryKeyAttributes={primaryKeyAttributes}
+                    />
+                </BorderLayout>
+            )}
+        </ContainerDimensions>
+    );
 };
+
+// Wrap Editor with resize HOC
+const ResizableEditor = withResize(Editor);
+
 export const selector = createStructuredSelector({
     open: state => get(state, "featuregrid.open"),
     customEditorsOptions: state => get(state, "featuregrid.customEditorsOptions"),
@@ -264,19 +270,21 @@ export const selector = createStructuredSelector({
     typeName: state => typeNameSelector(state),
     features: state => get(state, 'featuregrid.features') || EMPTY_ARR,
     describe: describeSelector,
+    featurePropertiesJSONSchema: attributesJSONSchemaSelector,
     fields: selectedLayerFieldsSelector,
     attributes: state => get(state, "featuregrid.attributes"),
     tools: state => get(state, "featuregrid.tools"),
     select: selectedFeaturesSelector,
     mode: modeSelector,
-    changes: state => toChangesMap(changesSelector(state)),
+    changes: state => changesSelector(state),
     newFeatures: state => newFeaturesSelector(state) || EMPTY_ARR,
     hasChanges: hasChangesSelector,
     focusOnEdit: state => get(state, 'featuregrid.focusOnEdit', false),
     enableColumnFilters: state => get(state, 'featuregrid.enableColumnFilters'),
     pagination: createStructuredSelector(paginationInfo),
     pages: state => get(state, 'featuregrid.pages'),
-    size: state => get(state, 'featuregrid.pagination.size')
+    size: state => get(state, 'featuregrid.pagination.size'),
+    hasNoGeometry: hasNoGeometrySelector
 });
 
 const EditorPlugin = compose(
@@ -318,13 +326,12 @@ const EditorPlugin = compose(
             gridEvents: bindActionCreators(gridEvents, dispatch),
             pageEvents: bindActionCreators(pageEvents, dispatch),
             toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
-            gridTools: gridTools.map((t) => ({
+            gridTools: defaultGridTools.map((t) => ({
                 ...t,
                 events: bindActionCreators(t.events, dispatch)
-            })),
-            onSizeChange: (...params) => dispatch(sizeChange(...params))
+            }))
         })
     )
-)(FeatureDock);
+)(ResizableEditor);
 
 export default EditorPlugin;

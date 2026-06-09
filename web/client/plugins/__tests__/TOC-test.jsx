@@ -14,7 +14,7 @@ import TestBackend from 'react-dnd-test-backend';
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
 import AddGroup from '../AddGroup';
-import MetadataExplorer from '../MetadataExplorer';
+import Catalog from '../Catalog';
 import LayerInfo from '../LayerInfo';
 import FeatureEditor from '../FeatureEditor';
 import TOCItemsSettings from '../TOCItemsSettings';
@@ -202,7 +202,7 @@ describe('TOCPlugin Plugin', () => {
             }
         });
         const WrappedPlugin = dndContext(Plugin);
-        const items = getTOCItems({ MetadataExplorer, AddGroup, LayerInfo });
+        const items = getTOCItems({ Catalog, AddGroup, LayerInfo });
         ReactDOM.render(<WrappedPlugin items={items}/>, document.getElementById("container"));
         const toolbarNode = document.getElementsByClassName('ms-toc-toolbar')[0];
         expect(toolbarNode).toBeTruthy();
@@ -245,7 +245,7 @@ describe('TOCPlugin Plugin', () => {
             }
         });
         const WrappedPlugin = dndContext(Plugin);
-        const items = getTOCItems({ MetadataExplorer, AddGroup, LayerInfo });
+        const items = getTOCItems({ Catalog, AddGroup, LayerInfo });
         ReactDOM.render(<WrappedPlugin items={items}/>, document.getElementById("container"));
         const toolbar = document.getElementsByClassName('ms-toc-toolbar')[0];
         expect(toolbar).toBeTruthy();
@@ -402,7 +402,7 @@ describe('TOCPlugin Plugin', () => {
                 }
             });
             const WrappedPlugin = dndContext(Plugin);
-            const items = getTOCItems({ MetadataExplorer });
+            const items = getTOCItems({ Catalog });
             ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
             expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toBeTruthy();
@@ -428,7 +428,7 @@ describe('TOCPlugin Plugin', () => {
         const REMOVE_SELECTOR = `${TOOL_BUTTON_SELECTOR } .glyphicon-trash`;
         const SETTINGS_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-wrench`;
         const FILTER_LAYER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-filter-layer`;
-        const WIDGET_BUILDER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-stats`;
+        const WIDGET_BUILDER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-widgets`;
         it('render default tools zoomToLayer, remove layer, for selected layer', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
             const WrappedPlugin = dndContext(Plugin);
@@ -534,6 +534,60 @@ describe('TOCPlugin Plugin', () => {
             // check zoom and remove selector
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
+        });
+        it('should not render the zoom to layer button if there is a layer without valid bbox', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, {
+                layers: {
+                    flat: [
+                        {
+                            id: 'topp:states__6',
+                            format: 'image/png8',
+                            search: {
+                                url: 'https://something/geoserver/wfs',
+                                type: 'wfs'
+                            },
+                            name: 'topp:states',
+                            type: 'wms',
+                            url: 'https://something/geoserver/wms',
+                            bbox: {
+                                crs: 'EPSG:4326',
+                                bounds: '[OBJECT Object] WRONG BBOX!!!'
+                            },
+                            visibility: true
+                        }
+                    ],
+                    groups: [
+                        {
+                            id: 'Default',
+                            title: 'Default',
+                            name: 'Default',
+                            nodes: [
+                                'topp:states__6'
+                            ],
+                            expanded: true
+                        }
+                    ],
+                    selected: [
+                        'topp:states__6'
+                    ],
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    },
+                    layerMetadata: {
+                        expanded: false,
+                        metadataRecord: {},
+                        maskLoading: false
+                    }
+                }
+            });
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeFalsy();
             expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
     });

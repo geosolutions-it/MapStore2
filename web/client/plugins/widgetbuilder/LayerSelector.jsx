@@ -30,8 +30,8 @@ const Catalog = compose(
  * Builder page that allows layer's selection
  * @prop {function} [layerValidationStream]
  */
-export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, defaultServices,
-    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService} = {}) =>
+export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, defaultServices,
+    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService, defaultServiceFilters} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -40,13 +40,18 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
                 trigger={false}
                 glyph="warning-sign"
                 bsStyle="warning"
+                placement="left"
                 title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />}
                 text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
         </BuilderHeader>}
     >
         <Catalog
+            {...defaultServiceFilters}
+            multiSelect={false}
+            includeAddToMap={false}
             onChangeCatalogMode={onChangeCatalogMode}
             selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)}
+            onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onSelect={onItemClick}
             canEditService={canEditService}/>
     </BorderLayout>);
+

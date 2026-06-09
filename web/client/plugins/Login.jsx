@@ -216,6 +216,13 @@ LoginPlugin.defaultProps = {
             position: 3
         },
         {
+            name: 'resourcesCatalog.manageIPs',
+            msgId: 'resourcesCatalog.manageIPs',
+            glyph: 'globe',
+            path: '/manager/ipmanager',
+            position: 4
+        },
+        {
             name: 'rulesmanager.menutitle',
             msgId: 'rulesmanager.menutitle',
             glyph: 'admin-geofence',
@@ -254,8 +261,7 @@ export default createPlugin('Login', {
             target: 'right-menu',
             position: 9,
             priority: 3,
-            // TODO: remove square-button-md as soon all square button size are aligned
-            Component: connect(() => ({ className: 'square-button-md' }))(ConnectedLoginPlugin)
+            Component: connect(() => ({ className: 'square-button' }))(ConnectedLoginPlugin)
         },
         SidebarMenu: {
             name: "login",

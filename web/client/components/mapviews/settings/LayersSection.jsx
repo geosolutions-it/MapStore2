@@ -168,7 +168,7 @@ function LayersSection({
                     <Button
                         tooltipId="mapViews.linkAllNodes"
                         disabled={!view?.layers?.length && !view?.groups?.length}
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         onClick={() => {
                             onChange({
@@ -181,7 +181,7 @@ function LayersSection({
                     </Button>
                     <Button
                         tooltipId="mapViews.unlinkAllNodes"
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         disabled={areAllNodesUnlinked()}
                         onClick={() => {

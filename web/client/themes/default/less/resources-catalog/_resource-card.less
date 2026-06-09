@@ -18,7 +18,14 @@
             .border-color-var(@theme-vars[warning]);
             opacity: 0.75;
         }
+
+        .ms-resource-card-tag-button {
+            &.selected {
+                .background-color-var(@theme-vars[selected-bg]);
+            }
+        }
     }
+    
 }
 
 // **************
@@ -36,6 +43,11 @@
     --tag-color-r: 230;
     --tag-color-g: 230;
     --tag-color-b: 230;
+    border-radius: 4px;
+    .ms-resource-card-img {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+    }
     > div a {
         position: relative;
     }
@@ -56,7 +68,26 @@
             cursor: pointer;
         }
     }
-    
+
+    .ms-resource-card-tag-button {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        &:focus{
+            outline: none;
+        }
+
+    }
+
+    .ms-resource-card-body-footer {
+        min-width: 0;
+
+        .ms-flex-fill,
+        .ms-text {
+            min-width: 0;
+        }
+    }
 }
 
 .ms-resource-card-type-grid {
@@ -91,6 +122,11 @@
     width: 100%;
     height: 130px;
     object-fit: cover;
+}
+
+.btn-group > .btn + .dropdown-toggle {
+    padding-right: 4px;
+    padding-left: 4px;
 }
 
 .ms-resource-card-limit {

@@ -137,7 +137,7 @@ class IntlNumberFormControl extends React.Component {
     parse = value => {
         let formatValue = value;
         // eslint-disable-next-line use-isnan
-        if (formatValue !== NaN && formatValue !== "NaN") {  // Allow locale string to parse
+        if (formatValue !== '' && formatValue !== NaN && formatValue !== "NaN") {  // Allow locale string to parse
             const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const format = new Intl.NumberFormat(locale);
             const parts = format.formatToParts(12345.6);
@@ -164,7 +164,7 @@ class IntlNumberFormControl extends React.Component {
     };
 
     format = val => {
-        if (!isNaN(val) && val !== "NaN") {
+        if (val !== '' && !isNaN(val) && val !== "NaN") {
             const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const formatter = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
             return formatter.format(val);

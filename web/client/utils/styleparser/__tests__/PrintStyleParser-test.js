@@ -465,4 +465,69 @@ describe('PrintStyleParser', () => {
             });
         });
     });
+    it('should apply rule only when mapPrintScale is within scaleDenominator range', () => {
+        const style = {
+            name: 'test',
+            rules: [
+                {
+                    name: 'visible-rule',
+                    scaleDenominator: { min: 1000, max: 10000 },
+                    symbolizers: [{ kind: 'Fill', color: '#FF0000' }]
+                },
+                {
+                    name: 'hidden-rule',
+                    scaleDenominator: { min: 20000, max: 50000 },
+                    symbolizers: [{ kind: 'Fill', color: '#00FF00' }]
+                }
+            ]
+        };
+
+        const layer = {
+            features: [{
+                type: 'Feature',
+                properties: {},
+                geometry: { type: 'Polygon', coordinates: [[[0, 0], [0, 1], [1, 1], [0, 0]]] }
+            }]
+        };
+
+        // Scale 5000 → first rule visible, second hidden
+        const result1 = parser.writeStyle(style, true)({ layer, mapPrintScale: 5000 });
+        expect(result1[0].properties.ms_style.fillColor).toBe('#FF0000');
+
+        // Scale 30000 → first rule hidden, second visible
+        const result2 = parser.writeStyle(style, true)({ layer, mapPrintScale: 30000 });
+        expect(result2[0].properties.ms_style.fillColor).toBe('#00FF00');
+
+        // Scale 100 → both rules hidden → empty result
+        const result3 = parser.writeStyle(style, true)({ layer, mapPrintScale: 100 });
+        expect(result3.length).toBe(0);
+    });
+
+    it('should show rule when scaleDenominator has only min or max', () => {
+        const styleMinOnly = {
+            name: 'test',
+            rules: [{
+                name: 'min-only',
+                scaleDenominator: { min: 5000 },
+                symbolizers: [{ kind: 'Fill', color: '#AAAAAA' }]
+            }]
+        };
+
+        const layer = {
+            features: [{
+                type: 'Feature',
+                properties: {},
+                geometry: { type: 'Polygon', coordinates: [[[0, 0], [0, 1], [1, 1], [0, 0]]] }
+            }]
+        };
+
+        // Scale 10000 >= min 5000 → rule visible
+        const resultVisible = parser.writeStyle(styleMinOnly, true)({ layer, mapPrintScale: 10000 });
+        expect(resultVisible.length).toBe(1);
+        expect(resultVisible[0].properties.ms_style.fillColor).toBe('#AAAAAA');
+
+        // Scale 1000 < min 5000 → rule hidden → empty array
+        const resultHidden = parser.writeStyle(styleMinOnly, true)({ layer, mapPrintScale: 1000 });
+        expect(resultHidden.length).toBe(0);
+    });
 });

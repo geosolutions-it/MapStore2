@@ -50,6 +50,12 @@ describe('TemplateUtils', () => {
         let templateResult = templateFunction({test: "TEST"});
         expect(templateResult).toBe("this is a TEST2");
     });
+    it('generateTemplateString with some null or undefined attributes', () => {
+        let templateFunction = generateTemplateString("#${desc}, ${desc1}, ${desc2}#");
+        expect(templateFunction).toExist();
+        let templateResult = templateFunction({desc: "desc value", desc1: null, desc2: undefined});
+        expect(templateResult).toEqual("#desc value, , #");
+    });
 
     it('validateStringAttribute', () => {
         const testObj = {

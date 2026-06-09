@@ -13,7 +13,7 @@ import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import ToolbarButton from '../components/misc/toolbar/ToolbarButton';
 import { buttonCanEdit, showConnectionsSelector } from '../selectors/dashboard';
-import { dashboardHasWidgets, getWidgetsDependenciesGroups } from '../selectors/widgets';
+import { canEditLayoutView, dashboardHasWidgets, getWidgetsDependenciesGroups } from '../selectors/widgets';
 import { triggerShowConnections } from '../actions/dashboard';
 import { createPlugin } from '../utils/PluginsUtils';
 
@@ -23,7 +23,8 @@ class MapConnectionDashboard extends React.Component {
         canEdit: PropTypes.bool,
         hasWidgets: PropTypes.bool,
         hasConnections: PropTypes.bool,
-        onShowConnections: PropTypes.func
+        onShowConnections: PropTypes.func,
+        disabled: PropTypes.bool
     }
 
     static defaultProps = {
@@ -31,7 +32,7 @@ class MapConnectionDashboard extends React.Component {
     }
 
     render() {
-        const { showConnections, canEdit, hasConnections, hasWidgets, onShowConnections } = this.props;
+        const { showConnections, canEdit, hasConnections, hasWidgets, onShowConnections, disabled } = this.props;
         if (!(!!hasWidgets && !!hasConnections || !canEdit)) return false;
         return  (<ToolbarButton
             glyph={showConnections ? 'bulb-on' : 'bulb-off'}
@@ -40,7 +41,8 @@ class MapConnectionDashboard extends React.Component {
             onClick={()=>onShowConnections(!showConnections)}
             tooltipPosition={'left'}
             id={'ms-map-connection-card-dashboard'}
-            btnDefaultProps={{ tooltipPosition: 'bottom', className: 'square-button-md', bsStyle: 'primary' }}/>);
+            btnDefaultProps={{ tooltipPosition: 'bottom', className: 'square-button', bsStyle: 'primary' }}
+            disabled={disabled} />);
     }
 }
 
@@ -50,11 +52,13 @@ const ConnectedMapAddWidget = connect(
         dashboardHasWidgets,
         buttonCanEdit,
         getWidgetsDependenciesGroups,
-        (showConnections, hasWidgets, edit, groups = []) => ({
+        canEditLayoutView,
+        (showConnections, hasWidgets, edit, groups = [], canEditView) => ({
             showConnections,
             hasConnections: groups.length > 0,
             hasWidgets,
-            canEdit: edit
+            canEdit: edit,
+            disabled: !canEditView
         })
     ),
     {

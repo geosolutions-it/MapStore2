@@ -194,7 +194,7 @@ Layers.registerType('model', {
         if (primitives && !isEqual(newOptions?.features?.[0], oldOptions?.features?.[0])) {
             updatePrimitivesMatrix(primitives, newOptions?.features?.[0]);
         }
-        if (newOptions?.forceProxy !== oldOptions?.forceProxy) {
+        if (newOptions?.forceProxy !== oldOptions?.forceProxy || !isEqual(oldOptions.security, newOptions.security)) {
             return createLayer(newOptions, map);
         }
         return null;

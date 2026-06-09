@@ -18,13 +18,19 @@ import InfoPopover from '../../../widgets/widget/InfoPopover';
  * - autoload: Option allows the automatic fetching of the results upon selecting the service from Service dropdown
  * - hideThumbnail: Options allows to hide the thumbnail on the result
  *
+ * @prop {boolean} globalHideThumbnail - Global default cfg for thumbnail visibility.
+ * @prop {object} service the service to edit
+ * @prop {function} onChangeServiceProperty handler (key, value) to change a property of service.
+ * @prop {function} onToggleThumbnail - Thumbnail toggle handler.
  */
 export default ({
     children,
+    globalHideThumbnail,
     service,
     onChangeServiceProperty = () => { },
     onToggleThumbnail = () => { }
 }) => {
+    const showThumbnailValue = !isNil(service.hideThumbnail) ? !service.hideThumbnail : !isNil(globalHideThumbnail) ? !globalHideThumbnail : true;
     return (
         <>
             <FormGroup controlId="autoload" key="autoload">
@@ -35,8 +41,8 @@ export default ({
             </FormGroup>
             <FormGroup controlId="thumbnail" key="thumbnail">
                 <Checkbox
-                    onChange={() => onToggleThumbnail()}
-                    checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>
+                    onChange={(evt) => onToggleThumbnail(!evt.target.checked)}
+                    checked={showThumbnailValue}>
                     <Message msgId="catalog.showPreview" />
                 </Checkbox>
             </FormGroup>

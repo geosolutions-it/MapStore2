@@ -66,6 +66,7 @@ export const isDescribeLoaded = (state, name) => {
     return false;
 };
 export const describeSelector = (state) => layerDescribeSelector(state, queryFeatureTypeName(state));
+export const attributesJSONSchemaSelector = state => get(featureTypeSelectorCreator(queryFeatureTypeName(state))(state), `attributesJSONSchema`);
 export const featureLoadingSelector = (state) => get(state, "query.featureLoading");
 export const isSyncWmsActive = (state) => get(state, "query.syncWmsFilter", false);
 /**

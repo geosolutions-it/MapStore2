@@ -23,6 +23,7 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
+import '../plugins/FlatGeobufLayer';
 
 import {
     setStore,
@@ -1016,6 +1017,41 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
     });
+
+    it('allows wmts url-parameters to be added to url', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "params": {
+                "myparam1": "myvalue1",
+                "myparam2": "myvalue2"
+            },
+            "tileMatrixSet": [
+                {
+                    "TileMatrix": [],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
+                }
+            ],
+            "url": ["http://sample.server/geoserver/gwc/service/wmts"]
+        };
+        // create layer
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toBeTruthy();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        const url = map.getLayers().item(0).getSource().urls[0];
+        expect(url.includes('myparam1=myvalue1')).toBe(true);
+        expect(url.includes('myparam2=myvalue2')).toBe(true);
+    });
+
     it('test correct wms origin', () => {
         var options = {
             "type": "wms",
@@ -1790,6 +1826,63 @@ describe('Openlayers layer', () => {
         // this prevents old cache to be rendered while loading
         expect(spy).toHaveBeenCalled();
     });
+    it('wms layer is recreated when cropToProjectionExtent changes', () => {
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "cropToProjectionExtent": true
+        };
+        // create initial layer
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map} />,
+            document.getElementById("container")
+        );
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+        const originalSource = map.getLayers().item(0).getSource();
+
+        // update with cropToProjectionExtent: false: must trigger layer recreation
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{ ...options, cropToProjectionExtent: false }} map={map} />,
+            document.getElementById("container")
+        );
+        expect(map.getLayers().getLength()).toBe(1);
+        // a new source is created when the layer is recreated
+        expect(map.getLayers().item(0).getSource()).toNotBe(originalSource);
+    });
+
+    it('wms layer is recreated when cropToProjectionExtent is re-enabled', () => {
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "cropToProjectionExtent": false
+        };
+        // create layer with cropToProjectionExtent disabled
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map} />,
+            document.getElementById("container")
+        );
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+        const originalSource = map.getLayers().item(0).getSource();
+
+        // re-enable cropToProjectionExtent: must trigger layer recreation
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{ ...options, cropToProjectionExtent: true }} map={map} />,
+            document.getElementById("container")
+        );
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource()).toNotBe(originalSource);
+    });
+
     it('dimensions triggers params change', () => {
         // this tests if dimension parameter changes, this triggers updateParams
         var options = {
@@ -3357,6 +3450,125 @@ describe('Openlayers layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
     });
+    it('wms layer should refresh source when loadingError changes to Error', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms"
+        };
+
+        // create layer
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError set to "Error"
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+
+        // check that refresh was called
+        expect(refreshCalled).toBe(true);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+
+    it('wms layer should not refresh source when loadingError remains Error', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "loadingError": "Error"
+        };
+
+        // create layer with loadingError already set to "Error"
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError still "Error"
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+
+        // refresh should NOT be called because loadingError didn't change from non-Error to Error
+        expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+
+    it('wms layer should not refresh source when loadingError changes from Error to undefined', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "loadingError": "Error"
+        };
+
+        // create layer with loadingError set to "Error"
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError changing from "Error" to undefined
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: false}} map={map} />, document.getElementById("container"));
+
+        // refresh should NOT be called
+        expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
     it('creates a arcgis layer (MapServer)', () => {
         const options = {
             type: 'arcgis',
@@ -3371,6 +3583,135 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().item(0).getSource().urls[0]).toBe('http://arcgis/MapServer/');
         expect(map.getLayers().item(0).getSource().params_).toEqual({
             LAYERS: 'show:1'
+        });
+    });
+    it('should call onLayerLoading and onLayerLoad on featuresloadstart/end events', () => {
+        const options = {
+            type: 'osm',
+            visibility: true
+        };
+        let loadingCalled = false;
+        let loadCalled = false;
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options}
+                onLayerLoading={() => { loadingCalled = true; }}
+                onLayerLoad={() => { loadCalled = true; }}
+                map={map}/>, document.getElementById("container"));
+        expect(layer).toBeTruthy();
+        const olLayer = map.getLayers().item(0);
+        const source = olLayer.getSource();
+        source.dispatchEvent('featuresloadstart');
+        expect(loadingCalled).toBe(true);
+        source.dispatchEvent('featuresloadend');
+        expect(loadCalled).toBe(true);
+    });
+    it('should track concurrent featuresload events with counter', () => {
+        const options = {
+            type: 'osm',
+            visibility: true
+        };
+        let loadingCount = 0;
+        let loadCount = 0;
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options}
+                onLayerLoading={() => { loadingCount++; }}
+                onLayerLoad={() => { loadCount++; }}
+                map={map}/>, document.getElementById("container"));
+        expect(layer).toBeTruthy();
+        const olLayer = map.getLayers().item(0);
+        const source = olLayer.getSource();
+        source.dispatchEvent('featuresloadstart');
+        source.dispatchEvent('featuresloadstart');
+        expect(loadingCount).toBe(1);
+        source.dispatchEvent('featuresloadend');
+        expect(loadCount).toBe(0);
+        source.dispatchEvent('featuresloadend');
+        expect(loadCount).toBe(1);
+    });
+
+    describe('FlatGeobuf', () => {
+        // The fixture's FGB header reports geometryType=3 (Polygon) and
+        // covers central US (-106.2..-95.9, 34.6..42.0). The shared
+        // `map` in the outer beforeEach is centered at [0, 0] in EPSG:3857
+        // (Atlantic, doesn't intersect the fixture), so we set up a
+        // dedicated map at an EPSG:4326 view over the data extent.
+        const FGB_URL = 'base/web/client/test-resources/flatgeobuf/UScounties_subset.fgb';
+        let fgbMap;
+        beforeEach(() => {
+            document.body.innerHTML = '<div id="fgb-map" style="width:200px;height:200px;"></div><div id="container"></div>';
+            fgbMap = new Map({
+                layers: [],
+                target: 'fgb-map',
+                view: new View({
+                    projection: 'EPSG:4326',
+                    center: [-101, 38],
+                    zoom: 4
+                })
+            });
+        });
+        afterEach(() => {
+            fgbMap.setTarget(null);
+            document.body.innerHTML = '';
+        });
+
+        it('loads features from a real FGB and stores them in the source', (done) => {
+            const options = {
+                type: 'flatgeobuf',
+                visibility: true,
+                url: FGB_URL,
+                name: 'us-counties',
+                metadata: { geometryType: 3 }
+            };
+            let layer;
+            const onAddFeature = (e) => {
+                try {
+                    expect(['Polygon', 'MultiPolygon']).toContain(e.feature.getGeometry().getType());
+                } catch (err) {
+                    layer.layer.getSource().un('addfeature', onAddFeature);
+                    done(err);
+                    return;
+                }
+                layer.layer.getSource().un('addfeature', onAddFeature);
+                done();
+            };
+            layer = ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={options}
+                map={fgbMap}/>, document.getElementById("container"));
+            expect(layer.layer.getSource()).toBeTruthy();
+            layer.layer.getSource().on('addfeature', onAddFeature);
+        }).timeout(15000);
+
+        it('clears the source on CRS change instead of in-place transform', () => {
+            // The OL plugin update handler must clear+refresh on CRS change
+            // (not call geometry.transform), because dynamic projections are
+            // registered async by initOLProjectionAdapter. Asserts that
+            // changing crs empties the source synchronously.
+            const baseOptions = {
+                type: 'flatgeobuf',
+                visibility: true,
+                url: FGB_URL,
+                name: 'us-counties',
+                metadata: { geometryType: 3 },
+                crs: 'EPSG:4326'
+            };
+            const layer = ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={baseOptions}
+                map={fgbMap}/>, document.getElementById("container"));
+            // Inject a feature so we can observe clear()
+            const Feature = require('ol/Feature').default;
+            const Point = require('ol/geom/Point').default;
+            layer.layer.getSource().addFeature(new Feature({ geometry: new Point([0, 0]) }));
+            expect(layer.layer.getSource().getFeatures().length).toBe(1);
+            // Re-render with a new CRS to trigger update
+            ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={{ ...baseOptions, crs: 'EPSG:3857' }}
+                map={fgbMap}/>, document.getElementById("container"));
+            expect(layer.layer.getSource().getFeatures().length).toBe(0);
         });
     });
 });

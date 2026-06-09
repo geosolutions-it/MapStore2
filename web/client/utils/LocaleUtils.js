@@ -71,6 +71,10 @@ let supportedLocales = {
         code: "pt-PT",
         description: "Português"
     },
+    "pt-BR": {
+        code: "pt-BR",
+        description: "Português (Brasil)"
+    },
     "vi": {
         code: "vi-VN",
         description: "tiếng Việt"
@@ -108,6 +112,7 @@ export const DATE_FORMATS = {
     "zh-ZH": "YYYY/MM/DD",
     "hr-HR": "DD/MM/YYYY",
     "pt-PT": "DD/MM/YYYY",
+    "pt-BR": "DD/MM/YYYY",
     "vi-VN": "DD/MM/YYYY",
     "fi-FI": "DD/MM/YYYY"
 };
@@ -195,6 +200,39 @@ export const getErrorMessage = (e, service, section) => {
  * @returns {string} localized string
  */
 export const getLocalizedProp = (locale, prop) => isObject(prop) ? prop[locale] || prop.default : prop || '';
+
+/**
+ * Returns the normalized locale code in language-region format (e.g. 'en' → 'en-US', 'en-GB' → 'en-GB').
+ * Returns an empty string if the code is invalid or missing.
+ * @param {string} code locale code
+ * @returns {string}
+ */
+export const longLocale = (code) => {
+    if (!code) return '';
+    try {
+        const loc = new Intl.Locale(code);
+        if (loc.region) return `${loc.language}-${loc.region}`;
+        const maximized = loc.maximize();
+        return `${maximized.language}-${maximized.region}`;
+    } catch {
+        return '';
+    }
+};
+
+/**
+ * Returns the language component of a locale code (e.g. 'en-US' → 'en').
+ * Returns an empty string if the code is invalid or missing.
+ * @param {string} code locale code
+ * @returns {string}
+ */
+export const shortLocale = (code) => {
+    if (!code) return '';
+    try {
+        return new Intl.Locale(code).language;
+    } catch {
+        return '';
+    }
+};
 
 LocaleUtils = {
     getLocale,

@@ -80,7 +80,18 @@ class FeatureGrid extends React.PureComponent {
                     this.props.changes[id].hasOwnProperty(key);
             },
             isProperty: (k) => k === "geometry" || isProperty(k, this.props.describeFeatureType),
-            isValid: (val, key) => this.props.describeFeatureType ? isValidValueForPropertyName(val, key, this.props.describeFeatureType) : true
+            isValid: (val, key, rowId) => {
+                const { errors = [], changed } = (this.props?.validationErrors?.[rowId] || {});
+                // Extract field name from instancePath or dataPath (e.g., "/fid" -> "fid")
+                const error = errors.find((err) => {
+                    const path = err.instancePath || err.dataPath || '';
+                    return path.replace(/^[./]/, '') === key;
+                });
+                if (error) {
+                    return { valid: false, message: error?.message, changed };
+                }
+                return { valid: this.props.describeFeatureType ? isValidValueForPropertyName(val, key, this.props.describeFeatureType) :  false };
+            }
         };
     }
     render() {

@@ -25,6 +25,7 @@ import {
     processOGCFilterFields,
     processOGCSimpleFilterField,
     processCQLFilterFields,
+    processCQLFilterGroup,
     wrapIfNoWildcards,
     mergeFiltersToOGC,
     convertFiltersToOGC,
@@ -2790,5 +2791,85 @@ describe('FilterUtils', () => {
         });
         expect(isFiltered1).toBeTruthy();
         expect(isFiltered2).toBeFalsy();
+    });
+
+    describe('processCQLFilterGroup', () => {
+        it('skips empty groups', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'AND' }
+                ],
+                filterFields: [{
+                    groupId: 'root',
+                    attribute: 'NAME',
+                    type: 'string',
+                    operator: '=',
+                    value: 'Rome'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("\"NAME\"='Rome'");
+        });
+
+        it('returns the non-empty group filters', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'AND' },
+                    { id: 'child1', logic: 'OR', groupId: 'root' }
+                ],
+                filterFields: [{
+                    groupId: 'child1',
+                    attribute: 'STATE',
+                    type: 'string',
+                    operator: '=',
+                    value: 'IT'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("(\"STATE\"='IT')");
+        });
+
+        it('combines multiple groups filters', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'OR' },
+                    { id: 'child1', logic: 'AND', groupId: 'root' },
+                    { id: 'child2', logic: 'AND', groupId: 'root' }
+                ],
+                filterFields: [{
+                    groupId: 'child1',
+                    attribute: 'STATE',
+                    type: 'string',
+                    operator: '=',
+                    value: 'IT'
+                }, {
+                    groupId: 'child2',
+                    attribute: 'COUNTRY',
+                    type: 'string',
+                    operator: '=',
+                    value: 'USA'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("(\"STATE\"='IT') OR (\"COUNTRY\"='USA')");
+        });
+
+        it('wraps subgroup filters with NOT when it has NOR logic', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'NOR' },
+                    { id: 'child1', logic: 'AND', groupId: 'root' }
+                ],
+                filterFields: [{
+                    groupId: 'child1',
+                    attribute: 'STATE',
+                    type: 'string',
+                    operator: '=',
+                    value: 'IT'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("NOT (\"STATE\"='IT')");
+        });
     });
 });

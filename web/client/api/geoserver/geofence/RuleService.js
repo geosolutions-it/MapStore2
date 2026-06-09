@@ -50,6 +50,7 @@ const normalizeFilterValue = (value) => {
 };
 
 /**
+ * normalize keys to be sent with requests -> based of ref: https://docs.geoserver.org/main/en/user/extensions/geofence-server/rest.html#filter-parameters
  * Returns the parameter for GeoServer REST GeoFence (integrated) API key
  * @param {string} key the key of the filter map
  */
@@ -58,8 +59,12 @@ const normalizeKey = (key) => {
     // found out that is case sensitive
     case 'username':
         return 'userName';
+    case 'usernameAny':
+        return 'userAny';
     case 'rolename':
         return 'roleName';
+    case 'rolenameAny':
+        return 'roleAny';
     default:
         return key;
     }
@@ -169,7 +174,7 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
     addRule: (rule) => {
         const newRule = { ...rule };
         if (!newRule.instance) {
-            const { id: instanceId } = getGeoServerInstance();
+            const { id: instanceId } = getGeoServerInstance() || {};
             newRule.instance = { id: instanceId };
         }
         if (!newRule.grant) {

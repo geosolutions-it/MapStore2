@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {getCurrentResolution, getResolutions, METERS_PER_UNIT} from '../MapUtils';
+import {getCurrentResolution, getResolutions, getMetersPerUnit} from '../MapUtils';
 import {
     reproject,
     normalizeSRS,
@@ -21,8 +21,6 @@ import {
 } from '../WMTSUtils';
 import {getLayerUrl} from '../LayersUtils';
 import {optionsToVendorParams} from '../VendorParamsUtils';
-import { getAuthorizationBasic } from '../SecurityUtils';
-
 import {isObject, isNil, get} from 'lodash';
 
 import Rx, {Observable} from "rxjs";
@@ -44,7 +42,7 @@ export default {
 
         const srs = normalizeSRS(layer.srs || props.map.projection || 'EPSG:3857', layer.allowedSRS);
         const projection = determineCrs(srs);
-        const metersPerUnit = METERS_PER_UNIT[projection?.units] ? METERS_PER_UNIT[projection.units] : 1;
+        const metersPerUnit = getMetersPerUnit(projection?.units, 1);
         const tileMatrixSet = getTileMatrixSet(layer.tileMatrixSet, srs, layer.allowedSRS, layer.matrixIds);
         /*
         * WMTS assumes a DPI 90.7 instead of 96 as documented in the WMTSCapabilities document:
@@ -113,8 +111,7 @@ export default {
         };
     },
     getIdentifyFlow: (layer, basePath, params) => {
-        const headers = getAuthorizationBasic(layer?.security?.sourceId);
-        return Observable.defer(() => axios.get(basePath, { params, headers }))
+        return Observable.defer(() => axios.get(basePath, { params, _msAuthSourceId: layer?.security?.sourceId }))
             .catch((e) => {
                 if (e.data.indexOf("ExceptionReport") > 0) {
                     return Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {

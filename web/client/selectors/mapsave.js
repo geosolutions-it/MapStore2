@@ -11,7 +11,7 @@ import MapUtils from '../utils/MapUtils';
 import { mapSelector } from './map';
 import { createStructuredSelector, createSelector } from 'reselect';
 import { servicesSelector, selectedServiceSelector } from './catalog';
-import { getFloatingWidgets, getCollapsedState, getFloatingWidgetsLayout } from './widgets';
+import { getCollapsedState, getFloatingWidgetsLayout, getFloatingWidgets } from './widgets';
 import { mapInfoConfigurationSelector } from './mapInfo';
 import { currentTimeSelector, offsetTimeSelector } from './dimension';
 import {
@@ -24,6 +24,7 @@ import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
 import { customAttributesSettingsSelector } from "./featuregrid";
+import { dynamicProjectionDefsSelector } from './projections';
 
 const customSaveHandlers = {};
 
@@ -88,16 +89,18 @@ export const mapSaveDataSelector = createSelector(
         backgroundListSelector,
         textSearchConfigSelector,
         bookmarkSearchConfigSelector,
-        mapOptionsToSaveSelector
+        mapOptionsToSaveSelector,
+        dynamicProjectionDefsSelector
     ],
-    (map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions) => ({
+    (map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs) => ({
         map: map || {},
         layers,
         groups,
         backgrounds,
         textSearchConfig,
         bookmarkSearchConfig,
-        additionalOptions
+        additionalOptions,
+        projectionDefs
     })
 );
 
@@ -109,8 +112,17 @@ export const mapSaveDataSelector = createSelector(
  * @return the map to save
  */
 export const mapSaveSelector = state => {
-    const { map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions } = mapSaveDataSelector(state);
-    return MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
+    const { map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs } = mapSaveDataSelector(state);
+    return MapUtils.saveMapConfiguration(
+        map,
+        layers,
+        groups,
+        backgrounds,
+        textSearchConfig,
+        bookmarkSearchConfig,
+        additionalOptions,
+        projectionDefs
+    );
 };
 /**
  * Selector to identify pending changes.

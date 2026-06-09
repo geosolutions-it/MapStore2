@@ -9,6 +9,7 @@
 
 import * as csw from './CSW';
 import * as wms from './WMS';
+import * as geonode from './GeoNode';
 import * as wmts from './WMTS';
 import * as tms from './TMS';
 import * as wfs from './WFS';
@@ -18,6 +19,7 @@ import * as threeDTiles from './ThreeDTiles';
 import * as cog from './COG';
 import * as model from './Model';           // todo: will change to model
 import * as arcgis from './ArcGIS';
+import * as flatgeobuf from './FlatGeobuf';
 /**
  * APIs collection for catalog.
  * Each entry must implement:
@@ -37,6 +39,7 @@ import * as arcgis from './ArcGIS';
  * - `preprocess` return an Observable that performs actions on service object prior to its save
  * - `validate`: function that gets the service object and returns an Observable. The stream emit an exception if the service validation fails. Otherwise it emits the `service` object and complete.
  * - `testService` function that gets the service object and returns an Observable. The stream emit an exception if the service do not respond. Otherwise it emits the `service` object and complete.
+ * - `getCapabilities` (optional) this function should return the advanced support of the api
  * @memberof api
  * @name catalog
  */
@@ -44,6 +47,7 @@ export default {
     // TODO: we should separate catalog specific API from OGC services API, to define better the real interfaces of each API.
     // TODO: validate could be converted in a simple function
     // TODO: testService could be converted in a simple Promise
+    // TODO: use LAYER_TYPE constants defined in each module as keys for the exported object
     'csw': csw,
     'wfs': wfs,
     'wms': wms,
@@ -54,5 +58,7 @@ export default {
     '3dtiles': threeDTiles,
     'cog': cog,
     'model': model,
-    'arcgis': arcgis
+    'arcgis': arcgis,
+    'flatgeobuf': flatgeobuf,
+    'geonode': geonode
 };

@@ -9,7 +9,7 @@
 import expect from 'expect';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
-import { testEpic } from '../../../../epics/__tests__/epicTestUtils';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from '../../../../epics/__tests__/epicTestUtils';
 import {
     itinerarySearchByLocationNameEpic,
     itineraryMapLayoutEpic,
@@ -17,6 +17,7 @@ import {
     itinerarySelectLocationFromMapEpic,
     onItineraryRunEpic,
     onCloseItineraryEpic,
+    onToggleControlItineraryEpic,
     itineraryAddRouteAsLayerEpic,
     itineraryUpdateLocationEpic,
     onItineraryErrorEpic
@@ -38,7 +39,8 @@ import {
 } from '../../../../actions/maplayout';
 import {
     TOGGLE_CONTROL,
-    SET_CONTROL_PROPERTY
+    SET_CONTROL_PROPERTY,
+    toggleControl
 } from '../../../../actions/controls';
 import { CONTROL_NAME, ITINERARY_ROUTE_LAYER } from '../../constants';
 import { ADD_LAYER } from '../../../../actions/layers';
@@ -414,7 +416,15 @@ describe('Itinerary Epics', () => {
                 value: false
             };
 
-            testEpic(onCloseItineraryEpic, 4, action, (actions) => {
+            const state = {
+                controls: {
+                    [CONTROL_NAME]: {
+                        enabled: true
+                    }
+                }
+            };
+
+            testEpic(onCloseItineraryEpic, 5, action, (actions) => {
                 expect(actions[0].type).toBe(SET_ITINERARY_DATA);
                 expect(actions[0].data).toBeFalsy();
                 expect(actions[1].type).toBe(REMOVE_ADDITIONAL_LAYER);
@@ -422,9 +432,12 @@ describe('Itinerary Epics', () => {
                 expect(actions[1].owner).toBe(CONTROL_NAME);
                 expect(actions[2].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
                 expect(actions[2].owner).toBe(CONTROL_NAME + '_waypoint_marker');
-                expect(actions[3].type).toBe(UPDATE_LOCATIONS);
-                expect(actions[3].locations).toEqual([]);
-            }, {}, done);
+                expect(actions[3].type).toBe(CHANGE_MAPINFO_STATE);
+                expect(actions[3].enabled).toBe(true);
+                expect(actions[4].type).toBe(UPDATE_LOCATIONS);
+                expect(actions[4].locations).toEqual([]);
+                done();
+            }, state, done);
         });
 
         it('should close itinerary when RESET_ITINERARY is dispatched', (done) => {
@@ -674,6 +687,72 @@ describe('Itinerary Epics', () => {
                 expect(new Set(markerIds).size).toBe(2);
             }, {}, done);
         });
+
+        it('should handle locations with null entries', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [null, [4.8320, 45.7578]]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[0].options.features[0].geometry.coordinates).toEqual([4.8320, 45.7578]);
+            }, {}, done);
+        });
+
+        it('should handle locations with undefined entries', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [[2.3522, 48.8566], undefined]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[0].options.features[0].geometry.coordinates).toEqual([2.3522, 48.8566]);
+            }, {}, done);
+        });
+
+        it('should not zoom when only one valid location among nulls', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [null, [2.3522, 48.8566], null]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions.find(_action => _action.type === ZOOM_TO_EXTENT)).toBeFalsy();
+            }, {}, done);
+        });
+
+        it('should zoom when multiple valid locations among nulls', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [[2.3522, 48.8566], null, [4.8320, 45.7578]]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 3, action, (actions) => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+                expect(actions[2].extent).toBeTruthy();
+                expect(actions[2].crs).toBe('EPSG:4326');
+            }, {}, done);
+        });
+
+        it('should handle all null locations', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [null, null]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 0, action, (actions) => {
+                expect(actions.length).toBe(0);
+            }, {}, done);
+        });
     });
     it('onItineraryErrorEpic', (done) => {
         const action = { type: SET_ITINERARY_ERROR, error: { message: 'test error' } };
@@ -686,5 +765,79 @@ describe('Itinerary Epics', () => {
             expect(actions[0].position).toBe('tc');
             expect(actions[0].level).toBe('error');
         }, {}, done);
+    });
+
+    describe('onToggleControlItineraryEpic', () => {
+        it('should disable itinerary when a different control is toggled and itinerary is enabled', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+            const state = {
+                controls: {
+                    [CONTROL_NAME]: {
+                        enabled: true
+                    }
+                }
+            };
+
+            testEpic(
+                addTimeoutEpic(onToggleControlItineraryEpic, 10),
+                NUMBER_OF_ACTIONS,
+                toggleControl('otherControl'),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+                    expect(actions[0].control).toBe(CONTROL_NAME);
+                    expect(actions[0].property).toBe('enabled');
+                    expect(actions[0].value).toBe(false);
+                    done();
+                },
+                state
+            );
+        });
+
+        it('should not trigger when the itinerary control itself is toggled', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+            const state = {
+                controls: {
+                    [CONTROL_NAME]: {
+                        enabled: true
+                    }
+                }
+            };
+
+            testEpic(
+                addTimeoutEpic(onToggleControlItineraryEpic, 10),
+                NUMBER_OF_ACTIONS,
+                toggleControl(CONTROL_NAME),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
+                    done();
+                },
+                state
+            );
+        });
+
+        it('should not trigger when itinerary is disabled', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+            const state = {
+                controls: {
+                    [CONTROL_NAME]: {
+                        enabled: false
+                    }
+                }
+            };
+
+            testEpic(
+                addTimeoutEpic(onToggleControlItineraryEpic, 10),
+                NUMBER_OF_ACTIONS,
+                toggleControl('otherControl'),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
+                    done();
+                },
+                state
+            );
+        });
     });
 });

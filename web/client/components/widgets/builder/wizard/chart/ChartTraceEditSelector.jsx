@@ -94,7 +94,7 @@ const TraceMarkerStyle = ({ trace, error }) => {
 
 const chartTypes = [{
     type: "bar",
-    glyph: "stats"
+    glyph: "bar-chart"
 }, {
     type: "pie",
     glyph: "pie-chart"

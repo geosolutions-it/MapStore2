@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Message from '../../../../components/I18N/Message';
-import { Form, Button, ControlLabel, FormControl, Glyphicon } from 'react-bootstrap';
+import { Form, Button, ControlLabel, FormControl, Glyphicon, Alert } from 'react-bootstrap';
 import tooltip from '../../../../components/misc/enhancers/tooltip';
 const ButtonT = tooltip(Button);
 /**
@@ -11,9 +11,10 @@ const ButtonT = tooltip(Button);
  * @prop {object} credentials object with username and password
  * @prop {boolean} showCredentialsForm show form
  * @prop {function} setShowCredentialsForm function to set showCredentialsForm
+ * @prop {boolean} isCredentialsInvalid flag to indicate if credentials are invalid
  * @returns {JSX.Element} The rendered component
  */
-export default ({setCredentials = () => {}, credentials, showCredentialsForm, setShowCredentialsForm = () => {}}) => {
+export default ({setCredentials = () => {}, credentials, showCredentialsForm, setShowCredentialsForm = () => {}, isCredentialsInvalid = false}) => {
     const [username, setUsername] = useState(credentials?.username || '');
     const [password, setPassword] = useState(credentials?.password || '');
     const onSubmit = () => {
@@ -38,10 +39,15 @@ export default ({setCredentials = () => {}, credentials, showCredentialsForm, se
             <FormControl type="text"  value={username} onChange={e => setUsername(e.target.value)}/>
             <ControlLabel><Message msgId="streetView.cyclomedia.password" /></ControlLabel>
             <FormControl type="password"  value={password} onChange={e => setPassword(e.target.value)}/>
+            {isCredentialsInvalid && (
+                <Alert bsStyle="danger" style={{marginTop: 10}}>
+                    <Message msgId="streetView.cyclomedia.errors.invalidCredentials" />
+                </Alert>
+            )}
             <div className="street-view-credentials-form-buttons">
                 <Button disabled={!username || !password} onClick={() => onSubmit()}><Message msgId="streetView.cyclomedia.submit" /></Button>
                 {
-                    credentials?.username && credentials?.password && <Button onClick={() => {
+                    credentials?.username && credentials?.password && !isCredentialsInvalid && <Button onClick={() => {
                         setCredentials({username: credentials.username, password: credentials.password});
                         setShowCredentialsForm(false);
                     } }><Message msgId="cancel" /></Button>

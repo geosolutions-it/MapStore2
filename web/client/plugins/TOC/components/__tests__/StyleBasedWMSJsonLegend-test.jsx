@@ -201,4 +201,76 @@ describe('test StyleBasedWMSJsonLegend module component', () => {
         const legendRuleElem = domNode.querySelector('.wms-legend .alert-warning');
         expect(legendRuleElem).toBeFalsy();
     });
+    it('should return legendEmpty true when request fails', (done) => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            type: 'wms',
+            url: 'http://localhost:8080/geoserver3/wms'
+        };
+        mockAxios.onGet(/geoserver3/).reply(() => {
+            return [500];
+        });
+        ReactDOM.render(<StyleBasedWMSJsonLegend layer={l} onChange={(value) => {
+            try {
+                expect(value).toEqual({ legendEmpty: true });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }} />, document.getElementById("container"));
+    });
+    it('should return legendEmpty true when request succeed but there are not rules', (done) => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            type: 'wms',
+            url: 'http://localhost:8080/geoserver3/wms'
+        };
+        mockAxios.onGet(/geoserver3/).reply(() => {
+            return [200, {
+                "Legend": [{
+                    "layerName": "layer01",
+                    "title": "Layer1",
+                    "rules": []
+                }]
+            }];
+        });
+        ReactDOM.render(<StyleBasedWMSJsonLegend layer={l} onChange={(value) => {
+            try {
+                expect(value).toEqual({ legendEmpty: true });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }} />, document.getElementById("container"));
+    });
+    it('should return legendEmpty false when request succeed', (done) => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            type: 'wms',
+            url: 'http://localhost:8080/geoserver3/wms'
+        };
+        mockAxios.onGet(/geoserver3/).reply(() => {
+            return [200, {
+                "Legend": [{
+                    "layerName": "layer01",
+                    "title": "Layer1",
+                    rules
+                }]
+            }];
+        });
+        ReactDOM.render(<StyleBasedWMSJsonLegend layer={l} onChange={(value) => {
+            try {
+                expect(value).toEqual({ legendEmpty: false });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }} />, document.getElementById("container"));
+    });
 });

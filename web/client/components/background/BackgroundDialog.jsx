@@ -20,13 +20,14 @@ import uuidv1 from 'uuid/v1';
 import {pick, omit, get, keys, isNumber, isBoolean} from 'lodash';
 import Message from '../I18N/Message';
 import ResizableModal from '../misc/ResizableModal';
-import {Form, FormGroup, ControlLabel, FormControl, Glyphicon} from 'react-bootstrap';
+import {Form, FormGroup, ControlLabel, FormControl, Glyphicon, Checkbox} from 'react-bootstrap';
 import ButtonRB from '../misc/Button';
 import Thumbnail from '../maps/forms/Thumbnail';
 import WMSCacheOptions from '../TOC/fragments/settings/WMSCacheOptions';
 import { ServerTypes } from '../../utils/LayersUtils';
 import {getMessageById} from '../../utils/LocaleUtils';
 import tooltip from '../misc/enhancers/tooltip';
+import InfoPopover from '../widgets/widget/InfoPopover';
 const Button = tooltip(ButtonRB);
 const Editor = localizedProps("placeholder")(WYSIWYGEditor);
 
@@ -56,7 +57,8 @@ export default class BackgroundDialog extends React.Component {
         parameterTypeOptions: PropTypes.array,
         booleanOptions: PropTypes.array,
         projection: PropTypes.string,
-        disableTileGrids: PropTypes.bool
+        disableTileGrids: PropTypes.bool,
+        disableCropToProjectionExtent: PropTypes.bool
     };
 
     static contextTypes = {
@@ -177,6 +179,13 @@ export default class BackgroundDialog extends React.Component {
                     />
                 </FormGroup>
                 {this.renderStyleSelector()}
+                {!this.props.disableCropToProjectionExtent && <Checkbox
+                    disabled={!!this.props.layer.singleTile}
+                    key="cropToProjectionExtent" value="cropToProjectionExtent"
+                    checked={!!({ ...this.props.layer, ...this.state }.cropToProjectionExtent)}
+                    onChange={(e) => this.setState({ cropToProjectionExtent: e.target.checked })}>
+                    <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
+                </Checkbox>}
                 {this.props.layer?.serverType !== ServerTypes.NO_VENDOR && <FormGroup>
                     <WMSCacheOptions
                         layer={{ ...this.props.layer, ...this.state }}
@@ -189,7 +198,7 @@ export default class BackgroundDialog extends React.Component {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <ControlLabel style={{ flex: 1 }}><Message msgId="backgroundDialog.additionalParameters" /></ControlLabel>
                         <Button
-                            className="square-button-md"
+                            className="square-button"
                             tooltipId="backgroundDialog.addAdditionalParameterTooltip"
                             style={{ borderColor: 'transparent' }}
                             onClick={() => {
@@ -238,7 +247,7 @@ export default class BackgroundDialog extends React.Component {
                                 additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)
                             })}
                             tooltipId="backgroundDialog.removeAdditionalParameterTooltip"
-                            className="square-button-md"
+                            className="square-button"
                             style={{ borderColor: 'transparent' }}>
                             <Glyphicon glyph="trash" />
                         </Button>
@@ -284,7 +293,6 @@ export default class BackgroundDialog extends React.Component {
             fitContent
             title={<Message msgId={this.props.editing ? 'backgroundDialog.editTitle' : 'backgroundDialog.addTitle'}/>}
             show
-            fade
             clickOutEnabled={false}
             bodyClassName="ms-flex modal-properties-container background-dialog"
             loading={this.props.loading}

@@ -148,6 +148,14 @@ toGeoJSON = (rawWkt) => {
     // Remove any leading or trailing white spaces from the WKT
     let wkt = rawWkt.trim();
 
+    // Remove GeoServer’s SRID prefix (SRID=EPSG:XXXX;…), which is not standard WKT
+    let projection = null;
+    const sridMatch = /^SRID=(\d+);/i.exec(wkt);
+    if (sridMatch) {
+        projection = `EPSG:${sridMatch[1].trim()}`;
+        wkt = wkt.replace(/^SRID=\d+;/i, '');
+    }
+
     // Determine the geometry type based on the initial keyword
     const type = wkt.substring(0, wkt.indexOf('(')).trim().toUpperCase();
 
@@ -183,6 +191,11 @@ toGeoJSON = (rawWkt) => {
         throw new Error(`Not supported geometry: ${type}`);
     }
 
+    // Add projection/SRID information if it was present in the original WKT
+    if (projection) {
+        result.projection = projection;
+    }
+
     return result;
 };
 /**
@@ -190,6 +203,6 @@ toGeoJSON = (rawWkt) => {
  * @name toGeoJSON
  * @memberof utils.ogc.Filter.WKT
  * @param {string} wkt the wkt string
- * @return {object} the geoJSON geometry
+ * @return {object} the geoJSON geometry with optional projection property (if SRID was present in the original WKT)
  */
 export default toGeoJSON;

@@ -12,7 +12,7 @@ assignees: ''
 <!-- A few sentences describing the overall goals of the pull request' s commits. -->
 
 **Please check if the PR fulfills these requirements**
-- [ ] The commit message follows our guidelines: https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md
+- [ ] The commit message follows our guidelines: https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore
 - [ ] Tests for the changes have been added
 - [ ] Docs have been added / updated
 

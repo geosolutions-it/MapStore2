@@ -26,8 +26,10 @@ Once logged in as Admin, it becomes possible to manage users and groups, and the
 
 <img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage" style="max-width:300px"/>
 
-Selecting **Manage Accounts** options, the *Account Manager* opens:
+Selecting **Manage Accounts** options, the [Manage Users](managing-users.md#managing-users) tab opens:
 
 <img src="../img/managing-users-and-groups/manager-page.jpg" class="ms-docimage"/>
 
-In this page it is possible to switch between [Manage Users](managing-users.md#managing-users) or [Manage Groups](managing-groups.md#managing-groups) tab.
+Selecting **Manage Groups** options, , the [Manage Groups](managing-groups.md#managing-groups) tab opens:
+
+<img src="../img/managing-users-and-groups/manage-groups.jpg" class="ms-docimage"/>

@@ -1,0 +1,2579 @@
+{
+  "widgets": [
+            {
+                "id": "33fe2eb0-d996-11eb-a33a-93d34dd07255",
+                "layer": {
+                    "id": "gs:us_states__15",
+                    "format": "image/vnd.jpeg-png8",
+                    "search": {
+                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                        "type": "wfs"
+                    },
+                    "name": "gs:us_states",
+                    "opacity": 1,
+                    "description": "",
+                    "style": "pophade",
+                    "layerFilter": {
+                        "groupFields": [
+                            {
+                                "id": 1,
+                                "logic": "OR",
+                                "index": 0
+                            }
+                        ],
+                        "filterFields": [
+                            {
+                                "rowId": 1620923571841,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "E N Cen",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                },
+                                "openAutocompleteMenu": false
+                            },
+                            {
+                                "rowId": 1620923577673,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "E S Cen",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            },
+                            {
+                                "rowId": 1620923584177,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "Mid Atl",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            },
+                            {
+                                "rowId": 1620923589577,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "Mtn",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            }
+                        ],
+                        "attributePanelExpanded": true,
+                        "spatialPanelExpanded": true,
+                        "crossLayerExpanded": true,
+                        "crossLayerFilter": null,
+                        "spatialField": {
+                            "method": null,
+                            "operation": "INTERSECTS",
+                            "geometry": null,
+                            "attribute": "the_geom"
+                        },
+                        "searchUrl": null,
+                        "featureTypeConfigUrl": null,
+                        "showGeneratedFilter": false,
+                        "showDetailsPanel": false,
+                        "groupLevels": 5,
+                        "useMapProjection": false,
+                        "toolbarEnabled": true,
+                        "maxFeaturesWPS": 5,
+                        "simpleFilterFields": [],
+                        "autocompleteEnabled": true,
+                        "disabled": false,
+                        "filters": [
+                            {
+                                "id": "interactiveLegend",
+                                "format": "logic",
+                                "version": "1.0.0",
+                                "logic": "OR",
+                                "filters": [
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                    },
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "title": "States of US",
+                    "tiled": true,
+                    "type": "wms",
+                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                    "bbox": {
+                        "crs": "EPSG:4326",
+                        "bounds": {
+                            "minx": "-124.73142200000001",
+                            "miny": "24.955967",
+                            "maxx": "-66.969849",
+                            "maxy": "49.371735"
+                        }
+                    },
+                    "visibility": true,
+                    "singleTile": false,
+                    "allowedSRS": {
+                        "EPSG:3857": true,
+                        "EPSG:900913": true,
+                        "EPSG:4326": true
+                    },
+                    "dimensions": [],
+                    "hideLoading": false,
+                    "handleClickOnLayer": false,
+                    "featureInfo": {
+                        "format": "TEMPLATE",
+                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                    },
+                    "catalogURL": null,
+                    "useForElevation": false,
+                    "hidden": false,
+                    "legendOptions": {
+                        "legendWidth": 100,
+                        "legendHeight": 50
+                    },
+                    "tileSize": 512,
+                    "version": "1.3.0",
+                    "expanded": true,
+                    "enableInteractiveLegend": true,
+                    "enableDynamicLegend": true,
+                    "params": {},
+                    "localizedLayerStyles": true,
+                    "disableFeaturesEditing": true,
+                    "loading": false,
+                    "loadingError": false
+                },
+                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                "legend": false,
+                "mapSync": true,
+                "cartesian": true,
+                "yAxis": true,
+                "widgetType": "table",
+                "geomProp": "the_geom",
+                "options": {
+                    "propertyName": [
+                        "STATE_NAME",
+                        "STATE_FIPS",
+                        "SUB_REGION",
+                        "STATE_ABBR",
+                        "LAND_KM",
+                        "WATER_KM",
+                        "PERSONS",
+                        "FAMILIES",
+                        "HOUSHOLD",
+                        "MALE",
+                        "FEMALE",
+                        "WORKERS",
+                        "DRVALONE",
+                        "CARPOOL",
+                        "PUBTRANS",
+                        "EMPLOYED",
+                        "UNEMPLOY",
+                        "SERVICE",
+                        "MANUAL",
+                        "P_MALE",
+                        "P_FEMALE",
+                        "SAMP_POP"
+                    ]
+                },
+                "title": "US States",
+                "dataGrid": {
+                    "y": 0,
+                    "x": 0,
+                    "w": 1,
+                    "h": 1
+                }
+            },
+            {
+                "id": "9f54aae0-d996-11eb-a33a-93d34dd07255",
+                "mapSync": true,
+                "widgetType": "chart",
+                "dataGrid": {
+                    "w": 1,
+                    "h": 1,
+                    "x": 0,
+                    "y": 0
+                },
+                "title": "US Workers",
+                "selectedChartId": "af678120-6011-11ed-8df5-6f99a75c8882",
+                "charts": [
+                    {
+                        "name": "Chart-1",
+                        "legend": true,
+                        "cartesian": true,
+                        "chartId": "af678120-6011-11ed-8df5-6f99a75c8882",
+                        "xAxisOpts": [
+                            {
+                                "id": 0
+                            }
+                        ],
+                        "yAxisOpts": [
+                            {
+                                "hide": false,
+                                "id": 0
+                            }
+                        ],
+                        "traces": [
+                            {
+                                "id": "trace-af678120-6011-11ed-8df5-6f99a75c8882",
+                                "type": "pie",
+                                "options": {
+                                    "groupByAttributes": "SUB_REGION",
+                                    "aggregationAttribute": "WORKERS",
+                                    "aggregateFunction": "Sum",
+                                    "classificationAttribute": "SUB_REGION"
+                                },
+                                "style": {
+                                    "msClassification": {
+                                        "method": "uniqueInterval",
+                                        "intervals": 5,
+                                        "reverse": false,
+                                        "ramp": "viridis",
+                                        "defaultColor": "#0888A1",
+                                        "defaultLabel": "",
+                                        "classes": [
+                                            {
+                                                "id": "e0e8f4d2-ab8b-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#8dd3c7",
+                                                "value": "E N Cen",
+                                                "unique": "E N Cen"
+                                            },
+                                            {
+                                                "id": "9eac7fd0-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#e7e5c2",
+                                                "value": "W N Cen",
+                                                "unique": "W N Cen"
+                                            },
+                                            {
+                                                "id": "9e12d7e0-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#ec8f8c",
+                                                "value": "Mid Atl",
+                                                "unique": "Mid Atl"
+                                            },
+                                            {
+                                                "id": "9d7c8b50-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#90b1c5",
+                                                "value": "Mtn",
+                                                "unique": "Mtn"
+                                            },
+                                            {
+                                                "id": "9ce04b50-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#d8c966",
+                                                "value": "N Eng",
+                                                "unique": "N Eng"
+                                            },
+                                            {
+                                                "id": "9c443260-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#f3cfd6",
+                                                "value": "Pacific",
+                                                "unique": "Pacific"
+                                            },
+                                            {
+                                                "id": "9b8aa660-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#d2c3d2",
+                                                "value": "S Atl",
+                                                "unique": "S Atl"
+                                            },
+                                            {
+                                                "id": "9991e3a0-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#c6c3c2",
+                                                "value": "W N Cen",
+                                                "unique": "W N Cen"
+                                            },
+                                            {
+                                                "id": "9abc59e0-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#ffed6f",
+                                                "value": "W S Cen",
+                                                "unique": "W S Cen"
+                                            }
+                                        ]
+                                    },
+                                    "marker": {
+                                        "line": {
+                                            "width": 2,
+                                            "color": "rgb(255, 255, 255)"
+                                        }
+                                    }
+                                },
+                                "textinfo": null,
+                                "geomProp": "the_geom",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "includeLegendPercent": true,
+                                "valid": true,
+                                "name": "Workers"
+                            },
+                            {
+                                "id": "3aabc330-7fd9-11ee-94ad-9b26bae073df",
+                                "type": "pie",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "geomProp": "the_geom",
+                                "options": {
+                                    "groupByAttributes": "SUB_REGION",
+                                    "aggregationAttribute": "EMPLOYED",
+                                    "aggregateFunction": "Sum"
+                                },
+                                "style": {
+                                    "msClassification": {
+                                        "method": "uniqueInterval",
+                                        "intervals": 5,
+                                        "reverse": false,
+                                        "ramp": "blues"
+                                    },
+                                    "marker": {
+                                        "line": {
+                                            "width": 2,
+                                            "color": "rgb(255, 255, 255)"
+                                        }
+                                    }
+                                },
+                                "includeLegendPercent": true,
+                                "name": "Employed",
+                                "valid": true
+                            },
+                            {
+                                "id": "673c4d20-7fd9-11ee-94ad-9b26bae073df",
+                                "type": "pie",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "geomProp": "the_geom",
+                                "options": {
+                                    "groupByAttributes": "SUB_REGION",
+                                    "aggregationAttribute": "UNEMPLOY",
+                                    "aggregateFunction": "Sum"
+                                },
+                                "style": {
+                                    "msClassification": {
+                                        "method": "uniqueInterval",
+                                        "intervals": 5,
+                                        "reverse": false,
+                                        "ramp": "puor"
+                                    },
+                                    "marker": {
+                                        "line": {
+                                            "color": "rgb(255, 255, 255)",
+                                            "width": 2
+                                        }
+                                    }
+                                },
+                                "name": "Unemploy",
+                                "includeLegendPercent": true,
+                                "valid": true
+                            },
+                            {
+                                "id": "82be89a0-7fd9-11ee-94ad-9b26bae073df",
+                                "type": "pie",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "geomProp": "the_geom",
+                                "options": {
+                                    "groupByAttributes": "SUB_REGION",
+                                    "aggregationAttribute": "HOUSHOLD",
+                                    "aggregateFunction": "Sum"
+                                },
+                                "style": {
+                                    "msClassification": {
+                                        "method": "uniqueInterval",
+                                        "intervals": 5,
+                                        "reverse": false,
+                                        "ramp": "piyg"
+                                    },
+                                    "marker": {
+                                        "line": {
+                                            "color": "rgb(255, 255, 255)",
+                                            "width": 2
+                                        }
+                                    }
+                                },
+                                "name": "Houshold",
+                                "includeLegendPercent": true
+                            }
+                        ]
+                    }
+                ],
+                "selectedTraceId": "673c4d20-7fd9-11ee-94ad-9b26bae073df"
+            },
+            {
+                "id": "d8f1a910-d996-11eb-a33a-93d34dd07255",
+                "layer": {
+                    "id": "gs:us_states__15",
+                    "format": "image/vnd.jpeg-png8",
+                    "search": {
+                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                        "type": "wfs"
+                    },
+                    "name": "gs:us_states",
+                    "opacity": 1,
+                    "description": "",
+                    "style": "pophade",
+                    "layerFilter": {
+                        "groupFields": [
+                            {
+                                "id": 1,
+                                "logic": "OR",
+                                "index": 0
+                            }
+                        ],
+                        "filterFields": [
+                            {
+                                "rowId": 1620923571841,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "E N Cen",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                },
+                                "openAutocompleteMenu": false
+                            },
+                            {
+                                "rowId": 1620923577673,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "E S Cen",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            },
+                            {
+                                "rowId": 1620923584177,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "Mid Atl",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            },
+                            {
+                                "rowId": 1620923589577,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "Mtn",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            }
+                        ],
+                        "attributePanelExpanded": true,
+                        "spatialPanelExpanded": true,
+                        "crossLayerExpanded": true,
+                        "crossLayerFilter": null,
+                        "spatialField": {
+                            "method": null,
+                            "operation": "INTERSECTS",
+                            "geometry": null,
+                            "attribute": "the_geom"
+                        },
+                        "searchUrl": null,
+                        "featureTypeConfigUrl": null,
+                        "showGeneratedFilter": false,
+                        "showDetailsPanel": false,
+                        "groupLevels": 5,
+                        "useMapProjection": false,
+                        "toolbarEnabled": true,
+                        "maxFeaturesWPS": 5,
+                        "simpleFilterFields": [],
+                        "autocompleteEnabled": true,
+                        "disabled": false,
+                        "filters": [
+                            {
+                                "id": "interactiveLegend",
+                                "format": "logic",
+                                "version": "1.0.0",
+                                "logic": "OR",
+                                "filters": [
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                    },
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "title": "States of US",
+                    "tiled": true,
+                    "type": "wms",
+                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                    "bbox": {
+                        "crs": "EPSG:4326",
+                        "bounds": {
+                            "minx": "-124.73142200000001",
+                            "miny": "24.955967",
+                            "maxx": "-66.969849",
+                            "maxy": "49.371735"
+                        }
+                    },
+                    "visibility": true,
+                    "singleTile": false,
+                    "allowedSRS": {
+                        "EPSG:3857": true,
+                        "EPSG:900913": true,
+                        "EPSG:4326": true
+                    },
+                    "dimensions": [],
+                    "hideLoading": false,
+                    "handleClickOnLayer": false,
+                    "featureInfo": {
+                        "format": "TEMPLATE",
+                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                    },
+                    "catalogURL": null,
+                    "useForElevation": false,
+                    "hidden": false,
+                    "legendOptions": {
+                        "legendWidth": 100,
+                        "legendHeight": 50
+                    },
+                    "tileSize": 512,
+                    "version": "1.3.0",
+                    "expanded": true,
+                    "enableInteractiveLegend": true,
+                    "enableDynamicLegend": true,
+                    "params": {},
+                    "localizedLayerStyles": true,
+                    "disableFeaturesEditing": true,
+                    "loading": false,
+                    "loadingError": false
+                },
+                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                "legend": false,
+                "mapSync": true,
+                "cartesian": true,
+                "yAxis": true,
+                "widgetType": "counter",
+                "geomProp": "the_geom",
+                "options": {
+                    "propertyName": [
+                        "STATE_NAME",
+                        "STATE_FIPS",
+                        "SUB_REGION",
+                        "STATE_ABBR",
+                        "LAND_KM",
+                        "WATER_KM",
+                        "PERSONS",
+                        "FAMILIES",
+                        "HOUSHOLD",
+                        "MALE",
+                        "FEMALE",
+                        "WORKERS",
+                        "DRVALONE",
+                        "CARPOOL",
+                        "PUBTRANS",
+                        "EMPLOYED",
+                        "UNEMPLOY",
+                        "SERVICE",
+                        "MANUAL",
+                        "P_MALE",
+                        "P_FEMALE",
+                        "SAMP_POP"
+                    ],
+                    "aggregationAttribute": "FEMALE",
+                    "aggregateFunction": "Sum"
+                },
+                "title": "US Female",
+                "dataGrid": {
+                    "y": 0,
+                    "x": 0,
+                    "w": 1,
+                    "h": 1
+                },
+                "counterOpts": {
+                    "format": ".2s",
+                    "tickPrefix": "~"
+                }
+            },
+            {
+                "id": "e3dd1210-d996-11eb-a33a-93d34dd07255",
+                "layer": {
+                    "id": "gs:us_states__15",
+                    "format": "image/vnd.jpeg-png8",
+                    "search": {
+                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                        "type": "wfs"
+                    },
+                    "name": "gs:us_states",
+                    "opacity": 1,
+                    "description": "",
+                    "style": "pophade",
+                    "layerFilter": {
+                        "groupFields": [
+                            {
+                                "id": 1,
+                                "logic": "OR",
+                                "index": 0
+                            }
+                        ],
+                        "filterFields": [
+                            {
+                                "rowId": 1620923571841,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "E N Cen",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                },
+                                "openAutocompleteMenu": false
+                            },
+                            {
+                                "rowId": 1620923577673,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "E S Cen",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            },
+                            {
+                                "rowId": 1620923584177,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "Mid Atl",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            },
+                            {
+                                "rowId": 1620923589577,
+                                "groupId": 1,
+                                "attribute": "SUB_REGION",
+                                "operator": "=",
+                                "value": "Mtn",
+                                "type": "string",
+                                "fieldOptions": {
+                                    "valuesCount": 0,
+                                    "currentPage": 1
+                                },
+                                "exception": null,
+                                "loading": false,
+                                "openAutocompleteMenu": false,
+                                "options": {
+                                    "SUB_REGION": []
+                                }
+                            }
+                        ],
+                        "attributePanelExpanded": true,
+                        "spatialPanelExpanded": true,
+                        "crossLayerExpanded": true,
+                        "crossLayerFilter": null,
+                        "spatialField": {
+                            "method": null,
+                            "operation": "INTERSECTS",
+                            "geometry": null,
+                            "attribute": "the_geom"
+                        },
+                        "searchUrl": null,
+                        "featureTypeConfigUrl": null,
+                        "showGeneratedFilter": false,
+                        "showDetailsPanel": false,
+                        "groupLevels": 5,
+                        "useMapProjection": false,
+                        "toolbarEnabled": true,
+                        "maxFeaturesWPS": 5,
+                        "simpleFilterFields": [],
+                        "autocompleteEnabled": true,
+                        "disabled": false,
+                        "filters": [
+                            {
+                                "id": "interactiveLegend",
+                                "format": "logic",
+                                "version": "1.0.0",
+                                "logic": "OR",
+                                "filters": [
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                    },
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "title": "States of US",
+                    "tiled": true,
+                    "type": "wms",
+                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                    "bbox": {
+                        "crs": "EPSG:4326",
+                        "bounds": {
+                            "minx": "-124.73142200000001",
+                            "miny": "24.955967",
+                            "maxx": "-66.969849",
+                            "maxy": "49.371735"
+                        }
+                    },
+                    "visibility": true,
+                    "singleTile": false,
+                    "allowedSRS": {
+                        "EPSG:3857": true,
+                        "EPSG:900913": true,
+                        "EPSG:4326": true
+                    },
+                    "dimensions": [],
+                    "hideLoading": false,
+                    "handleClickOnLayer": false,
+                    "featureInfo": {
+                        "format": "TEMPLATE",
+                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                    },
+                    "catalogURL": null,
+                    "useForElevation": false,
+                    "hidden": false,
+                    "legendOptions": {
+                        "legendWidth": 100,
+                        "legendHeight": 50
+                    },
+                    "tileSize": 512,
+                    "version": "1.3.0",
+                    "expanded": true,
+                    "enableInteractiveLegend": true,
+                    "enableDynamicLegend": true,
+                    "params": {},
+                    "localizedLayerStyles": true,
+                    "disableFeaturesEditing": true,
+                    "loading": false,
+                    "loadingError": false
+                },
+                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                "legend": false,
+                "mapSync": true,
+                "cartesian": true,
+                "yAxis": true,
+                "widgetType": "counter",
+                "geomProp": "the_geom",
+                "options": {
+                    "aggregationAttribute": "MALE",
+                    "aggregateFunction": "Sum"
+                },
+                "title": "US Male",
+                "dataGrid": {
+                    "y": 0,
+                    "x": 0,
+                    "w": 1,
+                    "h": 1
+                },
+                "counterOpts": {
+                    "format": ".2s",
+                    "tickPrefix": "~"
+                }
+            },
+            {
+                "id": "34f67bf0-d997-11eb-a33a-93d34dd07255",
+                "mapSync": true,
+                "widgetType": "chart",
+                "dataGrid": {
+                    "w": 1,
+                    "h": 1,
+                    "x": 0,
+                    "y": 0
+                },
+                "title": "US Surfaces",
+                "selectedChartId": "af678121-6011-11ed-8df5-6f99a75c8882",
+                "charts": [
+                    {
+                        "name": "Chart-1",
+                        "legend": false,
+                        "cartesian": true,
+                        "chartId": "af678121-6011-11ed-8df5-6f99a75c8882",
+                        "xAxisOpts": [
+                            {
+                                "id": 0
+                            }
+                        ],
+                        "yAxisOpts": [
+                            {
+                                "hide": false,
+                                "id": 0
+                            },
+                            {
+                                "side": "right",
+                                "id": "bba16a20-7fda-11ee-94ad-9b26bae073df",
+                                "anchor": "x",
+                                "angle": 45
+                            }
+                        ],
+                        "traces": [
+                            {
+                                "id": "trace-af678121-6011-11ed-8df5-6f99a75c8882",
+                                "type": "line",
+                                "options": {
+                                    "groupByAttributes": "STATE_NAME",
+                                    "aggregationAttribute": "WATER_KM",
+                                    "aggregateFunction": "Sum"
+                                },
+                                "style": {
+                                    "line": {
+                                        "color": "rgb(74, 144, 226)",
+                                        "width": 3
+                                    },
+                                    "marker": {
+                                        "color": "#0888A1",
+                                        "size": 6
+                                    }
+                                },
+                                "geomProp": "the_geom",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "name": "Water Km",
+                                "valid": true,
+                                "yaxis": "bba16a20-7fda-11ee-94ad-9b26bae073df"
+                            },
+                            {
+                                "id": "cfa9da30-7fd9-11ee-94ad-9b26bae073df",
+                                "type": "line",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "geomProp": "the_geom",
+                                "options": {
+                                    "groupByAttributes": "STATE_NAME",
+                                    "aggregationAttribute": "LAND_KM",
+                                    "aggregateFunction": "Sum"
+                                },
+                                "style": {
+                                    "line": {
+                                        "color": "rgba(139, 87, 42, 0.46)",
+                                        "width": 3
+                                    },
+                                    "marker": {
+                                        "color": "rgb(103.80855879892516, 75.4551029931857, 28.029249141429002)",
+                                        "size": 6
+                                    }
+                                },
+                                "name": "Land Km"
+                            }
+                        ],
+                        "yaxis": "bba16a20-7fda-11ee-94ad-9b26bae073df",
+                        "xaxis": 0
+                    }
+                ],
+                "selectedTraceId": "trace-af678121-6011-11ed-8df5-6f99a75c8882"
+            },
+            {
+                "id": "cc462410-d997-11eb-a064-e1981316fca0",
+                "mapSync": true,
+                "widgetType": "chart",
+                "dataGrid": {
+                    "y": 0,
+                    "x": 0,
+                    "w": 1,
+                    "h": 1
+                },
+                "title": "US Population",
+                "selectedChartId": "af678122-6011-11ed-8df5-6f99a75c8882",
+                "charts": [
+                    {
+                        "name": "Chart-1",
+                        "legend": true,
+                        "cartesian": true,
+                        "chartId": "af678122-6011-11ed-8df5-6f99a75c8882",
+                        "barChartType": "group",
+                        "xAxisOpts": [
+                            {
+                                "id": 0
+                            },
+                            {
+                                "id": "c18d8ea0-796d-11ee-ae6f-f3bfa3b34da0",
+                                "side": "top",
+                                "hide": false,
+                                "color": "rgb(39, 151, 173)",
+                                "fontSize": 8,
+                                "anchor": "free",
+                                "positionPx": 2,
+                                "angle": -45
+                            }
+                        ],
+                        "yAxisOpts": [
+                            {
+                                "hide": false,
+                                "id": 0
+                            }
+                        ],
+                        "traces": [
+                            {
+                                "id": "trace-af678122-6011-11ed-8df5-6f99a75c8882",
+                                "name": "Persons",
+                                "type": "bar",
+                                "options": {
+                                    "groupByAttributes": "STATE_NAME",
+                                    "aggregationAttribute": "PERSONS",
+                                    "aggregateFunction": "Sum",
+                                    "classificationAttribute": "SUB_REGION"
+                                },
+                                "style": {
+                                    "msMode": "classification",
+                                    "msClassification": {
+                                        "method": "uniqueInterval",
+                                        "intervals": 5,
+                                        "reverse": false,
+                                        "ramp": "viridis",
+                                        "defaultColor": "#0888A1",
+                                        "defaultLabel": "",
+                                        "classes": [
+                                            {
+                                                "id": "e0e8f4d2-ab8b-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#8dd3c7",
+                                                "value": "E N Cen",
+                                                "unique": "E N Cen"
+                                            },
+                                            {
+                                                "id": "da300dc0-ab92-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#e7e5c2",
+                                                "value": "E S Cen",
+                                                "unique": "E S Cen"
+                                            },
+                                            {
+                                                "id": "e38e6e20-ab92-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#ec8f8c",
+                                                "value": "Mid Atl",
+                                                "unique": "Mid Atl"
+                                            },
+                                            {
+                                                "id": "ed2ee090-ab92-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#90b1c5",
+                                                "value": "Mtn",
+                                                "unique": "Mtn"
+                                            },
+                                            {
+                                                "id": "01813570-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#d8c966",
+                                                "value": "N Eng",
+                                                "unique": "N Eng"
+                                            },
+                                            {
+                                                "id": "097b71f0-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#f3cfd6",
+                                                "value": "Pacific",
+                                                "unique": "Pacific"
+                                            },
+                                            {
+                                                "id": "1da704f0-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#d2c3d2",
+                                                "value": "S Atl",
+                                                "unique": "S Atl"
+                                            },
+                                            {
+                                                "id": "27b2bc50-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#c6c3c2",
+                                                "value": "W N Cen",
+                                                "unique": "W N Cen"
+                                            },
+                                            {
+                                                "id": "2fb58450-ab93-11ec-98f5-3938b63067c2",
+                                                "title": "",
+                                                "color": "#ffed6f",
+                                                "value": "W S Cen",
+                                                "unique": "W S Cen"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "geomProp": "the_geom",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "valid": true
+                            },
+                            {
+                                "id": "78756620-796d-11ee-ae6f-f3bfa3b34da0",
+                                "type": "line",
+                                "layer": {
+                                    "id": "gs:us_states__15",
+                                    "format": "image/vnd.jpeg-png8",
+                                    "search": {
+                                        "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                                        "type": "wfs"
+                                    },
+                                    "name": "gs:us_states",
+                                    "opacity": 1,
+                                    "description": "",
+                                    "style": "pophade",
+                                    "layerFilter": {
+                                        "groupFields": [
+                                            {
+                                                "id": 1,
+                                                "logic": "OR",
+                                                "index": 0
+                                            }
+                                        ],
+                                        "filterFields": [
+                                            {
+                                                "rowId": 1620923571841,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E N Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                },
+                                                "openAutocompleteMenu": false
+                                            },
+                                            {
+                                                "rowId": 1620923577673,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "E S Cen",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923584177,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mid Atl",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            },
+                                            {
+                                                "rowId": 1620923589577,
+                                                "groupId": 1,
+                                                "attribute": "SUB_REGION",
+                                                "operator": "=",
+                                                "value": "Mtn",
+                                                "type": "string",
+                                                "fieldOptions": {
+                                                    "valuesCount": 0,
+                                                    "currentPage": 1
+                                                },
+                                                "exception": null,
+                                                "loading": false,
+                                                "openAutocompleteMenu": false,
+                                                "options": {
+                                                    "SUB_REGION": []
+                                                }
+                                            }
+                                        ],
+                                        "attributePanelExpanded": true,
+                                        "spatialPanelExpanded": true,
+                                        "crossLayerExpanded": true,
+                                        "crossLayerFilter": null,
+                                        "spatialField": {
+                                            "method": null,
+                                            "operation": "INTERSECTS",
+                                            "geometry": null,
+                                            "attribute": "the_geom"
+                                        },
+                                        "searchUrl": null,
+                                        "featureTypeConfigUrl": null,
+                                        "showGeneratedFilter": false,
+                                        "showDetailsPanel": false,
+                                        "groupLevels": 5,
+                                        "useMapProjection": false,
+                                        "toolbarEnabled": true,
+                                        "maxFeaturesWPS": 5,
+                                        "simpleFilterFields": [],
+                                        "autocompleteEnabled": true,
+                                        "disabled": false,
+                                        "filters": [
+                                            {
+                                                "id": "interactiveLegend",
+                                                "format": "logic",
+                                                "version": "1.0.0",
+                                                "logic": "OR",
+                                                "filters": [
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '77987.8' AND LAND_KM < '92903.7'",
+                                                        "id": "[LAND_KM >= '77987.8' AND LAND_KM < '92903.7']"
+                                                    },
+                                                    {
+                                                        "format": "cql",
+                                                        "version": "1.0.0",
+                                                        "body": "LAND_KM >= '103961.9' AND LAND_KM < '105823.6'",
+                                                        "id": "[LAND_KM >= '103961.9' AND LAND_KM < '105823.6']"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "title": "States of US",
+                                    "tiled": true,
+                                    "type": "wms",
+                                    "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                                    "bbox": {
+                                        "crs": "EPSG:4326",
+                                        "bounds": {
+                                            "minx": "-124.73142200000001",
+                                            "miny": "24.955967",
+                                            "maxx": "-66.969849",
+                                            "maxy": "49.371735"
+                                        }
+                                    },
+                                    "visibility": true,
+                                    "singleTile": false,
+                                    "allowedSRS": {
+                                        "EPSG:3857": true,
+                                        "EPSG:900913": true,
+                                        "EPSG:4326": true
+                                    },
+                                    "dimensions": [],
+                                    "hideLoading": false,
+                                    "handleClickOnLayer": false,
+                                    "featureInfo": {
+                                        "format": "TEMPLATE",
+                                        "template": "<p><strong>STATE_NAME - ${properties.STATE_NAME}</strong></p><p><strong>SUB_REGION - ${properties.SUB_REGION }</strong></p><p><strong>STATE_ABBR - ${properties.STATE_ABBR }</strong></p><p><strong>LAND_KM - ${properties.LAND_KM }</strong></p>"
+                                    },
+                                    "catalogURL": null,
+                                    "useForElevation": false,
+                                    "hidden": false,
+                                    "legendOptions": {
+                                        "legendWidth": 100,
+                                        "legendHeight": 50
+                                    },
+                                    "tileSize": 512,
+                                    "version": "1.3.0",
+                                    "expanded": true,
+                                    "enableInteractiveLegend": true,
+                                    "enableDynamicLegend": true,
+                                    "params": {},
+                                    "localizedLayerStyles": true,
+                                    "disableFeaturesEditing": true,
+                                    "loading": false,
+                                    "loadingError": false
+                                },
+                                "geomProp": "the_geom",
+                                "options": {
+                                    "groupByAttributes": "STATE_NAME",
+                                    "aggregationAttribute": "FAMILIES",
+                                    "aggregateFunction": "Sum"
+                                },
+                                "style": {
+                                    "line": {
+                                        "color": "#0888A1",
+                                        "width": 2
+                                    },
+                                    "marker": {
+                                        "color": "#0888A1",
+                                        "size": 6
+                                    }
+                                },
+                                "xaxis": "c18d8ea0-796d-11ee-ae6f-f3bfa3b34da0",
+                                "name": "Families"
+                            }
+                        ],
+                        "xaxis": "c18d8ea0-796d-11ee-ae6f-f3bfa3b34da0"
+                    }
+                ],
+                "selectedTraceId": "78756620-796d-11ee-ae6f-f3bfa3b34da0"
+            }
+        ]
+}

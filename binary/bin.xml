@@ -4,10 +4,12 @@
     <format>zip</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
+  <!-- main webapp (war built by bin-war module) -->
   <fileSets>
+    <!-- NOTE: we keep fileSets for other files (jre, libs, scripts, tomcat conf, logs, work) -->
     <fileSet>
-      <!-- the main webapp -->
-      <directory>./bin-war/target/</directory>
+      <!-- the main webapp (relative to bin-war module where assembly will run) -->
+      <directory>target/</directory>
       <outputDirectory>mapstore2/webapps/</outputDirectory>
       <includes>
         <include>mapstore.war</include>
@@ -22,7 +24,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <!-- the libs needed to run tomcat -->
+      <!-- the libs needed to run tomcat (copied by dependency plugin into target/dependency) -->
       <directory>target/dependency</directory>
       <outputDirectory>mapstore2/lib</outputDirectory>
       <includes>
@@ -31,8 +33,8 @@
       </includes>
     </fileSet>
     <fileSet>
-      <!-- windows batch files -->
-      <directory>bin</directory>
+      <!-- windows batch files (stored in binary/bin) -->
+      <directory>../bin</directory>
       <lineEnding>keep</lineEnding>
       <outputDirectory>mapstore2/</outputDirectory>
       <includes>
@@ -40,8 +42,8 @@
       </includes>
     </fileSet>
     <fileSet>
-      <!-- unix shell scripts -->
-      <directory>bin</directory>
+      <!-- unix shell scripts (stored in binary/bin) -->
+      <directory>../bin</directory>
       <lineEnding>unix</lineEnding>
       <outputDirectory>mapstore2/</outputDirectory>
       <fileMode>0755</fileMode>
@@ -51,21 +53,21 @@
       </includes>
     </fileSet>
     <fileSet>
-      <!-- tomcat configuration -->
-      <directory>tomcat</directory>
+      <!-- tomcat configuration (stored in binary/tomcat) -->
+      <directory>../tomcat</directory>
       <outputDirectory>mapstore2</outputDirectory>
       <includes>
         <include>**/*</include>
       </includes>
     </fileSet>
     <fileSet>
-      <!-- empty log directory -->
-      <directory>logs</directory>
+      <!-- empty log directory (in binary/logs) -->
+      <directory>../logs</directory>
       <outputDirectory>mapstore2</outputDirectory>
     </fileSet>
     <fileSet>
-      <!-- empty work directory -->
-      <directory>work</directory>
+      <!-- empty work directory (in binary/work) -->
+      <directory>../work</directory>
       <outputDirectory>mapstore2</outputDirectory>
     </fileSet>
   </fileSets>

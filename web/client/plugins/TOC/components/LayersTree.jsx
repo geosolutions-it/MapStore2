@@ -68,6 +68,7 @@ const loopGroupCondition = (groupNode, condition) => {
  * @prop {string} noFilteredResultsMsgId message id for no result on filter
  * @prop {object} config optional configuration available for the nodes
  * @prop {boolean} config.sortable activate the possibility to sort nodes
+ * @prop {component} treeHeader display a header on top of the layer tree
  */
 const LayersTree = ({
     tree,
@@ -90,7 +91,9 @@ const LayersTree = ({
     nodeToolItems,
     nodeContentItems,
     singleDefaultGroup = isSingleDefaultGroup(tree),
-    theme
+    theme,
+    treeHeader,
+    getNodeStyle = () => ({})
 }) => {
 
     const containerNode = useRef();
@@ -115,10 +118,6 @@ const LayersTree = ({
     const getLayer = () => {
         const Layer = layerNodeComponent;
         return (<Layer />);
-    };
-
-    const getNodeStyle = () => {
-        return {};
     };
 
     const getNodeClassName = (currentNode) => {
@@ -151,6 +150,7 @@ const LayersTree = ({
                     event.preventDefault();
                 }}
             >
+                {treeHeader ?? null}
                 {(root || []).map((node, index) => {
                     return (
                         <DefaultLayerOrGroup

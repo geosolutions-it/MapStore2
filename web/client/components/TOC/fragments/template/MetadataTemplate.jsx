@@ -49,7 +49,7 @@ class MetadataTemplate extends React.Component {
                 {content}
                 <Button
                     style={{margin: '4px 0 0 4px'}}
-                    className="square-button-md no-border"
+                    className="square-button no-border"
                     onClick={() => collapsePanel(id, !this.state.collapsed[id])}>
                     <Glyphicon glyph={this.state.collapsed[id] ? 'plus' : 'minus'}/>
                 </Button>

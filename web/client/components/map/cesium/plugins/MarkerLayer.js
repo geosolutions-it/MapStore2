@@ -9,7 +9,7 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 /**
  * @deprecated

@@ -94,7 +94,7 @@ export default ({
                         isHomeButtonEnabled && (
                             <Home
                                 bsStyle="default"
-                                className="square-button-md no-border"
+                                className="square-button no-border"
                                 tooltipPosition="right"
                                 renderUnsavedMapChangesDialog={false}
                             />

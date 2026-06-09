@@ -16,7 +16,8 @@ import {
     DEFAULT_PROVIDER,
     DEFAULT_PROFILE_OPTIONS,
     DEFAULT_SNAP_PREVENTION_OPTIONS,
-    DEFAULT_PROVIDER_CONFIGS
+    DEFAULT_PROVIDER_CONFIGS,
+    FLEXIBLE_MODE_PARAMS
 } from '../constants';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
@@ -47,13 +48,23 @@ const GraphHopperProvider = ({
     providerBodyRef.current = providerConfig;
 
     useEffect(() => {
-        setProviderConfig(prev => ({
-            ...prev,
-            ...omit(config, 'key'),
-            ...DEFAULT_PROVIDER_CONFIGS
-        }));
+        setProviderConfig(prev => {
+            const merged = {
+                ...DEFAULT_PROVIDER_CONFIGS,
+                ...prev,
+                ...omit(config, 'key')
+            };
+            return merged['ch.disable'] ? merged : omit(merged, FLEXIBLE_MODE_PARAMS);
+        });
     }, []);
     const [avoidRoads, setAvoidRoads] = useState([]);
+
+    // Reset avoidRoads
+    useEffect(() => {
+        if (providerConfig.custom_model === undefined) {
+            setAvoidRoads(prev => prev.length > 0 ? [] : prev);
+        }
+    }, [providerConfig.custom_model]);
 
     const handleProviderBodyChange = (key, value) => {
         let _value = value;
@@ -151,7 +162,8 @@ const GraphHopperProvider = ({
                         ))}
                     </ButtonGroup>
                 </FlexBox.Fill>
-                <FlexBox gap="sm" centerChildrenVertically>
+                {/* optimize requires Contraction Hierarchies (CH), which is unavailable when ch.disable=true */}
+                {!providerConfig['ch.disable'] && <FlexBox gap="sm" centerChildrenVertically>
                     <Text strong>
                         <Message msgId="itinerary.optimizeRoute" />
                         &nbsp;<InfoPopover placement="top" text={<Message msgId="itinerary.optimizeTooltip" />} />
@@ -160,9 +172,10 @@ const GraphHopperProvider = ({
                         checked={providerConfig.optimize}
                         onChange={(checked) => handleProviderBodyChange("optimize", checked)}
                     />
-                </FlexBox>
+                </FlexBox>}
             </FlexBox>
-            <FlexBox column gap="sm">
+            {/* custom_model requires ch.disable=true (flexible mode) */}
+            {providerConfig['ch.disable'] && <FlexBox column gap="sm">
                 <Text strong>
                     <Message msgId="itinerary.avoid" />
                         &nbsp;<InfoPopover text={<Message msgId="itinerary.avoidTooltip" />} />
@@ -173,8 +186,9 @@ const GraphHopperProvider = ({
                             key={option.value}
                             checked={avoidRoads.includes(option.value)}
                             onChange={(e) => {
+                                const isChecked = e.target?.checked;
                                 setAvoidRoads(prev => {
-                                    const newAvoidRoads = e.target.checked
+                                    const newAvoidRoads = isChecked
                                         ? [...prev, option.value]
                                         : prev.filter(item => item !== option.value);
                                     handleProviderBodyChange('custom_model', newAvoidRoads);
@@ -186,7 +200,7 @@ const GraphHopperProvider = ({
                         </Checkbox>
                     ))}
                 </FlexBox>
-            </FlexBox>
+            </FlexBox>}
         </FlexBox>
     );
 };

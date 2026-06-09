@@ -33,6 +33,7 @@ import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
  * @prop {node} header additional element for header
  * @prop {node} footer footer content
  * @prop {bool} hideHeader hide header
+ * @prop {bool} hideCloseButton hide close button
  */
 
 export default withState('fullscreen', 'onFullscreen', false)(
@@ -55,7 +56,8 @@ export default withState('fullscreen', 'onFullscreen', false)(
         onFullscreen = () => {},
         fixed = false,
         resizable = false,
-        hideHeader
+        hideHeader,
+        hideCloseButton = false
     }) =>
         <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') +  (!resizable ? 'react-dock-no-resize ' : '') + className}>
             <Dock
@@ -76,7 +78,8 @@ export default withState('fullscreen', 'onFullscreen', false)(
                             showFullscreen={showFullscreen}
                             glyph={glyph}
                             additionalRows={header}
-                            onFullscreen={onFullscreen}/>
+                            onFullscreen={onFullscreen}
+                            hideCloseButton={hideCloseButton}/>
                     }
                     footer={open && footer}>
                     {open && children}

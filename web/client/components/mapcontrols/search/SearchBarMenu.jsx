@@ -16,7 +16,7 @@ const DropdownButtonT = tooltip(DropdownButton);
 
 const defaultButtonConfig = {
     disabled: false,
-    className: "square-button-md",
+    className: "square-button",
     noCaret: true,
     idDropDown: uuidv1()
 };
@@ -24,7 +24,7 @@ const buttonConfig = {
     title: <Glyphicon glyph="menu-hamburger"/>,
     tooltipId: "search.changeSearchInputField",
     tooltipPosition: "bottom",
-    className: "square-button-md no-border",
+    className: "square-button no-border",
     pullRight: true
 };
 

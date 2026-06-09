@@ -94,4 +94,81 @@ describe('Controls component', () => {
         expect(spyChangeMap.calls.length).toBe(1);
         expect(spyChangeMap.calls[0].arguments).toEqual(['mapInfoControl', true]);
     });
+    it('renders center controls and scale controls with Apply to other maps buttons', () => {
+        ReactDOM.render(
+            <Controls
+                map={{
+                    center: {x: 11, y: 43, crs: 'EPSG:4326'},
+                    zoom: 5,
+                    projection: 'EPSG:3857'
+                }}
+            />, document.getElementById("container"));
+        doCommonTests(document);
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-geostory-map-controls-center')).toExist();
+        expect(container.querySelector('.ms-geostory-map-controls-scale')).toExist();
+        const buttons = container.querySelectorAll('.ms-geostory-map-controls button');
+        expect(buttons.length).toBeGreaterThanOrEqualTo(2);
+    });
+    it('hides center controls when isCarouselSection is true', () => {
+        ReactDOM.render(
+            <Controls
+                map={{
+                    center: {x: 11, y: 43, crs: 'EPSG:4326'},
+                    zoom: 5
+                }}
+                isCarouselSection
+            />, document.getElementById("container"));
+        doCommonTests(document);
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-geostory-map-controls-center')).toNotExist();
+        expect(container.querySelector('.ms-geostory-map-controls-scale')).toExist();
+    });
+    it('calls onApplyToMaps with center when Apply to other maps button is clicked for center', () => {
+        const actions = {
+            onApplyToMaps: () => {}
+        };
+        const spy = expect.spyOn(actions, 'onApplyToMaps');
+        const center = {x: 11, y: 43, crs: 'EPSG:4326'};
+        ReactDOM.render(
+            <Controls
+                map={{ center, zoom: 5 }}
+                onApplyToMaps={actions.onApplyToMaps}
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const centerBtn = container.querySelector('.ms-geostory-map-controls-center button');
+        expect(centerBtn).toExist();
+        ReactTestUtils.Simulate.click(centerBtn);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toBe('center');
+        expect(spy.calls[0].arguments[1]).toEqual(center);
+    });
+    it('calls onApplyToMaps with zoom when Apply to other maps button is clicked for scale', () => {
+        const actions = {
+            onApplyToMaps: () => {}
+        };
+        const spy = expect.spyOn(actions, 'onApplyToMaps');
+        ReactDOM.render(
+            <Controls
+                map={{ center: {x: 0, y: 0}, zoom: 8 }}
+                onApplyToMaps={actions.onApplyToMaps}
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const scaleBtn = container.querySelector('.ms-geostory-map-controls-scale button');
+        expect(scaleBtn).toExist();
+        ReactTestUtils.Simulate.click(scaleBtn);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toBe('zoom');
+        expect(spy.calls[0].arguments[1]).toBe(8);
+    });
+    it('renders scale options based on projection', () => {
+        ReactDOM.render(
+            <Controls
+                map={{ zoom: 3, projection: 'EPSG:3857' }}
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const selectValue = container.querySelector('.Select-value-label');
+        expect(selectValue).toExist();
+        expect(selectValue.textContent).toContain('1 :');
+    });
 });

@@ -58,8 +58,8 @@
 .mapstore-switch-btn {
     position: relative;
     display: inline-block;
-    width: ((@square-btn-small-size * 2) - 8px); /* 60 */
-    height: @square-btn-small-size; /* 34 */
+    width: ((@button-size-sm * 2) - 8px); /* 60 */
+    height: @button-size-sm; /* 34 */
     .m-slider {
 
         position: absolute;
@@ -71,17 +71,19 @@
         opacity: 0.4;
         -webkit-transition: 0.4s;
         transition: 0.4s;
+        border-radius: 9999px;
 
         &:before {
             position: absolute;
             content: " ";
-            height: @square-btn-small-size - 8px;
-            width: @square-btn-small-size - 8px;
+            height: @button-size-sm - 8px;
+            width: @button-size-sm - 8px;
             left: 4px;
             bottom: 4px;
             -webkit-transition: 0.4s;
             transition: 0.4s;
-
+            border-radius: 9999px;
+            .shadow();
         }
     }
 
@@ -92,7 +94,7 @@
             + .m-slider {
                 opacity: 1.0;
                 &:before {
-                    transform: translateX(@square-btn-small-size - 8px);
+                    transform: translateX(@button-size-sm - 8px);
                 }
             }
         }
@@ -103,6 +105,33 @@
         }
         &:focus + .m-slider {
             .shadow-soft;
+        }
+    }
+
+    // Smaller variant, opt-in via className="mapstore-switch-btn-xs"
+    // Keeps the same proportions (track ~ 2x height, knob inset by padding).
+    &.mapstore-switch-btn-xs {
+        @switch-btn-xs-height: 16px;
+        @switch-btn-xs-padding: 2px;
+
+        width: ((@switch-btn-xs-height * 2) - (@switch-btn-xs-padding * 2));
+        height: @switch-btn-xs-height;
+
+        .m-slider {
+            &:before {
+                height: @switch-btn-xs-height - (@switch-btn-xs-padding * 2);
+                width: @switch-btn-xs-height - (@switch-btn-xs-padding * 2);
+                left: @switch-btn-xs-padding;
+                bottom: @switch-btn-xs-padding;
+            }
+        }
+
+        input {
+            &:checked + .m-slider {
+                &:before {
+                    transform: translateX(@switch-btn-xs-height - (@switch-btn-xs-padding * 2));
+                }
+            }
         }
     }
 }

@@ -11,15 +11,12 @@ import { registerType } from '../../../../utils/openlayers/Layers';
 import TileLayer from 'ol/layer/Tile';
 import TileArcGISRest from 'ol/source/TileArcGISRest';
 import axios from 'axios';
-import { getCredentials } from '../../../../utils/SecurityUtils';
 import { isEqual } from 'lodash';
+import { hasRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 const tileLoadFunction = options => (image, src) => {
-    const storedProtectedService = getCredentials(options.security?.sourceId) || {};
     axios.get(src, {
-        headers: {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        },
+        _msAuthSourceId: options.security?.sourceId,
         responseType: 'blob'
     }).then(response => {
         image.getImage().src = URL.createObjectURL(response.data);
@@ -31,7 +28,7 @@ const tileLoadFunction = options => (image, src) => {
 registerType('arcgis', {
     create: (options) => {
         const sourceOpt = {};
-        if (options.security) {
+        if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
             sourceOpt.tileLoadFunction = tileLoadFunction(options);
         }
         return new TileLayer({
@@ -58,7 +55,8 @@ registerType('arcgis', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
-        if (!isEqual(oldOptions.security, newOptions.security)) {
+        if (!isEqual(oldOptions.security, newOptions.security)
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     },

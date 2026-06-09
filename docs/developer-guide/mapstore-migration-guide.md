@@ -20,7 +20,440 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.01.02 to 2026.02.00
+
+### MetadataExplorer plugin renamed to Catalog
+
+The `MetadataExplorer` plugin has been replaced by the new `Catalog` plugin. Projects that include `MetadataExplorer` in their plugin configuration must update both `localConfig.json` and `pluginsConfig.json` (or the equivalent project configuration files) as follows:
+
+**`localConfig.json`** - update the entry in the plugins list:
+
+- Replace `"name": "MetadataExplorer"` with `"name": "Catalog"`.
+- Remove the `"cfg": { "wrap": true }` option if present, it is no longer used.
+
+```json
+// before
+{ "name": "MetadataExplorer", "cfg": { "wrap": true } }
+
+// after
+{ "name": "Catalog" }
+```
+
+**`pluginsConfig.json`** update the plugin descriptor:
+
+- Replace `"name": "MetadataExplorer"` with `"name": "Catalog"` in the corresponding entry.
+
+```json
+// before
+{ "name": "MetadataExplorer", "title": "plugins.MetadataExplorer.title", ... }
+
+// after
+{ "name": "Catalog", "title": "plugins.MetadataExplorer.title", ... }
+```
+
+The Redux control key (`metadataexplorer`) and all menu/TOC/BackgroundSelector integrations are preserved for backward compatibility.
+
+Custom plugins that inject into the `Catalog` plugin must update their container target from `MetadataExplorer` to `Catalog`:
+
+```js
+// before
+createPlugin('MyPlugin', {
+    containers: {
+        MetadataExplorer: { target: 'url-addon', ... }
+    }
+});
+
+// after
+createPlugin('MyPlugin', {
+    containers: {
+        Catalog: { target: 'url-addon', ... }
+    }
+});
+```
+
+## Migration from 2026.01.01 to 2026.01.02
+
+### Monitored state available by default
+
+Several monitored state entries have been added to the default configuration of MapStore and they are now available by default without the need to add them in the `monitorState` section of `localConfig.json`.
+
+The entries you have configured will still work by overriding the default ones, anyway, in order to reduce the configuration, you should remove the entries if they are already available by default.
+
+The entries that you can remove because are available by default are documented in the [State Access and monitorState](./expressions.md#state-access-and-monitorstate) guide.
+
+## Migration from 2025.02.02 to 2026.01.00
+
+### Database update
+
+This version of MapStore ships with **GeoStore 2.5.0**, which introduces a structural change to the `gs_user_favorites` table. Unlike other GeoStore upgrades, this change **cannot be handled automatically** by `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` and **requires applying the manual migration script** described below.
+
+!!! warning
+    **Backup your database** before applying any of these changes. Data integrity is your responsibility.
+
+#### Upgrading from 2025.02.xx
+
+If you are upgrading from the **2025.02.xx** series, you must apply the following script to restructure the `gs_user_favorites` table (GeoStore [`postgresql-migration-from-v.2.4.0-to-v2.4.1.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.4.0-to-v2.4.1.sql)).
+
+Please verify that your schema is `geostore` (as in the default installation) or adjust the script accordingly:
+
+```sql
+ALTER TABLE geostore.gs_user_favorites
+    DROP CONSTRAINT gs_user_favorites_pkey;
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN user_id DROP NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN id int8;
+
+CREATE SEQUENCE geostore.gs_user_favorites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    OWNED BY geostore.gs_user_favorites.id;
+
+UPDATE geostore.gs_user_favorites
+SET id = nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_pk PRIMARY KEY (id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET DEFAULT nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN username varchar NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_user_id
+        UNIQUE (user_id, resource_id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_username
+        UNIQUE (resource_id, username);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_check
+        CHECK ((
+                (user_id IS NOT NULL AND username IS NULL)
+                    OR
+                (user_id IS NULL AND username IS NOT NULL)
+                ));
+```
+
+#### Upgrading from 2025.01.xx or earlier
+
+If you are skipping the **2025.02.xx** series entirely and upgrading directly from **2025.01.xx** or earlier, you must also apply the intermediate GeoStore migration scripts **before** the script above. Apply them in this exact order:
+
+1. **If upgrading from 2024.02.xx or earlier** (GeoStore < 2.3.0): apply [`postgresql-migration-from-v.2.1.0-to-v2.3.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql) — documented in the [Migration from 2024.02.00 to 2025.01.00 — Database update](#migration-from-20240200-to-20250100) section.
+2. **If upgrading from 2025.01.xx** (GeoStore 2.3.x): apply [`postgresql-migration-from-v.2.3.0-to-v2.4.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.3.0-to-v2.4.0.sql) — documented in the [Migration from 2025.01.01 to 2025.02.00 — Database update](#migration-from-20250101-to-20250200) section.
+3. Then apply the script in the [Upgrading from 2025.02.xx](#upgrading-from-202502xx) section above.
+
+### Update to Java 17
+
+We are planning for the next release to set minimum version of Java to Java 17.
+For this reason, we suggest to start using this version minimum. From this MapStore version, you need to do some changes on your `web/pom.xml` to make the
+application start locally also with Java 17.
+
+#### Running dev backend locally
+
+With Java 17 you need to add the following lines to your `web/pom.xml` Cargo configuration in order to make the backend dev instance start.
+
+```diff
+                <configuration>
+                    <type>standalone</type>
+                    <home>
+                        ${project.build.directory}/apache-tomcat-${tomcat.version}
+                    </home>
+                    <properties>
++                        <cargo.jvmargs>
++                            ${backend.debug.args}
++                            --add-opens=java.base/java.lang=ALL-UNNAMED
++                            --add-opens=java.base/java.io=ALL-UNNAMED
++                        </cargo.jvmargs>
+                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
+                        <cargo.logging>low</cargo.logging>
+                    </properties>
+                </configuration>
+```
+
+### Updating Local File Paths in `config.yaml` for Windows Compatibility
+
+If you are using local file paths for resources (such as print headers, logos, or styles) in your `config.yaml`, you must ensure they use the `file://` protocol prefix. Relative paths or absolute paths without the protocol may fail on Windows environments.
+
+Check your config.yaml for any url properties pointing to local files within `${configDir}` or other local directories. Update them to include the `file://` prefix.
+
+For Example:
+
+```diff
+- url: '/${configDir}/print_header.png'
++ url: 'file://${configDir}/print_header.png'
+```
+
+### Replace authenticationRules with requestsConfigurationRules
+
+As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
+
+### Configuration Changes
+
+#### Old Configuration (authenticationRules)
+
+```json
+{
+  "useAuthenticationRules": true,
+  "authenticationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+#### New Configuration (requestsConfigurationRules)
+
+```json
+{
+  "requestsConfigurationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    }
+  ]
+}
+```
+
+**Note**: The `${securityToken}` placeholder is automatically replaced at runtime with the actual security token from the security context
+
+#### Method Mapping
+
+| Old Method | New Configuration |
+|------------|------------------|
+| `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
+| `authkey` | `params: { "authkey": "${securityToken}" }` |
+| `basic` | `headers: { "Authorization": "${authHeader}" }` |
+| `header` | `headers: { ... }` |
+| `browserWithCredentials` | `withCredentials: true` |
+
+#### Data Directory Changes Required
+
+This change also requires updating the **data directory** configuration. If you are using a custom data directory, you must migrate the `authenticationRules` entries in any overridden `localConfig.json` to the new `requestsConfigurationRules` format as described above.
+
+In particular:
+
+- Remove the `useAuthenticationRules` flag and the `authenticationRules` array.
+- Add the equivalent `requestsConfigurationRules` array using the method mapping table above.
+
+Updating the data directory configuration ensures the authentication is correctly applied to requests (e.g. GeoStore or REST config endpoints will receive the expected `Authorization` header). For [reference](https://github.com/geosolutions-it/mapstore-datadir/pull/46).
+
+### Replace square-button-md and square-button-sm with square-button class
+
+The CSS classes `square-button-md` and `square-button-sm` have been deprecated and replaced by the unified `square-button` class. Update your custom components and themes to use the new class name.
+
+```diff
+- <Button className="square-button-md">Action</Button>
+- <Button className="square-button-sm">Action</Button>
++ <Button className="square-button">Action</Button>
+```
+
+### Replace filterAllowedCRS and additionalCRS with availableProjections
+
+As part of extending the functionalities of the CRS selector, we have deprecated the use of `filterAllowedCRS` and `additionalCRS` in favor of new configuration `availableProjections`. The new configuration provides the support to add both filterAllowedCRS and additionalCRS in a single configuration. The configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "name": "CRSSelector",
+    "cfg": {
+-        "additionalCRS": {},
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++          { "value": "EPSG:4326", "label": "EPSG:4326" },
++          { "value": "EPSG:3857", "label": "EPSG:3857" }
++       ],
+        "allowedRoles": ["ADMIN"]
+    }
+}
+```
+
+### Harmonize MousePosition and CameraPosition CRS configuration
+
+For consistency with `CRSSelector`, `MousePosition` and `CameraPosition` now support the same `availableProjections` configuration and deprecate `filterAllowedCRS` and `additionalCRS`.
+
+`filterAllowedCRS` and `additionalCRS` are still supported for backward compatibility, but projects should migrate to `availableProjections`.
+
+#### MousePosition
+
+```diff
+{
+    "name": "MousePosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+#### CameraPosition
+
+```diff
+{
+    "name": "CameraPosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+### Harmonize Print CRS configuration
+
+```diff
+{
+    "name": "Print",
+    "cfg": {
+        "projectionOptions":{
+-        "projections": [
+-            { "name": "WGS84", "value": "EPSG:4326" },
+-            { "name": "Mercator", "value": "EPSG:3857" }
+-        ],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "WGS84" },
++            { "value": "EPSG:3857", "label": "Mercator" }
++        ],
+        },
+        "defaultProjection": "EPSG:4326"
+    }
+}
+```
+
+The same `availableProjections` structure can also be used in `Print` plugin `projectionOptions.availableProjections`.
+
+### Update containerPosition for the Map and FeatureEditor plugin
+
+The `Map` and `FeatureEditor` plugins require explicit `containerPosition` configuration for proper layout placement. The `Map` plugin renders the map as a background layer, while `FeatureEditor` displays the feature grid in a bottom panel.
+
+**localConfig.json** — Add `containerPosition` to the plugin `cfg` in the `desktop` (and optionally `mobile`/`embedded`) plugins array:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+            {
+                "name": "Map",
+                "cfg": {
++                    "containerPosition": "background",
+                    "mapOptions": { ... },
+                    "toolsOptions": { ... }
+                }
+            },
+            ...
+            {
+                "name": "FeatureEditor",
++                "cfg": {
++                    "containerPosition": "bottom"
++                }
+            },
+            ...
+        ]
+    }
+}
+```
+
+**pluginsConfig.json** — Add `containerPosition` inside `defaultConfig` for each plugin:
+
+```diff
+{
+    "plugins": [
+        {
+            "name": "Map",
+            "mandatory": true,
+            "defaultConfig": {
+                "mapOptions": { ... },
+                "toolsOptions": { ... },
++                "containerPosition": "background"
+            }
+        },
+        ...
+        {
+            "name": "FeatureEditor",
+            "defaultConfig": {
++                "containerPosition": "bottom"
+            }
+        },
+        ...
+    ]
+}
+```
+
+**Reference values:**
+
+| Plugin        | containerPosition | Purpose                                       |
+|---------------|-------------------|-----------------------------------------------|
+| Map           | `"background"`    | Renders the map as the main background layer  |
+| FeatureEditor | `"bottom"`        | Shows the feature grid in a bottom panel      |
+
 ## Migration from 2025.01.01 to 2025.02.00
+
+### Database update
+
+This version of MapStore ships with **GeoStore 2.4.0**, which adds the `gs_ip_range` and `gs_security_ip_range` tables to support IP-based access control.
+
+If you are using `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` in your `geostore-datasource-ovr.properties`, these schema changes are applied automatically on startup — **no manual action is required**. See the [database setup documentation](../database-setup/#database-creation-mode) for details.
+
+If you manage the schema manually, apply the [`postgresql-migration-from-v.2.3.0-to-v2.4.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.3.0-to-v2.4.0.sql) script from the GeoStore repository.
+
+### Update authenticationRules in localConfig.json
+
+The previous default authentication rule used a broad pattern (`.*geostore.*`) that unintentionally matched internal GeoServer delegation endpoints (e.g., `/rest/security/usergroup/service/geostore/...`). This could cause delegated user/group requests to fail due to forced `bearer` authentication overriding the intended method (e.g., `authkey`).
+
+To avoid this conflict, update the authenticationRules entry in localConfig.json as follows:
+
+``` diff
+{
+  "authenticationRules": [
+    {
+-      "urlPattern": ".*geostore.*",
++      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
 
 ### Set minimum NodeJS version to 20
 
@@ -93,7 +526,94 @@ In your project, you should update the `print-lib.version` property from version
 
 ```diff
 -        <print-lib.version>2.3.1</print-lib.version>
-+        <print-lib.version>2.3.3</print-lib.version>
++        <print-lib.version>2.3.4</print-lib.version>
+```
+
+Due to this change you will need also to fix the `jackson` version to `2.16.1` in your project.
+To do this you need to:
+
+- add `version` and `dependencyManagement` section to the root `pom.xml` of your project
+
+    ```diff
+    @@ -13,6 +13,7 @@
+            <!-- platform BOM versions -->
+            <tomcat.port>8080</tomcat.port>
+            <tomcat.version>9.0.108</tomcat.version>
+    +        <jackson.version>2.16.1</jackson.version>
+            <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+            <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+            <!-- Spring Framework & Security (aligned) -->
+    @@ -36,7 +37,18 @@
+
+        <build>
+        </build>
+    -
+    +    <dependencyManagement>
+    +        <dependencies>
+    +            <!-- Jackson BOM (for to receive same version of jackson from print-lib. Fixes https://github.com/geosolutions-it/MapStore2/issues/11856 temporary)-->
+    +            <dependency>
+    +                <groupId>com.fasterxml.jackson</groupId>
+    +                <artifactId>jackson-bom</artifactId>
+    +                <version>${jackson.version}</version>
+    +                <type>pom</type>
+    +                <scope>import</scope>
+    +            </dependency>
+    +            </dependencies>
+    +    </dependencyManagement>
+        <modules>
+            <module>web</module>
+        </modules>
+    ```
+
+- add the `dependency` for `jackson` also in the `web/pom.xml` file
+
+    ```diff
+    @@ -17,6 +17,14 @@
+            <groupId>it.geosolutions.mapstore</groupId>
+            <artifactId>mapstore-services</artifactId>
+            <version>${mapstore-services.version}</version>
+    +    </dependency>
+    +     <!-- Jackson BOM (for to receive same version of jackson from print-lib)-->
+    +    <dependency>
+    +        <groupId>com.fasterxml.jackson</groupId>
+    +        <artifactId>jackson-bom</artifactId>
+    +        <version>${jackson.version}</version>
+    +        <type>pom</type>
+    +        <scope>import</scope>
+        </dependency>
+        <!-- ================================================================ -->
+        <!-- GeoStore modules -->
+    ```
+
+### Update `web.xml` with cache control
+
+MapStore 2025.02.00 introduces an improvement in cache management to prevent internal proxies and browsers from caching certain files, ensuring that updates are correctly applied.
+
+To enable this improvement, the `web.xml` file (usually located in `java/web/`) has been updated.
+If your custom project includes its own web.xml, make sure to update it by adding the following lines.
+
+```xml
+<!-- Cache management -->
+    <filter>
+        <filter-name>noCacheFilter</filter-name>
+        <filter-class>it.geosolutions.mapstore.filters.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>/</url-pattern> <!-- index.html -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.json</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.txt</url-pattern>
+    </filter-mapping>
 ```
 
 ### Removal of terrain from cfg.additionalLayers property using the new background selector
@@ -164,6 +684,50 @@ This change is necessary to maintain consistency and ensure that the application
 ```
 
 ## Migration from 2024.02.00 to 2025.01.00
+
+### Database update
+
+This version of MapStore ships with **GeoStore 2.3.0**, which adds the `gs_tag`, `gs_resource_tags`, and `gs_user_favorites` tables.
+
+If you are using `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` in your `geostore-datasource-ovr.properties`, these schema changes are applied automatically on startup — **no manual action is required**. See the [database setup documentation](../database-setup/#database-creation-mode) for details.
+
+If you manage the schema manually, apply the [`postgresql-migration-from-v.2.1.0-to-v2.3.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql) script from the GeoStore repository.
+
+### UI Update: Consistent Panel Header Styling
+
+In this version, MapStore introduced an intentional UI overhaul aimed at standardizing the appearance of panel headers across the application. Previously, several plugins and panels used hardcoded primary colors and prominent box shadows, which led to visual inconsistencies.
+
+To achieve a cleaner, more modern, and unified interface, the following styling adjustments were made:
+
+- Removal of Hardcoded Styles: Primary background colors and heavy box shadows have been removed from panel headers.
+- Iconography Updates: Icon colors within these headers were adjusted to match the new, lighter theme.
+- Layout Modernization: The affected headers were migrated to use the FlexBox React component for better structural alignment, spacing, and responsiveness.
+
+Here is an example of the new structure using MapStore's FlexBox component:
+
+```js
+
+import FlexBox from '@mapstore/framework/components/layout/FlexBox';
+import Text from '@mapstore/framework/components/layout/Text';
+
+// ...
+    // The new header utilizes the FlexBox component to align elements
+    return(
+        <FlexBox className="ms-header _padding-sm" gap="sm" column>
+            <FlexBox centerChildrenVertically>
+                {glyphButton}
+                <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
+                    {title}
+                </FlexBox.Fill>
+                {closeButton}
+            </FlexBox>
+            {additionalRows}
+        </FlexBox>
+    );
+// ...
+```
+
+(Note: Import paths may vary slightly depending on your project setup, but the component structure remains the same).
 
 ### POM changes
 

@@ -277,8 +277,8 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 0, right: 0, bottom: '100%', dockSize: 100, transform: "translate(0, -0px)", height: "calc(100% - 0px)",
-                        boundingMapRect: {bottom: "100%", dockSize: 100, left: 0, right: 0},
+                        bottom: 0, left: 0, right: 0, transform: "translate(0, -0px)", height: "calc(100% - 0px)",
+                        boundingMapRect: {bottom: 0, left: 0, right: 0},
                         boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
                         leftPanel: false,
                         rightPanel: false
@@ -289,7 +289,7 @@ describe('map layout epics', () => {
             }
             done();
         };
-        const state = {featuregrid: {open: true, dockSize: 1}};
+        const state = {featuregrid: {open: true}};
         testEpic(updateMapLayoutEpic, 1, openFeatureGrid(), epicResult, state);
     });
 });

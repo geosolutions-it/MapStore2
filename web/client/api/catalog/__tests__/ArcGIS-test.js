@@ -111,4 +111,78 @@ describe('Test ArcGIS Catalog API', () => {
         }
         done();
     });
+    it('should get layer from FeatureServer record with arcgis-feature type', (done) => {
+        const testRecord = {
+            name: 0,
+            title: 'Test FeatureServer Layer',
+            url: 'https://test.arcgis.com/rest/services/Test/FeatureServer',
+            geometryType: 'MultiPolygon',
+            maxRecordCount: 2000
+        };
+        try {
+            const layer = getLayerFromRecord(testRecord, { layerBaseConfig: {} });
+            expect(layer.type).toBe('arcgis-feature');
+            expect(layer.strategy).toBe('tile');
+            expect(layer.geometryType).toBe('MultiPolygon');
+            expect(layer.maxRecordCount).toBe(2000);
+            expect(layer.name).toBe('0');
+            expect(layer.visibility).toBe(true);
+            expect(layer.options).toBeFalsy();
+        } catch (e) {
+            done(e);
+        }
+        done();
+    });
+    it('should get catalog records with FeatureServer fields', (done) => {
+        const testRecord = {
+            id: 0,
+            name: 'PolygonLayer',
+            url: 'https://test.arcgis.com/rest/services/Test/FeatureServer',
+            geometryType: 'MultiPolygon',
+            maxRecordCount: 1000
+        };
+        try {
+            const records = getCatalogRecords({ records: [testRecord] });
+            expect(records[0].geometryType).toBe('MultiPolygon');
+            expect(records[0].maxRecordCount).toBe(1000);
+        } catch (e) {
+            done(e);
+        }
+        done();
+    });
+    it('should forward fields from FeatureServer record to layer config', (done) => {
+        const testRecord = {
+            name: 0,
+            title: 'Layer with fields',
+            url: 'https://test.arcgis.com/rest/services/Test/FeatureServer',
+            geometryType: 'MultiPolygon',
+            fields: [
+                { name: 'OBJECTID', alias: 'OID', type: 'esriFieldTypeOID' },
+                { name: 'pop', type: 'esriFieldTypeInteger' }
+            ]
+        };
+        try {
+            const layer = getLayerFromRecord(testRecord, { layerBaseConfig: {} });
+            expect(layer.type).toBe('arcgis-feature');
+            expect(layer.fields).toEqual(testRecord.fields);
+        } catch (e) {
+            return done(e);
+        }
+        return done();
+    });
+    it('should not add fields key when record has no fields', (done) => {
+        const testRecord = {
+            name: 0,
+            title: 'Layer without fields',
+            url: 'https://test.arcgis.com/rest/services/Test/FeatureServer',
+            geometryType: 'Point'
+        };
+        try {
+            const layer = getLayerFromRecord(testRecord, { layerBaseConfig: {} });
+            expect('fields' in layer).toBe(false);
+        } catch (e) {
+            return done(e);
+        }
+        return done();
+    });
 });

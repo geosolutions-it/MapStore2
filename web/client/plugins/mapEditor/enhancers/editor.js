@@ -7,7 +7,8 @@
  */
 import React from 'react';
 import {withHandlers, compose, defaultProps} from 'recompose';
-import {pickBy} from 'lodash';
+import pickBy from 'lodash/pickBy';
+import isNil from 'lodash/isNil';
 import {connect} from 'react-redux';
 import {resizeMap} from '../../../actions/map';
 
@@ -22,6 +23,7 @@ import {backgroundListSelector} from '../../../selectors/backgroundselector';
 import {mapOptionsToSaveSelector} from '../../../selectors/mapsave';
 import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../../../selectors/searchconfig';
 import MapUtils from '../../../utils/MapUtils';
+import { dynamicProjectionDefsSelector } from '../../../selectors/projections';
 
 
 const saveSelector = createSelector(
@@ -32,8 +34,9 @@ const saveSelector = createSelector(
     textSearchConfigSelector,
     bookmarkSearchConfigSelector,
     mapSelector,
-    (layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map) =>
-        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map})
+    dynamicProjectionDefsSelector,
+    (layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map, projectionDefs) =>
+        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map, projectionDefs})
 );
 
 
@@ -47,11 +50,16 @@ export default compose(
         onClick: ({hide, owner}) => () => {
             hide(owner);
         },
-        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions}) => () => {
+        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs}) => () => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
-                backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
+                backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs);
 
-            return save({...mapData.map, layers: mapData.map.layers.map(l => pickBy(l, (p) => p !== undefined && !(p === null)))}, owner);
+            return save({
+                ...mapData.map,
+                ...(map.widgetId && {widgetId: map.widgetId}),
+                ...(map.mapId && {mapId: map.mapId}),
+                layers: mapData.map.layers.map(l => pickBy(l, (p) => !isNil(p)))},
+            owner);
         }
     }),
     WithConfirm,

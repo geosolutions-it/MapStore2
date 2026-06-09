@@ -21,9 +21,17 @@ jobs:
         with:
           ref: ${{ github.event.inputs.main-branch }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Bot Details
+        id: bot-details
+        uses: raven-actions/bot-details@v1
+        
       - name: Create release branch and generate PR body
         id: create-branch
         env:
+          BOT_ID: ${{ steps.bot-details.outputs.id }}
+          BOT_DISPLAY_NAME: ${{ steps.bot-details.outputs.name }}
+          BOT_EMAIL: ${{ steps.bot-details.outputs.email }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCH: ${{ github.event.inputs.release-branch }}
           MAIN_BRANCH: ${{ github.event.inputs.main-branch }}
@@ -34,8 +42,8 @@ jobs:
           # script will go here
           echo "Initializing git"
           # Optional
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name $BOT_DISPLAY_NAME
+          git config user.email $BOT_EMAIL
           BRANCH_NAME="${RELEASE_BRANCH}"
           echo "creating branch is $BRANCH_NAME"
           git checkout -b "$BRANCH_NAME"

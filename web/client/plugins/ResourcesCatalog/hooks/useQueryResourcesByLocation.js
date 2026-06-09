@@ -9,10 +9,9 @@
 import { useRef, useEffect } from 'react';
 import url from 'url';
 import axios from '../../../libs/ajax';
-import uniq from 'lodash/uniq';
-import { clearQueryParams } from '../../../utils/ResourcesFiltersUtils';
+import { clearQueryParams, mergeDefaultQuery } from '../../../utils/ResourcesFiltersUtils';
 import useIsMounted from '../../../hooks/useIsMounted';
-import { isEmpty, isEqual, isArray, omit, castArray } from 'lodash';
+import { isEmpty, isEqual, isArray, omit } from 'lodash';
 
 const cleanParams = (params, exclude = ['d']) => {
     return Object.keys(params)
@@ -32,25 +31,6 @@ const getParams = (locationSearch = '', { defaultPage = 1, exclude } = {}) => {
         cleanedParams,
         page ? parseFloat(page) : defaultPage
     ];
-};
-
-const mergeParams = (params, defaultQuery) => {
-    const updatedDefaultQuery = Object.keys(defaultQuery || {}).reduce((acc, key) => {
-        if (defaultQuery[key] && params[key]) {
-            return {
-                ...acc,
-                [key]: uniq([...castArray(defaultQuery[key]), ...castArray(params[key] )])
-            };
-        }
-        return {
-            ...acc,
-            [key]: defaultQuery[key]
-        };
-    }, {});
-    return {
-        ...params,
-        ...updatedDefaultQuery
-    };
 };
 
 /**
@@ -117,7 +97,7 @@ const useQueryResourcesByLocation = ({
         createToken();
         setLoading(true, id);
         requestTimeout.current = setTimeout(() => {
-            const requestParams = cleanParams(mergeParams(params, defaultQuery));
+            const requestParams = cleanParams(mergeDefaultQuery(params, defaultQuery));
             request({
                 params: {
                     ...requestParams,

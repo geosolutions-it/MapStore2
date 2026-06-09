@@ -35,6 +35,8 @@
 // Layout
 // **************
 .mapstore-map-footer {
+    min-height: 42px;
+    z-index: 10;
     border: 1px solid transparent;
     .leaflet-control-attribution {
         display: flex;
@@ -72,25 +74,7 @@
        overflow: hidden;
        font-size: 11px;
    }
-}
-
-.ms-prj-selector {
-    position: relative;
-    z-index: 1100;
-    .dropdown-toggle-primary {
-        box-shadow: none;
-        border-width: 1px;
-        border: transparent;
-    }
-
-    .ms-prj-header {
-        font-size: @font-size-small;
-        .shadow-soft;
-        font-weight: bold;
-        z-index: 10;
-    }
-    .dropdown-menu {
-        border: none;
-        .shadow;
-    }
+   #mapstore-cameraposition{
+    height: 25px;
+   }
 }

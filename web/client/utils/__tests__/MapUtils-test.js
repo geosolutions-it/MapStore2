@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
+import * as Cesium from 'cesium';
 
 import { keys, sortBy } from 'lodash';
 
@@ -17,6 +18,8 @@ import {
     DEFAULT_SCREEN_DPI,
     registerHook,
     dpi2dpm,
+    dpi2dpu,
+    getResolutionsForProjection,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
@@ -45,7 +48,11 @@ import {
     recursiveIsChangedWithRules,
     filterFieldByRules,
     prepareObjectEntries,
-    parseFieldValue
+    parseFieldValue,
+    isCameraPerpendicularToSurface,
+    getMapScaleForCesium,
+    normalizeUnit,
+    getMetersPerUnit
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -122,6 +129,15 @@ describe('Test the MapUtils', () => {
         expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(96, mPerDegree)), "EPSG:4326", 96), resolutions)).toBe(true);
         expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(120, 1)), "EPSG:3857", 120), resolutions)).toBe(true);
         expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(120, mPerDegree)), "EPSG:4326", 120), resolutions)).toBe(true);
+    });
+    it('getResolutionsForProjection caps resolutions so scales never drop below 1:1', () => {
+        const smallExtent = [-8176.4, 9047679.28, 262592.74, 9335450.66];
+        const resolutions = getResolutionsForProjection('EPSG:3857', { extent: smallExtent });
+        const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, 'EPSG:3857');
+        const scales = resolutions.map(r => r * dpu);
+        scales.forEach(scale => {
+            expect(scale).toBeGreaterThanOrEqualTo(1);
+        });
     });
     it('getZoomForExtent without hook', () => {
         var extent = [1880758.3574092742, 6084533.340409827, 1291887.4915002766, 5606954.787684047];
@@ -1775,6 +1791,33 @@ describe('Test the MapUtils', () => {
             });
         });
 
+        it('should include projectionDefs in map.projections when provided', () => {
+            const mapConfig = {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                units: 'm',
+                mapInfoControl: true,
+                zoom: 10
+            };
+            const projectionDefs = [
+                { code: 'EPSG:3003', def: '+proj=tmerc', label: 'Monte Mario' }
+            ];
+            const saved = saveMapConfiguration(mapConfig, [], [], [], '', {}, {}, projectionDefs);
+            expect(saved.map.projections).toEqual({ defs: projectionDefs });
+        });
+        it('should not include projections in map when projectionDefs is empty', () => {
+            const mapConfig = {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                units: 'm',
+                mapInfoControl: true,
+                zoom: 10
+            };
+            const saved = saveMapConfiguration(mapConfig, [], [], [], '', {}, {}, []);
+            expect(saved.map.projections).toNotExist();
+        });
     });
 
     it('test getIdFromUri ', () => {
@@ -2549,3 +2592,184 @@ describe('prepareObjectEntries', () => {
         expect(entries).toEqual([]);
     });
 });
+describe('test calc scale utils for cesium', () => {
+    it('isCameraPerpendicularToSurface - nadir (straight down) returns true', () => {
+        const ellipsoid = Cesium.Ellipsoid.WGS84;
+        const position = Cesium.Cartesian3.fromDegrees(0, 0);
+        const surfaceNormal = ellipsoid.geodeticSurfaceNormal(position);
+
+        // Camera direction opposite to surface normal = looking straight down
+        const camera = {
+            direction: Cesium.Cartesian3.negate(surfaceNormal, new Cesium.Cartesian3())
+        };
+
+        const result = isCameraPerpendicularToSurface(camera, position, ellipsoid, 0.95);
+        expect(result).toBe(true);
+    });
+
+    it('isCameraPerpendicularToSurface - oblique angle returns false', () => {
+        const ellipsoid = Cesium.Ellipsoid.WGS84;
+        const position = Cesium.Cartesian3.fromDegrees(0, 0);
+
+        // Tilted camera direction (~45° from nadir, dot ≈ -0.7)
+        const camera = {
+            direction: new Cesium.Cartesian3(0, -0.7, -0.7)
+        };
+
+        const result = isCameraPerpendicularToSurface(camera, position, ellipsoid, 0.95);
+        expect(result).toBe(false);
+    });
+
+    it('isCameraPerpendicularToSurface - horizontal view returns false', () => {
+        const ellipsoid = Cesium.Ellipsoid.WGS84;
+        const position = Cesium.Cartesian3.fromDegrees(0, 0);
+
+        // Camera looking horizontally (dot = 0)
+        const camera = {
+            direction: new Cesium.Cartesian3(1, 0, 0)
+        };
+
+        const result = isCameraPerpendicularToSurface(camera, position, ellipsoid, 0.95);
+        expect(result).toBe(false);
+    });
+
+    it('getMapScaleForCesium - returns number when camera looks at sky', () => {
+    // Minimal stub: globe.pick returns undefined = looking at sky
+        const mockViewer = {
+            scene: {
+                canvas: { clientWidth: 800, clientHeight: 600 },
+                camera: {
+                    direction: new Cesium.Cartesian3(0, 0, 1),
+                    positionCartographic: { height: 10000 },
+                    getPickRay: () => ({})
+                },
+                globe: {
+                    ellipsoid: Cesium.Ellipsoid.WGS84,
+                    pick: () => undefined
+                }
+            }
+        };
+
+        const result = getMapScaleForCesium(mockViewer);
+
+        expect(typeof result).toBe('number');
+        expect(Number.isInteger(result)).toBe(true);
+        expect(result).toBeGreaterThan(0);
+    });
+
+    it('getMapScaleForCesium - returns number with valid positions + perpendicular camera', () => {
+    // Minimal stub: valid positions + perpendicular camera → triggers fallback by design
+        const mockPos = Cesium.Cartesian3.fromDegrees(0, 0, 0);
+        const mockViewer = {
+            scene: {
+                canvas: { clientWidth: 800, clientHeight: 600 },
+                camera: {
+                    direction: new Cesium.Cartesian3(0, 0, -1), // straight down
+                    positionCartographic: { height: 5000 },
+                    getPickRay: () => ({})
+                },
+                globe: {
+                    ellipsoid: Cesium.Ellipsoid.WGS84,
+                    pick: () => mockPos,
+                    cartesianToCartographic: () => ({
+                        longitude: 0,
+                        latitude: 0,
+                        height: 0
+                    })
+                }
+            }
+        };
+
+        const result = getMapScaleForCesium(mockViewer);
+
+        expect(typeof result).toBe('number');
+        expect(Number.isInteger(result)).toBe(true);
+    });
+
+    it('getMapScaleForCesium - returns number with valid positions + oblique camera', () => {
+    // Minimal stub: valid positions + oblique camera → uses EllipsoidGeodesic path
+        const mockPos = Cesium.Cartesian3.fromDegrees(0, 0, 0);
+        const mockViewer = {
+            scene: {
+                canvas: { clientWidth: 800, clientHeight: 600 },
+                camera: {
+                    direction: new Cesium.Cartesian3(0, -0.5, -0.8), // tilted
+                    positionCartographic: { height: 5000 },
+                    getPickRay: () => ({})
+                },
+                globe: {
+                    ellipsoid: Cesium.Ellipsoid.WGS84,
+                    pick: () => mockPos,
+                    cartesianToCartographic: () => ({
+                        longitude: 0,
+                        latitude: 0,
+                        height: 0
+                    })
+                }
+            }
+        };
+
+        const result = getMapScaleForCesium(mockViewer);
+
+        expect(typeof result).toBe('number');
+        expect(Number.isInteger(result)).toBe(true);
+    });
+});
+
+describe('normalizeUnit', () => {
+    it('returns null for falsy input', () => {
+        expect(normalizeUnit(null)).toBe(null);
+        expect(normalizeUnit(undefined)).toBe(null);
+        expect(normalizeUnit('')).toBe(null);
+    });
+
+    it('lowercases and collapses underscores/whitespace before alias lookup', () => {
+        // Esri WKT spellings, EPSG long form, and proj4 short form must all
+        // collapse onto the same canonical key.
+        expect(normalizeUnit('Foot_US')).toBe('us-ft');
+        expect(normalizeUnit('foot us')).toBe('us-ft');
+        expect(normalizeUnit('FOOT  US')).toBe('us-ft');
+        expect(normalizeUnit('US Survey Foot')).toBe('us-ft');
+        expect(normalizeUnit('Decimal_Degree')).toBe('degrees');
+        expect(normalizeUnit('Metre')).toBe('m');
+    });
+
+    it('passes through unknown units in normalized form', () => {
+        // Unknown units fall through unchanged so getMetersPerUnit can either
+        // match the m*<scale> regex or return the fallback.
+        expect(normalizeUnit('m*0.30479971')).toBe('m*0.30479971');
+        expect(normalizeUnit('  Unknown Unit  ')).toBe('unknown unit');
+    });
+});
+
+describe('getMetersPerUnit', () => {
+    it('resolves canonical units directly', () => {
+        expect(getMetersPerUnit('m')).toBe(1);
+        expect(getMetersPerUnit('ft')).toBe(0.3048);
+        expect(getMetersPerUnit('us-ft')).toBe(1200 / 3937);
+        expect(getMetersPerUnit('degrees')).toBe(111194.87428468118);
+        expect(getMetersPerUnit('foot-gold-coast')).toBe(0.30479971018542);
+    });
+
+    it('resolves unit aliases via normalizeUnit', () => {
+        // proj4 emits 'foot_gold_coast' for the Ghana legacy foot
+        expect(getMetersPerUnit('foot_gold_coast')).toBe(0.30479971018542);
+        expect(getMetersPerUnit('Foot_US')).toBe(1200 / 3937);
+        expect(getMetersPerUnit('metre')).toBe(1);
+    });
+
+    it('parses m*<scale> emitted by proj4 for non-standard WKT UNIT scales', () => {
+        // proj4 packs an unknown WKT UNIT["x", scale] as `m*<scale>` - the
+        // numeric part is literally the meters-per-unit ratio.
+        expect(getMetersPerUnit('m*0.30479971018542')).toBe(0.30479971018542);
+        expect(getMetersPerUnit('m*1')).toBe(1);
+    });
+
+    it('returns the fallback for unknown units, undefined when no fallback is given', () => {
+        expect(getMetersPerUnit('totally-unknown', 42)).toBe(42);
+        expect(getMetersPerUnit('totally-unknown')).toBe(undefined);
+        // Falsy unit goes through normalizeUnit -> null and still returns the fallback
+        expect(getMetersPerUnit(null, 99)).toBe(99);
+    });
+});
+

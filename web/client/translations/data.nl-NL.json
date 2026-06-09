@@ -85,6 +85,10 @@
       "style": "Stijl",
       "transparent": "Transparant",
       "singleTile": "Enkele tegel",
+      "cropToProjectionExtent": {
+        "label": "Roteer naar projectie-extensie",
+        "tooltip": "De laag wordt bijgesneden tot de projectie-extensie wanneer deze aan de kaart wordt toegevoegd met deze optie ingeschakeld"
+      },
       "cached": "Gebruik cache-opties",
       "styleCustom": "Gebruik een stijl genaamd \"{value}\"",
       "styleListLoadError": "Er is een fout opgetreden bij het laden van de lijst met stijlen",
@@ -181,7 +185,9 @@
           "eyeDomeLighting": "Activeer belichting",
           "eyeDomeLightingStrength": "Belichtingssterkte",
           "eyeDomeLightingRadius": "Belichtingsradius"
-        }
+        },
+        "enableImageryOverlay": "Overlay van beeldlagen inschakelen",
+        "enableImageryOverlayInfo": "Opmerking: Schakelt beeldlagen zoals WMS, TMS of WMTS in om boven de 3D Tiles-laag te worden weergegeven, in de opgegeven volgorde."
       },
       "modelLayer": {
         "modelCenterLat": "Breedtegraad centrum (DD)",
@@ -303,6 +309,7 @@
     "mousePositionCoordinates": "Coördinaten",
     "mouseCoordinates": "Coördinaten:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hoogte:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "n.v.t.",
     "elevationLoading": "Bezig met laden...",
@@ -313,6 +320,17 @@
     "showCrsSelector": "Selecteer projectie",
     "crsSelectorFilterPlaceholder": "Filter projectie",
     "crsSelectorSelectedCRS": "Geselecteerd:",
+    "crsSelector": {
+      "availableProjections": "Beschikbare projecties",
+      "searchProjection": "Projectie zoeken...",
+      "label": "Label",
+      "authorityId": "Autoriteit-ID",
+      "selectedProjection": "De geselecteerde projectie wordt gebruikt in de kaart",
+      "quickSwitch": "De geselecteerde projectie wordt toegevoegd aan de lijst voor snel wisselen",
+      "help": "Vink het vakje aan om een projectie toe te voegen aan snel wisselen. Klik op een rij om deze als standaardprojectie in te stellen.",
+      "save": "Opslaan",
+      "close": "Sluiten"
+    },
     "menu": "Menu",
     "options": "Opties",
     "settings": "Instellingen",
@@ -417,18 +435,19 @@
       "theme_combo": "Kies een thema:",
       "maps_title": "Kaarten",
       "locales_combo": "Taal:",
-      "featuredMaps": "Favorieten",
+      "featuredMaps": "Uitgelicht",
       "groupmanagerTab": "Groepen",
       "usermanagerTab": "Gebruikers",
-      "tagsmanagerTab": "Tags"
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "IP-bereiken"
     },
     "newMap": "Nieuwe kaart",
     "newMapEmpty": "Lege kaart",
     "newMapContext": "Bestaande context",
     "maps": {
       "title": "Kaarten",
-      "addToFeaturedMaps": "Voeg toe aan favoriete kaarten",
-      "removeFromFeaturedMaps": "Verwijder van favoriete kaarten",
+      "addToFeaturedMaps": "Voeg toe aan uitgelichte kaarten",
+      "removeFromFeaturedMaps": "Verwijder van uitgelichte kaarten",
       "feedback": {
         "noDetailsAvailable": "Details niet beschikbaar",
         "successSavedMap": "De kaart is correct aangemaakt",
@@ -466,8 +485,8 @@
         "deleteResource": "Verwijder",
         "editResource": "Bewerk eigenschappen",
         "editResourceData": "Bewerk resourcegegevens",
-        "addToFeatured": "Toevoegen aan favorieten",
-        "removeFromFeatured": "Verwijderen uit favorieten",
+        "addToFeatured": "Toevoegen aan uitgelichte sectie",
+        "removeFromFeatured": "Verwijderen uit uitgelichte sectie",
         "showDetails": "Toon details"
       },
       "contents": {
@@ -546,7 +565,8 @@
           "dateTimeOption": "Specifieke UTC datum-tijd",
           "dateTimePlaceholder": "Selecteer de datum-tijd"
         },
-        "collisionDetection": "Activeer terreinbotsingsdetectie"
+        "collisionDetection": "Activeer terreinbotsingsdetectie",
+        "imageryLayersOverlay": "Activeer overlay mapservicelaag"
       },
       "thumbnailError": {
         "error403": "Er is een fout opgetreden bij het verwijderen van de miniatuur",
@@ -815,7 +835,7 @@
     },
     "getFeatureInfoTitle": "Object informatie",
     "identifyTitle": "Object informatie",
-    "identifyNoQueryableLayers": "Geen actieve doorzoekbare laag",
+    "identifyNoQueryableLayers": "Momenteel is er geen actieve doorzoekbare laag; \"bevraagbare data\" wordt bepaald door de geselecteerde laag, op het laagste niveau. Controleer dus de laagst geselecteerde laag. Om alle lagen in de kaart te bevragen (zonder restrictie) volstaat het om geen enkele laag te selecteren.",
     "identifyRevGeocodeHeader": "Coördinaten",
     "identifyZoomToFeature": "Zoom in naar object",
     "identifyStopHighlightingFeatures": "Markeer geen objecten",
@@ -1253,6 +1273,8 @@
         "targetLayer": "Doellaag",
         "clear": "Filter wissen",
         "operation": "Operatie",
+        "areaOfInterest": "Interessegebied",
+        "areaOfInterestTooltip": "Gebruik hetzelfde interessegebied van deze laag",
         "placeholder": "Selecteer laag",
         "errors": {
           "noCrossLayerAvailable": "Tussen lagen filteren is niet beschikbaar voor de geselecteerde laag",
@@ -1425,8 +1447,8 @@
       "requiredFiedsMessage": "Velden gemarkeerd met een ster (*) zijn verplicht",
       "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
       "admin": "Admin",
-      "active": "Active",
-      "inactive": "Inactive"
+      "active": "Actief",
+      "inactive": "Inactief"
     },
     "usergroups": {
       "title": "Groepen beheren",
@@ -1455,9 +1477,9 @@
       "confirmDeleteGroup": "Weet u zeker dat u deze groep wilt \"{title}\" verwijderen?",
       "generalInformation": "Algemeen",
       "members": "Leden",
-      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
-      "active": "Active",
-      "inactive": "Inactive"
+      "userGroupsFound": "{count, plural, =0 {0 groepen gevonden} =1 {1 groep gevonden} other {# groepen gevonden}}",
+      "active": "Actief",
+      "inactive": "Inactief"
     },
     "share": {
       "title": "Delen",
@@ -1504,6 +1526,11 @@
         "height": "hoogte"
       }
     },
+    "dynamiclegend": {
+      "title": "Legende",
+      "tooltip": "Toon de kaartlegende",
+      "emptyLegend": "Geen legende om weer te geven"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink gegenereerd",
@@ -1534,6 +1561,43 @@
           "categoryErrorAdmin": "Aanmaken van ontbrekende categorie \"{categoryName}\" mislukt",
           "categoryErrorNonAdmin": "Categorie \"{categoryName}\" ontbreekt, gelieve de administrator te contacteren om de categorie aan te maken"
         }
+      }
+    },
+    "layersSelection": {
+      "title": "Selecteer",
+      "tooltip": "Toon de selectietool",
+      "description": "Toon de selectietool",
+      "hasReachMaxCount": "Maximum aantal elementen bereikt",
+      "selection": "Selectie",
+      "allLayers": "Alle lagen",
+      "featuresCount": "Aantal objecten",
+      "button": {
+        "select": "Selectiemodus",
+        "chooseGeometry": "Kies",
+        "selectByPoint": "Punt",
+        "selectByLine": "Lijn",
+        "selectByCircle": "Cirkel",
+        "selectByRectangle": "Rechthoek",
+        "selectByPolygon": "Polygoon",
+        "clear": "Wissen",
+        "zoomTo": "Zoom naar",
+        "statistics": "Statistieken",
+        "createLayer": "Maak laag",
+        "filterData": "Filter data",
+        "export": "Exporteer",
+        "exportToCsv": "Exporteer naar CSV",
+        "exportToJson": "Exporteer naar JSON",
+        "exportToGeoJson": "Exporteer naar GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistieken",
+        "field": "Veld",
+        "count": "Aantal waarden",
+        "sum": "Som van waarden",
+        "min": "Minimum",
+        "max": "Maximum",
+        "avg": "Gemiddelde",
+        "std": "Standaardafwijking"
       }
     },
     "snapshot": {
@@ -1620,6 +1684,20 @@
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
       },
+      "tagFilterType": {
+        "label": "ype tagfilter",
+        "category": "Categorie",
+        "keyword": "Trefwoord"
+      },
+      "listView": "Lijstweergave",
+      "gridView": "Rasterweergave",
+      "selectAll": "Alles selecteren",
+      "layers": "Lagen",
+      "edit": "Bewerken",
+      "backToList": "Terug naar catalogus",
+      "close": "Sluiten",
+      "showFullContent": "Toon volledige inhoud",
+      "hideFullContent": "Verberg volledige inhoud",
       "clearValueText": "Selecties wissen",
       "noResultsText": "Geen resultaat",
       "addToMap": "Toevoegen aan kaart",
@@ -1659,7 +1737,9 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -1990,7 +2070,19 @@
           "loadingStrategy": "Strategie laden"
         },
         "disableViewportFilter": "Stop kaartvensterfilter",
-        "enableViewportFilter": "Filter data uit huidig kaartvenster"
+        "enableViewportFilter": "Filter data uit huidig kaartvenster",
+        "validationError": "Er zijn validatiefouten voor de toegepaste wijzigingen. Dubbelcheck de aangepaste waarden voor het opslaan."
+      },
+      "primaryKey": {
+        "tooltip": "Dit veld is een primary key en kan niet bewerkt worden"
+      },
+      "restrictions": {
+        "required": "Dit attribuut is verplicht.",
+        "range": "De waarde moet groter dan of gelijk aan {minimum} zijn en kleiner dan of gelijk aan {maximum} zijn.",
+        "greaterEqualThan": "De waarde moet groter dan of gelijk aan {minimum} zijn.",
+        "lessEqualThan": "De waarde moet kleiner dan of gelijk aan {maximum} zijn.",
+        "options": "De waarde moet een van de volgende zijn: {options}.",
+        "nillable": "De waarde kan niet null zijn."
       }
     },
     "layerdownload": {
@@ -2012,7 +2104,8 @@
         "title": "Fout tijdens exporteren",
         "invalidOutputFormat": "Het geselecteerde exportformaat is niet beschikbaar",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator-aanvraag is mislukt, wat betekent dat het geëxporteerde bestand de geconfigureerde serverlimieten overschrijdt. Probeer de downloadopties te wijzigen of een filter aan uw laag toe te voegen en probeer het opnieuw."
+        "downloadEstimatorFailed": "DownloadEstimator-aanvraag is mislukt, wat betekent dat het geëxporteerde bestand de geconfigureerde serverlimieten overschrijdt. Probeer de downloadopties te wijzigen of een filter aan uw laag toe te voegen en probeer het opnieuw.",
+        "fetchFormatsFailed": "Ophalen van beschikbare formaten voor de laag is mislukt. Probeer het later opnieuw."
       },
       "exportResultsMessages": {
         "newExport": "Het bestand is hier beschikbaar wanneer het exporteren is voltooid",
@@ -2068,6 +2161,10 @@
         "counter": {
           "title": "Teller",
           "caption": "voeg een teller toe"
+        },
+        "filter": {
+          "title": "Filterselector",
+          "caption": "voeg een dynamische filterselector toe"
         }
       },
       "selectWidgetType": "Selecteer het widgettype",
@@ -2112,12 +2209,14 @@
           "backToMapSelection": "Terug naar kaartselectie",
           "backToPreview": "Terug naar voorbeeld",
           "backToChartOptions": "Terug naar kaartopties",
+          "backToFilterOptions": "Terug naar filteropties",
           "selectALayer": "Selecteer een laag",
           "selectLayers": "Selecteer een of meerdere lagen",
           "selectAMap": "Selecteer een kaart",
           "configureChartOptions": "Configureer grafiekopties",
           "configureWidgetOptions": "Configureer widget-opties",
           "errorChart": "Een of meerdere grafieken zijn ongeldig",
+          "errorFilter": "Een of meerdere filters zijn ongeldig",
           "backToTableOptions": "Terug naar tabelopties",
           "configureTableOptions": "Configureer tabelopties",
           "attributeEditorColumns": {
@@ -2209,7 +2308,8 @@
           "hide": "Verbergen",
           "hideDescription": "Verberg deze widget voor andere gebruikers",
           "unhide": "Maak zichtbaar",
-          "unhideDescription": "Maak de widget zichtbaar voor andere gebruikers"
+          "unhideDescription": "Maak de widget zichtbaar voor andere gebruikers",
+          "advancedMapEditor": "Open kaarteditor"
         }
       },
       "mapSwitcher": {
@@ -2217,14 +2317,23 @@
         "placeholder": "Geef een kaartnaam",
         "selectLabel": "Selecteer een kaart",
         "infoOnHide": "Vergroot widget om de kaart switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Toon achtergrondselector",
+        "showLegend": "Toon legende",
+        "legendAlreadyExists": "Er bestaat reeds een legendewidget voor de kaartwidget",
+        "mapEditorTitle": "Kaarteditorwidget"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "De geselecteerde kaartwidget heeft reeds een zichtbare legende in de kaartviewer"
       },
       "chartSwitcher": {
         "noResults": "Geen laag gevonden",
         "placeholder": "Geef grafieknaam",
         "selectLabel": "Grafiek",
         "infoOnHide": "Vergroot widget om de grafiek switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartType": {
         "bar": {
@@ -2321,6 +2430,10 @@
         "prefix": "Prefix",
         "suffix": "Suffix",
         "examples": "Voorbeelden",
+        "axisTickVals": "Waarden van asmarkeringen",
+        "axisTickValsTooltip": "Optioneel. Dwingt de as om alleen de opgegeven waarden te tonen (komma-gescheiden). Als ook Tick-tekst is ingesteld, wordt elke waarde weergegeven met het bijbehorende label.",
+        "axisTickText": "Tekst van asmarkeringen",
+        "axisTickTextTooltip": "Aangepaste labels (komma-gescheiden) die in plaats van de waarden uit Tick-waarden worden weergegeven, in de bijbehorende volgorde.",
         "formatExamples": "<div><ul><li><code>.0%</code>: afgeronde percentage, '12%'</li><li><code>.2s</code>:SI-prefix met twee significante cijfers, '42M'</li><li><code>,.2r</code>: gegroepeerde duidendtallen met twee significante cijfers '4,200'</li></ul><em>Meer informatie over formattering syntaxis <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">hier</a>.</em></div>",
         "formula": "Formule",
         "formulaExamples": "<div>Transformeer de waarde met een formule. Gebruik een variabele <code>waarde</code> in de expressie:<h5>Voorbeelden</h5><ul><li><code>waarde + 2</code></li><li><code>waarde / 100</code></li></ul><em>Meer informatie over de syntaxis <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">hier</a>.</em></div>",
@@ -2339,6 +2452,14 @@
         "traceAxes": "Assen grafieklijn",
         "traceData": "Data grafieklijn",
         "traceLegendOptions": "Opties legende grafieklijn",
+        "nullManagement": "Behandeling null-waarden",
+        "groupByNullHandlingStrategyTitle": "Voor veld '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategie",
+        "nullHandlingStrategyHelp": "<p>Kies behandeling null-waarden:</p><ul><li><strong>Negeer (standaard):</strong> Behoud null-waarden ongewijzigd in de data</li><li><strong>Sluit uit:</strong> Verwijder alle records met null-waarden</li><li><strong>Vervang:</strong> Vervang null-waarden met een zelfgedefinieerde waarde</li></ul>",
+        "nullHandlingPlaceholder": "Vervangwaarde",
+        "nullHandlingStrategyDefault": "Negeer (standaard)",
+        "nullHandlingStrategyExclude": "Sluit uit",
+        "nullHandlingStrategyPlaceholder": "Gebruik vervangwaarde",
         "traces": "Grafieklijnen",
         "axes": "Assen",
         "traceStyle": "Stijl grafieklijn",
@@ -2364,7 +2485,8 @@
           "log": "Logaritme",
           "date": "Datum"
         },
-        "showCurrentTime": "Toon huidige tijd op de as"
+        "showCurrentTime": "Toon huidige tijd op de as",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2379,6 +2501,115 @@
             "widgetsTitle": "Widgets zijn samengevouwen"
           }
         }
+      },
+      "filterWidget": {
+        "dataTabLabel": "Data",
+        "dataSource": "Databron",
+        "features": "Objecten",
+        "userDefined": "Gebruikersgedefinieerd",
+        "maps": "Kaarten",
+        "map": "Kaart",
+
+        "valuesFrom": "Waardengroepering",
+        "uniqueAttributes": "Unieke waarden",
+        "attributes": "Alle waarden",
+        "matchAllFilter": "Match alle filters (AND)",
+        "matchAnyFilter": "Match een van de filters (OR)",
+
+        "valueAttribute": "Waardenattribuut",
+        "labelAttribute": "Labelattribuut",
+        "sortByAttribute": "Sorteerattribuut",
+        "maxFeatures": "Max objecten",
+
+        "filterComposition": "Filtersamenstelling",
+        "type": "Type",
+        "filterList": "Filterlijst",
+        "styleList": "Stijllijst",
+        "typeTooltip": "<div><strong>Filterlijst:</strong> Gebruiker kan zelf filters definiëren</div><div><strong>Stijllijst:</strong> Gebruiker kan stijlen selecteren. Enkel beschikbaar voor WMS-lagen</div>",
+        "selectLayerStyle": "Selecteer stijl",
+        "filterStylesPlaceholder": "Stijlen filteren...",
+        "selectStylePlaceholder": "Selecteer een stijl...",
+        "filter": "Filter",
+        "style": "Stijl",
+        "actions": "Acties",
+
+        "layoutTabLabel": "Layout",
+        "title": "Titel",
+        "label": "Label",
+        "icon": "Icoon",
+        "fontSize": "Lettertypegrootte",
+        "fontWeight": "Lettertypedikte",
+        "fontStyle": "Lettertypestijl",
+        "color": "Kleur",
+
+        "items": "Filteritems",
+        "variant": "Variant",
+
+        "selectionMode": "Selectiemodus",
+        "multiple": "Meerdere",
+        "single": "Exclusief",
+
+        "direction": "Richting",
+        "directionHorizontal": "Horizontaal",
+        "directionVertical": "Verticaal",
+
+        "maxHeight": "Maximumhoogte",
+        "maxHeightPlaceholder": "Voer een maximumhoogte in...",
+
+        "interactionsTabLabel": "Interacties",
+        "onSelectionChange": "Koppel filterselector aan kaartitems",
+
+        "applyFilter": "Filter toepassen",
+
+        "selectAll": "Selecteer alles",
+        "clear": "Wis",
+        "showSelectAllClear": "Toon 'Selecteer alles'/'Wis'",
+        "showNoTargetsInfoLabel": "'Geen effect'-melding",
+        "showNoTargetsInfoDescription": "Wanneer er geen kaartitems geconnecteerd zijn met de filter, of de geconnecteerde lagen/widgets niet zichtbaar zijn, dan zal er een boodschap verschijnen die de gebruiker informeert dat de toegepaste filter geen visueel effect heeft.",
+        "noInteractionsInfo": "Geen kaartitems geconnecteerd. Gebruik het interactiepaneel om de filter te connecteren met lagen of widgets.",
+        "noTargetsInfo": "Geen geconnecteerd kaartitem zichtbaar. Activeer minstens één geconnecteerde laag/widget om de filtering zichtbaar te maken.",
+        "connectedLayerFilterDisabledInfo": "De filterknop is uitgeschakeld op een of meerdere geconnecteerde lagen. Activeer de laagfilter in het lagenpaneel om de filtering van de filterwidget toe te passen.",
+        "clickToSeeInfo": "Klik om meer info weer te geven",
+        "styleChangedByWidgetInfo": "Een of meerdere geconnecteerde lagen gebruiken een andere stijl dan de stijl die hier geselecteerd is. Klik op de onderstaande knop om de geselecteerde stijl toe te passen op alle geconnecteerde lagen.",
+        "styleChangedByWidgetBanner": "Stijl werd aangepast via de laaginstellingen van deze laag. Klik om de stijl toe te passen op alle geconnecteerde lagen in de filterwidget.",
+        "applyStyleFromWidgetButton": "Pas stijl toe op alle geconnecteerde lagen in deze filterwidget",
+
+        "defaultFilter": "Standaardfilter",
+        "defaultFilterInfo": "Definieer een filter om toe te passen wanneer niets geselecteerd is. Suggestie: als je niets wil weergeven wanneer niets geselecteerd is, maak dan een filter die altijd geen objecten teruggeeft",
+        "noSelectionMode": "Geen-selectiemodus",
+        "noSelectionModeTooltip": "<div><strong>Geen filter:</strong> Wanneer niets geselecteerd is, zal geen filter toegepast worden op de geconnecteerde kaartitems.</div><div><strong>Geen data:</strong> Wanneer niets geselecteerd is, zal een filter toegepast worden die geen data teruggeeft.</div><div><strong>Zelfgedefinieerd:</strong> Wanneer niets geselecteerd is, zal er een gebruikersgedefinieerde filter toegepast worden. Gebruik de filterknop op die te definiëren.</div>",
+        "noFilter": "Geen filter",
+        "exclude": "Geen data",
+        "custom": "Zelfgedefinieerd",
+        "customFilterRequiredWarning": "Wanneer de geen-selectiemodus 'Zelfgedefinieerd' is, moet je zelf een filter definiëren door op het filtericoon te klikken.",
+        "forceSelection": "Verplicht selectie",
+        "forceSelectionTooltip": "Wanneer ingeschakeld, dan is het verplicht om een filteritem te selecteren",
+        "forceSelectionEnabledTooltip": "Wanneer 'Verplicht Selectie' ingeschakeld is, moet minstens één filteritem geselecteerd worden",
+        "selectDataSourcePlaceHolder": "Selecteer databron ...",
+        "selectAttribute": "Selecteer attribuut",
+        "valueFromUniqueAttributeDescription": "Haalt alle unieke waarden op voor het geselecteerde attribuut.",
+        "valueFromAttributeDescription": "Haalt alle waarden op van alle objecten, inclusief mogelijks dubbele waarden voor het geselecteerde attribuut.",
+        "missingParametersMessage": "Selecteer de nodige velden om een filterlijst te genereren",
+        "fetchError": "Data ophalen gefaald",
+        "noSelectableItems": "Geen selecteerbare filteritems.",
+        "filters": "Filters",
+        "styles": "Stijlen",
+
+        "targetAutomaticallyNotConnectableTooltip": "Dit kaartitem is niet automatisch connecteerbaar, configureer verder om toch te verbinden",
+        "forcePlugLabel": "Pas toe ondanks afwijkende databron",
+        "filterForcePlugInfo": "Vink aan om te bevestigen dat de filter toegepast kan worden op deze van het origineel afwijkende databron. Dit betekent dat de attributen en waarden zoals geconfigureerd in filterselector ook van toepassing moeten zijn op die databron (naamgeving en domein)",
+        "styleForcePlugInfo": "Vink aan om te bevestigen dat de stijl toegepast kan worden op deze van het origineel afwijkende laag. Dit betekent dat deze laag een stijllijst moet hebben met dezelfde namen als geconfigureerd voor de filterselector",
+        "addUserDefinedFilterTooltip": "Klik om filter toe te voegen",
+        "addUserDefinedStyleTooltip": "Klik om stijl toe te voegen",
+        "addUserDefinedFilterValueTooltip": "Klik om filter te definiëren",
+        "addUserDefinedStyleValueTooltip": "Klik om stijl te definiëren",
+        "delete": "Verwijderen",
+        "filterTitlePlaceholder": "Filtertitel...",
+        "editFilterTitleTooltip": "Klik om filtertitel te bewerken",
+        "addNewFilterTooltip": "Klik om nieuwe filter toe te voegen",
+        "applyStyle": "Stijl toepassen",
+        "targetAlreadyConnectedToStyleTooltip": "Het kaartitem is al verbonden met een stijl. Het is niet mogelijk om met meerdere stijlselectors tegelijk te verbinden",
+        "collapseAll": "Vouw alle widgets samen"
       }
     },
     "dashboard": {
@@ -2403,7 +2634,8 @@
         },
         "resourceAlreadyExists": "Er bestaat al een resource met deze naam",
         "forbidden": "Er is een onverwachte fout opgetreden (403 verboden). Neem contact op met de beheerder",
-        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder"
+        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder",
+        "multipleDashboardError": "Dit dashboard bevat meerdere weergaven, wat niet wordt ondersteund. Selecteer één weergave om door te gaan."
       },
       "editor": {
         "save": "Sla het dashboard op",
@@ -2412,7 +2644,22 @@
         "hideConnections": "Verbindingen verbergen"
       },
       "emptyTitle": "Het dashboard is leeg",
-      "delete": "Verwijder dashboard"
+      "delete": "Verwijder dashboard",
+      "view": {
+        "delete": "Verwijderen",
+        "configure": "Configureren",
+        "moveRight": "Naar rechts verplaatsen",
+        "moveLeft": "Naar links verplaatsen",
+        "removeConfirmTitle": "Weet je het zeker?",
+        "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
+        "name": "Naam",
+        "color": "Kleur",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Je kunt geen bestaand lay-out toevoegen aan de weergave omdat deze al lay-outs heeft.",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard laden",
@@ -2597,8 +2844,8 @@
       "fontFamily": "Lettertypefamilie",
       "fontColor": "Letterkleur",
       "fontSize": "Lettertypegrootte",
-      "fontStyle": "Lettertype",
-      "fontWeight": "Lettertype dikte",
+      "fontStyle": "Lettertypestijl",
+      "fontWeight": "Lettertypedikte",
       "haloColor": "Gloed kleur",
       "haloWidth": "Gloed dikte",
       "offsetX": "Verschuiving x",
@@ -2763,6 +3010,8 @@
       "msExtrudedHeight": "Extrusiehoogte",
       "msExtrusionColor": "Extrusiekleur",
       "msExtrusionType": "Extrusietype",
+      "msExtrusionOutlineColor": "Kleur extrusieomtrek",
+      "msExtrusionOutlineWidth": "Breedte extrusieomtrek",
       "wall": "Muur",
       "enableBanding": "Bandstijl",
       "selectChannel": "Selecteer een band",
@@ -3015,6 +3264,8 @@
       "addWebPageContent": "Voeg webpagina-inhoud toe",
       "zoomToContent": "Zoom in op inhoud",
       "delete": "Verwijder geostory",
+      "duplicateSection": "Dupliceer sectie",
+      "copyOfPrefix": "Kopie van",
       "emptyTitle": "Dit verhaal is leeg",
       "emptyDescription": "Begin met het maken van een geweldige geostory door nieuwe inhoud toe te voegen",
       "closeFullscreenMap": "Kaart op volledig scherm sluiten",
@@ -3155,6 +3406,10 @@
         "toc": "Lagen",
         "pan": "Pan-interactie",
         "zoom": "In / uitzoomen interacties",
+        "center": "Centrum",
+        "scale": "Schaal",
+        "applyToOtherMaps": "Toepassen op andere kaarten",
+        "appliedSuccessfully": "Succesvol toegepast op andere kaarten",
         "topLeft": "Linksboven",
         "topRight": "Rechtsboven",
         "bottomLeft": "Linksonder",
@@ -3458,6 +3713,12 @@
         "description": "Toont de coördinaten van de muisaanwijzer",
         "title": "Muispositie"
       },
+      "CameraPosition": {
+        "description": "Toont de huidige positie van de camera in 3D-modus",
+        "title": "Camera positie",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Staat toe om de huidige kaart met legende af te drukken",
         "title": "Afdruktool"
@@ -3486,9 +3747,17 @@
         "description": "Maakt het mogelijk om de kaart op verschillende manieren te delen (link, QR-code, embed, sociale netwerken ...)",
         "title": "Deel tool"
       },
+      "DynamicLegend": {
+        "title": "Legende",
+        "description": "Toon de kaartlegende"
+      },
       "Permalink": {
         "description": "Maakt het mogelijk om een permalink aan te maken van de huidige weergave (gebruikerssessie) van de resource",
         "title": "Permalink"
+      },
+      "LayersSelection": {
+        "title": "Selecteer",
+        "description": "Toon de selectietool"
       },
       "StreetView": {
         "title": "Street View",
@@ -3560,20 +3829,24 @@
         "title": "Kaartoverzichten"
       },
       "BrandNavbar": {
-        "description": "Main navigation menu",
-        "title": "Brand Navbar"
+        "description": "Hoofdnavigatiemenu",
+        "title": "Navigatiemenu"
       },
       "ResourceDetails": {
-        "description": "This plugin allows to manage resource details of the map",
-        "title": "Resource Details"
+        "description": "Met deze plugin kan je de resourcegegevens beheren",
+        "title": "Resourcegegevens"
       },
       "Language": {
-        "description": "This plugin allows to change the language of the application",
-        "title": "Language"
+        "description": "Met deze plugin kan je de taal van de applicatie wijzigen",
+        "title": "Taal"
       },
       "Itinerary": {
         "description": "Met deze plugin kun je routes op de kaart maken",
         "title": "Reisroute"
+      },
+      "Isochrone": {
+        "description": "Met deze plugin kun je isochronen en isodistances berekenen",
+        "title": "Isochronen"
       }
     },
     "contextCreator": {
@@ -3833,12 +4106,12 @@
       "showViewsGeometries": "Toon positie van de overzichten",
       "addInitialView": "Klik op de plusknop om een nieuw overzicht toe te voegen",
       "removeView": "Verwijder overzicht",
-      "linkAllNodes": "Visibiliy and opacity properties of layers and groups will be connected with the main table of content",
-      "unlinkAllNodes": "Visibiliy and opacity properties of layers and groups will be disconneded from the main table of content",
-      "layersLinked": "Visibiliy and opacity properties are connected to the main table of content",
-      "layersUnlinked": "Visibiliy and opacity properties are disconnected from the main table of content",
-      "groupsLinked": "Visibiliy property is connected to the main table of content",
-      "groupsUnlinked": "Visibiliy property is disconnected from the main table of content",
+      "linkAllNodes": "Zichtbaarheids- en doorzichtigheidsinstellingen van lagen en groepen worden verbonden met het lagenpaneel",
+      "unlinkAllNodes": "Zichtbaarheids- en doorzichtigheidsinstellingen van lagen en groepen worden losgekoppeld van het lagenpaneel",
+      "layersLinked": "Zichtbaarheids- en doorzichtigheidsinstellingen zijn verbonden met het lagenpaneel",
+      "layersUnlinked": "Zichtbaarheids- en doorzichtigheidsinstellingen zijn losgekoppeld van het lagenpaneel",
+      "groupsLinked": "Zichtbaarheidsinstellingen zijn verbonden met het lagenpaneel",
+      "groupsUnlinked": "Zichtbaarheidsinstellingen zijn losgekoppeld van het lagenpaneel",
       "hideLayer": "Verberg laag",
       "showLayer": "Toon laag",
       "undoChanges": "Aanpassingen ongedaan maken",
@@ -4155,31 +4428,33 @@
       "tooltip": "Reset de huidige gebruikerssessie",
       "successRemoved": "Gebruikerssessie verwijderd",
       "remove": "Gebruikerssessie resetten",
-      "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
-      "successUpdated": "User session Updated",
-      "warningTitle": "Clear user session",
+      "confirmRemove": "Weet je zeker dat je de huidige gebruikerssessie wilt verwijderen? Dit zal de oorspronkelijke kaart/contextconfiguratie herstellen en je huidige wijzigingen verwijderen. Selecteer wat je wilt verwijderen en deselecteer wat je wilt behouden.",
+      "successUpdated": "Gebruikerssessie bijgewerkt",
+      "warningTitle": "Wis gebruikerssessie",
       "sessionLabels": {
-        "everything": "Everything",
-        "map": "Map",
-        "map_pos": "Zoom and center",
-        "visualization_mode": "Visualization Mode (3D/2D)",
-        "layers": "Layers",
-        "annotations_layer": "Annotations Layer",
-        "measurements_layer": "Measurements Layer",
-        "background_layers": "Background Layers",
-        "other_layers": "Other Layers",
-        "catalog_services": "Catalog Services",
+        "everything": "Alles",
+        "map": "Kaart",
+        "map_pos": "Zoom en centrum",
+        "visualization_mode": "Visualisatiemodus (3D/2D)",
+        "layers": "Lagen",
+        "annotations_layer": "Annotatielaag",
+        "measurements_layer": "Meetlaag",
+        "background_layers": "Achtergrondlagen",
+        "other_layers": "Andere lagen",
+        "catalog_services": "Catalogus service",
         "widgets": "Widgets",
-        "search": "Search",
-        "text_search_services": "Text Search Services",
-        "bookmarks": "Bookmarks",
-        "feature_grid": "Feature Grid",
-        "other": "Other",
-        "toc": "Table of Contents Configuration",
-        "playback": "Playback Configuration",
-        "mapTemplates": "Map Templates",
-        "userPlugins": "User Plugins",
-        "mapViews": "Map Views"
+        "search": "Zoeken",
+        "text_search_services": "Tekstzoekservices",
+        "bookmarks": "Bladwijzers",
+        "feature_grid": "Attributentabel",
+        "other": "Andere",
+        "toc": "Lagenpaneelconfiguratie",
+        "playback": "Afspeelconfiguratie",
+        "mapTemplates": "Kaartsjablonen",
+        "userPlugins": "Gebruikersplugins",
+        "mapViews": "kaartoverzichten",
+        "swipe": "Schuiven",
+        "crsSelector": "CRS-kiezer"
       }
     },
     "streetView": {
@@ -4394,6 +4669,10 @@
         "noPublicContentTitle": "Uitgelichte bronnen",
         "noPublicContentContent": "Deze catalogus bevat geen uitgelichte bronnen."
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Geen IP-bereiken geregistreerd",
+        "noContentYetContent": " "
+      },
       "groupsSection": {
         "noContentYetTitle": "Geen gebruikersgroepen",
         "noContentYetContent": "Er zijn geen gebruikersgroepen. Klik op \"Nieuwe groep\" om er een aan te maken"
@@ -4424,8 +4703,9 @@
       "editPermission": "Bewerken",
       "ownerPermission": "Eigenaar",
       "groups": "Groepen",
+      "ip": "IP-bereiken",
       "filterBy": "Filter...",
-      "about": "Over",
+      "about": "Aanvullende informatie",
       "readMore": "Lees meer",
       "readLess": "Lees minder",
       "noPermissionsAvailable": "Geen permissies beschikbaar",
@@ -4470,6 +4750,9 @@
         "error500": "Interne serverfout. Controleer of de configuratie van het bronbestand de vaste limiet overschrijdt",
         "errorDefault": "Netwerkfout"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Ontbrekende permissies op een geassocieerde resource."
+      },
       "deleteError": {
         "error403": "U mag de bron niet verwijderen",
         "error404": "Er is een fout opgetreden bij het verwijderen van de bron op de server",
@@ -4505,6 +4788,7 @@
       "tagDescription": "Omschrijving",
       "tagColor": "Kleur",
       "manageTags": "Tags beheren",
+      "manageIPs": "IP-bereiken beheren",
       "errorLoadingTags": "Tags kunnen niet worden geladen",
       "errorUpdatingTag": "Tag kan niet worden bijgewerkt",
       "errorTagNameAlreadyExist": "De tag die u probeert aan te maken bestaat al",
@@ -4515,6 +4799,42 @@
       "documentation": "Documentatie",
       "filterApplied": "Filter toegepast",
       "emptyFilterItems": "Geen items om weer te geven"
+    },
+    "ipManager": {
+      "newIP": "Nieuw IP-bereik",
+      "editTitle": "IP-bereik bewerken",
+      "editTooltip": "IP-bereik bewerken",
+      "deleteTitle": "IP-bereik verwijderen",
+      "deleteTooltip": "IP-bereik verwijderen",
+      "deleteButton": "Verwijderen",
+      "deleteConfirm": "Ben je zeker dat je dit IP-bereik wilt verwijderen?",
+      "ipAddress": "IP-bereik (CIDR-formaat)",
+      "description": "Omschrijving",
+      "search": "Zoek IP-bereiken...",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "ipsFound": "{count, plural, =0 {0 IP-bereiken gevonden} =1 {1 IP-bereik gevonden} other {# IP-bereiken gevonden}}",
+      "validation": {
+        "ipRequired": "IP-bereik is verplicht",
+        "cidrRequired": "CIDR-notatie vereist (bijv., 192.168.1.1/32 of 192.168.1.0/24)",
+        "invalidMask": "Subnet mask moet tussen 0 en 32 liggen",
+        "invalidFormat": "Ongeldig formaat IP-bereik",
+        "invalidOctet": "Elke octet moet tussen 0 en 255 liggen"
+      },
+      "notification": {
+        "createSuccessTitle": "Succes",
+        "createSuccessMessage": "IP-bereik succesvol aangemaakt",
+        "createErrorTitle": "Fout",
+        "createErrorMessage": "Mislukt om IP-bereik aan te maken",
+        "updateSuccessTitle": "Succes",
+        "updateSuccessMessage": "IP-bereik succesvol bijgewerkt",
+        "updateErrorTitle": "Fout",
+        "updateErrorMessage": "Mislukt om IP-bereik bij te werken",
+        "deleteSuccessTitle": "Succes",
+        "deleteSuccessMessage": "IP-bereik succesvol verwijderd",
+        "deleteErrorTitle": "Fout",
+        "deleteErrorMessage": "Mislukt om IP-bereik te verwijderen"
+      }
     },
     "itinerary": {
       "title": "Route",
@@ -4547,6 +4867,48 @@
       "togglePointTooltip": "Schakel coördinateneditor in",
       "toggleSearchTooltip": "Schakel zoeken op locatie in",
       "removeWaypointTooltip": "Verwijder waypoint"
+    },
+    "isochrone": {
+      "title": "Isochronen",
+      "tooltip": "Isochronen",
+      "modeTooltip": "Kies een reismodus voor de Isochroon/Isodistance",
+      "rangeByTooltip": "Kies <i>afstand</i> for <b>Isodistance</b> of <i>tijd</i> voor <b>Isochrone</b> als de methode voor het bereik",
+      "clickOnMap": "Klik op de kaart om een locatie te selecteren",
+      "coordinateTooltip": "Schakel coördinateneditor in",
+      "searchTooltip": "Zoek op locatienaam",
+      "searching": "Zoeken...",
+      "newSearch": "Nieuwe zoekopdracht",
+      "bucketsTooltip": "Definieert het aantal intervallen om te berekenen binnen het gekozen bereik. Max is 4.",
+      "noResultsFound": "Geen resultaten gevonden",
+      "searchByLocationName": "Zoek op locatienaam...",
+      "mode": "Reismodus",
+      "rangeBy": "Bereik volgens",
+      "departure": "Vertrek",
+      "arrival": "Aankomst",
+      "direction": "Richting",
+      "reset": "Reset",
+      "run": "Uitvoeren",
+      "buckets": "Intervallen",
+      "exportAsGeoJSON": "Exporteer als GeoJSON",
+      "addAsLayer": "Toevoegen als laag",
+      "deleteResult": "Resultaat verwijderen",
+      "distance": "Afstand",
+      "time": "Tijd",
+      "useRunParameters": "Gebruik uitvoerparameters",
+      "notification": {
+        "error": "Isochrone Fout",
+        "errorIsochroneError": "Er is een fout opgetreden bij het berekenen van de isochroon. Probeer het opnieuw...",
+        "infoLayerAdded": "Isochronenlaag toegevoegd"
+      },
+      "colors": "Kleuren",
+      "rampTooltip": "Kies het kleurverloop voor de intervallen",
+      "colorTooltip": "Kies de kleur voor het interval",
+      "confirmDialog": {
+        "title": "Sluit Isochroonpaneel",
+        "description": "Je hebt bestaande isochronendata. Het sluiten van het paneel zal alle resultaten verwijderen. Weet je zeker dat je wilt doorgaan?",
+        "confirm": "Bevestigen",
+        "cancel": "Annuleren"
+      }
     }
   }
 }

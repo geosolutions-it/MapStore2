@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,31 +8,32 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Label} from 'react-bootstrap';
 
 import NumberFormat from '../../I18N/Number';
 
-class MousePositionLabelDD extends React.Component {
-    static propTypes = {
-        position: PropTypes.shape({
-            lng: PropTypes.number,
-            lat: PropTypes.number
-        })
-    };
+const MousePositionLabelDD = ({ position }) => {
+    const integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 6, minimumFractionDigits: 6};
+    const lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 6, minimumFractionDigits: 6};
 
-    render() {
-        let integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 6, minimumFractionDigits: 6};
-        let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 6, minimumFractionDigits: 6};
-        return (
-            <h5>
-                <Label bsSize="lg" bsStyle="info">
-                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={this.props.position.lat} />
-                    <span>° Lng: </span>
-                    <NumberFormat key="lngD" numberParams={lngDFormat} value={this.props.position.lng} />
-                    <span>° </span>
-                </Label>
-            </h5>);
-    }
-}
+    return (
+        <>
+            <span>
+                {"Lat: "}
+                <NumberFormat key="lat" numberParams={integerFormat} value={position.lat} />
+            </span>
+            <span>
+                {"Lng: "}
+                <NumberFormat key="lng" numberParams={lngDFormat} value={position.lng} />
+            </span>
+        </>
+    );
+};
+
+MousePositionLabelDD.propTypes = {
+    position: PropTypes.shape({
+        lng: PropTypes.number,
+        lat: PropTypes.number
+    })
+};
 
 export default MousePositionLabelDD;

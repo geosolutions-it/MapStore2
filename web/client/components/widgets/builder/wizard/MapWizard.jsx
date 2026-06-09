@@ -30,7 +30,9 @@ export default ({
     setEditNode = () => {},
     closeNodeEditor = () => {},
     isLocalizedLayerStylesEnabled,
-    env
+    env,
+    widgets = [],
+    widgetId
 } = {}) => {
     const [selectedMap, setSelectedMap] = useState({});
     const [emptyMap, setEmptyMap] = useState(false);
@@ -67,6 +69,8 @@ export default ({
                     selectedNodes={selectedNodes}
                     onChange={onChange}
                     isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                    widgets={widgets}
+                    widgetId={widgetId}
                     preview={<Preview
                         key={editorData.selectedMapId}
                         onChange={onChange}

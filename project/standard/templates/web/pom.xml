@@ -18,6 +18,14 @@
         <artifactId>mapstore-services</artifactId>
         <version>${mapstore-services.version}</version>
     </dependency>
+     <!-- Jackson BOM (for to receive same version of jackson from print-lib)-->
+    <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
     <!-- ================================================================ -->
@@ -398,6 +406,11 @@
                         ${project.build.directory}/apache-tomcat-${tomcat.version}
                     </home>
                     <properties>
+                        <cargo.jvmargs>
+                            ${backend.debug.args}
+                            --add-opens=java.base/java.lang=ALL-UNNAMED
+                            --add-opens=java.base/java.io=ALL-UNNAMED
+                        </cargo.jvmargs>
                         <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
                     </properties>
