@@ -5,7 +5,7 @@ This page describes a quick local authentication environment for MapStore develo
 The stack is intended as a starting point. For the full configuration details, see the dedicated guides for [LDAP](users/ldap.md#ldap-integration-with-mapstore), [OpenID Connect](users/openId.md#integration-with-openid-connect), [Keycloak](users/keycloak.md#keycloak-integrations), [MapStore authentication](auth.md#mapstore-authentication---implementation-details) and the available [infrastructure setups](infrastructure-setups.md#possible-setups).
 
 !!! warning
-    The provided files contain sample credentials, sample users, a sample Keycloak realm and sample LDAP entries. They are useful for local development and testing, but they must be replaced or reviewed before using this setup in production.
+    The provided files contain public sample credentials, sample users, a sample Keycloak realm and sample LDAP entries. They are useful only for local development and testing. They are not secrets, they are not secure defaults, and they must be changed before using this setup outside a disposable local environment.
 
 ## Services
 
@@ -59,7 +59,7 @@ Review the values before starting the stack. The most relevant variables are:
 - `DATADIR_PATH`: optional path to the MapStore datadir mounted in the container. If omitted, `./datadir` is used.
 
 !!! warning
-    Do not reuse the sample passwords in shared, staging or production environments. Update `.env`, the Keycloak realm, LDIF files and MapStore datadir properties consistently.
+    Do not reuse the sample passwords or client secret in shared, staging or production environments. The placeholder values in this repository are intentionally guessable. Update `.env`, the Keycloak realm, LDIF files and MapStore datadir properties consistently.
 
 ## Prepare The Datadir
 
@@ -78,7 +78,9 @@ The sample datadir contains:
 - `configs/localConfig.json.patch`: adds Keycloak as an authentication provider in the login UI.
 
 !!! note
-    The sample Keycloak realm and LDAP credentials are intended for local testing only. Keep `docker/keycloak/realm-mapstore.sample.json` and the shipped LDIF data as local test data, and replace client secrets and user passwords before using the setup on another machine or in a shared environment.
+The sample Keycloak realm and LDAP credentials are intended for local testing only. Keep `docker/keycloak/realm-mapstore.sample.json` and the shipped LDIF data as local test data, and replace client secrets and user passwords before using the setup on another machine or in a shared environment.
+
+When you use a MapStore WAR built in LDAP-direct mode, `ldap.properties` must also define `ldap.memberPattern`. The shipped sample uses `^uid=([^,]+).*$`, which matches the sample OpenLDAP `member` values such as `uid=msadmin,ou=people,dc=acme,dc=org`.
 
 These files are regular MapStore externalized configuration files. See [configuration files](../configuration-files.md#configuration-files) and [externalized configuration](../externalized-configuration.md#externalized-configuration) for more details about datadir-based overrides.
 
@@ -96,7 +98,7 @@ The sample realm configures:
 
 - Realm: `mapstore`
 - Client: `mapstore-server`
-- Client secret: `mapstore-server-secret`
+- Client secret: `changeme-mapstore-oidc-client-secret-123`
 - Redirect URI: `http://localhost/mapstore/*`
 - Realm roles: `admin`, `user`
 - Sample users: `kcuser`, `kcadmin`
@@ -107,26 +109,20 @@ The client and secret must match the values in `datadir/mapstore-ovr.properties`
 
 | Username | Password | Email | Keycloak role | MapStore role |
 | --- | --- | --- | --- | --- |
-| `kcuser` | `kcuser123` | `kcuser@acme.org` | `user` | `USER` |
-| `kcadmin` | `kcadmin123` | `kcadmin@acme.org` | `admin` | `ADMIN` |
+| `kcuser` | `changeme-kcuser-pw-123` | `kcuser@acme.org` | `user` | `USER` |
+| `kcadmin` | `changeme-kcadmin-pw-123` | `kcadmin@acme.org` | `admin` | `ADMIN` |
 
 The Keycloak admin console is available at [http://localhost/keycloak/admin/](http://localhost/keycloak/admin/) with the `KEYCLOAK_ADMIN` and `KEYCLOAK_ADMIN_PASSWORD` values configured in `.env`. The admin user belongs to the Keycloak `master` realm and is used to manage Keycloak, not to log in to MapStore.
 
 ## Prepare OpenLDAP
 
-OpenLDAP is initialized from LDIF files in `docker/openldap/ldif/` when the LDAP data volume is empty. The repository keeps the sample users in `docker/openldap/ldif.sample/02-users.ldif` so you can review or customize them before importing.
-
-To use the provided test users, copy the sample users LDIF into the active bootstrap directory before the first startup:
-
-```sh
-cp docker/openldap/ldif.sample/02-users.ldif docker/openldap/ldif/02-users.ldif
-```
+OpenLDAP is initialized from the LDIF files in `docker/openldap/ldif/` when the LDAP data volume is empty. The repository ships the complete bootstrap set there, so the directory itself is the source of truth for organizational units, users, groups and roles.
 
 The LDAP bootstrap files define:
 
 - Organizational units, such as `ou=people` and `ou=groups`.
-- Sample users, if `02-users.ldif` is copied into `docker/openldap/ldif/`.
-- Groups and roles, including `ROLE_ADMIN`, `mapstore-users` and `mapstore-devs`.
+- Sample users in `02-users.ldif`.
+- Groups and roles, including `ROLE_ADMIN`, `ROLE_USER` and the `everyone` group.
 
 The LDIF files are copied into the OpenLDAP image at build time and imported only when the LDAP volumes are empty. If you edit LDIF files after the first startup, rebuild the LDAP image and remove the LDAP volumes before starting again.
 
@@ -143,9 +139,9 @@ docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml up --buil
 
 | Login | Password | MapStore role | LDAP groups |
 | --- | --- | --- | --- |
-| `msadmin` | `admin123` | `ADMIN` | `ROLE_ADMIN`, `mapstore-users` |
-| `msuser` | `user123` | `USER` | `mapstore-users` |
-| `msdev` | `dev123` | `USER` | `mapstore-users`, `mapstore-devs` |
+| `msadmin` | `changeme-msadmin-pw-123` | `ADMIN` | `ROLE_ADMIN`, `everyone` |
+| `msuser` | `changeme-msuser-pw-123` | `USER` | `ROLE_USER`, `everyone` |
+| `msdev` | `changeme-msdev-pw-123` | `USER` | `ROLE_USER`, `everyone` |
 
 Log in with the LDAP `uid`, for example `msadmin`, not the full DN. With `ldap.convertToUpperCase=true`, synchronized user and group names may appear uppercase in MapStore.
 
@@ -179,17 +175,17 @@ For Keycloak OpenID login:
 
 1. Open [http://localhost/mapstore](http://localhost/mapstore).
 2. Click login and choose **Keycloak**.
-3. Log in with `kcuser` / `kcuser123` or `kcadmin` / `kcadmin123`.
+3. Log in with `kcuser` / `changeme-kcuser-pw-123` or `kcadmin` / `changeme-kcadmin-pw-123`.
 4. Keycloak redirects back to MapStore.
 
-For LDAP login, use the standard username/password form with one of the LDAP users, such as `msadmin` / `admin123`. This requires a MapStore WAR built and configured with LDAP support. See [LDAP integration with MapStore](users/ldap.md#ldap-integration-with-mapstore).
+For LDAP login, use the standard username/password form with one of the LDAP users, such as `msadmin` / `changeme-msadmin-pw-123`. This requires a MapStore WAR built and configured with LDAP support. See [LDAP integration with MapStore](users/ldap.md#ldap-integration-with-mapstore).
 
 ## Troubleshooting
 
 - **Keycloak realm not imported**: Keycloak imports realm files only on first startup. Remove the `keycloak_data` volume and restart the stack.
 - **LDAP users not found**: confirm `docker/openldap/ldif/02-users.ldif` exists before first startup. If the LDAP volume already exists, remove the LDAP volumes and restart.
-- **MapStore waits for LDAP healthcheck**: the LDAP healthcheck searches for `msadmin`, so the sample user LDIF must be active or the healthcheck must be adapted to your custom users.
-- **Redirect or callback errors**: check that the Keycloak redirect URI matches `http://localhost/mapstore/*` and that `keycloakOAuth2Config.redirectUri` in the datadir points to `http://localhost/mapstore/rest/geostore/openid/keycloak/callback`.
+- **MapStore waits for LDAP healthcheck**: the LDAP container now uses a root DSE healthcheck, so this usually points to an LDAP startup problem rather than missing sample users.
+- **Redirect or callback errors**: check that the Keycloak redirect URI matches `http://localhost/mapstore/*` and that `keycloakOAuth2Config.redirectUri` in the datadir points to `http://localhost/mapstore/rest/geostore/openid/keycloak/callback`. In LDAP-direct mode, keep `keycloakOAuth2Config.autoCreateUser=false`; otherwise the Keycloak callback can fail while trying to sync users and groups through the LDAP-backed GeoStore DAOs.
 - **502 Bad Gateway during login or callback**: the auth proxy config in `docker/mapstore.auth.conf` increases proxy buffers for Keycloak and MapStore callback responses. Restart the proxy if you edit the file.
 - **LDAP LDIF edits are ignored**: LDIF bootstrap runs only on an empty LDAP volume. Rebuild the LDAP image and remove LDAP volumes before restarting.
 - **LDAP login does not appear to work**: verify the WAR was built with the LDAP profile and that `ldap.properties` is available in the datadir.

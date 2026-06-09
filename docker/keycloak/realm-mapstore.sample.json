@@ -31,7 +31,7 @@
       "credentials": [
         {
           "type": "password",
-          "value": "kcuser123",
+          "value": "changeme-kcuser-pw-123",
           "temporary": false
         }
       ]
@@ -47,7 +47,7 @@
       "credentials": [
         {
           "type": "password",
-          "value": "kcadmin123",
+          "value": "changeme-kcadmin-pw-123",
           "temporary": false
         }
       ]
@@ -61,7 +61,7 @@
       "protocol": "openid-connect",
       "publicClient": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "mapstore-server-secret",
+      "secret": "changeme-mapstore-oidc-client-secret-123",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,

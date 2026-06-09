@@ -10,24 +10,32 @@ services:
     image: geosolutions-mapstore/openldap
     container_name: ldap
     restart: on-failure
+    entrypoint:
+      - /bin/sh
+      - -lc
+      - >
+        rm -rf /container/service/slapd/assets/config/bootstrap/ldif/custom/* &&
+        cp -R /ldif-src/. /container/service/slapd/assets/config/bootstrap/ldif/custom/ &&
+        exec /container/tool/run
     environment:
       LDAP_ORGANISATION: "${LDAP_ORGANISATION:-Acme}"
       LDAP_DOMAIN: "${LDAP_DOMAIN:-acme.org}"
-      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD}"
-      LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD}"
+      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-changeme-ldap-admin-pw-123}"
+      LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD:-changeme-ldap-config-pw-123}"
       LDAP_READONLY_USER: "true"
-      LDAP_READONLY_USER_USERNAME: "${LDAP_READONLY_USER_USERNAME:-readonly}"
-      LDAP_READONLY_USER_PASSWORD: "${LDAP_READONLY_PASSWORD}"
+      LDAP_READONLY_USER_USERNAME: "${LDAP_READONLY_USER_USERNAME:-svc_mapstore_ldap}"
+      LDAP_READONLY_USER_PASSWORD: "${LDAP_READONLY_PASSWORD:-changeme-ldap-bind-pw-123}"
       LDAP_TLS: "${LDAP_TLS:-false}"
     volumes:
       - ldap_data:/var/lib/ldap
       - ldap_config:/etc/ldap/slapd.d
+      - ./docker/openldap/ldif:/ldif-src:ro
     healthcheck:
-      test: ["CMD-SHELL", "ldapsearch -x -H ldap://localhost -D cn=readonly,dc=acme,dc=org -w \"${LDAP_READONLY_PASSWORD}\" -b ou=people,dc=acme,dc=org -s one \"(uid=msadmin)\""]
+      test: ["CMD-SHELL", "ldapsearch -x -H ldap://localhost -b \"\" -s base \"(objectClass=*)\" namingContexts >/dev/null 2>&1"]
       interval: 5s
       timeout: 5s
       retries: 30
-      start_period: 15s
+      start_period: 20s
     networks:
       - mapstore-network
 

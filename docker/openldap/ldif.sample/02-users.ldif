@@ -7,7 +7,7 @@ cn: msadmin
 sn: Admin
 givenName: MapStore Admin
 mail: msadmin@acme.org
-userPassword: admin123
+userPassword: changeme-msadmin-pw-123
 
 dn: uid=msuser,ou=people,dc=acme,dc=org
 objectClass: inetOrgPerson
@@ -18,7 +18,7 @@ cn: msuser
 sn: User
 givenName: MapStore User
 mail: msuser@acme.org
-userPassword: user123
+userPassword: changeme-msuser-pw-123
 
 dn: uid=msdev,ou=people,dc=acme,dc=org
 objectClass: inetOrgPerson
@@ -29,4 +29,4 @@ cn: msdev
 sn: Developer
 givenName: MapStore Developer
 mail: msdev@acme.org
-userPassword: dev123
+userPassword: changeme-msdev-pw-123
