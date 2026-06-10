@@ -25,13 +25,18 @@ export const dynamicLegendMapLayoutEpic = (action$, store) =>
             return !isFloatingSelector(store.getState()) && enabledSelector(store.getState()) && isNil(source);
         })
         .map(({layout}) => {
+            const boundingSidebarRect = {
+                ...(layout.boundingSidebarRect || {}),
+                right: layout?.boundingSidebarRect?.right ?? 40
+            };
             const newLayout = {
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             };
             const action = updateMapLayout(newLayout);
