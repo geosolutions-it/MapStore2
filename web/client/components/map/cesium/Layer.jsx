@@ -9,7 +9,7 @@ import React from 'react';
 
 import Layers from '../../../utils/cesium/Layers';
 import PropTypes from 'prop-types';
-import { round, isNil, castArray, isFunction } from 'lodash';
+import { round, isNil, castArray, isFunction, isNumber } from 'lodash';
 import { getResolutions } from '../../../utils/MapUtils';
 import axios from '../../../libs/ajax';
 import { getProxyCacheByUrl } from '../../../utils/ProxyUtils';
@@ -39,6 +39,7 @@ class CesiumLayer extends React.Component {
         // in particular for detached layers (eg. Vector, WFS, 3D Tiles, ...)
         const visibility = this.getVisibilityOption(this.props);
         this._isMounted = true;
+        this.autorefreshTick = -1;
         this.createLayer(this.props.type, { ...this.props.options, visibility }, this.props.position, this.props.map, this.props.securityToken);
         if (this.props.options && this.layer && visibility) {
             this.addLayer(this.props);
@@ -82,6 +83,10 @@ class CesiumLayer extends React.Component {
             }
         }
         this.updateLayer(newProps, this.props);
+
+        if (newProps.autorefreshTicks) {
+            this.tryAutorefresh(newProps);
+        }
     }
 
     componentWillUnmount() {
@@ -472,6 +477,17 @@ class CesiumLayer extends React.Component {
             this.layer.remove();
         }
         this.props.map.scene.requestRender();
+    };
+
+    tryAutorefresh = (newProps) => {
+        const layerId = newProps.options.id;
+        const autorefreshTicks = newProps.autorefreshTicks;
+        const visible = this.getVisibilityOption(newProps);
+
+        if (visible && isNumber(autorefreshTicks[layerId]) && this.autorefreshTick < autorefreshTicks[layerId]) {
+            this.autorefreshTick = autorefreshTicks[layerId];
+            Layers.refreshLayer(this.props.type, this.layer);
+        }
     };
 }
 

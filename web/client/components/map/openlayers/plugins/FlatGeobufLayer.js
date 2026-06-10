@@ -241,5 +241,11 @@ Layers.registerType(FGB_LAYER_TYPE, {
         }
 
         return null;
+    },
+    refresh: (layer) => {
+        const source = layer.getSource();
+        if (source) {
+            source.refresh();
+        }
     }
 });
