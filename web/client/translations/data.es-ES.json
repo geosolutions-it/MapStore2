@@ -132,6 +132,7 @@
       "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
       "heightOffset": "Desplazamiento de altura (m)",
       "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
+      "maxFeaturesInView": "Número máximo de entidades en la vista",
       "serverType": "Tipo de servidor",
       "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
       "serverTypeOption": {
