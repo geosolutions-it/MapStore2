@@ -144,11 +144,13 @@ export const updateWidgetProperty = (id, key, value, mode = "replace", target = 
 /**
  * Update a layer property of all widgets with that layer
  * @param {object} layer New layer object
+ * @param {object} [options] options for the layer update
  * @return {object} action with type `WIDGETS:UPDATE_LAYER`
  */
-export const updateWidgetLayer = (layer) => ({
+export const updateWidgetLayer = (layer, options = {}) => ({
     type: UPDATE_LAYER,
-    layer
+    layer,
+    options
 });
 /**
  * Deletes a widget from the passed target
