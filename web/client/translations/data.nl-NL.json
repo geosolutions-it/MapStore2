@@ -72,7 +72,12 @@
       "hide": "Verbergen",
       "serviceUrl": "Service url",
       "title": "Beveiligde service",
-      "remove": "Verwijder beveiliging van deze service en sluit het venster"
+      "remove": "Verwijder beveiliging van deze service en sluit het venster",
+      "validationErrs": {
+        "invalidCredentials": "Ongeldige gebruikersnaam of wachtwoord",
+        "forbidden": "Toegang geweigerd. Controleer uw rechten",
+        "tryAgainLater": "Er is iets fout gegaan. Probeer het later opnieuw"
+      }
     },
     "layerProperties": {
       "windowTitle": "Eigenschappen van de laag",
@@ -314,18 +319,25 @@
     "mapScale": "Schaal:",
     "showMousePositionCoordinates": "Toon de coördinaten",
     "showCrsSelector": "Selecteer projectie",
-    "crsSelectorFilterPlaceholder": "Filter projectie",
-    "crsSelectorSelectedCRS": "Geselecteerd:",
     "crsSelector": {
       "availableProjections": "Beschikbare projecties",
-      "searchProjection": "Projectie zoeken...",
+      "searchProjection": "Filter geconfigureerde projecties...",
+      "searchProjectionUnified": "Filter geconfigureerde of zoek in GeoServer...",
       "label": "Label",
       "authorityId": "Autoriteit-ID",
       "selectedProjection": "De geselecteerde projectie wordt gebruikt in de kaart",
-      "quickSwitch": "De geselecteerde projectie wordt toegevoegd aan de lijst voor snel wisselen",
       "help": "Vink het vakje aan om een projectie toe te voegen aan snel wisselen. Klik op een rij om deze als standaardprojectie in te stellen.",
-      "save": "Opslaan",
-      "close": "Sluiten"
+      "remoteSuggestionsHeader": "Van GeoServer ({shown} van {total})",
+      "noRemoteResults": "Geen overeenkomstige projecties op de server",
+      "noFilteredMatch": "Geen enkele projectie in de geconfigureerde lijst komt overeen met de filter",
+      "loadMore": "Meer laden",
+      "alreadyAdded": "Reeds beschikbaar in de geconfigureerde lijst",
+      "useAsMapProjection": "Gebruik als kaartprojectie",
+      "removeProjection": "Verwijder deze projectie",
+      "loadingProjection": "Projectiedefinitie laden...",
+      "failedToLoad": "Laden van projectie mislukt. Klik om opnieuw te proberen",
+      "zoomToProjectionExtent": "Zoom naar projectiebereik",
+      "unregisteredProjections": "De volgende projecties werden geconfigureerd maar zijn niet beschikbaar: {projections}"
     },
     "menu": "Menu",
     "options": "Opties",
@@ -1680,6 +1692,23 @@
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
       },
+<<<<<<< HEAD
+=======
+      "tagFilterType": {
+        "label": "Type tagfilter",
+        "category": "Categorie",
+        "keyword": "Trefwoord"
+      },
+      "listView": "Lijstweergave",
+      "gridView": "Rasterweergave",
+      "selectAll": "Alles selecteren",
+      "layers": "Lagen",
+      "edit": "Bewerken",
+      "backToList": "Terug naar catalogus",
+      "close": "Sluiten",
+      "showFullContent": "Toon volledige inhoud",
+      "hideFullContent": "Verberg volledige inhoud",
+>>>>>>> dd6a75b (Update Dutch translations in data.nl-NL.json (#12478))
       "clearValueText": "Selecties wissen",
       "noResultsText": "Geen resultaat",
       "addToMap": "Toevoegen aan kaart",
@@ -2411,10 +2440,10 @@
         "prefix": "Prefix",
         "suffix": "Suffix",
         "examples": "Voorbeelden",
-        "axisTickVals": "Waarden van asmarkeringen",
-        "axisTickValsTooltip": "Optioneel. Dwingt de as om alleen de opgegeven waarden te tonen (komma-gescheiden). Als ook Tick-tekst is ingesteld, wordt elke waarde weergegeven met het bijbehorende label.",
-        "axisTickText": "Tekst van asmarkeringen",
-        "axisTickTextTooltip": "Aangepaste labels (komma-gescheiden) die in plaats van de waarden uit Tick-waarden worden weergegeven, in de bijbehorende volgorde.",
+        "axisTickVals": "Asmarkeringswaarden",
+        "axisTickValsTooltip": "Optioneel. Dwingt de as om alleen de opgegeven waarden te tonen (kommagescheiden). Als ook markeringslabels zijn ingesteld, dan wordt elke waarde weergegeven met het bijbehorende label.",
+        "axisTickText": "Asmarkeringslabels",
+        "axisTickTextTooltip": "Aangepaste labels (kommagescheiden) die in plaats van de asmarkeringswaarden worden weergegeven, in de overeenkomstige volgorde.",
         "formatExamples": "<div><ul><li><code>.0%</code>: afgeronde percentage, '12%'</li><li><code>.2s</code>:SI-prefix met twee significante cijfers, '42M'</li><li><code>,.2r</code>: gegroepeerde duidendtallen met twee significante cijfers '4,200'</li></ul><em>Meer informatie over formattering syntaxis <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">hier</a>.</em></div>",
         "formula": "Formule",
         "formulaExamples": "<div>Transformeer de waarde met een formule. Gebruik een variabele <code>waarde</code> in de expressie:<h5>Voorbeelden</h5><ul><li><code>waarde + 2</code></li><li><code>waarde / 100</code></li></ul><em>Meer informatie over de syntaxis <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">hier</a>.</em></div>",
@@ -2429,6 +2458,20 @@
         "barChartType": "Type Staafdiagram",
         "groupedBarChart": "Gegroepeerd",
         "stackedBarChart": "Gestapeld",
+        "hovermode": "Tooltipmodus",
+        "hovermodeTooltip": "Bepaalt hoe de grafiektooltips worden weergegeven.",
+        "hovermodeXUnified": "Unified X tooltip",
+        "hovermodeXUnifiedDescription": "Éen tooltip voor grafieklijnen op dezelfde X-waarde. Header toont de X-waarde; rijen tonen de Y-waarden.",
+        "hovermodeYUnified": "Unified Y tooltip",
+        "hovermodeYUnifiedDescription": "Éen tooltip voor grafieklijnen op dezelfde Y-waarde. Header toont de Y-waarde; rijen tonen de X-waarden.",
+        "hovermodeX": "X tooltip",
+        "hovermodeXDescription": "Labels voor grafieklijnen op dezelfde X-waarde, toont de Y-waarden.",
+        "hovermodeY": "Y tooltip",
+        "hovermodeYDescription": "Labels voor grafieklijnen op dezelfde Y-waarde, toont de X-waarden.",
+        "hovermodeClosest": "Individuele tooltip",
+        "hovermodeClosestDescription": "Dichtstbijzijnde punt alleen, toont de Y-waarde.",
+        "hovermodeFalse": "Geen tooltip",
+        "hovermodeFalseDescription": "Deactiveert tooltips.",
         "valueFormatting": "Formattering waarden grafieklijn",
         "traceAxes": "Assen grafieklijn",
         "traceData": "Data grafieklijn",
@@ -2466,7 +2509,7 @@
           "log": "Logaritme",
           "date": "Datum"
         },
-        "showCurrentTime": "Toon huidige tijd op de as",
+        "showCurrentTime": "Markeer geselecteerde tijd",
         "type": "Type"
       },
       "tray": {
@@ -2474,14 +2517,7 @@
         "expandTray": "Vouw de widgets-lade uit",
         "collapseTray": "Vouw de widgetslade samen",
         "expandAll": "Vouw alle widgets uit",
-        "collapseAll": "Vouw alle widgets samen",
-        "notifications": {
-          "collapsed": {
-            "message": "Tijdlijn en widgets kunnen niet tegelijkertijd blijven. Gebruik op de widgetbalk om te schakelen tussen tijdlijn en widgets",
-            "timelineTitle": "De tijdlijn is samengevouwen",
-            "widgetsTitle": "Widgets zijn samengevouwen"
-          }
-        }
+        "collapseAll": "Vouw alle widgets samen"
       },
       "filterWidget": {
         "dataTabLabel": "Data",
@@ -2490,6 +2526,9 @@
         "userDefined": "Gebruikersgedefinieerd",
         "maps": "Kaarten",
         "map": "Kaart",
+        "time": "Tijd",
+        "timeline": "Tijdlijn",
+        "elevation": "Hoogte",
 
         "valuesFrom": "Waardengroepering",
         "uniqueAttributes": "Unieke waarden",
@@ -2538,27 +2577,47 @@
         "maxHeightPlaceholder": "Voer een maximumhoogte in...",
 
         "interactionsTabLabel": "Interacties",
-        "onSelectionChange": "Koppel filterselector aan kaartitems",
+        "onSelectionChange": "Koppel filterselector aan items",
 
         "applyFilter": "Filter toepassen",
+        "applyDimension": "Dimensie toepassen",
+        "noConnectableNodesAvailable": "Geen connecterbare items beschikbaar",
 
         "selectAll": "Selecteer alles",
         "clear": "Wis",
         "showSelectAllClear": "Toon 'Selecteer alles'/'Wis'",
+        "showValueLabel": "Toon Waardenlabel",
+        "showSelectedValue": "Toon Geselecteerde Waarde",
+        "showSelectedValueTooltip": "Toont de huidig geselecteerde waarde boven de schuifbalk.",
+        "sliderNotSelected": "Niets geselecteerd",
+        "showTicks": "Toon Markeringen",
+        "showTicksTooltip": "Toont of verbergt markeringen op de schuifbalk.",
+        "tickValues": "Waarden voor Markeringen",
+        "tickLabels": "Labels voor Markeringen",
+        "tickValuesPlaceholder": "Kommagescheiden waarden",
+        "tickLabelsPlaceholder": "Kommagescheiden labels",
+        "tickValuesTooltip": "Voer kommagescheiden lijst van waarden in voor de markeringen. Enkel de overeenkomende waarden zullen getoond worden als label.",
+        "tickLabelsTooltip": "Voer kommagescheiden lijst van vervangende labels in volgens overeenkomende volgorde met de waardenlijst.",
+        "tickAngle": "Hoek Markeringslabels",
+        "tickAngleTooltip": "Stelt de rotatiehoek van de markeringlabels in graden in.",
+        "fillTickValuesTooltip": "Vul lijst met de beschikbare filterwaarden",
+        "fillTickLabelsTooltip": "Vul lijst met respectievelijke labels voor de filterwaarden",
         "showNoTargetsInfoLabel": "'Geen effect'-melding",
-        "showNoTargetsInfoDescription": "Wanneer er geen kaartitems geconnecteerd zijn met de filter, of de geconnecteerde lagen/widgets niet zichtbaar zijn, dan zal er een boodschap verschijnen die de gebruiker informeert dat de toegepaste filter geen visueel effect heeft.",
-        "noInteractionsInfo": "Geen kaartitems geconnecteerd. Gebruik het interactiepaneel om de filter te connecteren met lagen of widgets.",
-        "noTargetsInfo": "Geen geconnecteerd kaartitem zichtbaar. Activeer minstens één geconnecteerde laag/widget om de filtering zichtbaar te maken.",
+        "showNoTargetsInfoDescription": "Wanneer er geen items geconnecteerd zijn met de filter, of de geconnecteerde lagen/widgets niet zichtbaar zijn, dan zal er een boodschap verschijnen die de gebruiker informeert dat de toegepaste filter geen visueel effect heeft.",
+        "noInteractionsInfo": "Geen items geconnecteerd. Gebruik het interactiepaneel om de filter te connecteren met lagen of widgets.",
+        "noTargetsInfo": "Geen geconnecteerd item zichtbaar. Activeer minstens één geconnecteerde laag/widget om de filtering zichtbaar te maken.",
         "connectedLayerFilterDisabledInfo": "De filterknop is uitgeschakeld op een of meerdere geconnecteerde lagen. Activeer de laagfilter in het lagenpaneel om de filtering van de filterwidget toe te passen.",
         "clickToSeeInfo": "Klik om meer info weer te geven",
         "styleChangedByWidgetInfo": "Een of meerdere geconnecteerde lagen gebruiken een andere stijl dan de stijl die hier geselecteerd is. Klik op de onderstaande knop om de geselecteerde stijl toe te passen op alle geconnecteerde lagen.",
         "styleChangedByWidgetBanner": "Stijl werd aangepast via de laaginstellingen van deze laag. Klik om de stijl toe te passen op alle geconnecteerde lagen in de filterwidget.",
         "applyStyleFromWidgetButton": "Pas stijl toe op alle geconnecteerde lagen in deze filterwidget",
+        "dimensionChangedByWidgetInfo": "Een of meerdere geconnecteerde items gebruiken een andere dimensiewaarde dan de geselecteerde waarde. Klik op de onderstaande knop om de geselecteerde waarde toe te passen op alle geconnecteerde items.",
+        "applyDimensionFromWidgetButton": "Pas waarde van deze filter toe op alle geconnecteerde items",
 
         "defaultFilter": "Standaardfilter",
         "defaultFilterInfo": "Definieer een filter om toe te passen wanneer niets geselecteerd is. Suggestie: als je niets wil weergeven wanneer niets geselecteerd is, maak dan een filter die altijd geen objecten teruggeeft",
         "noSelectionMode": "Geen-selectiemodus",
-        "noSelectionModeTooltip": "<div><strong>Geen filter:</strong> Wanneer niets geselecteerd is, zal geen filter toegepast worden op de geconnecteerde kaartitems.</div><div><strong>Geen data:</strong> Wanneer niets geselecteerd is, zal een filter toegepast worden die geen data teruggeeft.</div><div><strong>Zelfgedefinieerd:</strong> Wanneer niets geselecteerd is, zal er een gebruikersgedefinieerde filter toegepast worden. Gebruik de filterknop op die te definiëren.</div>",
+        "noSelectionModeTooltip": "<div><strong>Geen filter:</strong> Wanneer niets geselecteerd is, zal geen filter toegepast worden op de geconnecteerde items.</div><div><strong>Geen data:</strong> Wanneer niets geselecteerd is, zal een filter toegepast worden die geen data teruggeeft.</div><div><strong>Zelfgedefinieerd:</strong> Wanneer niets geselecteerd is, zal er een gebruikersgedefinieerde filter toegepast worden. Gebruik de filterknop op die te definiëren.</div>",
         "noFilter": "Geen filter",
         "exclude": "Geen data",
         "custom": "Zelfgedefinieerd",
@@ -2572,12 +2631,17 @@
         "valueFromAttributeDescription": "Haalt alle waarden op van alle objecten, inclusief mogelijks dubbele waarden voor het geselecteerde attribuut.",
         "missingParametersMessage": "Selecteer de nodige velden om een filterlijst te genereren",
         "fetchError": "Data ophalen gefaald",
+        "unsupportedVariantMessage": "Niet-ondersteunde filtervariant: {variant}.",
+        "mapTimeRangeDisabledMessage": "Kan niet worden gebruikt wanneer bereik is ingeschakeld.",
+        "sliderSingleItemError": "Schuifbalk vereist minstens twee selecteerbare waarden.",
         "noSelectableItems": "Geen selecteerbare filteritems.",
         "filters": "Filters",
         "styles": "Stijlen",
 
-        "targetAutomaticallyNotConnectableTooltip": "Dit kaartitem is niet automatisch connecteerbaar, configureer verder om toch te verbinden",
+        "targetAutomaticallyNotConnectableTooltip": "Dit item is niet automatisch connecteerbaar, configureer verder om toch te verbinden",
         "forcePlugLabel": "Pas toe ondanks afwijkende databron",
+        "twoWaySynchronizationLabel": "Dubbele synchronisatie",
+        "twoWaySynchronizationInfo": "Synchroniseer met de tijdlijn. Dit kan niet worden ingeschakeld wanneer andere niet-tijdlijn items verbonden zijn.",
         "filterForcePlugInfo": "Vink aan om te bevestigen dat de filter toegepast kan worden op deze van het origineel afwijkende databron. Dit betekent dat de attributen en waarden zoals geconfigureerd in filterselector ook van toepassing moeten zijn op die databron (naamgeving en domein)",
         "styleForcePlugInfo": "Vink aan om te bevestigen dat de stijl toegepast kan worden op deze van het origineel afwijkende laag. Dit betekent dat deze laag een stijllijst moet hebben met dezelfde namen als geconfigureerd voor de filterselector",
         "addUserDefinedFilterTooltip": "Klik om filter toe te voegen",
@@ -2588,9 +2652,20 @@
         "filterTitlePlaceholder": "Filtertitel...",
         "editFilterTitleTooltip": "Klik om filtertitel te bewerken",
         "addNewFilterTooltip": "Klik om nieuwe filter toe te voegen",
+        "addOptionalTargetTooltip": "Voeg optioneel item toe",
+        "removeOptionalTargetConfirmTitle": "Item verwijderen?",
+        "removeOptionalTargetConfirmContent": "Alle verbonden interacties van dit item zullen worden verwijderd.",
         "applyStyle": "Stijl toepassen",
-        "targetAlreadyConnectedToStyleTooltip": "Het kaartitem is al verbonden met een stijl. Het is niet mogelijk om met meerdere stijlselectors tegelijk te verbinden",
-        "collapseAll": "Vouw alle widgets samen"
+        "timeSelectionHighlight": "Markering Tijdselectie",
+        "targetAlreadyConnectedToStyleTooltip": "Dit item is al verbonden met een stijl. Het is niet mogelijk om met meerdere stijlselectors tegelijk te verbinden",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "Dit item is al verbonden vanuit een andere bron. Verbinding met meerdere bronnen tegelijk is niet mogelijk.",
+        "applyDimensionSelectionModeDisabledTooltip": "Meervoudige selectie is uitgeschakeld omdat deze filter verbonden is met 'Dimensie Toepassen'. Verbreek de verbinding met 'Dimensie Toepassen' om de modus 'Meervoudige selectie' te kunnen gebruiken.",
+        "applyDimensionMultipleSelectionDisabledTooltip": "'Dimensie Toepassen' kan alleen worden verbonden wanneer de filterselectiemodus 'Exclusief' is. Wissel de lay-outselectiemodus naar 'Exclusief' om dit item te kunnen verbinden.",
+        "layerTimeControlledByTimelineTooltip": "Laagtijd wordt beheerd door de hoofdtijdlijn. Verbind daarom met de tijdlijn als doel.",
+        "axisCurrentTimeControlledByTimelineTooltip": "Huidige tijdsmarkering op de grafiek wordt beheerd door de hoofdtijdlijn. Verbind daarom met de tijdlijn als doel.",
+        "axisCurrentTimeDisabledTooltip": "Stel het datatype van de as in op 'Datum' en schakel de grafiekoptie 'Markering tijdselectie' in alvorens te verbinden met dit item.",
+        "timelineTargetUnavailableTooltip": "Tijdlijn is niet beschikbaar in deze context.",
+        "targetAlreadyConnectedToTimeTooltip": "Tijdlijnconnectie met geactiveerde dubbele synchronisatie kan slechts enkelvoudig geconnecteerd zijn. Deactiveer dubbele synchronisatie of deconnecteer de tijdlijn om andere items te kunnen connecteren."
       }
     },
     "dashboard": {
@@ -3198,6 +3273,13 @@
       "next": "volgende",
       "cacheCleaned": "Cache succesvol gewist",
       "errorTitle": "Geofence",
+      "allCacheCleaned": "Cache succesvol gewist van alle Geoserverinstanties",
+      "cacheConfirmSingle": "Ben je zeker dat je de regelcache voor instantie: '{instanceName}' wilt wissen?",
+      "cacheConfirmAll": "Ben je zeker dat je de cache van de regels voor alle Geoserverinstanties wilt wissen?",
+      "clearAllgsInstances": "Wis Voor Alle Instanties",
+      "noAvailGsInstances": "Geen instantie beschikbaar",
+      "errorCleaningCacheFor": "Cache wissen gefaald voor de volgende instanties: {instancesNames}",
+      "cacheCleanedFor": "Cache successvol gewist voor de volgende instanties: {instancesNames}",
       "errorCQL": "Geometrie niet geldig!",
       "errorCleaningCache": "Fout bij het wissen van de cache van de regels.",
       "errorLoadingRoles": "Fout bij het laden van rollen.",
@@ -3616,7 +3698,7 @@
       },
       "CRSSelector": {
         "description": "Maakt het mogelijk om kaartprojectie te wisselen",
-        "title": "CRS-kiezer"
+        "title": "CRS-selector"
       },
       "DeleteMap": {
         "description": "Maakt het mogelijk om een kaart en alle gekoppelde resources te verwijderen",
@@ -4435,7 +4517,7 @@
         "userPlugins": "Gebruikersplugins",
         "mapViews": "kaartoverzichten",
         "swipe": "Schuiven",
-        "crsSelector": "CRS-kiezer"
+        "crsSelector": "CRS-selector"
       }
     },
     "streetView": {
@@ -4467,6 +4549,9 @@
           "projectionNotAvailable": "De geconfigureerde projectie {srs} is niet beschikbaar. Gelieve de administrator te contacteren."
         },
         "reloadAPI": "Herlaad API"
+      },
+      "panoramax": {
+        "emptySelection": "U hebt geen afbeelding geselecteerd."
       }
     },
     "sidebarMenu": {
