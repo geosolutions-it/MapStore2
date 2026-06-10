@@ -22,7 +22,7 @@ import {
 } from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
-import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
+import { FEATURE_INFO_CLICK, hideMapinfoMarker } from '../actions/mapInfo';
 
 import {
     query,
@@ -120,7 +120,7 @@ import {
 
 import {
     queryPanelSelector,
-    drawerEnabledControlSelector, createControlEnabledSelector
+    drawerEnabledControlSelector
 } from '../selectors/controls';
 
 import { setHighlightFeaturesPath as setHighlightFeaturesPathAction } from '../actions/highlight';
@@ -163,7 +163,6 @@ import {isSnappingActive} from "../selectors/draw";
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
-import {dockPanelsSelector} from "../selectors/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {mapTypeSelector} from "../selectors/maptype";
 import { MapLibraries } from '../utils/MapTypeUtils';
@@ -325,7 +324,6 @@ export const featureGridBrowseData = (action$, store) =>
         const currentTypeName = get(store.getState(), "query.typeName");
         return Rx.Observable.of(
             ...(currentTypeName !== layer.name ? [reset()] : []),
-            setControlProperty('drawer', 'enabled', false),
             setLayer(layer.id),
             openFeatureGrid()
         ).merge(
@@ -804,24 +802,6 @@ export const resetEditingOnFeatureGridClose = (action$, store) => action$.ofType
 );
 
 /**
- * close all dock panels at the right whenever feature editor is open
- * @param action$
- * @param store
- * @returns {Observable<unknown>}
- */
-export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
-    action$.ofType(OPEN_FEATURE_GRID)
-        .switchMap( () => {
-            const actions = [];
-            const state = store.getState();
-            const rightPanels = dockPanelsSelector(state).right;
-            rightPanels.forEach(panel => {
-                if (createControlEnabledSelector(panel)(state)) actions.push(setControlProperty(panel, 'enabled', false));
-            });
-            return Rx.Observable.from(actions);
-        });
-
-/**
  * closes feature editor once another drawing tool is open
  * @param action$
  * @param store
@@ -919,10 +899,7 @@ export const resetGridOnLocationChange = action$ =>
         action$.ofType(LOCATION_CHANGE)
             .take(1)
             .switchMap(() =>
-                Rx.Observable.of(
-                    toggleViewMode(),
-                    closeFeatureGrid()
-                )
+                Rx.Observable.of(toggleViewMode())
             )
             .takeUntil(action$.ofType(CLOSE_FEATURE_GRID))
     );
@@ -940,7 +917,7 @@ export const autoCloseFeatureGridEpicOnDrowerOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID).switchMap(() =>
         action$.ofType(TOGGLE_CONTROL)
             .filter(action => action.control && action.control === 'drawer' && isFeatureGridOpen(store.getState()))
-            .switchMap(() => Rx.Observable.of(closeFeatureGrid(), selectFeatures([])))
+            .switchMap(() => Rx.Observable.of(selectFeatures([])))
             .takeUntil(action$.ofType(LOCATION_CHANGE))
     );
 export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.ofType(CLOSE_FEATURE_GRID_CONFIRM).switchMap( () => {
@@ -975,59 +952,13 @@ export const removeWmsFilterOnGridClose = (action$, store) =>
                 // change are performed before it
                 .takeUntil(action$.ofType(LOCATION_CHANGE, FEATURE_INFO_CLICK, OPEN_ADVANCED_SEARCH))
         );
-/**
- * re-opens the feature grid after it was closed by feature info click
- */
-export const autoReopenFeatureGridOnFeatureInfoClose = (action$) =>
-    action$.ofType(OPEN_FEATURE_GRID)
-        // need to finalize the flow before listen the next open event to avoid
-        // to catch open feature info triggered by this flow or advanced search
-        .switchMap(() =>
-            Rx.Observable.race(
-                action$.ofType(FEATURE_INFO_CLICK).take(1),
-                action$.ofType(CLOSE_FEATURE_GRID).take(1)
-            ).exhaustMap((action) => action.type === CLOSE_FEATURE_GRID
-                // a close event stops the flow living it free to listen the next event
-                ? Rx.Observable.empty()
-                : action$
-                    // if feature info was clicked, wait for a feature info close to reopen the feature grid
-                    .ofType(HIDE_MAPINFO_MARKER)
-                    .switchMap(() => Rx.Observable.of(openFeatureGrid()))
 
-            ).takeUntil(
-                action$.ofType(LOCATION_CHANGE, TOGGLE_CONTROL)
-                    .filter(action => action.type === LOCATION_CHANGE || action.control && action.control === 'drawer')
-                    .merge(
-                        action$
-                        // a close feature grid event not between feature info click and hide mapinfo marker
-                            .ofType(CLOSE_FEATURE_GRID)
-                            .withLatestFrom(
-                                action$
-                                    .ofType(FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER)
-                                    .scan((acc, { type }) => {
-                                        switch (type) {
-                                        case FEATURE_INFO_CLICK:
-                                            return false;
-                                        case HIDE_MAPINFO_MARKER:
-                                            return true;
-                                        default:
-                                            return false;
-                                        }
-                                    }, true)
-                                    .startWith(true),
-                                (a, b) => b
-                            ).filter(e => e)
-
-                    )
-            )
-        );
 export const onOpenAdvancedSearch = (action$, store) =>
     action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
         return Rx.Observable.of(
             // hide selected features from map
             selectFeatures([]),
             loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
-            closeFeatureGrid('queryPanel'),
             setControlProperty('queryPanel', "enabled", true)
         )
             .merge(
@@ -1064,11 +995,6 @@ export const onFeatureGridZoomAll = (action$, store) =>
 export const resetControlsOnEnterInEditMode = (action$) =>
     action$.ofType(TOGGLE_MODE)
         .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"]));
-export const closeIdentifyWhenOpenFeatureGrid = (action$) =>
-    action$.ofType(OPEN_FEATURE_GRID)
-        .switchMap(() => {
-            return Rx.Observable.of(closeIdentify());
-        });
 /**
  * start sync filter with wms layer
  *
@@ -1211,7 +1137,7 @@ export const hideFeatureGridOnDrawerOpenMobile = (action$, { getState } = {}) =>
             && getState().browser.mobile
             && drawerEnabledControlSelector(getState())
         )
-        .switchMap(() => Rx.Observable.of(hideMapinfoMarker(), closeFeatureGrid()));
+        .switchMap(() => Rx.Observable.of(hideMapinfoMarker()));
 export const hideDrawerOnFeatureGridOpenMobile = (action$, { getState } = {}) =>
     action$
         .ofType(FEATURE_INFO_CLICK)
