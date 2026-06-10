@@ -65,6 +65,13 @@ const emptyState = {
     }
 };
 
+// Some layer updates come from connected map state and must not affect standalone widgets.
+const shouldUpdateWidgetLayer = (widget, action) => {
+    if (action.options?.connectedOnly) {
+        return !!widget?.mapSync;
+    }
+    return true;
+};
 
 /**
  * Manages the state of the widgets
@@ -161,6 +168,9 @@ function widgetsReducer(state = emptyState, action) {
             if (_widgets) {
                 return set(`containers[${DEFAULT_TARGET}].widgets`,
                     _widgets.map(w => {
+                        if (!shouldUpdateWidgetLayer(w, action)) {
+                            return w;
+                        }
                         if (w.widgetType === "chart" && w?.charts) {
                             // every chart stores the layer object configuration
                             // so we need to loop around them to update correctly the layer properties
