@@ -64,7 +64,7 @@ const recordToLayer = (record, {
     if (!record) {
         return null;
     }
-    const { format, properties, bbox, layerOptions: recordLayerOptions } = record;
+    const { format, properties, bbox } = record;
     const { layerOptions } = service || {};
     return {
         type: FGB_LAYER_TYPE,
@@ -76,7 +76,6 @@ const recordToLayer = (record, {
         ...(bbox && { bbox }),
         ...(format && { format }),
         ...(properties && { properties }),
-        ...recordLayerOptions,
         ...layerOptions
     };
 };
