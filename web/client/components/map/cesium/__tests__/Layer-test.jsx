@@ -1947,5 +1947,31 @@ describe('Cesium layer', () => {
             // Same GeoJSONStyledFeatures instance: features stay loaded.
             expect(cmp.layer.getStyledFeatures()).toBe(styledFeaturesBefore);
         });
+
+        it('recreates the layer when maxFeaturesInView changes', () => {
+            const cmp = ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={{
+                        ...baseOptions,
+                        maxFeaturesInView: 1
+                    }}
+                    map={map}
+                />, document.getElementById('container'));
+            const layerBefore = cmp.layer;
+            expect(layerBefore).toBeTruthy();
+
+            ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={{
+                        ...baseOptions,
+                        maxFeaturesInView: 2
+                    }}
+                    map={map}
+                />, document.getElementById('container'));
+            expect(cmp.layer).toNotBe(layerBefore);
+            expect(cmp.layer.getStyledFeatures()).toBeTruthy();
+        });
     });
 });

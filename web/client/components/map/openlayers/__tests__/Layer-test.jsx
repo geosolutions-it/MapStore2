@@ -3684,6 +3684,35 @@ describe('Openlayers layer', () => {
             layer.layer.getSource().on('addfeature', onAddFeature);
         }).timeout(15000);
 
+        it('limits features loaded from a real FGB when maxFeaturesInView is configured', (done) => {
+            const options = {
+                type: 'flatgeobuf',
+                visibility: true,
+                url: FGB_URL,
+                name: 'us-counties',
+                metadata: { geometryType: 3 },
+                maxFeaturesInView: 1
+            };
+            const layer = ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={options}
+                map={fgbMap}/>, document.getElementById("container"));
+            const source = layer.layer.getSource();
+            const onLoadEnd = () => {
+                source.un('featuresloadend', onLoadEnd);
+                setTimeout(() => {
+                    try {
+                        expect(source.getFeatures().length).toBe(1);
+                    } catch (err) {
+                        done(err);
+                        return;
+                    }
+                    done();
+                }, 250);
+            };
+            source.on('featuresloadend', onLoadEnd);
+        }).timeout(15000);
+
         it('clears the source on CRS change instead of in-place transform', () => {
             // The OL plugin update handler must clear+refresh on CRS change
             // (not call geometry.transform), because dynamic projections are
