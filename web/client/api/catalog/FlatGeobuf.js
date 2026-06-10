@@ -58,11 +58,14 @@ function validateUrl(serviceUrl) {
  * Converts a FGB record into a layerNode
  * maybe export as util method
  */
-const recordToLayer = (record) => {
+const recordToLayer = (record, {
+    service
+} = {}) => {
     if (!record) {
         return null;
     }
-    const { format, properties, bbox } = record;
+    const { format, properties, bbox, layerOptions: recordLayerOptions } = record;
+    const { layerOptions } = service || {};
     return {
         type: FGB_LAYER_TYPE,
         url: record.url,
@@ -72,7 +75,9 @@ const recordToLayer = (record) => {
         sourceMetadata: record.metadata,
         ...(bbox && { bbox }),
         ...(format && { format }),
-        ...(properties && { properties })
+        ...(properties && { properties }),
+        ...recordLayerOptions,
+        ...layerOptions
     };
 };
 

@@ -25,7 +25,8 @@ import {
     FGB_FEATURE_BATCH_SIZE,
     FGB_STREAM_FLUSH_INTERVAL,
     getFlatGeobufGeojson,
-    createFlatGeobufGeometryTypeResolver
+    createFlatGeobufGeometryTypeResolver,
+    getFlatGeobufMaxFeaturesInView
 } from '../../../../api/FlatGeobuf';
 import {
     getFlatGeobufGeometryTypeFromOptions,
@@ -66,6 +67,7 @@ const createLayer = (options, map) => {
     }
 
     const vectorFeatureFilter = createVectorFeatureFilter(options);
+    const maxFeaturesInView = getFlatGeobufMaxFeaturesInView(options);
 
     let styledFeatures = new GeoJSONStyledFeatures({
         map: map,
@@ -145,6 +147,8 @@ const createLayer = (options, map) => {
         );
 
         let batch = [];
+        let loadedFeatures = 0;
+        let capped = false;
         let lastFlush = Date.now();
         try {
             // 5th positional is `headers` (HeadersInit). The 3rd is
@@ -165,6 +169,11 @@ const createLayer = (options, map) => {
                     seenFeatureIds.add(feature.id);
                 }
                 batch.push(feature);
+                loadedFeatures += 1;
+                if (maxFeaturesInView && loadedFeatures >= maxFeaturesInView) {
+                    capped = true;
+                    break;
+                }
                 if (batch.length >= FGB_FEATURE_BATCH_SIZE) {
                     styledFeatures.addFeatures(batch);
                     batch = [];
@@ -186,9 +195,9 @@ const createLayer = (options, map) => {
                 styledFeatures.addFeatures(batch);
             }
             styledFeatures.flushPendingUpdate();
-            if (rect) {
+            if (rect && !capped) {
                 loadedRects.push(rect);
-            } else {
+            } else if (!capped) {
                 loadedEverything = true;
             }
         } catch (e) {
@@ -234,7 +243,8 @@ Layers.registerType(FGB_LAYER_TYPE, {
     update: (layer, newOptions, oldOptions, map) => {
         if (!isEqual(newOptions.features, oldOptions.features)
             || !isEqual(oldOptions.security, newOptions.security)
-            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+            || newOptions.maxFeaturesInView !== oldOptions.maxFeaturesInView) {
             return createLayer(newOptions, map);
         }
         const styledFeatures = layer?.getStyledFeatures?.();
