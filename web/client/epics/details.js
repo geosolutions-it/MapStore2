@@ -12,6 +12,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     OPEN_DETAILS_PANEL,
     CLOSE_DETAILS_PANEL,
+    DETAILS_LOADED,
     NO_DETAILS_AVAILABLE,
     updateDetails,
     closeDetailsPanel,
@@ -34,6 +35,7 @@ import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import { REDUCERS_LOADED } from '../actions/storemanager';
 import { detailsSettingsSelector, detailsUriSelector } from '../selectors/details';
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
+import { CLOSE_TUTORIAL } from '../actions/tutorial';
 
 export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
@@ -90,10 +92,9 @@ const parseDetailsSettings = (detailsSettings) => {
 };
 
 export const openDetailsPanelOnStartup = (action$, store) =>
-    action$.ofType(REDUCERS_LOADED)
+    action$.ofType(DETAILS_LOADED, REDUCERS_LOADED, CLOSE_TUTORIAL)
         .filter((action) => action.type !== REDUCERS_LOADED || isDetailsReducerLoaded(action.reducers))
         .delay(100)
-        // Retry startup auto-open after the Details plugin has registered.
         .filter(() => {
             const state = store.getState();
             const detailsUri = detailsUriSelector(state);

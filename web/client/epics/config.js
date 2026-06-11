@@ -30,7 +30,7 @@ import { mapIdSelector } from '../selectors/map';
 import { getDashboardId } from '../selectors/dashboard';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapConfig} from '../actions/usersession';
-import { detailsLoaded, openDetailsPanel } from '../actions/details';
+import { detailsLoaded } from '../actions/details';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
@@ -223,7 +223,6 @@ export const storeDetailsInfoEpic = (action$, store) =>
             return !!mapId;
         })
         .switchMap(({mapId, info: {attributes}}) => {
-            const isTutorialRunning = store.getState()?.tutorial?.run;
             let details = attributes?.details;
             let detailsSettings;
             try {
@@ -235,16 +234,12 @@ export const storeDetailsInfoEpic = (action$, store) =>
             if (!details || details === EMPTY_RESOURCE_VALUE) {
                 return Observable.empty();
             }
-            return Observable.from([
-                detailsLoaded(mapId, details, detailsSettings),
-                ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])]
-            );
+            return Observable.of(detailsLoaded(mapId, details, detailsSettings));
         });
 export const storeDetailsInfoDashboardEpic = (action$, store) =>
     action$.ofType(DASHBOARD_LOADED)
         .switchMap(() => {
             const dashboardId = getDashboardId(store.getState());
-            const isTutorialRunning = store.getState()?.tutorial?.run;
             return !dashboardId
                 ? Observable.empty()
                 : Observable.fromPromise(
@@ -263,10 +258,7 @@ export const storeDetailsInfoDashboardEpic = (action$, store) =>
                         detailsSettings = {};
                     }
 
-                    return Observable.of(
-                        detailsLoaded(dashboardId, details.value, detailsSettings),
-                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
-                    );
+                    return Observable.of(detailsLoaded(dashboardId, details.value, detailsSettings));
                 });
         });
 
