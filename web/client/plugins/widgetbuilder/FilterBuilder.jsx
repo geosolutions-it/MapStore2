@@ -12,6 +12,7 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/filter/Toolbar';
 import LayerSelector from './FilterLayerSelector';
+import MapCatalogLayerSelector from './MapCatalogLayerSelector';
 import FilterBuilderContent from './FilterBuilderContent';
 import {
     insertWidget,
@@ -21,6 +22,7 @@ import {
     changeEditorSetting
 } from '../../actions/widgets';
 import filterLayerSelector from './enhancers/filterLayerSelector';
+import mapLayerSelector from './enhancers/mapLayerSelector';
 import viewportBuilderConnectMask from './enhancers/connection/viewportBuilderConnectMask';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
 import { wizardSelector, wizardStateToProps } from './commons';
@@ -58,6 +60,8 @@ const FilterToolbar = compose(
 /*
  * in case you don't have a layer selected (e.g. dashboard) the filter builder
  * prompts a catalog view to allow layer selection
+ *
+ * For globalWidgetMode widgets, current map layers are listed instead of catalog records
  */
 const chooseLayerEnhancer = compose(
     withState('showLayers', "toggleLayerSelector", false),
@@ -65,6 +69,10 @@ const chooseLayerEnhancer = compose(
     connect(wizardSelector, null, wizardStateToProps),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
+    branch(
+        ({showLayers, editorData} = {}) => showLayers && editorData?.globalWidgetMode === true,
+        renderComponent(mapLayerSelector(MapCatalogLayerSelector))
+    ),
     branch(
         ({showLayers} = {}) => showLayers,
         renderComponent(filterLayerSelector(LayerSelector))
