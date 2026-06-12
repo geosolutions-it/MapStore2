@@ -1,0 +1,7 @@
+dn: ou=people,dc=acme,dc=org
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=acme,dc=org
+objectClass: organizationalUnit
+ou: groups

@@ -1,0 +1,80 @@
+{
+  "realm": "mapstore",
+  "enabled": true,
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "sslRequired": "external",
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Mapped to MapStore ADMIN (see mapstore-ovr.properties roleMappings)"
+      },
+      {
+        "name": "user",
+        "description": "Optional; default MapStore role is USER if unmapped"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "kcuser",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Keycloak",
+      "lastName": "User",
+      "email": "kcuser@acme.org",
+      "realmRoles": ["user"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "changeme-kcuser-pw-123",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "kcadmin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Keycloak",
+      "lastName": "Admin",
+      "email": "kcadmin@acme.org",
+      "realmRoles": ["admin"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "changeme-kcadmin-pw-123",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "mapstore-server",
+      "name": "MapStore OpenID (server)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "changeme-mapstore-oidc-client-secret-123",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost/mapstore/*"
+      ],
+      "webOrigins": [
+        "http://localhost",
+        "+"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost/mapstore/*"
+      }
+    }
+  ]
+}
