@@ -27,7 +27,7 @@ import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
 import '../plugins/ModelLayer';
-import '../plugins/FlatGeobufLayer';
+import { isMeaningfulCappedRectRefinement } from '../plugins/FlatGeobufLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1903,6 +1903,33 @@ describe('Cesium layer', () => {
             visibility: true,
             metadata: { geometryType: 3 } // Polygon
         };
+
+        it('identifies meaningful capped rect refinements', () => {
+            const loadedRect = {
+                capped: true,
+                rect: { minX: 0, minY: 0, maxX: 100, maxY: 100 }
+            };
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 0, minY: 0, maxX: 100, maxY: 100 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 1, minY: 1, maxX: 99, maxY: 99 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 25, minY: 25, maxX: 75, maxY: 75 }
+            )).toBe(true);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 50, minY: 50, maxX: 150, maxY: 150 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                { ...loadedRect, capped: false },
+                { minX: 25, minY: 25, maxX: 75, maxY: 75 }
+            )).toBe(false);
+        });
 
         it('exposes getStyledFeatures and getInferredGeometryType accessors', () => {
             const cmp = ReactDOM.render(

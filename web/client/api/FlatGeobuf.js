@@ -28,6 +28,7 @@ export const FGB_FEATURE_BATCH_SIZE = 200;
  * when batches arrive faster than the network roundtrip, in cesium plugin
  */
 export const FGB_STREAM_FLUSH_INTERVAL = 500;
+export const FGB_MEANINGFUL_VIEW_RATIO = 0.95;
 
 export const getFlatGeobufMaxFeaturesInView = (options) => {
     const maxFeaturesInView = parseInt(options?.maxFeaturesInView, 10);
