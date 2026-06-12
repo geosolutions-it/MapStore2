@@ -1569,6 +1569,16 @@ describe('LayersUtils', () => {
                     expect(l.cropToProjectionExtent).toBe(false);
                 }
             ],
+            // save maxFeaturesInView if present
+            [
+                {
+                    type: "flatgeobuf",
+                    maxFeaturesInView: 25
+                },
+                l => {
+                    expect(l.maxFeaturesInView).toBe(25);
+                }
+            ],
             // default cropToProjectionExtent to  undefined
             [
                 {

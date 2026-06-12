@@ -27,7 +27,7 @@ import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
 import '../plugins/ModelLayer';
-import '../plugins/FlatGeobufLayer';
+import { isMeaningfulCappedRectRefinement } from '../plugins/FlatGeobufLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1904,6 +1904,33 @@ describe('Cesium layer', () => {
             metadata: { geometryType: 3 } // Polygon
         };
 
+        it('identifies meaningful capped rect refinements', () => {
+            const loadedRect = {
+                capped: true,
+                rect: { minX: 0, minY: 0, maxX: 100, maxY: 100 }
+            };
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 0, minY: 0, maxX: 100, maxY: 100 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 1, minY: 1, maxX: 99, maxY: 99 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 25, minY: 25, maxX: 75, maxY: 75 }
+            )).toBe(true);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 50, minY: 50, maxX: 150, maxY: 150 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                { ...loadedRect, capped: false },
+                { minX: 25, minY: 25, maxX: 75, maxY: 75 }
+            )).toBe(false);
+        });
+
         it('exposes getStyledFeatures and getInferredGeometryType accessors', () => {
             const cmp = ReactDOM.render(
                 <CesiumLayer
@@ -1946,6 +1973,32 @@ describe('Cesium layer', () => {
             expect(cmp.layer).toBe(layerBefore);
             // Same GeoJSONStyledFeatures instance: features stay loaded.
             expect(cmp.layer.getStyledFeatures()).toBe(styledFeaturesBefore);
+        });
+
+        it('recreates the layer when maxFeaturesInView changes', () => {
+            const cmp = ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={{
+                        ...baseOptions,
+                        maxFeaturesInView: 1
+                    }}
+                    map={map}
+                />, document.getElementById('container'));
+            const layerBefore = cmp.layer;
+            expect(layerBefore).toBeTruthy();
+
+            ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={{
+                        ...baseOptions,
+                        maxFeaturesInView: 2
+                    }}
+                    map={map}
+                />, document.getElementById('container'));
+            expect(cmp.layer).toNotBe(layerBefore);
+            expect(cmp.layer.getStyledFeatures()).toBeTruthy();
         });
     });
 });

@@ -23,9 +23,11 @@ import {
     FGB_LAYER_TYPE,
     FGB_MATCH_ALL_RECT,
     FGB_FEATURE_BATCH_SIZE,
+    FGB_MEANINGFUL_VIEW_RATIO,
     FGB_STREAM_FLUSH_INTERVAL,
     getFlatGeobufGeojson,
-    createFlatGeobufGeometryTypeResolver
+    createFlatGeobufGeometryTypeResolver,
+    getFlatGeobufMaxFeaturesInView
 } from '../../../../api/FlatGeobuf';
 import {
     getFlatGeobufGeometryTypeFromOptions,
@@ -38,6 +40,22 @@ import {
  * without blocking the interface during loading
  */
 const yieldToEventLoop = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+const fgbRectEquals = (rectA, rectB) =>
+    rectA && rectB
+    && rectA.minX === rectB.minX && rectA.maxX === rectB.maxX
+    && rectA.minY === rectB.minY && rectA.maxY === rectB.maxY;
+
+const fgbRectArea = (rect) =>
+    rect ? Math.abs((rect.maxX - rect.minX) * (rect.maxY - rect.minY)) : 0;
+
+export const isMeaningfulCappedRectRefinement = (loadedRect, rect) => {
+    const cappedRect = loadedRect?.rect;
+    if (!loadedRect?.capped || !cappedRect || !rect || !fgbRectContains(cappedRect, rect) || fgbRectEquals(cappedRect, rect)) {
+        return false;
+    }
+    return fgbRectArea(rect) < fgbRectArea(cappedRect) * FGB_MEANINGFUL_VIEW_RATIO;
+};
 
 // Resolve and apply the cesium style function for an FGB layer. Pulled out
 // of createLayer so the update handler can reapply on a style-only change
@@ -66,6 +84,7 @@ const createLayer = (options, map) => {
     }
 
     const vectorFeatureFilter = createVectorFeatureFilter(options);
+    const maxFeaturesInView = getFlatGeobufMaxFeaturesInView(options);
 
     let styledFeatures = new GeoJSONStyledFeatures({
         map: map,
@@ -116,7 +135,14 @@ const createLayer = (options, map) => {
         if (loadedEverything) {
             return;
         }
-        if (rect && loadedRects.some(loaded => fgbRectContains(loaded, rect))) {
+        if (rect) {
+            for (let idx = loadedRects.length - 1; idx >= 0; idx--) {
+                if (isMeaningfulCappedRectRefinement(loadedRects[idx], rect)) {
+                    loadedRects.splice(idx, 1);
+                }
+            }
+        }
+        if (rect && loadedRects.some(loaded => fgbRectContains(loaded.rect, rect))) {
             return;
         }
 
@@ -145,6 +171,8 @@ const createLayer = (options, map) => {
         );
 
         let batch = [];
+        let loadedFeatures = 0;
+        let capped = false;
         let lastFlush = Date.now();
         try {
             // 5th positional is `headers` (HeadersInit). The 3rd is
@@ -165,6 +193,11 @@ const createLayer = (options, map) => {
                     seenFeatureIds.add(feature.id);
                 }
                 batch.push(feature);
+                loadedFeatures += 1;
+                if (maxFeaturesInView && loadedFeatures >= maxFeaturesInView) {
+                    capped = true;
+                    break;
+                }
                 if (batch.length >= FGB_FEATURE_BATCH_SIZE) {
                     styledFeatures.addFeatures(batch);
                     batch = [];
@@ -187,8 +220,8 @@ const createLayer = (options, map) => {
             }
             styledFeatures.flushPendingUpdate();
             if (rect) {
-                loadedRects.push(rect);
-            } else {
+                loadedRects.push({ rect, capped });
+            } else if (!capped) {
                 loadedEverything = true;
             }
         } catch (e) {
@@ -234,7 +267,8 @@ Layers.registerType(FGB_LAYER_TYPE, {
     update: (layer, newOptions, oldOptions, map) => {
         if (!isEqual(newOptions.features, oldOptions.features)
             || !isEqual(oldOptions.security, newOptions.security)
-            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+            || newOptions.maxFeaturesInView !== oldOptions.maxFeaturesInView) {
             return createLayer(newOptions, map);
         }
         const styledFeatures = layer?.getStyledFeatures?.();

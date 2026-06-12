@@ -124,6 +124,11 @@ export default class extends React.Component {
         });
     }
 
+    onMaxFeaturesInViewChange = (value) => {
+        const maxFeaturesInView = parseInt(value, 10);
+        this.props.onChange("maxFeaturesInView", maxFeaturesInView > 0 ? maxFeaturesInView : undefined);
+    };
+
     getValidationState = (name) =>{
         if (this.state.legendOptions && this.state.legendOptions[name]) {
             return parseInt(this.state.legendOptions[name], 10) < 12 && "error";
@@ -208,6 +213,21 @@ export default class extends React.Component {
                                 name={"opacity"}
                                 value={this.state.opacity}
                                 onChange={(val)=> this.onChange("opacity", val)}/>
+                        </FormGroup>
+                    </Col>
+                </Row>}
+
+                {this.props.element.type === "flatgeobuf" && <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.maxFeaturesInView" /></ControlLabel>
+                            <IntlNumberFormControl
+                                data-qa="display-max-features-in-view"
+                                type="number"
+                                min={1}
+                                step={1}
+                                value={this.props.element.maxFeaturesInView === undefined ? '' : this.props.element.maxFeaturesInView}
+                                onChange={this.onMaxFeaturesInViewChange}/>
                         </FormGroup>
                     </Col>
                 </Row>}
