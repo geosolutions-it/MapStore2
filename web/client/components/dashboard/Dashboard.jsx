@@ -13,7 +13,7 @@ import { widthProvider } from '../layout/enhancers/gridLayout';
 import emptyState from '../misc/enhancers/emptyState';
 import withSelection from '../widgets/view/enhancers/withSelection';
 import WidgetViewWrapper from './WidgetViewWrapper';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 const WIDGET_MOBILE_RIGHT_SPACE = 18;
 

@@ -8,7 +8,7 @@
 
 import Rx from 'rxjs';
 import { get, find, reverse, includes } from 'lodash';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO,

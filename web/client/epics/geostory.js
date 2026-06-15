@@ -21,7 +21,7 @@ import cloneDeepWith from 'lodash/cloneDeepWith';
 import capitalize from 'lodash/capitalize';
 
 import { push, LOCATION_CHANGE } from 'connected-react-router';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
 import axios from '../libs/ajax';
 

@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 import { get, isNil, find, pick, toPairs, castArray, isEmpty } from 'lodash';
 import { saveAs } from 'file-saver';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
 import {

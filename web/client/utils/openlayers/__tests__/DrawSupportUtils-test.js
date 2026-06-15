@@ -1,5 +1,5 @@
 import expect from 'expect';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { Circle, Polygon } from 'ol/geom';
 import { fromCircle } from 'ol/geom/Polygon';
 import Feature from 'ol/Feature';
