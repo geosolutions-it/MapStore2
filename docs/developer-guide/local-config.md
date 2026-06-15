@@ -486,8 +486,11 @@ Nominatim configuration:
    "type": "nominatim",
    "searchTextTemplate": "${properties.display_name}", // text to use as searchText when an item is selected. Gets the result properties.
    "options": {
-     "polygon_geojson": 1,
-     "limit": 3
+     "polygon_geojson": 1, // example parameter to be passed on to the Nominatim API, consult Nominatim documentation for further information
+     "limit": 3, // further example parameter to be passed on to the Nominatim API
+     "host": "my-nominatim.example.com", // optional custom Nominatim hostname
+     "protocol": "https" // optional protocol to use for the call to Nominatim API ('https' or 'http')
+   }
 }
 ```
 
