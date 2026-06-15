@@ -18,7 +18,7 @@ import { v1 as uuidv1 } from 'uuid';
  * @prop {string} styleId identifier
  */
 
-const baseTemplates = [{
+export const baseTemplates = [{
     types: ['point', 'linestring', 'polygon', 'vector'],
     title: 'Base CSS',
     format: 'css',
@@ -103,7 +103,7 @@ const baseTemplates = [{
     }
 }].map(style => ({ ...style, styleId: uuidv1() }));
 
-const customTemplates = [
+export const customTemplates = [
     {
         types: ['linestring', 'vector'],
         title: 'Line',
@@ -946,7 +946,3 @@ const customTemplates = [
     }
 ].map(style => ({ ...style, styleId: uuidv1() }));
 
-module.exports = {
-    baseTemplates,
-    customTemplates
-};
