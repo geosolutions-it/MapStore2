@@ -150,7 +150,7 @@ const Catalog = ({
     useEffect(() => {
         clearSelection?.();
         if (shouldAutoload(selectedService, services)) {
-            search({ searchText });
+            search({ searchText, filters, sort });
         }
         setShowFilters(false);
     }, [services, mode]);
