@@ -193,6 +193,109 @@ describe('WidgetChart', () => {
             ]}
         />, document.getElementById("container"));
     });
+    it('renders custom tick values and labels for both axes', () => {
+        const { layout } = toPlotly({
+            data: [DATASET_1.data],
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }],
+            xAxisOpts: [{
+                id: 0,
+                tickvals: ' 1, 2, 3 ',
+                ticktext: ' A, B, C '
+            }],
+            yAxisOpts: [{
+                id: 0,
+                tickvals: ' 4, 5 ',
+                ticktext: ' D, E '
+            }]
+        });
+        expect(layout.xaxis.tickvals).toEqual(['1', '2', '3']);
+        expect(layout.xaxis.ticktext).toEqual(['A', 'B', 'C']);
+        expect(layout.yaxis.tickvals).toEqual(['4', '5']);
+        expect(layout.yaxis.ticktext).toEqual(['D', 'E']);
+    });
+
+    it('uses configured hovermode from layout options', () => {
+        const { data, layout } = toPlotly({
+            data: [DATASET_1.data],
+            classifyGeoJSONSync,
+            layout: {
+                hovermode: 'closest'
+            },
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }]
+        });
+        expect(layout.hovermode).toBe('closest');
+        expect(data[0].hovertemplate).toBe('%{y:d}<extra></extra>');
+    });
+
+    it('uses x values in trace rows for unified y hovermode', () => {
+        const { data, layout } = toPlotly({
+            data: [DATASET_1.data],
+            classifyGeoJSONSync,
+            layout: {
+                hovermode: 'y unified'
+            },
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }]
+        });
+        expect(layout.hovermode).toBe('y unified');
+        expect(data[0].hovertemplate).toBe('%{x}<extra></extra>');
+    });
+
+    it('uses x values in trace labels for y hovermode', () => {
+        const { data, layout } = toPlotly({
+            data: [DATASET_1.data],
+            classifyGeoJSONSync,
+            layout: {
+                hovermode: 'y'
+            },
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }]
+        });
+        expect(layout.hovermode).toBe('y');
+        expect(data[0].hovertemplate).toBe('%{x}<extra></extra>');
+    });
+
+    it('preserves blank custom tick labels', () => {
+        const { layout } = toPlotly({
+            data: [DATASET_1.data],
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }],
+            xAxisOpts: [{
+                id: 0,
+                tickvals: ' 1, 2, 3 ',
+                ticktext: ' A,, C '
+            }]
+        });
+        expect(layout.xaxis.tickvals).toEqual(['1', '2', '3']);
+        expect(layout.xaxis.ticktext).toEqual(['A', '', 'C']);
+    });
 });
 
 const TYPES = ['pie', 'line', 'bar'];

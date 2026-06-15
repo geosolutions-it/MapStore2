@@ -72,7 +72,12 @@
       "hide": "Ocultar",
       "serviceUrl": "URL del servicio",
       "title": "Servicio protegido",
-      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal"
+      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal",
+      "validationErrs": {
+        "invalidCredentials": "Nombre de usuario o contraseña inválidos",
+        "forbidden": "Acceso denegado. Verifique sus permisos",
+        "tryAgainLater": "Algo salió mal. Inténtelo de nuevo más tarde"
+      }
     },
     "layerProperties": {
       "windowTitle": "Propiedades de la capa",
@@ -85,6 +90,10 @@
       "style": "Estilo",
       "transparent": "Transparente",
       "singleTile": "Baldosa única",
+      "cropToProjectionExtent": {
+        "label": "Recortar a la extensión de la proyección",
+        "tooltip": "La capa se recorta a la extensión de la proyección cuando se agrega al mapa con esta opción habilitada"
+      },
       "cached": "Cacheado",
       "styleCustom": "Use un estilo llamado \"{value} \"",
       "styleListLoadError": "Se ha producido un error al cargar la lista de estilos",
@@ -314,18 +323,25 @@
     "mapScale": "Escala:",
     "showMousePositionCoordinates": "Mostrar/ocultar las coordenadas",
     "showCrsSelector": "Seleccionar proyección",
-    "crsSelectorFilterPlaceholder": "Proyección de filtro",
-    "crsSelectorSelectedCRS": "Seleccionado:",
     "crsSelector": {
       "availableProjections": "Proyecciones disponibles",
-      "searchProjection": "Buscar proyección...",
+      "searchProjection": "Filtrar proyecciones configuradas...",
+      "searchProjectionUnified": "Filtrar configuradas o buscar en GeoServer...",
       "label": "Etiqueta",
       "authorityId": "ID de autoridad",
       "selectedProjection": "La proyección seleccionada se utilizará en el mapa",
-      "quickSwitch": "La proyección seleccionada se añadirá a la lista de cambio rápido",
       "help": "Marque la casilla para agregar una proyección al cambio rápido. Haga clic en una fila para establecerla como proyección predeterminada.",
-      "save": "Guardar",
-      "close": "Cerrar"
+      "remoteSuggestionsHeader": "Desde GeoServer ({shown} de {total})",
+      "noRemoteResults": "No hay proyecciones coincidentes en el servidor",
+      "noFilteredMatch": "Ninguna proyección de la lista configurada coincide con el filtro",
+      "loadMore": "Cargar más",
+      "alreadyAdded": "Ya está en la lista configurada",
+      "useAsMapProjection": "Usar como proyección del mapa",
+      "removeProjection": "Eliminar esta proyección",
+      "loadingProjection": "Cargando definición de la proyección...",
+      "failedToLoad": "Error al cargar la proyección. Haga clic para reintentar",
+      "zoomToProjectionExtent": "Ampliar a la extensión de la proyección",
+      "unregisteredProjections": "Las siguientes proyecciones fueron configuradas pero no están disponibles: {projections}"
     },
     "menu": "Menú",
     "options": "Opciones",
@@ -1680,6 +1696,20 @@
         "label": "Descargar metadatos del archivo al guardar",
         "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
       },
+      "tagFilterType": {
+        "label": "Tipo de filtro de etiqueta",
+        "category": "Categoría",
+        "keyword": "Palabra clave"
+      },
+      "listView": "Vista de lista",
+      "gridView": "Vista de cuadrícula",
+      "selectAll": "Seleccionar todo",
+      "layers": "Capas",
+      "edit": "Editar",
+      "backToList": "Volver al catálogo",
+      "close": "Cerrar",
+      "showFullContent": "Mostrar todo el contenido",
+      "hideFullContent": "Ocultar todo el contenido",
       "clearValueText": "Borrar selección",
       "noResultsText": "No se encontraron resultados",
       "addToMap": "Añadir al mapa",
@@ -1720,7 +1750,8 @@
         "cog": "p.ej. https://mydomain.com/cog.tif",
         "model": "p.ej. https://mydomain.com/filename.ifc",
         "arcgis": "p.ej. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipo",
       "serviceTitle": "Título",
@@ -2298,7 +2329,7 @@
         "placeholder": "Ingrese el nombre del mapa",
         "selectLabel": "Seleccione un mapa",
         "infoOnHide": "Expanda el widget para ver el selector de mapas",
-        "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+        "subTitle": "<p>Puedes seleccionar múltiples capas</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Mostrar selector de fondo",
@@ -2314,7 +2345,7 @@
         "placeholder": "Introduzca el nombre del gráfico",
         "selectLabel": "Cuadro",
         "infoOnHide": "Expanda el widget para ver el selector de gráficos",
-        "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+        "subTitle": "<p>Puedes seleccionar múltiples capas</p>"
       },
       "chartType": {
         "bar": {
@@ -2411,6 +2442,10 @@
         "prefix": "Prefijo",
         "suffix": "Sufijo",
         "examples": "Ejemplos",
+        "axisTickVals": "Valores de marcas del eje",
+        "axisTickValsTooltip": "Opcional. Fuerza el eje a mostrar solo los valores indicados (separados por comas). Si también se indica el Texto de Marca, cada valor se muestra con la etiqueta correspondiente.",
+        "axisTickText": "Texto de marcas del eje",
+        "axisTickTextTooltip": "Etiquetas personalizadas (separadas por comas) que se muestran en lugar de los valores definidos en Valores de Marca, en el orden correspondiente.",
         "formatExamples": "<div> <ul> <li> <code> .0% </code>: porcentaje redondeado, '12% '</li> <li> <code> .2s </code>: SI -prefijo con dos dígitos significativos, '42M' </li> <li> <code>, .2r </code>: miles agrupados con dos dígitos significativos '4200' </li> </ul> <em> Más información sobre la sintaxis de formato <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> aquí</a>.</em></div> ",
         "formula": "Fórmula",
         "formulaExamples": "<div> Transforma el valor usando una fórmula. Usa la variable <code> valor </code> en la expresión: <h5> Ejemplos </h5> <ul> <li> <code> valor + 2 </code></li><li> <code> value / 100 </code> </li> </ul><em> Más información sobre la sintaxis <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">aquí</a>.</em></div> ",
@@ -2425,6 +2460,20 @@
         "barChartType": "Tipo de Gráfico de Barras",
         "groupedBarChart": "Agrupado",
         "stackedBarChart": "Apilado",
+        "hovermode": "Modo de tooltip",
+        "hovermodeTooltip": "Controla cómo se muestran los tooltips en los gráficos.",
+        "hovermodeXUnified": "Tooltip X unificado",
+        "hovermodeXUnifiedDescription": "Un tooltip para trazas con el mismo valor X. El encabezado muestra X; las filas muestran valores Y.",
+        "hovermodeYUnified": "Tooltip Y unificado",
+        "hovermodeYUnifiedDescription": "Un tooltip para trazas con el mismo valor Y. El encabezado muestra Y; las filas muestran valores X.",
+        "hovermodeX": "Tooltip X",
+        "hovermodeXDescription": "Etiquetas para trazas con el mismo valor X, mostrando valores Y.",
+        "hovermodeY": "Tooltip Y",
+        "hovermodeYDescription": "Etiquetas para trazas con el mismo valor Y, mostrando valores X.",
+        "hovermodeClosest": "Tooltip individual",
+        "hovermodeClosestDescription": "Solo el punto más cercano, mostrando el valor Y.",
+        "hovermodeFalse": "Sin tooltip",
+        "hovermodeFalseDescription": "Desactiva los tooltips al pasar el cursor.",
         "valueFormatting": "Formato del valor de trace",
         "traceAxes": "Trazar ejes",
         "traceData": "Datos de trace",
@@ -2472,6 +2521,9 @@
         "userDefined": "Definido por el usuario",
         "maps": "Mapas",
         "map": "Mapa",
+        "time": "Tiempo",
+        "timeline": "Línea de tiempo",
+        "elevation": "Elevación",
         "valuesFrom": "Valores de",
         "uniqueAttributes": "Valores únicos",
         "attributes": "Atributos",
@@ -2511,9 +2563,27 @@
         "interactionsTabLabel": "Interacciones",
         "onSelectionChange": "Al cambiar la selección",
         "applyFilter": "Aplicar filtro",
+        "applyDimension": "Aplicar dimensión",
+        "noConnectableNodesAvailable": "No hay nodos conectables disponibles",
         "selectAll": "Seleccionar todo",
         "clear": "Limpiar",
         "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
+        "showValueLabel": "Mostrar etiqueta del valor",
+        "showSelectedValue": "Mostrar valor seleccionado",
+        "showSelectedValueTooltip": "Muestra el valor de marca actualmente seleccionado encima del deslizador.",
+        "sliderNotSelected": "No seleccionado",
+        "showTicks": "Mostrar marcas",
+        "showTicksTooltip": "Muestra u oculta las marcas del deslizador.",
+        "tickValues": "Valores para marcas",
+        "tickLabels": "Etiquetas para marca",
+        "tickValuesPlaceholder": "Valores separados por comas",
+        "tickLabelsPlaceholder": "Etiquetas separadas por comas",
+        "tickValuesTooltip": "Introduce valores separados por comas para considerarlos como marcas. Solo se mostrará la etiqueta del valor coincidente.",
+        "tickLabelsTooltip": "Introduce etiquetas de reemplazo para los valores de marca indicados, en el mismo orden que los valores de marca.",
+        "tickAngle": "Ángulo de etiqueta de marca",
+        "tickAngleTooltip": "Define el ángulo de rotación de la etiqueta de marca en grados.",
+        "fillTickValuesTooltip": "Rellenar con valores de filtro disponibles",
+        "fillTickLabelsTooltip": "Autorrellenar las etiquetas correspondientes a los valores de marca",
 
         "defaultFilter": "Filtro predeterminado",
         "defaultFilterInfo": "Define un filtro para aplicar cuando no hay nada seleccionado. Sugerencia: si desea no mostrar nada cuando no hay nada seleccionado, cree un filtro que no devuelva ninguna característica",
@@ -2535,6 +2605,8 @@
         "styleChangedByWidgetInfo": "Una o más capas conectadas usan un estilo distinto al seleccionado aquí. Haga clic en el botón de abajo para aplicar el estilo seleccionado a todas las capas conectadas.",
         "styleChangedByWidgetBanner": "El estilo se ha cambiado en la configuración de la capa para esta capa. Haga clic para aplicar el estilo a todas las capas conectadas desde este widget.",
         "applyStyleFromWidgetButton": "Aplicar estilo a todas las capas conectadas desde este widget",
+        "dimensionChangedByWidgetInfo": "Uno o más nodos conectados utilizan un valor de dimensión distinto al seleccionado aquí. Pulse el botón siguiente para aplicar el valor seleccionado a todos los nodos conectados.",
+        "applyDimensionFromWidgetButton": "Aplicar el valor de este filtro a todos los nodos conectados",
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",
@@ -2543,11 +2615,16 @@
         "valueFromAttributeDescription": "Recupera todas las entidades existentes incluyendo los posibles valores duplicados para el atributo seleccionado.",
         "missingParametersMessage": "Por favor seleccione los campos requeridos para generar la lista de filtros",
         "fetchError": "Error al obtener los datos",
+        "unsupportedVariantMessage": "Variante de filtro no admitida: {variant}.",
+        "mapTimeRangeDisabledMessage": "No se puede usar cuando el rango está habilitado.",
+        "sliderSingleItemError": "El filtro de deslizador requiere al menos dos valores seleccionables.",
         "noSelectableItems": "No hay elementos de filtro seleccionables.",
         "filters": "Filtros",
         "styles": "Estilos",
         "targetAutomaticallyNotConnectableTooltip": "El destino no es conectable automáticamente, por favor configúrelo para conectarlo",
         "forcePlugLabel": "Aplicar independientemente de la fuente de datos",
+        "twoWaySynchronizationLabel": "Sincronización bidireccional",
+        "twoWaySynchronizationInfo": "Sincronizar con la conexión actual de la línea de tiempo del mapa. No se puede activar cuando hay otros nodos que no son de conexión de la línea de tiempo del mapa conectados.",
         "filterForcePlugInfo": "Marque para confirmar que el filtro puede aplicarse a esta fuente de datos, incluso si es diferente de la original",
         "styleForcePlugInfo": "Marque para confirmar que el estilo puede aplicarse a esta capa, incluso si es diferente de la original. Esto significa que esta capa debe tener una lista de estilos con los mismos nombres que los configurados para esta herramienta",
         "addUserDefinedFilterTooltip": "Haga clic para agregar filtro",
@@ -2558,22 +2635,27 @@
         "filterTitlePlaceholder": "Título del filtro...",
         "editFilterTitleTooltip": "Haga clic para editar el título del filtro",
         "addNewFilterTooltip": "Haga clic para agregar nuevo filtro",
+        "addOptionalTargetTooltip": "Añadir objetivo opcional",
+        "removeOptionalTargetConfirmTitle": "¿Eliminar objetivo?",
+        "removeOptionalTargetConfirmContent": "Se eliminarán todas las interacciones conectadas desde este objetivo.",
         "applyStyle": "Aplicar estilo",
-        "targetAlreadyConnectedToStyleTooltip": "El objetivo ya está conectado a un estilo. No se puede conectar a múltiples estilos al mismo tiempo"
+        "timeSelectionHighlight": "Resaltar tiempo seleccionado",
+        "targetAlreadyConnectedToStyleTooltip": "El objetivo ya está conectado a un estilo. No se puede conectar a múltiples estilos al mismo tiempo",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "Este objetivo ya está conectado desde otra fuente. No se puede conectar desde varias fuentes al mismo tiempo",
+        "applyDimensionSelectionModeDisabledTooltip": "La selección múltiple está deshabilitada porque este filtro está conectado a «Aplicar dimensión». Desconecte «Aplicar dimensión» para usar el modo de selección múltiple.",
+        "applyDimensionMultipleSelectionDisabledTooltip": "«Aplicar dimensión» solo puede conectarse cuando el modo de selección del filtro es «Única». Cambie el modo de selección del diseño a «Única» para conectar este objetivo.",
+        "layerTimeControlledByTimelineTooltip": "La hora de la capa la controla la línea de tiempo principal del mapa. Conéctese al objetivo Línea de tiempo en su lugar.",
+        "axisCurrentTimeControlledByTimelineTooltip": "La hora actual del eje la controla la línea de tiempo principal del mapa. Conéctese al objetivo Línea de tiempo en su lugar.",
+        "axisCurrentTimeDisabledTooltip": "Establezca el tipo de eje en Fecha y active \"Mostrar hora actual\" en las opciones del gráfico antes de conectarlo.",
+        "timelineTargetUnavailableTooltip": "La línea de tiempo no está disponible en este contexto.",
+        "targetAlreadyConnectedToTimeTooltip": "La conexión de la línea de tiempo del mapa con sincronización bidireccional activada solo puede conectarse sola. Desactiva la sincronización bidireccional o desconecta la conexión de la línea de tiempo del mapa para conectar otros objetivos."
       },
       "tray": {
         "title": "Widgets",
         "expandTray": "Expandir la bandeja de widgets",
         "collapseTray": "Contraer la bandeja de widgets",
         "expandAll": "Expandir todos los widgets",
-        "collapseAll": "Contraer todos los widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "La línea de tiempo y los widgets no pueden permanecer al mismo tiempo. Use en la bandeja del widget para cambiar entre la línea de tiempo y los widgets",
-            "timelineTitle": "La línea de tiempo ha sido colapsada",
-            "widgetsTitle": "Widgets ha sido colapsado"
-          }
-        }
+        "collapseAll": "Contraer todos los widgets"
       }
     },
     "dashboard": {
@@ -3180,6 +3262,13 @@
       "previous": "previo",
       "next": "siguiente",
       "cacheCleaned": "Caché limpiada con éxito",
+      "cacheConfirmSingle": "¿Está seguro de que desea limpiar el caché de reglas para la instancia: '{instanceName}'?",
+      "cacheConfirmAll": "¿Desea limpiar el caché de reglas de todas las instancias de Geoserver?",
+      "clearAllgsInstances": "Limpiar para todas las instancias",
+      "noAvailGsInstances": "No hay instancias disponibles",
+      "allCacheCleaned": "Caché limpiado con éxito para todas las instancias de Geoserver",
+      "errorCleaningCacheFor": "Error al limpiar el caché para las siguientes instancias: {instancesNames}",
+      "cacheCleanedFor": "Caché limpiado con éxito para las siguientes instancias: {instancesNames}",
       "errorTitle": "Geofence",
       "errorCQL": "¡Geometría no válida!",
       "errorCleaningCache": "Error al limpiar la memoria caché geofence.",
@@ -4382,7 +4471,7 @@
     "userSession": {
       "saveErrorNotification": {
         "titleContext": "Error al guardar la sesión del usuario",
-        "categoryError": "Creando categoría faltante \"{categoryName}\"faile",
+        "categoryError": "No se pudo crear la categoría faltante \"{categoryName}\"",
         "defaultMessage": "Error desconocido"
       },
       "removeErrorNotification": {
@@ -4392,31 +4481,33 @@
       "tooltip": "Borrar la sesión de usuario actual guardada",
       "successRemoved": "Sesión de usuario eliminada",
       "remove": "Restablecer sesión de usuario",
-      "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
-      "successUpdated": "User session Updated",
-      "warningTitle": "Clear user session",
+      "confirmRemove": "¿Está seguro de que desea eliminar la sesión de usuario actual? Esto restaurará la configuración original del mapa/contexto, eliminando los cambios actuales. Seleccione qué desea eliminar y deseleccione qué desea conservar.",
+      "successUpdated": "Sesión de usuario actualizada",
+      "warningTitle": "Limpiar sesión de usuario",
       "sessionLabels": {
-        "everything": "Everything",
-        "map": "Map",
-        "map_pos": "Zoom and center",
-        "visualization_mode": "Visualization Mode (3D/2D)",
-        "layers": "Layers",
-        "annotations_layer": "Annotations Layer",
-        "measurements_layer": "Measurements Layer",
-        "background_layers": "Background Layers",
-        "other_layers": "Other Layers",
-        "catalog_services": "Catalog Services",
+        "everything": "Todo",
+        "map": "Mapa",
+        "map_pos": "Zoom y centro",
+        "visualization_mode": "Modo de visualización (3D/2D)",
+        "layers": "Capas",
+        "annotations_layer": "Capa de anotaciones",
+        "measurements_layer": "Capa de mediciones",
+        "background_layers": "Capas de fondo",
+        "other_layers": "Otras capas",
+        "catalog_services": "Servicios de catálogo",
         "widgets": "Widgets",
-        "search": "Search",
-        "text_search_services": "Text Search Services",
-        "bookmarks": "Bookmarks",
-        "feature_grid": "Feature Grid",
-        "other": "Other",
-        "toc": "Table of Contents Configuration",
-        "playback": "Playback Configuration",
-        "mapTemplates": "Map Templates",
-        "userPlugins": "User Plugins",
-        "mapViews": "Map Views"
+        "search": "Búsqueda",
+        "text_search_services": "Servicios de búsqueda de texto",
+        "bookmarks": "Marcadores",
+        "feature_grid": "Cuadrícula de atributos",
+        "other": "Otro",
+        "toc": "Configuración de la tabla de contenidos",
+        "playback": "Configuración de reproducción",
+        "mapTemplates": "Plantillas de mapa",
+        "userPlugins": "Plugins de usuario",
+        "mapViews": "Vistas de mapa",
+        "swipe": "Deslizar",
+        "crsSelector": "Selector de CRS"
       }
     },
     "streetView": {
@@ -4448,6 +4539,9 @@
           "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador."
         },
         "reloadAPI": "Recargar API"
+      },
+      "panoramax": {
+        "emptySelection": "No ha seleccionado ninguna imagen."
       }
     },
     "sidebarMenu": {

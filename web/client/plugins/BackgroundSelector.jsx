@@ -82,6 +82,7 @@ const backgroundSelector = createSelector([
     allowDeletion,
     projection,
     disableTileGrids: !!isCesiumViewer,
+    disableCropToProjectionExtent: !!isCesiumViewer,
     enableTerrainList: !!isCesiumViewer,
     canEdit: !!(mode !== 'mobile' && mapIsEditable !== false)
 }));
@@ -130,7 +131,7 @@ BackgroundSelectorComponent.contextTypes = {
   *  'MyPlugin',
   *  {
   *      containers: {
-  *          MetadataExplorer: {
+  *          BackgroundSelector: {
   *              name: "TOOLNAME", // a name for the current tool.
   *              target: "background-toolbar", // the target where to insert the component
   *              Component: MyButtonComponent

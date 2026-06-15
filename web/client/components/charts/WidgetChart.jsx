@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useCallback, useRef } from 'react';
 import { isArray, castArray, max, isNaN, isNumber, isNull } from 'lodash';
 import LoadingView from '../misc/LoadingView';
 import { parseExpression } from '../../utils/ExpressionUtils';
@@ -46,6 +46,46 @@ const applyPercentageToLabel = (label, value, total) => {
     }
     return label;
 };
+
+const parseAxisTickValues = (tickValues) => {
+    const values = typeof tickValues === 'string' && tickValues.trim()
+        ? tickValues
+            .split(',')
+            .map(value => value.trim())
+        : undefined;
+    return values?.length > 0 ? values : undefined;
+};
+
+const getAxisTickOptions = (options = {}) => {
+    const tickvals = parseAxisTickValues(options?.tickvals);
+    const ticktext = parseAxisTickValues(options?.ticktext);
+    if (tickvals && ticktext) {
+        return { tickvals, ticktext };
+    }
+    if (tickvals) {
+        return { tickvals };
+    }
+    return {};
+};
+
+const getCartesianHoverTemplate = ({
+    layout,
+    tickPrefix,
+    format,
+    tickSuffix,
+    defaultFormat,
+    extra = ''
+}) => {
+    const yValue = `${tickPrefix ?? ""}%{y:${format ?? defaultFormat}}${tickSuffix ?? ""}`;
+    if (layout?.hovermode === 'closest') {
+        return `${yValue}<extra>${extra}</extra>`;
+    }
+    if (layout?.hovermode === 'y unified' || layout?.hovermode === 'y') {
+        return `%{x}<extra>${extra}</extra>`;
+    }
+    return `${yValue}<extra>${extra}</extra>`;
+};
+
 /**
  * Returns the labels for the pie chart, adds % to the labels, for legend, if the prop `includeLegendPercent` is true
  * @param {string|number[]} labels the values of the chart ["California", "Ohio", ...]
@@ -220,6 +260,7 @@ const chartDataTypes = {
         style: styleProperty,
         name: traceName,
         classifyGeoJSON,
+        layout,
         yAxisOpts,
         xAxisOpts,
         sortBy = 'groupBy',
@@ -265,7 +306,7 @@ const chartDataTypes = {
                     y: filteredData.map(({ properties }) => properties[yDataKey]),
                     name,
                     legendgrouptitle: { text },
-                    hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'g'}}${tickSuffix ?? ""}<extra>${name}</extra>`,
+                    hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'g', extra: name }),
                     marker: {
                         color,
                         ...(style?.marker?.line && {
@@ -289,7 +330,7 @@ const chartDataTypes = {
             name,
             ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
             ...(yAxisOpts.yaxis && { yaxis: yAxisOpts.yaxis }),
-            hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'g'}}${tickSuffix ?? ""}<extra></extra>`
+            hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'g' })
         };
     },
     line: ({
@@ -299,6 +340,7 @@ const chartDataTypes = {
         formula, // refers always to y
         style: styleProperty,
         name: traceName,
+        layout,
         yAxisOpts,
         xAxisOpts,
         tickPrefix: tickPrefixProp,
@@ -345,7 +387,7 @@ const chartDataTypes = {
                     y: filteredData.map(({ properties }) => properties[yDataKey]),
                     name,
                     legendgrouptitle: { text },
-                    hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'd'}}${tickSuffix ?? ""}<extra></extra>`,
+                    hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'd' }),
                     line: {
                         ...(style?.line || {}),
                         color
@@ -371,7 +413,7 @@ const chartDataTypes = {
             mode: mode || 'lines', // default mode should be lines
             ...style,
             name,
-            hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'd'}}${tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+            hovertemplate: getCartesianHoverTemplate({ layout, tickPrefix, format, tickSuffix, defaultFormat: 'd' }), // uses the format if passed, otherwise shows the full number.
             x,
             y,
             ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
@@ -462,6 +504,7 @@ function getLayoutOptions({
         return {
             ...acc,
             [`yaxis${idx === 0 ? '' : idx + 1}`]: {
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',
@@ -505,6 +548,7 @@ function getLayoutOptions({
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',
@@ -636,7 +680,7 @@ export const toPlotly = (_props) => {
                         }
                     }
                     : {}),
-            hovermode: 'x unified',
+            hovermode: types.every(t => t === 'pie') ? 'closest' : layout?.hovermode ?? 'x unified',
             uirevision: true,
             shapes: [...(layout?.shapes || [])],
             ...gridProperty
@@ -750,11 +794,16 @@ function WidgetChart({
     onHover,
     ...props
 }) {
+    const graphDiv = useRef();
+    const handleInitialized = useCallback((figure, gd) => {
+        graphDiv.current = gd;
+        onInitialized?.(figure, gd);
+    }, [onInitialized]);
     const { data, layout, config } = toPlotly(props);
     return (
         <Suspense fallback={<LoadingView />}>
             <Plot
-                onInitialized={onInitialized}
+                onInitialized={handleInitialized}
                 onHover={onHover}
                 data={data.flat()}
                 layout={layout}

@@ -29,7 +29,7 @@ import ConnectedResourcesGrid from './containers/ResourcesGrid';
 import { hashLocationToHref } from '../../utils/ResourcesFiltersUtils';
 import GeoStoreDAO from '../../api/GeoStoreDAO';
 import { Button } from 'react-bootstrap';
-import InputControl from './components/InputControl';
+import InputControl from '../../components/catalog/resources/InputControl';
 import Message from '../../components/I18N/Message';
 
 import UserDeleteConfirm from '../../components/manager/users/UserDeleteConfirm';

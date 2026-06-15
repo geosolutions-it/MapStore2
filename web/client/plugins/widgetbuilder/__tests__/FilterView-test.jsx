@@ -59,20 +59,20 @@ describe('FilterView component', () => {
         expect(container.innerHTML).toBe('');
     });
 
-    it('returns null when componentMap does not contain the variant', (done) => {
+    it('renders a warning when componentMap does not contain the variant', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('unknown-variant');
-        try {
-            renderWithProvider(
-                <FilterView
-                    filterData={filterData}
-                />,
-                container
-            );
-        } catch (e) {
-            expect(e.message).toBe('Unsupported filter variant: unknown-variant');
-            done();
-        }
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-view-unsupported-variant')).toExist();
+        expect(container.textContent).toContain('widgets.filterWidget.unsupportedVariantMessage');
+        expect(container.querySelector('.ms-filter-button-list-item')).toNotExist();
     });
 
     it('renders button component when variant is button', () => {
@@ -162,6 +162,122 @@ describe('FilterView component', () => {
 
     });
 
+    it('renders slider component when variant is slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Two' },
+                    { id: '3', label: 'Three' }
+                ]}
+                selections={['2']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider')).toExist();
+    });
+
+    it('shows an error message instead of slider when filter has only one selectable item', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' }
+                ]}
+                selections={['1']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider')).toNotExist();
+        expect(container.querySelector('.ms-filter-view-slider-error')).toExist();
+    });
+
+    it('shows selected label outside the slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showSelectedValue: true
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Two' }
+                ]}
+                selections={['2']}
+            />,
+            container
+        );
+
+        const selectedValue = container.querySelector('.ms-filter-slider-selected-value');
+        expect(selectedValue).toExist();
+        expect(selectedValue.textContent).toContain('Two');
+    });
+
+    it('renders tick labels in the slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showTicks: true,
+            tickValues: '1693307400000',
+            tickLabels: 'Event',
+            tickAngle: 90
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1693307400000', label: '1693307400000' },
+                    { id: '1693307400001', label: '1693307400001' }
+                ]}
+                selections={['1693307400000']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider--with-ticks')).toExist();
+        expect(container.querySelector('.ms-filter-slider-control').style.getPropertyValue('--ms-filter-slider-tick-angle')).toBe('90deg');
+        const tickLabels = container.querySelectorAll('.noUi-value');
+        expect(tickLabels.length).toBeGreaterThan(0);
+        expect(container.textContent).toContain('Event');
+    });
+
+    it('preserves blank tick labels when parsing slider tick labels', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showTicks: true,
+            tickValues: '1, 2, 3',
+            tickLabels: 'Start, , End'
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Middle Tick' },
+                    { id: '3', label: 'Three' }
+                ]}
+                selections={['1']}
+            />,
+            container
+        );
+
+        expect(container.textContent).toContain('Start');
+        expect(container.textContent).toContain('End');
+        expect(container.textContent).toNotContain('Middle Tick');
+    });
+
     it('shows missing parameters message when missingParameters is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
@@ -186,6 +302,7 @@ describe('FilterView component', () => {
         const filterData = createMockFilterData('button');
         const MOCK_PATH = "map.layers['456']";
         const MOCK_INTERACTIONS = [{
+            id: 'interaction-1',
             plugged: true,
             target: {nodePath: MOCK_PATH}
 
@@ -209,6 +326,18 @@ describe('FilterView component', () => {
             renderWithProvider(<FilterView
                 interactions={MOCK_INTERACTIONS}
                 activeTargets={{}}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toExist();
+
+        });
+        it('show no target info when connected interactions are inactive', () => {
+            const container = document.getElementById("container");
+            renderWithProvider(<FilterView
+                interactions={MOCK_INTERACTIONS}
+                inactiveInteractionIds={MOCK_INTERACTIONS.map(interaction => interaction.id)}
+                activeTargets={MOCK_ACTIVE_TARGETS}
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
             />, container);
@@ -268,6 +397,36 @@ describe('FilterView component', () => {
         expect(container.textContent).toContain('widgets.filterWidget.fetchError');
     });
 
+    it('disables map.time apply dimension selection when timeline range is enabled', () => {
+        const container = document.getElementById("container");
+        const onSelectionChangeSpy = expect.createSpy();
+        const filterData = createMockFilterData('button');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '2024-01-01T00:00:00.000Z', label: '2024-01-01' }
+                ]}
+                currentTime="2024-01-01T00:00:00.000Z"
+                syncCurrentTime
+                timelineRangeEnabled
+                interactions={[{
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    target: { nodePath: 'map.time' }
+                }]}
+                onSelectionChange={onSelectionChangeSpy}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-view-map-time-range-disabled')).toExist();
+        expect(container.textContent).toContain('widgets.filterWidget.mapTimeRangeDisabledMessage');
+        expect(container.querySelector('.ms-filter-button-list-item')).toNotExist();
+
+    });
+
     it('does not call onSelectionChange when forceSelection is true and user clicks checkbox with value 1 to deselect', () => {
         const container = document.getElementById("container");
         const onSelectionChangeSpy = expect.createSpy();
@@ -292,4 +451,3 @@ describe('FilterView component', () => {
         expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 });
-

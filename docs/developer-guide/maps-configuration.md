@@ -1357,6 +1357,37 @@ Where:
 }
 ```
 
+#### ArcGIS FeatureServer layer
+
+This layer type allows to render an ArcGIS FeatureServer layer as a vector layer with client-side styling support.
+
+An ArcGIS FeatureServer provides vector features via the ArcGIS REST API. The layer is identified by the `arcgis-feature` type. Features are fetched in GeoJSON format and support pagination when the service's `maxRecordCount` is exceeded. e.g.
+
+```json
+{
+    "type": "arcgis-feature",
+    "url": "https://arcgis-example/rest/services/MyService/FeatureServer",
+    "name": "0",
+    "title": "Title",
+    "group": "",
+    "visibility": true
+}
+```
+
+Where:
+
+- `url` is the URL of the FeatureServer source.
+- `name` (optional) the sub-layer id to query. Defaults to `0` if not specified.
+- `strategy` (optional) the loading strategy. Possible values are `tile` (default), `bbox`, and `all`.
+  - `tile`: loads features using a tile grid, best for large datasets.
+  - `bbox`: loads features based on the current map view extent.
+  - `all`: loads all features at once.
+- `geometryType` (optional) the GeoJSON geometry type (e.g. `Point`, `MultiPoint`, `Polygon`, `MultiPolygon`, `LineString`, `MultiLineString`). When available, it determines the rendering approach in Cesium (billboard for points, primitives for other geometries).
+- `maxRecordCount` (optional) the maximum number of features per request page. Used for pagination when the service has a transfer limit.
+
+!!! note
+    The `arcgis-feature` layer supports the MapStore Style Editor, allowing users to apply and modify vector styles at runtime. Styles are preserved across feature loads.
+
 #### FlatGeobuf(FGB) layer
 
 This type of layer shows vector file in FlatGeobuf format also inside the Cesium viewer.
