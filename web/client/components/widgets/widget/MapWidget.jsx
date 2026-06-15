@@ -55,24 +55,37 @@ const LegendView = withHandlers({
     }
 })(LegendViewComponent);
 
+export const updateMapBackgroundLayerVisibility = (map = {}, layerId, properties = {}) => {
+    if (!layerId) {
+        return map;
+    }
+    const selectedLayer = map.layers?.find(layer => layer.id === layerId && layer.group === 'background');
+    if (!selectedLayer) {
+        return map;
+    }
+    const selectedTerrain = selectedLayer.type === 'terrain';
+    const newLayers = map.layers?.map(layer => {
+        if (layer.group === 'background' && (layer.type === 'terrain') === selectedTerrain) {
+            const updatedLayer = { ...layer, visibility: false };
+            // set the selected background layer to visible
+            if (layer.id === layerId) {
+                return { ...updatedLayer, visibility: true, ...properties };
+            }
+            return updatedLayer;
+        }
+        return layer;
+    });
+    if (!isEqual(map.layers, newLayers)) {
+        return { ...map, layers: newLayers };
+    }
+    return map;
+};
+
 const BackgroundSelectorWithHandlers = withHandlers({
     onPropertiesChange: ({ onUpdateMapProperty, map }) => (layerId, properties) => {
-        if (!layerId) {
-            return;
-        }
-        const newLayers = map.layers?.map(layer => {
-            if (layer.group === 'background') {
-                const updatedLayer = { ...layer, visibility: false };
-                // set the selected background layer to visible
-                if (layer.id === layerId) {
-                    return { ...updatedLayer, visibility: true, ...properties };
-                }
-                return updatedLayer;
-            }
-            return layer;
-        });
-        if (!isEqual(map.layers, newLayers)) {
-            onUpdateMapProperty({ ...map, layers: newLayers });
+        const newMap = updateMapBackgroundLayerVisibility(map, layerId, properties);
+        if (newMap !== map) {
+            onUpdateMapProperty(newMap);
         }
     }
 })(BackgroundSelector);
