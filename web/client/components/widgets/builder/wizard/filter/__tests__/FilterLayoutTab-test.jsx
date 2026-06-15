@@ -66,5 +66,230 @@ describe('FilterLayoutTab component', () => {
         labelInput.value = 'Test Label';
         Simulate.change(labelInput);
     });
-});
 
+    it('should include slider in the variant options when selection mode is single', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        selectionMode: 'single'
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const variantControl = container.querySelector('.ms-filter-items-panel .Select-control');
+        expect(variantControl).toExist();
+        Simulate.keyDown(variantControl, { keyCode: 40 });
+
+        const options = container.querySelectorAll('.Select-option');
+        const sliderOption = Array.from(options).find(option => option.textContent.trim() === 'Slider');
+        expect(sliderOption).toExist();
+    });
+
+    it('should not include slider in the variant options when selection mode is multiple', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        selectionMode: 'multiple'
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const variantControl = container.querySelector('.ms-filter-items-panel .Select-control');
+        expect(variantControl).toExist();
+        Simulate.keyDown(variantControl, { keyCode: 40 });
+
+        const options = container.querySelectorAll('.Select-option');
+        const sliderOption = Array.from(options).find(option => option.textContent.trim() === 'Slider');
+        expect(sliderOption).toNotExist();
+    });
+
+    it('should hide direction control when variant is slider', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single'
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-filter-direction-form-group')).toNotExist();
+    });
+
+    it('should prevent typing negative max height values without changing existing negative values', () => {
+        const changes = [];
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        maxHeight: -10
+                    }
+                }}
+                onChange={(key, value) => changes.push({ key, value })}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const maxHeightInput = container.querySelector('.ms-filter-layout-max-height');
+        expect(maxHeightInput).toExist();
+        expect(maxHeightInput.min).toBe('0');
+        expect(maxHeightInput.value).toBe('-10');
+
+        let defaultPrevented = false;
+        Simulate.keyDown(maxHeightInput, {
+            key: '-',
+            preventDefault: () => {
+                defaultPrevented = true;
+            }
+        });
+        expect(defaultPrevented).toBe(true);
+
+        defaultPrevented = false;
+        Simulate.paste(maxHeightInput, {
+            clipboardData: {
+                getData: () => '-20'
+            },
+            preventDefault: () => {
+                defaultPrevented = true;
+            }
+        });
+        expect(defaultPrevented).toBe(true);
+
+        maxHeightInput.value = '-20';
+        Simulate.change(maxHeightInput);
+        expect(changes.length).toBe(0);
+
+        maxHeightInput.value = '20';
+        Simulate.change(maxHeightInput);
+        expect(changes).toEqual([{ key: 'layout.maxHeight', value: 20 }]);
+    });
+
+    it('should call onChange when tick angle changes', (done) => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickAngle: 90
+                    }
+                }}
+                onChange={(key, value) => {
+                    expect(key).toBe('layout.tickAngle');
+                    expect(value).toBe(45);
+                    done();
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const tickAngleControl = container.querySelector('.ms-filter-tick-angle-control');
+        expect(tickAngleControl).toExist();
+
+        const tickAngleInput = container.querySelector('.ms-filter-tick-angle-range');
+        expect(tickAngleInput).toExist();
+        expect(tickAngleInput.min).toBe('-90');
+        expect(tickAngleInput.max).toBe('90');
+        const tickAngleNumberInput = container.querySelector('.ms-filter-tick-angle-number');
+        expect(tickAngleNumberInput).toExist();
+        expect(tickAngleNumberInput.min).toBe('-90');
+        expect(tickAngleNumberInput.max).toBe('90');
+        expect(tickAngleNumberInput.value).toBe('90');
+        tickAngleInput.value = '45';
+        Simulate.change(tickAngleInput);
+    });
+
+    it('should call onChange when tick angle number input changes', (done) => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickAngle: -90
+                    }
+                }}
+                onChange={(key, value) => {
+                    expect(key).toBe('layout.tickAngle');
+                    expect(value).toBe(45);
+                    done();
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const tickAngleControl = container.querySelector('.ms-filter-tick-angle-control');
+        expect(tickAngleControl).toExist();
+
+        const tickAngleNumberInput = container.querySelector('.ms-filter-tick-angle-number');
+        expect(tickAngleNumberInput).toExist();
+        tickAngleNumberInput.value = '45';
+        Simulate.change(tickAngleNumberInput);
+    });
+
+    it('should hide tick labels autofill button when tick values are empty', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickValues: '   '
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-filter-slider-fill-tick-labels-btn')).toNotExist();
+    });
+
+    it('should fill tick labels from matching tick values', (done) => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickValues: '1, 3, 999'
+                    }
+                }}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '3', label: 'Three' }
+                ]}
+                onChange={(key, value) => {
+                    expect(key).toBe('layout.tickLabels');
+                    expect(value).toBe('One, Three, ');
+                    done();
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const fillTickLabelsButton = container.querySelector('.ms-filter-slider-fill-tick-labels-btn');
+        expect(fillTickLabelsButton).toExist();
+        Simulate.click(fillTickLabelsButton);
+    });
+});

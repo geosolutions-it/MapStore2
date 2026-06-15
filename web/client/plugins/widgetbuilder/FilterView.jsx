@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { Button, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
@@ -21,23 +22,33 @@ import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/F
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import FilterSlider from '../../components/widgets/builder/wizard/filter/FilterSlider';
 import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
+import { isMapTimeTarget } from '../../utils/InteractionUtils';
 
-const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
+const toIsoTime = (value) => {
+    if (value === undefined || value === null || value === '') {
+        return '';
+    }
+    const normalized = moment.utc(value);
+    return normalized.isValid() ? normalized.toISOString() : String(value);
+};
+
+const NoTargetInfo = ({ interactions = [], inactiveInteractionIds = [], activeTargets = {} }) => {
     const connectedActiveTargets = useMemo(() => {
         const interactionTargetPaths = interactions
-            .filter(({plugged}) => plugged) // get only plugged interactions
+            .filter(({plugged, id}) => plugged && !inactiveInteractionIds.includes(id)) // get only plugged active interactions
             .map(interaction => cleanPaths(interaction.target.nodePath)); // get target paths;
         return interactionTargetPaths
             .filter(path =>
                 Object.entries(activeTargets).some(([activePath, visibility]) => {
-                    return visibility && path === cleanPaths(activePath);
+                    return (visibility && path === cleanPaths(activePath)) || isMapTimeTarget(path);
                 })
             );
-    }, [activeTargets, interactions]);
+    }, [activeTargets, inactiveInteractionIds, interactions]);
 
     // display the list of layers/widgets affected by the filter when there are active interactions
     const hasActiveInteractions = connectedActiveTargets.length > 0;
@@ -89,9 +100,41 @@ const DisabledFilterInfo = ({ interactions = [], activeTargets = {}, targetsWith
     );
 };
 
-const ApplyStyleOutOfSyncInfo = connect()(
-    ({ applyStyleOutOfSync = {}, dispatch }) => {
-        const [debouncedState, setDebouncedState] = useState(applyStyleOutOfSync);
+const UnsupportedVariantInfo = ({ variant }) => (
+    <div
+        className="ms-filter-view-unsupported-variant"
+        style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 20px',
+            textAlign: 'center',
+            color: '#999'
+        }}
+    >
+        <Glyphicon glyph="warning-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
+        <div style={{ fontSize: '14px', maxWidth: '400px' }}>
+            <Message
+                msgId="widgets.filterWidget.unsupportedVariantMessage"
+                msgParams={{ variant }}
+            />
+        </div>
+    </div>
+);
+
+const MapTimeRangeDisabledInfo = () => (
+    <div className="ms-filter-view-map-time-range-disabled">
+        <Glyphicon glyph="warning-sign" className="ms-filter-view-map-time-range-disabled-icon" />
+        <div className="ms-filter-view-map-time-range-disabled-message">
+            <Message msgId="widgets.filterWidget.mapTimeRangeDisabledMessage" />
+        </div>
+    </div>
+);
+
+const ApplyInteractionOutOfSyncInfo = connect()(
+    ({ outOfSync = {}, messageId, buttonId, dispatch }) => {
+        const [debouncedState, setDebouncedState] = useState(outOfSync);
         const timeoutRef = useRef(null);
         const DEBOUNCE_MS = 300;
 
@@ -102,7 +145,7 @@ const ApplyStyleOutOfSyncInfo = connect()(
                 clearTimeout(timeoutRef.current);
             }
             timeoutRef.current = setTimeout(() => {
-                setDebouncedState(applyStyleOutOfSync);
+                setDebouncedState(outOfSync);
                 timeoutRef.current = null;
             }, DEBOUNCE_MS);
             return () => {
@@ -110,7 +153,7 @@ const ApplyStyleOutOfSyncInfo = connect()(
                     clearTimeout(timeoutRef.current);
                 }
             };
-        }, [applyStyleOutOfSync]);
+        }, [outOfSync]);
 
         const { showBanner, actionParams } = debouncedState;
         if (!showBanner || !actionParams) {
@@ -134,14 +177,14 @@ const ApplyStyleOutOfSyncInfo = connect()(
                         trigger={['click']}
                         text={
                             <div>
-                                <HTML msgId="widgets.filterWidget.styleChangedByWidgetInfo" />
+                                <HTML msgId={messageId} />
                                 <div style={{ marginTop: 8 }}>
                                     <Button
                                         bsStyle="primary"
                                         bsSize="small"
                                         onClick={() => dispatch(applyFilterWidgetInteractions(actionParams.widgetId, actionParams.target, actionParams.filterId))}
                                     >
-                                        <Message msgId="widgets.filterWidget.applyStyleFromWidgetButton" />
+                                        <Message msgId={buttonId} />
                                     </Button>
                                 </div>
                             </div>
@@ -157,34 +200,109 @@ const componentMap = {
     checkbox: FilterCheckboxList,
     button: FilterChipList,
     dropdown: FilterDropdownList,
-    'switch': FilterSwitchList
+    'switch': FilterSwitchList,
+    slider: FilterSlider
 };
 const FilterView = ({
     className,
     filterData,
     selections = [],
+    currentTime,
+    syncCurrentTime = false,
+    timelineRangeEnabled = false,
     interactions = [],
+    inactiveInteractionIds = [],
     activeTargets = {},
     targetsWithDisabledFilter = {},
     applyStyleOutOfSync = {},
+    applyDimensionOutOfSync = {},
     showNoTargetsInfo,
     onSelectionChange = () => {},
     loading = false,
     missingParameters = false,
     selectableItems = [],
+    onSelectableItemsChange = () => {},
     fetchError = false
 }) => {
+    const layout = filterData?.layout ?? {};
+    const Component = componentMap[layout.variant ?? 'checkbox'];
+    const showUnsupportedVariantWarning = !Component;
+    const forceSelection = layout.forceSelection === true;
+    const hasMapTimeApplyDimension = syncCurrentTime && (interactions || []).some(interaction =>
+        interaction?.plugged === true
+        && interaction?.targetType === 'applyDimension'
+        && isMapTimeTarget(interaction?.target?.nodePath)
+    );
+    const disableMapTimeSelection = hasMapTimeApplyDimension && timelineRangeEnabled;
+    const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
+    const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
+    const selectionSyncTimeoutRef = useRef(null);
+    const currentSelection = Array.isArray(selections) ? selections : [];
+
+    useEffect(() => {
+        if (typeof onSelectableItemsChange === 'function') {
+            onSelectableItemsChange(selectableItems);
+        }
+    }, [onSelectableItemsChange, selectableItems]);
+
+    // Reverse sync: when the map timeline changes, drive the filter widget selection from `currentTime`. For now only on APPLY_DIMENSION's targetPath map.time
+    useEffect(() => {
+        if (selectionSyncTimeoutRef.current) {
+            clearTimeout(selectionSyncTimeoutRef.current);
+            selectionSyncTimeoutRef.current = null;
+        }
+
+        if (!hasMapTimeApplyDimension || disableMapTimeSelection || !currentTime || loading) {
+            return () => {
+                if (selectionSyncTimeoutRef.current) {
+                    clearTimeout(selectionSyncTimeoutRef.current);
+                    selectionSyncTimeoutRef.current = null;
+                }
+            };
+        }
+
+        // Debounce: avoid fighting rapid timeline updates while matching selectable items to the same instant.
+        selectionSyncTimeoutRef.current = setTimeout(() => {
+            const currentTimeIso = toIsoTime(currentTime);
+            const matchedItem = (selectableItems || []).find(item =>
+                toIsoTime(item?.id ?? item?.value) === currentTimeIso
+            );
+            const nextSelection = matchedItem ? [matchedItem.id] : [];
+            const currentSelectionString = currentSelection.length > 0 ? String(currentSelection[0]) : '';
+            const nextSelectionString = nextSelection.length > 0 ? String(nextSelection[0]) : '';
+
+            if (matchedItem) {
+                if (currentSelection.length !== 1 || currentSelectionString !== nextSelectionString) {
+                    onSelectionChange(nextSelection);
+                }
+            } else if (currentSelection.length > 0) {
+                // No dimension value matches map.time anymore — clear selection.
+                onSelectionChange([]);
+            }
+        }, 250);
+
+        return () => {
+            if (selectionSyncTimeoutRef.current) {
+                clearTimeout(selectionSyncTimeoutRef.current);
+                selectionSyncTimeoutRef.current = null;
+            }
+        };
+    }, [hasMapTimeApplyDimension, disableMapTimeSelection, currentTime, selectableItems, currentSelection, loading, onSelectionChange]);
+
+    const onChangeSelections = useCallback((selectedValues) => {
+        if (disableMapTimeSelection) {
+            return;
+        }
+        // when force Selection is on, one item must be selected
+        if (selectedValues?.length === 0 && layout.forceSelection) {
+            return;
+        }
+        onSelectionChange(selectedValues);
+    }, [disableMapTimeSelection, layout.forceSelection, onSelectionChange]);
+
     if (!filterData) {
         return null;
     }
-
-    const { layout = {} } = filterData;
-    const Component = componentMap[layout.variant ?? 'checkbox'];
-    if (!Component) {
-        throw new Error(`Unsupported filter variant: ${layout.variant}`);
-    }
-    const forceSelection = layout.forceSelection === true;
-    const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
 
     // Show message when required parameters are missing
     if (missingParameters) {
@@ -253,6 +371,16 @@ const FilterView = ({
                 layoutMaxHeight: layout.maxHeight
             };
         }
+        if (layout.variant === 'slider') {
+            return {
+                layoutMaxHeight: layout.maxHeight,
+                showSelectedValue: layout.showSelectedValue ?? layout.showValueLabel !== false,
+                showTicks: layout.showTicks !== false,
+                tickValues: layout.tickValues,
+                tickLabels: layout.tickLabels,
+                tickAngle: layout.tickAngle
+            };
+        }
         return {};
     };
 
@@ -271,14 +399,6 @@ const FilterView = ({
         position: 'relative',
         ...(layout.backgroundColor && { backgroundColor: layout.backgroundColor }),
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
-    };
-
-    const onChangeSelections = (selectedValues) =>{
-        // when force Selection is on, one item must be selected
-        if (selectedValues?.length === 0 && layout.forceSelection) {
-            return;
-        }
-        onSelectionChange(selectedValues);
     };
 
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
@@ -335,6 +455,7 @@ const FilterView = ({
                         ? <NoTargetInfo
                             key={filterData.id + '-no-targets-info'}
                             interactions={interactions}
+                            inactiveInteractionIds={inactiveInteractionIds}
                             activeTargets={activeTargets}
                         />
                         : null
@@ -351,14 +472,26 @@ const FilterView = ({
                 }
                 {
                     showNoTargetsInfoTool
-                        ? <ApplyStyleOutOfSyncInfo
+                        ? <ApplyInteractionOutOfSyncInfo
                             key={filterData.id + '-apply-style-out-of-sync-info'}
-                            applyStyleOutOfSync={applyStyleOutOfSync}
+                            outOfSync={applyStyleOutOfSync}
+                            messageId="widgets.filterWidget.styleChangedByWidgetInfo"
+                            buttonId="widgets.filterWidget.applyStyleFromWidgetButton"
+                        />
+                        : null
+                }
+                {
+                    showNoTargetsInfoTool
+                        ? <ApplyInteractionOutOfSyncInfo
+                            key={filterData.id + '-apply-dimension-out-of-sync-info'}
+                            outOfSync={applyDimensionOutOfSync}
+                            messageId="widgets.filterWidget.dimensionChangedByWidgetInfo"
+                            buttonId="widgets.filterWidget.applyDimensionFromWidgetButton"
                         />
                         : null
                 }
 
-                {showSelectAll && (<FilterSelectAllOptions
+                {showSelectAll && !showUnsupportedVariantWarning && !disableMapTimeSelection && (<FilterSelectAllOptions
                     key={filterData.id + '-select-all'}
                     items={selectableItems}
                     selectedValues={selections || []}
@@ -368,15 +501,28 @@ const FilterView = ({
                 />)
                 }
             </div>
-            {selectableItems?.length > 0 ? (
-                <Component
-                    key={filterData.id}
-                    items={selectableItems}
-                    selectionMode={layout.selectionMode}
-                    selectedValues={selections || []}
-                    onSelectionChange={onChangeSelections}
-                    {...getLayoutProps()}
-                />
+            {disableMapTimeSelection ? (
+                <MapTimeRangeDisabledInfo />
+            ) : showUnsupportedVariantWarning ? (
+                <UnsupportedVariantInfo variant={layout.variant} />
+            ) : selectableItems?.length > 0 ? (
+                showSliderSingleItemError ? (
+                    <div className="ms-filter-view-slider-error">
+                        <Glyphicon glyph="warning-sign" className="ms-filter-view-slider-error-icon" />
+                        <div className="ms-filter-view-slider-error-message">
+                            <Message msgId="widgets.filterWidget.sliderSingleItemError" />
+                        </div>
+                    </div>
+                ) : (
+                    <Component
+                        key={filterData.id}
+                        items={selectableItems}
+                        selectionMode={layout.selectionMode}
+                        selectedValues={selections || []}
+                        onSelectionChange={onChangeSelections}
+                        {...getLayoutProps()}
+                    />
+                )
             ) : (
                 !loading ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
             )}
@@ -391,6 +537,14 @@ FilterView.propTypes = {
     activeTargets: PropTypes.object,
     targetsWithDisabledFilter: PropTypes.object,
     applyStyleOutOfSync: PropTypes.shape({
+        showBanner: PropTypes.bool,
+        actionParams: PropTypes.shape({
+            widgetId: PropTypes.string,
+            target: PropTypes.string,
+            filterId: PropTypes.string
+        })
+    }),
+    applyDimensionOutOfSync: PropTypes.shape({
         showBanner: PropTypes.bool,
         actionParams: PropTypes.shape({
             widgetId: PropTypes.string,
@@ -414,8 +568,13 @@ FilterView.propTypes = {
     loading: PropTypes.bool,
     missingParameters: PropTypes.bool,
     selectableItems: PropTypes.array,
-    fetchError: PropTypes.bool
+    onSelectableItemsChange: PropTypes.func,
+    fetchError: PropTypes.bool,
+    syncCurrentTime: PropTypes.bool,
+    timelineRangeEnabled: PropTypes.bool,
+    currentTime: PropTypes.string
 };
+FilterView.defaultProps = {};
 
 // Export unwrapped component for testing
 export { FilterView };
@@ -423,4 +582,3 @@ export { FilterView };
 export default compose(
     filterWidgetEnhancer
 )(FilterView);
-

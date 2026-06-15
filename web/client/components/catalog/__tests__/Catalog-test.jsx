@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
-import Catalog from '../Catalog';
+import Catalog from '../datasets/Catalog';
 
 describe('Test Catalog panel', () => {
     beforeEach((done) => {
@@ -23,229 +23,241 @@ describe('Test Catalog panel', () => {
         setTimeout(done);
     });
     it('creates the component with defaults', () => {
-        const item = ReactDOM.render(<Catalog />, document.getElementById("container"));
-        const catalog = TestUtils.findRenderedDOMComponentWithClass(item, "ms2-border-layout-body catalog");
-        expect(item).toExist();
-        expect(catalog).toExist();
-    });
-    it('test the search of records', (done) => {
         const SERVICE = {
             type: "csw",
-            url: "url",
+            url: "http://sample.service/catalog",
             title: "csw"
         };
-        const item = ReactDOM.render(<Catalog
+        ReactDOM.render(<Catalog
             services={{ "csw": SERVICE}}
             selectedService="csw"
+            selectedFormat="csw"
+        />, document.getElementById("container"));
+        const catalog = document.querySelector('.ms-catalog');
+        expect(catalog).toBeTruthy();
+    });
+    it('triggers search on autoload service', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "http://sample.service/catalog",
+            title: "csw",
+            autoload: true
+        };
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            selectedFormat="csw"
             onSearch={(props) => {
-                expect(props).toExist();
-                expect(props).toEqual({ format: 'csw', url: 'url', startPosition: 1, maxRecords: 4, text: '', options: {service: SERVICE} } );
+                expect(props).toEqual({
+                    format: 'csw',
+                    url: 'http://sample.service/catalog',
+                    startPosition: 1,
+                    maxRecords: 12,
+                    text: '',
+                    options: {
+                        filters: undefined,
+                        sort: undefined,
+                        service: SERVICE
+                    }
+                });
                 done();
             }}
         />, document.getElementById("container"));
-        expect(item).toExist();
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(item, "button");
-        expect(buttons.length).toBe(1);
-        const searchButton = buttons[0];
-        TestUtils.Simulate.click(searchButton);
     });
-    it('test rendering records with expand button', () => {
-        const title = "title";
-        const description = "description";
-        const item = ReactDOM.render(<Catalog
-            services={{"csw": {
-                type: "csw",
-                url: "url",
-                title: "csw",
-                format: "image/png8",
-                metadataTemplate: "<p>${title} and ${description}</p>",
-                showTemplate: true
-            }}}
-            searchOptions={{}}
-            selectedService="csw"
-            loading={false}
-            mode="view"
-            result={{numberOfRecordsMatched: 1}}
-            records={[{title, description, references: []}]}
-        />, document.getElementById("container"));
-        expect(item).toExist();
-        const expandClass = ".glyphicon-chevron-left";
-        const expandButton = document.querySelector(expandClass);
-        expect(expandButton).toExist(`${expandClass} does not exist`);
-    });
-    it('renders records without thumbnail for all services', () => {
-        const title = "title";
-        const description = "description";
-        const item = ReactDOM.render(<Catalog
-            services={{"csw": {
-                type: "csw",
-                url: "url",
-                title: "csw",
-                format: "image/png8",
-                metadataTemplate: "<p>${title} and ${description}</p>"
-            }}}
-            searchOptions={{}}
-            selectedService="csw"
-            loading={false}
-            mode="view"
-            result={{numberOfRecordsMatched: 3}}
-            records={[{title, description, references: []}, {title, description, references: []}, {title, description, references: []}]}
-            hideThumbnail
-        />, document.getElementById("container"));
-        expect(item).toExist();
-        const previewClassName = ".mapstore-side-preview";
-        const preview = document.querySelectorAll(previewClassName);
-        expect(preview.length).toEqual(0);
-    });
-    it('renders records without thumbnail for a specific service', () => {
-        const title = "title";
-        const description = "description";
-        const item = ReactDOM.render(<Catalog
-            services={{"csw": {
-                type: "csw",
-                url: "url",
-                title: "csw",
-                format: "image/png8",
-                metadataTemplate: "<p>${title} and ${description}</p>",
-                hideThumbnail: true
-            }}}
-            searchOptions={{}}
-            selectedService="csw"
-            loading={false}
-            mode="view"
-            result={{numberOfRecordsMatched: 1}}
-            records={[{title, description, references: []}]}
-        />, document.getElementById("container"));
-        expect(item).toExist();
-        const previewClassName = ".mapstore-side-preview";
-        const preview = document.querySelector(previewClassName);
-        expect(preview).toNotExist(`${previewClassName} does not exist`);
-    });
-    it('renders records with default_map_backgrounds', () => {
-        const title = "title";
-        const description = "description";
-        const item = ReactDOM.render(<Catalog
-            services={{
-                "default_map_backgrounds": {
-                    "type": "backgrounds",
-                    "title": "Default bg",
-                    "titleMsgId": "defaultMapBackgroundsServiceTitle",
-                    "autoload": true
-                },
-                "csw": {
-                    type: "csw",
-                    url: "url",
-                    title: "csw",
-                    format: "image/png8",
-                    metadataTemplate: "<p>${title} and ${description}</p>",
-                    hideThumbnail: true
-                }
-            }}
-            searchOptions={{}}
-            selectedService="default_map_backgrounds"
-            loading={false}
-            mode="view"
-            result={{numberOfRecordsMatched: 1}}
-            records={[{title, description, references: []}]}
-        />, document.getElementById("container"));
-        const inputField = document.querySelector(".form-group .Select-value-label");
-        expect(inputField.innerText).toBe("defaultMapBackgroundsServiceTitle");
-        expect(item).toExist();
-    });
-    it('test the search of records with new service added', () => {
+    it('resets new service status before autoload search', (done) => {
         const SERVICE = {
             type: "csw",
-            url: "url",
-            title: "csw"
+            url: "http://sample.service/catalog",
+            title: "csw",
+            autoload: true
         };
-        const actions = { setNewServiceStatus: () => {} };
-        const spyOnNewService = expect.spyOn(actions, 'setNewServiceStatus');
-        const item = ReactDOM.render(<Catalog
+        const actions = {
+            setNewServiceStatus: () => {}
+        };
+        const spyOnStatus = expect.spyOn(actions, 'setNewServiceStatus');
+        actions.onSearch = () => {
+            expect(spyOnStatus).toHaveBeenCalled();
+            expect(spyOnStatus.calls[0].arguments[0]).toBe(false);
+            done();
+        };
+        ReactDOM.render(<Catalog
             services={{ "csw": SERVICE}}
             selectedService="csw"
+            selectedFormat="csw"
+            onSearch={actions.onSearch}
             isNewServiceAdded
             setNewServiceStatus={actions.setNewServiceStatus}
-            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
         />, document.getElementById("container"));
-        expect(item).toExist();
-        const catalogPagination = document.getElementsByClassName('catalog-pagination');
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(item, "button");
-        expect(buttons.length).toBe(1);
-        const searchButton = buttons[0];
-        TestUtils.Simulate.click(searchButton);
-        expect(spyOnNewService).toHaveBeenCalled();
-        expect(spyOnNewService.calls[0].arguments[0]).toBeFalsy();
-        expect(catalogPagination.length).toBe(0); // Pagination is hidden
     });
-    it('test the search of records with no new service added', () => {
+    it('renders editor in edit mode', () => {
         const SERVICE = {
             type: "csw",
-            url: "url",
-            title: "csw"
-        };
-        const actions = { onSearch: () => {}, setNewServiceStatus: () => {} };
-        const spyOnNewService = expect.spyOn(actions, 'setNewServiceStatus');
-        const spyOnSearch = expect.spyOn(actions, 'onSearch');
-        const item = ReactDOM.render(<Catalog
-            services={{ "csw": SERVICE}}
-            selectedService="csw"
-            isNewServiceAdded={false}
-            onSearch={actions.onSearch}
-            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
-            searchOptions={{startPosition: 1}}
-            setNewServiceStatus={actions.setNewServiceStatus}
-        />, document.getElementById("container"));
-        expect(item).toExist();
-        const catalogPagination = document.getElementsByClassName('catalog-pagination');
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(item, "button");
-        expect(buttons.length).toBe(1);
-        const searchButton = buttons[0];
-        TestUtils.Simulate.click(searchButton);
-        expect(spyOnNewService).toNotHaveBeenCalled();
-        expect(spyOnSearch).toHaveBeenCalled();
-        expect(spyOnSearch.calls[0].arguments[0]).toEqual({ format: 'csw', url: 'url', startPosition: 1, maxRecords: 4, text: '', options: {service: SERVICE} });
-        expect(catalogPagination.length).toBe(1); // Pagination is displayed
-    });
-    it('test manage service with permission', () => {
-        const SERVICE = {
-            type: "csw",
-            url: "url",
+            url: "http://sample.service/catalog",
             title: "csw"
         };
         ReactDOM.render(<Catalog
             services={{ "csw": SERVICE}}
-            canEdit
             selectedService="csw"
-            isNewServiceAdded={false}
-            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
-            searchOptions={{startPosition: 1}}
+            mode="edit"
         />, document.getElementById("container"));
-        const container = document.getElementById("container");
-        expect(container).toBeTruthy();
-        let editEl = document.querySelector('.glyphicon-pencil');
-        let addEl = document.querySelector('.glyphicon-plus');
-        expect(editEl).toBeTruthy();
-        expect(addEl).toBeTruthy();
+        expect(document.querySelector('.ms-catalog-service-editor')).toBeTruthy();
     });
-    it('test manage service with no permission', () => {
+
+    it('renders layer error alert in view mode', () => {
         const SERVICE = {
-            type: "csw",
-            url: "url",
-            title: "csw"
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
         };
         ReactDOM.render(<Catalog
-            services={{ "csw": SERVICE}}
-            canEdit={false}
+            services={{ csw: SERVICE }}
             selectedService="csw"
-            isNewServiceAdded={false}
-            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
-            searchOptions={{startPosition: 1}}
-        />, document.getElementById("container"));
-        const container = document.getElementById("container");
-        expect(container).toBeTruthy();
-        let editEl = document.querySelector('.glyphicon-pencil');
-        let addEl = document.querySelector('.glyphicon-plus');
-        expect(editEl).toBeFalsy();
-        expect(addEl).toBeFalsy();
+            selectedFormat="csw"
+            mode="view"
+            layerError
+        />, document.getElementById('container'));
+
+        const alertNode = document.querySelector('.alert.alert-danger');
+        expect(alertNode).toBeTruthy();
+    });
+
+    it('renders no records matched message section', () => {
+        const SERVICE = {
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
+        };
+        ReactDOM.render(<Catalog
+            services={{ csw: SERVICE }}
+            selectedService="csw"
+            selectedFormat="csw"
+            mode="view"
+            result={{ numberOfRecordsMatched: 0 }}
+        />, document.getElementById('container'));
+
+        const emptySection = document.querySelector('._padding-sm');
+        expect(emptySection).toBeTruthy();
+    });
+
+    it('hides catalog selector when showCatalogSelector is false', () => {
+        const SERVICE = {
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
+        };
+        ReactDOM.render(<Catalog
+            services={{ csw: SERVICE }}
+            selectedService="csw"
+            selectedFormat="csw"
+            mode="view"
+            showCatalogSelector={false}
+        />, document.getElementById('container'));
+
+        expect(document.querySelector('.ms-catalog-service-select')).toBeFalsy();
+    });
+
+    it('handles back button click in edit mode', () => {
+        const SERVICE = {
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
+        };
+        const actions = {
+            onChangeCatalogMode: () => {}
+        };
+        const spyOnChangeMode = expect.spyOn(actions, 'onChangeCatalogMode');
+
+        ReactDOM.render(<Catalog
+            services={{ csw: SERVICE }}
+            selectedService="csw"
+            mode="edit"
+            onChangeCatalogMode={actions.onChangeCatalogMode}
+        />, document.getElementById('container'));
+
+        const buttons = document.querySelectorAll('button');
+        expect(buttons.length).toBeGreaterThan(0);
+        TestUtils.Simulate.click(buttons[0]);
+
+        expect(spyOnChangeMode).toHaveBeenCalled();
+        expect(spyOnChangeMode.calls[0].arguments[0]).toBe('view');
+        expect(spyOnChangeMode.calls[0].arguments[1]).toBe(false);
+    });
+
+    it('triggers search on geonode autoload service', (done) => {
+        const SERVICE = {
+            type: 'geonode',
+            url: 'http://sample.service/geonode',
+            title: 'GeoNode',
+            autoload: true
+        };
+        ReactDOM.render(<Catalog
+            services={{ geonode: SERVICE }}
+            selectedService="geonode"
+            selectedFormat="geonode"
+            onSearch={(props) => {
+                expect(props).toEqual({
+                    format: 'geonode',
+                    url: 'http://sample.service/geonode',
+                    startPosition: 1,
+                    maxRecords: 12,
+                    text: '',
+                    options: {
+                        filters: undefined,
+                        sort: undefined,
+                        service: SERVICE
+                    }
+                });
+                done();
+            }}
+        />, document.getElementById('container'));
+    });
+
+    it('shows filter and sort controls for geonode', () => {
+        const SERVICE = {
+            type: 'geonode',
+            url: 'http://sample.service/geonode',
+            title: 'GeoNode'
+        };
+        ReactDOM.render(<Catalog
+            services={{ geonode: SERVICE }}
+            selectedService="geonode"
+            selectedFormat="geonode"
+            mode="view"
+            result={{ numberOfRecordsMatched: 1 }}
+            records={[{ identifier: 'geo-1', title: 'Geo Layer', references: [] }]}
+            selected={[]}
+            layers={[]}
+            loadingLayers={[]}
+            onSelect={() => {}}
+            onAddSelected={() => {}}
+            onAddLayer={() => {}}
+        />, document.getElementById('container'));
+
+        expect(document.querySelector('.glyphicon-filter')).toBeTruthy();
+        expect(document.querySelector('#sort-dropdown')).toBeTruthy();
+    });
+
+    it('does not show sort control for csw service', () => {
+        const SERVICE = {
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
+        };
+        ReactDOM.render(<Catalog
+            services={{ csw: SERVICE }}
+            selectedService="csw"
+            selectedFormat="csw"
+            mode="view"
+            result={{ numberOfRecordsMatched: 1 }}
+            records={[{ identifier: 'csw-1', title: 'Catalog Layer', references: [] }]}
+            selected={[]}
+            layers={[]}
+            loadingLayers={[]}
+            onSelect={() => {}}
+            onAddSelected={() => {}}
+            onAddLayer={() => {}}
+        />, document.getElementById('container'));
+
+        expect(document.querySelector('#sort-dropdown')).toBeFalsy();
     });
 });

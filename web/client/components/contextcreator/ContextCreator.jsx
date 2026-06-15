@@ -27,13 +27,13 @@ import {CONTEXT_TUTORIALS} from '../../actions/contextcreator';
  * ```
  * pluginsConfigs:
  *         "SomePlugin",
- *         "MetadataExplorer",
+ *         "Catalog",
  *           {
  *               "name": "TOC",
  *               "cfg": { activateQueryTool: true, otherOptions: true }
  *           },
  * viewerPlugins:
- *         "MetadataExplorer",
+ *         "Catalog",
  *           {
  *               "name": "TOC",
  *               "overrides": {
@@ -41,7 +41,7 @@ import {CONTEXT_TUTORIALS} from '../../actions/contextcreator';
  *               }
  *           },
  * result:
- *         "MetadataExplorer",
+ *         "Catalog",
  *           {
  *               "name": "TOC",
  *               "cfg": { activateQueryTool: false, otherOptions: true }
@@ -199,7 +199,7 @@ export default class ContextCreator extends React.Component {
         viewerPlugins: [
             "Map",
             "BackgroundSelector",
-            "MetadataExplorer",
+            "Catalog",
             {
                 "name": "TOC",
                 "overrides": {

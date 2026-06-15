@@ -17,6 +17,9 @@ In the following guide you will learn how to configure MapStore to use an extern
 
 MapStore has a file called `geostore-datasource-ovr.properties`. This file is on the repository in the folder `java/web/src/main/resources`, in the final `mapstore.war` package it will be copied into `WEB-INF/classes` path. It contains the set-up for the database connection. Anyway if you edit the file in `WEB-INF/classes` this file will be overridden on the next re-deploy. To preserve your configuration on every deploy you can use an environment variable, `geostore-ovr`, to configure the path to an override file in a different, external directory. In this file the user can re-define the default configuration and so set-up the database configuration.
 
+!!! tip
+    For production deployments, consider using the [externalized configuration](externalized-configuration.md) (`-Ddatadir.location=`) instead. It provides a single data directory that centralizes all MapStore configuration files (database, proxy, JSON configs, etc.) and persists across updates. The `geostore-datasource-ovr.properties` file can simply be placed inside that directory.
+
 For instance using tomcat on linux you will have to do something like this to add the environment variable to the JAVA_OPTS
 > where to add your JAVA_OPTS depends on your operating system. For instance the file could be `/etc/default/tomcat8`, or similar, in linux debian
 
