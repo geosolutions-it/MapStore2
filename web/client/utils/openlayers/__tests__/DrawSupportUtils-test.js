@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { v4 as uuid } from 'uuid';
+import { v1 as uuid } from 'uuid';
 import { Circle, Polygon } from 'ol/geom';
 import { fromCircle } from 'ol/geom/Polygon';
 import Feature from 'ol/Feature';
@@ -19,7 +19,7 @@ describe('DrawSupportUtils openlayers', () => {
         return new Feature({
             geometry: fromCircle(new Circle(center, radius), 100),
             isCircle: true,
-            id: uuid.v1(),
+            id: uuid(),
             radius,
             center: makePoint(reproject(center, crs, "EPSG:4326")),
             crs
