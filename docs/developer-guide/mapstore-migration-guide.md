@@ -22,6 +22,88 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.01.02 to 2026.02.00
 
+### webpack-dev-server upgrade to v5
+
+`webpack-dev-server` has been upgraded from 3.11.0 to 5.2.4. This is a dev-only change with no impact on production builds, but projects that customize the dev server configuration must update accordingly.
+
+#### Proxy configuration must be an array
+
+The `proxy` option in `devServer` no longer accepts an object. It must be an array of objects with a `context` property.
+
+**Before (`build/devServer.js`):**
+
+```js
+const devServer = {
+    proxy: {
+        '/rest': {
+            target: MAPSTORE_BACKEND_URL,
+            secure: false,
+            headers: { host: domain }
+        },
+        '/my-path': {
+            target: 'http://localhost:9000',
+            pathRewrite: { '/my-path': '/other' }
+        }
+    }
+};
+```
+
+**After:**
+
+```js
+const devServer = {
+    proxy: [
+        {
+            context: ['/rest'],
+            target: MAPSTORE_BACKEND_URL,
+            secure: false,
+            headers: { host: domain }
+        },
+        {
+            context: ['/my-path'],
+            target: 'http://localhost:9000',
+            pathRewrite: { '^/my-path': '/other' }
+        }
+    ]
+};
+```
+
+Multiple paths sharing the same target can be grouped in a single entry:
+
+```js
+{
+    context: ['/rest', '/pdf', '/proxy'],
+    target: MAPSTORE_BACKEND_URL,
+    secure: false,
+    headers: { host: domain }
+}
+```
+
+Note: `pathRewrite` keys should now use anchored regex patterns (e.g. `'^/path'` instead of `'/path'`).
+
+#### devServer.publicPath moved to devServer.devMiddleware.publicPath
+
+If your project's `webpack.config.js` passes a custom `devServer` object to `buildConfig`, update the `publicPath` key:
+
+```diff
+ devServer: {
+-    publicPath: '/dist/',
++    devMiddleware: { publicPath: '/dist/' },
+     // ...
+ }
+```
+
+#### Package.json scripts: --inline removed, --content-base renamed
+
+Update your project's `package.json` start scripts:
+
+```diff
+-"fe:start": "webpack serve --progress --color --port 8081 --hot --inline --config webpack.config.js --content-base ."
++"fe:start": "webpack serve --progress --color --port 8081 --hot --config webpack.config.js --static ."
+```
+
+You can copy the updated scripts from `utility/projects/projectScripts.json` in the MapStore2 repository.
+
 ### MetadataExplorer plugin renamed to Catalog
 
 The `MetadataExplorer` plugin has been replaced by the new `Catalog` plugin. Projects that include `MetadataExplorer` in their plugin configuration must update both `localConfig.json` and `pluginsConfig.json` (or the equivalent project configuration files) as follows:
