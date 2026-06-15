@@ -26,7 +26,7 @@ import set from "lodash/fp/set";
 import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX, LAYERS_REGEX } from '../actions/widgets';
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
-import uuidv1 from "uuid/v1";
+import { v1 as uuidv1 } from "uuid";
 import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
 import moment from 'moment';
