@@ -14,7 +14,7 @@
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
         <tomcat.version>11.0.22</tomcat.version>
-        <jackson.version>2.16.1</jackson.version>
+        <jackson.version>2.19.4</jackson.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
