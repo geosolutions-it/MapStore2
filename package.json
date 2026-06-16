@@ -100,8 +100,8 @@
     "url-loader": "0.5.7",
     "webpack": "5.104.1",
     "webpack-bundle-size-analyzer": "2.0.2",
-    "webpack-cli": "4.10.0",
-    "webpack-dev-server": "3.11.0"
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "5.2.4"
   },
   "dependencies": {
     "@babel/standalone": "7.23.9",
@@ -268,8 +268,8 @@
   "scripts": {
     "start": "npm run app:start",
     "app:start": "concurrently -n frontend,backend -c green,blue \"npm:fe:start\" \"npm:be:start\"",
-    "fe:start": "webpack serve --progress --color --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
-    "fe:start-prod": "webpack serve --progress --color --port 8081 --hot --inline --config build/prod-webpack.config.js --content-base web/client",
+    "fe:start": "webpack serve --progress --color --port 8081 --hot --config build/webpack.config.js --static web/client",
+    "fe:start-prod": "webpack serve --progress --color --port 8081 --hot --config build/prod-webpack.config.js --static web/client",
     "fe:build": "npm run clean && mkdirp ./web/client/dist && webpack build --progress --color --config build/prod-webpack.config.js",
     "compile": "npm run fe:build",
     "be:build": "mvn clean install -Pprinting",
