@@ -74,6 +74,7 @@ import { configureMap } from '../../actions/config';
 import { changeVisualizationMode } from './../../actions/maptype';
 import { FORCE_UPDATE_MAP_LAYOUT } from '../../actions/maplayout';
 import { VisualizationModes } from '../../utils/MapTypeUtils';
+import ProjectionRegistry from '../../utils/ProjectionRegistry';
 
 const TEST_MAP_STATE = {
     present: {
@@ -94,6 +95,13 @@ const TEST_MAP_STATE = {
             crs: 'EPSG:3857'
         }
     }
+};
+
+const EPSG_32636_DEF = {
+    code: 'EPSG:32636',
+    def: '+proj=utm +zone=36 +datum=WGS84 +units=m +no_defs +type=crs',
+    extent: [166021.44, 0.0, 833978.56, 9329005.18],
+    worldExtent: [30.0, 0.0, 36.0, 84.0]
 };
 
 describe('identify Epics', () => {
@@ -967,6 +975,63 @@ describe('identify Epics', () => {
                 }
             });
             done();
+        };
+
+        testEpic(zoomToVisibleAreaEpic, 2, sentActions, expectedAction, state);
+    });
+
+    it('test center to visible area outside projection extent', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        ProjectionRegistry.register(EPSG_32636_DEF);
+
+        const state = {
+            mapInfo: {
+                centerToMarker: true
+            },
+            map: {
+                present: {
+                    ...TEST_MAP_STATE.present,
+                    projection: 'EPSG:32636'
+                }
+            },
+            maplayout: {
+                boundingMapRect: {
+                    left: 500,
+                    bottom: 250
+                }
+            },
+            projections: {
+                staticDefs: [EPSG_32636_DEF]
+            }
+        };
+
+        const sentActions = [featureInfoClick({ latlng: { lat: 43.7711, lng: 11.2486 } }), loadFeatureInfo()];
+
+        const expectedAction = actions => {
+            try {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ZOOM_TO_POINT:
+                        expect(action.zoom).toBe(4);
+                        expect(Number.isFinite(action.pos.x)).toBe(true);
+                        expect(Number.isFinite(action.pos.y)).toBe(true);
+                        expect(action.crs).toBe('EPSG:4326');
+                        break;
+                    case UPDATE_CENTER_TO_MARKER:
+                        expect(action.status).toBe('enabled');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                ProjectionRegistry.unRegister(EPSG_32636_DEF.code);
+                done();
+            } catch (e) {
+                ProjectionRegistry.unRegister(EPSG_32636_DEF.code);
+                done(e);
+            }
         };
 
         testEpic(zoomToVisibleAreaEpic, 2, sentActions, expectedAction, state);
