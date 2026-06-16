@@ -142,8 +142,8 @@
                 <version>3.10.1</version>
                 <configuration>
                     <encoding>utf8</encoding>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>17</source>
+                    <target>17</target>
                     <debug>true</debug>
                     <encoding>UTF-8</encoding>
                     <!--

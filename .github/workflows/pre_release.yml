@@ -40,7 +40,7 @@ jobs:
     - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
-        java-version: '21.x'
+        java-version: '17.x'
         distribution: 'adopt'
         cache: maven
 

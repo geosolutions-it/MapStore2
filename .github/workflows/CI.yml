@@ -196,14 +196,14 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '21.x'
+          java-version: '17.x'
       ############
       # Publish
       ##########
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'temurin'
           server-id: geosolutions
           server-username: MAVEN_USERNAME
