@@ -50,7 +50,7 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsquery';
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
-import uuid from 'uuid';
+import { v1 as uuid } from 'uuid';
 
 const emptyResultsState = {
     advancedFilters: {},
@@ -267,7 +267,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     }
     case CREATE_NEW_FEATURE: {
-        let id = uuid.v1();
+        let id = uuid();
         return Object.assign({}, state, {
             newFeatures: action.features.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
                 geometry: f.geometry ? f.geometry : null

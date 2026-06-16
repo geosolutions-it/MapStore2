@@ -9,7 +9,7 @@ import expect from "expect";
 import { isArray, values } from "lodash";
 import React from 'react';
 import ReactDOM from 'react-dom';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import {
     DEFAULT_MAP_OPTIONS,

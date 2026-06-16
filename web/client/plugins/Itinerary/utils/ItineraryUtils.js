@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import get from "lodash/get";
 import times from "lodash/times";
 

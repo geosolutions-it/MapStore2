@@ -8,7 +8,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import * as Cesium from 'cesium';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 import DrawGeometrySupport from './DrawGeometrySupport';
 import {
