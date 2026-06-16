@@ -3,6 +3,8 @@
     "dependabot[bot]",
     "dependabot-preview[bot]",
     "github-actions[bot]",
+    "Copilot",
+    "copilot-swe-agent[bot]",
     "afabiani",
     "giohappy",
     "allyoucanmap",
@@ -40,7 +42,9 @@
     "jlo-arxit",
     "huntsmarinho",
     "aseques",
-    "jwkaltz"
+    "jwkaltz",
+    "ygodaert",
+    "Binabh"
   ],
   "label": "CLA Ready",
   "message": "In order to contribute to the MapStore project, the CLA (Contributor License agreement) should be sent signed to GeoSolutions. Please consult contributing rules at: https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore#contributing-code"

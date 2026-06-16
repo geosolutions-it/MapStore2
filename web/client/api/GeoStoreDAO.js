@@ -7,7 +7,7 @@
 */
 import { castArray, findIndex, get, has, isArray, merge, omit, pick } from 'lodash';
 
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
 

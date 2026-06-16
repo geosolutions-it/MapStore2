@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {ButtonToolbar, Col, Glyphicon, Grid, Row, Tooltip} from 'react-bootstrap';
 import {DropdownList} from 'react-widgets';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 import { download } from '../../../utils/FileUtils';
 import {getMessageById} from '../../../utils/LocaleUtils';

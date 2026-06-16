@@ -9,7 +9,7 @@
 import { isImageServerUrl } from './ArcGISUtils';
 import { getConfigProp } from './ConfigUtils';
 import { getSupportedLocales, shortLocale } from './LocaleUtils';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { isEmpty } from 'lodash';
 import queryString from 'query-string';
 import url from 'url';
