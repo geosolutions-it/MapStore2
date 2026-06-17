@@ -8,7 +8,7 @@
 
 import { Parser } from 'xml2js';
 import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs, castArray } from 'lodash';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 import {
     extractTag,

@@ -12,7 +12,7 @@ import find from 'lodash/find';
 import isArray from 'lodash/isArray';
 import { Glyphicon, FormControl as FormControlRB, FormGroup } from 'react-bootstrap';
 import Fields from './Fields';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import Toolbar from '../misc/toolbar/Toolbar';
 import { FilterBuilderPopover } from './FilterBuilder';
 import { ScaleDenominatorPopover } from './ScaleDenominator';

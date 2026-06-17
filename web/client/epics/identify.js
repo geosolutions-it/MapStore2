@@ -8,7 +8,7 @@
 
 import Rx from 'rxjs';
 import { get, find, reverse, includes } from 'lodash';
-import uuid from 'uuid';
+import { v1 as uuidv1, v4 as uuid } from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO,
@@ -134,7 +134,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                         const appParams = filterRequestParams(layer, includeOptions, excludeParams);
                         const attachJSON = isHighlightEnabledSelector(getState());
                         const itemId = itemIdSelector(getState());
-                        const reqId = uuid.v1();
+                        const reqId = uuidv1();
                         const param = { ...appParams, ...requestParams };
                         return getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
                             // this 0 delay is needed for vector/3dtiles layer because makes the response async and give time to the GUI to render

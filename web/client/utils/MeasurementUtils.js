@@ -7,7 +7,7 @@
 */
 
 import { round, flatten, uniq, get, isEqual } from 'lodash';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import turfArea from '@turf/area';
 import {
     createAnnotationId,
