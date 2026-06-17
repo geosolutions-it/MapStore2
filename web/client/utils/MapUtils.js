@@ -27,7 +27,7 @@ import {
 import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
 import { get as getExtent } from 'ol/proj/projections';
 
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 import { getUnits, normalizeSRS, reproject } from './CoordinatesUtils';
 

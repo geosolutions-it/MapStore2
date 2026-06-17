@@ -7,7 +7,7 @@
  */
 
 import React, { useState } from 'react';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import { createPlugin } from "../../utils/PluginsUtils";
 import PendingStatePrompt from './containers/PendingStatePrompt';
 import { connect } from 'react-redux';

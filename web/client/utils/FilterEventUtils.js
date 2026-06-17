@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import { cqlStringField, cqlNumberField, cqlBooleanField, toCQLFilter } from './FilterUtils';
 
 /**

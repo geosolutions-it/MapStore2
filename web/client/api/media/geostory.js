@@ -7,7 +7,7 @@
  */
 import { Observable } from 'rxjs';
 import { groupBy } from 'lodash';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import { addResource, editResource, removeResource } from '../../actions/geostory';
 import { resourcesSelector } from '../../selectors/geostory';

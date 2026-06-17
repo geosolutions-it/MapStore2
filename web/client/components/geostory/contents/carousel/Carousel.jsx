@@ -15,7 +15,7 @@ import { Modes } from "../../../../utils/GeoStoryUtils";
 import ItemThumbnail from "./carouselItem/ItemThumbnail";
 import draggableComponent from '../../../misc/enhancers/draggableComponent';
 import draggableContainer from "../../../misc/enhancers/draggableContainer";
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import Button from '../../../misc/Button';
 import defaultThumb from './img/default.jpg';
 import InfoCarousel from "./InfoCarousel";
