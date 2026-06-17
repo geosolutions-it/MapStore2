@@ -293,20 +293,18 @@ class CesiumMap extends React.Component {
                 const x = (180.0 + longitude) / 360.0 * this.props.standardWidth * (this.props.zoom + 1);
                 const latlng = { lat: latitude, lng: longitude, z: elevation };
                 const pixel = { x, y };
-                const pointToBuildRequest = {
+                const hasHeight = !!this.props.mapOptions?.terrainProvider || intersectedFeatures.length > 0;
+
+                this.props.onClick({
                     pixel,
-                    height: (this.props.mapOptions && this.props.mapOptions.terrainProvider) || intersectedFeatures.length > 0
-                        ? cartographic.height
-                        : undefined,
+                    height: hasHeight ? cartographic.height : undefined,
                     cartographic,
                     latlng,
                     crs: "EPSG:4326",
                     intersectedFeatures,
-                    resolution: getResolutions()[Math.round(this.props.zoom)]
-                };
-
-                pointToBuildRequest.intersectedPixelsPromise = this.getIntersectedPixels(map, cartographic);
-                this.props.onClick(pointToBuildRequest);
+                    resolution: getResolutions()[Math.round(this.props.zoom)],
+                    intersectedPixelsPromise: this.getIntersectedPixels(map, cartographic)
+                });
             }
         }
     };
