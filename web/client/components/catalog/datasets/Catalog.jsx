@@ -35,6 +35,22 @@ const shouldAutoload = (service, services) => {
         services[service].autoload;
 };
 
+const shouldPreserveCurrentRequest = ({
+    loading,
+    isNewServiceAdded,
+    loadingError,
+    result,
+    searchOptions,
+    selectedService,
+    services
+}) => {
+    if (loading || isNewServiceAdded || (loadingError !== undefined && loadingError !== null)) {
+        return true;
+    }
+    const service = selectedService && services?.[selectedService];
+    return !!(result && service && searchOptions?.url === buildServiceUrl(service));
+};
+
 const Catalog = ({
     serviceTypes = [
         { name: "csw", label: "CSW" },
@@ -148,8 +164,22 @@ const Catalog = ({
     };
 
     useEffect(() => {
-        clearSelection?.();
-        if (shouldAutoload(selectedService, services)) {
+        const preserveCurrentRequest = shouldPreserveCurrentRequest({
+            loading,
+            isNewServiceAdded,
+            loadingError,
+            result,
+            searchOptions,
+            selectedService,
+            services
+        });
+        if (!preserveCurrentRequest) {
+            clearSelection?.();
+        }
+        if (isNewServiceAdded) {
+            setNewServiceStatus(false);
+        }
+        if (!preserveCurrentRequest && mode === 'view' && shouldAutoload(selectedService, services)) {
             search({ searchText });
         }
         setShowFilters(false);
