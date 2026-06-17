@@ -203,7 +203,7 @@ class OpenlayersMap extends React.Component {
                 const finalLat = markerCoords ? markerCoords.y : lat;
                 const finalLng = markerCoords ? normalizeLng(markerCoords.x) : lng;
                 const intersectedFeatures = this.getIntersectedFeatures(map, event?.pixel);
-                const intersectedPixels = this.getIntersectedPixels(map, event?.pixel);
+                const intersectedPixelsPromise = Promise.resolve(this.getIntersectedPixels(map, event?.pixel));
 
                 this.props.onClick({
                     pixel: {
@@ -223,7 +223,7 @@ class OpenlayersMap extends React.Component {
                         shift: event.originalEvent.shiftKey
                     },
                     intersectedFeatures,
-                    intersectedPixels
+                    intersectedPixelsPromise
                 }, layerInfo);
             }
         });

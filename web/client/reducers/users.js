@@ -7,7 +7,7 @@
  */
 
 import isNil from 'lodash/isNil';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import {
     USERMANAGER_EDIT_USER,
     USERMANAGER_EDIT_USER_DATA,
