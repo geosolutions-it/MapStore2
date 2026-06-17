@@ -32,6 +32,12 @@ describe("mapinfo COG utils", () => {
         const currentLocale = "en-US";
         const pixValueRaw = new Uint8Array([140, 80, 80, 255]);
         const pixValueBands = pixValueRaw.reduce((acc, value, index) => ({ ...acc, [index + 1]: value }), {});
+        const intersectedPixelsPromise = Promise.resolve({
+            "0": {
+                "id": layerId,
+                "bands": pixValueBands
+            }
+        });
         const latlng = {
             "lat": 40.19133465092119, "lng": -92.60925292968749
         };
@@ -49,12 +55,7 @@ describe("mapinfo COG utils", () => {
                 "metaKey": false,
                 "shift": false
             },
-            "intersectedPixels": {
-                "0": {
-                    "id": layerId,
-                    "bands": pixValueBands
-                }
-            },
+            intersectedPixelsPromise,
             "intersectedFeatures": [
                 {
                     "id": layerId,
@@ -88,22 +89,12 @@ describe("mapinfo COG utils", () => {
         const request = cog.buildRequest(layer, { point, currentLocale });
         const expectedRequest = {
             "request": {
-                "features": [
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [latlng.lng, latlng.lat]
-                        },
-                        "properties": {
-                            "band 1": pixValueRaw[0],
-                            "band 2": pixValueRaw[1],
-                            "band 3": pixValueRaw[2],
-                            "band 4": pixValueRaw[3]
-                        }
-                    }
-                ],
-                "outputFormat": "application/json"
+                "features": [],
+                "outputFormat": "application/json",
+                intersectedPixelsPromise,
+                point: {
+                    latlng
+                }
             },
             "metadata": {
                 "title": "Cloud layer title"
@@ -112,6 +103,54 @@ describe("mapinfo COG utils", () => {
         };
 
         expect(request).toEqual(expectedRequest);
+    });
+
+    it("should create features from intersected pixels promise", (done) => {
+        const layerId = "6ba42670-f3c-21f0-8e1f-dd66f6ae634d";
+        const layer = { id: layerId };
+        const latlng = {
+            "lat": 40.19133465092119, "lng": -92.60925292968749
+        };
+        const intersectedPixelsPromise = Promise.resolve({
+            "0": {
+                "id": layerId,
+                "bands": {
+                    "1": 140,
+                    "2": 80,
+                    "3": 80,
+                    "4": 255
+                }
+            }
+        });
+
+        cog.getIdentifyFlow(layer, undefined, {
+            intersectedPixelsPromise,
+            point: {
+                latlng
+            }
+        })
+            .toPromise()
+            .then((response) => {
+                expect(response).toEqual({
+                    data: {
+                        features: [{
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [latlng.lng, latlng.lat]
+                            },
+                            "properties": {
+                                "band 1": 140,
+                                "band 2": 80,
+                                "band 3": 80,
+                                "band 4": 255
+                            }
+                        }]
+                    }
+                });
+                done();
+            })
+            .catch(done);
     });
 
     it("should use sources[0].url as fallback when layer.url is not set", () => {
