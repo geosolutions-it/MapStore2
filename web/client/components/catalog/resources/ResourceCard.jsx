@@ -129,14 +129,18 @@ const ResourceCardMetadataValue = tooltip(({
 
     const getProperties = () => {
         if (isObject(value)) {
+            const itemValue = value[entry.itemValue];
+            const itemLabel = entry.itemLabel ? value[entry.itemLabel] : null;
             return {
-                value: value[entry.itemValue],
+                value: itemValue,
+                label: itemLabel || itemValue,
                 color: value[entry.itemColor],
                 selected: !!value?.[entry.itemSelected]
             };
         }
         return {
-            value
+            value,
+            label: value
         };
     };
 
@@ -158,13 +162,13 @@ const ResourceCardMetadataValue = tooltip(({
                 {...props}
                 className={`ms-tag ms-resource-card-tag-button${properties.selected ? ' selected' : ''}`}
                 style={getTagColorVariables(properties.color)}
-                title={properties.value}
+                title={properties.label}
                 onClick={(event) => {
                     event.stopPropagation();
                     entry.onClick(properties.value, event);
                 }}
             >
-                {properties.value}
+                {properties.label}
             </Button>
         );
     }
@@ -184,7 +188,7 @@ const ResourceCardMetadataValue = tooltip(({
         >
             {entry.type === 'date' && entry.format && properties.value
                 ? moment(properties.value).format(entry.format)
-                : properties.value}
+                : properties.label}
         </ALink>
     );
 });
