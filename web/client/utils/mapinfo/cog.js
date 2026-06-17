@@ -12,28 +12,14 @@ import isObject from 'lodash/isObject';
 export default {
     buildRequest: (layer, { point, currentLocale } = {}) => {  // executed for each COG layer in TOC
 
-        const pickValues = Object.values(point?.intersectedPixels);
-        const arrayValues = pickValues ? Array.from(pickValues) : [];
-        const filteredValues = arrayValues.filter(({ id }) => id === layer.id);
-
-        const features = filteredValues.map((value) => ({
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                coordinates: [point.latlng.lng, point.latlng.lat]
-            },
-            properties: value?.bands ?
-                Object.entries(value.bands).reduce((acc, [key, val]) => {
-                    acc[`band ${key}`] = val;
-                    return acc;
-                }, {})
-                : {}
-        }));
-
         return {
             request: {
-                features: [...features],
-                outputFormat: 'application/json'
+                features: [],
+                outputFormat: 'application/json',
+                intersectedPixelsPromise: point?.intersectedPixelsPromise,
+                point: {
+                    latlng: point?.latlng
+                }
             },
             metadata: {
                 title: isObject(layer.title)
@@ -43,7 +29,38 @@ export default {
             url: layer.url || layer?.sources?.[0]?.url
         };
     },
-    getIdentifyFlow: (layer, basePath, {features = []} = {}) => {
+    getIdentifyFlow: (layer, _, {features = [], intersectedPixelsPromise, point} = {}) => {
+
+        if (intersectedPixelsPromise && point) {
+            return Observable.fromPromise(intersectedPixelsPromise)
+                .map((intersectedPixels = []) => {
+                    const pickValues = Object.values(intersectedPixels);
+                    const arrayValues = pickValues ? Array.from(pickValues) : [];
+                    const filteredValues = arrayValues.filter(({ id }) => id === layer.id);
+                    return {
+                        data: {
+                            features: filteredValues.map((value) => ({
+                                type: 'Feature',
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: [point.latlng.lng, point.latlng.lat]
+                                },
+                                properties: value?.bands ?
+                                    Object.entries(value.bands).reduce((acc, [key, val]) => {
+                                        acc[`band ${key}`] = val;
+                                        return acc;
+                                    }, {})
+                                    : {}
+                            }))
+                        }
+                    };
+                })
+                .catch(() => Observable.of({
+                    data: {
+                        features: []
+                    }
+                }));
+        }
 
         return Observable.of({
             data: {
