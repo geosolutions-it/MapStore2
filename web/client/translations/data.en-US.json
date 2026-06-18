@@ -135,6 +135,8 @@
       "templatePreview": "Template preview",
       "heightOffset": "Height offset (m)",
       "wmsLayerTileSize": "Tile size (WMS)",
+      "maxFeaturesInView": "Max features in view",
+      "maxFeaturesInViewPlaceholder": "When the value is undefined current functionality works as usual(i.e. load all features)",
       "serverType": "Server Type",
       "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",
       "serverTypeOption": {
