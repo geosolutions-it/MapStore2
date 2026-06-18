@@ -29,8 +29,6 @@ const WidgetsBuilderButton = connect((state) => ({
     statusTypes,
     available,
     hasLayers,
-    config = {},
-    variant = 'layer',
     ...props
 }) => {
     const ItemComponent = itemComponent;
@@ -40,12 +38,7 @@ const WidgetsBuilderButton = connect((state) => ({
     }
 
     // Map-level widget: nothing (or a group) selected, the TOC root toolbar is shown
-    if (variant === 'map') {
-        if (config.activateFilterWidgetButton === false
-            || !hasLayers
-            || ![statusTypes.DESELECT, statusTypes.GROUP].includes(status)) {
-            return null;
-        }
+    if ([statusTypes.DESELECT, statusTypes.GROUP].includes(status) && hasLayers) {
         return (
             <ItemComponent
                 {...props}
@@ -75,8 +68,5 @@ const WidgetsBuilderButton = connect((state) => ({
     }
     return null;
 });
-
-export const WidgetsBuilderLayerButton = (props) => <WidgetsBuilderButton {...props} variant="layer" />;
-export const WidgetsBuilderMapButton = (props) => <WidgetsBuilderButton {...props} variant="map" />;
 
 export default WidgetsBuilderButton;

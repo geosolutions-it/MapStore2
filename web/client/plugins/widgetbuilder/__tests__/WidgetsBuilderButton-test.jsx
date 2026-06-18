@@ -124,24 +124,18 @@ describe('WidgetsBuilderButton plugin', () => {
         expect(dispatched[0].widget.mapSync).toBeFalsy();
     });
 
-    it('renders nothing for the default (per-layer) variant when nothing is selected (status=DESELECT)', () => {
-        const { store } = makeStore();
-        render({ status: STATUS_TYPES.DESELECT }, store);
-        expect(document.querySelectorAll('.ms-test-toc-btn').length).toBe(0);
-    });
-
     it('renders nothing when no filterable map layers exist', () => {
         const { store } = makeStore({
             controls: { widgetBuilder: { available: true } },
             layers: { flat: [{ id: 'l1', type: 'vector' }] }
         });
-        render({ status: STATUS_TYPES.DESELECT, variant: 'map' }, store);
+        render({ status: STATUS_TYPES.DESELECT }, store);
         expect(document.querySelectorAll('.ms-test-toc-btn').length).toBe(0);
     });
 
     it('renders the map-level button when DESELECT and at least one filterable layer is present', () => {
         const { store } = makeStore();
-        render({ status: STATUS_TYPES.DESELECT, variant: 'map' }, store);
+        render({ status: STATUS_TYPES.DESELECT }, store);
         const btns = document.querySelectorAll('.ms-test-toc-btn');
         expect(btns.length).toBe(1);
         expect(btns[0].getAttribute('data-glyph')).toBe('widgets');
@@ -150,23 +144,13 @@ describe('WidgetsBuilderButton plugin', () => {
 
     it('renders the map-level button when a group is selected (status=GROUP)', () => {
         const { store } = makeStore();
-        render({ status: STATUS_TYPES.GROUP, variant: 'map' }, store);
+        render({ status: STATUS_TYPES.GROUP }, store);
         expect(document.querySelectorAll('.ms-test-toc-btn').length).toBe(1);
-    });
-
-    it('renders nothing for the map variant when a layer is selected (status=LAYER)', () => {
-        const { store } = makeStore();
-        render({
-            status: STATUS_TYPES.LAYER,
-            variant: 'map',
-            selectedNodes: [{ node: { id: 'l1', search: {} } }]
-        }, store);
-        expect(document.querySelectorAll('.ms-test-toc-btn').length).toBe(0);
     });
 
     it('clicking the map-level button dispatches createWidget without a preset widgetType and flags map-layers-only', () => {
         const { store, dispatched } = makeStore();
-        render({ status: STATUS_TYPES.DESELECT, variant: 'map' }, store);
+        render({ status: STATUS_TYPES.DESELECT }, store);
         Simulate.click(document.querySelector('.ms-test-toc-btn'));
         expect(dispatched.length).toBe(1);
         expect(dispatched[0].type).toBe(NEW);
@@ -175,15 +159,5 @@ describe('WidgetsBuilderButton plugin', () => {
         // every builder's layer step lists only the current map layers
         expect(dispatched[0].widget.globalWidgetMode).toBeTruthy();
         expect(dispatched[0].widget.builderEntry).toBeFalsy();
-    });
-
-    it('respects activateFilterWidgetButton config flag (false hides the map-level button)', () => {
-        const { store } = makeStore();
-        render({
-            status: STATUS_TYPES.DESELECT,
-            variant: 'map',
-            config: { activateFilterWidgetButton: false }
-        }, store);
-        expect(document.querySelectorAll('.ms-test-toc-btn').length).toBe(0);
     });
 });

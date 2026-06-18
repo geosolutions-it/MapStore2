@@ -411,11 +411,11 @@ const FilterView = ({
     };
 
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
-    // No title means no row for the chevron, so force the filter open.
+    // No title means no row for the arrow, so force the filter open.
     const effectiveCollapsed = showTitle ? isCollapsed : false;
     const collapseTool = (showItemToolbar && showTitle) ? (
         <ToolButton
-            glyph={effectiveCollapsed ? 'chevron-right' : 'chevron-down'}
+            glyph={effectiveCollapsed ? 'next' : 'bottom'}
             tooltipKey={effectiveCollapsed
                 ? 'widgets.filterWidget.expandFilter'
                 : 'widgets.filterWidget.collapseFilter'}

@@ -79,7 +79,7 @@ const FilterItemToolbar = ({
             )}
             {onToggleCollapse && (
                 <ToolButton
-                    glyph={collapsed ? 'chevron-right' : 'chevron-down'}
+                    glyph={collapsed ? 'next' : 'bottom'}
                     tooltipKey={collapsed
                         ? 'widgets.filterWidget.expandFilter'
                         : 'widgets.filterWidget.collapseFilter'}

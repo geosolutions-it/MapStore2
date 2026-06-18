@@ -26,7 +26,7 @@ import { toggleConnection } from '../actions/widgets';
 import withMapExitButton from './widgetbuilder/enhancers/withMapExitButton';
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
 import FeatureEditorButton from './widgetbuilder/FeatureEditorButton';
-import { WidgetsBuilderLayerButton, WidgetsBuilderMapButton } from './widgetbuilder/WidgetBuilderButton';
+import WidgetsBuilderButton from './widgetbuilder/WidgetBuilderButton';
 const Builder = compose(
     connect(
         createSelector(
@@ -121,19 +121,13 @@ export default createPlugin('WidgetsBuilder', {
     component: Plugin,
     epics,
     containers: {
-        TOC: [{
+        TOC: {
             doNotHide: true,
             name: "WidgetBuilder",
             target: 'toolbar',
-            Component: WidgetsBuilderLayerButton,
+            Component: WidgetsBuilderButton,
             position: 10
-        }, {
-            doNotHide: true,
-            name: "WidgetBuilderForMap",
-            target: 'toolbar',
-            Component: WidgetsBuilderMapButton,
-            position: 99
-        }],
+        },
         FeatureEditor: {
             doNotHide: true,
             target: "toolbar",
