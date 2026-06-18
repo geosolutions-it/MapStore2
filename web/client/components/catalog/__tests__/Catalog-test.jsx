@@ -131,6 +131,87 @@ describe('Test Catalog panel', () => {
             done();
         }, 0);
     });
+    it('does not clear selected records on initial render', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "http://sample.service/catalog",
+            title: "csw"
+        };
+        const actions = {
+            clearSelection: () => {}
+        };
+        const spyOnClearSelection = expect.spyOn(actions, 'clearSelection');
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            selectedFormat="csw"
+            records={[{ identifier: 'csw-1', title: 'Catalog Layer', references: [] }]}
+            selected={[{ identifier: 'csw-1', title: 'Catalog Layer', references: [] }]}
+            layers={[]}
+            loadingLayers={[]}
+            onSelect={() => {}}
+            onAddSelected={() => {}}
+            onAddLayer={() => {}}
+            clearSelection={actions.clearSelection}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(spyOnClearSelection.calls.length).toBe(0);
+            done();
+        }, 0);
+    });
+    it('uses filters and sort from current search options after remount', (done) => {
+        const SERVICE = {
+            type: "geonode",
+            url: "http://sample.service/geonode",
+            title: "GeoNode"
+        };
+        const filters = {'filter{category.identifier.in}': ['environment']};
+        const actions = {
+            onSearch: () => {}
+        };
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<Catalog
+            services={{ "geonode": SERVICE}}
+            selectedService="geonode"
+            selectedFormat="geonode"
+            result={{ numberOfRecordsMatched: 24 }}
+            searchOptions={{
+                url: 'http://sample.service/geonode',
+                startPosition: 1,
+                filters,
+                sort: 'title'
+            }}
+            records={[{ identifier: 'geo-1', title: 'Geo Layer', references: [], isValid: true }]}
+            selected={[]}
+            layers={[]}
+            loadingLayers={[]}
+            onSelect={() => {}}
+            onAddSelected={() => {}}
+            onAddLayer={() => {}}
+            onSearch={actions.onSearch}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            const page2 = [...document.querySelectorAll('.pagination a')]
+                .find((node) => node.textContent === '2');
+            TestUtils.Simulate.click(page2);
+            expect(spyOnSearch.calls.length).toBe(1);
+            expect(spyOnSearch.calls[0].arguments[0]).toEqual({
+                format: 'geonode',
+                url: 'http://sample.service/geonode',
+                startPosition: 13,
+                maxRecords: 12,
+                text: '',
+                options: {
+                    filters,
+                    sort: 'title',
+                    service: SERVICE
+                }
+            });
+            done();
+        }, 0);
+    });
     it('does not autoload again while catalog is loading', (done) => {
         const SERVICE = {
             type: "csw",

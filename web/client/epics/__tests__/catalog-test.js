@@ -406,6 +406,42 @@ describe('catalog Epics', () => {
             newService: service
         } });
     });
+    it('newCatalogServiceAdded preserves current search options when editing a service', (done) => {
+        const NUM_ACTIONS = 2;
+        const filters = {'filter{category.identifier.in}': ['environment']};
+        const service = {
+            type: "csw",
+            url: "base/web/client/test-resources/csw/getRecordsResponseDC.xml",
+            oldService: "cswCatalog"
+        };
+        testEpic(addTimeoutEpic(newCatalogServiceAdded), NUM_ACTIONS, addService(), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case TEXT_SEARCH:
+                    expect(action.format).toBe(service.type);
+                    expect(action.url).toBe(service.url);
+                    expect(action.startPosition).toBe(1);
+                    expect(action.maxRecords).toBe(12);
+                    expect(action.text).toBe("roads");
+                    expect(action.options).toEqual({service, isNewService: true, filters, sort: "-date"});
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, { catalog: {
+            newService: service,
+            searchOptions: {
+                text: "roads",
+                filters,
+                sort: "-date"
+            }
+        } });
+    });
     it('recordSearchEpic with network error', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
