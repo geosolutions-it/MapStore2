@@ -154,7 +154,9 @@ export default (API) => ({
                             url,
                             startPosition,
                             maxRecords,
-                            text
+                            text,
+                            filters: options?.filters,
+                            sort: options?.sort
                         }, result)]);
                     })
                     .startWith(isNewService ? savingService(true) : setLoading(true))
