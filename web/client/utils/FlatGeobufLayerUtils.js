@@ -151,12 +151,12 @@ export const fgbRectContains = (outer, inner) =>
     && outer.minY <= inner.minY && outer.maxY >= inner.maxY;
 
 export const fgbRectEquals = (rectA, rectB) =>
-        rectA && rectB
-        && rectA.minX === rectB.minX && rectA.maxX === rectB.maxX
-        && rectA.minY === rectB.minY && rectA.maxY === rectB.maxY;
-    
+    rectA && rectB
+    && rectA.minX === rectB.minX && rectA.maxX === rectB.maxX
+    && rectA.minY === rectB.minY && rectA.maxY === rectB.maxY;
+
 export const fgbRectArea = (rect) =>
-        rect ? Math.abs((rect.maxX - rect.minX) * (rect.maxY - rect.minY)) : 0;
+    rect ? Math.abs((rect.maxX - rect.minX) * (rect.maxY - rect.minY)) : 0;
 
 export const isMeaningfulCappedRectRefinement = (loadedRect, rect) => {
     const cappedRect = loadedRect?.rect;
