@@ -133,7 +133,7 @@ const ResourceCardMetadataValue = tooltip(({
             const itemLabel = entry.itemLabel ? value[entry.itemLabel] : null;
             return {
                 value: itemValue,
-                label: itemLabel || itemValue,
+                label: itemLabel || itemValue || '',
                 color: value[entry.itemColor],
                 selected: !!value?.[entry.itemSelected]
             };
