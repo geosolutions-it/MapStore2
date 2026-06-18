@@ -314,6 +314,20 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
+                                <ControlLabel><Message msgId="widgets.filterWidget.description" /></ControlLabel>
+                                <InputGroup>
+                                    <LocalizedFormControl
+                                        componentClass="textarea"
+                                        rows={2}
+                                        value={layout.description || ''}
+                                        placeholder="widgets.filterWidget.descriptionPlaceholder"
+                                        onChange={(e) => {
+                                            onChange('layout.description', e.target.value);
+                                        }}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup className="form-group-flex">
                                 <ControlLabel><Message msgId="widgets.filterWidget.icon" /></ControlLabel>
                                 <InputGroup>
                                     <FontAwesomeIconSelector
@@ -638,6 +652,20 @@ const FilterLayoutTab = ({
                                     )}
                                 </>
                             )}
+                            <FormGroup className="form-group-flex">
+                                <ControlLabel>
+                                    <Message msgId="widgets.filterWidget.defaultExpanded" />&nbsp;
+                                    <InfoPopover
+                                        placement="top"
+                                        text={<Message msgId="widgets.filterWidget.defaultExpandedTooltip" />}
+                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                    />
+                                </ControlLabel>
+                                <Checkbox
+                                    checked={layout.defaultExpanded !== false}
+                                    onChange={() => onChange('layout.defaultExpanded', !(layout.defaultExpanded !== false))}
+                                />
+                            </FormGroup>
                         </div>
                     </Collapse>
                 )}

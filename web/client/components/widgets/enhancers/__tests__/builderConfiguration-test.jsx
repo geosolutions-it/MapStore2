@@ -88,6 +88,25 @@ describe('widgets builderConfiguration enhancer', () => {
                 onConfigurationError={actions.onConfigurationError} />),
             document.getElementById("container"));
     });
+    it('reports configuration error to the toolbar when the layer has no attributes', (done) => {
+        const errors = [];
+        ReactDOM.render(
+            (<WidgetBuilder
+                layer={{
+                    url: 'base/web/client/test-resources/widgetbuilder/wms',
+                    search: { url: 'base/web/client/test-resources/widgetbuilder/no-data' }
+                }}
+                onConfigurationError={(e) => {
+                    errors.push(e);
+                    setTimeout(() => {
+                        // the empty view is shown and the toolbar is notified
+                        expect(document.querySelector('.empty-state-container')).toBeTruthy();
+                        expect(errors.some(Boolean)).toBeTruthy();
+                        done();
+                    }, 20);
+                }} />),
+            document.getElementById("container"));
+    });
     it('with option needsWPS = true, the missing WPS process causes error', (done) => {
         const actions = {
             onConfigurationError: () => {

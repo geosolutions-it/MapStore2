@@ -258,8 +258,15 @@ export const getDefaultAggregationOperations = () => {
     ];
 };
 
-export const CHART_PROPS = ["selectedChartId", "selectedTraceId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description"];
-export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description", "interactions"];
+export const CHART_PROPS = ["selectedChartId", "selectedTraceId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description", "globalWidgetMode"];
+export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description", "interactions", "globalWidgetMode"];
+
+/**
+ * Check if layer can support a widget
+ * @param {object} layer the map layer
+ * @return {boolean} true if the layer can support a widget
+ */
+export const isWidgetLayerSupported = (layer) => !!layer?.search && layer.search !== 'vector';
 
 const legacyColorsMap = {
     'global.colors.blue': '#0888A1',
