@@ -14,7 +14,7 @@ import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 
 import Rx from 'rxjs';
-import uuidV1 from 'uuid/v1';
+import { v1 as uuidV1 } from 'uuid';
 import {parseString} from 'xml2js';
 import {stripPrefix} from 'xml2js/lib/processors';
 

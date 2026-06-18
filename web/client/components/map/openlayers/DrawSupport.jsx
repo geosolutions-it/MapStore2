@@ -19,7 +19,7 @@ import isNil from 'lodash/isNil';
 import castArray from 'lodash/castArray';
 
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
+import { v1 as uuid } from 'uuid';
 import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
@@ -439,7 +439,7 @@ export default class DrawSupport extends React.Component {
         });
         this.drawInteraction.on('drawend', (evt) => {
             const sketchFeature = evt.feature.clone();
-            sketchFeature.set('id', uuid.v1());
+            sketchFeature.set('id', uuid());
             if (this.props.drawMethod === "Circle" && sketchFeature.getGeometry().getType() === "Circle") {
                 const radius = sketchFeature.getGeometry().getRadius();
                 const center = sketchFeature.getGeometry().getCenter();
@@ -546,7 +546,7 @@ export default class DrawSupport extends React.Component {
 
         this.drawInteraction.on('drawend', (evt) => {
             const sketchFeature = evt.feature.clone();
-            const id = uuid.v1();
+            const id = uuid();
             sketchFeature.set('id', id);
             let drawnGeom = sketchFeature.getGeometry();
             let drawnFeatures = this.drawLayer.getSource().getFeatures();
@@ -596,7 +596,7 @@ export default class DrawSupport extends React.Component {
                 // drawnFeatures is array of Feature
                 const previousFeatures = drawnFeatures.length >= 1 ? [...this.replaceCirclesWithPolygonsInFeatureColl(drawnFeatures)] : [];
                 if (!newFeature.getProperties().id) {
-                    newFeature.setProperties({id: uuid.v1()});
+                    newFeature.setProperties({id: uuid()});
                 }
                 const newFeatures = [...previousFeatures, newFeature];
                 // create FeatureCollection externalize as function

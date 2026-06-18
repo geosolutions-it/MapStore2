@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import sortBy from 'lodash/sortBy';
