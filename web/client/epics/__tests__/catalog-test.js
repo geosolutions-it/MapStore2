@@ -251,7 +251,7 @@ describe('catalog Epics', () => {
         }, { controls: { metadataexplorer: { enabled: true } }});
     });
 
-    it('catalogCloseEpic should reset metadataexplorer panel to true', (done) => {
+    it('catalogCloseEpic should preserve metadataexplorer panel', (done) => {
         const NUM_ACTIONS = 3;
         testEpic(catalogCloseEpic, NUM_ACTIONS, catalogClose(), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -259,8 +259,7 @@ describe('catalog Epics', () => {
             expect(actions[0].control).toBe('metadataexplorer');
             expect(actions[0].properties).toEqual({
                 enabled: false,
-                group: null,
-                panel: true
+                group: null
             });
             done();
         }, {
