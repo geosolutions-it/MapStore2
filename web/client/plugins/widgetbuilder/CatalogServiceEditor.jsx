@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
 
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import CatalogServiceEditorComponent from '../../components/catalog/datasets/CatalogServiceEditor';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];

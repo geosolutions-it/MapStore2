@@ -9,7 +9,7 @@ import React from 'react';
 import {compose, branch, withStateHandlers, withPropsOnChange, mapPropsStream, createEventHandler} from 'recompose';
 import {Observable} from 'rxjs';
 import { isEqual} from 'lodash';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import MapInfoViewer from '../MapInfoViewer';
 import {getFeatureInfo} from '../../../api/identify';
 

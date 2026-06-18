@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import omit from 'lodash/omit';
 import isEmpty from 'lodash/isEmpty';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { getCredentials, validateServiceCredentials } from '../utils/SecurityUtils';
 
 import security from '../reducers/security';

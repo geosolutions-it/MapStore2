@@ -11,7 +11,7 @@ import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../uti
 import { convertFromLegacy, normalizeConfig } from '../../utils/ConfigUtils';
 
 import { getResource, getResources } from '../persistence';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 export const load = ({ params }) => {
     const { page, pageSize } = params;

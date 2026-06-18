@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 export const createContainer = ( id = uuid(), className = "ms-map-popup") => {
     const c = document.createElement('div');
     c.setAttribute("id", id + "-map-popup");
