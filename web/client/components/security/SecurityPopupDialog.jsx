@@ -17,7 +17,7 @@ import _Button from '../layout/Button';
 import FlexBox from '../layout/FlexBox';
 import Text from '../layout/Text';
 import Spinner from '../layout/Spinner';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import tooltip from '../misc/enhancers/tooltip';
 import withDebounceOnCallback from '../misc/enhancers/withDebounceOnCallback';
 import localizedProps from '../misc/enhancers/localizedProps';

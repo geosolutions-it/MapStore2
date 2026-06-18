@@ -7,7 +7,7 @@
  */
 import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { Glyphicon } from 'react-bootstrap';
 import { editors } from 'react-data-grid';
 import tooltip from '../../../../misc/enhancers/tooltip';

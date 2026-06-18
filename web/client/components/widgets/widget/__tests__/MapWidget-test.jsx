@@ -14,7 +14,7 @@ import {compose, defaultProps} from 'recompose';
 import '../../../../libs/bindings/rxjsRecompose';
 
 import mapWidget from '../../enhancers/mapWidget';
-import MapWidgetComp from '../MapWidget';
+import MapWidgetComp, {updateMapBackgroundLayerVisibility} from '../MapWidget';
 
 const MapWidget = compose(
     defaultProps({
@@ -152,5 +152,49 @@ describe('MapWidget component', () => {
         ReactDOM.render(<Provider store={{ subscribe: () => { }, getState: () => ({ maptype: { mapType: 'openlayers' } }) }} ><MapWidget map={{size: {height: 401, width: 401}, layers: [] }} topRightItems={[customItem]}/></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.custom-top-item')).toBeTruthy();
+    });
+    it('does not update background layers on mount when Ellipsoid terrain is missing', (done) => {
+        const onUpdateMapProperty = expect.createSpy();
+        const map = {
+            size: { height: 500, width: 500 },
+            layers: [
+                { id: 'bg1', title: 'Background 1', type: 'wms', group: 'background', visibility: true },
+                { id: 'bg2', title: 'Background 2', type: 'wms', group: 'background', visibility: false }
+            ],
+            showBackgroundSelector: true,
+            mapInfoControl: true
+        };
+
+        ReactDOM.render(<Provider store={{ subscribe: () => { }, getState: () => ({ maptype: { mapType: 'openlayers' } }) }} >
+            <MapWidget id="widget1" map={map} onUpdateMapProperty={onUpdateMapProperty}/>
+        </Provider>, document.getElementById("container"));
+
+        setTimeout(() => {
+            try {
+                expect(onUpdateMapProperty).toNotHaveBeenCalled();
+                done();
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+    it('selects another background without changing terrain visibility', () => {
+        const map = {
+            size: { height: 500, width: 500 },
+            layers: [
+                { id: 'bg1', title: 'Background 1', type: 'wms', group: 'background', visibility: true },
+                { id: 'bg2', title: 'Background 2', type: 'wms', group: 'background', visibility: false },
+                { id: 'terrain1', title: 'Terrain 1', type: 'terrain', group: 'background', visibility: true },
+                { id: 'layer1', title: 'Overlay 1', type: 'wms', group: 'overlay', visibility: true }
+            ],
+            showBackgroundSelector: true,
+            mapInfoControl: true
+        };
+
+        const updatedMap = updateMapBackgroundLayerVisibility(map, 'bg2', { visibility: true });
+        expect(updatedMap.layers.find(layer => layer.id === 'bg1').visibility).toBe(false);
+        expect(updatedMap.layers.find(layer => layer.id === 'bg2').visibility).toBe(true);
+        expect(updatedMap.layers.find(layer => layer.id === 'terrain1').visibility).toBe(true);
+        expect(updatedMap.layers.find(layer => layer.id === 'layer1').visibility).toBe(true);
     });
 });

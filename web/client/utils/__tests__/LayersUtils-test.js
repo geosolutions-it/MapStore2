@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import * as LayersUtils from '../LayersUtils';
 
 const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;

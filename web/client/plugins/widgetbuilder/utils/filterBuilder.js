@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { USER_DEFINED_TYPES, FILTER_SELECTION_MODES } from '../../../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 
 export const createEmptyFilterData = () => ({
@@ -49,11 +49,14 @@ export const createNewFilter = (filtersCount = 0) => {
                 fontWeight: 'normal',
                 fontStyle: 'normal'
             },
-            forceSelection: false
+            forceSelection: false,
+            // initial collapsed state on the widget card. defaults to expanded.
+            defaultExpanded: true
         },
         items: [],
         addedOptionalTargets: [],
-        data: createEmptyFilterData()
+        data: createEmptyFilterData(),
+        disabled: false // per-filter "disabled" flag
     };
 };
 

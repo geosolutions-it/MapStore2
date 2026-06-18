@@ -12,9 +12,11 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     OPEN_DETAILS_PANEL,
     CLOSE_DETAILS_PANEL,
+    DETAILS_LOADED,
     NO_DETAILS_AVAILABLE,
     updateDetails,
-    closeDetailsPanel
+    closeDetailsPanel,
+    openDetailsPanel
 } from '../actions/details';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import { MAP_SAVED } from '../actions/config';
@@ -30,7 +32,10 @@ import GeoStoreApi from '../api/GeoStoreDAO';
 import { getIdFromUri } from '../utils/MapUtils';
 import { basicError } from '../utils/NotificationUtils';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
-import { detailsUriSelector } from '../selectors/details';
+import { REDUCERS_LOADED } from '../actions/storemanager';
+import { detailsSettingsSelector, detailsUriSelector } from '../selectors/details';
+import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
+import { CLOSE_TUTORIAL } from '../actions/tutorial';
 
 export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
@@ -68,3 +73,37 @@ export const closeDetailsPanelOn3DToggle = (action$) =>
         .switchMap(() => {
             return Rx.Observable.of(closeDetailsPanel());
         });
+
+const isDetailsReducerLoaded = (reducers) =>
+    Array.isArray(reducers) ? reducers.indexOf('details') !== -1 : !!reducers?.details;
+
+const parseDetailsSettings = (detailsSettings) => {
+    if (!detailsSettings) {
+        return {};
+    }
+    if (typeof detailsSettings === 'string') {
+        try {
+            return JSON.parse(detailsSettings) || {};
+        } catch (e) {
+            return {};
+        }
+    }
+    return detailsSettings;
+};
+
+export const openDetailsPanelOnStartup = (action$, store) =>
+    action$.ofType(DETAILS_LOADED, REDUCERS_LOADED, CLOSE_TUTORIAL)
+        .filter((action) => action.type !== REDUCERS_LOADED || isDetailsReducerLoaded(action.reducers))
+        .delay(100)
+        .filter(() => {
+            const state = store.getState();
+            const detailsUri = detailsUriSelector(state);
+            const detailsSettings = parseDetailsSettings(detailsSettingsSelector(state));
+            return !state?.context?.loading
+                && detailsUri
+                && detailsUri !== EMPTY_RESOURCE_VALUE
+                && detailsSettings?.showAtStartup
+                && !state?.tutorial?.run
+                && !state?.controls?.details?.enabled;
+        })
+        .switchMap(() => Rx.Observable.of(openDetailsPanel()));

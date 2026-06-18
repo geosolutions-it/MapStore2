@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { Glyphicon, DropdownButton, MenuItem } from 'react-bootstrap';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import Message from '../I18N/Message';
 
 const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
