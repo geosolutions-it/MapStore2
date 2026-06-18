@@ -23,7 +23,6 @@ import {
     FGB_LAYER_TYPE,
     FGB_MATCH_ALL_RECT,
     FGB_FEATURE_BATCH_SIZE,
-    FGB_MEANINGFUL_VIEW_RATIO,
     FGB_STREAM_FLUSH_INTERVAL,
     getFlatGeobufGeojson,
     createFlatGeobufGeometryTypeResolver,
@@ -32,7 +31,8 @@ import {
 import {
     getFlatGeobufGeometryTypeFromOptions,
     getFlatGeobufCrsFromOptions,
-    fgbRectContains
+    fgbRectContains,
+    isMeaningfulCappedRectRefinement
 } from '../../../../utils/FlatGeobufLayerUtils';
 
 /**
@@ -40,22 +40,6 @@ import {
  * without blocking the interface during loading
  */
 const yieldToEventLoop = () => new Promise((resolve) => setTimeout(resolve, 0));
-
-const fgbRectEquals = (rectA, rectB) =>
-    rectA && rectB
-    && rectA.minX === rectB.minX && rectA.maxX === rectB.maxX
-    && rectA.minY === rectB.minY && rectA.maxY === rectB.maxY;
-
-const fgbRectArea = (rect) =>
-    rect ? Math.abs((rect.maxX - rect.minX) * (rect.maxY - rect.minY)) : 0;
-
-export const isMeaningfulCappedRectRefinement = (loadedRect, rect) => {
-    const cappedRect = loadedRect?.rect;
-    if (!loadedRect?.capped || !cappedRect || !rect || !fgbRectContains(cappedRect, rect) || fgbRectEquals(cappedRect, rect)) {
-        return false;
-    }
-    return fgbRectArea(rect) < fgbRectArea(cappedRect) * FGB_MEANINGFUL_VIEW_RATIO;
-};
 
 // Resolve and apply the cesium style function for an FGB layer. Pulled out
 // of createLayer so the update handler can reapply on a style-only change

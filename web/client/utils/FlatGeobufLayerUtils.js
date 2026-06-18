@@ -7,7 +7,7 @@
  */
 
 import { isWGS84Equivalent } from './ProjectionUtils';
-import { FGB_MATCH_ALL_RECT } from '../api/FlatGeobuf';
+import { FGB_MATCH_ALL_RECT, FGB_MEANINGFUL_VIEW_RATIO } from '../api/FlatGeobuf';
 /**
  * Extract GeometryType from flatgeobuf metadata using flatgeobuf.readMetadata() method
  * Sample of FlatGeobuf Metadata contents
@@ -149,3 +149,19 @@ export const fgbRectContains = (outer, inner) =>
     outer && inner
     && outer.minX <= inner.minX && outer.maxX >= inner.maxX
     && outer.minY <= inner.minY && outer.maxY >= inner.maxY;
+
+export const fgbRectEquals = (rectA, rectB) =>
+        rectA && rectB
+        && rectA.minX === rectB.minX && rectA.maxX === rectB.maxX
+        && rectA.minY === rectB.minY && rectA.maxY === rectB.maxY;
+    
+export const fgbRectArea = (rect) =>
+        rect ? Math.abs((rect.maxX - rect.minX) * (rect.maxY - rect.minY)) : 0;
+
+export const isMeaningfulCappedRectRefinement = (loadedRect, rect) => {
+    const cappedRect = loadedRect?.rect;
+    if (!loadedRect?.capped || !cappedRect || !rect || !fgbRectContains(cappedRect, rect) || fgbRectEquals(cappedRect, rect)) {
+        return false;
+    }
+    return fgbRectArea(rect) < fgbRectArea(cappedRect) * FGB_MEANINGFUL_VIEW_RATIO;
+};

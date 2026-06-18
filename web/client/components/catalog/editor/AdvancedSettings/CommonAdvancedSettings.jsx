@@ -13,7 +13,7 @@ import Message from "../../../I18N/Message";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 const parseMaxFeaturesInView = (event) => {
-    const maxFeaturesInView = parseInt(event?.target?.value, 10);
+    const maxFeaturesInView = Number(event?.target?.value);
     return maxFeaturesInView > 0 ? maxFeaturesInView : undefined;
 };
 
@@ -71,7 +71,7 @@ export default ({
                     value={service.layerOptions?.maxFeaturesInView === undefined ? '' : service.layerOptions?.maxFeaturesInView}
                     onChange={(e) => onChangeServiceProperty("layerOptions", {
                         ...service.layerOptions,
-                        maxFeaturesInView: parseMaxFeaturesInView(e)
+                        maxFeaturesInView: Number(e.target.value) > 0 ? Number(e.target.value) : undefined
                     })} />
             </FormGroup>}
             {['wfs', 'vector'].includes(service.type) && <FormGroup className="wfs-vector-interactive-legend" controlId="enableInteractiveLegend" key="enableInteractiveLegend">

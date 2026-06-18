@@ -31,7 +31,7 @@ export const FGB_STREAM_FLUSH_INTERVAL = 500;
 export const FGB_MEANINGFUL_VIEW_RATIO = 0.95;
 
 export const getFlatGeobufMaxFeaturesInView = (options) => {
-    const maxFeaturesInView = parseInt(options?.maxFeaturesInView, 10);
+    const maxFeaturesInView = Number(options?.maxFeaturesInView);
     return maxFeaturesInView > 0 ? maxFeaturesInView : undefined;
 };
 export const getFlatGeobufGeojson = () => import('flatgeobuf/lib/mjs/geojson').then(mod => mod);
