@@ -32,7 +32,7 @@ const AccordionTitle = ({
         <FlexBox gap="sm" centerChildrenVertically onClick={onClick}>
             {loading
                 ? <Spinner/>
-                : <Glyphicon glyph={`${expanded ? "bottom" : "back"}`}/>
+                : <Glyphicon glyph={`${expanded ? "bottom" : "next"}`}/>
             }
             <FlexBox.Fill>
                 <Text strong>
