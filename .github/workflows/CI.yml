@@ -68,11 +68,12 @@ jobs:
         run: npm test -- --reporters mocha,coverage,coveralls
 
       - name: Send coverage to Coveralls (parallel)
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
-           github-token: ${{ secrets.GITHUB_TOKEN }}
-           parallel: true
-           flag-name: run-${{ join(matrix.*, '-') }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel: true
+          flag-name: run-${{ join(matrix.*, '-') }}
+          continue-on-error: true
 
   test-back-end:
     runs-on: ubuntu-latest
