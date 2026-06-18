@@ -16,6 +16,7 @@ import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNorma
 import WMS from "../api/WMS";
 import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
 import { getDefaultUrl } from '../utils/URLUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
@@ -512,11 +513,12 @@ const Api = {
     getRecords: function(url, startPosition, maxRecords, text, options) {
         const body = constructXMLBody(startPosition, maxRecords, text, options);
         const protectedId = options?.options?.service?.protectedId;
+        let headers = getAuthorizationBasic(protectedId);
         return axios.post(parseUrl(url), body, {
             headers: {
-                'Content-Type': 'application/xml'
-            },
-            _msAuthSourceId: protectedId
+                'Content-Type': 'application/xml',
+                ...headers
+            }
         }).then((response) => {
             const { error, _dcRef, result } = parseCSWResponse(response) || {};
             if (result) {

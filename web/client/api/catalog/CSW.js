@@ -15,13 +15,10 @@ import CSW, { getLayerReferenceFromDc } from '../CSW';
 import {
     validate as commonValidate,
     testService as commonTestService,
-    preprocess as commonPreprocess,
-    getRecordIdentifier
+    preprocess as commonPreprocess
 } from './common';
 import { THREE_D_TILES } from '../ThreeDTiles';
 import { MODEL } from '../Model';
-import { FGB } from '../FlatGeobuf';
-
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
 };
@@ -132,7 +129,7 @@ function getCatalogRecord3DTiles(record, metadata) {
         isValid: true,
         description: dc && isString(dc.abstract) && dc.abstract || '',
         title: dc && isString(dc.title) && dc.title || '',
-        identifier: isString(dc?.identifier) ? dc.identifier : getRecordIdentifier({ title: dc?.title, desc: dc?.abstract, url }),
+        identifier: dc && isString(dc.identifier) && dc.identifier || '',
         url,
         thumbnail: null,
         bbox: getBoundingBox(record),
@@ -274,9 +271,7 @@ export const getCatalogRecords = (records, options, locales) => {
             if (dc && dc.format === THREE_D_TILES) {
                 catRecord = getCatalogRecord3DTiles(record, metadata);
             } else if (dc && dc.format === MODEL) {
-                // todo: handle get catalog record for Ifc Model
-            } else if (dc && dc.format === FGB) {
-                // todo: handle get catalog record for FlatGeobuf
+                // todo: handle get catalog record for ifc
             } else {
                 const layerType = Object.keys(parsedReferences).filter(key => !ADDITIONAL_OGC_SERVICES.includes(key)).find(key => parsedReferences[key]);
                 const ogcReferences = layerType && layerType !== 'esri'
@@ -289,7 +284,7 @@ export const getCatalogRecords = (records, options, locales) => {
                     boundingBox: record.boundingBox,
                     description: dc && isString(dc.abstract) && dc.abstract || '',
                     layerOptions: options && options.layerOptions || {},
-                    identifier: isString(dc?.identifier) ? dc.identifier : getRecordIdentifier({ title: dc?.title, desc: dc?.abstract, references }),
+                    identifier: dc && isString(dc.identifier) && dc.identifier || '',
                     references: references,
                     thumbnail: getThumbnailFromDc(dc, options),
                     title: dc && isString(dc.title) && dc.title || '',
