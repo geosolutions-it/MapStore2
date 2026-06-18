@@ -48,8 +48,9 @@ export default ({needsWPS} = {}) => compose(
                         loading: false,
                         types: TYPES,
                         featureTypeProperties: get(result, "data.featureTypes[0].properties") || []
-                    })
-                    ))
+                    }))
+                    // keep the toolbar in sync with the empty/error view shown by the emptyState enhancer below
+                    .do(({ featureTypeProperties = [] } = {}) => onConfigurationError(featureTypeProperties.length === 0)))
                 .catch( e => {
                     onConfigurationError(e);
                     return Observable.of({

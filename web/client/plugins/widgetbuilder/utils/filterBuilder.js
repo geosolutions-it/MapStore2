@@ -49,11 +49,14 @@ export const createNewFilter = (filtersCount = 0) => {
                 fontWeight: 'normal',
                 fontStyle: 'normal'
             },
-            forceSelection: false
+            forceSelection: false,
+            // initial collapsed state on the widget card. defaults to expanded.
+            defaultExpanded: true
         },
         items: [],
         addedOptionalTargets: [],
-        data: createEmptyFilterData()
+        data: createEmptyFilterData(),
+        disabled: false // per-filter "disabled" flag
     };
 };
 
