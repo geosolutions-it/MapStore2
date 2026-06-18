@@ -36,7 +36,7 @@ import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInf
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
 import { addLayer } from '../../../actions/layers';
-import { DEFAULT_PANEL_WIDTH, parseLayoutValue } from '../../../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect, parseLayoutValue } from '../../../utils/LayoutUtils';
 import { drawerEnabledControlSelector } from '../../../selectors/controls';
 import { info } from '../../../actions/notifications';
 import { getMarkerLayerIdentifier } from '../utils/IsochroneUtils';
@@ -58,10 +58,7 @@ export const isochroneMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
-            const boundingSidebarRect = {
-                ...(layout.boundingSidebarRect || {}),
-                right: layout?.boundingSidebarRect?.right ?? 40
-            };
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
                 right: OFFSET + boundingSidebarRect.right,

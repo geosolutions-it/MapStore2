@@ -145,7 +145,7 @@ import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
 import {findNonGeometryProperty, findGeometryProperty} from '../utils/ogc/WFS/base';
 import toWKT from '../utils/ogc/WKT/toWKT';
-import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../utils/LayoutUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 const DEACTIVATE_ACTIONS = [
@@ -1059,10 +1059,7 @@ export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => isGeoProcessingEnabledSelector(store.getState()) && source !== GPT_CONTROL_NAME)
         .map(({layout}) => {
-            const boundingSidebarRect = {
-                ...(layout.boundingSidebarRect || {}),
-                right: layout?.boundingSidebarRect?.right ?? 40
-            };
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
                 right: OFFSET + boundingSidebarRect.right,

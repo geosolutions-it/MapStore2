@@ -8,7 +8,7 @@
 
 import isNil from 'lodash/isNil';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
-import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../../../utils/LayoutUtils';
 import { CONTROL_NAME } from '../constants';
 import { enabledSelector, isFloatingSelector } from '../selectors/dynamiclegend';
 const OFFSET = DEFAULT_PANEL_WIDTH;
@@ -25,10 +25,7 @@ export const dynamicLegendMapLayoutEpic = (action$, store) =>
             return !isFloatingSelector(store.getState()) && enabledSelector(store.getState()) && isNil(source);
         })
         .map(({layout}) => {
-            const boundingSidebarRect = {
-                ...(layout.boundingSidebarRect || {}),
-                right: layout?.boundingSidebarRect?.right ?? 40
-            };
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const newLayout = {
                 ...layout,
                 right: OFFSET + boundingSidebarRect.right,
