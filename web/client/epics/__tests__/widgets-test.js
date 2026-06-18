@@ -277,7 +277,6 @@ describe('widgets Epics', () => {
                 id: "1",
                 name: "layer"
             });
-            expect(actions[0].options).toEqual({ connectedOnly: true });
             done();
         };
         testEpic(updateLayerOnLayerPropertiesChange,
@@ -311,7 +310,6 @@ describe('widgets Epics', () => {
                 id: "1",
                 name: "layer"
             });
-            expect(actions[0].options).toEqual({ connectedOnly: true });
             done();
         };
         testEpic(updateLayerOnLayerPropertiesChange,
@@ -370,7 +368,6 @@ describe('widgets Epics', () => {
                 id: "1",
                 name: "layer"
             });
-            expect(actions[0].options).toEqual({ connectedOnly: true });
             done();
         };
         testEpic(updateLayerOnLayerPropertiesChange,

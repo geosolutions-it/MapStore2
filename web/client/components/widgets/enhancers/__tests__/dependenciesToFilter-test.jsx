@@ -211,15 +211,14 @@ describe('widgets dependenciesToFilter enhancer', () => {
         />, document.getElementById("container"));
     });
 
-    it('dependenciesToFilter with empty layerFilter and no mapSync', (done) => {
+    it('dependenciesToFilter with layerFilter and no mapSync', (done) => {
         const Sink = dependenciesToFilter(createSink(props => {
             expect(props).toExist();
             expect(props.filter).toBe(undefined);
             done();
         }));
-        const layer = { ...layerFilter, layerFilter: { } };
         ReactDOM.render(<Sink
-            layer={layer}
+            layer={layerFilter}
         />, document.getElementById("container"));
     });
 

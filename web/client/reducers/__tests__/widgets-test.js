@@ -182,38 +182,6 @@ describe('Test the widgets reducer', () => {
         expect(widgetObjects[4].charts[2].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[1].layer);
         expect(widgetObjects[4].charts[2].traces[0].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[2].traces[0].layer);
     });
-    it('updateWidgetLayers connectedOnly updates only connected widgets', () => {
-        const targetLayer = {
-            name: "layer2",
-            id: "2",
-            layerFilter: { rowId: 1 }
-        };
-        const originalLayer = {
-            name: "layer2",
-            id: "2"
-        };
-        const state = {
-            containers: {
-                [DEFAULT_TARGET]: {
-                    widgets: [{
-                        id: "disconnected-table",
-                        mapSync: false,
-                        layer: originalLayer
-                    }, {
-                        id: "connected-table",
-                        mapSync: true,
-                        layer: originalLayer
-                    }]
-                }
-            }
-        };
-
-        const newState = widgets(state, updateWidgetLayer(targetLayer, { connectedOnly: true }));
-        const widgetObjects = newState.containers[DEFAULT_TARGET].widgets;
-
-        expect(widgetObjects[0].layer).toBe(originalLayer);
-        expect(widgetObjects[1].layer).toEqual(targetLayer);
-    });
     it('deleteWidget', () => {
         const state = {
             containers: {

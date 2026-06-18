@@ -240,7 +240,7 @@ export const updateLayerOnLayerPropertiesChange = (action$, store) =>
             const flatLayer = getLayerFromId(state, layer ?? node);
             const shouldUpdate = flatLayer && (has(newProperties ?? options, "layerFilter") || has(newProperties, "fields"));
             if (shouldUpdate) {
-                return Rx.Observable.of(updateWidgetLayer(flatLayer, { connectedOnly: true }));
+                return Rx.Observable.of(updateWidgetLayer(flatLayer));
             }
             return Rx.Observable.empty();
         });

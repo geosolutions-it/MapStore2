@@ -56,7 +56,6 @@ const createFilterProps = ({ mapSync, geomProp, dependencies = {}, filter: filte
 
     if (!mapSync) {
         const filterParts = [
-            ...(layerFilter && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
             ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
             ...interactionFilterParts
         ];
