@@ -89,8 +89,8 @@ const MAP_LAYERS_API = {
                 ...layer,
                 serviceType: 'maplayers',
                 title: MAP_LAYERS_API.getLayerTitle(layer),
-                description: layer.description,
-                identifier: layer.name || layer.id,
+                description: layer.description || layer.name,
+                identifier: layer.id,
                 // keep a reference to the original map layer so it can be returned as-is
                 mapLayer: layer,
                 isValid: true
@@ -178,6 +178,7 @@ const MapCatalogLayerSelector = connect(selector)(({
                 services={services}
                 selectedService={MAP_LAYERS_SERVICE_KEY}
                 showCatalogSelector={false}
+                hideIdentifier
                 multiSelect={false}
                 includeAddToMap={false}
                 locales={currentLocale}

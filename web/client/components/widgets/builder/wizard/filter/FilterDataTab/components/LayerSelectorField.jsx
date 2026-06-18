@@ -30,13 +30,9 @@ const LayerSelectorField = ({
     layerIsRequired = false,
     onFilterLayer = () => {},
     onOpenLayerSelector,
-    dashBoardEditing = false,
-    globalWidgetMode = false,
     hideFilter = false
 }) => {
     const layerTitle = getLayerTitle(layer);
-    const allowLayerChange = dashBoardEditing || globalWidgetMode;
-    const isDisabled = !allowLayerChange && layer;
     const validationState = layerIsRequired && !layer ? 'error' : null;
 
     const hasFilter = useMemo(() =>{
@@ -56,20 +52,18 @@ const LayerSelectorField = ({
                 <LocalizedFormControl
                     placeholder="widgets.filterWidget.selectDataSourcePlaceHolder"
                     value={layerTitle}
-                    onClick={() => !isDisabled && onOpenLayerSelector()}
-                    style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-                    readOnly
-                    disabled={isDisabled} />
-                {!isDisabled && <InputGroup.Button>
+                    onClick={() => onOpenLayerSelector()}
+                    style={{ cursor: 'pointer' }}
+                    readOnly />
+                <InputGroup.Button>
                     <Button
                         bsStyle="primary"
-                        disabled={isDisabled}
-                        onClick={() => !isDisabled && onOpenLayerSelector()}
+                        onClick={() => onOpenLayerSelector()}
                         tooltipId={'widgets.builder.selectLayer'}
                     >
                         <Glyphicon glyph={layer ? "cog" : "folder-open"} />
                     </Button>
-                </InputGroup.Button>}
+                </InputGroup.Button>
                 {layer && !hideFilter && <InputGroup.Button>
                     <Button
                         bsStyle={hasFilter ? 'success' : 'primary'}
@@ -87,12 +81,8 @@ const LayerSelectorField = ({
 LayerSelectorField.propTypes = {
     layer: PropTypes.object,
     layerIsRequired: PropTypes.bool,
+    onFilterLayer: PropTypes.func,
     onOpenLayerSelector: PropTypes.func.isRequired,
-    onEditLayerFilter: PropTypes.func,
-    showEditFilter: PropTypes.bool,
-    filter: PropTypes.object,
-    dashBoardEditing: PropTypes.bool,
-    globalWidgetMode: PropTypes.bool,
     hideFilter: PropTypes.bool
 };
 

@@ -64,6 +64,7 @@ const Builder = connect(
         openFilterEditor,
         setPage,
         setValid: valid => changeEditorSetting("valid", valid),
+        onConfigurationError: error => changeEditorSetting("configurationError", !!error),
         onEditorChange,
         insertWidget
     },
@@ -76,6 +77,22 @@ const Builder = connect(
     })
 )(ChartWizard));
 
+// on layer error, add a back button to return to widget type selection
+const withBackToWidgetTypeButton = withProps(({ stepButtons = [], settings = {}, onChange = () => {} }) => ({
+    stepButtons: settings?.configurationError ? [
+        {
+            onClick: () => {
+                // clears the previously selected layer/charts then the widget type
+                onChange('chart-layers', undefined);
+                onChange('widgetType', undefined);
+            },
+            visible: true,
+            glyph: 'arrow-left',
+            tooltipId: 'widgets.builder.wizard.backToWidgetTypeSelection'
+        },
+        ...stepButtons
+    ] : stepButtons
+}));
 
 const ChartToolbar = compose(
     connect(
@@ -91,6 +108,7 @@ const ChartToolbar = compose(
     viewportBuilderConnect,
     withExitButton(),
     withProps((props) => setMultiDependencySupport(props)),
+    withBackToWidgetTypeButton,
     withConnectButton(({step}) => step === 0)
 )(Toolbar);
 
@@ -114,7 +132,8 @@ const chooseLayerEnhancer = compose(
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
     branch(
-        ({layer, showLayers, editorData} = {}) => (!layer || showLayers) && editorData?.globalWidgetMode === true,
+        ({layer, showLayers, editorData, dashBoardEditing} = {}) =>
+            (!layer || showLayers) && (editorData?.globalWidgetMode === true || !dashBoardEditing),
         renderComponent(ChartMapLayerSelector)
     ),
     branch(

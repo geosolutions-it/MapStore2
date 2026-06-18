@@ -122,7 +122,6 @@ const ChartWizard = ({
     valid,
     dashBoardEditing
 }) => {
-    const allowLayerChange = dashBoardEditing || data?.globalWidgetMode === true;
     const selectedChart = (data?.charts || []).find((chart) => chart.chartId === data.selectedChartId);
     const traces = selectedChart?.traces || [];
     const selectedTrace = traces.find(trace => trace.id === data?.selectedTraceId) || traces[0];
@@ -203,14 +202,14 @@ const ChartWizard = ({
                         onChange(`charts[${selectedChart?.chartId}].traces[${selectedTrace.id}].${key}`, value);
                     }}
                     layer={selectedTrace?.layer}
-                    disableLayerSelection={!allowLayerChange}
+                    disableLayerSelection={false}
                     showTitle={false}
                     error={!!errors?.[selectedTrace?.layer?.name]}
-                    onChangeLayer={allowLayerChange ? () => toggleLayerSelector({
+                    onChangeLayer={() => toggleLayerSelector({
                         key: 'chart-layer-replace',
                         chartId: selectedChart?.chartId,
                         traceId: selectedTrace?.id
-                    }) : null}
+                    })}
                     onFilterLayer={() => openFilterEditor()}
                 />}
                 <ChartStyleEditorComp

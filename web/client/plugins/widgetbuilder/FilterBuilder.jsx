@@ -70,7 +70,8 @@ const chooseLayerEnhancer = compose(
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
     branch(
-        ({showLayers, editorData} = {}) => showLayers && editorData?.globalWidgetMode === true,
+        ({showLayers, editorData, dashBoardEditing} = {}) =>
+            showLayers && (editorData?.globalWidgetMode === true || !dashBoardEditing),
         renderComponent(mapLayerSelector(MapCatalogLayerSelector))
     ),
     branch(
