@@ -7,7 +7,7 @@ import Message from '../../../components/I18N/Message';
 import { describeFeatureType } from '../../../api/WFS';
 import Statistics from './Statistics';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 /**
  * EllipsisButton provides a contextual menu for selected layer data.

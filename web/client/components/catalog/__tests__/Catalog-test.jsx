@@ -55,8 +55,8 @@ describe('Test Catalog panel', () => {
                     maxRecords: 12,
                     text: '',
                     options: {
-                        filters: undefined,
-                        sort: undefined,
+                        filters: {},
+                        sort: '-date',
                         service: SERVICE
                     }
                 });
@@ -317,8 +317,8 @@ describe('Test Catalog panel', () => {
                     maxRecords: 12,
                     text: '',
                     options: {
-                        filters: undefined,
-                        sort: undefined,
+                        filters: {},
+                        sort: '-date',
                         service: SERVICE
                     }
                 });

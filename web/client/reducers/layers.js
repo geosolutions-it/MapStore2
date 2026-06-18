@@ -38,7 +38,7 @@ import {
 import { TOGGLE_CONTROL } from '../actions/controls';
 
 import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { isString, includes, castArray } from 'lodash';
 import {
     getNode,

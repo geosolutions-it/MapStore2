@@ -180,7 +180,7 @@ const Catalog = ({
             setNewServiceStatus(false);
         }
         if (!preserveCurrentRequest && mode === 'view' && shouldAutoload(selectedService, services)) {
-            search({ searchText });
+            search({ searchText, filters, sort });
         }
         setShowFilters(false);
     }, [services, mode]);

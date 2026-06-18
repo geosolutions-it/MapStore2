@@ -154,7 +154,9 @@ export default (API) => ({
                             url,
                             startPosition,
                             maxRecords,
-                            text
+                            text,
+                            filters: options?.filters,
+                            sort: options?.sort
                         }, result)]);
                     })
                     .startWith(isNewService ? savingService(true) : setLoading(true))
@@ -631,7 +633,7 @@ export default (API) => ({
                 const metadataSource = metadataSourceSelector(state);
                 const stashedService = stashedServiceSelector(state);
                 return Rx.Observable.of(...([
-                    setControlProperties('metadataexplorer', "enabled", false, "group", null, "panel", true),
+                    setControlProperties('metadataexplorer', "enabled", false, "group", null),
                     changeCatalogMode("view"),
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?

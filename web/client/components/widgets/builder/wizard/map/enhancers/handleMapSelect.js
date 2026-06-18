@@ -15,7 +15,7 @@ import { EMPTY_MAP } from "../../../../../../utils/MapUtils";
 import { is3DVisualizationMode } from "../../../../../../utils/MapTypeUtils";
 import { getResource } from '../../../../../../api/persistence';
 import '../../../../../../libs/bindings/rxjsRecompose';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import castArray from 'lodash/castArray';
 
 const handleMapSelect = compose(
