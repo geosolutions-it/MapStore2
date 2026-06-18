@@ -27,12 +27,12 @@ import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
 import '../plugins/ModelLayer';
-import { isMeaningfulCappedRectRefinement } from '../plugins/FlatGeobufLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
+import { isMeaningfulCappedRectRefinement } from '../../../../utils/FlatGeobufLayerUtils';
 
 const tilesetMock = {
     "asset": {

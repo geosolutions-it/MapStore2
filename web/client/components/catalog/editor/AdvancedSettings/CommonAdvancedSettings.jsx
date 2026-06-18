@@ -11,6 +11,9 @@ import { FormGroup, Checkbox, ControlLabel, FormControl } from "react-bootstrap"
 
 import Message from "../../../I18N/Message";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
+import localizedProps from '../../../misc/enhancers/localizedProps';
+
+const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
 const parseMaxFeaturesInView = (event) => {
     const maxFeaturesInView = Number(event?.target?.value);
@@ -63,15 +66,16 @@ export default ({
             {!isNil(service.type) && service.type === "flatgeobuf" &&
             <FormGroup className="form-group" controlId="maxFeaturesInView" key="maxFeaturesInView">
                 <ControlLabel><Message msgId="layerProperties.maxFeaturesInView" /></ControlLabel>
-                <FormControl
+                <LocalizedFormControl
                     data-qa="catalog-max-features-in-view"
                     type="number"
                     min={1}
                     step={1}
+                    placeholder="layerProperties.maxFeaturesInViewPlaceholder"
                     value={service.layerOptions?.maxFeaturesInView === undefined ? '' : service.layerOptions?.maxFeaturesInView}
                     onChange={(e) => onChangeServiceProperty("layerOptions", {
                         ...service.layerOptions,
-                        maxFeaturesInView: Number(e.target.value) > 0 ? Number(e.target.value) : undefined
+                        maxFeaturesInView: parseMaxFeaturesInView(e)
                     })} />
             </FormGroup>}
             {['wfs', 'vector'].includes(service.type) && <FormGroup className="wfs-vector-interactive-legend" controlId="enableInteractiveLegend" key="enableInteractiveLegend">

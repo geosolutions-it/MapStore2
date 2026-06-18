@@ -133,6 +133,7 @@
       "heightOffset": "Desplazamiento de altura (m)",
       "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
       "maxFeaturesInView": "Número máximo de entidades en la vista",
+      "maxFeaturesInViewPlaceholder": "Cuando el valor es indefinido, la funcionalidad actual funciona como de costumbre (es decir, cargar todas las entidades)",
       "serverType": "Tipo de servidor",
       "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
       "serverTypeOption": {
