@@ -18,6 +18,7 @@ import {
     getMapPrintScale,
     getMapfishPrintSpecification,
     rgbaTorgb,
+    isCompatibleWithSRS,
     specCreators,
     addTransformer,
     addMapTransformer,
@@ -821,6 +822,90 @@ describe('PrintUtils', () => {
 
     });
 
+    it("test isCompatibleWithSRS", () => {
+        const prj3857 = "EPSG:3857";
+        const prj4326 = "EPSG:4326";
+        const tests = [{
+            args: {
+                projection: prj3857,
+                layer: undefined
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: undefined,
+                layer: {type: "wms"}
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: undefined,
+                layer: {type: "wfs"}
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: undefined,
+                layer: {type: "vector"}
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: undefined,
+                layer: {type: "graticule"}
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: undefined,
+                layer: {type: "empty"}
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: undefined,
+                layer: {type: "arcgis"}
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: prj4326,
+                layer: {type: "tms"}
+            },
+            result: true
+        },
+        {
+            args: {
+                projection: prj4326,
+                layer: {type: "incompatible"}
+            },
+            result: false
+        },
+        {
+            args: {
+                projection: prj4326,
+                layer: {type: "wmts"}
+            },
+            result: false
+        }, {
+            args: {
+                projection: prj4326,
+                layer: {type: "wmts", allowedSRS: {"EPSG:4326": {}}}
+            },
+            result: true
+        }];
+        tests.forEach(({args, result}) => {
+            let res = isCompatibleWithSRS(args.projection, args.layer);
+            expect(res).toBe(result);
+        });
+    });
     describe('specCreators', () => {
         describe('opacity', () => {
             const testBase = {
@@ -983,8 +1068,8 @@ describe('PrintUtils', () => {
                 expect(layerSpec.type).toEqual("tms");
                 expect(layerSpec.format).toExist();
                 // baseURL should not have version in URL
-                expect(layerSpec.baseURL).toEqual(encodeURI(testLayer.tileMapService).split("/1.0.0")[0]);
-                expect(layerSpec.layer).toEqual(testLayer.tileMapUrl.split("/1.0.0/")[1]);
+                expect(layerSpec.baseURL).toEqual(decodeURIComponent(testLayer.tileMapService).split("/1.0.0")[0]);
+                expect(layerSpec.layer).toEqual(decodeURIComponent(testLayer.tileMapUrl.split("/1.0.0/")[1]));
                 expect(layerSpec.tileSize).toEqual(testLayer.tileSize);
                 expect(layerSpec).toExist();
                 expect(layerSpec.resolutions.length).toEqual(testLayer.tileSets.length);

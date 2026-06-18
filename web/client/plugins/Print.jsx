@@ -11,6 +11,7 @@ import './print/print.css';
 import head from 'lodash/head';
 import castArray from "lodash/castArray";
 import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
 import PropTypes from 'prop-types';
 import React from 'react';
 import { PanelGroup, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
@@ -32,7 +33,7 @@ import { normalizeSRS, convertDegreesToRadian } from '../utils/CoordinatesUtils'
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI, getScales, reprojectZoom } from '../utils/MapUtils';
 import { getDerivedLayersVisibility, isInsideResolutionsLimits } from '../utils/LayersUtils';
-import { has, includes, isEmpty } from 'lodash';
+
 import {additionalLayersSelector} from "../selectors/additionallayers";
 import { MapLibraries } from '../utils/MapTypeUtils';
 import FlexBox from '../components/layout/FlexBox';
@@ -315,7 +316,8 @@ export default {
                     getDefaultPrintingService,
                     getLayoutName,
                     getPrintScales,
-                    getNearestZoom
+                    getNearestZoom,
+                    isCompatibleWithSRS
                 } = utilsMod;
                 class Print extends React.Component {
                     static propTypes = {
@@ -616,19 +618,9 @@ export default {
                     addParameter = (name, value) => {
                         this.props.addPrintParameter("params." + name, value);
                     };
-                    isCompatibleWithSRS = (projection, layer) => {
-                        return projection === "EPSG:3857" || includes([
-                            "wms",
-                            "wfs",
-                            "vector",
-                            "graticule",
-                            "empty",
-                            "arcgis"
-                        ], layer.type) || layer.type === "wmts" && has(layer.allowedSRS, projection);
-                    };
                     isAllowed = (layer, projection) => {
                         return this.props.ignoreLayers.indexOf(layer.type) === -1 &&
-                            this.isCompatibleWithSRS(normalizeSRS(projection), layer);
+                            isCompatibleWithSRS(normalizeSRS(projection), layer);
                     };
 
                     isBackgroundIgnored = (layers, projection) => {
