@@ -1696,6 +1696,31 @@
         "label": "Descargar metadatos del archivo al guardar",
         "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
       },
+      "resourceTypes": {
+        "label": "Tipos de recurso",
+        "dataset": "Conjuntos de datos",
+        "document": "Documentos"
+      },
+      "subtypes": {
+        "label": "Tipo de contenido",
+        "vector": "Vectorial",
+        "raster": "Raster",
+        "vector_time": "Serie temporal",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabular",
+        "image": "Imagen",
+        "video": "Vídeo",
+        "audio": "Audio",
+        "text": "Texto",
+        "archive": "Archivo",
+        "presentation": "Presentación"
+      },
+      "filterFields": {
+        "category": "Categoría",
+        "keyword": "Palabra clave",
+        "region": "Región",
+        "extent": "Filtro de extensión"
+      },
       "tagFilterType": {
         "label": "Tipo de filtro de etiqueta",
         "category": "Categoría",

@@ -124,7 +124,7 @@ const Catalog = ({
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState('-date');
     const [selectedServiceInitialized, setSelectedServiceInitialized] = useState(false);
-    const serviceCapabilities = API[selectedFormat]?.getCapabilities?.() || {
+    const serviceCapabilities = API[selectedFormat]?.getCapabilities?.({ service: services[selectedService] }) || {
         filterSupport: false,
         orderBySupport: false
     };
@@ -216,7 +216,6 @@ const Catalog = ({
                 return accumulator;
             }, {});
         setFilters(updatedFilters);
-        clearSelection?.();
         search({ searchText, filters: updatedFilters, sort });
     };
 
@@ -237,7 +236,6 @@ const Catalog = ({
 
     const onSortChange = (newSort) => {
         setSort(newSort);
-        clearSelection?.();
         search({ searchText, filters, sort: newSort, start: searchOptions?.startPosition });
     };
 
@@ -247,7 +245,6 @@ const Catalog = ({
         <CatalogSearchInput
             searchText={searchText}
             onChangeText={(text, opts) => {
-                clearSelection?.();
                 onChangeText(text, opts);
             }}
             enableFilters={serviceCapabilities.filterSupport}

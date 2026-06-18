@@ -193,4 +193,32 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
             }
         });
     });
+
+    it('getRecords applies the default sort when none is provided', (done) => {
+        mockAxios.onGet().reply((config) => {
+            try {
+                expect(config.params.sort).toEqual(['-date']);
+            } catch (e) {
+                done(e);
+            }
+            return [200, { resources: [], total: 0, page: 1, page_size: 4, links: {} }];
+        });
+
+        API.getRecords('https://example.com', 1, 4, '', {}).then(() => done()).catch(done);
+    });
+
+    it('getRecords prefers the service defaultSort over the global default', (done) => {
+        mockAxios.onGet().reply((config) => {
+            try {
+                expect(config.params.sort).toEqual(['-popular_count']);
+            } catch (e) {
+                done(e);
+            }
+            return [200, { resources: [], total: 0, page: 1, page_size: 4, links: {} }];
+        });
+
+        API.getRecords('https://example.com', 1, 4, '', {
+            options: { service: { defaultSort: '-popular_count' } }
+        }).then(() => done()).catch(done);
+    });
 });

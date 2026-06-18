@@ -7,6 +7,7 @@ const withCatalogRequests = (Component) => {
         pageSize = 12,
         locales = 'en-US',
         layerOptions = {},
+        resourceTypes,
         services,
         selectedService,
         selected,
@@ -20,8 +21,18 @@ const withCatalogRequests = (Component) => {
         ...props
     }) {
 
-        const service = services?.[selectedService] || {};
+        const baseService = useMemo(() => services?.[selectedService] || {}, [services, selectedService]);
+        // constrain the GeoNode resource types when the host restricts them (e.g. widget builder -> datasets only)
+        // memoized so the derived object keeps a stable identity (it feeds the search effect dependencies)
+        const service = useMemo(
+            () => (resourceTypes?.length ? { ...baseService, resourceTypes } : baseService),
+            [baseService, resourceTypes]
+        );
         const selectedFormat = service?.type;
+        const searchServices = useMemo(
+            () => (resourceTypes?.length && selectedService ? { ...services, [selectedService]: service } : services),
+            [services, selectedService, service, resourceTypes]
+        );
 
         const [searchText, setSearchText] = useState('');
         const [result, setResult] = useState('');
@@ -120,7 +131,7 @@ const withCatalogRequests = (Component) => {
                 multiSelect={multiSelect}
                 onChangeCatalogMode={onChangeCatalogMode}
                 title={title}
-                services={services}
+                services={searchServices}
                 selectedService={selectedService}
                 selected={selectedRecords}
                 isAllSelected={false}

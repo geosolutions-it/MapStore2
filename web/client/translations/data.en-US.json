@@ -1696,6 +1696,31 @@
         "label": "Download file metadata on save",
         "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
       },
+      "resourceTypes": {
+        "label": "Resource types",
+        "dataset": "Datasets",
+        "document": "Documents"
+      },
+      "subtypes": {
+        "label": "Content type",
+        "vector": "Vector",
+        "raster": "Raster",
+        "vector_time": "Time series",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabular",
+        "image": "Image",
+        "video": "Video",
+        "audio": "Audio",
+        "text": "Text",
+        "archive": "Archive",
+        "presentation": "Presentation"
+      },
+      "filterFields": {
+        "category": "Category",
+        "keyword": "Keyword",
+        "region": "Region",
+        "extent": "Extent filter"
+      },
       "tagFilterType": {
         "label": "Tag filter type",
         "category": "Category",

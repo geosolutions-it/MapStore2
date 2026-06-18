@@ -14,7 +14,7 @@ import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '
 import { projectionSelector, mapEnableImageryOverlaySelector } from '../../../selectors/map';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import { setProtectedServices, setShowModalStatus } from '../../../actions/security';
-import { changeLayerProperties } from '../../../actions/layers';
+import { changeLayerProperties, addGroup } from '../../../actions/layers';
 import { layersSelector } from '../../../selectors/layers';
 import { metadataSourceSelector, modalParamsSelector } from '../../../selectors/backgroundselector';
 import { setControlProperty, toggleControl } from '../../../actions/controls';
@@ -109,6 +109,7 @@ const Catalog = ({
     servicesWithBackgrounds,
     services: servicesProp,
     onLayerAdd,
+    onAddGroup,
     onAddBackgroundProperties,
     onAddBackground,
     zoomToLayer = true,
@@ -250,10 +251,56 @@ const Catalog = ({
     };
 
 
+    const buildLayerOptions = () => {
+        const selectedServiceOptions = services[selectedService];
+        return {
+            service: {
+                ...selectedServiceOptions,
+                format: selectedServiceOptions?.format ?? 'image/png'
+            },
+            layerBaseConfig,
+            removeParams: authkeyParamNames,
+            map: {
+                projection: crs,
+                resolutions: getResolutions()
+            },
+            enableImageryOverlay
+        };
+    };
+
     function handleAddLayers(newRecords = [], { clearSelected = false } = {}) {
         const recordsToAdd = newRecords.filter(Boolean);
         if (!recordsToAdd.length) {
             return Promise.resolve([]);
+        }
+        const processRecords = source !== 'backgroundSelector' && API[selectedFormat]?.processRecords;
+        if (processRecords) {
+            const allowed = recordsToAdd.filter(record => !isSRSNotAllowed(record));
+            if (allowed.length < recordsToAdd.length) {
+                onError('catalog.srs_not_allowed');
+            }
+            if (!allowed.length) {
+                return Promise.resolve([]);
+            }
+            setLoadingLayers(allowed.map(record => record.identifier));
+            return processRecords(allowed, buildLayerOptions())
+                .then(({ layers = [], groups = [] } = {}) => {
+                    groups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
+                    layers.filter(Boolean).forEach(layer => onLayerAdd(layer, { zoomToLayer }));
+                    if (clearSelected) {
+                        clearSelection();
+                    }
+                    return { layers, groups };
+                })
+                .catch(() => {
+                    onError('catalog.addLayerError');
+                    return [];
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        setLoadingLayers([]);
+                    }, 300);
+                });
         }
         setLoadingLayers(recordsToAdd.map(record => record.identifier));
         return Promise.all(
@@ -402,6 +449,7 @@ const layerCatalogSelector = createStructuredSelector({
 const ConnectedCatalog = connect(layerCatalogSelector, {
     onSearch: textSearch,
     onLayerAdd: addLayer,
+    onAddGroup: addGroup,
     closeCatalog: catalogClose,
     onChangeFormat: changeCatalogFormat,
     onChangeServiceFormat: changeServiceFormat,

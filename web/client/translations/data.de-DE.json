@@ -1735,6 +1735,31 @@
         "label": "Dateimetadaten beim Speichern herunterladen",
         "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
       },
+      "resourceTypes": {
+        "label": "Ressourcentypen",
+        "dataset": "Datensätze",
+        "document": "Dokumente"
+      },
+      "subtypes": {
+        "label": "Inhaltstyp",
+        "vector": "Vektor",
+        "raster": "Raster",
+        "vector_time": "Zeitreihe",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabellarisch",
+        "image": "Bild",
+        "video": "Video",
+        "audio": "Audio",
+        "text": "Text",
+        "archive": "Archiv",
+        "presentation": "Präsentation"
+      },
+      "filterFields": {
+        "category": "Kategorie",
+        "keyword": "Schlüsselwort",
+        "region": "Region",
+        "extent": "Ausdehnungsfilter"
+      },
       "tagFilterType": {
         "label": "Tag-Filtertyp",
         "category": "Kategorie",
