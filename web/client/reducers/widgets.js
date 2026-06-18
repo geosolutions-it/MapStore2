@@ -65,6 +65,7 @@ const emptyState = {
     }
 };
 
+
 /**
  * Manages the state of the widgets
  * @prop {array} widgets version identifier
