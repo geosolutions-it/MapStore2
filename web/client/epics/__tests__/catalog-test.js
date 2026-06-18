@@ -172,7 +172,9 @@ describe('catalog Epics', () => {
                     type: "csw",
                     url: "url",
                     filter: "test"
-                }
+                },
+                filters: {'filter{category.identifier.in}': ['environment']},
+                sort: '-date'
             });
             done();
         }, {
@@ -186,7 +188,11 @@ describe('catalog Epics', () => {
                         filter: "test"
                     }
                 },
-                pageSize: 2
+                pageSize: 2,
+                searchOptions: {
+                    filters: {'filter{category.identifier.in}': ['environment']},
+                    sort: '-date'
+                }
             },
             layers: {
                 selected: ["TEST"],
@@ -245,7 +251,7 @@ describe('catalog Epics', () => {
         }, { controls: { metadataexplorer: { enabled: true } }});
     });
 
-    it('catalogCloseEpic should reset metadataexplorer panel to true', (done) => {
+    it('catalogCloseEpic should preserve metadataexplorer panel', (done) => {
         const NUM_ACTIONS = 3;
         testEpic(catalogCloseEpic, NUM_ACTIONS, catalogClose(), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -253,8 +259,7 @@ describe('catalog Epics', () => {
             expect(actions[0].control).toBe('metadataexplorer');
             expect(actions[0].properties).toEqual({
                 enabled: false,
-                group: null,
-                panel: true
+                group: null
             });
             done();
         }, {
@@ -305,6 +310,23 @@ describe('catalog Epics', () => {
                     expect(true).toBe(false);
                 }
             });
+            done();
+        }, { });
+    });
+    it('recordSearchEpic preserves filters and sort in search options', (done) => {
+        const NUM_ACTIONS = 2;
+        const filters = {'filter{category.identifier.in}': ['environment']};
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+            format: "csw",
+            url: "base/web/client/test-resources/csw/getRecordsResponseDC.xml",
+            startPosition: 1,
+            maxRecords: 1,
+            text: "a",
+            options: {filters, sort: '-date'}
+        }), (actions) => {
+            const recordsLoadedAction = actions.find(({type}) => type === RECORD_LIST_LOADED);
+            expect(recordsLoadedAction.searchOptions.filters).toEqual(filters);
+            expect(recordsLoadedAction.searchOptions.sort).toBe('-date');
             done();
         }, { });
     });

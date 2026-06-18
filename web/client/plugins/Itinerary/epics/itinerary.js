@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import sortBy from 'lodash/sortBy';
@@ -32,7 +32,7 @@ import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
 import { changeMousePointer, CLICK_ON_MAP, zoomToExtent } from '../../../actions/map';
 import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ITINERARY_ROUTE_LAYER } from '../constants';
 import { enabledSelector, itinerarySearchConfigSelector, locationsSelector } from '../selectors/itinerary';
-import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../../../utils/LayoutUtils';
 import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInfo';
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
@@ -54,13 +54,15 @@ export const itineraryMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             });
             return { ...action, source: CONTROL_NAME };

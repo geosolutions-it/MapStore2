@@ -13,7 +13,7 @@ import {
     Checkbox,
     ButtonToolbar
 } from 'react-bootstrap';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import max from 'lodash/max';
 import undoable from 'redux-undo';
 import identity from 'lodash/identity';
