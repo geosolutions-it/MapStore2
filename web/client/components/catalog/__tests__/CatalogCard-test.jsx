@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
 import CatalogCard from '../datasets/CatalogCard';
+import { GEONODE_CATEGORY_FILTER } from '../../../api/catalog/GeoNode';
 
 describe('CatalogCard component', () => {
     const record = {
@@ -135,5 +136,45 @@ describe('CatalogCard component', () => {
         expect(inputs.length).toBe(0);
         const card = document.querySelector('.ms-catalog-card.disabled');
         expect(card).toBeTruthy();
+    });
+
+    it('renders GeoNode category tag label while preserving identifier as filter value', () => {
+        const actions = {
+            onTagClick: () => {}
+        };
+        const spyOnTagClick = expect.spyOn(actions, 'onTagClick');
+        const geonodeRecord = {
+            ...record,
+            tagFilterType: 'category',
+            tags: [{
+                identifier: 'boundaries',
+                label: 'Boundaries'
+            }]
+        };
+
+        ReactDOM.render(<CatalogCard
+            includeAddToMap={false}
+            multiSelect={false}
+            loadingRecords={false}
+            filters={{
+                [GEONODE_CATEGORY_FILTER]: ['boundaries']
+            }}
+            record={geonodeRecord}
+            onToggle={() => {}}
+            onAdd={() => {}}
+            onTagClick={actions.onTagClick}
+        />, document.getElementById('container'));
+
+        const tagButton = document.querySelector('.ms-resource-card-tag-button');
+        expect(tagButton).toBeTruthy();
+        expect(tagButton.textContent).toBe('Boundaries');
+        expect(tagButton.getAttribute('title')).toBe('Boundaries');
+        expect(tagButton.className.includes('selected')).toBe(true);
+
+        TestUtils.Simulate.click(tagButton, { stopPropagation: () => {} });
+
+        expect(spyOnTagClick).toHaveBeenCalled();
+        expect(spyOnTagClick.calls[0].arguments[0]).toBe('boundaries');
+        expect(spyOnTagClick.calls[0].arguments[1]).toEqual(geonodeRecord);
     });
 });
