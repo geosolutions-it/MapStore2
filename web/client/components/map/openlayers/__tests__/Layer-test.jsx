@@ -23,16 +23,12 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
-<<<<<<< HEAD
-import '../plugins/FlatGeobufLayer';
-=======
 import '../plugins/COGLayer';
 import {
     invalidateCappedLoadExtents,
     isMeaningfulCappedExtentRefinement,
     registerCappedLoadExtent
 } from '../plugins/FlatGeobufLayer';
->>>>>>> 22f800f (COG layers are loading data even if not visible  #12360 (#12488))
 
 import {
     setStore,
