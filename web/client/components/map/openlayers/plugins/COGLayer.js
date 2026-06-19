@@ -41,6 +41,9 @@ function getSource(options) {
 }
 
 function create(options) {
+    // GeoTIFF sources fetch eagerly on creation (unlike WMS, which loads on demand),
+    // so `visible: false` won't prevent requests. Skip creating hidden layers;
+    // `update` recreates them when they become visible.
     if (options.visibility === false) {
         return null;
     }
