@@ -778,7 +778,6 @@ export const specCreators = {
                                     ...getWMSLegendConfig({layer, legendOptions, mapBbox: spec.bbox, mapSize: spec.size, projection: spec.projection, format: LEGEND_FORMAT.IMAGE}),
                                     TRANSPARENT: true,
                                     EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                    VERSION: "1.1.1",
                                     SCALE: spec.scale,
                                     ...getLegendIconsSize(spec, layer),
                                     ...(spec.language ? {LANGUAGE: spec.language} : {})
