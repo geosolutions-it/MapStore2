@@ -55,8 +55,8 @@ describe('Test Catalog panel', () => {
                     maxRecords: 12,
                     text: '',
                     options: {
-                        filters: undefined,
-                        sort: undefined,
+                        filters: {},
+                        sort: '-date',
                         service: SERVICE
                     }
                 });
@@ -64,7 +64,7 @@ describe('Test Catalog panel', () => {
             }}
         />, document.getElementById("container"));
     });
-    it('resets new service status before autoload search', (done) => {
+    it('clears new service status without duplicate autoload search', (done) => {
         const SERVICE = {
             type: "csw",
             url: "http://sample.service/catalog",
@@ -72,14 +72,11 @@ describe('Test Catalog panel', () => {
             autoload: true
         };
         const actions = {
-            setNewServiceStatus: () => {}
+            setNewServiceStatus: () => {},
+            onSearch: () => {}
         };
         const spyOnStatus = expect.spyOn(actions, 'setNewServiceStatus');
-        actions.onSearch = () => {
-            expect(spyOnStatus).toHaveBeenCalled();
-            expect(spyOnStatus.calls[0].arguments[0]).toBe(false);
-            done();
-        };
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
         ReactDOM.render(<Catalog
             services={{ "csw": SERVICE}}
             selectedService="csw"
@@ -88,6 +85,205 @@ describe('Test Catalog panel', () => {
             isNewServiceAdded
             setNewServiceStatus={actions.setNewServiceStatus}
         />, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(spyOnSearch.calls.length).toBe(0);
+            expect(spyOnStatus).toHaveBeenCalled();
+            expect(spyOnStatus.calls[0].arguments[0]).toBe(false);
+            done();
+        }, 0);
+    });
+    it('does not autoload again when the current service already has results', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "http://sample.service/catalog",
+            title: "csw",
+            autoload: true
+        };
+        const actions = {
+            onSearch: () => {},
+            clearSelection: () => {}
+        };
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        const spyOnClearSelection = expect.spyOn(actions, 'clearSelection');
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            selectedFormat="csw"
+            result={{ numberOfRecordsMatched: 24 }}
+            searchOptions={{ url: 'http://sample.service/catalog', startPosition: 13 }}
+            records={[{ identifier: 'csw-1', title: 'Catalog Layer', references: [] }]}
+            selected={[]}
+            layers={[]}
+            loadingLayers={[]}
+            onSelect={() => {}}
+            onAddSelected={() => {}}
+            onAddLayer={() => {}}
+            onSearch={actions.onSearch}
+            clearSelection={actions.clearSelection}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            const activePage = document.querySelector('.pagination .active a, .pagination .active span');
+            expect(spyOnSearch.calls.length).toBe(0);
+            expect(spyOnClearSelection.calls.length).toBe(0);
+            expect(activePage.textContent).toBe('2');
+            done();
+        }, 0);
+    });
+    it('does not clear selected records on initial render', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "http://sample.service/catalog",
+            title: "csw"
+        };
+        const actions = {
+            clearSelection: () => {}
+        };
+        const spyOnClearSelection = expect.spyOn(actions, 'clearSelection');
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            selectedFormat="csw"
+            records={[{ identifier: 'csw-1', title: 'Catalog Layer', references: [] }]}
+            selected={[{ identifier: 'csw-1', title: 'Catalog Layer', references: [] }]}
+            layers={[]}
+            loadingLayers={[]}
+            onSelect={() => {}}
+            onAddSelected={() => {}}
+            onAddLayer={() => {}}
+            clearSelection={actions.clearSelection}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(spyOnClearSelection.calls.length).toBe(0);
+            done();
+        }, 0);
+    });
+    it('uses filters and sort from current search options after remount', (done) => {
+        const SERVICE = {
+            type: "geonode",
+            url: "http://sample.service/geonode",
+            title: "GeoNode"
+        };
+        const filters = {'filter{category.identifier.in}': ['environment']};
+        const actions = {
+            onSearch: () => {}
+        };
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<Catalog
+            services={{ "geonode": SERVICE}}
+            selectedService="geonode"
+            selectedFormat="geonode"
+            result={{ numberOfRecordsMatched: 24 }}
+            searchOptions={{
+                url: 'http://sample.service/geonode',
+                startPosition: 1,
+                filters,
+                sort: 'title'
+            }}
+            records={[{ identifier: 'geo-1', title: 'Geo Layer', references: [], isValid: true }]}
+            selected={[]}
+            layers={[]}
+            loadingLayers={[]}
+            onSelect={() => {}}
+            onAddSelected={() => {}}
+            onAddLayer={() => {}}
+            onSearch={actions.onSearch}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            const page2 = [...document.querySelectorAll('.pagination a')]
+                .find((node) => node.textContent === '2');
+            TestUtils.Simulate.click(page2);
+            expect(spyOnSearch.calls.length).toBe(1);
+            expect(spyOnSearch.calls[0].arguments[0]).toEqual({
+                format: 'geonode',
+                url: 'http://sample.service/geonode',
+                startPosition: 13,
+                maxRecords: 12,
+                text: '',
+                options: {
+                    filters,
+                    sort: 'title',
+                    service: SERVICE
+                }
+            });
+            done();
+        }, 0);
+    });
+    it('does not autoload again while catalog is loading', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "http://sample.service/catalog",
+            title: "csw",
+            autoload: true
+        };
+        const actions = {
+            onSearch: () => {}
+        };
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            selectedFormat="csw"
+            loading
+            onSearch={actions.onSearch}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(spyOnSearch.calls.length).toBe(0);
+            done();
+        }, 0);
+    });
+    it('does not autoload again when current catalog has a loading error', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "http://sample.service/catalog",
+            title: "csw",
+            autoload: true
+        };
+        const actions = {
+            onSearch: () => {}
+        };
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            selectedFormat="csw"
+            loadingError="error"
+            onSearch={actions.onSearch}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(spyOnSearch.calls.length).toBe(0);
+            done();
+        }, 0);
+    });
+    it('does not autoload in edit mode', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "http://sample.service/catalog",
+            title: "csw",
+            autoload: true
+        };
+        const actions = {
+            onSearch: () => {}
+        };
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            selectedFormat="csw"
+            mode="edit"
+            onSearch={actions.onSearch}
+        />, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(spyOnSearch.calls.length).toBe(0);
+            expect(document.querySelector('.ms-catalog-service-editor')).toBeTruthy();
+            done();
+        }, 0);
     });
     it('renders editor in edit mode', () => {
         const SERVICE = {
@@ -202,8 +398,8 @@ describe('Test Catalog panel', () => {
                     maxRecords: 12,
                     text: '',
                     options: {
-                        filters: undefined,
-                        sort: undefined,
+                        filters: {},
+                        sort: '-date',
                         service: SERVICE
                     }
                 });

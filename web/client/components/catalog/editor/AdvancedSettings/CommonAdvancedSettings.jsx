@@ -7,10 +7,18 @@
  */
 import React from 'react';
 import { isNil } from 'lodash';
-import { FormGroup, Checkbox } from "react-bootstrap";
+import { FormGroup, Checkbox, ControlLabel, FormControl } from "react-bootstrap";
 
 import Message from "../../../I18N/Message";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
+import localizedProps from '../../../misc/enhancers/localizedProps';
+
+const LocalizedFormControl = localizedProps('placeholder')(FormControl);
+
+const parseMaxFeaturesInView = (event) => {
+    const maxFeaturesInView = Number(event?.target?.value);
+    return maxFeaturesInView > 0 ? maxFeaturesInView : undefined;
+};
 
 /**
  * Common Advanced settings form WMS/CSW/WMTS/WFS
@@ -54,6 +62,21 @@ export default ({
                     checked={!isNil(service.fetchMetadata) ? service.fetchMetadata : true}>
                     <Message msgId="catalog.fetchMetadata.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.fetchMetadata.tooltip" />} />
                 </Checkbox>
+            </FormGroup>}
+            {!isNil(service.type) && service.type === "flatgeobuf" &&
+            <FormGroup className="form-group" controlId="maxFeaturesInView" key="maxFeaturesInView">
+                <ControlLabel><Message msgId="layerProperties.maxFeaturesInView" /></ControlLabel>
+                <LocalizedFormControl
+                    data-qa="catalog-max-features-in-view"
+                    type="number"
+                    min={1}
+                    step={1}
+                    placeholder="layerProperties.maxFeaturesInViewPlaceholder"
+                    value={service.layerOptions?.maxFeaturesInView === undefined ? '' : service.layerOptions?.maxFeaturesInView}
+                    onChange={(e) => onChangeServiceProperty("layerOptions", {
+                        ...service.layerOptions,
+                        maxFeaturesInView: parseMaxFeaturesInView(e)
+                    })} />
             </FormGroup>}
             {['wfs', 'vector'].includes(service.type) && <FormGroup className="wfs-vector-interactive-legend" controlId="enableInteractiveLegend" key="enableInteractiveLegend">
                 <Checkbox data-qa="display-interactive-legend-option"

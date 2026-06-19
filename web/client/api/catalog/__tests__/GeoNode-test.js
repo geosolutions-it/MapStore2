@@ -37,6 +37,40 @@ describe('Test correctness of the GeoNode catalog APIs', () => {
         expect(records[0].pk).toBe(123);
     });
 
+    it('geonode catalog records mapping uses category label for tags', () => {
+        const records = getCatalogRecords({
+            records: [{
+                title: 'Title',
+                category: {
+                    identifier: 'boundaries',
+                    gn_description: 'Boundaries'
+                },
+                pk: 123
+            }]
+        });
+        expect(records[0].tags).toEqual([{
+            identifier: 'boundaries',
+            gn_description: 'Boundaries',
+            label: 'Boundaries'
+        }]);
+    });
+
+    it('geonode catalog records mapping falls back to category identifier for tag label', () => {
+        const records = getCatalogRecords({
+            records: [{
+                title: 'Title',
+                category: {
+                    identifier: 'boundaries'
+                },
+                pk: 123
+            }]
+        });
+        expect(records[0].tags).toEqual([{
+            identifier: 'boundaries',
+            label: 'boundaries'
+        }]);
+    });
+
     it('geonode catalog records returns null with no records', () => {
         expect(getCatalogRecords()).toBe(null);
         expect(getCatalogRecords({})).toBe(null);

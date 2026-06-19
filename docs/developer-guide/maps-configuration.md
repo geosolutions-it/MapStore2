@@ -1396,12 +1396,18 @@ See format specifications for more info about FlatGeobuf [here](https://flatgeob
 ```javascript
 {
     "type": "flatgeobuf",
-    "url": "https://host-sample/countries.fgb",    
+    "url": "https://host-sample/countries.fgb",
     "title": "Title",
     "group": "",
-    "visibility": true
+    "visibility": true,
+    "maxFeaturesInView": 1000
 }
 ```
+
+Where:
+
+- `url` is the URL of the FlatGeobuf source.
+- `maxFeaturesInView` (optional) the maximum number of features to load for the current map view. Used to limit rendering when the FlatGeobuf source contains many features.
 
 ## Layer groups
 
