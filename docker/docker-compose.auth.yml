@@ -91,7 +91,7 @@ services:
       keycloak:
         condition: service_healthy
     extra_hosts:
-      - "localhost:host-gateway"
+      - "host.docker.internal:host-gateway"
     volumes:
       - "${DATADIR_PATH:-./datadir}:/usr/local/tomcat/datadir:ro"
     networks:
