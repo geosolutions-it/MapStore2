@@ -22,6 +22,31 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.01.02 to 2026.02.00
 
+### Custom map resolutions moved from `new.json` to the `CRSSelector` plugin
+
+Custom map resolutions used to be declared in the default map configuration (`new.json`, or the project-level equivalent) under `mapOptions.view.resolutions`. That location was tied to a single projection and was not kept in sync when the CRS was changed at runtime, which could leave saved maps with a projection that did not match the persisted resolutions.
+
+Custom resolutions are declared **per CRS** in the `CRSSelector` plugin configuration in `localConfig.json`, keyed by SRS code:
+
+```json
+{
+  "name": "CRSSelector",
+  "cfg": {
+    "customResolutions": {
+      "EPSG:3003": [8000, 4000, 2000, 1000, 500, 250, 100, 50, 20, 10],
+      "EPSG:4326": [0.7, 0.35, 0.175, 0.0875, 0.04375, 0.021875]
+    }
+  }
+}
+```
+
+When the user switches the map CRS, the matching list of resolutions is applied to the map. If a CRS has no entry, the resolutions are computed from the projection extent. In either case the chosen list is saved together with the map so that, on reload, the CRS and the resolutions remain aligned.
+
+#### Migration steps
+
+1. Remove `mapOptions.view.resolutions` from `new.json` (and from any custom default map config used by the project). Any value left there is dropped on the next save.
+2. Add an equivalent `customResolutions` block to the `CRSSelector` plugin entry in `localConfig.json`, keyed by the SRS the resolutions were originally designed for.
+
 ### webpack-dev-server upgrade to v5
 
 `webpack-dev-server` has been upgraded from 3.11.0 to 5.2.4. This is a dev-only change with no impact on production builds, but projects that customize the dev server configuration must update accordingly.
