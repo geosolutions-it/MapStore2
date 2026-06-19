@@ -53,13 +53,35 @@ export const resolveTagFilterType = (service) => {
     return getGeoNodeDefaultTagFilterType();
 };
 
+const getTagLabel = (tag, tagFilterType) => {
+    if (!tag || typeof tag !== 'object') {
+        return tag;
+    }
+    if (tagFilterType === 'category') {
+        return tag.label || tag.gn_description || tag.identifier;
+    }
+    if (tagFilterType === 'keyword') {
+        return tag.label || tag.name || tag.slug;
+    }
+    return tag.label || tag.name || tag.gn_description || tag.identifier || tag.slug;
+};
+
+const normalizeTag = (tag, tagFilterType) => {
+    if (!tag || typeof tag !== 'object') {
+        return tag;
+    }
+    const label = getTagLabel(tag, tagFilterType);
+    return label ? { ...tag, label } : tag;
+};
+
 export const getCatalogRecords = (records, options) => {
     if (records && records.records) {
         const tagFilterType = resolveTagFilterType(options?.service);
         return records.records.map((record) => {
-            const tags = tagFilterType === 'keyword'
+            const tags = (tagFilterType === 'keyword'
                 ? (record.keywords || [])
-                : (record.category ? [record.category] : []);
+                : (record.category ? [record.category] : []))
+                .map((tag) => normalizeTag(tag, tagFilterType));
             return {
                 ...record,
                 serviceType: "geonode",

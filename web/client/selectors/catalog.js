@@ -31,6 +31,7 @@ export const selectedStaticServiceTypeSelector =
 export const tileSizeOptionsSelector = state => get(state, 'catalog.default.tileSizes', [256, 512]);
 
 export const groupSelector = (state) => get(state, "controls.metadataexplorer.group");
+export const catalogPanelSelector = (state) => get(state, "controls.metadataexplorer.panel");
 export const savingSelector = (state) => get(state, "catalog.saving");
 export const resultSelector = (state) => get(state, "catalog.result");
 export const serviceListOpenSelector = (state) => get(state, "catalog.openCatalogServiceList");
