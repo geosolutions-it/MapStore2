@@ -23,7 +23,16 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
+<<<<<<< HEAD
 import '../plugins/FlatGeobufLayer';
+=======
+import '../plugins/COGLayer';
+import {
+    invalidateCappedLoadExtents,
+    isMeaningfulCappedExtentRefinement,
+    registerCappedLoadExtent
+} from '../plugins/FlatGeobufLayer';
+>>>>>>> 22f800f (COG layers are loading data even if not visible  #12360 (#12488))
 
 import {
     setStore,
@@ -3629,6 +3638,56 @@ describe('Openlayers layer', () => {
         expect(loadCount).toBe(0);
         source.dispatchEvent('featuresloadend');
         expect(loadCount).toBe(1);
+    });
+
+    describe('COG', () => {
+        const cogOptions = {
+            id: 'cog-layer',
+            type: 'cog',
+            title: 'COG layer',
+            visibility: false,
+            sources: [{
+                url: 'data:image/tiff;base64,'
+            }],
+            sourceMetadata: {
+                crs: 'EPSG:3857'
+            }
+        };
+
+        it('does not create an OpenLayers layer while initially hidden', () => {
+            const layer = ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={cogOptions}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            expect(layer.layer).toBe(null);
+            expect(map.getLayers().getLength()).toBe(0);
+        });
+
+        it('creates the OpenLayers layer when visibility changes from hidden to visible', () => {
+            const layer = ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={cogOptions}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={{...cogOptions, visibility: true}}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            expect(layer.layer).toBeTruthy();
+            expect(layer.layer.getSource()).toBeTruthy();
+            expect(map.getLayers().getLength()).toBe(1);
+        });
     });
 
     describe('FlatGeobuf', () => {
