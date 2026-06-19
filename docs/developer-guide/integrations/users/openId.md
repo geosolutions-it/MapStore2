@@ -23,8 +23,6 @@ For each provider you want to enable, you have to:
 - add the provider name to `oidc_providers` and configure `{provider}OAuth2Config.*` properties in `mapstore-ovr.properties`
 - add a corresponding entry to `authenticationProviders` in `localConfig.json`
 
-Keycloak supports an additional **Single Sign On (SSO)** feature for automatic login/logout detection across applications. See the [dedicated section](#keycloak-single-sign-on-sso).
-
 ### OpenID Connect
 
 In order to configure an OpenID Connect provider with a service of your choice you have to:
@@ -67,9 +65,9 @@ oidcOAuth2Config.discoveryUrl=https://<idp-host>/.well-known/openid-configuratio
 oidcOAuth2Config.autoCreateUser=true
 
 # Redirect URIs
-oidcOAuth2Config.redirectUri=http://localhost:8080/mapstore/rest/geostore/openid/oidc/callback
+oidcOAuth2Config.redirectUri=http://<my-domain-site>/mapstore/rest/geostore/openid/oidc/callback
 # Internal redirect URI (can be relative path, e.g. `../../..` to work across domains)
-oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
+oidcOAuth2Config.internalRedirectUri=http://<my-domain-site>/mapstore
 
 # User name attribute (default: email)
 # oidcOAuth2Config.principalKey=email
@@ -93,7 +91,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 
 # Groups always assigned to every authenticated user, in addition to claim-derived ones.
 # Created automatically if they do not exist; not subject to groupMappings/dropUnmapped.
-# oidcOAuth2Config.defaultGroups=everyone-oidc
+# oidcOAuth2Config.defaultGroups=oidc-users
 
 # Global logout (RP-initiated logout): invoke IdP logout on MapStore logout
 # oidcOAuth2Config.globalLogoutEnabled=true
@@ -316,13 +314,7 @@ googleOAuth2Config.accessType=offline
 
 ### Keycloak
 
-[Keycloak](https://www.keycloak.org/) is an open source identity and access management application widely used. MapStore integrates with Keycloak via the generic OIDC layer:
-
-- Standard OpenID Connect (OIDC) login/logout in MapStore
-- Single Sign On (SSO) with other applications — see [the dedicated section](#keycloak-single-sign-on-sso)
-- Mapping Keycloak roles to MapStore roles and groups
-
-In this section you can see how to configure Keycloak as an OIDC provider.
+[Keycloak](https://www.keycloak.org/) is an open source identity and access management application widely used. MapStore integrates with Keycloak via the generic OIDC layer.
 
 #### Configure Keycloak Client
 
@@ -378,7 +370,7 @@ keycloakOAuth2Config.groupMappings=MY_KEYCLOAK_ROLE:MY_MAPSTORE_GROUP,MY_KEYCLOA
 keycloakOAuth2Config.dropUnmapped=false
 
 # Groups always assigned to every authenticated user (created on the fly if missing)
-# keycloakOAuth2Config.defaultGroups=everyone-keycloak
+# keycloakOAuth2Config.defaultGroups=keycloak-users
 
 # RP-initiated global logout
 # keycloakOAuth2Config.globalLogoutEnabled=true
