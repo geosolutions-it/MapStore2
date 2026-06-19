@@ -29,17 +29,17 @@ const AccordionTitle = ({
 }) => {
 
     return (
-        <FlexBox gap="sm" onClick={onClick}>
+        <FlexBox gap="sm" centerChildrenVertically onClick={onClick}>
+            {loading
+                ? <Spinner/>
+                : <Glyphicon glyph={`${expanded ? "bottom" : "next"}`}/>
+            }
             <FlexBox.Fill>
                 <Text strong>
                     {children}
                     <Button onClick={onClick} style={{ display: 'block', width: 0, height: 0, overflow: 'hidden', opacity: 0, padding: 0, margin: 0 }}/>
                 </Text>
             </FlexBox.Fill>
-            {loading
-                ? <Spinner/>
-                : <Glyphicon glyph={`${expanded ? "bottom" : "back"}`}/>
-            }
         </FlexBox>
     );
 };

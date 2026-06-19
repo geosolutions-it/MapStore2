@@ -5,12 +5,33 @@
 .ms-filter-selector-header {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end; // align to the right when title is hidden
+    gap: 6px;
+    .ms-filter-title-wrap {
+        flex: 1 1 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        .mapstore-info-popover {
+            display: inline-flex;
+            align-items: center;
+        }
+    }
     .ms-filter-title {
-        flex: 1;
+        flex: 1 1 auto;
         margin-bottom: 0;
         padding: 5px 0; // to fit with select all / clear checkbox alignment
+    }
+    .ms-filter-title-wrap .ms-filter-title {
+        flex: 0 0 auto;
+    }
+    .ms-filter-actions-wrap {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
     }
 }
 
@@ -30,5 +51,30 @@
     .ms-filter-view-map-time-range-disabled-message {
         font-size: 14px;
         max-width: 360px;
+    }
+}
+.ms-filter-card-toolbar {
+    label {
+        margin-bottom: 0;
+    }
+
+    .ms-filter-card-tool-btn,
+    .ms-filter-card-tool-btn:hover,
+    .ms-filter-card-tool-btn:focus,
+    .ms-filter-card-tool-btn:active {
+        text-decoration: none;
+    }
+}
+
+.ms-filter-selector-header {
+    .ms-filter-collapse-toggle,
+    .ms-filter-collapse-toggle:hover,
+    .ms-filter-collapse-toggle:focus,
+    .ms-filter-collapse-toggle:active {
+        text-decoration: none;
+    }
+    // Pull the chevron left so its glyph optical-aligns with items in the expanded body
+    .ms-filter-collapse-toggle {
+        margin-left: -6px;
     }
 }
