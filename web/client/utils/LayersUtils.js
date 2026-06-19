@@ -7,7 +7,7 @@
  */
 
 import toBbox from 'turf-bbox';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
@@ -763,6 +763,7 @@ export const saveLayer = (layer) => {
     layer.strategy ? { strategy: layer.strategy } : {},
     layer.geometryType ? { geometryType: layer.geometryType } : {},
     layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {},
+    !isNil(layer.maxFeaturesInView) ? { maxFeaturesInView: layer.maxFeaturesInView } : {},
     !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : {});
 };
 

@@ -28,6 +28,9 @@ import { wizardStateToProps, wizardSelector} from './commons';
 import TableWizard from '../../components/widgets/builder/wizard/TableWizard';
 import BaseToolbar from '../../components/widgets/builder/wizard/table/Toolbar';
 import LayerSelector from './LayerSelector';
+import MapCatalogLayerSelector from './MapCatalogLayerSelector';
+import layerSelectorConnect from './enhancers/connection/layerSelectorConnect';
+import withBackButton from './enhancers/withBackButton';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
 
 const Builder = connect(
@@ -72,6 +75,12 @@ const Toolbar = compose(
     withConnectButton(({ step }) => step === 0)
 )(BaseToolbar);
 
+// Map-layers picker (current map layers only)
+const TableMapLayerSelector = compose(
+    layerSelectorConnect,
+    withBackButton
+)(MapCatalogLayerSelector);
+
 /*
  * in case you don't have a layer selected (e.g. dashboard) the table builder
  * prompts a catalog view to allow layer selection
@@ -80,6 +89,10 @@ const chooseLayerEnhancer = compose(
     connect(wizardSelector),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
+    branch(
+        ({ layer, editorData } = {}) => !layer && editorData?.globalWidgetMode === true,
+        renderComponent(TableMapLayerSelector)
+    ),
     branch(
         ({ layer } = {}) => !layer,
         renderComponent(tableLayerSelector(LayerSelector))

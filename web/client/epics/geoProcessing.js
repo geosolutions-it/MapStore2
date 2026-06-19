@@ -14,7 +14,7 @@ import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 
 import Rx from 'rxjs';
-import uuidV1 from 'uuid/v1';
+import { v1 as uuidV1 } from 'uuid';
 import {parseString} from 'xml2js';
 import {stripPrefix} from 'xml2js/lib/processors';
 
@@ -145,7 +145,7 @@ import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
 import {findNonGeometryProperty, findGeometryProperty} from '../utils/ogc/WFS/base';
 import toWKT from '../utils/ogc/WKT/toWKT';
-import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../utils/LayoutUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 const DEACTIVATE_ACTIONS = [
@@ -1059,13 +1059,15 @@ export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => isGeoProcessingEnabledSelector(store.getState()) && source !== GPT_CONTROL_NAME)
         .map(({layout}) => {
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             });
             return { ...action, source: GPT_CONTROL_NAME }; // add an argument to avoid infinite loop.

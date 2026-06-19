@@ -15,7 +15,7 @@ import {
     createEventHandler,
     withHandlers
 } from 'recompose';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import MapInfoViewer from '../../../common/MapInfoViewer';
 import { getDefaultInfoFormat } from '../../../common/enhancers/withIdentifyPopup';
 import { isEqual } from "lodash";

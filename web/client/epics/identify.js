@@ -8,7 +8,7 @@
 
 import Rx from 'rxjs';
 import { get, find, reverse, includes } from 'lodash';
-import uuid from 'uuid';
+import { v1 as uuidv1, v4 as uuid } from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO,
@@ -46,9 +46,9 @@ import {
 import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, rawGroupsSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
-import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
+import { mapSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
-import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox} from '../utils/CoordinatesUtils';
+import { centerToVisibleArea, isInsideVisibleArea } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -134,7 +134,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                         const appParams = filterRequestParams(layer, includeOptions, excludeParams);
                         const attachJSON = isHighlightEnabledSelector(getState());
                         const itemId = itemIdSelector(getState());
-                        const reqId = uuid.v1();
+                        const reqId = uuidv1();
                         const param = { ...appParams, ...requestParams };
                         return getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
                             // this 0 delay is needed for vector/3dtiles layer because makes the response async and give time to the GUI to render
@@ -272,11 +272,6 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
                         return Rx.Observable.from([updateCenterToMarker('disabled'), hideMapinfoMarker()]);
                     }
                     const map = mapSelector(state);
-                    const mapProjection = projectionSelector(state);
-                    const projectionDefs = projectionDefsSelector(state);
-                    const currentprojectionDefs = find(projectionDefs, {'code': mapProjection});
-                    const projectionExtent = currentprojectionDefs && currentprojectionDefs.extent;
-                    const reprojectExtent = projectionExtent && reprojectBbox(projectionExtent, mapProjection, "EPSG:4326");
                     const boundingMapRect = boundingMapRectSelector(state);
                     const coords = action.point && action.point && action.point.latlng;
                     const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
@@ -299,9 +294,6 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
                     // exclude cesium with cartographic options
                     if (!map || !layoutBounds || !coords || action.point.cartographic || isFeatInsideVisibleArea || isMouseMoveIdentifyActiveSelector(state) || skipZooming) {
                         return Rx.Observable.of(updateCenterToMarker('disabled'));
-                    }
-                    if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
-                        return Rx.Observable.empty();
                     }
                     const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
                     if (featureBbox && isQueryJustOneLayer) {

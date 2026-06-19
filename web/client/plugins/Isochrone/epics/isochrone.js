@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import isArray from 'lodash/isArray';
@@ -36,7 +36,7 @@ import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInf
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
 import { addLayer } from '../../../actions/layers';
-import { DEFAULT_PANEL_WIDTH, parseLayoutValue } from '../../../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect, parseLayoutValue } from '../../../utils/LayoutUtils';
 import { drawerEnabledControlSelector } from '../../../selectors/controls';
 import { info } from '../../../actions/notifications';
 import { getMarkerLayerIdentifier } from '../utils/IsochroneUtils';
@@ -58,13 +58,15 @@ export const isochroneMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             });
             return { ...action, source: CONTROL_NAME };

@@ -11,13 +11,11 @@ import Rx from 'rxjs';
 import {
     START_TUTORIAL,
     UPDATE_TUTORIAL,
-    CLOSE_TUTORIAL,
     INIT_TUTORIAL,
     CHANGE_PRESET,
     closeTutorial,
     setupTutorial
 } from '../actions/tutorial';
-import { openDetailsPanel } from '../actions/details';
 import { CHANGE_MAP_VIEW } from '../actions/map';
 import { modeSelector } from '../selectors/geostory';
 import { CHANGE_MODE } from '../actions/geostory';
@@ -28,7 +26,6 @@ import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi, getItemKey } from '../api/userPersistedStorage';
 import {REDUCERS_LOADED} from "../actions/storemanager";
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
-import { detailsSettingsSelector } from '../selectors/details';
 
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
@@ -165,26 +162,10 @@ export const getActionsFromStepEpic = (action$) =>
  * @type {Object}
  */
 
-export const openDetailsPanelEpic = (action$, store) =>
-    action$.ofType(CLOSE_TUTORIAL)
-        .filter(() => {
-            const state = store.getState();
-            let detailsSettings = detailsSettingsSelector(state);
-            if (detailsSettings && typeof detailsSettings === 'string') {
-                detailsSettings = JSON.parse(detailsSettings);
-            }
-            return detailsSettings?.showAtStartup;
-        })
-        .switchMap( () => {
-            return Rx.Observable.of(openDetailsPanel());
-        });
-
-
 export default {
     closeTutorialEpic,
     switchTutorialEpic,
     getActionsFromStepEpic,
     changePresetEpic,
-    switchGeostoryTutorialEpic,
-    openDetailsPanelEpic
+    switchGeostoryTutorialEpic
 };

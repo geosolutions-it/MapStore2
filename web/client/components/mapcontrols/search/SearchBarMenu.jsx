@@ -10,7 +10,7 @@ import { Glyphicon, DropdownButton } from 'react-bootstrap';
 
 import tooltip from '../../misc/enhancers/tooltip';
 import React from 'react';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 const DropdownButtonT = tooltip(DropdownButton);
 

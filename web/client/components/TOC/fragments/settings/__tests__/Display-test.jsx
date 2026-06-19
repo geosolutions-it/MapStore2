@@ -53,6 +53,32 @@ describe('test Layer Properties Display module component', () => {
         ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('100');
     });
+    it('tests Display component for FlatGeobuf max features in view field', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'flatgeobuf',
+            url: 'fakeurl',
+            maxFeaturesInView: 7
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const spyOn = expect.spyOn(handlers, 'onChange');
+        ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const maxFeaturesInView = document.querySelector('[data-qa="display-max-features-in-view"]');
+        expect(maxFeaturesInView).toBeTruthy();
+        expect(maxFeaturesInView.value).toBe('7');
+        ReactTestUtils.Simulate.change(maxFeaturesInView, { target: { value: '15' } });
+        expect(spyOn.calls[0].arguments).toEqual([ 'maxFeaturesInView', 15 ]);
+        ReactTestUtils.Simulate.change(maxFeaturesInView, { target: { value: '' } });
+        expect(spyOn.calls[1].arguments).toEqual([ 'maxFeaturesInView', undefined ]);
+    });
     it('tests Display component for wms for map viewer', () => {
         const l = {
             name: 'layer00',

@@ -22,7 +22,7 @@ import {
     isObject,
     isNumber
 } from "lodash";
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 
 
 import url from 'url';

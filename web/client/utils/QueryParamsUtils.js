@@ -26,7 +26,7 @@ import {
     SEARCH_LAYER_WITH_FILTER,
     SCHEDULE_SEARCH_LAYER_WITH_FILTER
 } from "../actions/search";
-import uuid from "uuid/v1";
+import { v1 as uuid } from "uuid";
 import {syncActiveBackgroundLayer} from "../actions/backgroundselector";
 import {selectedServiceSelector} from "../selectors/catalog";
 import {mapTypeSelector} from "../selectors/maptype";
