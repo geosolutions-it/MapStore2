@@ -191,13 +191,7 @@ From the Azure app registration you need three values:
 | --- | --- | --- |
 | **Application (client) ID** | App registration → Overview | `oidcOAuth2Config.clientId` |
 | **Client secret value** | App registration → Certificates & secrets → New client secret | `oidcOAuth2Config.clientSecret` |
-| **Directory (tenant) ID** | App registration → Overview | Part of the `discoveryUrl` |
-
-The `discoveryUrl` is built from the tenant ID:
-
-```text
-https://login.microsoftonline.com/<TENANT_ID>/v2.0/.well-known/openid-configuration
-```
+| **OpenID Connect metadata document** | App registration → Endpoints → OpenID Connect metadata document | Part of the `discoveryUrl` |
 
 `mapstore-ovr.properties`:
 
@@ -208,7 +202,7 @@ oidcOAuth2Config.enabled=true
 oidcOAuth2Config.clientId=<APPLICATION_CLIENT_ID>
 oidcOAuth2Config.clientSecret=<CLIENT_SECRET_VALUE>
 oidcOAuth2Config.sendClientSecret=true
-oidcOAuth2Config.discoveryUrl=https://login.microsoftonline.com/<TENANT_ID>/v2.0/.well-known/openid-configuration
+oidcOAuth2Config.discoveryUrl=<OPENID_CONNECT_METADATA_DOCUMENT_URL>
 oidcOAuth2Config.autoCreateUser=true
 oidcOAuth2Config.redirectUri=https://<your-domain>/mapstore/rest/geostore/openid/oidc/callback
 oidcOAuth2Config.internalRedirectUri=https://<your-domain>/mapstore
