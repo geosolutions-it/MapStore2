@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
 import { buildServiceUrl } from '../../../utils/CatalogUtils';
@@ -33,6 +33,32 @@ const shouldAutoload = (service, services) => {
     return service &&
         services[service] &&
         services[service].autoload;
+};
+
+const getCurrentSearchOptions = ({
+    searchOptions,
+    selectedService,
+    services
+}) => {
+    const service = selectedService && services?.[selectedService];
+    return service && searchOptions?.url === buildServiceUrl(service)
+        ? searchOptions
+        : {};
+};
+
+const shouldPreserveCurrentRequest = ({
+    loading,
+    isNewServiceAdded,
+    loadingError,
+    result,
+    searchOptions,
+    selectedService,
+    services
+}) => {
+    if (loading || isNewServiceAdded || (loadingError !== undefined && loadingError !== null)) {
+        return true;
+    }
+    return !!(result && getCurrentSearchOptions({ searchOptions, selectedService, services })?.url);
 };
 
 const Catalog = ({
@@ -120,10 +146,12 @@ const Catalog = ({
     filterFormFields
 }, context) => {
     const { messages } = context;
+    const currentSearchOptions = getCurrentSearchOptions({ searchOptions, selectedService, services });
     const [showFilters, setShowFilters] = useState(false);
-    const [filters, setFilters] = useState({});
-    const [sort, setSort] = useState('-date');
+    const [filters, setFilters] = useState(currentSearchOptions.filters || {});
+    const [sort, setSort] = useState(currentSearchOptions.sort || '-date');
     const [selectedServiceInitialized, setSelectedServiceInitialized] = useState(false);
+    const servicesEffectInitialized = useRef(false);
     const serviceCapabilities = API[selectedFormat]?.getCapabilities?.() || {
         filterSupport: false,
         orderBySupport: false
@@ -148,8 +176,23 @@ const Catalog = ({
     };
 
     useEffect(() => {
-        clearSelection?.();
-        if (shouldAutoload(selectedService, services)) {
+        const preserveCurrentRequest = shouldPreserveCurrentRequest({
+            loading,
+            isNewServiceAdded,
+            loadingError,
+            result,
+            searchOptions,
+            selectedService,
+            services
+        });
+        if (!preserveCurrentRequest && servicesEffectInitialized.current) {
+            clearSelection?.();
+        }
+        servicesEffectInitialized.current = true;
+        if (isNewServiceAdded) {
+            setNewServiceStatus(false);
+        }
+        if (!preserveCurrentRequest && mode === 'view' && shouldAutoload(selectedService, services)) {
             search({ searchText, filters, sort });
         }
         setShowFilters(false);

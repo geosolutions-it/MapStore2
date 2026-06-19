@@ -236,6 +236,7 @@ const CatalogCard = ({
                         filter: activeFilterKey,
                         itemColor: 'color',
                         itemValue: activeFilterProp,
+                        itemLabel: 'label',
                         itemSelected: 'selected',
                         onClick: onTagClick
                             ? (tagValue) => onTagClick(tagValue, record)
