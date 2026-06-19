@@ -13,7 +13,7 @@ You can add additional providers to the list (e.g., `openid`), and they will be 
 !!! info
     If only one OpenID entry is present in `authenticationProviders` (and no `geostore` entry available), clicking on the login entry in the login menu will redirect directly to the OpenID provider login page configured, without showing the login window. If more than one entry is present in the `authenticationProviders` list, the the login window will be provided in the MapStore UI to be able choose the desired one for the authentication.
 
-## Supported OpenID services
+## Generic OpenID Connect configuration
 
 MapStore integrates with any [OpenID Connect](https://openid.net/connect/)-compliant provider using a generic OIDC layer. You can configure **one or more providers simultaneously** — each identified by a name that determines the `provider` field in `localConfig.json` and the property prefix in `mapstore-ovr.properties`.
 
@@ -23,24 +23,17 @@ For each provider you want to enable, you have to:
 - add the provider name to `oidc_providers` and configure `{provider}OAuth2Config.*` properties in `mapstore-ovr.properties`
 - add a corresponding entry to `authenticationProviders` in `localConfig.json`
 
-### OpenID Connect
+### Configure OpenID provider client
 
-In order to configure an OpenID Connect provider with a service of your choice you have to:
+This step depends on the specific OpenID provider so, please, refer to the specific documentation of the OpenID provider you are using. See the [Provider examples](#provider-examples) section below for step-by-step guides for Microsoft Azure, Google, and Keycloak.
 
-- Configure the OpenID provider client
-- Configure MapStore back-end
-- Configure the MapStore front-end
-
-#### Configure OpenID provider client
-
-This step depends on the specific OpenID provider so, please, refer to the specific documentation of the OpenID provider you are using. You can find some examples about how to configure a generic OpenID provider with Microsoft Azure in the following sections. The same information are valid for other OpenID providers, like Google, Keycloak, etc.
 You have to get the following information:
 
 - **Client ID**: the client id. This is the client id that must be present on the OpenID provider
 - **Client Secret**: the client secret. This is the client secret for the client id on the OpenID provider
 - **Discovery URL**: the discovery URL. This is the URL that contains all the information for the specific service.
 
-#### Configure the MapStore back-end
+### Configure the MapStore back-end
 
 In order to configure the generic OpenID provider you have to:
 
@@ -149,9 +142,9 @@ These values correspond to the standard fields in the discovery document and are
 - `oidcOAuth2Config.accessType`: (*optional*) passed as the `access_type` parameter in the authorization request. Set to `offline` to request a refresh token (required by Google).
 
 !!! note
-    The only mandatory claim is `email` (or whatever you set in `oidcOAuth2Config.principalKey`). Role and group mapping are optional. All OIDC providers — including Keycloak and Google — now use the same generic configuration.
+    The only mandatory claim is `email` (or whatever you set in `oidcOAuth2Config.principalKey`). Role and group mapping are optional. All OIDC providers — including Keycloak, Google, and Azure — use the same generic configuration.
 
-#### Configure the MapStore front-end
+### Configure the MapStore front-end
 
 - Add an entry for `oidc` in `authenticationProviders` inside `localConfig.json` file.
 
@@ -173,16 +166,78 @@ These values correspond to the standard fields in the discovery document and are
 
 You can customize the `title` to be displayed in the login form, add an `imageURL` or use only one `authenticationProviders`, removing the `geostore` entry, if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
 
-#### Example with Microsoft Azure
+## Multiple simultaneous providers
+
+You can run multiple OIDC providers at the same time by listing them in `oidc_providers` (comma-separated) and configuring each with its own `{provider}OAuth2Config.*` prefix. Each provider's `redirectUri` **must** include the provider name in the path.
+
+Example: Keycloak + Google
+
+```properties
+# Both providers active simultaneously
+oidc_providers=keycloak,google
+
+# Keycloak
+keycloakOAuth2Config.enabled=true
+keycloakOAuth2Config.clientId=mapstore-server
+keycloakOAuth2Config.clientSecret=<KEYCLOAK_SECRET>
+keycloakOAuth2Config.discoveryUrl=https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration
+keycloakOAuth2Config.redirectUri=https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback
+keycloakOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
+keycloakOAuth2Config.autoCreateUser=true
+
+# Google
+googleOAuth2Config.enabled=true
+googleOAuth2Config.clientId=<GOOGLE_CLIENT_ID>
+googleOAuth2Config.clientSecret=<GOOGLE_CLIENT_SECRET>
+googleOAuth2Config.discoveryUrl=https://accounts.google.com/.well-known/openid-configuration
+googleOAuth2Config.redirectUri=https://my.mapstore.site.com/mapstore/rest/geostore/openid/google/callback
+googleOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
+googleOAuth2Config.autoCreateUser=true
+googleOAuth2Config.accessType=offline
+```
+
+`localConfig.json` — both providers listed:
+
+```json
+{
+    "authenticationProviders": [
+      {
+        "type": "openID",
+        "provider": "keycloak",
+        "title": "Keycloak"
+      },
+      {
+        "type": "openID",
+        "provider": "google",
+        "title": "Google"
+      },
+      {
+        "type": "basic",
+        "provider": "geostore"
+      }
+    ]
+}
+```
+
+!!! note
+    Use `oidc_providers` (underscore) not `oidc.providers` (dot). The dot form conflicts with Spring's `PropertyOverrideConfigurer` which interprets `oidc.providers` as bean `oidc`, property `providers`.
+
+## Provider examples
+
+The following sections show complete configurations for three common providers. Each is a specific instance of the [generic OIDC layer](#generic-openid-connect-configuration) described above — the configuration structure is the same across all providers.
+
+### Microsoft Azure (Entra ID)
 
 Microsoft Azure (Entra ID) provides OpenID Connect support. Please refer to the [Microsoft Azure documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app) for details.
+
+#### Configure Azure app registration
 
 Here a quick summary of the steps to configure Microsoft Azure as an OpenID provider and get the information needed to configure MapStore:
 
 1. Create a new application ![Create azure application](img/azure-1.jpg)
 2. Set the proper valid redirect URLs ![set redirect URL](img/azure-2.jpg) to: `https://<your-domain>/mapstore/rest/geostore/openid/oidc/callback`
 3. Create and copy the client secret ![Create and copy client secret](img/azure-3.jpg)
-4. Add optional claims if needed ![Add optional claims](img/azure-4.jpg)
+4. Add optional claims (e.g. `email`, `family_name`, `given_name`) in **Token configuration** if needed
 5. Copy endpoints and data to configure MapStore ![Copy endpoints](img/azure-5.jpg)
 
 From the Azure app registration you need three values:
@@ -191,7 +246,9 @@ From the Azure app registration you need three values:
 | --- | --- | --- |
 | **Application (client) ID** | App registration → Overview | `oidcOAuth2Config.clientId` |
 | **Client secret value** | App registration → Certificates & secrets → New client secret | `oidcOAuth2Config.clientSecret` |
-| **OpenID Connect metadata document** | App registration → Endpoints → OpenID Connect metadata document | Part of the `discoveryUrl` |
+| **OpenID Connect metadata document** | App registration → Endpoints → OpenID Connect metadata document | `oidcOAuth2Config.discoveryUrl` |
+
+#### Configure MapStore back-end for Azure
 
 `mapstore-ovr.properties`:
 
@@ -208,6 +265,8 @@ oidcOAuth2Config.redirectUri=https://<your-domain>/mapstore/rest/geostore/openid
 oidcOAuth2Config.internalRedirectUri=https://<your-domain>/mapstore
 oidcOAuth2Config.scopes=openid,email,profile
 ```
+
+#### Configure MapStore front-end for Azure
 
 `configs/localConfig.json.patch` ( *with a custom title and an image with the Microsoft logo* to show in the login form)
 
@@ -403,59 +462,3 @@ keycloakOAuth2Config.dropUnmapped=false
     ]
 }
 ```
-
-### Multiple simultaneous providers
-
-You can run multiple OIDC providers at the same time by listing them in `oidc_providers` (comma-separated) and configuring each with its own `{provider}OAuth2Config.*` prefix. Each provider's `redirectUri` **must** include the provider name in the path.
-
-Example: Keycloak + Google
-
-```properties
-# Both providers active simultaneously
-oidc_providers=keycloak,google
-
-# Keycloak
-keycloakOAuth2Config.enabled=true
-keycloakOAuth2Config.clientId=mapstore-server
-keycloakOAuth2Config.clientSecret=<KEYCLOAK_SECRET>
-keycloakOAuth2Config.discoveryUrl=https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration
-keycloakOAuth2Config.redirectUri=https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback
-keycloakOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
-keycloakOAuth2Config.autoCreateUser=true
-
-# Google
-googleOAuth2Config.enabled=true
-googleOAuth2Config.clientId=<GOOGLE_CLIENT_ID>
-googleOAuth2Config.clientSecret=<GOOGLE_CLIENT_SECRET>
-googleOAuth2Config.discoveryUrl=https://accounts.google.com/.well-known/openid-configuration
-googleOAuth2Config.redirectUri=https://my.mapstore.site.com/mapstore/rest/geostore/openid/google/callback
-googleOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
-googleOAuth2Config.autoCreateUser=true
-googleOAuth2Config.accessType=offline
-```
-
-`localConfig.json` — both providers listed:
-
-```json
-{
-    "authenticationProviders": [
-      {
-        "type": "openID",
-        "provider": "keycloak",
-        "title": "Keycloak"
-      },
-      {
-        "type": "openID",
-        "provider": "google",
-        "title": "Google"
-      },
-      {
-        "type": "basic",
-        "provider": "geostore"
-      }
-    ]
-}
-```
-
-!!! note
-    Use `oidc_providers` (underscore) not `oidc.providers` (dot). The dot form conflicts with Spring's `PropertyOverrideConfigurer` which interprets `oidc.providers` as bean `oidc`, property `providers`.
