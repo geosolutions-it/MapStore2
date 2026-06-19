@@ -24,11 +24,7 @@ import '../plugins/WFSLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
 import '../plugins/COGLayer';
-import {
-    invalidateCappedLoadExtents,
-    isMeaningfulCappedExtentRefinement,
-    registerCappedLoadExtent
-} from '../plugins/FlatGeobufLayer';
+import '../plugins/FlatGeobufLayer';
 
 import {
     setStore,
