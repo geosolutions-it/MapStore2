@@ -22,6 +22,15 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.01.02 to 2026.02.00
 
+### print-lib updated to 2.3.5
+
+In your project, you should update the `print-lib.version` property from version `2.3.4` to version `2.3.5` in the root `pom.xml`.
+
+```diff
+-        <print-lib.version>2.3.4</print-lib.version>
++        <print-lib.version>2.3.5</print-lib.version>
+```
+
 ### webpack-dev-server upgrade to v5
 
 `webpack-dev-server` has been upgraded from 3.11.0 to 5.2.4. This is a dev-only change with no impact on production builds, but projects that customize the dev server configuration must update accordingly.
