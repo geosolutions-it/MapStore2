@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import API from '../../../../api/catalog';
+import defaultAPI from '../../../../api/catalog';
 import { buildServiceUrl } from '../../../../utils/CatalogUtils';
 
 const withCatalogRequests = (Component) => {
@@ -17,6 +17,7 @@ const withCatalogRequests = (Component) => {
         onChangeSelectedService,
         onChangeCatalogMode,
         title,
+        API = defaultAPI,
         ...props
     }) {
 
@@ -114,6 +115,7 @@ const withCatalogRequests = (Component) => {
         return (
             <Component
                 {...props}
+                API={API}
                 canEditService={canEditService}
                 includeAddToMap={includeAddToMap}
                 onChangeSelectedService={onChangeSelectedService}

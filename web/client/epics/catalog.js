@@ -431,11 +431,19 @@ export default (API) => ({
                 const state = store.getState();
                 const newService = newServiceSelector(state);
                 const maxRecords = pageSizeSelector(state);
+                const currentSearchOptions = searchOptionsSelector(state) || {};
                 return Rx.Observable.of(newService)
                     // validate
                     .switchMap((service) => API[service.type]?.preprocess?.(service) ?? ( Rx.Observable.of(service)))
                     .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
                     .switchMap((service) => {
+                        const preserveCurrentRequest = !!service.oldService;
+                        const preservedSearchOptions = preserveCurrentRequest
+                            ? {
+                                ...(currentSearchOptions.filters !== undefined && { filters: currentSearchOptions.filters }),
+                                ...(currentSearchOptions.sort !== undefined && { sort: currentSearchOptions.sort })
+                            }
+                            : {};
                         // Dispatch action to test service and add records to catalog after successful saving of the service,
                         // this prevents duplicate calls being fired for all the services
                         return Rx.Observable.of(
@@ -444,8 +452,8 @@ export default (API) => ({
                                 url: service.url,
                                 startPosition: 1,
                                 maxRecords,
-                                text: "",
-                                options: {service, isNewService: true, ...options}
+                                text: preserveCurrentRequest ? currentSearchOptions.text || "" : "",
+                                options: {service, isNewService: true, ...preservedSearchOptions, ...options}
                             })
                         );
                     })

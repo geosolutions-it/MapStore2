@@ -45,22 +45,31 @@ const FilterWidget = ({
     dataGrid = {},
     confirmDelete = false,
     onDelete = () => {},
-    dispatch,
+    onApplyInteractions = () => {},
     target = 'floating' // Default target container
 } = {}) => {
 
+    // Re-apply interaction effects for a filter. Deferred so the reducer has
+    // processed the preceding UPDATE_PROPERTY first.
+    const reapplyInteractions = (filterId) => {
+        setTimeout(() => {
+            onApplyInteractions(id, target, filterId);
+        }, 0);
+    };
+
     // Handle selection change for a specific filter
     const handleSelectionChange = (filterId) => (newValues) => {
-        // Update widget state
         updateProperty(id, `selections[${filterId}]`, newValues);
+        reapplyInteractions(filterId);
+    };
 
-        // Trigger interaction effects after state is updated
-        // Use setTimeout to ensure reducer has processed UPDATE_PROPERTY first
-        if (dispatch) {
-            setTimeout(() => {
-                dispatch(applyFilterWidgetInteractions(id, target, filterId));
-            }, 0);
-        }
+    // Toggle a filter's `disabled` flag. Selections are preserved.
+    const handleToggleDisabled = (filterId) => (nextDisabled) => {
+        const updatedFilters = filters.map(f => (
+            f.id === filterId ? { ...f, disabled: !!nextDisabled } : f
+        ));
+        updateProperty(id, 'filters', updatedFilters);
+        reapplyInteractions(filterId);
     };
 
     return (
@@ -110,6 +119,8 @@ const FilterWidget = ({
                                 syncCurrentTime={syncCurrentTime}
                                 timelineRangeEnabled={timelineRangeEnabled}
                                 onSelectionChange={handleSelectionChange(filter.id)}
+                                showItemToolbar // toolbar shown inside the widget, not in the builder preview
+                                onToggleDisabled={handleToggleDisabled(filter.id)}
                             />
                         </div>);
                     })
@@ -146,7 +157,7 @@ FilterWidget.propTypes = {
     dataGrid: PropTypes.object,
     confirmDelete: PropTypes.bool,
     onDelete: PropTypes.func,
-    dispatch: PropTypes.func,
+    onApplyInteractions: PropTypes.func,
     timelineRangeEnabled: PropTypes.bool,
     inactiveInteractionIds: PropTypes.array,
     target: PropTypes.string
@@ -160,4 +171,6 @@ export default connect(createStructuredSelector({
     inactiveInteractionIds: (state, ownProps) => inactiveInteractionIdsForWidgetSelector(state, ownProps?.id),
     currentTime: currentTimeSelector,
     timelineRangeEnabled: offsetEnabledSelector
-}))(FilterWidget);
+}), {
+    onApplyInteractions: applyFilterWidgetInteractions
+})(FilterWidget);
