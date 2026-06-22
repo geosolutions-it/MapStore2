@@ -2,7 +2,7 @@
 
 MapStore allows to integrate with [OpenID connect](https://openid.net/connect/) services. This allows to use external services to authenticate users in MapStore. This is useful when you have to integrate MapStore with an existing authentication system, or when you want to use a third-party service to authenticate users.
 
-## Customizing logo an text in Login Form
+## Customizing logo and text in Login Form
 
 For details about the configuration for a specific service, please refer to the corresponding section below. If you want to customize the icon and/or text displayed, you can refer to the documentation of the [LoginPlugin](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Login).
 
@@ -15,7 +15,7 @@ You can add additional providers to the list (e.g., `openid`), and they will be 
 
 ## Generic OpenID Connect configuration
 
-MapStore integrates with any [OpenID Connect](https://openid.net/connect/)-compliant provider using a generic OIDC layer. You can configure **one or more providers simultaneously** — each identified by a name that determines the `provider` field in `localConfig.json` and the property prefix in `mapstore-ovr.properties`.
+MapStore integrates with any [OpenID Connect](https://openid.net/connect/)-compliant provider using a generic OIDC layer. You can configure **one or more providers simultaneously** - each identified by a name that determines the `provider` field in `localConfig.json` and the property prefix in `mapstore-ovr.properties`.
 
 For each provider you want to enable, you have to:
 
@@ -91,7 +91,7 @@ oidcOAuth2Config.internalRedirectUri=http://<my-domain-site>/mapstore
 # URI to redirect to after logout (optional, required by some providers)
 # oidcOAuth2Config.postLogoutRedirectUri=https://<your-domain>/mapstore/
 
-# PKCE (Proof Key for Code Exchange) — recommended for public clients
+# PKCE (Proof Key for Code Exchange) recommended for public clients
 # oidcOAuth2Config.usePKCE=false
 
 # Bearer token validation strategy: jwt (default), introspection, or auto
@@ -132,7 +132,7 @@ These values correspond to the standard fields in the discovery document and are
 - `oidcOAuth2Config.authenticatedDefaultRole`: (*optional*) role assigned when no `roleMappings` entry matches. Allowed values: `USER` or `ADMIN`.
 - `oidcOAuth2Config.groupsClaim`: (*optional*) claim name containing groups to map to MapStore user groups.
 - `oidcOAuth2Config.groupMappings`: (*optional*) comma-separated `idp-group:mapstore-group` pairs. Escape `:` and `,` in group names with a backslash (doubled in `.properties` files: `\\:`).
-- `oidcOAuth2Config.dropUnmapped`: (*optional*) when `false` (default), unmatched IdP roles are ignored. When `true`, they are added as MapStore user groups.
+- `oidcOAuth2Config.dropUnmapped`: (*optional*) when `false` (default), **all** groups found in the claim are created in MapStore and assigned to the user, even if they have no entry in `groupMappings`. When `true`, only groups that have an explicit entry in `groupMappings` are assigned; unmatched ones are ignored.
 - `oidcOAuth2Config.defaultGroups`: (*optional*) comma-separated group names always assigned to every authenticated user, in addition to the claim-derived ones. These groups are created automatically if they do not exist and are not subject to `groupMappings`/`dropUnmapped`.
 - `oidcOAuth2Config.globalLogoutEnabled`: (*optional*) if `true`, invokes RP-initiated logout on the IdP when the user logs out of MapStore.
 - `oidcOAuth2Config.postLogoutRedirectUri`: (*optional*) URI to redirect to after IdP logout; required by some providers (e.g., Keycloak).
@@ -142,7 +142,7 @@ These values correspond to the standard fields in the discovery document and are
 - `oidcOAuth2Config.accessType`: (*optional*) passed as the `access_type` parameter in the authorization request. Set to `offline` to request a refresh token (required by Google).
 
 !!! note
-    The only mandatory claim is `email` (or whatever you set in `oidcOAuth2Config.principalKey`). Role and group mapping are optional. All OIDC providers — including Keycloak, Google, and Azure — use the same generic configuration.
+    The only mandatory claim is `email` (or whatever you set in `oidcOAuth2Config.principalKey`). Role and group mapping are optional. All OIDC providers, including Keycloak, Google, and Azure, use the same generic configuration.
 
 ### Configure the MapStore front-end
 
@@ -164,7 +164,30 @@ These values correspond to the standard fields in the discovery document and are
 }
 ```
 
-You can customize the `title` to be displayed in the login form, add an `imageURL` or use only one `authenticationProviders`, removing the `geostore` entry, if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
+!!! note
+    You can:
+    - customize the `title` to be displayed in the login form
+    - add an `imageURL` to show a custom icon in the login form. For example, to use a base64-encoded SVG image:
+
+    ```json
+    {
+    "type": "openID",
+    "provider": "oidc",
+    "title": "My custom identity provider",
+    "imageURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgc3R5bGU9ImZpbGw6I2ZmMDAwMDsiIC8+PC9zdmc+"
+    }
+    ```
+
+    - use only one `authenticationProviders`, removing the `geostore` entry, if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
+    - `showAccountInfo` is `false` by default for OpenID provider. To allow users to view their account details in MapStore, add `"showAccountInfo": true` to the provider entry:
+
+    ```json
+    {
+      "type": "openID",
+      "provider": "oidc",
+      "showAccountInfo": true
+    }
+    ```
 
 ## Multiple simultaneous providers
 
@@ -196,7 +219,7 @@ googleOAuth2Config.autoCreateUser=true
 googleOAuth2Config.accessType=offline
 ```
 
-`localConfig.json` — both providers listed:
+`localConfig.json`: both providers listed:
 
 ```json
 {
@@ -248,23 +271,56 @@ From the Azure app registration you need three values:
 | **Client secret value** | App registration → Certificates & secrets → New client secret | `oidcOAuth2Config.clientSecret` |
 | **OpenID Connect metadata document** | App registration → Endpoints → OpenID Connect metadata document | `oidcOAuth2Config.discoveryUrl` |
 
+!!! note
+    If you want to assign groups to users from Azure, you also need to add the `GroupMember.Read.All` scope to the API permissions and grant admin consent.
+    To do it you need to go to API permissions → Add a permission → Microsoft Graph → Application permissions → Delegated Permission → select `GroupMember.Read.All` → Add permissions, then click on **Grant admin consent**.
+
 #### Configure MapStore back-end for Azure
 
 `mapstore-ovr.properties`:
 
 ```properties
-oidc_providers=oidc
+oidc_providers=azure
 
-oidcOAuth2Config.enabled=true
-oidcOAuth2Config.clientId=<APPLICATION_CLIENT_ID>
-oidcOAuth2Config.clientSecret=<CLIENT_SECRET_VALUE>
-oidcOAuth2Config.sendClientSecret=true
-oidcOAuth2Config.discoveryUrl=<OPENID_CONNECT_METADATA_DOCUMENT_URL>
-oidcOAuth2Config.autoCreateUser=true
-oidcOAuth2Config.redirectUri=https://<your-domain>/mapstore/rest/geostore/openid/oidc/callback
-oidcOAuth2Config.internalRedirectUri=https://<your-domain>/mapstore
-oidcOAuth2Config.scopes=openid,email,profile
+azureOAuth2Config.enabled=true
+azureOAuth2Config.clientId=<APPLICATION_CLIENT_ID>
+azureOAuth2Config.clientSecret=<CLIENT_SECRET_VALUE>
+azureOAuth2Config.sendClientSecret=true
+azureOAuth2Config.discoveryUrl=<OPENID_CONNECT_METADATA_DOCUMENT_URL>
+azureOAuth2Config.autoCreateUser=true
+azureOAuth2Config.redirectUri=https://<your-domain>/mapstore/rest/geostore/openid/azure/callback
+azureOAuth2Config.internalRedirectUri=https://<your-domain>/mapstore
+note: GroupMember.Read.All scope is required to get group info in the token for group mapping
+azureOAuth2Config.scopes=openid,email,profile
+
 ```
+
+If you need to assign groups to users from Azure, add the `GroupMember.Read.All` scope to the API permissions and grant admin consent. This allows group information to be included in the token for group mapping, and enable `msGraphEnabled` and `msGraphGroupsEnabled` to get group info from Microsoft Graph.
+
+```properties
+# replace this property
+azureOAuth2Config.scopes=openid,email,profile,GroupMember.Read.All
+# add these properties to enable group retrieval from Microsoft Graph
+azureOAuth2Config.msGraphEnabled=true
+azureOAuth2Config.msGraphGroupsEnabled=true
+
+```
+
+!!! note
+    There is a limit of 200 groups/roles returned in the token by Azure. If a user belongs to more than 200 groups, the `groups` claim is omitted and replaced with an overage indicator. From GeoStore 2.7 (planned for MapStore 2026.03.00) there are additional properties to enable retrieving groups from Microsoft Graph as a workaround for this limitation, but it still requires the `GroupMember.Read.All` scope and admin consent.
+
+    ```properties
+    # These properties will be available from geostore 2.7
+    # This forces to have groups resolved from Microsoft Graph also if the groups claim is present in the token, to avoid the issue of Azure AD not emitting group claims when a user belongs to too many groups (over 200). With this setting, group mapping will work even for users with a large number of groups, as all group information will be retrieved from Microsoft Graph instead of relying on the token claims.
+    # oidcOAuth2Config.msGraphAlwaysResolveGroups=false
+    # This allows to customize the URL, if changes in the future
+    # oidcOAuth2Config.msGraphEndpoint=<https://graph.microsoft.com/v1.0>
+    # This allows to enable role retrieval from Microsoft Graph, if you use App Roles for role mapping instead of group claims. This is also recommended to avoid the issue of Azure AD not emitting role claims when a user belongs to too many groups (over 200), as role information will be retrieved from Microsoft Graph instead of relying on the token claims.
+    # oidcOAuth2Config.msGraphRolesEnabled=false
+    ```
+
+!!! note
+    This is only an example, azure allows complex configurations with different types of credentials, role and group mapping, different tenants... Please refer to the Microsoft Azure documentation for more details.
 
 #### Configure MapStore front-end for Azure
 
@@ -289,6 +345,75 @@ oidcOAuth2Config.scopes=openid,email,profile
 
     }
 ]
+```
+
+#### Role mapping via Azure App Roles
+
+The recommended approach for mapping MapStore roles in Azure is to use **App Roles** defined in the application registration. This avoids the group GUID and 200-group-overage limitations of the `groups` claim and produces a clean `roles` claim directly in the ID token.
+
+**Step 1**: Create an App Role in the Azure app registration
+
+1. In the App Registration → **App roles → Create app role**
+2. Set **Display name** and **Value** to `ADMIN` (the value is what appears in the token)
+3. Set **Allowed member types** to `Users/Groups`
+4. Enable the role and save
+
+**Step 2**: Assign the role to users or groups
+
+1. Go to **Enterprise Applications** → select your application → **Users and groups → Add user/group**
+2. Select the user (or group) and assign the `ADMIN` role
+
+!!! warning
+    Assigning App Roles to groups requires an **Azure AD P1 or P2** (Entra ID P1/P2) license. Without it, roles can only be assigned to individual users.
+
+With this configuration the ID token will contain a `roles` claim like:
+
+```json
+{
+  "roles": ["ADMIN"],
+  "email": "user@example.com"
+}
+```
+
+**Step 3**: Configure MapStore to read the `roles` claim
+
+Add role mapping to `mapstore-ovr.properties`:
+
+```properties
+# Map the Azure 'roles' claim to MapStore roles
+oidcOAuth2Config.rolesClaim=roles
+oidcOAuth2Config.roleMappings=ADMIN:ADMIN
+# Users without a matching role get USER by default
+oidcOAuth2Config.authenticatedDefaultRole=USER
+```
+
+#### Group mapping in Azure
+
+By default the `groups` claim in the Azure ID token contains **Object ID GUIDs**, not display names. To emit display names instead, edit the application **Manifest** (App Registration → Manifest) and set:
+
+```json
+{
+  "groupMembershipClaims": "ApplicationGroup",
+  "optionalClaims": {
+    "idToken": [{
+      "name": "groups",
+      "additionalProperties": ["cloud_displayname"]
+    }]
+  }
+}
+```
+
+!!! note
+    `groupMembershipClaims` can be set to `"SecurityGroup"` or `"All"` to include broader group sets, but display names via `cloud_displayname` are only emitted for groups **explicitly assigned to the application**. Groups not assigned to the app may still appear as GUIDs regardless of this setting.
+
+!!! warning
+    If a user belongs to more than 200 groups, Azure omits the `groups` claim entirely and replaces it with an overage indicator. In that case group-based mapping will not work. This is one of the key reasons to prefer App Roles over group claims where possible.
+
+Once display names are emitted, configure MapStore to read them:
+
+```properties
+oidcOAuth2Config.groupsClaim=groups
+oidcOAuth2Config.groupMappings=<azure-group-display-name>:<mapstore-group-name>
 ```
 
 ### Google
@@ -380,7 +505,7 @@ Create a new Client on Keycloak. In this guide we will name it `mapstore-server`
 
 <img src="../img/kc-configure-mapstore-server.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-Note the **realm** and **auth-server-url** from Keycloak — you will use them to build the `discoveryUrl`.
+Note the **realm** and **auth-server-url** from Keycloak, you will use them to build the `discoveryUrl`.
 
 #### Configure MapStore back-end for Keycloak OpenID
 
@@ -408,18 +533,20 @@ keycloakOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
 # Create user on first login (set to false if users come from LDAP or another external source)
 keycloakOAuth2Config.autoCreateUser=true
 
-# Scopes to request — explicitly set to avoid requesting offline_access by default,
+# Scopes to request: explicitly set to avoid requesting offline_access by default,
 # which requires the Keycloak client/user to have the offline_access role configured.
 keycloakOAuth2Config.scopes=openid,profile,email
 
-# Role mapping: Keycloak realm roles → MapStore roles (ADMIN or USER)
+# Role mapping: dot-notation path to the claim carrying roles, and mapping to MapStore roles (ADMIN or USER)
+keycloakOAuth2Config.rolesClaim=realm_access.roles
 keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
 # Default role when no mapping matches
 keycloakOAuth2Config.authenticatedDefaultRole=USER
 
-# Group mapping: Keycloak roles → MapStore user groups
-keycloakOAuth2Config.groupMappings=MY_KEYCLOAK_ROLE:MY_MAPSTORE_GROUP,MY_KEYCLOAK_ROLE2:MY_MAPSTORE_GROUP2
-# Drop unmatched Keycloak roles (false = ignore, true = add as MapStore groups)
+# Group mapping: claim name that carries groups, and mapping to MapStore groups
+keycloakOAuth2Config.groupsClaim=groups
+keycloakOAuth2Config.groupMappings=MY_KEYCLOAK_GROUP:MY_MAPSTORE_GROUP,MY_KEYCLOAK_GROUP2:MY_MAPSTORE_GROUP2
+# false (default) = all groups from the claim are created and assigned; true = only mapped ones
 keycloakOAuth2Config.dropUnmapped=false
 
 # Groups always assigned to every authenticated user (created on the fly if missing)
@@ -431,14 +558,14 @@ keycloakOAuth2Config.dropUnmapped=false
 ```
 
 - `oidc_providers=keycloak`: registers the `keycloakOAuth2Config` bean; required in geostore 2.6+.
-- `keycloakOAuth2Config.discoveryUrl`: the Keycloak OIDC discovery URL — `<auth-server-url>/realms/<realm>/.well-known/openid-configuration`. This replaces the old `keycloakOAuth2Config.jsonConfig`.
+- `keycloakOAuth2Config.discoveryUrl`: the Keycloak OIDC discovery URL - `<auth-server-url>/realms/<realm>/.well-known/openid-configuration`. This replaces the old `keycloakOAuth2Config.jsonConfig`.
 - `keycloakOAuth2Config.redirectUri`: must end with `/rest/geostore/openid/keycloak/callback`.
 - `keycloakOAuth2Config.internalRedirectUri`: the MapStore home page URI after login.
 - `keycloakOAuth2Config.autoCreateUser`: `true` to create DB users on first login; `false` when using LDAP or external user stores.
 - `keycloakOAuth2Config.roleMappings`: comma-separated `keycloak-role:MAPSTORE_ROLE` pairs. Allowed MapStore values: `USER` or `ADMIN`.
 - `keycloakOAuth2Config.authenticatedDefaultRole`: role applied when no `roleMappings` entry matches.
-- `keycloakOAuth2Config.groupMappings`: comma-separated `keycloak-role:mapstore-group` pairs.
-- `keycloakOAuth2Config.dropUnmapped`: `false` (default) ignores unmatched Keycloak roles; `true` adds them as MapStore user groups.
+- `keycloakOAuth2Config.groupMappings`: comma-separated `keycloak-group:mapstore-group` pairs.
+- `keycloakOAuth2Config.dropUnmapped`: `false` (default) creates and assigns **all** groups from the claim, even unmapped ones; `true` assigns only groups with an explicit entry in `groupMappings`.
 - `keycloakOAuth2Config.defaultGroups`: (*optional*) comma-separated group names always assigned to every authenticated user.
 
 !!! note
@@ -461,4 +588,56 @@ keycloakOAuth2Config.dropUnmapped=false
       }
     ]
 }
+```
+
+#### Role and group mapping in Keycloak
+
+##### Role mapping
+
+GeoStore supports only two roles: `ADMIN` and `USER`. The simplest approach is to set `authenticatedDefaultRole=USER` and promote admin users manually through the MapStore UI.
+
+If you want the token to drive admin assignment automatically, set `rolesClaim` to point at the claim that carries roles. MapStore supports dot-notation paths for nested claims, so you can reference Keycloak's default `realm_access.roles` structure directly:
+
+```properties
+keycloakOAuth2Config.rolesClaim=realm_access.roles
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+keycloakOAuth2Config.authenticatedDefaultRole=USER
+```
+
+Alternatively, add a **User Realm Role** protocol mapper in Keycloak to emit a flat top-level claim and use that instead. In the Keycloak Admin Console, go to **Clients → mapstore-server → Client scopes → mapstore-server-dedicated → Add mapper → By configuration → User Realm Role**, then set:
+
+| Field | Value |
+| --- | --- |
+| Name | `roles` |
+| Token Claim Name | `roles` |
+| Add to ID token | On |
+| Add to access token | On |
+| Multivalued | On |
+
+This produces `"roles": ["admin", "user"]` at the token root:
+
+```properties
+keycloakOAuth2Config.rolesClaim=roles
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+keycloakOAuth2Config.authenticatedDefaultRole=USER
+```
+
+##### Group mapping
+
+Add a **Group Membership** mapper in the same client scope:
+
+| Field | Value |
+| --- | --- |
+| Name | `groups` |
+| Token Claim Name | `groups` |
+| Full group path | Off |
+| Add to ID token | On |
+
+This produces `"groups": ["my-group", "another-group"]` with display names (no leading `/`). Configure MapStore:
+
+```properties
+keycloakOAuth2Config.groupsClaim=groups
+keycloakOAuth2Config.groupMappings=my-keycloak-group:my-mapstore-group
+# false = all groups from claim created/assigned; true = only mapped ones
+keycloakOAuth2Config.dropUnmapped=false
 ```
