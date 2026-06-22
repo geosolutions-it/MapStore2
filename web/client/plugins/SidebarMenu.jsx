@@ -266,18 +266,28 @@ class SidebarMenu extends React.Component {
         return this.state.hidden ? false : (
             <div id="mapstore-sidebar-menu-container" className={`shadow-soft ${this.props.isSidebarFullHeight ? "fullHeightSideBar" : ""}`} style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
-                    { ({ height }) =>
-                        <ToolsContainer id={this.props.id}
-                            className={this.props.className}
-                            container={(props) => <>{props.children}</>}
-                            toolStyle="tray"
-                            activeStyle="primary"
-                            stateSelector="sidebarMenu"
-                            tool={SidebarElement}
-                            tools={this.getTools('sidebar', height)}
-                            panels={this.getPanels(this.props.items)}
-                            toolComponent={SidebarMenuItem}
-                        /> }
+                    { ({ height }) => {
+                        const tools = this.getTools('sidebar', height).map((tool, index) => ({
+                            ...tool,
+                            cfg: {
+                                ...(tool.cfg || {}),
+                                'cy-data': (tool.cfg && tool.cfg['cy-data']) || (tool.name ? `sidebar-btn-${tool.name}` : `tooltip-btn-${index}`)
+                            }
+                        }));
+                        return (
+                            <ToolsContainer id={this.props.id}
+                                className={this.props.className}
+                                container={(props) => <>{props.children}</>}
+                                toolStyle="tray"
+                                activeStyle="primary"
+                                stateSelector="sidebarMenu"
+                                tool={SidebarElement}
+                                tools={tools}
+                                panels={this.getPanels(this.props.items)}
+                                toolComponent={SidebarMenuItem}
+                            />
+                        );
+                    } }
                 </ContainerDimensions>
             </div>
 

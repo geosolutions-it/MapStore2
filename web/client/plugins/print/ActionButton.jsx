@@ -11,7 +11,7 @@ export const ActionButton = (props) => {
     const icon = glyph ? <Glyphicon glyph={glyph}/> : <span/>;
     const enable = !!handleExpression({}, {...props}, "{" + enabled + "}");
     return (
-        <Button className={className} disabled={!enable} {...buttonConfig} style={{marginTop: "10px", marginRight: "5px"}} onClick={actions[action]}>
+        <Button cy-data="btn-print" className={className} disabled={!enable} {...buttonConfig} style={{marginTop: "10px", marginRight: "5px"}} onClick={actions[action]}>
             {loading ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" noFadeIn /> : icon} <Message msgId={text}/>
         </Button>
     );

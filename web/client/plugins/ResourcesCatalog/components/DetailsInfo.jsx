@@ -169,6 +169,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
             '_relative',
             '_padding-tb-md'
         ]}
+        cy-data="details-info-fields"
     >
         {fields.map((field, filedIndex) => {
 

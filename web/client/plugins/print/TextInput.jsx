@@ -25,7 +25,7 @@ export const TextInput = ({spec, property, label, placeholder, actions, onChange
     return (
         <FormGroup>
             {label && <ControlLabel>{getMessageById(context.messages, label)}</ControlLabel> || null}
-            <FormControl {...getType(type)} value={get(spec, fullProperty)} placeholder={placeholder && getMessageById(context.messages, placeholder)}
+            <FormControl {...getType(type)} cy-data={`print-form-${label}`} value={get(spec, fullProperty)} placeholder={placeholder && getMessageById(context.messages, placeholder)}
                 onChange={(e) => onChangeParameter(fullProperty, e.target.value)} disabled={disabled}/>
         </FormGroup>
     );
