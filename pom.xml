@@ -13,7 +13,7 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>11.0.22</tomcat.version>
+        <tomcat.version>10.1.55</tomcat.version>
         <jackson.version>2.19.4</jackson.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
@@ -28,7 +28,7 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.14.0</commons-io.version>
         <commons-logging.version>1.2</commons-logging.version>
-        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
         <jaxws-api.version>4.0.3</jaxws-api.version>
         <json-lib.version>2.4.2-geoserver</json-lib.version>
         <json-patch.version>1.13</json-patch.version>
