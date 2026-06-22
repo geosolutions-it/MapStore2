@@ -1,10 +1,19 @@
 dn: cn=ROLE_ADMIN,ou=groups,dc=acme,dc=org
 objectClass: groupOfNames
 cn: ROLE_ADMIN
-member: uid=msadmin,ou=people,dc=acme,dc=org
+member: uid=ldapadmin,ou=people,dc=acme,dc=org
 
 dn: cn=ROLE_USER,ou=groups,dc=acme,dc=org
 objectClass: groupOfNames
 cn: ROLE_USER
-member: uid=msuser,ou=people,dc=acme,dc=org
-member: uid=msdev,ou=people,dc=acme,dc=org
+member: uid=ldapuser,ou=people,dc=acme,dc=org
+
+dn: cn=LDAP_ADMINS,ou=groups,dc=acme,dc=org
+objectClass: groupOfNames
+cn: LDAP_ADMINS
+member: uid=ldapadmin,ou=people,dc=acme,dc=org
+
+dn: cn=LDAP_USERS,ou=groups,dc=acme,dc=org
+objectClass: groupOfNames
+cn: LDAP_USERS
+member: uid=ldapuser,ou=people,dc=acme,dc=org

@@ -89,7 +89,7 @@ The sample also enables OpenID global logout and redirects back to `http://local
 !!! note
 The sample Keycloak realm and LDAP credentials are intended for local testing only. Keep `docker/keycloak/realm-mapstore.sample.json` and the shipped LDIF data as local test data, and replace client secrets and user passwords before using the setup on another machine or in a shared environment.
 
-When you use a MapStore WAR built in LDAP-direct mode, `ldap.properties` must also define `ldap.memberPattern`. The shipped sample uses `^uid=([^,]+).*$`, which matches the sample OpenLDAP `member` values such as `uid=msadmin,ou=people,dc=acme,dc=org`.
+When you use a MapStore WAR built in LDAP-direct mode, `ldap.properties` must also define `ldap.memberPattern`. The shipped sample uses `^uid=([^,]+).*$`, which matches the sample OpenLDAP `member` values such as `uid=ldapadmin,ou=people,dc=acme,dc=org`.
 
 These files are regular MapStore externalized configuration files. See [configuration files](../configuration-files.md#configuration-files) and [externalized configuration](../externalized-configuration.md#externalized-configuration) for more details about datadir-based overrides.
 
@@ -109,17 +109,17 @@ The sample realm configures:
 - Client: `mapstore-server`
 - Client secret: `changeme-mapstore-oidc-client-secret-123`
 - Redirect URI: `http://localhost/mapstore/*`
-- Realm roles: `admin`, `user`
+- Realm roles: `admin`, `user`, `kc-admins`, `kc-users`
 - Sample users: `kcuser`, `kcadmin`
 
 The client and secret must match the values in `datadir/mapstore-ovr.properties`. If you change the realm file, update the MapStore datadir configuration accordingly. For details about Keycloak OpenID configuration, see the [Keycloak section of the OpenID Connect guide](users/openId.md#keycloak).
 
 ### Keycloak Test Users
 
-| Username | Password | Email | Keycloak role | MapStore role |
-| --- | --- | --- | --- | --- |
-| `kcuser` | `changeme-kcuser-pw-123` | `kcuser@acme.org` | `user` | `USER` |
-| `kcadmin` | `changeme-kcadmin-pw-123` | `kcadmin@acme.org` | `admin` | `ADMIN` |
+| Username | Password | Email | Keycloak roles | MapStore role | MapStore group |
+| --- | --- | --- | --- | --- | --- |
+| `kcuser` | `changeme-kcuser-pw-123` | `kcuser@acme.org` | `user`, `kc-users` | `USER` | `KC_USERS` |
+| `kcadmin` | `changeme-kcadmin-pw-123` | `kcadmin@acme.org` | `admin`, `kc-admins` | `ADMIN` | `KC_ADMINS` |
 
 The Keycloak admin console is available at [http://localhost/keycloak/admin/](http://localhost/keycloak/admin/) with the `KEYCLOAK_ADMIN` and `KEYCLOAK_ADMIN_PASSWORD` values configured in `.env`. The admin user belongs to the Keycloak `master` realm and is used to manage Keycloak, not to log in to MapStore.
 
@@ -131,7 +131,7 @@ The LDAP bootstrap files define:
 
 - Organizational units, such as `ou=people` and `ou=groups`.
 - Sample users in `02-users.ldif`.
-- Groups and roles, including `ROLE_ADMIN`, `ROLE_USER` and the `everyone` group.
+- Groups and roles, including `ROLE_ADMIN`, `ROLE_USER`, `LDAP_ADMINS`, `LDAP_USERS`, plus MapStore's default `everyone` group.
 
 The LDIF files are copied into the OpenLDAP image at build time and imported only when the LDAP volumes are empty. If you edit LDIF files after the first startup, rebuild the LDAP image and remove the LDAP volumes before starting again.
 
@@ -146,13 +146,12 @@ docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml up --buil
 
 ### LDAP Test Users
 
-| Login | Password | MapStore role | LDAP groups |
+| Login | Password | MapStore role | LDAP / MapStore groups |
 | --- | --- | --- | --- |
-| `msadmin` | `changeme-msadmin-pw-123` | `ADMIN` | `ROLE_ADMIN`, `everyone` |
-| `msuser` | `changeme-msuser-pw-123` | `USER` | `ROLE_USER`, `everyone` |
-| `msdev` | `changeme-msdev-pw-123` | `USER` | `ROLE_USER`, `everyone` |
+| `ldapadmin` | `changeme-ldapadmin-pw-123` | `ADMIN` | `ROLE_ADMIN`, `LDAP_ADMINS`, `everyone` |
+| `ldapuser` | `changeme-ldapuser-pw-123` | `USER` | `ROLE_USER`, `LDAP_USERS`, `everyone` |
 
-Log in with the LDAP `uid`, for example `msadmin`, not the full DN. With `ldap.convertToUpperCase=true`, synchronized user and group names may appear uppercase in MapStore.
+Log in with the LDAP `uid`, for example `ldapadmin`, not the full DN. With `ldap.convertToUpperCase=true`, synchronized user and group names may appear uppercase in MapStore.
 
 For a full explanation of LDAP synchronized and direct modes, see the [LDAP integration guide](users/ldap.md#ldap-integration-with-mapstore).
 
@@ -187,7 +186,7 @@ For Keycloak OpenID login:
 3. Log in with `kcuser` / `changeme-kcuser-pw-123` or `kcadmin` / `changeme-kcadmin-pw-123`.
 4. Keycloak redirects back to MapStore.
 
-For LDAP login, use the standard username/password form with one of the LDAP users, such as `msadmin` / `changeme-msadmin-pw-123`. This requires a MapStore WAR built and configured with LDAP support. See [LDAP integration with MapStore](users/ldap.md#ldap-integration-with-mapstore).
+For LDAP login, use the standard username/password form with one of the LDAP users, such as `ldapadmin` / `changeme-ldapadmin-pw-123`. This requires a MapStore WAR built and configured with LDAP support. See [LDAP integration with MapStore](users/ldap.md#ldap-integration-with-mapstore).
 
 ## Troubleshooting
 

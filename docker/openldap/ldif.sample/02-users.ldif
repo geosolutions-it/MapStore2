@@ -1,32 +1,21 @@
-dn: uid=msadmin,ou=people,dc=acme,dc=org
+dn: uid=ldapadmin,ou=people,dc=acme,dc=org
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
-uid: msadmin
-cn: msadmin
+uid: ldapadmin
+cn: ldapadmin
 sn: Admin
-givenName: MapStore Admin
-mail: msadmin@acme.org
-userPassword: changeme-msadmin-pw-123
+givenName: LDAP Admin
+mail: ldapadmin@ldap.test
+userPassword: changeme-ldapadmin-pw-123
 
-dn: uid=msuser,ou=people,dc=acme,dc=org
+dn: uid=ldapuser,ou=people,dc=acme,dc=org
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
-uid: msuser
-cn: msuser
+uid: ldapuser
+cn: ldapuser
 sn: User
-givenName: MapStore User
-mail: msuser@acme.org
-userPassword: changeme-msuser-pw-123
-
-dn: uid=msdev,ou=people,dc=acme,dc=org
-objectClass: inetOrgPerson
-objectClass: organizationalPerson
-objectClass: person
-uid: msdev
-cn: msdev
-sn: Developer
-givenName: MapStore Developer
-mail: msdev@acme.org
-userPassword: changeme-msdev-pw-123
+givenName: LDAP User
+mail: ldapuser@ldap.test
+userPassword: changeme-ldapuser-pw-123

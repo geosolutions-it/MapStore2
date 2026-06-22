@@ -16,6 +16,14 @@
       {
         "name": "user",
         "description": "Optional; default MapStore role is USER if unmapped"
+      },
+      {
+        "name": "kc-admins",
+        "description": "Mapped to the MapStore KC_ADMINS user group"
+      },
+      {
+        "name": "kc-users",
+        "description": "Mapped to the MapStore KC_USERS user group"
       }
     ]
   },
@@ -27,7 +35,7 @@
       "firstName": "Keycloak",
       "lastName": "User",
       "email": "kcuser@acme.org",
-      "realmRoles": ["user"],
+      "realmRoles": ["user", "kc-users"],
       "credentials": [
         {
           "type": "password",
@@ -43,7 +51,7 @@
       "firstName": "Keycloak",
       "lastName": "Admin",
       "email": "kcadmin@acme.org",
-      "realmRoles": ["admin"],
+      "realmRoles": ["admin", "kc-admins"],
       "credentials": [
         {
           "type": "password",
