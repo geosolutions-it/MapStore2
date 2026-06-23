@@ -1508,6 +1508,43 @@
         "height": "højde"
       }
     },
+    "layersSelection": {
+      "title": "Udvælg",
+      "tooltip": "Vis udvælgelsesværktøjet",
+      "description": "Vis udvælgelsesværktøjet",
+      "hasReachMaxCount": "Det maksimale antal features er nået",
+      "selection": "Udvælgelse",
+      "allLayers": "Alle lag",
+      "featuresCount": "Antal Features",
+      "button": {
+        "select": "Udvælgelsesmetode",
+        "chooseGeometry": "Udpeg",
+        "selectByPoint": "Punkt",
+        "selectByLine": "Linje",
+        "selectByCircle": "Cirkel",
+        "selectByRectangle": "Rektangel",
+        "selectByPolygon": "Polygon",
+        "clear": "Ryd",
+        "zoomTo": "Zoom til",
+        "statistics": "Statistik",
+        "createLayer": "Opret lag",
+        "filterData": "Filtrer data",
+        "export": "Ekporter",
+        "exportToCsv": "Ekporter til CSV",
+        "exportToJson": "Ekporter til JSON",
+        "exportToGeoJson": "Ekporter til GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistik",
+        "field": "Felt",
+        "count": "Antal værdier",
+        "sum": "Sum af værdier",
+        "min": "Minimum",
+        "max": "Maksimum",
+        "avg": "Gennemsnit",
+        "std": "Standardafvigelse"
+      }
+    },
     "snapshot": {
       "title": "Øjebliksbillede Forhåndsvisning",
       "save": "Gem",
