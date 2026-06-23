@@ -2662,6 +2662,7 @@
         "color": "Color",
         "linkExistingDashboard": "Link existing dashboard",
         "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Du kan ikke tilføje eksisterende lag til visningen, da det allerede har et layout.",
         "save": "Save",
         "cancel": "Cancel"
       }
