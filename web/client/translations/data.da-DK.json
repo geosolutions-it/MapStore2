@@ -4706,7 +4706,12 @@
       "hide": "Skjul",
       "serviceUrl": "Tjeneste-URL",
       "title": "Beskyttet tjeneste",
-      "remove": "Fjern beskyttelse fra denne tjeneste og luk modalen"
+      "remove": "Fjern beskyttelse fra denne tjeneste og luk modalen",
+      "validationErrs": {
+        "invalidCredentials": "Forkert brugernavn eller password",
+        "forbidden": "Adgang nægtet. Kontroller dine tilladelser",
+        "tryAgainLater": "Noget gik galt. Prøv igen senere"
+      }
     },
     "dynamiclegend": {
       "title": "Signaturforklaring",
