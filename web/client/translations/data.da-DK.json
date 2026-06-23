@@ -3756,6 +3756,10 @@
         "description": "Tillader deling af kortet på forskellige måder (link, QR-kode, indlejring, sociale netværk osv.)",
         "title": "Delingsværktøj"
       },
+      "LayersSelection": {
+        "title": "Udvælgelsesværktøj",
+        "description": "Vis udvælgelsesværktøjet"
+      },
       "StreetView": {
         "title": "StreetView",
         "description": "StreetView-værktøj til at gennemse Google Street View-billeder fra kortet"
