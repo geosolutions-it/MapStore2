@@ -1432,11 +1432,11 @@
       "errorDelete": "Der opstod en fejl ved at slette brugeren:",
       "errorSaving": "Der opstod en fejl ved at gemme brugeren:",
       "selectedGroups": "Tildelte grupper",
-      "requiredFiedsMessage": "Felter markeret med stjerne (*) er påkrævede",
-      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
-      "admin": "Admin",
-      "active": "Active",
-      "inactive": "Inactive"
+      "requiredFiedsMessage": "Felter markeret med stjerne (*) er påkrævede",      
+      "usersFound": "{count, plural, =0 {0 Brugere fundet} =1 {1 Bruger fundet} other {# Brugere fundet}}",
+      "admin": "Administrator",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "usergroups": {
       "title": "Administrer grupper",
@@ -1465,9 +1465,9 @@
       "confirmDeleteGroup": "Er du sikker på, at du vil slette gruppen?",
       "generalInformation": "Generelt",
       "members": "Medlemmer",
-      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
-      "active": "Active",
-      "inactive": "Inactive"
+      "userGroupsFound": "{count, plural, =0 {0 Grupper fundet} =1 {1 Gruppe fundet} other {# Grupper fundet}}",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "share": {
       "title": "Del",
