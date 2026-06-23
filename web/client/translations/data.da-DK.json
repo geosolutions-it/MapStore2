@@ -997,7 +997,7 @@
       "s_tooltip": "Værktøjstip til tjenestemenu",
       "searching": "Søger...",
       "noResultsFound": "Ingen resultater fundet",
-      "searchByLocationName": "Søg efter stednavn...",
+      "searchByLocationName": "Søg efter adresse...",
       "addDestination": "Tilføj destination"
     },
     "draw": {
