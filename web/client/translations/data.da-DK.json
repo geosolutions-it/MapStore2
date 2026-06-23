@@ -306,18 +306,13 @@
     "mapScale": "Målforhold:",
     "showMousePositionCoordinates": "Vis/skjul koordinatvisning",
     "showCrsSelector": "Vælg projektion",
-    "crsSelectorFilterPlaceholder": "Filtrer projektion",
-    "crsSelectorSelectedCRS": "Valgt:",
     "crsSelector": {
       "availableProjections": "Tilgængelige projektioner",
       "searchProjection": "Søg projektion...",
       "label": "Etiket",
       "authorityId": "Myndigheds-ID",
       "selectedProjection": "Den valgte projektion vil blive brugt på kortet",
-      "quickSwitch": "Den valgte projektion vil blive tilføjet til listen for hurtig skift",
-      "help": "Marker afkrydsningsfeltet for at tilføje en projektion til hurtig skift. Klik på en række for at indstille den som standardprojektion.",
-      "save": "Gem",
-      "close": "Luk"
+      "help": "Marker afkrydsningsfeltet for at tilføje en projektion til hurtig skift. Klik på en række for at indstille den som standardprojektion."
     },
     "menu": "Menu",
     "options": "Indstillinger",
@@ -793,7 +788,6 @@
         "font": "Skriftindstillinger",
         "forceLabels": "Vis etiketter:",
         "antiAliasing": "Antialiasing af skrift:",
-        "iconsSize": "Icons size:",
         "dpi": "Dpi:",
         "forceIconsSize": "Tilsidesæt ikonstørrelse",
         "iconsWidth": "Ikonbredde:",
@@ -2410,7 +2404,6 @@
         "dataSource": "Datakilde",
         "features": "Objekter",
         "userDefined": "Brugerdefineret",
-        "layer": "Lag",
         "maps": "Kort",
         "map": "Kort",
         "time": "Tid",
@@ -2469,7 +2462,6 @@
         "styles": "Stile",
         "targetAutomaticallyNotConnectableTooltip": "Målet kan ikke forbindes automatisk – konfigurer det for at forbinde",
         "forcePlugLabel": "Anvend uanset datakilde",
-        "forcePlugInfo": "Marker for at bekræfte, at filteret kan anvendes på denne datakilde, selv om den er forskellig fra den oprindelige",
         "addUserDefinedFilterTooltip": "Klik for at tilføje filter",
         "addUserDefinedStyleTooltip": "Klik for at tilføje stil",
         "addUserDefinedFilterValueTooltip": "Klik for at definere filter",
@@ -4823,9 +4815,7 @@
         "title": "Luk isokronpanelet",
         "description": "Du har eksisterende isokrondata. Lukning af panelet vil slette alle aktuelle kørselsdata. Er du sikker på, at du vil fortsætte?",
         "confirm": "Bekræft",
-        "cancel": "Annuller",
-        "errorIsochroneError": "Der opstod en fejl under beregning af isokronen. Prøv igen...",
-        "infoLayerAdded": "Isokronlag tilføjet"
+        "cancel": "Annuller"
       }
     }
   }
