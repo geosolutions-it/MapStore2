@@ -3712,8 +3712,8 @@
         "title": "Rutevejledning"
       },
       "Isochrone": {
-        "description": "Beregn isokroner og isodistanter",
-        "title": "Isochron"
+        "description": "Dette plugin gør det muligt at beregne isokroner og isodistanser",
+        "title": "Iskroner"
       }
     },
     "contextCreator": {
@@ -4785,21 +4785,21 @@
       "removeWaypointTooltip": "Fjern viapunkt"
     },
     "isochrone": {
-      "title": "Isochron",
-      "tooltip": "Isochron",
-      "modeTooltip": "Vælg rejsetilstand for Isochrone/Isodistance",
-      "rangeByTooltip": "Vælg <i>afstand</i> for <b>Isodistance</b> eller <i>tid</i> for <b>Isochrone</b> som grundlag for intervallet",
-      "clickOnMap": "Klik på kortet for at vælge et sted",
+      "title": "Isokroner",
+      "tooltip": "Isokroner",
+      "modeTooltip": "Vælg en transportform for isokronen/isodistancen",
+      "rangeByTooltip": "Vælg <i>distance</i> for <b>Isodistance</b> eller <i>tid</i> for <b>Isokron</b> som basis for intervallet",
+      "clickOnMap": "Klik på kortet for at vælge en placering",
       "coordinateTooltip": "Slå koordinateditor til/fra",
-      "searchTooltip": "Søg efter stednavn",
+      "searchTooltip": "Søg efter adresse",
       "searching": "Søger...",
       "newSearch": "Ny søgning",
-      "bucketsTooltip": "Antal intervaller i det valgte område. Maks. 4.",
+      "bucketsTooltip": "Angiver antallet af intervaller, der skal beregnes inden for det valgte interval. Maks. er 4.",
       "noResultsFound": "Ingen resultater fundet",
-      "searchByLocationName": "Søg efter stednavn...",
-      "mode": "Rejsetilstand",
+      "searchByLocationName": "Søg efter adresse...",
+      "mode": "Transportform",
       "rangeBy": "Interval efter",
-      "departure": "Afrejse",
+      "departure": "Afgang",
       "arrival": "Ankomst",
       "direction": "Retning",
       "reset": "Nulstil",
@@ -4810,20 +4810,22 @@
       "deleteResult": "Slet resultat",
       "distance": "Afstand",
       "time": "Tid",
-      "useRunParameters": "Brug kør-parametre",
+      "useRunParameters": "Brug kørselsparametre",
       "notification": {
-        "error": "Isochrone-fejl",
-        "errorIsochroneError": "Fejl ved beregning af isochrone. Prøv igen...",
-        "infoLayerAdded": "Isochrone-lag tilføjet"
+        "error": "Fejl",
+        "errorIsochroneError": "Der opstod en fejl under beregning af isokronen. Prøv venligst igen...",
+        "infoLayerAdded": "Isokronlag tilføjet"
       },
       "colors": "Farver",
       "rampTooltip": "Vælg farvegradient for intervallerne",
       "colorTooltip": "Vælg farve for intervallet",
       "confirmDialog": {
-        "title": "Luk isochrone-panel",
-        "description": "Du har eksisterende isochrone-data. Lukning rydder alle aktuelle kørselsdata. Vil du fortsætte?",
+        "title": "Luk isokronpanelet",
+        "description": "Du har eksisterende isokrondata. Lukning af panelet vil slette alle aktuelle kørselsdata. Er du sikker på, at du vil fortsætte?",
         "confirm": "Bekræft",
-        "cancel": "Annuller"
+        "cancel": "Annuller",
+        "errorIsochroneError": "Der opstod en fejl under beregning af isokronen. Prøv igen...",
+        "infoLayerAdded": "Isokronlag tilføjet"
       }
     }
   }
