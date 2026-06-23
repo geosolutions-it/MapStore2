@@ -652,6 +652,7 @@
       "grabGroupIcon": "Træk gruppen for at ændre rækkefølgen",
       "toggleLayerVisibilityWarning": "Skift lagets synlighed. Advarsel: Laget blev ikke indlæst korrekt",
       "createWidget": "Opret widget for det valgte lag",
+      "createWidgetForMap": "Opret widget for kortet",
       "editLayerProperties": "Redigér lagets egenskaber",
       "browseData": "Åbn attributtabellen",
       "removeLayer": "Fjern lag",
