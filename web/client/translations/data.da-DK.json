@@ -3708,8 +3708,8 @@
         "title": "Permanent link"
       },
       "Itinerary": {
-        "description": "Opret ruter på kortet",
-        "title": "Rute"
+        "description": "Dette plugin gør det muligt at oprette rutevejledninger på kortet",
+        "title": "Rutevejledning"
       },
       "Isochrone": {
         "description": "Beregn isokroner og isodistanter",
