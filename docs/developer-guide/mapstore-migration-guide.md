@@ -162,6 +162,121 @@ createPlugin('MyPlugin', {
 });
 ```
 
+### GeoStore 2.6 — OpenID Connect configuration changes
+
+This version ships with **GeoStore 2.6**, which consolidates all OIDC providers (Keycloak, Google, and any other) into a single generic OIDC layer. If you are using OpenID Connect authentication, you must update your configuration.
+
+#### Update `pom.xml` (custom projects only)
+
+If you maintain a custom MapStore project, bump the GeoStore version in your `pom.xml`:
+
+```diff
+-<geostore-webapp.version>2.5.x</geostore-webapp.version>
++<geostore-webapp.version>2.6.x</geostore-webapp.version>
+```
+
+Replace `2.5.x` / `2.6.x` with the exact release version used by this MapStore release (check the root `pom.xml` of MapStore for the current value of `geostore-webapp.version`).
+
+#### Keycloak: replace `jsonConfig` with `discoveryUrl` and add `oidc_providers`
+
+The Keycloak-specific configuration format (`keycloakOAuth2Config.jsonConfig`) is **no longer supported**. Replace it with the standard OIDC `discoveryUrl`.
+
+**Before:**
+
+```properties
+keycloakOAuth2Config.enabled=true
+keycloakOAuth2Config.jsonConfig={"realm":"myrealm","auth-server-url":"https://keycloak.example.com/","resource":"mapstore-server",...}
+keycloakOAuth2Config.redirectUri=...
+keycloakOAuth2Config.autoCreateUser=true
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+```
+
+**After — `mapstore-ovr.properties`**:
+
+```properties
+oidc_providers=keycloak
+
+keycloakOAuth2Config.enabled=true
+keycloakOAuth2Config.clientId=mapstore-server
+keycloakOAuth2Config.clientSecret=<CLIENT_SECRET>
+keycloakOAuth2Config.sendClientSecret=true
+keycloakOAuth2Config.discoveryUrl=https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration
+keycloakOAuth2Config.redirectUri=...
+keycloakOAuth2Config.autoCreateUser=true
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+```
+
+All other `keycloakOAuth2Config.*` properties (`roleMappings`, `groupMappings`, `dropUnmapped`, `authenticatedDefaultRole`, `autoCreateUser`, `globalLogoutEnabled`, etc.) remain unchanged.
+
+#### Google: add `oidc_providers`
+
+```properties
+# Add this line — Google is now registered via the generic OIDC layer
+oidc_providers=google
+
+# All other googleOAuth2Config.* properties remain unchanged
+googleOAuth2Config.enabled=true
+googleOAuth2Config.clientId=...
+# Add accessType=offline to request a refresh token (recommended)
+googleOAuth2Config.accessType=offline
+```
+
+#### Keycloak direct user integration removed
+
+The **Direct user integration** feature (`keycloakRESTClient.*`, `-Dsecurity.integration=keycloak-direct`) has been removed. If you were using this feature, migrate to [LDAP integration](./integrations/users/ldap.md) instead.
+
+#### Multiple providers
+
+Multiple OIDC providers can now run simultaneously. Use a comma-separated list:
+
+```properties
+oidc_providers=keycloak,google
+```
+
+!!! note
+    Use `oidc_providers` (underscore), not `oidc.providers` (dot). The dot form conflicts with Spring's `PropertyOverrideConfigurer`.
+
+#### `applicationContext.xml` update (MapStore projects only)
+
+Custom projects have their own copy of `web/src/main/resources/applicationContext.xml`. Add `ignoreInvalidKeys` to the order-10 `PropertyOverrideConfigurer` so that `oidc_providers` (a bare key with no dot) is accepted in `mapstore-ovr.properties`:
+
+```diff
+     <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+         <property name="ignoreResourceNotFound" value="true"/>
++        <property name="ignoreInvalidKeys" value="true"/>
+         <property name="order" value="10"/>
+```
+
+Without this change, adding `oidc_providers=...` to `mapstore-ovr.properties` causes a startup failure (`Invalid key 'oidc_providers': expected 'beanName.property'`).
+
+#### Spring security XML update (MapStore projects only)
+
+If you maintain a **custom MapStore project** (i.e. you have your own `geostore-spring-security-db.xml`), you must update it to use the new dynamic OIDC provider mechanism.
+
+```diff
+     <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
+-    <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
+-    <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+-    <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/>
++    <security:custom-filter ref="compositeOpenIdFilter" before="OPENID_FILTER"/>
+     <security:anonymous />
+
+-    <!-- Keycloak -->
+-    <bean id="keycloakConfig"
+-          class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
+-    <bean id="googleSecurityConfiguration"
+-          class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
++    <bean id="oidcProviderRegistrar"
++          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectProviderRegistrar"/>
++    <bean id="compositeOpenIdFilter"
++          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.CompositeOpenIdConnectFilter"/>
+     <!-- oidcSecurityConfiguration unchanged -->
+     <bean id="oidcSecurityConfiguration"
+           class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/>
+```
+
+`oidcProviderRegistrar` reads `oidc_providers` from `mapstore-ovr.properties` at startup and registers one `{name}OAuth2Config` bean per provider. `PropertyOverrideConfigurer` then populates each bean from the matching `{name}OAuth2Config.*` properties. `compositeOpenIdFilter` handles the Authorization Code Flow for all active providers through a single filter chain entry.
+
 ## Migration from 2026.01.01 to 2026.01.02
 
 ### Monitored state available by default
