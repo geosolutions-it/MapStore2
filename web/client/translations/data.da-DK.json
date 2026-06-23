@@ -4776,9 +4776,9 @@
       "goThroughRoundabout": "Kør gennem rundkørsel(er)",
       "reset": "Nulstil",
       "notification": {
-          "error": "Fejl i rutevejledning",
-          "errorItineraryError": "Der opstod en fejl under beregning af ruten. Prøv venligst igen...",
-          "infoLayerAdded": "Rutevejledning tilføjet som lag"
+        "error": "Fejl i rutevejledning",
+        "errorItineraryError": "Der opstod en fejl under beregning af ruten. Prøv venligst igen...",
+        "infoLayerAdded": "Rutevejledning tilføjet som lag"
       },
       "togglePointTooltip": "Skift til koordinateditor",
       "toggleSearchTooltip": "Skift til søgning efter adresse",
