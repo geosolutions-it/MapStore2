@@ -3615,8 +3615,8 @@
         "title": "Delingsværktøj"
       },
       "StreetView": {
-        "title": "Gadevisning",
-        "description": "Gadevisningsværktøj til at gennemse Google Street View-billeder fra kortet"
+        "title": "StreetView",
+        "description": "StreetView-værktøj til at gennemse Google Street View-billeder fra kortet"
       },
       "StyleEditor": {
         "description": "Editor for lagets stil",
