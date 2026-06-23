@@ -3426,16 +3426,16 @@
       "number": "Nummer",
       "boolean": "Boolsk"
     },
-    "defaultMapBackgroundsServiceTitle": "Standardbaggrunde",
+    "defaultMapBackgroundsServiceTitle": "Standardbaggrundskort",
     "backgroundSelector": {
-      "addTooltip": "Tilføj ny baggrund",
-      "editTooltip": "Redigér baggrund",
-      "deleteTooltip": "Slet baggrund",
-      "confirmDelete": "Er du sikker på, at du vil slette baggrunden \"{title}\"?",
+      "addTooltip": "Tilføj nyt baggrundskort",
+      "editTooltip": "Rediger baggrundskort",
+      "deleteTooltip": "Slet baggrundkort",
       "addTerrainTooltip": "Tilføj nyt terræn",
       "editTerrainTooltip": "Rediger terræn",
       "deleteTerrainTooltip": "Slet terræn",
-      "backgroundIncompatibleTooltip": "Dette baggrundslag er ikke kompatibelt med den aktuelle kortprojektion",
+      "confirmDelete": "Er du sikker på, at du vil slette baggrundskortet \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Dette baggrundskort er ikke kompatibelt med kortets aktuelle projektion",
       "terrain": {
         "placeholders": {
           "titleLabel": "Indtast titel ...",
@@ -3446,9 +3446,9 @@
           "layernameLabel": "Indtast lagnavn ..."
         },
         "invalidUrl": "Den angivne URL er ugyldig",
-        "mainTitle": "Terræn",
+        "mainTitle": "Terræner",
         "title": "Tilføj nyt terræn",
-        "providerLabel": "Leverandør",
+        "providerLabel": "Udbyder",
         "titleLabel": "Titel",
         "cesiumProvider": {
           "urlLabel": "URL",
