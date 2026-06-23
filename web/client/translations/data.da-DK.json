@@ -4581,8 +4581,8 @@
       "removeThumbnail": "Fjern miniaturebillede",
       "apply": "Anvend",
       "detailsPendingChangesTitle": "Er du sikker på at forlade uden at anvende dine ændringer?",
-      "detailsPendingChangesDescription": "Hvis du forlader, mister du dine ventende ændringer",
-      "detailsPendingChangesConfirm": "Forlad",
+      "detailsPendingChangesDescription": "Hvis du forlader, mister du dine ændringer",
+      "detailsPendingChangesConfirm": "Bekræft",
       "detailsPendingChangesCancel": "Tilbage til redigering",
       "filterMapsByContext": "Kort efter kontekst",
       "tags": "Tags",
@@ -4661,7 +4661,7 @@
         "noContentYetTitle": "Ingen brugergrupper",
         "noContentYetContent": "Der er ingen brugergrupper. Klik på \"Ny gruppe\" for at oprette en"
       },
-      "ip": "IP-intervaller",
+      "ip": "IP-ranges",
       "resourceIssues": {
         "dependencyMissing": "Manglende tilladelser på en tilknyttet ressource."
       },
