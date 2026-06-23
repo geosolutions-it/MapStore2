@@ -562,7 +562,8 @@
           "dateTimeOption": "Specifik UTC dato og tid",
           "dateTimePlaceholder": "Vælg dato og tid"
         },
-        "collisionDetection": "Aktiver terrænkollisionsdetektering"
+        "collisionDetection": "Aktiver terrænkollisionsdetektering",
+        "imageryLayersOverlay": "Slå lag-overlap til"
       },
       "thumbnailError": {
         "error403": "Du har ikke tilladelse til at opdatere miniaturebilledet",
