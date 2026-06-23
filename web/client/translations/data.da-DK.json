@@ -4498,7 +4498,10 @@
           "invalidCredentials": "Ugyldige legitimationsoplysninger",
           "projectionNotAvailable": "Projektionen {srs} er ikke tilgængelig. Kontakt administratoren."
         },
-        "reloadAPI": "Genindlæs API"
+        "reloadAPI": "Genindlæs API",
+        "panoramax": {
+          "emptySelection": "Du har ikke valgt noget billede."
+        }
       }
     },
     "sidebarMenu": {
