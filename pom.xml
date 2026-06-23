@@ -21,8 +21,8 @@
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
-        <spring.version>7.0.7</spring.version>
-        <spring.security.version>7.0.5</spring.security.version>
+        <spring.version>7.0.8</spring.version>
+        <spring.security.version>7.1.0</spring.security.version>
 
         <!-- other dependencies (aligned where applicable) -->
         <commons-collections.version>3.2.2</commons-collections.version>
