@@ -11,6 +11,7 @@ import castArray from 'lodash/castArray';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { Checkbox } from 'react-bootstrap';
+import SafeHtml from '../../../components/misc/SafeHtml';
 
 import Button from '../../../components/layout/Button';
 import Tabs from '../../../components/catalog/resources/Tabs';
@@ -74,7 +75,7 @@ function DetailsHTML({ value, placeholder }) {
         return (
             <Component display={expand ? undefined : 'flex'} className="_relative" >
                 {expand
-                    ? <div dangerouslySetInnerHTML={{ __html: value }} />
+                    ? <SafeHtml html={value} />
                     : <FlexBox.Fill flexBox centerChildrenVertically ><Text ellipsis >{placeholder}</Text></FlexBox.Fill>}
                 <Button size="sm" onClick={() => setExpand(!expand)}>
                     <Message msgId={expand ? 'resourcesCatalog.readLess' : 'resourcesCatalog.readMore'} />
@@ -82,7 +83,7 @@ function DetailsHTML({ value, placeholder }) {
             </Component>);
     }
     return (
-        <div dangerouslySetInnerHTML={{ __html: value }} />
+        <SafeHtml html={value} />
     );
 }
 

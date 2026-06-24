@@ -81,7 +81,16 @@ const appStore = (
                     console.error("couldn't remove old key");
                 }
                 if (fragmentState) {
-                    defaultState[fragment] = JSON.parse(fragmentState);
+                    const parsed = JSON.parse(fragmentState);
+                    if (fragment === 'security' && parsed.authHeader) {
+                        delete parsed.authHeader;
+                        try {
+                            getApi().setItem(getItemKey(STORAGE_SECTION, fragment), JSON.stringify(parsed));
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                    defaultState[fragment] = parsed;
                 }
             } catch (e) {
                 console.error(e);
@@ -113,7 +122,10 @@ const appStore = (
                 if (fragmentState && persisted[fragment] !== fragmentState) {
                     persisted[fragment] = fragmentState;
                     try {
-                        getApi().setItem(getItemKey(STORAGE_SECTION, fragment), JSON.stringify(fragmentState));
+                        const { authHeader: _omit, ...securityState } = fragmentState; // eslint-disable-line no-unused-vars
+                        getApi().setItem(getItemKey(STORAGE_SECTION, fragment), JSON.stringify(
+                            fragment === 'security' ? securityState : fragmentState
+                        ));
                     } catch (e) {
                         console.error(e);
                     }

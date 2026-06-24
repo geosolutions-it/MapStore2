@@ -22,9 +22,7 @@
         <security:csrf disabled="true"/>
         <security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-<!--        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>-->
-<!--        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>-->
-<!--        <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/>-->
+        <security:custom-filter ref="compositeOpenIdFilter" before="OPENID_FILTER"/>
         <security:anonymous />
         <security:intercept-url pattern="/**" access="permitAll" />
     </security:http>
@@ -68,19 +66,26 @@
     </bean>
 
     <context:annotation-config/>
-    <!-- OAuth2 beans -->
 
-<!--    &lt;!&ndash; Generic OIDC &ndash;&gt;-->
-<!--    <bean id="oidcSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/>-->
+    <!-- ==================================================================== -->
+    <!-- === OAuth2 / OIDC beans (GeoStore 2.6+) ============================ -->
+    <!-- ==================================================================== -->
 
-<!--    &lt;!&ndash; Google &ndash;&gt;-->
-<!--    <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>-->
+    <!-- Reads oidc_providers from mapstore-ovr.properties and registers
+         one {name}OAuth2Config bean per provider, which PropertyOverrideConfigurer
+         then populates with {name}OAuth2Config.* properties. -->
+    <bean id="oidcProviderRegistrar"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectProviderRegistrar"/>
 
-<!--    &lt;!&ndash; Keycloak &ndash;&gt;-->
+    <!-- Single @Configuration that wires up all OIDC internals. -->
+    <bean id="oidcSecurityConfiguration"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/>
 
-<!--    <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>-->
+    <!-- Composite filter: handles Authorization Code Flow for every active provider. -->
+    <bean id="compositeOpenIdFilter"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.CompositeOpenIdConnectFilter"/>
 
-    <!-- END OAuth2 beans-->
+    <!-- END OAuth2 beans -->
 
     <!--  security integration inclusions  -->
     <import resource="classpath*:security-integration-${security.integration:default}.xml"/>
