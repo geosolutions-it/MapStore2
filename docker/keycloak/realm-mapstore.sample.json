@@ -16,17 +16,19 @@
       {
         "name": "user",
         "description": "Optional; default MapStore role is USER if unmapped"
-      },
-      {
-        "name": "kc-admins",
-        "description": "Mapped to the MapStore KC_ADMINS user group"
-      },
-      {
-        "name": "kc-users",
-        "description": "Mapped to the MapStore KC_USERS user group"
       }
     ]
   },
+  "groups": [
+    {
+      "name": "kc-admins",
+      "path": "/kc-admins"
+    },
+    {
+      "name": "kc-users",
+      "path": "/kc-users"
+    }
+  ],
   "users": [
     {
       "username": "kcuser",
@@ -35,7 +37,8 @@
       "firstName": "Keycloak",
       "lastName": "User",
       "email": "kcuser@acme.org",
-      "realmRoles": ["user", "kc-users"],
+      "realmRoles": ["user"],
+      "groups": ["/kc-users"],
       "credentials": [
         {
           "type": "password",
@@ -51,7 +54,8 @@
       "firstName": "Keycloak",
       "lastName": "Admin",
       "email": "kcadmin@acme.org",
-      "realmRoles": ["admin", "kc-admins"],
+      "realmRoles": ["admin"],
+      "groups": ["/kc-admins"],
       "credentials": [
         {
           "type": "password",
@@ -73,12 +77,22 @@
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
-      "redirectUris": [
-        "http://localhost/mapstore/*"
-      ],
-      "webOrigins": [
-        "http://localhost",
-        "+"
+      "redirectUris": ["http://localhost/mapstore/*"],
+      "webOrigins": ["http://localhost", "+"],
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "groups",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
       ],
       "attributes": {
         "post.logout.redirect.uris": "http://localhost/mapstore/*"

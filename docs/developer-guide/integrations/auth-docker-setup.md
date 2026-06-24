@@ -77,6 +77,12 @@ The sample datadir contains:
 - `geostore-datasource-ovr.properties`: sample PostgreSQL datasource configuration for GeoStore.
 - `configs/localConfig.json.patch`: adds Keycloak as an authentication provider in the login UI.
 
+The sample follows the production-oriented OpenID mapping model used by GeoStore 2.6+:
+
+- Identity-provider roles map only to MapStore roles, currently `ADMIN` or `USER`.
+- Identity-provider groups map to MapStore user groups, such as `KC_ADMINS`, `KC_USERS`, `MS_ADMINS` or `MS_USERS`.
+- `dropUnmapped=true` is used for sample OpenID group mappings, so only groups explicitly listed in `groupMappings` are created and assigned in MapStore.
+
 The sample `mapstore-ovr.properties` intentionally separates the internal and public Keycloak URLs:
 
 - Browser-facing authorization and redirect URLs use `http://localhost/...`, because the local Nginx proxy exposes both MapStore and Keycloak on that host.
@@ -87,7 +93,10 @@ Do not point backend-only MapStore OpenID endpoints at `http://localhost/keycloa
 The sample also enables OpenID global logout and redirects back to `http://localhost/mapstore/`, so a MapStore logout clears the Keycloak SSO session instead of silently logging the user in again on the next Keycloak login attempt.
 
 !!! note
-The sample Keycloak realm and LDAP credentials are intended for local testing only. Keep `docker/keycloak/realm-mapstore.sample.json` and the shipped LDIF data as local test data, and replace client secrets and user passwords before using the setup on another machine or in a shared environment.
+    The sample Keycloak realm and LDAP credentials are intended for local testing only. Keep `docker/keycloak/realm-mapstore.sample.json` and the shipped LDIF data as local test data, and replace client secrets and user passwords before using the setup on another machine or in a shared environment.
+
+!!! note
+    The sample `mapstore-ovr.properties` uses `keycloakOAuth2Config.autoCreateUser=true` so the sample Keycloak users and mapped groups are created and synchronized in a DB-backed GeoStore setup. Set it to `false` only when the WAR is built in LDAP-direct/read-only user-store mode; in that case, make sure the Keycloak usernames are already available in the external user store.
 
 When you use a MapStore WAR built in LDAP-direct mode, `ldap.properties` must also define `ldap.memberPattern`. The shipped sample uses `^uid=([^,]+).*$`, which matches the sample OpenLDAP `member` values such as `uid=ldapadmin,ou=people,dc=acme,dc=org`.
 
@@ -109,19 +118,124 @@ The sample realm configures:
 - Client: `mapstore-server`
 - Client secret: `changeme-mapstore-oidc-client-secret-123`
 - Redirect URI: `http://localhost/mapstore/*`
-- Realm roles: `admin`, `user`, `kc-admins`, `kc-users`
+- Realm roles: `admin`, `user`
+- Realm groups: `kc-admins`, `kc-users`
+- Client mapper: a Group Membership mapper that emits group names in the OIDC `groups` claim
 - Sample users: `kcuser`, `kcadmin`
 
 The client and secret must match the values in `datadir/mapstore-ovr.properties`. If you change the realm file, update the MapStore datadir configuration accordingly. For details about Keycloak OpenID configuration, see the [Keycloak section of the OpenID Connect guide](users/openId.md#keycloak).
 
+The sample uses Keycloak realm roles for MapStore role mapping:
+
+```properties
+keycloakOAuth2Config.rolesClaim=realm_access.roles
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+```
+
+It uses Keycloak groups for MapStore user-group mapping:
+
+```properties
+keycloakOAuth2Config.groupsClaim=groups
+keycloakOAuth2Config.groupMappings=kc-admins:KC_ADMINS,kc-users:KC_USERS
+keycloakOAuth2Config.dropUnmapped=true
+```
+
+This keeps the test bench close to a real customer setup: administrative authority and group membership can be changed independently in the identity provider.
+
 ### Keycloak Test Users
 
-| Username | Password | Email | Keycloak roles | MapStore role | MapStore group |
-| --- | --- | --- | --- | --- | --- |
-| `kcuser` | `changeme-kcuser-pw-123` | `kcuser@acme.org` | `user`, `kc-users` | `USER` | `KC_USERS` |
-| `kcadmin` | `changeme-kcadmin-pw-123` | `kcadmin@acme.org` | `admin`, `kc-admins` | `ADMIN` | `KC_ADMINS` |
+| Username | Password | Email | Keycloak role | Keycloak group | MapStore role | MapStore group |
+| --- | --- | --- | --- | --- | --- | --- |
+| `kcuser` | `changeme-kcuser-pw-123` | `kcuser@acme.org` | `user` | `kc-users` | `USER` | `KC_USERS` |
+| `kcadmin` | `changeme-kcadmin-pw-123` | `kcadmin@acme.org` | `admin` | `kc-admins` | `ADMIN` | `KC_ADMINS` |
 
 The Keycloak admin console is available at [http://localhost/keycloak/admin/](http://localhost/keycloak/admin/) with the `KEYCLOAK_ADMIN` and `KEYCLOAK_ADMIN_PASSWORD` values configured in `.env`. The admin user belongs to the Keycloak `master` realm and is used to manage Keycloak, not to log in to MapStore.
+
+## Optional Microsoft Entra Provider
+
+The sample `mapstore-ovr.properties` includes a commented Microsoft Entra template. It is intentionally disabled because every Entra tenant requires tenant-specific IDs and a real client secret. To enable it in a local copied datadir:
+
+1. Change `oidc_providers=keycloak` to `oidc_providers=keycloak,microsoft`.
+2. Uncomment the `microsoftOAuth2Config.*` block.
+3. Fill in `clientId`, `clientSecret` and the tenant-specific `discoveryUrl`.
+4. Add a Microsoft entry to `datadir/configs/localConfig.json.patch` with `"provider": "microsoft"`.
+5. Register `http://localhost/mapstore/rest/geostore/openid/microsoft/callback` as a Web redirect URI in the Entra app registration.
+6. Add readable user claims such as `email`, `preferred_username` and `unique_name`, then set `microsoftOAuth2Config.principalKey` to a claim that is actually present in the token returned by your tenant.
+
+The Microsoft login entry should use the same provider name as the backend prefix:
+
+```json
+{
+  "type": "openID",
+  "provider": "microsoft",
+  "title": "Microsoft"
+}
+```
+
+For a realistic client-style setup, use **Entra App Roles** for MapStore `ADMIN` / `USER` role mapping and **Entra security groups** for MapStore user-group mapping. Avoid using the same App Role claim for both roles and groups unless you are deliberately testing a shortcut.
+
+The sample uses `microsoftOAuth2Config.principalKey=email` because the local Microsoft Entra test token includes a readable `email` claim while `preferred_username` may be absent from the token/userinfo data used by this GeoStore 2.6 flow. For a client tenant, inspect the actual returned claims and prefer a stable readable value such as `email`, `preferred_username` or `unique_name`.
+
+### Entra Role Mapping
+
+In the App Registration, create app roles like these:
+
+| Display name | Value | Allowed member types | MapStore role |
+| --- | --- | --- | --- |
+| `MapStore Admin` | `MapStore.Admin` | Users/Groups | `ADMIN` |
+| `MapStore User` | `MapStore.User` | Users/Groups | `USER` |
+
+Assign users or groups to these roles from **Enterprise applications** -> your application -> **Users and groups**. The token should then contain a `roles` claim. Configure MapStore with:
+
+```properties
+microsoftOAuth2Config.rolesClaim=roles
+microsoftOAuth2Config.roleMappings=MapStore.Admin:ADMIN,MapStore.User:USER
+microsoftOAuth2Config.authenticatedDefaultRole=USER
+```
+
+`MapStore.User` is optional when `authenticatedDefaultRole=USER` is present, but keeping it in the test bench lets you verify both explicit user and admin mappings.
+
+### Entra Group Mapping
+
+Create or choose Entra security groups for MapStore groups, for example:
+
+| Entra group | MapStore group |
+| --- | --- |
+| `MS_ADMINS` | `MS_ADMINS` |
+| `MS_USERS` | `MS_USERS` |
+
+For the most stable production-like mapping, use the Entra group **Object ID** values in `groupMappings`:
+
+```properties
+microsoftOAuth2Config.groupsClaim=groups
+microsoftOAuth2Config.groupMappings=<MS_ADMINS_GROUP_OBJECT_ID>:MS_ADMINS,<MS_USERS_GROUP_OBJECT_ID>:MS_USERS
+microsoftOAuth2Config.dropUnmapped=true
+```
+
+To get the `groups` claim in the token, configure the Entra app registration to emit group claims. A practical setup is:
+
+1. Open **App registrations** -> your app -> **Token configuration**.
+2. Add a **Groups claim**.
+3. Prefer groups assigned to the application when available, so the token contains only groups relevant to this app.
+4. Assign the `MS_ADMINS` and `MS_USERS` groups to the Enterprise Application.
+
+By default, Entra emits group Object IDs. That is usually the safest value to map because display names can change. If a client explicitly wants display names, configure the app manifest to emit cloud display names for app-assigned groups and use those display names in `groupMappings` instead:
+
+```json
+{
+  "groupMembershipClaims": "ApplicationGroup",
+  "optionalClaims": {
+    "idToken": [
+      {
+        "name": "groups",
+        "additionalProperties": ["cloud_displayname"]
+      }
+    ]
+  }
+}
+```
+
+When group claims are enabled broadly, users in many groups can hit Entra's group overage behavior and the token may omit the normal `groups` list. For this test bench, prefer app-assigned groups and `dropUnmapped=true` so the MapStore side stays deterministic.
 
 ## Prepare OpenLDAP
 
@@ -131,7 +245,9 @@ The LDAP bootstrap files define:
 
 - Organizational units, such as `ou=people` and `ou=groups`.
 - Sample users in `02-users.ldif`.
-- Groups and roles, including `ROLE_ADMIN`, `ROLE_USER`, `LDAP_ADMINS`, `LDAP_USERS`, plus MapStore's default `everyone` group.
+- LDAP groups and roles, including `ROLE_ADMIN`, `ROLE_USER`, `LDAP_ADMINS` and `LDAP_USERS`.
+
+MapStore/GeoStore also assigns users to its default `everyone` group; that group is not bootstrapped from the LDAP LDIF files.
 
 The LDIF files are copied into the OpenLDAP image at build time and imported only when the LDAP volumes are empty. If you edit LDIF files after the first startup, rebuild the LDAP image and remove the LDAP volumes before starting again.
 
