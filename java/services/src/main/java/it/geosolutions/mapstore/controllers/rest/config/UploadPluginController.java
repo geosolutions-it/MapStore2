@@ -16,6 +16,7 @@ import it.geosolutions.mapstore.controllers.BaseMapStoreController;
 import it.geosolutions.mapstore.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -25,13 +26,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.ServletContext;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -69,6 +71,8 @@ public class UploadPluginController extends BaseMapStoreController {
     @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "/uploadPlugin", method = RequestMethod.POST, headers = "Accept=application/json")
     public @ResponseBody String uploadPlugin(InputStream dataStream) throws IOException {
+        File servletTempDir = (File) context.getAttribute(ServletContext.TEMPDIR);
+        Path tempDir = Files.createTempDirectory(servletTempDir.toPath(), "mapstore-upload-");
         try (ZipInputStream zip = new ZipInputStream(dataStream)) {
             ZipEntry entry = zip.getNextEntry();
             String pluginName = null;
@@ -85,12 +89,12 @@ public class UploadPluginController extends BaseMapStoreController {
 
                     if (lower.endsWith("index.js")) {
                         bundleEntryName = normalizedEntry;
-                        File tempBundle = File.createTempFile("mapstore-bundle", ".js");
+                        File tempBundle = Files.createTempFile(tempDir, "mapstore-bundle", ".js").toFile();
                         storeAsset(zip, tempBundle);
                         // We'll resolve final relative target after we know pluginName
                         tempFilesToRelativeTargets.put(tempBundle, "__BUNDLE__");
                     } else if (lower.equals("index.json")) {
-                        JsonNode json = readJSON(zip);
+                        JsonNode json = readJSON(CloseShieldInputStream.wrap(zip));
                         JsonNode plugins = json.get("plugins");
                         if (plugins == null || !plugins.isArray() || plugins.isEmpty()) {
                             throw new IOException("Invalid bundle: index.json has no 'plugins' array");
@@ -108,13 +112,13 @@ public class UploadPluginController extends BaseMapStoreController {
                             addPluginConfiguration(plugin);
                         }
                     } else if (lower.startsWith("translations/")) {
-                        File tempAsset = File.createTempFile("mapstore-asset-translations", ".json");
+                        File tempAsset = Files.createTempFile(tempDir, "mapstore-asset-translations", ".json").toFile();
                         storeAsset(zip, tempAsset);
                         // Target relative to extensions root: <pluginName>/<translations/...>
                         tempFilesToRelativeTargets.put(tempAsset, PLUGIN_PATH_PREFIX + normalizedEntry);
                         addTranslations = true;
                     } else if (lower.startsWith("assets/")) {
-                        File tempAsset = File.createTempFile("mapstore-asset", ".tmp");
+                        File tempAsset = Files.createTempFile(tempDir, "mapstore-asset", ".tmp").toFile();
                         storeAsset(zip, tempAsset);
                         // Target relative to extensions root: <pluginName>/<assets/...>
                         tempFilesToRelativeTargets.put(tempAsset, PLUGIN_PATH_PREFIX + normalizedEntry);
@@ -159,6 +163,8 @@ public class UploadPluginController extends BaseMapStoreController {
             }
 
             return plugin.toString();
+        } finally {
+            FileUtils.deleteDirectory(tempDir.toFile());
         }
     }
 
@@ -212,7 +218,7 @@ public class UploadPluginController extends BaseMapStoreController {
     private boolean canUseDataDir() {
         return !getDataDir().isEmpty() &&
                Stream.of(getDataDir().split(","))
-                       .anyMatch(folder -> !folder.trim().isEmpty() && new File(folder).exists());
+                   .anyMatch(folder -> !folder.trim().isEmpty() && new File(folder).exists());
     }
 
     /**
@@ -250,7 +256,7 @@ public class UploadPluginController extends BaseMapStoreController {
             for (int i = 0; i < plugins.size(); i++) {
                 JsonNode plugin = plugins.get(i);
                 String name = plugin.has("name") ? plugin.get("name").asText()
-                        : plugin.get("value").get("name").asText();
+                    : plugin.get("value").get("name").asText();
                 if (name.contentEquals(pluginName)) {
                     toRemove = i;
                 }
@@ -445,7 +451,7 @@ public class UploadPluginController extends BaseMapStoreController {
     }
 
     private void addExtension(String pluginName, String pluginBundleRelative, String translationsRelative)
-            throws IOException {
+        throws IOException {
         ObjectNode config;
         Optional<File> extensionsConfigFile = findResource(getExtensionsConfigPath());
         if (extensionsConfigFile.isPresent()) {
@@ -484,25 +490,16 @@ public class UploadPluginController extends BaseMapStoreController {
     }
 
     private JsonNode readJSON(InputStream input) throws IOException {
-        byte[] buffer = new byte[4096];
-        int read;
-        StringBuilder json = new StringBuilder();
-        while ((read = input.read(buffer)) >= 0) {
-            json.append(new String(buffer, 0, read, StandardCharsets.UTF_8));
-        }
-        return jsonMapper.readTree(json.toString());
+        return jsonMapper.readTree(input);
     }
 
     private void storeAsset(ZipInputStream zip, File file) throws IOException {
         try (FileOutputStream outFile = new FileOutputStream(file)) {
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = zip.read(buffer)) >= 0) {
-                outFile.write(buffer, 0, read);
-            }
+            IOUtils.copy(zip, outFile);
         }
     }
 
+    @Override
     public void setContext(ServletContext context) {
         this.context = context;
     }

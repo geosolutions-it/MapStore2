@@ -58,6 +58,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
 
         // Mock a legitimate folder inside the base directory
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
@@ -89,6 +90,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(
                 (Answer<String>) invocation -> {
@@ -112,6 +114,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(
                 (Answer<String>) invocation -> {
@@ -139,6 +142,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.endsWith(".patch"))).thenReturn(tempDir.getAbsolutePath() + "/pluginsConfig.json.patch");
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
                 (Answer<String>) invocation -> {
@@ -162,6 +166,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         controller.setBundlesPath("custom");
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("custom/"))).thenAnswer(
@@ -184,6 +189,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("/extensions/"))).thenAnswer(
                 (Answer<String>) invocation -> {
@@ -206,6 +212,7 @@ public class UploadPluginControllerTest {
         controller.setDataDir(dataDir.getAbsolutePath());
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(dataDir);
         File tempConfig = TestUtils.copyTo(UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"), dataDir, "/configs/pluginsConfig.json");
         File tempExtensions = TestUtils.copyTo(UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir, "/extensions/extensions.json");
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
@@ -222,6 +229,7 @@ public class UploadPluginControllerTest {
         controller.setDataDir(dataDir1.getAbsolutePath() + "," + dataDir2.getAbsolutePath());
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(dataDir1);
         // we load from dataDir2 (less priority)
         File tempConfig = TestUtils.copyTo(
                 UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"),
@@ -245,6 +253,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(
                 (Answer<String>) invocation -> {
@@ -305,6 +314,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
 
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
                 (Answer<String>) invocation -> {
                     String path = (String) invocation.getArguments()[0];
@@ -329,6 +339,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
 
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenReturn(
                 tempDist.getAbsolutePath() + File.separator + "ignored"
         );
@@ -349,6 +360,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(TestUtils.getDataDir());
 
         Map<String, byte[]> extras = new HashMap<>();
         extras.put("C:\\evil.js", "drv".getBytes(StandardCharsets.UTF_8));
@@ -368,6 +380,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
 
         File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
                 (Answer<String>) invocation -> {
                     String path = (String) invocation.getArguments()[0];
@@ -390,6 +403,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(TestUtils.getDataDir());
 
         Map<String, byte[]> extras = new HashMap<>();
         // no extra assets needed; bundle name itself is malicious
@@ -408,6 +422,7 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
 
         final File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(tempDist);
 
         // Cover both likely extension roots
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
