@@ -1442,7 +1442,7 @@
       "errorDelete": "Der opstod en fejl ved at slette brugeren:",
       "errorSaving": "Der opstod en fejl ved at gemme brugeren:",
       "selectedGroups": "Tildelte grupper",
-      "requiredFiedsMessage": "Felter markeret med stjerne (*) er påkrævede",      
+      "requiredFiedsMessage": "Felter markeret med stjerne (*) er påkrævede",
       "usersFound": "{count, plural, =0 {0 Brugere fundet} =1 {1 Bruger fundet} other {# Brugere fundet}}",
       "admin": "Administrator",
       "active": "Aktiv",
@@ -2546,7 +2546,7 @@
         "tickAngleTooltip": "Tilføjer vinkel i grader som trinbeskrivelser.",
         "fillTickValuesTooltip": "Fyld op med tilgængelige filterværdier",
         "fillTickLabelsTooltip": "Autoudfyld beskrivelser med trinværdier",
-        
+
         "showNoTargetsInfoLabel": "Meddelelse ved manglende forbindelse",
         "showNoTargetsInfoDescription": "Når der intet er fundet til filteret, eller de forbundne lag/widgets ikke er synlige, vil en meddelelse fortælle brugeren at filteret ikke har nogen effekt.",
         "noInteractionsInfo": "Intet er forbundet. Brug forbindelsespanelet til at forbinde filteret til lag eller widgets.",
