@@ -25,8 +25,7 @@
         <security:csrf disabled="true"/>
 		<security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
 		<security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
-        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+        <security:custom-filter ref="compositeOpenIdFilter" before="OPENID_FILTER"/>
 		<security:anonymous />
 	</security:http>
 	<!-- Entry point -->
@@ -140,14 +139,21 @@
     <bean id="preauthenticatedAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
     </bean>
 
-    <!-- OAuth2 beans -->
     <context:annotation-config/>
 
-    <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
+    <!-- ==================================================================== -->
+    <!-- === OAuth2 / OIDC beans (GeoStore 2.6+) ============================ -->
+    <!-- ==================================================================== -->
 
-    <!-- Keycloak -->
+    <bean id="oidcProviderRegistrar"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectProviderRegistrar"/>
 
-    <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
+    <bean id="oidcSecurityConfiguration"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/>
 
-    <!-- END OAuth2 beans-->
+    <bean id="compositeOpenIdFilter"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.CompositeOpenIdConnectFilter"/>
+
+    <!-- END OAuth2 beans -->
+
 </beans>
