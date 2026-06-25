@@ -177,19 +177,39 @@ const identifyDefaultProps = defaultProps({
 /**
  * This plugin allows get information about clicked point. It can be configured to have a mobile or a desktop flavor.
  *
- * You can configure some of the features of this plugin by setting up the initial mapInfo state in
- * "initialState.defaultState", or by the plugin configuration. Map-specific Identify settings are
- * saved in the map configuration as top-level "mapInfoConfiguration".
- * ```
- * "mapInfo": {
- *   "enabled": true, // enabled by default
- *   "disabledAlwaysOn": false, // if true, disable always on setup
- *   "configuration": {
- *     "showEmptyMessageGFI": false // allow or deny the visibility of message when you have no results from identify request
- *     "infoFormat": "text/plain" // default infoformat value, other values are "text/html" for text only or "application/json" for properties
+ * You can configure app-wide defaults for new maps by setting the initial mapInfo
+ * state in localConfig.json, or by the plugin configuration:
+ * ```json
+ * "initialState": {
+ *   "defaultState": {
+ *     "mapInfo": {
+ *       "enabled": true,
+ *       "disabledAlwaysOn": false,
+ *       "configuration": {
+ *         "showEmptyMessageGFI": false,
+ *         "infoFormat": "text/plain"
+ *       }
+ *     }
  *   }
  * }
  * ```
+ *
+ * Saved map-specific Identify settings are stored in the map configuration as a
+ * top-level "mapInfoConfiguration" property, sibling of "map". Use the same
+ * top-level property in a map template such as new.json when the template needs
+ * its own Identify settings:
+ * ```json
+ * {
+ *   "version": 2,
+ *   "map": {},
+ *   "mapInfoConfiguration": {
+ *     "showEmptyMessageGFI": false,
+ *     "infoFormat": "text/html"
+ *   }
+ * }
+ * ```
+ * When both configurations are present, "mapInfoConfiguration" takes precedence
+ * for the loaded map; otherwise the app-wide default is used.
  *
  * @class Identify
  * @memberof plugins
