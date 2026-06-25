@@ -48,6 +48,7 @@ import {
 import {
     isActiveSelector,
     authkeyParamNameSelector,
+    catalogPanelSelector,
     groupSelector,
     layerErrorSelector,
     loadingErrorSelector,
@@ -115,6 +116,7 @@ const Catalog = ({
     zoomToLayer = true,
     onError,
     group,
+    catalogPanel,
     authkeyParamNames,
     crs,
     enableImageryOverlay,
@@ -128,7 +130,8 @@ const Catalog = ({
 }, context) => {
     const { loadedPlugins } = context;
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
-    const [panel, setPanel] = useState(defaultView !== 'dialog');
+    const defaultPanel = defaultView !== 'dialog';
+    const panel = catalogPanel ?? defaultPanel;
     const [loadingLayers, setLoadingLayers] = useState([]);
 
     useEffect(() => {
@@ -136,6 +139,9 @@ const Catalog = ({
             editingAllowedRoles,
             editingAllowedGroups
         });
+        if (catalogPanel === undefined) {
+            onSetCatalogPanel(defaultPanel);
+        }
         return () => {
             closeCatalog();
         };
@@ -367,9 +373,7 @@ const Catalog = ({
                             tooltipPosition="bottom"
                             tooltipId={panel ? <Message msgId="catalog.gridView" /> : <Message msgId="catalog.listView" />}
                             onClick={() => {
-                                const newPanel = !panel;
-                                setPanel(newPanel);
-                                onSetCatalogPanel?.(newPanel);
+                                onSetCatalogPanel(!panel);
                             }}
                             square
                         >
@@ -378,12 +382,7 @@ const Catalog = ({
                         <ButtonWithTooltip
                             tooltipPosition="bottom"
                             tooltipId={<Message msgId="catalog.close" />}
-                            onClick={() => {
-                                closeCatalog();
-                                if (!panel) {
-                                    setPanel(true);
-                                }
-                            }}
+                            onClick={closeCatalog}
                             square
                         >
                             <Glyphicon glyph="1-close" />
@@ -441,6 +440,7 @@ const layerCatalogSelector = createStructuredSelector({
     dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     // controls
     group: groupSelector,
+    catalogPanel: catalogPanelSelector,
     // backgorund
     source: metadataSourceSelector,
     modalParams: modalParamsSelector

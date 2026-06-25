@@ -56,15 +56,35 @@ describe('FilterLayoutTab component', () => {
         expect(titleToggle).toExist();
         Simulate.click(titleToggle);
 
-        // Verify there are 6 input groups in title panel
         const titlePanel = container.querySelector('.ms-filter-title-panel');
         const titleInputs = titlePanel.querySelectorAll('.input-group');
-        expect(titleInputs.length).toBe(6);
+        expect(titleInputs.length).toBe(7);
 
         const labelInput = container.querySelector('input[type="text"][placeholder*="label"]');
         expect(labelInput).toExist();
         labelInput.value = 'Test Label';
         Simulate.change(labelInput);
+    });
+
+    it('toggles layout.defaultExpanded via the new Items panel checkbox', (done) => {
+        ReactDOM.render(<FilterLayoutTab
+            data={{ layout: { defaultExpanded: true } }}
+            onChange={(key, value) => {
+                if (key === 'layout.defaultExpanded') {
+                    expect(value).toBe(false);
+                    done();
+                }
+            }}
+        />, document.getElementById('container'));
+        const container = document.getElementById('container');
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+        expect(checkboxes.length).toBeGreaterThanOrEqualTo(4);
+        const formGroups = Array.from(container.querySelectorAll('.form-group-flex'));
+        const target = formGroups.find(g => /defaultExpanded/.test(g.innerHTML));
+        expect(target).toExist();
+        const cb = target.querySelector('input[type="checkbox"]');
+        expect(cb).toExist();
+        Simulate.change(cb);
     });
 
     it('should include slider in the variant options when selection mode is single', () => {

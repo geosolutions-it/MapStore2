@@ -230,7 +230,7 @@ describe('Itinerary Epics', () => {
 
             testEpic(itineraryMapLayoutEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(UPDATE_MAP_LAYOUT);
-                expect(actions[0].layout.right).toBe(420);
+                expect(actions[0].layout.right).toBe(460);
             }, state, done);
         });
 

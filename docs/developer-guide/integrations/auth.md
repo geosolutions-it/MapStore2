@@ -44,7 +44,7 @@ Where:
   - when set to `true`, the refresh token is used and the session extends every time the session timeout is met
 
 !!! note
-    `sessionTimeout` and `autorefresh` in `mapstore.properties` are valid for the default session storage. If you are using openID or keycloak, they will not be used.
+    `sessionTimeout` and `autorefresh` in `mapstore.properties` are valid for the default session storage. If you are using OpenID Connect (including Keycloak or Google), they will not be used — token lifetimes are controlled by the IdP and the `{provider}OAuth2Config.cacheExpirationMinutes` setting in `mapstore-ovr.properties`.
 
 Additionally, on the client side, in order to configure the interval in which is session `refresh` action is fired, one can use the `tokenRefreshInterval` property. It can be configured via `localConfig.json -> tokenRefreshInterval`, the value is in milliseconds.
 
