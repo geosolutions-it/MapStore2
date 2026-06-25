@@ -144,6 +144,8 @@ const initState = {
     configuration: {}
 };
 
+const getDefaultConfiguration = (state) => state.defaultConfiguration || state.configuration || {};
+
 /**
  * Manages the map info tool state. Contains configurations and responses.
  * @prop {boolean} [enabled=true] if true, the info tool is enabled by default
@@ -365,9 +367,11 @@ function mapInfo(state = initState, action) {
         };
     }
     case MAP_CONFIG_LOADED: {
+        const defaultConfiguration = getDefaultConfiguration(state);
         return {
             ...state,
-            configuration: action.config.mapInfoConfiguration || state.configuration || {}
+            defaultConfiguration,
+            configuration: action.config?.mapInfoConfiguration || defaultConfiguration
         };
     }
     case CHANGE_FORMAT: {
