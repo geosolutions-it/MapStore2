@@ -57,7 +57,7 @@ export const identifyHandlers = withHandlers({
 /**
  * Basic identify lifecycle used in Identify plugin with IdentifyContainer component
  * - componentDidMount: show cursor on map as pointer if enabled props is true
- * - componentWillReceiveProps:
+ * - UNSAFE_componentWillReceiveProps:
  *      - changes pointer enable true/false - TODO: move it in an epic
  *      - set index to 0 to when responses are changed to avoid empty view if index is greater than current responses length
  * @memberof components.data.identify.enhancers.identify
@@ -120,7 +120,7 @@ export const identifyLifecycle = compose(
             hideMarker();
             purgeResults();
         },
-        componentWillReceiveProps(newProps) {
+        UNSAFE_componentWillReceiveProps(newProps) {
             const {
                 hideMarker = () => {},
                 purgeResults = () => {},
