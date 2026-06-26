@@ -85,6 +85,7 @@ const FeatureInfoEditor = ({
                     }
                 ]}>
                 <div id="ms-template-editor" className="ms-editor">
+                    {/* eslint-disable-next-line react/no-danger -- CSS injected for DraftJS image placeholder; content is a hardcoded i18n string */}
                     <style dangerouslySetInnerHTML={{__html: ".DraftEditor-editorContainer img::after {content: '" + getMessageById(messages, "layerProperties.imageNotFound") + "'}"} }/>
                     {imageField ? createPortal(<div className="guide-text"><Message msgId="layerProperties.guideText"/></div>, imageField) : null}
 

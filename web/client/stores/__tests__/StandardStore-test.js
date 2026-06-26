@@ -15,6 +15,8 @@ import {LOAD_MAP_CONFIG} from "../../actions/config";
 import mapInfoReducers from "../../reducers/mapInfo";
 import browserReducers from "../../reducers/browser";
 import { CHANGE_BROWSER_PROPERTIES } from '../../actions/browser';
+import { setApi, getApi, getItemKey } from '../../api/userPersistedStorage';
+import securityReducer from '../../reducers/security';
 
 describe('Test StandardStore', () => {
     it('storeOpts notify is true by default', () => {
@@ -118,5 +120,54 @@ describe('Test StandardStore', () => {
         expect(state.mapInfo.enabled).toBe(true);
         expect(state.mapInfo.highlight).toBe(true);
         expect(state.mapInfo.infoFormat).toBe("application/json");
+    });
+});
+
+describe('Test StandardStore persist - authHeader not stored', () => {
+    const PERSIST_KEY = getItemKey('persistence', 'security');
+
+    beforeEach(() => {
+        setApi('memoryStorage');
+        getApi().removeItem(PERSIST_KEY);
+    });
+    afterEach(() => {
+        getApi().removeItem(PERSIST_KEY);
+    });
+
+    it('authHeader is not written to storage when security state is saved', (done) => {
+        const store = createStore(
+            { appReducers: { security: securityReducer } },
+            {},
+            { persist: { whitelist: ['security'] } }
+        );
+        store.dispatch({ type: 'TEST_ACTION' });
+        setTimeout(() => {
+            const stored = JSON.parse(getApi().getItem(PERSIST_KEY) || '{}');
+            expect(stored.authHeader).toBe(undefined);
+            done();
+        }, 50);
+    });
+
+    it('authHeader already in storage is cleaned up on store initialization', () => {
+        getApi().setItem(PERSIST_KEY, JSON.stringify({ user: { name: 'test' }, authHeader: 'Basic dGVzdA==' }));
+        createStore(
+            { appReducers: { security: securityReducer } },
+            {},
+            { persist: { whitelist: ['security'] } }
+        );
+        const stored = JSON.parse(getApi().getItem(PERSIST_KEY) || '{}');
+        expect(stored.authHeader).toBe(undefined);
+        expect(stored.user).toEqual({ name: 'test' });
+    });
+
+    it('authHeader is not present in initial state loaded from storage', () => {
+        getApi().setItem(PERSIST_KEY, JSON.stringify({ user: { name: 'test' }, authHeader: 'Basic dGVzdA==' }));
+        const store = createStore(
+            { appReducers: { security: securityReducer } },
+            {},
+            { persist: { whitelist: ['security'] } }
+        );
+        expect(store.getState().security?.authHeader).toBe(undefined);
+        expect(store.getState().security?.user).toEqual({ name: 'test' });
     });
 });

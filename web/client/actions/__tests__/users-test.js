@@ -229,5 +229,18 @@ describe('Test correctness of the users actions', () => {
             }
         });
     });
+    it('deleteUser passes cascadeResourceDelete=USERSESSION to the API', (done) => {
+        const spy = expect.spyOn(GeoStoreDAO, 'deleteUser').andReturn(Promise.resolve());
+        const retFun = deleteUser(1, "delete");
+        retFun((action) => {
+            if (action.status === 'deleted' || action.status === 'error') {
+                expect(spy.calls.length).toBe(1);
+                expect(spy.calls[0].arguments[0]).toBe(1);
+                expect(spy.calls[0].arguments[1]).toEqual({ params: { cascadeResourceDelete: 'USERSESSION' } });
+                spy.restore();
+                done();
+            }
+        });
+    });
 
 });
