@@ -136,7 +136,7 @@
       "heightOffset": "Spostamento in altezza (m)",
       "wmsLayerTileSize": "Dimensione tile (WMS)",
       "maxFeaturesInView": "Numero massimo di feature in vista",
-      "maxFeaturesInViewPlaceholder": "Quando il valore è indefinito, la funzionalità attuale funziona come di consueto (cioè carica tutte le feature)",
+      "maxFeaturesInViewTooltip": "Quando il valore è indefinito, la funzionalità attuale funziona come di consueto (cioè carica tutte le feature)",
       "serverType": "Tipo di Server",
       "formatError": "Non è stato possibile recuperare le informazioni sui formati dal servizio configurato. Probabilmente stai usando un servizio \"No Vendor\" e questo non è supportato (es. GeoNetwork)",
       "serverTypeOption": {
