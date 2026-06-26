@@ -344,4 +344,17 @@ describe('WMC tests', () => {
                 expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
         })
     );
+    it('toWMC with empty maxExtent should not fail', () => {
+        Promise.all([
+            axios.get('base/web/client/test-resources/wmc/config.json'),
+            axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
+        ]).then(([{data: config}, {data: context}]) => {
+            const _config = omit(config, "map.maxExtent"); // remove mapExtent
+            const exportedLines = toWMC(_config, {}).split('\n').map(r => r.trim()).filter(e => e);
+            const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
+
+            zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
+                expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+        });
+    });
 });
