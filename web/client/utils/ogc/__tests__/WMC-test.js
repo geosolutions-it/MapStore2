@@ -332,29 +332,54 @@ describe('WMC tests', () => {
             done(new Error('Expected toMapConfig to throw an error!'));
         });
     });
-    it('toWMC', () =>
-        Promise.all([
-            axios.get('base/web/client/test-resources/wmc/config.json'),
-            axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
-        ]).then(([{data: config}, {data: context}]) => {
-            const exportedLines = toWMC(config, {}).split('\n').map(r => r.trim()).filter(e => e);
-            const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
+    describe('WMC export tests', () => {
+        it('toWMC', () =>
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                const exportedLines = toWMC(config, {}).split('\n').map(r => r.trim()).filter(e => e);
+                const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
 
-            zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
-                expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
-        })
-    );
-    it('toWMC with empty maxExtent should not fail', () => {
-        Promise.all([
-            axios.get('base/web/client/test-resources/wmc/config.json'),
-            axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
-        ]).then(([{data: config}, {data: context}]) => {
-            const _config = omit(config, "map.maxExtent"); // remove mapExtent
-            const exportedLines = toWMC(_config, {}).split('\n').map(r => r.trim()).filter(e => e);
-            const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
+                zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
+                    expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+            })
+        );
+        it('Eempty maxExtent should not fail', () => {
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                const _config = omit(config, "map.maxExtent"); // remove mapExtent
+                const exportedLines = toWMC(_config, {}).split('\n').map(r => r.trim()).filter(e => e);
+                const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
 
-            zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
-                expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+                zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
+                    expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+            });
+        });
+        it('bbox should take precedence over maxExtent', () => {
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/context-bbox.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                const _config = {
+                    ...config,
+                    map: {
+                        ...config.map,
+                        bbox: {bounds: {
+                            minx: -447353.25587372016,
+                            miny: 3817753.15151658,
+                            maxx: 4562023.82912628,
+                            maxy: 6138992.826157694
+                        }, crs: "EPSG:900913"}
+                    }
+                };
+                const exportedLines = toWMC(_config, {}).split('\n').map(r => r.trim()).filter(e => e);
+                const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
+                zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
+                    expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+            });
         });
     });
 });

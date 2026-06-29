@@ -391,7 +391,8 @@ export const toWMC = (
             })
         };
     };
-    const maxExtentFromBbox = makeMaxExtentFromBbox(bbox);
+
+    const maxExtentFromBbox = isEmpty(bbox) ? null : makeMaxExtentFromBbox(bbox);
     const olExtensionsGeneral = !isEmpty(maxExtentFromBbox)
         ? castArray(maxExtentFromBbox)
         : assignNamespace([{
