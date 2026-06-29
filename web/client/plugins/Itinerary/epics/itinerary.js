@@ -43,6 +43,10 @@ import { info, error as errorNotification } from '../../../actions/notifications
 import { createMarkerSvgDataUrl } from '../../../utils/StyleUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
+const isCancelLocationSelectionAction = ({type, control, value}) =>
+    type === RESET_ITINERARY
+    || (type === SET_CONTROL_PROPERTY && control === CONTROL_NAME && !value)
+    || (type === TOGGLE_CONTROL && control === CONTROL_NAME);
 
 /**
  * Handles itinerary map layout updates
@@ -188,10 +192,26 @@ export const onOpenItineraryEpic = (action$, {getState}) =>
  */
 export const itinerarySelectLocationFromMapEpic = (action$, { getState }) =>
     action$.ofType(SELECT_LOCATION_FROM_MAP)
-        .switchMap(({ index }) =>
-            action$.ofType(CLICK_ON_MAP)
+        .switchMap(({ index }) => {
+            if (isNil(index) || index === '') {
+                return Observable.of(changeMousePointer('auto'));
+            }
+            const cancelSelection$ = action$
+                .ofType(RESET_ITINERARY, SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+                .filter(isCancelLocationSelectionAction)
+                .take(1)
+                .map(() => ({ cancel: true }));
+            return Observable.merge(
+                action$.ofType(CLICK_ON_MAP)
+                    .take(1)
+                    .map(({ point }) => ({ point })),
+                cancelSelection$
+            )
                 .take(1)
                 .switchMap(({ point }) => {
+                    if (!point?.latlng) {
+                        return Observable.of(changeMousePointer('auto'));
+                    }
                     const { latlng } = point;
                     const state = getState();
                     const locations = locationsSelector(state);
@@ -202,8 +222,8 @@ export const itinerarySelectLocationFromMapEpic = (action$, { getState }) =>
                         updateLocations(newLocations),
                         addMarkerFeature(latlng, index)
                     );
-                }).startWith(changeMousePointer('pointer'))
-        );
+                }).startWith(changeMousePointer('pointer'));
+        });
 
 /**
  * Handles itinerary run
