@@ -314,8 +314,8 @@ class OpenlayersMap extends React.Component {
                         }, 0);
                     }
                 }
-                this.map.setView(this.createView(center, closestMatchedZoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
-                this.props.onResolutionsChange(this.getResolutions());
+                this.map.setView(this.createView(center, closestMatchedZoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits, newProps.mapOptions));
+                this.props.onResolutionsChange(this.getResolutions(newProps.projection, newProps.mapOptions));
             }
             // We have to force ol to drop tile and reload
             this.map.getLayers().forEach((l) => {
@@ -362,7 +362,7 @@ class OpenlayersMap extends React.Component {
      * - custom grid set is partially supported by mapOptions.view.resolutions but this is not managed by projection change yet
      * - custom tile sizes
      */
-    getResolutions = (srs) => {
+    getResolutions = (srs, mapOptions = this.props.mapOptions) => {
     // Resolve requested projection
         const requestedProj = srs
             ? msGetProjection(srs)
@@ -370,7 +370,7 @@ class OpenlayersMap extends React.Component {
         const requestedSRS = normalizeSRS(srs || requestedProj.getCode());
 
         // Check for explicitly configured resolutions + matching projection
-        const viewOptions = this.props?.mapOptions?.view || {};
+        const viewOptions = mapOptions?.view || {};
         const configuredResolutions = viewOptions.resolutions;
         const configuredResProjection = viewOptions.projection && normalizeSRS(viewOptions.projection);
 
@@ -388,11 +388,11 @@ class OpenlayersMap extends React.Component {
         return getResolutionsForProjection(
             srs ?? this.map.getView().getProjection().getCode(),
             {
-                minResolution: this.props.mapOptions.minResolution,
-                maxResolution: this.props.mapOptions.maxResolution,
-                minZoom: this.props.mapOptions.minZoom,
-                maxZoom: this.props.mapOptions.maxZoom,
-                zoomFactor: this.props.mapOptions.zoomFactor,
+                minResolution: mapOptions.minResolution,
+                maxResolution: mapOptions.maxResolution,
+                minZoom: mapOptions.minZoom,
+                maxZoom: mapOptions.maxZoom,
+                zoomFactor: mapOptions.zoomFactor,
                 extent
             }
         );
@@ -613,7 +613,7 @@ class OpenlayersMap extends React.Component {
         return !isEqual(rotation, newRotation);
     };
 
-    createView = (center, zoom, projection, options, limits = {}) => {
+    createView = (center, zoom, projection, options, limits = {}, mapOptions) => {
         const srs = normalizeSRS(projection);
         // limit has a crs defined
         const extent = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, normalizeSRS(projection));
@@ -628,7 +628,7 @@ class OpenlayersMap extends React.Component {
             resolutionsToUse = configuredResolutions;
         } else {
             // compute resolutions dynamically (e.g., EPSG:4326)
-            resolutionsToUse = this.getResolutions(srs);
+            resolutionsToUse = this.getResolutions(srs, mapOptions ? { ...mapOptions, view: options } : undefined);
         }
         const newOptions = {
             ...options,
@@ -650,7 +650,7 @@ class OpenlayersMap extends React.Component {
             // does not allow intermediary zoom levels
             // we need this at true to set correctly the scale box
             constrainResolution: true,
-            resolutions: this.getResolutions(srs)
+            resolutions: this.getResolutions(srs, mapOptions ? { ...mapOptions, view: options } : undefined)
         }, newOptions || {});
         return new View(viewOptions);
     };
