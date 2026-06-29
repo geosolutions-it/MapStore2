@@ -4539,6 +4539,9 @@
       "loadingAPI": "Loading API...",
       "cyclomedia": {
         "initializing": "Initializing Street Smart API...",
+        "logout": "Street Smart Logout",
+        "tryForceLogout": "Force Street Smart Logout",
+        "confirmLogout": "Are you sure you want to log out from Street Smart?",
         "loadingAPI": "Loading Street Smart API...",
         "changeCredentials": "Change Street Smart credentials",
         "insertCredentials": "Insert your Street Smart credentials",
@@ -4549,6 +4552,7 @@
         "zoomIn": "Please zoom in the map to see the street view coverage",
         "errorOccurred": "Error occurred: ",
         "errors": {
+          "notLoggedIn": "You are not logged in",
           "invalidCredentials": "Invalid credentials",
           "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
         },

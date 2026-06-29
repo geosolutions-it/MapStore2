@@ -4570,6 +4570,9 @@
       "loadingAPI": "API wird geladen...",
       "cyclomedia": {
         "initializing": "Initialisiere Street Smart API...",
+        "logout": "Street Smart Abmelden",
+        "tryForceLogout": "Street Smart Abmeldung erzwingen",
+        "confirmLogout": "Sind Sie sicher, dass Sie sich von Street Smart abmelden möchten?",
         "loadingAPI": "Lade Street Smart API...",
         "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
         "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",
@@ -4580,6 +4583,7 @@
         "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
         "errorOccurred": "Fehler aufgetreten: ",
         "errors": {
+          "notLoggedIn": "Nicht angemeldet",
           "invalidCredentials": "Ungültige Anmeldeinformationen",
           "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
         },
