@@ -4542,6 +4542,9 @@
       "loadingAPI": "Caricamento API...",
       "cyclomedia": {
         "initializing": "Inizializzazione Street Smart API...",
+        "logout": "Logout Street Smart",
+        "tryForceLogout": "Forza il logout Street Smart",
+        "confirmLogout": "Sei sicuro di voler effettuare il logout da Street Smart?",
         "loadingAPI": "Caricamento Street Smart API...",
         "changeCredentials": "Cambia credenziali Street Smart",
         "insertCredentials": "Inserisci le tue credenziali Street Smart",
@@ -4552,6 +4555,7 @@
         "zoomIn": "Effettua un ulteriore zoom sulla mappa per visualizzare dove sono disponibili le immagini",
         "errorOccurred": "Si è verificato un errore: ",
         "errors": {
+          "notLoggedIn": "Non sei loggato",
           "invalidCredentials": "Credenziali non valide",
           "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore."
         },
