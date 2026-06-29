@@ -1,13 +1,13 @@
 import { MAP_CONFIG_LOADED } from '../../../actions/config';
 import { setProjectionsConfig } from '../actions/crsselector';
 import Rx from 'rxjs';
+import isEqual from 'lodash/isEqual';
 import {
     CHANGE_MAP_CRS,
     setMapResolutions,
     updateMapOptions
 } from '../../../actions/map';
 import { mapSelector } from '../../../selectors/map';
-import { normalizeSRS } from '../../../utils/CoordinatesUtils';
 import { getResolutionsForProjection } from '../../../utils/MapUtils';
 import { customResolutionsForCrsSelector } from '../selectors/crsselector';
 
@@ -21,6 +21,12 @@ const resolveResolutionsForCrs = (state, crs) => {
         return custom;
     }
     return getResolutionsForProjection(crs);
+};
+
+const omitProjectionFromView = (view = {}) => {
+    const viewOptions = { ...view };
+    delete viewOptions.projection;
+    return viewOptions;
 };
 
 /**
@@ -43,14 +49,13 @@ export const updateCrsSelectorConfigEpic = (action$) =>
 
             const customForCrs = projection ? customResolutions[projection] : undefined;
             const resolutionsAreAlignedToCrs = !!view.resolutions
-                && !!view.projection
-                && normalizeSRS(view.projection) === normalizeSRS(projection);
+                && isEqual(view.resolutions, customForCrs);
             const canUpdateMapOptions = !!customForCrs && customForCrs.length > 0 && !resolutionsAreAlignedToCrs;
 
             if (canUpdateMapOptions) {
                 return Rx.Observable.of(
                     setConfigAction,
-                    updateMapOptions({ view: { ...view, projection, resolutions: customForCrs } }),
+                    updateMapOptions({ view: { ...omitProjectionFromView(view), resolutions: customForCrs } }),
                     setMapResolutions(customForCrs)
                 );
             }
@@ -72,7 +77,7 @@ export const updateMapResolutionsOnCrsChangeEpic = (action$, store) =>
             const resolutions = resolveResolutionsForCrs(state, crs);
             const currentView = mapSelector(state)?.mapOptions?.view || {};
             return Rx.Observable.of(
-                updateMapOptions({ view: { ...currentView, projection: crs, resolutions } }),
+                updateMapOptions({ view: { ...omitProjectionFromView(currentView), resolutions } }),
                 setMapResolutions(resolutions)
             );
         });

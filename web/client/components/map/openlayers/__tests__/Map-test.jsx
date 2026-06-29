@@ -1711,14 +1711,14 @@ describe('OpenlayersMap', () => {
         // center is modified
         expect(map.map.getView().getCenter()).toEqual([10.3346773790, 43.9323234388]);
     });
-    it('should correctly apply view projection without propagating to zoom changes', () => {
+    it('should correctly apply view resolutions without requiring mapOptions.view.projection', () => {
         const resolutions = [0.0005, 0.0004, 0.0003, 0.0002];
         const map = ReactDOM.render(
             <OpenlayersMap
                 center={{y: 45, x: 10}}
                 zoom={2}
                 projection="EPSG:4326"
-                mapOptions={{ view: { projection: 'EPSG:4326', resolutions } }}
+                mapOptions={{ view: { resolutions } }}
             />,
             document.getElementById("map")
         );

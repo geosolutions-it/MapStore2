@@ -113,7 +113,7 @@ describe('crsselector epics', () => {
                     expect(actions.length).toBe(3);
                     expect(actions[0].type).toBe(SET_PROJECTIONS_CONFIG);
                     expect(actions[1].type).toBe(UPDATE_MAP_OPTIONS);
-                    expect(actions[1].configUpdate.view.projection).toBe('EPSG:4326');
+                    expect(actions[1].configUpdate.view.projection).toBe(undefined);
                     expect(actions[1].configUpdate.view.resolutions).toEqual([1, 0.5, 0.25]);
                     expect(actions[2].type).toBe(SET_MAP_RESOLUTIONS);
                     expect(actions[2].resolutions).toEqual([1, 0.5, 0.25]);
@@ -123,7 +123,7 @@ describe('crsselector epics', () => {
             );
         });
 
-        it('should NOT hydrate when mapOptions.view.resolutions is already aligned to the current CRS', (done) => {
+        it('should NOT hydrate when mapOptions.view.resolutions already match custom resolutions for the current CRS', (done) => {
             const action = configureMap({
                 crsSelector: {
                     customResolutions: {
@@ -133,7 +133,7 @@ describe('crsselector epics', () => {
                 map: {
                     projection: 'EPSG:4326',
                     mapOptions: {
-                        view: { projection: 'EPSG:4326', resolutions: [9, 8, 7] }
+                        view: { projection: 'EPSG:4326', resolutions: [1, 0.5, 0.25] }
                     }
                 }
             });
@@ -150,7 +150,7 @@ describe('crsselector epics', () => {
             );
         });
 
-        it('should hydrate when mapOptions.view.projection is set but points to a different CRS than map.projection', (done) => {
+        it('should hydrate and remove stale mapOptions.view.projection when custom resolutions differ', (done) => {
             const action = configureMap({
                 crsSelector: {
                     customResolutions: {
@@ -171,7 +171,7 @@ describe('crsselector epics', () => {
                 (actions) => {
                     expect(actions.length).toBe(3);
                     expect(actions[1].type).toBe(UPDATE_MAP_OPTIONS);
-                    expect(actions[1].configUpdate.view.projection).toBe('EPSG:4326');
+                    expect(actions[1].configUpdate.view.projection).toBe(undefined);
                     expect(actions[1].configUpdate.view.resolutions).toEqual([1, 0.5, 0.25]);
                     expect(actions[2].type).toBe(SET_MAP_RESOLUTIONS);
                 },
@@ -205,7 +205,7 @@ describe('crsselector epics', () => {
                 (actions) => {
                     expect(actions.length).toBe(2);
                     expect(actions[0].type).toBe(UPDATE_MAP_OPTIONS);
-                    expect(actions[0].configUpdate.view.projection).toBe('EPSG:4326');
+                    expect(actions[0].configUpdate.view.projection).toBe(undefined);
                     expect(actions[0].configUpdate.view.resolutions).toEqual([10, 5, 2.5, 1.25]);
                     // preserves unrelated view options (rotation, ...)
                     expect(actions[0].configUpdate.view.rotation).toBe(0.5);
@@ -229,7 +229,7 @@ describe('crsselector epics', () => {
                 (actions) => {
                     expect(actions.length).toBe(2);
                     expect(actions[0].type).toBe(UPDATE_MAP_OPTIONS);
-                    expect(actions[0].configUpdate.view.projection).toBe('EPSG:4326');
+                    expect(actions[0].configUpdate.view.projection).toBe(undefined);
                     expect(Array.isArray(actions[0].configUpdate.view.resolutions)).toBe(true);
                     expect(actions[0].configUpdate.view.resolutions.length).toBeGreaterThan(0);
                     expect(actions[1].type).toBe(SET_MAP_RESOLUTIONS);

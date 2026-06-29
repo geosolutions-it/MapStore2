@@ -379,8 +379,7 @@ class OpenlayersMap extends React.Component {
         if (
             configuredResolutions &&
         Array.isArray(configuredResolutions) &&
-        configuredResProjection &&
-        requestedSRS === configuredResProjection
+        (!configuredResProjection || requestedSRS === configuredResProjection)
         ) {
             return configuredResolutions;
         }
@@ -624,7 +623,7 @@ class OpenlayersMap extends React.Component {
         const configuredProj = normalizeSRS(options?.projection);
 
         let resolutionsToUse;
-        if (configuredResolutions && configuredProj === srs) {
+        if (configuredResolutions && (!configuredProj || configuredProj === srs)) {
             // use provided resolutions (keep backward compatibility)
             resolutionsToUse = configuredResolutions;
         } else {
