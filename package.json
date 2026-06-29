@@ -17,6 +17,9 @@
       "__MAPSTORE_PROJECT_CONFIG__": false,
       "__COMMITHASH__": false,
       "__COMMIT_DATA__": false
+    },
+    "rules": {
+      "react/no-danger": "error"
     }
   },
   "eslintIgnore": [
@@ -101,7 +104,7 @@
     "webpack": "5.104.1",
     "webpack-bundle-size-analyzer": "2.0.2",
     "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.2.4"
+    "webpack-dev-server": "5.2.5"
   },
   "dependencies": {
     "@babel/standalone": "7.23.9",
@@ -150,6 +153,7 @@
     "draft-js-inline-toolbar-plugin": "3.0.1",
     "draft-js-plugins-editor": "2.1.1",
     "draft-js-side-toolbar-plugin": "3.0.1",
+    "dompurify": "^3.1.0",
     "draftjs-to-html": "0.8.4",
     "dxf-parser": "1.1.2",
     "dxf-writer": "1.18.4",

@@ -45,7 +45,7 @@ import {
 import { CONTROL_NAME, ITINERARY_ROUTE_LAYER } from '../../constants';
 import { ADD_LAYER } from '../../../../actions/layers';
 import { REMOVE_ADDITIONAL_LAYER, REMOVE_ALL_ADDITIONAL_LAYERS, UPDATE_ADDITIONAL_LAYER } from '../../../../actions/additionallayers';
-import { CHANGE_MOUSE_POINTER, ZOOM_TO_EXTENT } from '../../../../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, ZOOM_TO_EXTENT } from '../../../../actions/map';
 import { CHANGE_MAPINFO_STATE, PURGE_MAPINFO_RESULTS } from '../../../../actions/mapInfo';
 import { SHOW_NOTIFICATION } from '../../../../actions/notifications';
 
@@ -328,6 +328,8 @@ describe('Itinerary Epics', () => {
 
         it('should handle map click and update location', (done) => {
             const action = { type: SELECT_LOCATION_FROM_MAP, index: 1 };
+            const point = { latlng: { lat: 44.4949, lng: 11.3426 } };
+            const clickAction = { type: CLICK_ON_MAP, point };
 
             const state = {
                 itinerary: {
@@ -335,9 +337,16 @@ describe('Itinerary Epics', () => {
                 }
             };
 
-            testEpic(itinerarySelectLocationFromMapEpic, 1, action, (actions) => {
+            testEpic(itinerarySelectLocationFromMapEpic, 4, [action, clickAction], (actions) => {
                 expect(actions[0].type).toBe(CHANGE_MOUSE_POINTER);
                 expect(actions[0].pointer).toBe('pointer');
+                expect(actions[1].type).toBe(CHANGE_MOUSE_POINTER);
+                expect(actions[1].pointer).toBe('auto');
+                expect(actions[2].type).toBe(UPDATE_LOCATIONS);
+                expect(actions[2].locations).toEqual([[2.3522, 48.8566], [11.3426, 44.4949]]);
+                expect(actions[3].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[3].id).toBe(ITINERARY_ROUTE_LAYER + `_waypoint_marker_${1}`);
+                expect(actions[3].owner).toBe(CONTROL_NAME + '_waypoint_marker');
             }, state, done);
         });
 
@@ -354,6 +363,56 @@ describe('Itinerary Epics', () => {
                 expect(actions[0].type).toBe(CHANGE_MOUSE_POINTER);
                 expect(actions[0].pointer).toBe('pointer');
             }, state, done);
+        });
+
+        it('should cancel location selection when index is empty', (done) => {
+            const action = { type: SELECT_LOCATION_FROM_MAP, index: null };
+
+            testEpic(addTimeoutEpic(itinerarySelectLocationFromMapEpic, 10), 2, action, (actions) => {
+                expect(actions[0].type).toBe(CHANGE_MOUSE_POINTER);
+                expect(actions[0].pointer).toBe('auto');
+                expect(actions[1].type).toBe(TEST_TIMEOUT);
+                expect(actions.some(({ type }) => type === UPDATE_LOCATIONS)).toBe(false);
+                expect(actions.some(({ type }) => type === UPDATE_ADDITIONAL_LAYER)).toBe(false);
+            }, {}, done);
+        });
+
+        it('should cancel pending location selection on itinerary reset', (done) => {
+            const point = { latlng: { lat: 44.4949, lng: 11.3426 } };
+            const actions = [
+                { type: SELECT_LOCATION_FROM_MAP, index: 0 },
+                { type: RESET_ITINERARY },
+                { type: CLICK_ON_MAP, point }
+            ];
+
+            testEpic(addTimeoutEpic(itinerarySelectLocationFromMapEpic, 10), 3, actions, (emittedActions) => {
+                expect(emittedActions[0].type).toBe(CHANGE_MOUSE_POINTER);
+                expect(emittedActions[0].pointer).toBe('pointer');
+                expect(emittedActions[1].type).toBe(CHANGE_MOUSE_POINTER);
+                expect(emittedActions[1].pointer).toBe('auto');
+                expect(emittedActions[2].type).toBe(TEST_TIMEOUT);
+                expect(emittedActions.some(({ type }) => type === UPDATE_LOCATIONS)).toBe(false);
+                expect(emittedActions.some(({ type }) => type === UPDATE_ADDITIONAL_LAYER)).toBe(false);
+            }, {}, done);
+        });
+
+        it('should cancel pending location selection when itinerary closes', (done) => {
+            const point = { latlng: { lat: 44.4949, lng: 11.3426 } };
+            const actions = [
+                { type: SELECT_LOCATION_FROM_MAP, index: 0 },
+                { type: SET_CONTROL_PROPERTY, control: CONTROL_NAME, value: false },
+                { type: CLICK_ON_MAP, point }
+            ];
+
+            testEpic(addTimeoutEpic(itinerarySelectLocationFromMapEpic, 10), 3, actions, (emittedActions) => {
+                expect(emittedActions[0].type).toBe(CHANGE_MOUSE_POINTER);
+                expect(emittedActions[0].pointer).toBe('pointer');
+                expect(emittedActions[1].type).toBe(CHANGE_MOUSE_POINTER);
+                expect(emittedActions[1].pointer).toBe('auto');
+                expect(emittedActions[2].type).toBe(TEST_TIMEOUT);
+                expect(emittedActions.some(({ type }) => type === UPDATE_LOCATIONS)).toBe(false);
+                expect(emittedActions.some(({ type }) => type === UPDATE_ADDITIONAL_LAYER)).toBe(false);
+            }, {}, done);
         });
     });
 

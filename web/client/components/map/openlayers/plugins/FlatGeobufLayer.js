@@ -9,16 +9,23 @@ import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { transformExtent as olTransformExtent } from 'ol/proj';
+import {
+    containsExtent as olContainsExtent,
+    equals as olExtentsEqual,
+    getArea as olGetExtentArea
+} from 'ol/extent';
 import GeoJSON from 'ol/format/GeoJSON';
 import Layers from '../../../../utils/openlayers/Layers';
-import {bbox as bboxStrategy } from 'ol/loadingstrategy.js';
+import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
 import { getStyle } from '../VectorStyle';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import {
     FGB_LAYER_TYPE,
     FGB_FEATURE_BATCH_SIZE,
+    FGB_MEANINGFUL_VIEW_RATIO,
     getFlatGeobufGeojson,
-    createFlatGeobufGeometryTypeResolver
+    createFlatGeobufGeometryTypeResolver,
+    getFlatGeobufMaxFeaturesInView
 } from '../../../../api/FlatGeobuf';
 import {
     getFlatGeobufGeometryTypeFromOptions,
@@ -29,6 +36,7 @@ import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 import { updateUrlParams } from '../../../../utils/URLUtils';
 
 const FGB_INFERRED_GEOMETRY_TYPE_KEY = `_${FGB_LAYER_TYPE}_InferredGeometryType`;
+const FGB_CAPPED_LOAD_EXTENTS_KEY = `_${FGB_LAYER_TYPE}_CappedLoadExtents`;
 
 const getFlatGeobufStyle = (layer, options, map) => {
     const geometryType = getFlatGeobufGeometryTypeFromOptions(options)
@@ -82,15 +90,73 @@ const FGB_LOAD_SESSION_KEY = `_${FGB_LAYER_TYPE}_LoadSession`;
 const getLoadSession = (source) => source.get(FGB_LOAD_SESSION_KEY) || 0;
 const bumpLoadSession = (source) => source.set(FGB_LOAD_SESSION_KEY, getLoadSession(source) + 1);
 
+const getCappedLoadExtents = (source) => source.get(FGB_CAPPED_LOAD_EXTENTS_KEY) || [];
+const setCappedLoadExtents = (source, cappedLoadExtents) =>
+    source.set(FGB_CAPPED_LOAD_EXTENTS_KEY, cappedLoadExtents, true);
+const clearCappedLoadExtents = (source) => setCappedLoadExtents(source, []);
+
+export const isMeaningfulCappedExtentRefinement = (cappedLoadExtent, extent, resolution) => {
+    const cappedExtent = cappedLoadExtent?.extent;
+    if (!cappedExtent || !extent || !olContainsExtent(cappedExtent, extent) || olExtentsEqual(cappedExtent, extent)) {
+        return false;
+    }
+    const cappedArea = olGetExtentArea(cappedExtent);
+    const currentArea = olGetExtentArea(extent);
+    const isFinerResolution = Number.isFinite(cappedLoadExtent.resolution)
+        && Number.isFinite(resolution)
+        && resolution < cappedLoadExtent.resolution * FGB_MEANINGFUL_VIEW_RATIO;
+    const isSmallerExtent = Number.isFinite(cappedArea)
+        && Number.isFinite(currentArea)
+        && currentArea < cappedArea * FGB_MEANINGFUL_VIEW_RATIO;
+    return isFinerResolution || isSmallerExtent;
+};
+
+export const registerCappedLoadExtent = (source, extent, resolution) => {
+    const cappedLoadExtents = getCappedLoadExtents(source)
+        .filter(cappedLoadExtent => !olExtentsEqual(cappedLoadExtent.extent, extent));
+    setCappedLoadExtents(source, [
+        ...cappedLoadExtents,
+        {
+            extent: extent.slice(),
+            resolution
+        }
+    ]);
+};
+
+export const invalidateCappedLoadExtents = (source, extent, resolution) => {
+    const cappedLoadExtents = getCappedLoadExtents(source);
+    let invalidated = false;
+    const retained = cappedLoadExtents.filter(cappedLoadExtent => {
+        if (isMeaningfulCappedExtentRefinement(cappedLoadExtent, extent, resolution)) {
+            source.removeLoadedExtent(cappedLoadExtent.extent);
+            invalidated = true;
+            return false;
+        }
+        return true;
+    });
+    if (invalidated) {
+        setCappedLoadExtents(source, retained);
+    }
+    return invalidated;
+};
+
+const createCappedLoadStrategy = (getSource) => (extent, resolution, projection) => {
+    const source = getSource();
+    if (source) {
+        invalidateCappedLoadExtents(source, extent, resolution);
+    }
+    return bboxStrategy(extent, resolution, projection);
+};
+
 /**
  * Consume async iterator of GeoJSON features, add to source, yield every FGB_FEATURE_BATCH_SIZE
  */
-const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolver, isCancelled) => new Promise((resolve, reject) => {
+const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolver, isCancelled, maxFeaturesInView) => new Promise((resolve, reject) => {
     let counter = 0;
     const step = () => {
         if (isCancelled()) {
             iterator.return?.();
-            resolve();
+            resolve({ capped: false });
             return;
         }
         iterator.next().then(({ value: geoJsonFeature, done }) => {
@@ -98,7 +164,7 @@ const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolve
                 if (isCancelled()) {
                     iterator.return?.();
                 }
-                resolve();
+                resolve({ capped: false });
                 return;
             }
             const olFeature = geoJsonFormat.readFeature(geoJsonFeature);
@@ -109,6 +175,11 @@ const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolve
             // sniff the first feature's geometry type as a fallback.
             if (!resolver.reported) {
                 resolver.sniffFromFeature(geoJsonFeature?.geometry?.type);
+            }
+            if (maxFeaturesInView && loaded.length >= maxFeaturesInView) {
+                iterator.return?.();
+                resolve({ capped: true });
+                return;
             }
             if (counter % FGB_FEATURE_BATCH_SIZE === 0) {
                 yieldToEventLoop().then(step);
@@ -157,10 +228,14 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
         );
 
         const loaded = [];
+        const maxFeaturesInView = getFlatGeobufMaxFeaturesInView(options);
         const iterator = flatgeobuf.deserialize(secureUrl, rect, resolver.handleHeader, false, headers);
-        return consumeFeatureIterator(iterator, geoJsonFormat, source, loaded, resolver, isCancelled)
-            .then(() => {
+        return consumeFeatureIterator(iterator, geoJsonFormat, source, loaded, resolver, isCancelled, maxFeaturesInView)
+            .then(({ capped }) => {
                 if (!isCancelled()) {
+                    if (capped) {
+                        registerCappedLoadExtent(source, extent, resolution);
+                    }
                     success?.(loaded);
                 }
             });
@@ -173,9 +248,9 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
 
 const createLayer = (options, map) => {
 
-    const strategy = bboxStrategy;
-
-    const source = new VectorSource({
+    let source;
+    const strategy = createCappedLoadStrategy(() => source);
+    source = new VectorSource({
         strategy
     });
 
@@ -203,7 +278,8 @@ const needsReload = (oldOptions, newOptions) =>
     oldOptions.url !== newOptions.url
     || !isEqual(oldOptions.security, newOptions.security)
     || !isEqual(oldOptions.params, newOptions.params)
-    || oldOptions.requestRuleRefreshHash !== newOptions.requestRuleRefreshHash;
+    || oldOptions.requestRuleRefreshHash !== newOptions.requestRuleRefreshHash
+    || oldOptions.maxFeaturesInView !== newOptions.maxFeaturesInView;
 
 Layers.registerType(FGB_LAYER_TYPE, {
     create: createLayer,
@@ -219,6 +295,7 @@ Layers.registerType(FGB_LAYER_TYPE, {
         // URL/security/params changes; rebuild the loader to capture new options.
         if (crsChanged || reload) {
             bumpLoadSession(source);
+            clearCappedLoadExtents(source);
             if (reload) {
                 source.setLoader(createLoader(source, newOptions, () => layer, map));
             }

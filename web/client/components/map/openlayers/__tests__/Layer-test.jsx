@@ -23,7 +23,12 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
-import '../plugins/FlatGeobufLayer';
+import '../plugins/COGLayer';
+import {
+    invalidateCappedLoadExtents,
+    isMeaningfulCappedExtentRefinement,
+    registerCappedLoadExtent
+} from '../plugins/FlatGeobufLayer';
 
 import {
     setStore,
@@ -34,6 +39,7 @@ import { ServerTypes } from '../../../../utils/LayersUtils';
 
 
 import { Map, View } from 'ol';
+import VectorSource from 'ol/source/Vector';
 import { defaults as defaultControls } from 'ol/control';
 
 import axios from "../../../../libs/ajax";
@@ -3631,6 +3637,56 @@ describe('Openlayers layer', () => {
         expect(loadCount).toBe(1);
     });
 
+    describe('COG', () => {
+        const cogOptions = {
+            id: 'cog-layer',
+            type: 'cog',
+            title: 'COG layer',
+            visibility: false,
+            sources: [{
+                url: 'data:image/tiff;base64,'
+            }],
+            sourceMetadata: {
+                crs: 'EPSG:3857'
+            }
+        };
+
+        it('does not create an OpenLayers layer while initially hidden', () => {
+            const layer = ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={cogOptions}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            expect(layer.layer).toBe(null);
+            expect(map.getLayers().getLength()).toBe(0);
+        });
+
+        it('creates the OpenLayers layer when visibility changes from hidden to visible', () => {
+            const layer = ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={cogOptions}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={{...cogOptions, visibility: true}}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            expect(layer.layer).toBeTruthy();
+            expect(layer.layer.getSource()).toBeTruthy();
+            expect(map.getLayers().getLength()).toBe(1);
+        });
+    });
+
     describe('FlatGeobuf', () => {
         // The fixture's FGB header reports geometryType=3 (Polygon) and
         // covers central US (-106.2..-95.9, 34.6..42.0). The shared
@@ -3654,6 +3710,42 @@ describe('Openlayers layer', () => {
         afterEach(() => {
             fgbMap.setTarget(null);
             document.body.innerHTML = '';
+        });
+
+        it('invalidates capped extents only on meaningful view refinement', () => {
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [0, 0, 100, 100], 10)).toBe(false);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [1, 1, 99, 99], 10)).toBe(false);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [25, 25, 75, 75], 10)).toBe(true);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [25, 25, 75, 75], 4)).toBe(true);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [50, 50, 150, 150], 4)).toBe(false);
+        });
+
+        it('keeps capped extents cached until the view is refined', () => {
+            const source = new VectorSource();
+            const removeLoadedExtent = expect.spyOn(source, 'removeLoadedExtent').andCallThrough();
+            registerCappedLoadExtent(source, [0, 0, 100, 100], 10);
+
+            expect(invalidateCappedLoadExtents(source, [0, 0, 100, 100], 10)).toBe(false);
+            expect(removeLoadedExtent).toNotHaveBeenCalled();
+
+            expect(invalidateCappedLoadExtents(source, [25, 25, 75, 75], 4)).toBe(true);
+            expect(removeLoadedExtent).toHaveBeenCalled();
+            expect(removeLoadedExtent.calls[0].arguments[0]).toEqual([0, 0, 100, 100]);
         });
 
         it('loads features from a real FGB and stores them in the source', (done) => {
@@ -3682,6 +3774,35 @@ describe('Openlayers layer', () => {
                 map={fgbMap}/>, document.getElementById("container"));
             expect(layer.layer.getSource()).toBeTruthy();
             layer.layer.getSource().on('addfeature', onAddFeature);
+        }).timeout(15000);
+
+        it('limits features loaded from a real FGB when maxFeaturesInView is configured', (done) => {
+            const options = {
+                type: 'flatgeobuf',
+                visibility: true,
+                url: FGB_URL,
+                name: 'us-counties',
+                metadata: { geometryType: 3 },
+                maxFeaturesInView: 1
+            };
+            const layer = ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={options}
+                map={fgbMap}/>, document.getElementById("container"));
+            const source = layer.layer.getSource();
+            const onLoadEnd = () => {
+                source.un('featuresloadend', onLoadEnd);
+                setTimeout(() => {
+                    try {
+                        expect(source.getFeatures().length).toBe(1);
+                    } catch (err) {
+                        done(err);
+                        return;
+                    }
+                    done();
+                }, 250);
+            };
+            source.on('featuresloadend', onLoadEnd);
         }).timeout(15000);
 
         it('clears the source on CRS change instead of in-place transform', () => {

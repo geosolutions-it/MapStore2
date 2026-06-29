@@ -19,6 +19,7 @@ import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
 import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
+import { sanitizeHtml } from './HtmlSanitizer';
 import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
@@ -763,6 +764,7 @@ export const saveLayer = (layer) => {
     layer.strategy ? { strategy: layer.strategy } : {},
     layer.geometryType ? { geometryType: layer.geometryType } : {},
     layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {},
+    !isNil(layer.maxFeaturesInView) ? { maxFeaturesInView: layer.maxFeaturesInView } : {},
     !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : {});
 };
 
@@ -911,7 +913,8 @@ export const excludeGoogleBackground = ll => {
 export const creditsToAttribution = ({ imageUrl, link, title, text }) => {
     // TODO: check if format is valid for an img (svg, for instance, may not work)
     const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title || text || "credits";
-    return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
+    const attribution = link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
+    return sanitizeHtml(attribution);
 };
 
 export const getLayerTitle = ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name;
