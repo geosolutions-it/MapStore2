@@ -101,11 +101,11 @@ const hasOutputFormat = (data) => {
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
-const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, downloadOptions = {}, options } = {}) => {
+const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, viewportFilter, downloadOptions = {}, options } = {}) => {
     const { sortOptions, propertyNames } = options;
 
     const cqlFilter = getCQLFilterFromLayer(layer);
-    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, downloadOptions.downloadFilteredDataSet ? layerFilter : {}, downloadOptions.downloadFilteredDataSet ? filterObj : {}, cqlFilter);
+    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, downloadOptions.downloadFilteredDataSet ? layerFilter : {}, downloadOptions.downloadFilteredDataSet ? filterObj : {}, viewportFilter, cqlFilter);
 
     return getXMLFeature(url, getFilterFeature(query(
         filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
@@ -123,10 +123,44 @@ const getFileName = action => {
     return name;
 };
 const getDefaultSortOptions = (attribute) => {
-    return attribute ? { sortBy: attribute, sortOrder: 'A'} : {};
+    return attribute ? { sortBy: attribute, sortOrder: 'A'} : null;
 };
 const getFirstAttribute = (state)=> {
     return state.query && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes && state.query.featureTypes[state.query.typeName].attributes[0] && state.query.featureTypes[state.query.typeName].attributes[0].attribute || null;
+};
+const getBboxExtent = (bounds = {}) => {
+    return Array.isArray(bounds)
+        ? bounds
+        : [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
+};
+const getViewportFilter = (cropDataSet, mapBbox, geometryAttribute) => {
+    if (!cropDataSet || !mapBbox?.bounds) {
+        return null;
+    }
+    const projection = mapBbox.crs || 'EPSG:4326';
+    if (geometryAttribute) {
+        return {
+            spatialField: {
+                geometry: {
+                    ...bboxToFeatureGeometry(mapBbox.bounds),
+                    projection
+                },
+                attribute: geometryAttribute,
+                method: 'Rectangle',
+                operation: 'INTERSECTS'
+            }
+        };
+    }
+    return {
+        spatialField: {
+            geometry: {
+                extent: [getBboxExtent(mapBbox.bounds)],
+                projection
+            },
+            method: 'BBOX',
+            operation: 'BBOX'
+        }
+    };
 };
 
 const wpsExecuteErrorToMessage = e => {
@@ -255,10 +289,12 @@ export const startFeatureExportDownload = (action$, store) =>
 
         const mapBbox = mapBboxSelector(state);
         const currentLocale = currentLocaleSelector(state);
+        const geometryAttribute = extractGeometryAttributeName(layerDescribeSelector(state, layer.name));
         const propertyNames = action.downloadOptions.propertyName ? [
-            extractGeometryAttributeName(layerDescribeSelector(state, layer.name)),
+            ...(geometryAttribute ? [geometryAttribute] : []),
             ...action.downloadOptions.propertyName
         ] : null;
+        const viewportFilter = getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute);
 
         const { layerFilter } = layer;
 
@@ -268,6 +304,7 @@ export const startFeatureExportDownload = (action$, store) =>
             filterObj: isNil(action.filterObj) ? {} : action.filterObj,
             layer,
             layerFilter,
+            viewportFilter,
             options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                 propertyNames
@@ -289,11 +326,12 @@ export const startFeatureExportDownload = (action$, store) =>
                     filterObj: action.filterObj,
                     layer,
                     layerFilter,
+                    viewportFilter: getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute),
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
                         propertyNames: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
-                            extractGeometryAttributeName(layerDescribeSelector(state, layer.name))] : null
+                            ...(geometryAttribute ? [geometryAttribute] : [])] : null
                     }
                 }).do(({ data, headers }) => {
                     if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
