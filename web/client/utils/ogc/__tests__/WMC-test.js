@@ -345,7 +345,7 @@ describe('WMC tests', () => {
                     expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
             })
         );
-        it('Eempty maxExtent should not fail', () => {
+        it('Empty maxExtent should not fail', () => {
             Promise.all([
                 axios.get('base/web/client/test-resources/wmc/config.json'),
                 axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
