@@ -136,7 +136,7 @@
       "heightOffset": "Höhenversatz (m)",
       "wmsLayerTileSize": "Kachelgröße (WMS)",
       "maxFeaturesInView": "Maximale Anzahl von Features in der Ansicht",
-      "maxFeaturesInViewPlaceholder": "Wenn der Wert undefiniert ist, funktioniert die aktuelle Funktionalität wie gewohnt (d. h. alle Features laden)",
+      "maxFeaturesInViewTooltip": "Wenn der Wert undefiniert ist, funktioniert die aktuelle Funktionalität wie gewohnt (d. h. alle Features laden)",
       "serverType": "Servertyp",
       "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
       "serverTypeOption": {
