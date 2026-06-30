@@ -69,7 +69,7 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
         mockAxios.onGet().reply((config) => {
             try {
                 expect(config.url).toBe('https://example.com/api/v2/resources');
-                expect(config.params).toEqual({
+                expect({...config.params}).toEqual({
                     'filter{metadata_only}': false,
                     include: [
                         'advertised',
@@ -135,7 +135,7 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
         mockAxios.onGet().reply((config) => {
             try {
                 expect(config.url).toBe('https://example.com/api/v2/resources');
-                expect(config.params).toEqual({
+                expect({...config.params}).toEqual({
                     'filter{metadata_only}': false,
                     include: [
                         'advertised',
