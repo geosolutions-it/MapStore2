@@ -12,19 +12,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>11.0.22</tomcat.version>
-        <jackson.version>2.16.1</jackson.version>
+        <tomcat.version>10.1.55</tomcat.version>
+        <jackson.version>2.19.4</jackson.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+
         <!-- Spring Framework & Security (aligned) -->
-        <spring.version>7.0.7</spring.version>
-        <spring.security.version>7.0.5</spring.security.version>
+        <spring.version>7.0.8</spring.version>
+        <spring.security.version>7.1.0</spring.security.version>
+
         <!-- other dependencies (aligned where applicable) -->
-        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
         <jaxws-api.version>4.0.3</jaxws-api.version>
         <junit.version>4.13.2</junit.version>
         <mockito-core.version>4.0.0</mockito-core.version>
         <cargo.version>1.10.27</cargo.version>
+
         <!-- MapStore‑specific -->
         <mapstore-services.version>1.12-SNAPSHOT</mapstore-services.version>
         <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
