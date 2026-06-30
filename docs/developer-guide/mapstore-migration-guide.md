@@ -22,6 +22,31 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.01.02 to 2026.02.00
 
+### Custom map resolutions moved from `new.json` to the `CRSSelector` plugin
+
+Custom map resolutions used to be declared in the default map configuration (`new.json`, or the project-level equivalent) under `mapOptions.view.resolutions`. That location was tied to a single projection and was not kept in sync when the CRS was changed at runtime, which could leave saved maps with a projection that did not match the persisted resolutions.
+
+Custom resolutions are declared **per CRS** in the `CRSSelector` plugin configuration in `localConfig.json`, keyed by SRS code:
+
+```json
+{
+  "name": "CRSSelector",
+  "cfg": {
+    "customResolutions": {
+      "EPSG:3003": [2366, 1183, 591, 295, 147, 73, 36, 18, 9, 4, 2, 1, 0.5, 0.28, 0.14, 0.07, 0.035, 0.018],
+      "EPSG:4326": [0.7, 0.35, 0.175, 0.0875, 0.04375, 0.021875, 0.010986, 0.0054931]
+    }
+  }
+}
+```
+
+When the user switches the map CRS, the matching list of resolutions is applied to the map. If a CRS has no entry, the resolutions are computed from the projection extent. In either case the chosen list is saved together with the map so that, on reload, the CRS and the resolutions remain aligned.
+
+#### Migration steps
+
+1. Remove `mapOptions.view.resolutions` from `new.json` (and from any custom default map config used by the project). Any value left there is dropped on the next save.
+2. Add an equivalent `customResolutions` block to the `CRSSelector` plugin entry in `localConfig.json`, keyed by the SRS the resolutions were originally designed for.
+
 ### print-lib updated to 2.3.5
 
 In your project, you should update the `print-lib.version` property from version `2.3.4` to version `2.3.5` in the root `pom.xml`.
