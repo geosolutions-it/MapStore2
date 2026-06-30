@@ -4573,6 +4573,7 @@
         "logout": "Street Smart Abmelden",
         "tryForceLogout": "Street Smart Abmeldung erzwingen",
         "confirmLogout": "Sind Sie sicher, dass Sie sich von Street Smart abmelden möchten?",
+        "loggingOut": "Street Smart Abmeldung läuft...",
         "loadingAPI": "Lade Street Smart API...",
         "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
         "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",

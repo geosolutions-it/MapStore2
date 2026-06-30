@@ -4534,6 +4534,7 @@
         "logout": "Déconnexion Street Smart",
         "tryForceLogout": "Forcer la déconnexion Street Smart",
         "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter de Street Smart ?",
+        "loggingOut": "Déconnexion de Street Smart en cours...",
         "loadingAPI": "Chargement de l'API Street Smart...",
         "changeCredentials": "Modifier les identifiants Street Smart",
         "insertCredentials": "Insérer vos identifiants Street Smart",
