@@ -117,6 +117,7 @@ describe('Test common advanced settings', () => {
         const maxFeaturesInView = document.querySelector("[data-qa='catalog-max-features-in-view']");
         expect(maxFeaturesInView).toBeTruthy();
         expect(maxFeaturesInView.value).toBe('7');
+        expect(document.querySelector('.mapstore-info-popover')).toBeTruthy();
         TestUtils.Simulate.change(maxFeaturesInView, { "target": { "value": '15' }});
         expect(spyOn.calls[0].arguments).toEqual([
             'layerOptions',

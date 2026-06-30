@@ -11,9 +11,6 @@ import { FormGroup, Checkbox, ControlLabel, FormControl } from "react-bootstrap"
 
 import Message from "../../../I18N/Message";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
-import localizedProps from '../../../misc/enhancers/localizedProps';
-
-const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
 const parseMaxFeaturesInView = (event) => {
     const maxFeaturesInView = Number(event?.target?.value);
@@ -65,13 +62,14 @@ export default ({
             </FormGroup>}
             {!isNil(service.type) && service.type === "flatgeobuf" &&
             <FormGroup className="form-group" controlId="maxFeaturesInView" key="maxFeaturesInView">
-                <ControlLabel><Message msgId="layerProperties.maxFeaturesInView" /></ControlLabel>
-                <LocalizedFormControl
+                <ControlLabel>
+                    <Message msgId="layerProperties.maxFeaturesInView" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.maxFeaturesInViewTooltip" />} />
+                </ControlLabel>
+                <FormControl
                     data-qa="catalog-max-features-in-view"
                     type="number"
                     min={1}
                     step={1}
-                    placeholder="layerProperties.maxFeaturesInViewPlaceholder"
                     value={service.layerOptions?.maxFeaturesInView === undefined ? '' : service.layerOptions?.maxFeaturesInView}
                     onChange={(e) => onChangeServiceProperty("layerOptions", {
                         ...service.layerOptions,
