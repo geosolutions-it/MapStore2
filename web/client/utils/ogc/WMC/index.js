@@ -7,7 +7,7 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs, castArray } from 'lodash';
+import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs, castArray, isEmpty } from 'lodash';
 import { v1 as uuidv1 } from 'uuid';
 
 import {
@@ -392,15 +392,18 @@ export const toWMC = (
         };
     };
 
-    const olExtensionsGeneral = assignNamespace([{
-        name: 'maxExtent',
-        attributes: objectToAttributes({
-            minx: maxExtent[0],
-            miny: maxExtent[1],
-            maxx: maxExtent[2],
-            maxy: maxExtent[3]
-        })
-    }], namespaces.ol);
+    const maxExtentFromBbox = isEmpty(bbox) ? null : makeMaxExtentFromBbox(bbox);
+    const olExtensionsGeneral = !isEmpty(maxExtentFromBbox)
+        ? castArray(maxExtentFromBbox)
+        : assignNamespace([{
+            name: 'maxExtent',
+            attributes: objectToAttributes({
+                minx: maxExtent[0],
+                miny: maxExtent[1],
+                maxx: maxExtent[2],
+                maxy: maxExtent[3]
+            })
+        }], namespaces.ol);
     const msExtensionsGeneral = assignNamespace([groups.length > 0 ? {
         name: 'GroupList',
         children: groups.map(group => ({
