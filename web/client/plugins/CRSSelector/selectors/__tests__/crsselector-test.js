@@ -7,7 +7,12 @@
 */
 
 import expect from 'expect';
-import { crsInputValueSelector, canEditProjectionSelector } from '../crsselector';
+import {
+    crsInputValueSelector,
+    canEditProjectionSelector,
+    customResolutionsByCrsSelector,
+    customResolutionsForCrsSelector
+} from '../crsselector';
 
 describe('Test crsselector selectors', () => {
     it('test crsInputValueSelector', () => {
@@ -38,5 +43,41 @@ describe('Test crsselector selectors', () => {
             map: { present: { info: { canEdit: true } } }
         };
         expect(canEditProjectionSelector(state)).toBe(false);
+    });
+
+    describe('customResolutions selectors', () => {
+        const stateWithCustom = {
+            crsselector: {
+                config: {
+                    customResolutions: {
+                        'EPSG:3003': [8000, 4000, 2000],
+                        'EPSG:4326': [0.7, 0.35, 0.175]
+                    }
+                }
+            }
+        };
+
+        it('customResolutionsByCrsSelector returns the whole map', () => {
+            expect(customResolutionsByCrsSelector(stateWithCustom)).toEqual({
+                'EPSG:3003': [8000, 4000, 2000],
+                'EPSG:4326': [0.7, 0.35, 0.175]
+            });
+        });
+
+        it('customResolutionsByCrsSelector returns empty object when no config', () => {
+            expect(customResolutionsByCrsSelector({})).toEqual({});
+            expect(customResolutionsByCrsSelector({ crsselector: { config: {} } })).toEqual({});
+        });
+
+        it('customResolutionsForCrsSelector returns the array for the requested CRS', () => {
+            expect(customResolutionsForCrsSelector(stateWithCustom, 'EPSG:3003')).toEqual([8000, 4000, 2000]);
+            expect(customResolutionsForCrsSelector(stateWithCustom, 'EPSG:4326')).toEqual([0.7, 0.35, 0.175]);
+        });
+
+        it('customResolutionsForCrsSelector returns undefined for unknown CRS / no crs / no config', () => {
+            expect(customResolutionsForCrsSelector(stateWithCustom, 'EPSG:3857')).toBe(undefined);
+            expect(customResolutionsForCrsSelector(stateWithCustom, undefined)).toBe(undefined);
+            expect(customResolutionsForCrsSelector({}, 'EPSG:4326')).toBe(undefined);
+        });
     });
 });
