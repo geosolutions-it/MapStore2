@@ -74,6 +74,7 @@ describe('test Layer Properties Display module component', () => {
         const maxFeaturesInView = document.querySelector('[data-qa="display-max-features-in-view"]');
         expect(maxFeaturesInView).toBeTruthy();
         expect(maxFeaturesInView.value).toBe('7');
+        expect(document.querySelector('.mapstore-info-popover')).toBeTruthy();
         ReactTestUtils.Simulate.change(maxFeaturesInView, { target: { value: '15' } });
         expect(spyOn.calls[0].arguments).toEqual([ 'maxFeaturesInView', 15 ]);
         ReactTestUtils.Simulate.change(maxFeaturesInView, { target: { value: '' } });

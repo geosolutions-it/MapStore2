@@ -133,7 +133,7 @@
       "heightOffset": "Desplazamiento de altura (m)",
       "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
       "maxFeaturesInView": "Número máximo de entidades en la vista",
-      "maxFeaturesInViewPlaceholder": "Cuando el valor es indefinido, la funcionalidad actual funciona como de costumbre (es decir, cargar todas las entidades)",
+      "maxFeaturesInViewTooltip": "Cuando el valor es indefinido, la funcionalidad actual funciona como de costumbre (es decir, cargar todas las entidades)",
       "serverType": "Tipo de servidor",
       "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
       "serverTypeOption": {
@@ -4538,6 +4538,9 @@
       "loadingAPI": "Cargando API...",
       "cyclomedia": {
         "initializing": "Inicializando la API de Street Smart...",
+        "logout": "Cerrar sesión de Street Smart",
+        "tryForceLogout": "Forzar cierre de sesión de Street Smart",
+        "confirmLogout": "¿Está seguro de que desea cerrar sesión de Street Smart?",
         "loadingAPI": "Cargando la API de Street Smart...",
         "changeCredentials": "Cambiar credenciales de Street Smart",
         "insertCredentials": "Inserte sus credenciales de Street Smart",
@@ -4548,6 +4551,7 @@
         "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
         "errorOccurred": "Se produjo un error: ",
         "errors": {
+          "notLoggedIn": "No ha iniciado sesión",
           "invalidCredentials": "Credenciales inválidas",
           "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador."
         },
