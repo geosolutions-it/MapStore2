@@ -4553,6 +4553,7 @@
         "logout": "Street Smart Logout",
         "tryForceLogout": "Force Street Smart Logout",
         "confirmLogout": "Are you sure you want to log out from Street Smart?",
+        "loggingOut": "Logging out from Street Smart...",
         "loadingAPI": "Loading Street Smart API...",
         "changeCredentials": "Change Street Smart credentials",
         "insertCredentials": "Insert your Street Smart credentials",
