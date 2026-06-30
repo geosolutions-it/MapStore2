@@ -469,3 +469,20 @@ In **General Settings** of a ArcGIS source type, it is possible to specify the s
 A [FlatGeobuf (FGB)](https://flatgeobuf.org/) is a vector file format designed to be served through a standard HTTP server. Its internal structure enables fast and selective data access by leveraging HTTP Range Requests: clients can request only the portions of the file they need, without having to download the entire dataset.
 
 In MapStore, FGB files can be added as layers. Through the Catalog tool, it is possible to configure multiple FlatGeobuf URL sources: each URL is interpreted as a single layer and added to the map directly and efficiently.
+
+<img src="../img/catalog/fgb_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+#### Advanced Settings
+
+In addition to the standard options, only for FGB catalog sources, through the **Advanced Settings** the user can configure also the following option:
+
+<img src="../img/catalog/advanced_settings_fgb.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+* *Max features in view*: enter the maximum number of features to be displayed on the map when the layer is added to the [TOC](toc.md#table-of-contents).
+
+!!! Note
+    The tool capabilities currently available for FGB layers are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#cog-layer) options and the [Style](layer-settings.md#styling-for-cog-layer)
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
