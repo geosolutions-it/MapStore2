@@ -26,7 +26,7 @@ function patchAxiosMockAdapter(nodeModulesPath) {
     const filePath = path.resolve(nodeModulesPath, 'axios-mock-adapter/src/handle_request.js');
     if (!fs.existsSync(filePath)) return;
     const original = 'config.headers.constructor.name === "AxiosHeaders"';
-    const patched  = 'config.headers.constructor?.name === "AxiosHeaders"';
+    const patched  = 'config.headers?.constructor?.name === "AxiosHeaders"';
     const content = fs.readFileSync(filePath, 'utf8');
     if (content.includes(original)) {
         console.log('* patching axios-mock-adapter handle_request.js (null-prototype compat)');
