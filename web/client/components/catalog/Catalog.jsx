@@ -306,7 +306,7 @@ class Catalog extends React.Component {
                         this.search({ services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText });
                     }
                 }}
-                className={this.props.buttonClassName} key="catalog_search_button" disabled={this.props.loading || !this.isValidServiceSelected()}>
+                className={this.props.buttonClassName} key="catalog_search_button" cy-data="catalog-search-button" disabled={this.props.loading || !this.isValidServiceSelected()}>
                 <Message msgId="catalog.search" />
             </Button>);
         }
@@ -323,6 +323,7 @@ class Catalog extends React.Component {
         const textSearch = (<FormControl
             ref="searchText"
             type="text"
+            cy-data="catalog-search"
             style={{
                 textOverflow: "ellipsis"
             }}
@@ -358,7 +359,7 @@ class Catalog extends React.Component {
                                 onClick={() => this.props.onChangeCatalogMode("edit", false)}>
                                 <Glyphicon glyph="pencil" />
                             </InputGroup.Addon>) : null}
-                            {this.props.canEdit && <InputGroup.Addon className="btn" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
+                            {this.props.canEdit && <InputGroup.Addon className="btn" cy-data="catalog-add-service" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
                                 <Glyphicon glyph="plus" />
                             </InputGroup.Addon>}
                         </InputGroup>

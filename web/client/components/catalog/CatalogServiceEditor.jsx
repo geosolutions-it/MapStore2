@@ -112,17 +112,17 @@ const CatalogServiceEditor = ({
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>
-                    <Button style={buttonStyle} disabled={saving || !valid} onClick={onSaveService} key="catalog_add_service_button">
+                    <Button style={buttonStyle} disabled={saving || !valid} onClick={onSaveService} key="catalog_add_service_button" cy-data="catalog-save">
                         {saving ? <Loader size={12} style={{display: 'inline-block'}} /> : null}
                         <Message msgId="save" />
                     </Button>
                     {service && !service.isNew
-                        ? <Button style={buttonStyle} disabled={saving} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
+                        ? <Button style={buttonStyle} disabled={saving} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button" cy-data="catalog-delete">
                             <Message msgId="catalog.delete" />
                         </Button>
                         : null
                     }
-                    <Button style={buttonStyle} disabled={disabled} onClick={onCancel} key="catalog_back_view_button">
+                    <Button style={buttonStyle} disabled={disabled} onClick={onCancel} key="catalog_back_view_button" cy-data="catalog-cancel">
                         <Message msgId="cancel" />
                     </Button>
                 </Col>

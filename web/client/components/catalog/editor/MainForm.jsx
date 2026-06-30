@@ -51,6 +51,7 @@ const DefaultURLEditor = ({
 
     const UrlForm = (<FormControl
         type="text"
+        cy-data="catalog-service-url"
         style={{
             textOverflow: "ellipsis"
         }}
@@ -203,6 +204,7 @@ export default ({
                     <FormControl
                         onChange={(e) => onChangeType(e.target.value)}
                         value={service && service.type}
+                        cy-data="catalog-service-type"
                         componentClass="select">
                         {serviceTypes.map((type) => <option value={type.name} key={type.name}>{type.label}</option>)}
                     </FormControl>
@@ -211,6 +213,7 @@ export default ({
                     <ControlLabel><Message msgId="catalog.serviceTitle" /></ControlLabel>
                     <FormControl
                         type="text"
+                        cy-data="catalog-service-title"
                         style={{
                             textOverflow: "ellipsis"
                         }}

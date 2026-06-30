@@ -257,7 +257,7 @@ class MetadataExplorerComponent extends React.Component {
                 glyph="folder-open"
                 style={this.props.dockStyle}
             >
-                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                <Panel id={this.props.id} cy-data="catalog-panel" style={this.props.panelStyle} className={this.props.panelClassName}>
                     {panel}
                 </Panel>
             </ResponsivePanel>
@@ -335,6 +335,7 @@ const AddLayerButton = connect(() => ({}), {
         return (
             <ItemComponent
                 {...props}
+                cy-data="toc-add-layer"
                 glyph="add-layer"
                 tooltipId={status === statusTypes.GROUP ? 'toc.addLayerToGroup' : 'toc.addLayer'}
                 onClick={() => onClick(group)}

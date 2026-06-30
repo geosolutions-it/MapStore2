@@ -63,6 +63,7 @@ const DrawerButton = connect(state => ({
 }) =>
     <Button
         id={id}
+        cy-data="drawer-menu-button"
         style={menuButtonStyle}
         bsStyle={buttonStyle}
         key="menu-button"

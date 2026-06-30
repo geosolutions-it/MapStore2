@@ -103,6 +103,7 @@ function ResourcesSearch({
                     onChange={(q) => onSearch({ params: { q } })}
                     debounceTime={debounceTime}
                     placeholder="maps.search"
+                    cy-data="catalogue-search"
                 />
                 {!isEmpty(query) ? <ResourcesSearchTool
                     glyph={'1-close'}
