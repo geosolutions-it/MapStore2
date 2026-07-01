@@ -46,12 +46,14 @@ export default class OpenlayersLayer extends React.Component {
         onCreationError: () => {},
         onWarning: () => {},
         srs: "EPSG:3857"
+
     };
 
     componentDidMount() {
         this.valid = true;
         this.tilestoload = 0;
         this.imagestoload = 0;
+        this.autorefreshTick = -1;
         this.createLayer(
             this.props.type,
             this.props.options,
@@ -75,6 +77,9 @@ export default class OpenlayersLayer extends React.Component {
         if (this.props.options) {
             this.updateLayer(newProps, this.props);
         }
+        if (newProps.autorefreshTicks) {
+            this.tryAutorefresh(newProps.options.id, newProps.autorefreshTicks);
+        }
     }
 
     componentWillUnmount() {
@@ -93,9 +98,7 @@ export default class OpenlayersLayer extends React.Component {
                 this.props.map.removeLayer(this.layer);
             }
         }
-        if (this.refreshTimer) {
-            clearInterval(this.refreshTimer);
-        }
+
         Layers.removeLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     }
 
@@ -344,13 +347,6 @@ export default class OpenlayersLayer extends React.Component {
                     this.props.onLayerLoad(options.id, {error: true});
                 }
             });
-
-            if (options.refresh) {
-                let counter = 0;
-                this.refreshTimer = setInterval(() => {
-                    this.layer.getSource().updateParams(Object.assign({}, options.params, {_refreshCounter: counter++}));
-                }, options.refresh);
-            }
         }
     };
 
@@ -359,4 +355,11 @@ export default class OpenlayersLayer extends React.Component {
         this.valid = valid;
         return valid;
     };
+
+    tryAutorefresh = (layerId, autorefreshTicks) => {
+        if (this.layer?.getVisible() && isNumber(autorefreshTicks[layerId]) && this.autorefreshTick < autorefreshTicks[layerId]) {
+            this.autorefreshTick = autorefreshTicks[layerId];
+            Layers.refreshLayer(this.props.type, this.layer);
+        }
+    }
 }

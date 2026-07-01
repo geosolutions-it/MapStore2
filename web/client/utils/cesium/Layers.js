@@ -41,6 +41,34 @@ const Layers = {
     },
     isSupported(type) {
         return !!layerTypes[type];
+    },
+    /**
+     * Call the refresh method of the layer implementation located in web/client/components/map/cesium/plugins/[layerType]
+     * where layerType = WMSLayer, WFSLayer, WMTSLayer, ArcGISLayer, etc
+     * if implemented, that is used for autorefresh of layers.
+     * @param {string} type
+     * @param {object} layer
+     * @returns {void}
+     */
+    refreshLayer(type, layer) {
+        var layerCreator = layerTypes[type];
+        if (layerCreator && layerCreator.refresh) {
+            layerCreator.refresh(layer);
+        }
+    },
+    /**
+     * Check if the layer implementation located in web/client/components/map/cesium/plugins/[layerType]
+     * where layerType = WMSLayer, WFSLayer, WMTSLayer, ArcGISLayer, etc
+     * implements the refresh method, that is used for autorefresh of layers.
+     * @param {string} type
+     * @returns {boolean}
+     */
+    hasAutoRefreshCapability(type) {
+        const layerCreator = layerTypes[type];
+        if (layerCreator && layerCreator.refresh) {
+            return true;
+        }
+        return false;
     }
 };
 
