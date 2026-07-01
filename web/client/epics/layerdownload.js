@@ -326,7 +326,7 @@ export const startFeatureExportDownload = (action$, store) =>
                     filterObj: action.filterObj,
                     layer,
                     layerFilter,
-                    viewportFilter: getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute),
+                    viewportFilter,
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
