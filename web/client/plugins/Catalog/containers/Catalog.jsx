@@ -289,7 +289,7 @@ const Catalog = ({
                 return Promise.resolve([]);
             }
             setLoadingLayers(allowed.map(record => record.identifier));
-            return processRecords(allowed, buildLayerOptions())
+            return processRecords(allowed, buildLayerOptions(), locales)
                 .then(({ layers = [], groups = [] } = {}) => {
                     groups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
                     layers.filter(Boolean).forEach(layer => onLayerAdd(layer, { zoomToLayer }));

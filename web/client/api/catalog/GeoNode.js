@@ -12,6 +12,7 @@ import isEmpty from 'lodash/isEmpty';
 import turfCenter from '@turf/center';
 import { textSearch as geonodeTextSearch, getDatasetByPk, getResourceByPk, getDocumentByPk } from '../GeoNode';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
+import { getMessageById } from '../../utils/LocaleUtils';
 import {
     resourceToLayerConfig,
     isDefaultDatasetSubtype,
@@ -168,6 +169,7 @@ const DOCUMENTS_STYLE = {
  */
 export const documentsToLayerConfig = (documents = [], options = {}) => {
     const baseURL = options?.service?.url;
+    const locales = options?.locales;
     // resilient per document: a failed fetch is skipped, not fatal to the whole layer
     return Promise.all(documents.map(doc => getDocumentByPk(baseURL, doc.pk).catch(() => null)))
         .then((fullDocs) => {
@@ -196,7 +198,7 @@ export const documentsToLayerConfig = (documents = [], options = {}) => {
                 type: 'vector',
                 visibility: true,
                 name: 'Documents',
-                title: 'Documents',
+                title: getMessageById(locales, 'catalog.resourceTypes.document'),
                 ...(bbox && { bbox }),
                 features,
                 style: DOCUMENTS_STYLE,
@@ -210,7 +212,7 @@ export const documentsToLayerConfig = (documents = [], options = {}) => {
  * GeoNode documents collapse into a single vector layer; every other record type
  * is converted through getLayerFromRecord. Always resolves with `{ layers, groups }`.
  */
-export const processRecords = (records = [], options = {}) => {
+export const processRecords = (records = [], options = {}, locales) => {
     const protectedId = options?.service?.protectedId;
     const applySecurity = (layer) => layer && protectedId
         ? { ...layer, security: { type: 'basic', sourceId: protectedId } }
@@ -222,7 +224,7 @@ export const processRecords = (records = [], options = {}) => {
         others.map(record => getLayerFromRecord(record, options, true).then(applySecurity).catch(() => null))
     );
     const documentsLayerPromise = documents.length
-        ? documentsToLayerConfig(documents, options).catch(() => null)
+        ? documentsToLayerConfig(documents, { ...options, locales }).catch(() => null)
         : Promise.resolve(null);
     return Promise.all([otherLayersPromise, documentsLayerPromise])
         .then(([otherLayers, documentsLayer]) => ({
