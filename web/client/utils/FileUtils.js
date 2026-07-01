@@ -70,9 +70,10 @@ export const readShapePrjFiles = function(buffer) {
 const getPrjAxisDirections = (prj = '') => {
     const directions = [];
     const axisRegExp = /AXIS\s*\[[^\]]*,\s*(NORTH|SOUTH|EAST|WEST|UP|DOWN|OTHER)\s*\]/ig;
-    let axis;
-    while ((axis = axisRegExp.exec(prj)) && directions.length < 2) {
+    let axis = axisRegExp.exec(prj);
+    while (axis && directions.length < 2) {
         directions.push(axis[1].toUpperCase());
+        axis = axisRegExp.exec(prj);
     }
     return directions;
 };
