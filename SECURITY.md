@@ -1,6 +1,6 @@
 # Security Policy
 
-MapStore maintainers take security vulnerabilities seriously. 
+MapStore maintainers take security vulnerabilities seriously.
 Please do not report suspected security vulnerabilities through public GitHub issues, public pull requests, public discussions, mailing lists, or other public channels.
 
 ## Supported versions
@@ -23,7 +23,7 @@ Please report suspected vulnerabilities privately using one of the following cha
 
 Use the repository security page and submit a private vulnerability report:
 
-https://github.com/geosolutions-it/MapStore2/security/advisories/new
+[https://github.com/geosolutions-it/MapStore2/security/advisories/new](https://github.com/geosolutions-it/MapStore2/security/advisories/new)
 
 This is the preferred channel when available, because it allows maintainers and the reporter to coordinate privately, prepare a fix, request or associate a CVE where appropriate, and publish a GitHub Security Advisory after release.
 
@@ -58,7 +58,8 @@ MapStore follows a coordinated vulnerability disclosure process.
 6. Fixed releases are published before exploit details are disclosed publicly, unless the vulnerability is already public or actively exploited.
 7. The advisory is published with affected versions, fixed versions, severity, mitigation or workaround instructions, and upgrade guidance.
 
-We ask reporters to keep vulnerability details private until a fixed release and advisory are available. If public disclosure is required for external reasons, please coordinate the timing with the maintainers whenever possible. 
+We ask reporters to keep vulnerability details private until a fixed release and advisory are available. If public disclosure
+is required for external reasons, please coordinate the timing with the maintainers whenever possible. 
 
 ## Scope
 
