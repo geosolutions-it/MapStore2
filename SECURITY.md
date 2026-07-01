@@ -59,7 +59,7 @@ MapStore follows a coordinated vulnerability disclosure process.
 7. The advisory is published with affected versions, fixed versions, severity, mitigation or workaround instructions, and upgrade guidance.
 
 We ask reporters to keep vulnerability details private until a fixed release and advisory are available. If public disclosure
-is required for external reasons, please coordinate the timing with the maintainers whenever possible. 
+is required for external reasons, please coordinate the timing with the maintainers whenever possible.
 
 ## Scope
 
