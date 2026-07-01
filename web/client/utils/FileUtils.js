@@ -53,8 +53,90 @@ export const download = function(blob, name, mimetype) {
 export const downloadCanvasDataURL = function(dataURL, name = "snapshot.png", mimetype) {
     download(toBlob(dataURL), name, mimetype);
 };
-export const shpToGeoJSON = function(zipBuffer) {
-    return [].concat(shp.parseZip(zipBuffer));
+export const readShapePrjFiles = function(buffer) {
+    const zip = new JSZip();
+    return zip.loadAsync(buffer).then(({files = {}}) => {
+        const prjFiles = Object.keys(files)
+            .filter(k => !files[k].dir && k.indexOf("__MACOSX") !== 0 && k.toLowerCase().indexOf(".prj") === k.length - 4);
+        return Promise.all(prjFiles.map(fileName =>
+            files[fileName].async("string")
+                .then(prj => [fileName.slice(0, -4), prj])
+        )).then(entries => entries.reduce((result, [fileName, prj]) => ({
+            ...result,
+            [fileName]: prj
+        }), {}));
+    });
+};
+const getPrjAxisDirections = (prj = '') => {
+    const directions = [];
+    const axisRegExp = /AXIS\s*\[[^\]]*,\s*(NORTH|SOUTH|EAST|WEST|UP|DOWN|OTHER)\s*\]/ig;
+    let axis;
+    while ((axis = axisRegExp.exec(prj)) && directions.length < 2) {
+        directions.push(axis[1].toUpperCase());
+    }
+    return directions;
+};
+export const isWGS84LatLonPrj = (prj = '') => {
+    const trimmed = prj.trim();
+    if (!/^GEOG(?:CS|CRS)\s*\[/i.test(trimmed)
+        || !/AUTHORITY\s*\[\s*"EPSG"\s*,\s*"4326"\s*\]/i.test(trimmed)) {
+        return false;
+    }
+    const axisDirections = getPrjAxisDirections(trimmed);
+    return axisDirections[0] === 'NORTH' && axisDirections[1] === 'EAST';
+};
+const swapBboxAxisOrder = bbox =>
+    Array.isArray(bbox) && bbox.length >= 4
+        ? [bbox[1], bbox[0], bbox[3], bbox[2], ...bbox.slice(4)]
+        : bbox;
+const swapCoordinatesAxisOrder = coordinates => {
+    if (!Array.isArray(coordinates)) {
+        return coordinates;
+    }
+    if (typeof coordinates[0] === 'number' && typeof coordinates[1] === 'number') {
+        return [coordinates[1], coordinates[0], ...coordinates.slice(2)];
+    }
+    return coordinates.map(swapCoordinatesAxisOrder);
+};
+const swapGeometryAxisOrder = geometry => {
+    if (!geometry) {
+        return geometry;
+    }
+    if (geometry.type === 'GeometryCollection') {
+        return {
+            ...geometry,
+            bbox: swapBboxAxisOrder(geometry.bbox),
+            geometries: (geometry.geometries || []).map(swapGeometryAxisOrder)
+        };
+    }
+    return {
+        ...geometry,
+        bbox: swapBboxAxisOrder(geometry.bbox),
+        coordinates: swapCoordinatesAxisOrder(geometry.coordinates)
+    };
+};
+export const swapGeoJSONAxisOrder = geoJSON => {
+    if (geoJSON.type === 'FeatureCollection') {
+        return {
+            ...geoJSON,
+            bbox: swapBboxAxisOrder(geoJSON.bbox),
+            features: (geoJSON.features || []).map(swapGeoJSONAxisOrder)
+        };
+    }
+    if (geoJSON.type === 'Feature') {
+        return {
+            ...geoJSON,
+            bbox: swapBboxAxisOrder(geoJSON.bbox),
+            geometry: swapGeometryAxisOrder(geoJSON.geometry)
+        };
+    }
+    return swapGeometryAxisOrder(geoJSON);
+};
+export const shpToGeoJSON = function(zipBuffer, prjFiles = {}) {
+    return [].concat(shp.parseZip(zipBuffer))
+        .map(geoJSON => isWGS84LatLonPrj(prjFiles[geoJSON.fileName])
+            ? swapGeoJSONAxisOrder(geoJSON)
+            : geoJSON);
 };
 export const kmlToGeoJSON = function(xml) {
     const pureKml = cleanStyleFromKml(xml);

@@ -23,6 +23,7 @@ import {
     readKmz,
     readWMC,
     readZip,
+    readShapePrjFiles,
     recognizeExt,
     shpToGeoJSON,
     readGeoJson,
@@ -101,17 +102,19 @@ const readFile = ({onWarnings, options}) => (file) => {
                 if (warnings.length > 0) {
                     onWarnings({type: 'warning', filename: file.name, message: 'shapefile.error.missingPrj'});
                 }
-                const geoJsonArr = shpToGeoJSON(buffer).map(json => ({ ...json, filename: file.name }));
-                const areProjectionsPresent = some(geoJsonArr, geoJson => !!get(geoJson, 'map.projection'));
-                if (areProjectionsPresent) {
-                    const filteredGeoJsonArr = geoJsonArr.filter(item => !!get(item, 'map.projection'));
-                    const areProjectionsValid = every(filteredGeoJsonArr, geoJson => supportedProjections.includes(geoJson.map.projection));
-                    if (areProjectionsValid) {
-                        return geoJsonArr;
+                return readShapePrjFiles(buffer).then((prjFiles) => {
+                    const geoJsonArr = shpToGeoJSON(buffer, prjFiles).map(json => ({ ...json, filename: file.name }));
+                    const areProjectionsPresent = some(geoJsonArr, geoJson => !!get(geoJson, 'map.projection'));
+                    if (areProjectionsPresent) {
+                        const filteredGeoJsonArr = geoJsonArr.filter(item => !!get(item, 'map.projection'));
+                        const areProjectionsValid = every(filteredGeoJsonArr, geoJson => supportedProjections.includes(geoJson.map.projection));
+                        if (areProjectionsValid) {
+                            return geoJsonArr;
+                        }
+                        throw new Error("PROJECTION_NOT_SUPPORTED");
                     }
-                    throw new Error("PROJECTION_NOT_SUPPORTED");
-                }
-                return geoJsonArr;
+                    return geoJsonArr;
+                });
             });
         });
     }

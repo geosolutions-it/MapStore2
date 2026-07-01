@@ -25,6 +25,7 @@ import {
     gpxToGeoJSON,
     readKmz,
     readZip,
+    readShapePrjFiles,
     checkShapePrj,
     shpToGeoJSON
 } from '../../utils/FileUtils';
@@ -90,7 +91,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                         if (warnings.length > 0) {
                             onWarnings('shapefile.error.missingPrj');
                         }
-                        return shpToGeoJSON(buffer);
+                        return readShapePrjFiles(buffer).then((prjFiles) => shpToGeoJSON(buffer, prjFiles));
                     });
                 });
             }
