@@ -198,7 +198,7 @@ export const documentsToLayerConfig = (documents = [], options = {}) => {
                 type: 'vector',
                 visibility: true,
                 name: 'Documents',
-                title: getMessageById(locales, 'catalog.resourceTypes.document'),
+                title: `${getMessageById(locales, 'catalog.resourceTypes.document')} (${features.length})`,
                 ...(bbox && { bbox }),
                 features,
                 style: DOCUMENTS_STYLE,
