@@ -5,7 +5,7 @@ on:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
-    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
     - '[geonode]-[0-9].[0-9].x' # stable branches for GeoNode. E.g. geonode-4.4.x
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11.x'
+          java-version: '17.x'
       ############
       # CACHING
       ##########
