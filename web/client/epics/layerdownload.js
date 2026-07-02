@@ -294,8 +294,6 @@ export const startFeatureExportDownload = (action$, store) =>
             ...(geometryAttribute ? [geometryAttribute] : []),
             ...action.downloadOptions.propertyName
         ] : null;
-        const viewportFilter = getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute);
-
         const { layerFilter } = layer;
 
         const wfsFlow = () => getWFSFeature({
@@ -304,7 +302,7 @@ export const startFeatureExportDownload = (action$, store) =>
             filterObj: isNil(action.filterObj) ? {} : action.filterObj,
             layer,
             layerFilter,
-            viewportFilter,
+            viewportFilter: getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute),
             options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                 propertyNames
@@ -326,7 +324,7 @@ export const startFeatureExportDownload = (action$, store) =>
                     filterObj: action.filterObj,
                     layer,
                     layerFilter,
-                    viewportFilter,
+                    viewportFilter: getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute),
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
