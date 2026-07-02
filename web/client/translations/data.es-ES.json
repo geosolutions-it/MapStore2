@@ -1702,7 +1702,8 @@
       "resourceTypes": {
         "label": "Tipos de recurso",
         "dataset": "Conjuntos de datos",
-        "document": "Documentos"
+        "document": "Documentos",
+        "map": "Mapas"
       },
       "subtypes": {
         "label": "Tipo de contenido",

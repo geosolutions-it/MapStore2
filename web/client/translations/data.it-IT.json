@@ -1701,7 +1701,8 @@
       "resourceTypes": {
         "label": "Tipi di risorsa",
         "dataset": "Dataset",
-        "document": "Documenti"
+        "document": "Documenti",
+        "map": "Mappe"
       },
       "subtypes": {
         "label": "Tipo di contenuto",

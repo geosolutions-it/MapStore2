@@ -28,6 +28,7 @@ export const GEONODE_DEFAULT_SORT = '-date';
 export const RESOURCES = 'resources';
 export const DATASETS = 'datasets';
 export const DOCUMENTS = 'documents';
+export const MAPS = 'maps';
 export const FACETS = 'facets';
 
 let endpoints = {
@@ -158,6 +159,14 @@ export const getDocumentByPk = (baseUrl, pk) => {
         ...paramsSerializer()
     })
         .then(({ data }) => data.document);
+};
+
+export const getMapByPk = (baseUrl, pk) => {
+    return axios.get(getEndpointUrl(baseUrl, MAPS, pk), {
+        params: mergePresetParams('VIEWER_COMMON', 'MAP'),
+        ...paramsSerializer()
+    })
+        .then(({ data }) => data.map);
 };
 
 export const getResources = ({
