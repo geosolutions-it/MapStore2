@@ -90,7 +90,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                         if (warnings.length > 0) {
                             onWarnings('shapefile.error.missingPrj');
                         }
-                        return shpToGeoJSON(buffer);                    
+                        return shpToGeoJSON(buffer);
                     });
                 });
             }

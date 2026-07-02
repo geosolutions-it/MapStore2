@@ -7,7 +7,7 @@
 */
 import expect from 'expect';
 
-import {readJson, readZip, readShapePrjFiles, checkShapePrj, isFileSizeExceedMaxLimit} from '../FileUtils';
+import {readJson, readZip, checkShapePrj, isFileSizeExceedMaxLimit} from '../FileUtils';
 import axios from '../../libs/ajax';
 
 describe('FilterUtils', () => {
