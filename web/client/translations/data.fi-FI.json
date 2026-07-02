@@ -1189,6 +1189,9 @@
       "wmcNoLayersError": "Vähintään yksi WMS-taso tarvitaan, jotta kartta voitaisiin viedä WMC-formaatissa"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Tunnisteen suodattimen tyyppi",
         "category": "Kategoria",

@@ -1686,6 +1686,9 @@
       "wmcNoLayersError": "Er is minimaal één WMS-laag nodig om naar WMC te exporteren, nul gevonden"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "start": "Begin datum ",
       "end": "Einddatum ",
       "notAvailable": "Niet beschikbaar",

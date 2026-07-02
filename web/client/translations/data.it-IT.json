@@ -1715,7 +1715,8 @@
         "audio": "Audio",
         "text": "Testo",
         "archive": "Archivio",
-        "presentation": "Presentazione"
+        "presentation": "Presentazione",
+        "file": "File"
       },
       "filterFields": {
         "category": "Categoria",

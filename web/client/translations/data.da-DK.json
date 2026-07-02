@@ -1588,6 +1588,9 @@
       "wmcNoLayersError": "Mindst ét WMS-lag er nødvendigt for at eksportere til WMC, ingen blev fundet"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "start": "Startdato",
       "end": "Slutdato",
       "notAvailable": "Ikke tilgængelig",

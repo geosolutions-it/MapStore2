@@ -150,17 +150,17 @@ const documentMarkerSymbolizer = (glyph) => [{
     msHeightReference: 'none'
 }];
 
-const DOCUMENTS_STYLE = {
+const getDocumentsStyle = (locales) => ({
     format: 'geostyler',
     metadata: { editorType: 'visual' },
     body: {
         rules: [
-            { name: 'Videos', ruleId: '01', mandatory: false, filter: ['&&', ['==', 'subtype', 'video']], symbolizers: documentMarkerSymbolizer('video-camera') },
-            { name: 'Images', ruleId: '02', mandatory: false, filter: ['&&', ['==', 'subtype', 'image']], symbolizers: documentMarkerSymbolizer('camera') },
-            { name: 'Files', ruleId: '03', mandatory: false, filter: ['&&', ['!=', 'subtype', 'image'], ['!=', 'subtype', 'video']], symbolizers: documentMarkerSymbolizer('file') }
+            { name: getMessageById(locales, 'catalog.subtypes.video'), ruleId: '01', mandatory: false, filter: ['&&', ['==', 'subtype', 'video']], symbolizers: documentMarkerSymbolizer('video-camera') },
+            { name: getMessageById(locales, 'catalog.subtypes.image'), ruleId: '02', mandatory: false, filter: ['&&', ['==', 'subtype', 'image']], symbolizers: documentMarkerSymbolizer('camera') },
+            { name: getMessageById(locales, 'catalog.subtypes.file'), ruleId: '03', mandatory: false, filter: ['&&', ['!=', 'subtype', 'image'], ['!=', 'subtype', 'video']], symbolizers: documentMarkerSymbolizer('file') }
         ]
     }
-};
+});
 
 /**
  * Build a single MapStore vector layer that collects the given GeoNode documents
@@ -201,7 +201,7 @@ export const documentsToLayerConfig = (documents = [], options = {}) => {
                 title: `${getMessageById(locales, 'catalog.resourceTypes.document')} (${features.length})`,
                 ...(bbox && { bbox }),
                 features,
-                style: DOCUMENTS_STYLE,
+                style: getDocumentsStyle(locales),
                 rowViewer: GEONODE_DOCUMENTS_ROW_VIEWER
             };
         });
