@@ -200,7 +200,7 @@ const CatalogCard = ({
                     '@extras': {
                         info: {
                             thumbnailUrl: record?.thumbnail_url || record?.thumbnail,
-                            icon: { glyph: 'dataset' },
+                            icon: record?.icon ?? { glyph: 'dataset' },
                             title: getTitle(record?.title),
                             // creator: record.metadata?.creator || record?.creator || 'Unknown',
                             description: record?.description || record?.raw_abstract,

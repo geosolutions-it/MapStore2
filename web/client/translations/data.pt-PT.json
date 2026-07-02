@@ -2060,6 +2060,9 @@
       "wmcNoLayersError": "É necessária pelo menos uma camada WMS para exportar para WMC, foram encontradas zero"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Tipo de filtro de tag",
         "category": "Categoria",

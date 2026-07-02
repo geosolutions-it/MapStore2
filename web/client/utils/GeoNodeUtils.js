@@ -45,6 +45,7 @@ export const ResourceTypes = {
 
 export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
+export const GEONODE_DOCUMENTS_ROW_VIEWER = 'GEONODE_DOCUMENTS_ROW_VIEWER';
 
 const DEFAULT_PRESET_KEYS = {
     CATALOGS: 'catalog_list',
@@ -88,7 +89,7 @@ const DEFAULT_REST_API_PRESETS = {
         "exclude": ["*"],
         "include": [
             "pk", "raw_abstract", "resource_type", "subtype", "title", "data",
-            "executions", "thumbnail_url", "alternate", "attribution", "href"
+            "executions", "thumbnail_url", "alternate", "attribution", "href", "extension"
         ]
     },
     [DEFAULT_PRESET_KEYS.VIEWER_COMMON]: {
@@ -106,13 +107,13 @@ const DEFAULT_REST_API_PRESETS = {
     [DEFAULT_PRESET_KEYS.MAP_DETAILS]: {
         "include": ["maplayers"]
     },
-    [DEFAULT_PRESET_KEYS.MAP_VIEWER]: {
+    [DEFAULT_PRESET_KEYS.MAP]: {
         "include": ["data", "maplayers"]
     },
-    [DEFAULT_PRESET_KEYS.DOCUMENT_VIEWER]: {
-        "include": ["href", "extension"]
+    [DEFAULT_PRESET_KEYS.DOCUMENT]: {
+        "include": ["href", "extension", "ll_bbox_polygon"]
     },
-    [DEFAULT_PRESET_KEYS.DATASET_VIEWER]: {
+    [DEFAULT_PRESET_KEYS.DATASET]: {
         "include": [
             "featureinfo_custom_template", "dataset_ows_url", "default_style", "ptype",
             "store", "has_time", "attribute_set", "data"
