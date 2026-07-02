@@ -1699,6 +1699,32 @@
         "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
         "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
       },
+      "resourceTypes": {
+        "label": "Types de ressource",
+        "dataset": "Jeux de données",
+        "document": "Documents"
+      },
+      "subtypes": {
+        "label": "Type de contenu",
+        "vector": "Vecteur",
+        "raster": "Raster",
+        "vector_time": "Série temporelle",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabulaire",
+        "image": "Image",
+        "video": "Vidéo",
+        "audio": "Audio",
+        "text": "Texte",
+        "archive": "Archive",
+        "presentation": "Présentation",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Catégorie",
+        "keyword": "Mot-clé",
+        "region": "Région",
+        "extent": "Filtre d'étendue"
+      },
       "tagFilterType": {
         "label": "Type de filtre de tag",
         "category": "Catégorie",

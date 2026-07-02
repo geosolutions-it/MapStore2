@@ -1698,6 +1698,32 @@
         "label": "Scarica i metadati del file al salvataggio",
         "tooltip": "Questa opzione recupererà i metadati per supportare lo zoom a livello. Potrebbe rallentare l'operazione di ricerca se le immagini sono troppo grandi o troppe."
       },
+      "resourceTypes": {
+        "label": "Tipi di risorsa",
+        "dataset": "Dataset",
+        "document": "Documenti"
+      },
+      "subtypes": {
+        "label": "Tipo di contenuto",
+        "vector": "Vettoriale",
+        "raster": "Raster",
+        "vector_time": "Serie temporale",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabellare",
+        "image": "Immagine",
+        "video": "Video",
+        "audio": "Audio",
+        "text": "Testo",
+        "archive": "Archivio",
+        "presentation": "Presentazione",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Categoria",
+        "keyword": "Parola chiave",
+        "region": "Regione",
+        "extent": "Filtro per estensione"
+      },
       "tagFilterType": {
         "label": "Tipo di filtro per tag",
         "category": "Categoria",

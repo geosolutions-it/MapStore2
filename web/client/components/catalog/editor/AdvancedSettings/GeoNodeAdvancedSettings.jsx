@@ -22,9 +22,16 @@ const TAG_FILTER_TYPE_OPTIONS = [
     { value: 'keyword', label: <Message msgId="catalog.tagFilterType.keyword" /> }
 ];
 
+const RESOURCE_TYPE_OPTIONS = [
+    { value: 'dataset', label: <Message msgId="catalog.resourceTypes.dataset" /> },
+    { value: 'document', label: <Message msgId="catalog.resourceTypes.document" /> }
+];
+
 /**
  * Advanced settings form for GeoNode catalog services.
  *
+ * - resourceTypes: the GeoNode resource types included in the catalog search. At least one
+ *   type must remain selected. Defaults to ['dataset'] when not set.
  * - tagFilterType: Selects whether the card tags (used for filtering and display) come from
  *   'category' (default) or from 'keyword'. The default can be overridden via
  *   `initialState.defaultState.catalog.default.tagFilterType` in localConfig.
@@ -38,8 +45,31 @@ export default ({
     const currentValue = !isNil(service?.tagFilterType) ? service.tagFilterType : globalDefault;
     const selectedOption = TAG_FILTER_TYPE_OPTIONS.find(o => o.value === currentValue) || TAG_FILTER_TYPE_OPTIONS[0];
 
+    const currentResourceTypes = service?.resourceTypes?.length ? service.resourceTypes : ['dataset'];
+    const selectedResourceTypes = RESOURCE_TYPE_OPTIONS.filter(o => currentResourceTypes.includes(o.value));
+
     return (
         <CommonAdvancedSettings service={service} onChangeServiceProperty={onChangeServiceProperty} {...props}>
+            <FormGroup controlId="geonode-resource-types">
+                <ControlLabel>
+                    <Message msgId="catalog.resourceTypes.label" />
+                </ControlLabel>
+                <Select
+                    multi
+                    noResultsText="catalog.noResultsText"
+                    clearable={false}
+                    value={selectedResourceTypes}
+                    options={RESOURCE_TYPE_OPTIONS}
+                    onChange={(options) => {
+                        const values = (options || []).map(option => option.value);
+                        // keep at least one resource type selected
+                        if (values.length === 0) {
+                            return;
+                        }
+                        onChangeServiceProperty('resourceTypes', values);
+                    }}
+                />
+            </FormGroup>
             <FormGroup controlId="geonode-tag-filter-type">
                 <ControlLabel>
                     <Message msgId="catalog.tagFilterType.label" />

@@ -7,9 +7,13 @@
  */
 
 import expect from 'expect';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../../libs/ajax';
 import {
     getCatalogRecords,
-    getLayerFromRecord
+    getLayerFromRecord,
+    documentsToLayerConfig,
+    processRecords
 } from '../GeoNode';
 
 describe('Test correctness of the GeoNode catalog APIs', () => {
@@ -118,5 +122,147 @@ describe('Test correctness of the GeoNode catalog APIs', () => {
                 done(e);
             }
         });
+    });
+});
+
+describe('GeoNode catalog processRecords / documents', () => {
+    let mockAxios;
+    beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
+    });
+    afterEach(() => {
+        mockAxios.restore();
+    });
+
+    const mockDocuments = () => {
+        mockAxios.onGet().reply((config) => {
+            if (config.url.indexOf('/documents/10') !== -1) {
+                return [200, { document: { pk: 10, title: 'Doc 10', subtype: 'image', detail_url: '/documents/10', extent: { coords: [0, 0, 10, 10] } } }];
+            }
+            if (config.url.indexOf('/documents/11') !== -1) {
+                return [200, { document: { pk: 11, title: 'Doc 11', subtype: 'document', detail_url: '/documents/11' } }];
+            }
+            return [404];
+        });
+    };
+
+    const datasetRecord = {
+        resource_type: 'dataset',
+        alternate: 'geonode:layer',
+        links: [{ link_type: 'OGC:WMS', url: 'http://sample?name=layer1' }]
+    };
+
+    it('documentsToLayerConfig builds a single vector layer of point features', (done) => {
+        mockDocuments();
+        documentsToLayerConfig([{ pk: 10 }, { pk: 11 }], { service: { url: 'http://gn' } })
+            .then((layer) => {
+                try {
+                    expect(layer.type).toBe('vector');
+                    expect(layer.name).toBe('Documents');
+                    expect(layer.rowViewer).toBe('GEONODE_DOCUMENTS_ROW_VIEWER');
+                    // doc 11 has no extent -> skipped
+                    expect(layer.features.length).toBe(1);
+                    expect(layer.features[0].id).toBe(10);
+                    expect(layer.features[0].geometry.type).toBe('Point');
+                    expect(layer.features[0].geometry.coordinates).toEqual([5, 5]);
+                    expect(layer.bbox).toExist();
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
+
+    it('processRecords collapses documents and converts other records to layers', (done) => {
+        mockDocuments();
+        const records = [datasetRecord, { resource_type: 'document', pk: 10 }];
+        processRecords(records, { service: { url: 'http://gn' } })
+            .then(({ layers, groups }) => {
+                try {
+                    expect(groups).toEqual([]);
+                    expect(layers.length).toBe(2);
+                    const vector = layers.find(layer => layer.type === 'vector');
+                    const wms = layers.find(layer => layer.type === 'wms');
+                    expect(vector).toExist();
+                    expect(wms).toExist();
+                    expect(vector.features.length).toBe(1);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
+
+    it('processRecords applies protectedId security to dataset layers but not documents', (done) => {
+        mockDocuments();
+        const records = [datasetRecord, { resource_type: 'document', pk: 10 }];
+        processRecords(records, { service: { url: 'http://gn', protectedId: 'svc-1' } })
+            .then(({ layers }) => {
+                try {
+                    const vector = layers.find(layer => layer.type === 'vector');
+                    const wms = layers.find(layer => layer.type === 'wms');
+                    expect(wms.security).toEqual({ type: 'basic', sourceId: 'svc-1' });
+                    expect(vector.security).toBe(undefined);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
+
+    it('processRecords returns empty layers for an empty selection', (done) => {
+        processRecords([], { service: { url: 'http://gn' } })
+            .then(({ layers, groups }) => {
+                try {
+                    expect(layers).toEqual([]);
+                    expect(groups).toEqual([]);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
+
+    it('documentsToLayerConfig skips documents whose fetch fails', (done) => {
+        mockAxios.onGet().reply((config) => {
+            if (config.url.indexOf('/documents/10') !== -1) {
+                return [200, { document: { pk: 10, title: 'Doc 10', subtype: 'image', extent: { coords: [0, 0, 10, 10] } } }];
+            }
+            return [500];
+        });
+        documentsToLayerConfig([{ pk: 10 }, { pk: 12 }], { service: { url: 'http://gn' } })
+            .then((layer) => {
+                try {
+                    expect(layer.features.length).toBe(1);
+                    expect(layer.features[0].id).toBe(10);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
+
+    it('processRecords skips records that fail and keeps the rest', (done) => {
+        mockAxios.onGet().reply((config) => {
+            if (config.url.indexOf('/documents/10') !== -1) {
+                return [200, { document: { pk: 10, subtype: 'image', extent: { coords: [0, 0, 10, 10] } } }];
+            }
+            return [500];
+        });
+        const records = [
+            { resource_type: 'dataset', pk: 99, subtype: 'vector', alternate: 'geonode:layer', links: [{ link_type: 'OGC:WMS', url: 'http://sample?name=layer1' }] },
+            { resource_type: 'document', pk: 10 }
+        ];
+        processRecords(records, { service: { url: 'http://gn' } })
+            .then(({ layers }) => {
+                try {
+                    // dataset fetch (datasets/99) fails -> skipped; documents layer survives
+                    expect(layers.find(layer => layer.type === 'vector')).toExist();
+                    expect(layers.find(layer => layer.type === 'wms')).toNotExist();
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
     });
 });

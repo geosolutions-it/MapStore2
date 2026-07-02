@@ -1104,6 +1104,9 @@
       "title": "Export Map"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Tag filter type",
         "category": "Category",
