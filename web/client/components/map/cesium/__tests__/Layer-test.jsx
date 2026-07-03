@@ -12,7 +12,7 @@ import expect from 'expect';
 import * as Cesium from 'cesium';
 import { waitFor } from '@testing-library/react';
 
-import '../../../../utils/cesium/Layers';
+import Layers from '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/TileProviderLayer';
 import '../plugins/WMSLayer';
@@ -1816,6 +1816,68 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.terrainProvider).toBeTruthy();
+    });
+    it('should not reset the globe terrain provider when the terrain layer is recreated on update', (done) => {
+        const options = {
+            type: "terrain",
+            provider: "wms",
+            url: "/geoserver/wms",
+            name: "workspace:layername",
+            visibility: true,
+            options: {
+                crs: 'CRS:84'
+            }
+        };
+        const layer = Layers.createLayer('terrain', options, map);
+        layer.add();
+        // updating one of the watched properties recreates the layer implementation,
+        // this must not detach the terrain currently applied to the scene
+        // while the new one is loading (see #black-3d-globe regression)
+        Layers.updateLayer('terrain', layer, { ...options, securityToken: 'token' }, options, map);
+        layer.terrainProvider.then((provider) => {
+            return waitFor(() => expect(map.scene.globe.terrainProvider).toBe(provider));
+        }).then(() => done()).catch(done);
+    });
+    it('should not override the active terrain when removing a deselected terrain layer', (done) => {
+        const wmsOptions = {
+            type: "terrain",
+            provider: "wms",
+            url: "/geoserver/wms",
+            name: "workspace:layername",
+            visibility: true,
+            options: {
+                crs: 'CRS:84'
+            }
+        };
+        const ellipsoidOptions = {
+            type: "terrain",
+            provider: "ellipsoid",
+            visibility: false
+        };
+        // the ellipsoid terrain is initially the active one
+        const ellipsoidLayer = Layers.createLayer('terrain', ellipsoidOptions, map);
+        ellipsoidLayer.add();
+        // the wms terrain gets activated, then the deselected ellipsoid layer is removed,
+        // the scene must keep the wms terrain (see terrain switch from background selector)
+        const wmsLayer = Layers.createLayer('terrain', wmsOptions, map);
+        wmsLayer.add();
+        ellipsoidLayer.remove();
+        wmsLayer.terrainProvider.then((provider) => {
+            return waitFor(() => expect(map.scene.globe.terrainProvider).toBe(provider));
+        }).then(() => done()).catch(done);
+    });
+    it('should fallback to the ellipsoid terrain when the terrain provider fails to load', (done) => {
+        const options = {
+            type: "terrain",
+            provider: "cesium",
+            // connection refused, simulates an unreachable server or a CORS error
+            url: "https://localhost:1/terrain/",
+            visibility: true
+        };
+        const layer = Layers.createLayer('terrain', options, map);
+        layer.add();
+        waitFor(() => expect(map.scene.globe.terrainProvider instanceof Cesium.EllipsoidTerrainProvider).toBe(true))
+            .then(() => done()).catch(done);
     });
     it('should create am elevation layer from wms layer', () => {
         const options = {

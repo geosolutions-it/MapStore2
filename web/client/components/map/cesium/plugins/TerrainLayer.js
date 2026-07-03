@@ -51,7 +51,6 @@ function cesiumIonOptionsMapping(config) {
 }
 
 const createLayer = (config, map) => {
-    map.terrainProvider = undefined;
     let terrainProvider;
     let terrain;
     let url;
@@ -99,12 +98,30 @@ const createLayer = (config, map) => {
         add: () => {
             if (terrainProvider) {
                 terrain = new Cesium.Terrain(terrainProvider);
+                // if the terrain provider fails to load (e.g. unreachable server or CORS error)
+                // fallback to the default ellipsoid terrain to avoid a completely black scene
+                terrain.errorEvent.addEventListener((error) => {
+                    // eslint-disable-next-line no-console
+                    console.error('Error while loading the terrain provider, falling back to the ellipsoid terrain', error);
+                    if (map._msCurrentTerrain === terrain) {
+                        terrain = new Cesium.Terrain(new Cesium.EllipsoidTerrainProvider());
+                        map.scene.setTerrain(terrain);
+                        map._msCurrentTerrain = terrain;
+                    }
+                });
                 map.scene.setTerrain(terrain);
+                map._msCurrentTerrain = terrain;
             }
         },
         remove: () => {
-            terrain = new Cesium.Terrain(new Cesium.EllipsoidTerrainProvider());
-            map.scene.setTerrain(terrain);
+            // reset the scene terrain only if this layer is the one currently applied,
+            // removing a deselected or hidden terrain layer must not override
+            // a terrain that has just been activated (e.g. switching terrain from the background selector)
+            if (terrain && map._msCurrentTerrain === terrain) {
+                terrain = new Cesium.Terrain(new Cesium.EllipsoidTerrainProvider());
+                map.scene.setTerrain(terrain);
+                map._msCurrentTerrain = terrain;
+            }
         }
     };
 };
