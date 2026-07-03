@@ -239,17 +239,17 @@ When group claims are enabled broadly, users in many groups can hit Entra's grou
 
 ## Prepare OpenLDAP
 
-OpenLDAP is initialized from the LDIF files in `docker/openldap/ldif/` when the LDAP data volume is empty. The repository ships the complete bootstrap set there, so the directory itself is the source of truth for organizational units, users, groups and roles.
+OpenLDAP is initialized from `docker/openldap/ldap-init.ldif` when the LDAP data volume is empty. The repository ships the complete bootstrap data in that single file, so it is the source of truth for organizational units, users, groups and roles.
 
-The LDAP bootstrap files define:
+The LDAP bootstrap file defines:
 
 - Organizational units, such as `ou=people` and `ou=groups`.
-- Sample users in `02-users.ldif`.
+- Sample users, including `ldapadmin` and `ldapuser`.
 - LDAP groups and roles, including `ROLE_ADMIN`, `ROLE_USER`, `LDAP_ADMINS` and `LDAP_USERS`.
 
 MapStore/GeoStore also assigns users to its default `everyone` group; that group is not bootstrapped from the LDAP LDIF files.
 
-The LDIF files are copied into the OpenLDAP image at build time and imported only when the LDAP volumes are empty. If you edit LDIF files after the first startup, rebuild the LDAP image and remove the LDAP volumes before starting again.
+The LDIF file is mounted by the compose overlay, copied into the OpenLDAP bootstrap directory at container startup and imported only when the LDAP volumes are empty. If you edit `ldap-init.ldif` after the first startup, rebuild the LDAP image and remove the LDAP volumes before starting again.
 
 ```sh
 docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml down
@@ -307,7 +307,7 @@ For LDAP login, use the standard username/password form with one of the LDAP use
 ## Troubleshooting
 
 - **Keycloak realm not imported**: Keycloak imports realm files only on first startup. Remove the `keycloak_data` volume and restart the stack.
-- **LDAP users not found**: confirm `docker/openldap/ldif/02-users.ldif` exists before first startup. If the LDAP volume already exists, remove the LDAP volumes and restart.
+- **LDAP users not found**: confirm `docker/openldap/ldap-init.ldif` exists before first startup. If the LDAP volume already exists, remove the LDAP volumes and restart.
 - **MapStore waits for LDAP healthcheck**: the LDAP container now uses a root DSE healthcheck, so this usually points to an LDAP startup problem rather than missing sample users.
 - **OIDC login returns 500 before reaching Keycloak**: check the MapStore logs for `authorizationUri is null`. In this Docker setup, `keycloakOAuth2Config.authorizationUri` must be configured explicitly and should point to the public browser URL `http://localhost/keycloak/realms/mapstore/protocol/openid-connect/auth`.
 - **OIDC callback returns 500 after Keycloak login**: make sure backend-only endpoints such as `accessTokenUri`, `checkTokenEndpointUrl`, `idTokenUri`, `revokeEndpoint` and `introspectionEndpoint` point to `http://host.docker.internal/keycloak/...`, not `http://localhost/keycloak/...`.

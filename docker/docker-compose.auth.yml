@@ -15,7 +15,7 @@ services:
       - -lc
       - >
         rm -rf /container/service/slapd/assets/config/bootstrap/ldif/custom/* &&
-        cp -R /ldif-src/. /container/service/slapd/assets/config/bootstrap/ldif/custom/ &&
+        cp /ldif-src/ldap-init.ldif /container/service/slapd/assets/config/bootstrap/ldif/custom/ldap-init.ldif &&
         exec /container/tool/run
     environment:
       LDAP_ORGANISATION: "${LDAP_ORGANISATION:-Acme}"
@@ -29,7 +29,7 @@ services:
     volumes:
       - ldap_data:/var/lib/ldap
       - ldap_config:/etc/ldap/slapd.d
-      - ./docker/openldap/ldif:/ldif-src:ro
+      - ./docker/openldap/ldap-init.ldif:/ldif-src/ldap-init.ldif:ro
     healthcheck:
       test: ["CMD-SHELL", "ldapsearch -x -H ldap://localhost -b \"\" -s base \"(objectClass=*)\" namingContexts >/dev/null 2>&1"]
       interval: 5s

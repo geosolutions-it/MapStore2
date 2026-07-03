@@ -52,7 +52,6 @@ mapstore**.war
 
 # Local auth overrides and runtime bootstrap files
 /docker/keycloak/realm-mapstore.json
-/docker/openldap/ldif/02-users.ldif
 # datadir runtime files
 datadir/
 datadir/*
