@@ -208,7 +208,7 @@ jobs:
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.MAPSTORE_MAVEN_SSH_KEY }}
+          ssh-private-key: ${{ secrets.GS_MAVEN_MAPSTORE2_KEY }}
       - name: Trust Maven Host
         run: ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
       - name: Set up Maven Central Repository
@@ -217,7 +217,7 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           server-id: geosolutions
-          server-username: MAPSTORE_MAVEN_USERNAME
+          server-username: MAVEN_USERNAME
 
       - name: Publish maven packages
         # Here it deploys only java modules and root, needed for MS project builds.
@@ -228,4 +228,4 @@ jobs:
           # deploys also the root module, needed for dependencies
           mvn deploy --non-recursive
         env:
-          MAPSTORE_MAVEN_USERNAME: ${{ secrets.MAPSTORE_MAVEN_USERNAME }}
+          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_MAPSTORE2_USERNAME }}
