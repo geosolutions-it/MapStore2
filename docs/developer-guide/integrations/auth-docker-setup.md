@@ -7,6 +7,47 @@ The stack is intended as a starting point. For the full configuration details, s
 !!! warning
     The provided files contain public sample credentials, sample users, a sample Keycloak realm and sample LDAP entries. They are useful only for local development and testing. They are not secrets, they are not secure defaults, and they must be changed before using this setup outside a disposable local environment.
 
+## Quick Start
+
+From a clean checkout, copy a MapStore WAR into the repository root. Use an LDAP-profile WAR if you want to test LDAP username/password login:
+
+```sh
+cp /path/to/your/mapstore-ldap.war mapstore.war
+```
+
+Create the local runtime files from the committed samples:
+
+```sh
+cp docker/.env.auth.example .env
+mkdir -p datadir
+cp -R docker/sample-datadir/. datadir/
+cp docker/keycloak/realm-mapstore.sample.json docker/keycloak/realm-mapstore.json
+```
+
+Start the stack:
+
+```sh
+docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml up -d --build
+```
+
+Check the services and open MapStore:
+
+```sh
+docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml ps
+docker ps
+```
+
+- MapStore: [http://localhost/mapstore](http://localhost/mapstore)
+- Keycloak admin: [http://localhost/keycloak/admin/](http://localhost/keycloak/admin/)
+
+Stop the stack:
+
+```sh
+docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml down
+```
+
+For more details, see [prerequisites](#prerequisites), [local runtime files](#prepare-local-runtime-files), [OpenLDAP initialization](#prepare-openldap), [starting the stack](#start-the-stack), [test users](#test-login) and [troubleshooting](#troubleshooting).
+
 ## Services
 
 The auth Docker setup includes:
@@ -43,15 +84,24 @@ MAPSTORE_WEBAPP_SRC: "mapstore.war"
 
 This means Docker expects a `mapstore.war` file in the repository root. If the file is missing, the MapStore image build will fail. You can either copy your built WAR to `./mapstore.war` or edit `docker/docker-compose.auth.yml` to point `MAPSTORE_WEBAPP_SRC` to another local WAR path or a downloadable WAR URL.
 
-## Prepare Environment Variables
+```sh
+cp /path/to/your/mapstore-ldap.war mapstore.war
+```
 
-Copy the sample environment file to the repository root:
+The root `mapstore.war` file is ignored by Git and is only used as a local Docker build input.
+
+## Prepare Local Runtime Files
+
+From a clean checkout, create the local files that are intentionally not committed:
 
 ```sh
 cp docker/.env.auth.example .env
+mkdir -p datadir
+cp -R docker/sample-datadir/. datadir/
+cp docker/keycloak/realm-mapstore.sample.json docker/keycloak/realm-mapstore.json
 ```
 
-Review the values before starting the stack. The most relevant variables are:
+Review `.env` before starting the stack. The most relevant variables are:
 
 - `KEYCLOAK_ADMIN` and `KEYCLOAK_ADMIN_PASSWORD`: credentials for the Keycloak admin console.
 - `KEYCLOAK_HOSTNAME`: public Keycloak URL used in redirects. The local default is `http://localhost/keycloak`.
@@ -60,15 +110,6 @@ Review the values before starting the stack. The most relevant variables are:
 
 !!! warning
     Do not reuse the sample passwords or client secret in shared, staging or production environments. The placeholder values in this repository are intentionally guessable. Update `.env`, the Keycloak realm, LDIF files and MapStore datadir properties consistently.
-
-## Prepare The Datadir
-
-Create a local datadir from the provided sample:
-
-```sh
-mkdir -p datadir
-cp -R docker/sample-datadir/. datadir/
-```
 
 The sample datadir contains:
 
@@ -106,7 +147,7 @@ These files are regular MapStore externalized configuration files. See [configur
 
 The auth stack imports a Keycloak realm at first startup. The realm defines the `mapstore` realm, sample users, roles and the confidential OpenID Connect client used by MapStore.
 
-Copy the sample realm into the filename expected by the compose file:
+The setup command above copies the sample realm into the filename expected by the compose file:
 
 ```sh
 cp docker/keycloak/realm-mapstore.sample.json docker/keycloak/realm-mapstore.json
@@ -249,12 +290,12 @@ The LDAP bootstrap file defines:
 
 MapStore/GeoStore also assigns users to its default `everyone` group; that group is not bootstrapped from the LDAP LDIF files.
 
-The LDIF file is mounted by the compose overlay, copied into the OpenLDAP bootstrap directory at container startup and imported only when the LDAP volumes are empty. If you edit `ldap-init.ldif` after the first startup, rebuild the LDAP image and remove the LDAP volumes before starting again.
+The LDIF file is mounted by the compose overlay, copied into the OpenLDAP bootstrap directory at container startup and imported only when the LDAP volumes are empty. If you edit `ldap-init.ldif` after the first startup, remove the LDAP volumes before starting again.
 
 ```sh
 docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml down
 docker volume rm mapstore2_ldap_data mapstore2_ldap_config
-docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml up --build
+docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml up -d
 ```
 
 !!! note
@@ -277,6 +318,13 @@ Start MapStore with the auth compose overlay:
 
 ```sh
 docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml up -d --build
+```
+
+Check the running services:
+
+```sh
+docker compose -f docker-compose.yml -f docker/docker-compose.auth.yml ps
+docker ps
 ```
 
 Open [http://localhost/mapstore](http://localhost/mapstore) when the services are ready.
@@ -314,5 +362,5 @@ For LDAP login, use the standard username/password form with one of the LDAP use
 - **Keycloak login is automatic after MapStore logout**: this means the Keycloak SSO session is still active. The sample sets `keycloakOAuth2Config.globalLogoutEnabled=true` and `keycloakOAuth2Config.postLogoutRedirectUri=http://localhost/mapstore/` so MapStore logout also asks Keycloak to end the realm session.
 - **Redirect or callback errors**: check that the Keycloak redirect URI matches `http://localhost/mapstore/*` and that `keycloakOAuth2Config.redirectUri` in the datadir points to `http://localhost/mapstore/rest/geostore/openid/keycloak/callback`. In LDAP-direct mode, keep `keycloakOAuth2Config.autoCreateUser=false`; otherwise the Keycloak callback can fail while trying to sync users and groups through the LDAP-backed GeoStore DAOs.
 - **502 Bad Gateway during login or callback**: the auth proxy config in `docker/mapstore.auth.conf` increases proxy buffers for Keycloak and MapStore callback responses. Restart the proxy if you edit the file.
-- **LDAP LDIF edits are ignored**: LDIF bootstrap runs only on an empty LDAP volume. Rebuild the LDAP image and remove LDAP volumes before restarting.
-- **LDAP login does not appear to work**: verify the WAR was built with the LDAP profile and that `ldap.properties` is available in the datadir.
+- **LDAP LDIF changes are ignored**: LDIF bootstrap runs only on an empty LDAP volume. Remove LDAP volumes before restarting.
+- **LDAP login does not appear to work**: confirm the WAR was built with the LDAP profile and that `ldap.properties` is available in the datadir.
