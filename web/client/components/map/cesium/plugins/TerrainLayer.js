@@ -101,7 +101,6 @@ const createLayer = (config, map) => {
                 // if the terrain provider fails to load (e.g. unreachable server or CORS error)
                 // fallback to the default ellipsoid terrain to avoid a completely black scene
                 terrain.errorEvent.addEventListener((error) => {
-                    // eslint-disable-next-line no-console
                     console.error('Error while loading the terrain provider, falling back to the ellipsoid terrain', error);
                     if (map._msCurrentTerrain === terrain) {
                         terrain = new Cesium.Terrain(new Cesium.EllipsoidTerrainProvider());
