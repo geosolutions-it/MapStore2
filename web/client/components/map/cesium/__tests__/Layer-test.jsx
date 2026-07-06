@@ -1832,7 +1832,7 @@ describe('Cesium layer', () => {
         layer.add();
         // updating one of the watched properties recreates the layer implementation,
         // this must not detach the terrain currently applied to the scene
-        // while the new one is loading (see #black-3d-globe regression)
+        // while the new one is loading (see #12579 regression)
         Layers.updateLayer('terrain', layer, { ...options, securityToken: 'token' }, options, map);
         layer.terrainProvider.then((provider) => {
             return waitFor(() => expect(map.scene.globe.terrainProvider).toBe(provider));
