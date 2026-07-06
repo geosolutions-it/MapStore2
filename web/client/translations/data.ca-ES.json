@@ -1613,6 +1613,9 @@
       "wmcNoLayersError": "Almenys una capa WMS necessitava exportar a WMC,es troba zero"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "start": "Data d\u2019inici",
       "end": "Data de finalitzaci\u00f3",
       "notAvailable": "No disponible",

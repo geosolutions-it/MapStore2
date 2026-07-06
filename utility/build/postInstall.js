@@ -20,6 +20,20 @@ const nodeModules = [
     }
 ];
 
+// Patch for axios-mock-adapter to support null-prototype headers introduced in axios 0.32.0.
+// Remove when https://github.com/ctimmerm/axios-mock-adapter/issues/415 is fixed and released.
+function patchAxiosMockAdapter(nodeModulesPath) {
+    const filePath = path.resolve(nodeModulesPath, 'axios-mock-adapter/src/handle_request.js');
+    if (!fs.existsSync(filePath)) return;
+    const original = 'config.headers.constructor.name === "AxiosHeaders"';
+    const patched  = 'config.headers?.constructor?.name === "AxiosHeaders"';
+    const content = fs.readFileSync(filePath, 'utf8');
+    if (content.includes(original)) {
+        console.log('* patching axios-mock-adapter handle_request.js (null-prototype compat)');
+        fs.writeFileSync(filePath, content.replace(original, patched), 'utf8');
+    }
+}
+
 function removeModules(nodeModulesPath) {
     const removeModulesList = [
         'leaflet-simple-graticule/node_modules'
@@ -45,6 +59,7 @@ function removeModules(nodeModulesPath) {
 nodeModules.forEach((nodeModule) => {
     if (fs.existsSync(nodeModule.path) && nodeModule.valid) {
         console.log('remove in node_modules path', nodeModule.path);
-        removeModules(nodeModule.path) 
+        removeModules(nodeModule.path);
+        patchAxiosMockAdapter(nodeModule.path);
     }
 });

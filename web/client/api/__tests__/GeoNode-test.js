@@ -69,7 +69,7 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
         mockAxios.onGet().reply((config) => {
             try {
                 expect(config.url).toBe('https://example.com/api/v2/resources');
-                expect(config.params).toEqual({
+                expect({...config.params}).toEqual({
                     'filter{metadata_only}': false,
                     include: [
                         'advertised',
@@ -135,7 +135,7 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
         mockAxios.onGet().reply((config) => {
             try {
                 expect(config.url).toBe('https://example.com/api/v2/resources');
-                expect(config.params).toEqual({
+                expect({...config.params}).toEqual({
                     'filter{metadata_only}': false,
                     include: [
                         'advertised',
@@ -192,5 +192,33 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
                 done(e);
             }
         });
+    });
+
+    it('getRecords applies the default sort when none is provided', (done) => {
+        mockAxios.onGet().reply((config) => {
+            try {
+                expect(config.params.sort).toEqual(['-date']);
+            } catch (e) {
+                done(e);
+            }
+            return [200, { resources: [], total: 0, page: 1, page_size: 4, links: {} }];
+        });
+
+        API.getRecords('https://example.com', 1, 4, '', {}).then(() => done()).catch(done);
+    });
+
+    it('getRecords prefers the service defaultSort over the global default', (done) => {
+        mockAxios.onGet().reply((config) => {
+            try {
+                expect(config.params.sort).toEqual(['-popular_count']);
+            } catch (e) {
+                done(e);
+            }
+            return [200, { resources: [], total: 0, page: 1, page_size: 4, links: {} }];
+        });
+
+        API.getRecords('https://example.com', 1, 4, '', {
+            options: { service: { defaultSort: '-popular_count' } }
+        }).then(() => done()).catch(done);
     });
 });
