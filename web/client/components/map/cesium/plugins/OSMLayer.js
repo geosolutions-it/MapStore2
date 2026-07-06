@@ -11,6 +11,6 @@ import * as Cesium from 'cesium';
 
 Layers.registerType('osm', () => {
     return new Cesium.OpenStreetMapImageryProvider({
-        url: '//a.tile.openstreetmap.org/'
+        url: 'https://tile.openstreetmap.org/'
     });
 });
