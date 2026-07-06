@@ -313,6 +313,13 @@ class CesiumLayer extends React.Component {
         if (this._isProxy === undefined && newProps?.options?.url) {
             const urls = castArray(newProps.options.url);
             return axios(urls[0], { noProxy: true })
+                // this request is used only to detect if the layer needs the proxy,
+                // a failure (e.g. CORS error) is expected and must not produce an unhandled rejection
+                // preventing the error avoids an unhandled rejection in console.
+                .catch(() => {
+                    console.warn(`Failed to detect proxy for ${urls[0]}. This is expected if the server does not support CORS.`);
+                    return null;
+                })
                 .finally(() => {
                     this._isProxy = !!getProxyCacheByUrl(urls[0]);
                     this.updateLayer(newProps, this.props);
