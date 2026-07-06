@@ -17,7 +17,7 @@ import { getShowFiltersForm } from '../selectors/resources';
 import { setShowFiltersForm  } from '../actions/resources';
 
 const ButtonWithTooltip = tooltip(Button);
-const DefaultButton = ({ labelId, glyph, ...props }) => <ButtonWithTooltip {...props}><Message msgId={labelId}/></ButtonWithTooltip>;
+const DefaultButton = ({ labelId, glyph, ...props }) => <ButtonWithTooltip {...{'cy-data': 'catalogue-filter-button'}} {...props}><Message msgId={labelId}/></ButtonWithTooltip>;
 
 const getQueryFilters = (query) => {
     const queryFilters = Object.keys(query).reduce((acc, key) => ['sort', 'page', 'd'].includes(key)

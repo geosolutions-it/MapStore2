@@ -48,6 +48,7 @@ function FiltersForm({
         <div
             className="ms-filters-form"
             style={styleContainerForm}
+            cy-data="catalogue-filter-menu"
         >
             <FlexBox classNames={['ms-main-colors', '_padding-md', '_sticky', '_corner-tl']} centerChildrenVertically gap="sm">
                 <FlexBox.Fill>
@@ -78,6 +79,7 @@ function FiltersForm({
                 gap="sm"
                 style={style}
                 classNames={['_padding-lr-md']}
+                cy-data="catalogue-filter-form"
             >
                 <FilterItems
                     id={id}

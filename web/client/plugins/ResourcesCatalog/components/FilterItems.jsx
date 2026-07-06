@@ -340,7 +340,10 @@ function FilterItem({
                 onChangeFacet: onChangeFilterParent,
                 renderChild: filterChild
             }) : (
-                <FormGroup controlId={'ms-radio-filter-' + getFilterValue(field)}>
+                <FormGroup
+                    controlId={'ms-radio-filter-' + getFilterValue(field)}
+                    {...(field.dataCy ? { 'cy-data': field.dataCy } : {})}
+                >
                     <Checkbox
                         type="checkbox"
                         checked={!!active}

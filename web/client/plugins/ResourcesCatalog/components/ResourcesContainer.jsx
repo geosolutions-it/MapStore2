@@ -53,6 +53,7 @@ const ResourcesContainer = (props) => {
                     gap={cardLayoutStyle === 'list' ? 'md' : 'lg'}
                     className={`ms-resources-container-${cardLayoutStyle}`}
                     classNames={['_relative', '_padding-tb-lg']}
+                    cy-data="catalogue-resource-list"
                 >
                     {resources.map((resource, idx) => {
                         const {
