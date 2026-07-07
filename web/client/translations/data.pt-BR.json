@@ -1619,6 +1619,9 @@
       "wmcNoLayersError": "Pelo menos uma camada WMS necessária para exportar para WMC, encontrado zero"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "start": "Data de início ",
       "end": "Data de término ",
       "notAvailable": "Não Disponível",

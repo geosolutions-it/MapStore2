@@ -136,7 +136,7 @@
       "heightOffset": "Höhenversatz (m)",
       "wmsLayerTileSize": "Kachelgröße (WMS)",
       "maxFeaturesInView": "Maximale Anzahl von Features in der Ansicht",
-      "maxFeaturesInViewPlaceholder": "Wenn der Wert undefiniert ist, funktioniert die aktuelle Funktionalität wie gewohnt (d. h. alle Features laden)",
+      "maxFeaturesInViewTooltip": "Wenn der Wert undefiniert ist, funktioniert die aktuelle Funktionalität wie gewohnt (d. h. alle Features laden)",
       "serverType": "Servertyp",
       "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
       "serverTypeOption": {
@@ -1737,6 +1737,32 @@
       "fetchMetadata": {
         "label": "Dateimetadaten beim Speichern herunterladen",
         "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
+      },
+      "resourceTypes": {
+        "label": "Ressourcentypen",
+        "dataset": "Datensätze",
+        "document": "Dokumente"
+      },
+      "subtypes": {
+        "label": "Inhaltstyp",
+        "vector": "Vektor",
+        "raster": "Raster",
+        "vector_time": "Zeitreihe",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabellarisch",
+        "image": "Bild",
+        "video": "Video",
+        "audio": "Audio",
+        "text": "Text",
+        "archive": "Archiv",
+        "presentation": "Präsentation",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Kategorie",
+        "keyword": "Schlüsselwort",
+        "region": "Region",
+        "extent": "Ausdehnungsfilter"
       },
       "tagFilterType": {
         "label": "Tag-Filtertyp",
@@ -4581,6 +4607,10 @@
       "loadingAPI": "API wird geladen...",
       "cyclomedia": {
         "initializing": "Initialisiere Street Smart API...",
+        "logout": "Street Smart Abmelden",
+        "tryForceLogout": "Street Smart Abmeldung erzwingen",
+        "confirmLogout": "Sind Sie sicher, dass Sie sich von Street Smart abmelden möchten?",
+        "loggingOut": "Street Smart Abmeldung läuft...",
         "loadingAPI": "Lade Street Smart API...",
         "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
         "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",
@@ -4591,6 +4621,7 @@
         "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
         "errorOccurred": "Fehler aufgetreten: ",
         "errors": {
+          "notLoggedIn": "Nicht angemeldet",
           "invalidCredentials": "Ungültige Anmeldeinformationen",
           "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
         },

@@ -31,7 +31,7 @@ describe('ResourceCatalog api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect({...config.params}).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
                 expect(config.testConfig).toBe('test');
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
@@ -79,7 +79,7 @@ describe('ResourceCatalog api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect({...config.params}).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
                 expect(config.testConfig).toBe('test');
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
@@ -127,7 +127,7 @@ describe('ResourceCatalog api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect({...config.params}).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
                 expect(config.testConfig).toBe('test');
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
@@ -179,7 +179,7 @@ describe('ResourceCatalog api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
+                expect({...config.params}).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -277,7 +277,7 @@ describe('ResourceCatalog api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
+                expect({...config.params}).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -382,7 +382,7 @@ describe('ResourceCatalog api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
+                expect({...config.params}).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -492,7 +492,7 @@ describe('ResourceCatalog api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect({...config.params}).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
             } catch (e) {
                 done(e);
             }

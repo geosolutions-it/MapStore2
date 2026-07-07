@@ -223,13 +223,14 @@ export default class extends React.Component {
                 {this.props.element.type === "flatgeobuf" && <Row>
                     <Col xs={12}>
                         <FormGroup>
-                            <ControlLabel><Message msgId="layerProperties.maxFeaturesInView" /></ControlLabel>
+                            <ControlLabel>
+                                <Message msgId="layerProperties.maxFeaturesInView" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.maxFeaturesInViewTooltip" />} />
+                            </ControlLabel>
                             <IntlNumberFormControl
                                 data-qa="display-max-features-in-view"
                                 type="number"
                                 min={1}
                                 step={1}
-                                placeholder="layerProperties.maxFeaturesInViewPlaceholder"
                                 value={this.props.element.maxFeaturesInView === undefined ? '' : this.props.element.maxFeaturesInView}
                                 onChange={this.onMaxFeaturesInViewChange}/>
                         </FormGroup>

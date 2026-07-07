@@ -136,7 +136,7 @@
       "heightOffset": "Décalage en hauteur (m)",
       "wmsLayerTileSize": "Taille de la tuile (WMS)",
       "maxFeaturesInView": "Nombre maximal d'entités dans la vue",
-      "maxFeaturesInViewPlaceholder": "Lorsque la valeur est indéfinie, la fonctionnalité actuelle fonctionne comme d'habitude (c'est-à-dire charger toutes les entités)",
+      "maxFeaturesInViewTooltip": "Lorsque la valeur est indéfinie, la fonctionnalité actuelle fonctionne comme d'habitude (c'est-à-dire charger toutes les entités)",
       "serverType": "Type de serveur",
       "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",
       "serverTypeOption": {
@@ -1698,6 +1698,32 @@
       "fetchMetadata": {
         "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
         "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
+      },
+      "resourceTypes": {
+        "label": "Types de ressource",
+        "dataset": "Jeux de données",
+        "document": "Documents"
+      },
+      "subtypes": {
+        "label": "Type de contenu",
+        "vector": "Vecteur",
+        "raster": "Raster",
+        "vector_time": "Série temporelle",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabulaire",
+        "image": "Image",
+        "video": "Vidéo",
+        "audio": "Audio",
+        "text": "Texte",
+        "archive": "Archive",
+        "presentation": "Présentation",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Catégorie",
+        "keyword": "Mot-clé",
+        "region": "Région",
+        "extent": "Filtre d'étendue"
       },
       "tagFilterType": {
         "label": "Type de filtre de tag",
@@ -4542,6 +4568,10 @@
       "loadingAPI": "Chargement de l'API...",
       "cyclomedia": {
         "initializing": "Initialisation de l'API Street Smart...",
+        "logout": "Déconnexion Street Smart",
+        "tryForceLogout": "Forcer la déconnexion Street Smart",
+        "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter de Street Smart ?",
+        "loggingOut": "Déconnexion de Street Smart en cours...",
         "loadingAPI": "Chargement de l'API Street Smart...",
         "changeCredentials": "Modifier les identifiants Street Smart",
         "insertCredentials": "Insérer vos identifiants Street Smart",
@@ -4552,6 +4582,7 @@
         "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
         "errorOccurred": "Une erreur s'est produite : ",
         "errors": {
+          "notLoggedIn": "Vous n'êtes pas connecté",
           "invalidCredentials": "Identifiants invalides",
           "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur."
         },

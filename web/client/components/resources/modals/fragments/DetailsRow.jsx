@@ -13,6 +13,7 @@ import { isNil } from 'lodash';
 import Toolbar from '../../../misc/toolbar/Toolbar';
 
 import Message from '../../../I18N/Message';
+import SafeHtml from '../../../misc/SafeHtml';
 
 /**
  * @deprecated
@@ -103,7 +104,7 @@ export default ({
                 </Row>
             </div>
             {detailsText && <div className="ms-details-preview-container">
-                {detailsText !== '' ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: detailsText }} />
+                {detailsText !== '' ? <SafeHtml className="ms-details-preview" html={detailsText} />
                     : <div className="ms-details-preview"> <Message msgId="maps.feedback.noDetailsAvailable" /></div>}
             </div>}
         </div>
