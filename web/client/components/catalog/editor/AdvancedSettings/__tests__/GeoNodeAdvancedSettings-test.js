@@ -40,10 +40,10 @@ describe('Test GeoNode advanced settings', () => {
         );
 
         const fields = document.querySelectorAll('.form-group');
-        expect(fields.length).toBe(3);
-        expect(fields[2].textContent).toContain('catalog.tagFilterType.label');
+        expect(fields.length).toBe(4);
+        expect(fields[3].textContent).toContain('catalog.tagFilterType.label');
 
-        const selectedValue = fields[2].querySelector('.Select-value-label');
+        const selectedValue = fields[3].querySelector('.Select-value-label');
         expect(selectedValue).toExist();
         expect(selectedValue.textContent).toBe('catalog.tagFilterType.category');
     });
@@ -64,7 +64,7 @@ describe('Test GeoNode advanced settings', () => {
             document.getElementById('container')
         );
 
-        const selectedValue = document.querySelector('.Select-value-label');
+        const selectedValue = document.querySelectorAll('.form-group')[3].querySelector('.Select-value-label');
         expect(selectedValue).toExist();
         expect(selectedValue.textContent).toBe('catalog.tagFilterType.keyword');
     });
@@ -85,7 +85,7 @@ describe('Test GeoNode advanced settings', () => {
             document.getElementById('container')
         );
 
-        const selectedValue = document.querySelector('.Select-value-label');
+        const selectedValue = document.querySelectorAll('.form-group')[3].querySelector('.Select-value-label');
         expect(selectedValue).toExist();
         expect(selectedValue.textContent).toBe('catalog.tagFilterType.category');
     });
@@ -104,7 +104,7 @@ describe('Test GeoNode advanced settings', () => {
             document.getElementById('container')
         );
 
-        const tagFilterInput = document.querySelector('input[role="combobox"]');
+        const tagFilterInput = document.querySelectorAll('.form-group')[3].querySelector('input[role="combobox"]');
         expect(tagFilterInput).toBeTruthy();
 
         TestUtils.Simulate.change(tagFilterInput, { target: { value: 'keyword' } });
@@ -112,5 +112,77 @@ describe('Test GeoNode advanced settings', () => {
 
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual(['tagFilterType', 'keyword']);
+    });
+
+    it('renders the resource types selector with dataset as default', () => {
+        ReactDOM.render(
+            <GeoNodeAdvancedSettings service={{ type: 'geonode' }} />,
+            document.getElementById('container')
+        );
+
+        const fields = document.querySelectorAll('.form-group');
+        expect(fields[2].textContent).toContain('catalog.resourceTypes.label');
+
+        const values = fields[2].querySelectorAll('.Select-value-label');
+        expect(values.length).toBe(1);
+        expect(values[0].textContent.trim()).toBe('catalog.resourceTypes.dataset');
+    });
+
+    it('reflects the configured resource types', () => {
+        ReactDOM.render(
+            <GeoNodeAdvancedSettings service={{ type: 'geonode', resourceTypes: ['dataset', 'document'] }} />,
+            document.getElementById('container')
+        );
+
+        const values = document.querySelectorAll('.form-group')[2].querySelectorAll('.Select-value-label');
+        expect(values.length).toBe(2);
+        expect(values[0].textContent.trim()).toBe('catalog.resourceTypes.dataset');
+        expect(values[1].textContent.trim()).toBe('catalog.resourceTypes.document');
+    });
+
+    it('calls onChangeServiceProperty when a resource type is added', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+
+        ReactDOM.render(
+            <GeoNodeAdvancedSettings
+                service={{ type: 'geonode', resourceTypes: ['dataset'] }}
+                onChangeServiceProperty={action.onChangeServiceProperty}
+            />,
+            document.getElementById('container')
+        );
+
+        const input = document.querySelectorAll('.form-group')[2].querySelector('input[role="combobox"]');
+        expect(input).toBeTruthy();
+
+        TestUtils.Simulate.change(input, { target: { value: 'document' } });
+        TestUtils.Simulate.keyDown(input, { keyCode: 9, key: 'Tab' });
+
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual(['resourceTypes', ['dataset', 'document']]);
+    });
+
+    it('does not allow removing the last resource type', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+
+        ReactDOM.render(
+            <GeoNodeAdvancedSettings
+                service={{ type: 'geonode', resourceTypes: ['dataset'] }}
+                onChangeServiceProperty={action.onChangeServiceProperty}
+            />,
+            document.getElementById('container')
+        );
+
+        const removeIcon = document.querySelectorAll('.form-group')[2].querySelector('.Select-value-icon');
+        expect(removeIcon).toExist();
+
+        TestUtils.Simulate.mouseDown(removeIcon, { button: 0 });
+
+        expect(spyOn).toNotHaveBeenCalled();
     });
 });

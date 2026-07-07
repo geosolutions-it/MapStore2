@@ -1481,6 +1481,9 @@
       "wmcNoLayersError": "At least one WMS layer needed to export to WMC, found zero"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Teg sía sía",
         "category": "Flokkur",

@@ -36,6 +36,7 @@ import * as flatgeobuf from './FlatGeobuf';
  * ```
  * - `getCatalogRecords` (data, options) => function that returns an array of catalogs records
  * - `getLayerFromRecord` (record, options, asPromise) => function that returns a promise/object that resolve with a mapstore layer configuration object given a catalog record
+ * - `processRecords` (records, options) => (optional) function that returns a promise resolving with `{ layers, groups }`. When present, the catalog processes the whole selected record set through this instead of calling `getLayerFromRecord` per record (e.g. to collapse GeoNode documents into a single vector layer, or import map resources as groups + layers)
  * - `preprocess` return an Observable that performs actions on service object prior to its save
  * - `validate`: function that gets the service object and returns an Observable. The stream emit an exception if the service validation fails. Otherwise it emits the `service` object and complete.
  * - `testService` function that gets the service object and returns an Observable. The stream emit an exception if the service do not respond. Otherwise it emits the `service` object and complete.

@@ -136,7 +136,7 @@
       "heightOffset": "Height offset (m)",
       "wmsLayerTileSize": "Tile size (WMS)",
       "maxFeaturesInView": "Max features in view",
-      "maxFeaturesInViewPlaceholder": "When the value is undefined current functionality works as usual(i.e. load all features)",
+      "maxFeaturesInViewTooltip": "When the value is undefined current functionality works as usual (i.e. load all features)",
       "serverType": "Server Type",
       "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",
       "serverTypeOption": {
@@ -1698,6 +1698,32 @@
       "fetchMetadata": {
         "label": "Download file metadata on save",
         "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
+      },
+      "resourceTypes": {
+        "label": "Resource types",
+        "dataset": "Datasets",
+        "document": "Documents"
+      },
+      "subtypes": {
+        "label": "Content type",
+        "vector": "Vector",
+        "raster": "Raster",
+        "vector_time": "Time series",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabular",
+        "image": "Image",
+        "video": "Video",
+        "audio": "Audio",
+        "text": "Text",
+        "archive": "Archive",
+        "presentation": "Presentation",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Category",
+        "keyword": "Keyword",
+        "region": "Region",
+        "extent": "Extent filter"
       },
       "tagFilterType": {
         "label": "Tag filter type",
@@ -4550,6 +4576,10 @@
       "loadingAPI": "Loading API...",
       "cyclomedia": {
         "initializing": "Initializing Street Smart API...",
+        "logout": "Street Smart Logout",
+        "tryForceLogout": "Force Street Smart Logout",
+        "confirmLogout": "Are you sure you want to log out from Street Smart?",
+        "loggingOut": "Logging out from Street Smart...",
         "loadingAPI": "Loading Street Smart API...",
         "changeCredentials": "Change Street Smart credentials",
         "insertCredentials": "Insert your Street Smart credentials",
@@ -4560,6 +4590,7 @@
         "zoomIn": "Please zoom in the map to see the street view coverage",
         "errorOccurred": "Error occurred: ",
         "errors": {
+          "notLoggedIn": "You are not logged in",
           "invalidCredentials": "Invalid credentials",
           "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
         },

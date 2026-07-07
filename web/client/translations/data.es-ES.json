@@ -133,7 +133,7 @@
       "heightOffset": "Desplazamiento de altura (m)",
       "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
       "maxFeaturesInView": "Número máximo de entidades en la vista",
-      "maxFeaturesInViewPlaceholder": "Cuando el valor es indefinido, la funcionalidad actual funciona como de costumbre (es decir, cargar todas las entidades)",
+      "maxFeaturesInViewTooltip": "Cuando el valor es indefinido, la funcionalidad actual funciona como de costumbre (es decir, cargar todas las entidades)",
       "serverType": "Tipo de servidor",
       "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
       "serverTypeOption": {
@@ -1698,6 +1698,32 @@
       "fetchMetadata": {
         "label": "Descargar metadatos del archivo al guardar",
         "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
+      },
+      "resourceTypes": {
+        "label": "Tipos de recurso",
+        "dataset": "Conjuntos de datos",
+        "document": "Documentos"
+      },
+      "subtypes": {
+        "label": "Tipo de contenido",
+        "vector": "Vectorial",
+        "raster": "Raster",
+        "vector_time": "Serie temporal",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabular",
+        "image": "Imagen",
+        "video": "Vídeo",
+        "audio": "Audio",
+        "text": "Texto",
+        "archive": "Archivo",
+        "presentation": "Presentación",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Categoría",
+        "keyword": "Palabra clave",
+        "region": "Región",
+        "extent": "Filtro de extensión"
       },
       "tagFilterType": {
         "label": "Tipo de filtro de etiqueta",
@@ -4538,6 +4564,10 @@
       "loadingAPI": "Cargando API...",
       "cyclomedia": {
         "initializing": "Inicializando la API de Street Smart...",
+        "logout": "Cerrar sesión de Street Smart",
+        "tryForceLogout": "Forzar cierre de sesión de Street Smart",
+        "confirmLogout": "¿Está seguro de que desea cerrar sesión de Street Smart?",
+        "loggingOut": "Cerrando sesión de Street Smart...",
         "loadingAPI": "Cargando la API de Street Smart...",
         "changeCredentials": "Cambiar credenciales de Street Smart",
         "insertCredentials": "Inserte sus credenciales de Street Smart",
@@ -4548,6 +4578,7 @@
         "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
         "errorOccurred": "Se produjo un error: ",
         "errors": {
+          "notLoggedIn": "No ha iniciado sesión",
           "invalidCredentials": "Credenciales inválidas",
           "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador."
         },
