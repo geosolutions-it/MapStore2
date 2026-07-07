@@ -39,3 +39,11 @@ assignees: ''
 
 ## Other useful information
 <!-- error stack trace, screenshot, videos, or link to repository code are welcome -->
+
+## Security vulnerabilities
+
+Do not report security vulnerabilities in public issues.
+
+If you believe you have found a vulnerability in MapStore, please use GitHub private vulnerability reporting or contact the security address listed in `SECURITY.md`.
+
+

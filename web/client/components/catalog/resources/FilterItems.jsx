@@ -220,7 +220,9 @@ function FilterItem({
         const filterKey = `filter{${formId}.in}`;
 
         const currentValues = values[filterKey] || [];
-        const options = (optionsField || [])?.map(option => ({ value: option, label: option }));
+        const options = (optionsField || [])?.map(option => (option?.labelId
+            ? { value: option.value, label: getMessageById(messages, option.labelId) }
+            : { value: option, label: option }));
         const getFilterLabelById = (value) => options.find(option => option.value === value)?.label;
         return (
             <FormGroup

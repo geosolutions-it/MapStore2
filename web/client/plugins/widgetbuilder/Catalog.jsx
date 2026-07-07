@@ -12,5 +12,7 @@ import Catalog from '../../components/catalog/datasets/Catalog';
 import withCatalogRequests from '../../components/catalog/datasets/hoc/catalogRequestsWorkflow';
 
 export default defaultProps({
-    title: <Message msgId="widgets.builder.wizard.selectALayer" />
+    title: <Message msgId="widgets.builder.wizard.selectALayer" />,
+    // widgets are backed by datasets only; never expose GeoNode documents as a widget source
+    resourceTypes: ['dataset']
 })(withCatalogRequests(Catalog));

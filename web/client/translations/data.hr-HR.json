@@ -1146,6 +1146,9 @@
       "title": "Izvezi kartu"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Vrsta filtra oznaka",
         "category": "Kategorija",

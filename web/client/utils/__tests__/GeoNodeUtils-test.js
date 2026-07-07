@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import { setSupportedLocales, getSupportedLocales } from '../LocaleUtils';
-import { resourceToLayerConfig, getDimensions } from '../GeoNodeUtils';
+import { resourceToLayerConfig, getDimensions, resolveApiPresetParams, mergePresetParams } from '../GeoNodeUtils';
 
 describe('GeoNodeUtils', () => {
     describe('resourceToLayerConfig', () => {
@@ -245,6 +245,36 @@ describe('GeoNodeUtils', () => {
                     url: '/geoserver/gwc/service/wmts'
                 }
             }]);
+        });
+    });
+
+    describe('REST API presets', () => {
+        it('resolves document/dataset/map viewer presets (regression for the *_VIEWER key mismatch)', () => {
+            const doc = resolveApiPresetParams('DOCUMENT');
+            expect(doc.include).toContain('href');
+            expect(doc.include).toContain('extension');
+            expect(doc.include).toContain('ll_bbox_polygon');
+
+            const dataset = resolveApiPresetParams('DATASET');
+            expect(dataset.include).toContain('attribute_set');
+            expect(dataset.include).toContain('default_style');
+
+            const map = resolveApiPresetParams('MAP');
+            expect(map.include).toContain('data');
+            expect(map.include).toContain('maplayers');
+        });
+
+        it('mergePresetParams merges the document viewer fields needed by the media viewer', () => {
+            const merged = mergePresetParams('VIEWER_COMMON', 'DOCUMENT');
+            // viewer_common essentials
+            expect(merged.include).toContain('resource_type');
+            expect(merged.include).toContain('perms');
+            expect(merged.include).toContain('thumbnail_url');
+            // document specific
+            expect(merged.include).toContain('href');
+            expect(merged.include).toContain('extension');
+            expect(merged.include).toContain('ll_bbox_polygon');
+            expect(merged.exclude).toContain('*');
         });
     });
 });
