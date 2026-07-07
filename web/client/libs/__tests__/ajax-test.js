@@ -12,6 +12,7 @@ import urlUtil from 'url';
 
 import ConfigUtils from "../../utils/ConfigUtils";
 import {setStore} from "../../utils/StateUtils";
+import rateLimitManager from "../../utils/RateLimitManager";
 
 function setSecurityInfo(info) {
     setStore({
@@ -110,6 +111,8 @@ describe('Tests ajax library', () => {
         ConfigUtils.setConfigProp("authenticationRules", null);
         ConfigUtils.setConfigProp("useAuthenticationRules", false);
         ConfigUtils.setConfigProp("proxyUrl", originalOProxyURL);
+        ConfigUtils.setConfigProp("rateLimit", undefined);
+        rateLimitManager.reset();
     });
 
     it('uses proxy for requests not on the same origin', (done) => {
@@ -547,6 +550,90 @@ describe('Tests ajax library', () => {
                 expect(response.config).toExist();
                 expect(response.config.url).toExist();
                 expect(response.config.url).toNotContain("proxy/?url=");
+                done();
+            });
+    });
+
+    it('retries a 429 response using Retry-After header', (done) => {
+        ConfigUtils.setConfigProp("rateLimit", {
+            baseDelay: 1000,
+            maxDelay: 60000
+        });
+        let requests = 0;
+        mockAxios.onGet('/rate-limited').reply(() => {
+            requests++;
+            if (requests === 1) {
+                return [429, {}, {'Retry-After': '0'}];
+            }
+            return [200, {ok: true}];
+        });
+
+        axios.get('/rate-limited')
+            .then((response) => {
+                expect(response.status).toBe(200);
+                expect(response.data).toEqual({ok: true});
+                expect(requests).toBe(2);
+                done();
+            })
+            .catch(done);
+    });
+
+    it('uses exponential backoff for 429 responses without Retry-After', (done) => {
+        ConfigUtils.setConfigProp("rateLimit", {
+            baseDelay: 0,
+            maxDelay: 1000
+        });
+        let requests = 0;
+        mockAxios.onGet('/rate-limited-backoff').reply(() => {
+            requests++;
+            if (requests === 1) {
+                return [429, {}];
+            }
+            return [200, {}];
+        });
+
+        axios.get('/rate-limited-backoff')
+            .then(() => {
+                expect(requests).toBe(2);
+                done();
+            })
+            .catch(done);
+    });
+
+    it('preserves original URL for rate-limit bucketing when proxy rewrites the request', (done) => {
+        ConfigUtils.setConfigProp("rateLimit", {
+            baseDelay: 0,
+            defaultBucket: 'path'
+        });
+        let firstRequestConfig;
+        mockAxios.onGet().reply((config) => {
+            firstRequestConfig = firstRequestConfig || config;
+            return [200, {}];
+        });
+
+        axios.get('http://external.example.com/geoserver/wms?LAYERS=workspace:layer', {
+            proxyUrl: {
+                url: '/proxy/?url=',
+                useCORS: [],
+                autoDetectCORS: false
+            }
+        })
+            .then(() => {
+                expect(firstRequestConfig.url).toContain('/proxy/?url=');
+                expect(firstRequestConfig._msRateLimitUrl).toBe('http://external.example.com/geoserver/wms?LAYERS=workspace:layer');
+                done();
+            })
+            .catch(done);
+    });
+
+    it('keeps non-429 error behavior unchanged', (done) => {
+        mockAxios.onGet('/not-found').reply(404, {error: 'missing'});
+
+        axios.get('/not-found')
+            .then(() => done(new Error('Expected request to fail')))
+            .catch((error) => {
+                expect(error.status).toBe(404);
+                expect(error.data).toEqual({error: 'missing'});
                 done();
             });
     });

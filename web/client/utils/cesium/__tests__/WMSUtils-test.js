@@ -9,10 +9,12 @@ import expect from 'expect';
 import {
     wmsToCesiumOptionsBIL,
     wmsToCesiumOptions,
-    wmsToCesiumOptionsSingleTile
+    wmsToCesiumOptionsSingleTile,
+    createSingleTileImageryProvider
 } from '../WMSUtils';
 import { setCredentials } from './../../SecurityUtils';
 import ConfigUtils from './../../ConfigUtils';
+import rateLimitManager from '../../RateLimitManager';
 const testLayerConfig = {
     "type": "terrain",
     "provider": "wms",
@@ -28,6 +30,11 @@ const testLayerConfig = {
 };
 
 describe('Test the WMSUtil for Cesium', () => {
+    afterEach(() => {
+        ConfigUtils.setConfigProp('rateLimit', undefined);
+        rateLimitManager.reset();
+    });
+
     it('wmsToCesiumOptionsBIL with proxy', () => {
         let config = wmsToCesiumOptionsBIL({...testLayerConfig, forceProxy: true});
         expect(config.url).toBe(testLayerConfig.url);
@@ -135,5 +142,44 @@ describe('Test the WMSUtil for Cesium', () => {
         ConfigUtils.setConfigProp('useAuthenticationRules', false);
 
         expect(cesiumOptions.url.headers).toEqual({Authorization: "Basic dTpw"});
+    });
+
+    it('wmsToCesiumOptions adds a 429 retry callback to the resource', (done) => {
+        ConfigUtils.setConfigProp('rateLimit', {
+            baseDelay: 0,
+            maxDelay: 1000
+        });
+        const cesiumOptions = wmsToCesiumOptions({
+            type: 'wms',
+            url: 'https://example.com/geoserver/wms',
+            name: 'workspace:layer'
+        });
+        const resource = {
+            getUrlComponent: () => 'https://example.com/geoserver/wms?LAYERS=workspace:layer&BBOX=1,2,3,4'
+        };
+
+        expect(cesiumOptions.url.retryCallback).toBeA('function');
+        cesiumOptions.url.retryCallback(resource, {
+            statusCode: 429,
+            responseHeaders: {
+                'Retry-After': '0'
+            }
+        })
+            .then((retry) => {
+                expect(retry).toBe(true);
+                done();
+            })
+            .catch(done);
+    });
+
+    it('createSingleTileImageryProvider returns a provider with rate-limit aware resource', () => {
+        const provider = createSingleTileImageryProvider({
+            type: 'wms',
+            url: '/geoserver/wms',
+            name: 'workspace:layer'
+        });
+
+        expect(provider.requestImage).toBeA('function');
+        expect(provider._resource.retryCallback).toBeA('function');
     });
 });

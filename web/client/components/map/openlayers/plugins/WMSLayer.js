@@ -33,78 +33,139 @@ import { isValidResponse } from '../../../../utils/WMSUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
+import rateLimitManager from '../../../../utils/RateLimitManager';
 
 const failTiles = new Set(); // registry of fail tile urls to prevent reloading loops
+
+const getRateLimitOptions = (options = {}) => ({
+    msRateLimitBucket: options.msRateLimitBucket,
+    msRateLimitKey: options.msRateLimitKey
+});
+
+const setImageError = (image) => {
+    if (typeof image.setState === 'function') {
+        image.setState(3);
+    } else {
+        image.state = 3;
+        if (typeof image.changed === 'function') {
+            image.changed();
+        }
+    }
+};
+
+const retryImageLoad = (image, src, options) => {
+    if (typeof image.load === 'function' && !failTiles.has(src)) {
+        rateLimitManager.wait(src, getRateLimitOptions(options)).then(() => image.load());
+    }
+};
+
+const isRateLimitError = (error) => error?.status === 429
+    || error?.response?.status === 429
+    || error?.originalError?.response?.status === 429;
 
 const loadFunction = (options, headers) => function(image, src) {
 
     if (failTiles.has(src)) {  // avoids custom reload in cases of tiles that have already returned exceptions
-        image.setState(3);
+        setImageError(image);
         return;
     }
 
-    // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
-    let img = image.getImage();
-    let newSrc = proxySource(options.forceProxy, src);
+    rateLimitManager.wait(src, getRateLimitOptions(options)).then(() => {
+        // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
+        let img = image.getImage();
+        let newSrc = proxySource(options.forceProxy, src);
 
-    if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity)) {
-        // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
-        let [url, ...dataEntries] = src.split("&");
-        url = proxySource(options.forceProxy, url);
+        if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity)) {
+            // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
+            let [url, ...dataEntries] = src.split("&");
+            url = proxySource(options.forceProxy, url);
 
-        // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
-        axios.post(url, "&" + dataEntries.join("&"), {
-            headers: {
-                "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-                ...headers
-            },
-            responseType: 'arraybuffer'
-        }).then(response => {
-            if (response.status === 200) {
-                const uInt8Array = new Uint8Array(response.data);
-                let i = uInt8Array.length;
-                const binaryString = new Array(i);
-                while (i--) {
-                    binaryString[i] = String.fromCharCode(uInt8Array[i]);
-                }
-                const dataImg = binaryString.join('');
-                const type = response.headers['content-type'];
-                if (type.indexOf('image') === 0) {
-                    img.src = 'data:' + type + ';base64,' + window.btoa(dataImg);
-                }
-            }
-        }).catch(e => {
-            image.setState(3);
-            failTiles.add(src);
-            console.error(e);
-        });
-    } else {
-        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
-            axios.get(newSrc, {
-                headers,
-                responseType: 'blob'
-            })
-                .then((response) => {
-                    return response.data.type === "text/xml"
-                        ? response.data.text().then(dataText => ({...response, dataText}))
-                        : response;
-                })
-                .then(response => {
-                    if (isValidResponse(response)) { // not contains OGC exception
-                        image.getImage().src = URL.createObjectURL(response.data);
-                    } else {
-                        throw new Error(response.dataText);
+            // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
+            axios.post(url, "&" + dataEntries.join("&"), {
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+                    ...headers
+                },
+                responseType: 'arraybuffer',
+                _msRateLimitUrl: src
+            }).then(response => {
+                if (response.status === 200) {
+                    const uInt8Array = new Uint8Array(response.data);
+                    let i = uInt8Array.length;
+                    const binaryString = new Array(i);
+                    while (i--) {
+                        binaryString[i] = String.fromCharCode(uInt8Array[i]);
                     }
-                }).catch(errorMessage => {
-                    image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
-                    image.setState(3);            // set error state for tile and removed from the queue to prevent reloading loops
-                    failTiles.add(src);           // indexing fail url tile to prevent reloading loops
-                    console.error(errorMessage);  // show ogc exception in console for debugging
-                });
+                    const dataImg = binaryString.join('');
+                    const type = response.headers['content-type'];
+                    if (type.indexOf('image') === 0) {
+                        img.src = 'data:' + type + ';base64,' + window.btoa(dataImg);
+                    }
+                }
+            }).catch(e => {
+                setImageError(image);
+                failTiles.add(src);
+                console.error(e);
+            });
         } else {
-            img.src = newSrc;
+            if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
+                axios.get(newSrc, {
+                    headers,
+                    responseType: 'blob',
+                    _msRateLimitUrl: src
+                })
+                    .then((response) => {
+                        return response.data.type === "text/xml"
+                            ? response.data.text().then(dataText => ({...response, dataText}))
+                            : response;
+                    })
+                    .then(response => {
+                        if (isValidResponse(response)) { // not contains OGC exception
+                            image.getImage().src = URL.createObjectURL(response.data);
+                        } else {
+                            throw new Error(response.dataText);
+                        }
+                    }).catch(errorMessage => {
+                        image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
+                        setImageError(image);          // set error state for tile and removed from the queue to prevent reloading loops
+                        failTiles.add(src);            // indexing fail url tile to prevent reloading loops
+                        console.error(errorMessage);   // show ogc exception in console for debugging
+                    });
+            } else {
+                const onDirectImageError = () => {
+                    axios.get(newSrc, {
+                        responseType: 'blob',
+                        _msRateLimitUrl: src
+                    })
+                        .then((response) => {
+                            return response.data.type === "text/xml"
+                                ? response.data.text().then(dataText => ({...response, dataText}))
+                                : response;
+                        })
+                        .then((response) => {
+                            if (isValidResponse(response)) {
+                                retryImageLoad(image, src, options);
+                            } else {
+                                throw new Error(response.dataText);
+                            }
+                        })
+                        .catch((errorMessage) => {
+                            if (isRateLimitError(errorMessage)) {
+                                retryImageLoad(image, src, options);
+                                return;
+                            }
+                            setImageError(image);
+                            failTiles.add(src);
+                            console.error(errorMessage);
+                        });
+                };
+                if (typeof img.addEventListener === 'function') {
+                    img.addEventListener('error', onDirectImageError, { once: true });
+                }
+                img.src = newSrc;
+            }
         }
-    }
+    });
 };
 
 const createLayer = (options, map, mapId) => {
