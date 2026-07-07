@@ -1896,6 +1896,51 @@ describe('Cesium layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.getElevation).toBeTruthy();
     });
+    it('should add the elevation layer to the map imagery layers after the proxy detection', (done) => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        // the proxy detection request is asynchronous,
+        // once completed the elevation layer must be part of the imagery layers
+        // so Cesium can request its tiles and make them available to the getElevation function
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                expect(cmp.layer.getElevation).toBeTruthy();
+                done();
+            }).catch(done);
+    });
+    it('should add the elevation layer to the map imagery layers when forceProxy is set in the options', (done) => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true,
+            forceProxy: true
+        };
+        ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                done();
+            }).catch(done);
+    });
     it('creates a arcgis layer', (done) => {
         const options = {
             type: 'arcgis',
