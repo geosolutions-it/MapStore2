@@ -176,7 +176,7 @@ For more information check [this](https://github.com/geosolutions-it/MapStore2/w
 
 ## Who uses MapStore
 
-Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add ( or remove 😟 ) your organization from this list, please, contact [simone.giannecchini@geosolutionsgroup.com](mailto:simone.giannecchini@geosolutionsgroup.com) .
+Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add ( or remove 😟 ) your organization from this list, please, contact [info@geosolutionsgroup.com](mailto:info@geosolutionsgroup.com) .
 
 - [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
 - [City of Bozen - Italy](https://sit.comune.bolzano.it/mapstore2/#/)
