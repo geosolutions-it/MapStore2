@@ -154,7 +154,7 @@ Read more on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/
 ## Professional Support
 
 MapStore is being developed by <a href="http://www.geosolutionsgroup.com/" target="_blank">GeoSolutions</a> hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it (see section below).
-If you have expertise with MapStore and if you want to be included in the list of commercial providers, please write to info@geosolutionsgroup.com.
+If you have expertise with MapStore and if you want to be included in the list of commercial providers, please write to <info@geosolutionsgroup.com>.
 
 ## Communication
 
@@ -177,7 +177,7 @@ For more information check [this](https://github.com/geosolutions-it/MapStore2/w
 
 ## Who uses MapStore
 
-Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add ( or remove 😟 ) your organization from this list, please, contact info@geosolutionsgroup.com.
+Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add ( or remove 😟 ) your organization from this list, please, contact <info@geosolutionsgroup.com>.
 
 - [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
 - [City of Bozen - Italy](https://sit.comune.bolzano.it/mapstore2/#/)
