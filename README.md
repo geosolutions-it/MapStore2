@@ -154,6 +154,7 @@ Read more on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/
 ## Professional Support
 
 MapStore is being developed by <a href="http://www.geosolutionsgroup.com/" target="_blank">GeoSolutions</a> hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it (see section below).
+If you have expertise with MapStore and if you want to be included in the list of commercial providers, please write to info@geosolutionsgroup.com.
 
 ## Communication
 
