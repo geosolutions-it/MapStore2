@@ -155,6 +155,7 @@ Layers.registerType('elevation', {
     create,
     update: (layer, newOptions, oldOptions, map) => {
         if (!isEqual(oldOptions.security, newOptions.security)
+            || oldOptions.forceProxy !== newOptions.forceProxy
             || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             return create(newOptions, map);
         }
