@@ -12,7 +12,7 @@ import {
     resourceToLayerConfig,
     isDefaultDatasetSubtype,
     getTagConfig,
-    documentsToLayerConfig,
+    documentsToLayerConfig as documentsToLayerConfigSync,
     resourceMapToLayerGroup,
     ResourceTypes
 } from '../../utils/GeoNodeUtils';
@@ -142,7 +142,7 @@ export const processRecords = (records = [], options = {}, locales) => {
         ? Promise.all(
             documents.map(doc => getDocumentByPk(options?.service?.url, doc.pk).catch(() => null))
         )
-            .then((docs) => documentsToLayerConfig(docs, locales))
+            .then((docs) => documentsToLayerConfigSync(docs, locales))
             .catch(() => null)
         : Promise.resolve(null);
 
@@ -166,6 +166,17 @@ export const processRecords = (records = [], options = {}, locales) => {
                 ].filter(Boolean),
                 groups: validMapContents.flatMap(content => content.groups)
             };
+        });
+};
+
+// used by https://github.com/GeoNode/geonode-mapstore-client/issues/2583
+export const documentsToLayerConfig = (documents = [], options = {}) => {
+    const baseURL = options?.service?.url;
+    const locales = options?.locales;
+    // resilient per document: a failed fetch is skipped, not fatal to the whole layer
+    return Promise.all(documents.map(doc => getDocumentByPk(baseURL, doc.pk).catch(() => null)))
+        .then((fullDocs) => {
+            return documentsToLayerConfigSync(fullDocs, locales);
         });
 };
 
