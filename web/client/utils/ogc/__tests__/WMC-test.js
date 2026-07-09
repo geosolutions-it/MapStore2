@@ -333,16 +333,22 @@ describe('WMC tests', () => {
         });
     });
     describe('WMC export tests', () => {
+        // round decimal numbers embedded in the exported text because floating point
+        // results of transcendental functions can differ across browser versions
+        const normalizeNumbers = line => line.replace(/-?\d+\.\d+/g, match => Number(match).toFixed(6));
+        const compareLines = (exported, context) => {
+            const exportedLines = exported.split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
+            const contextLines = context.split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
+
+            zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
+                expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+        };
         it('toWMC', () =>
             Promise.all([
                 axios.get('base/web/client/test-resources/wmc/config.json'),
                 axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
             ]).then(([{data: config}, {data: context}]) => {
-                const exportedLines = toWMC(config, {}).split('\n').map(r => r.trim()).filter(e => e);
-                const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
-
-                zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
-                    expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+                compareLines(toWMC(config, {}), context);
             })
         );
         it('Empty maxExtent should not fail', () => {
@@ -351,11 +357,7 @@ describe('WMC tests', () => {
                 axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
             ]).then(([{data: config}, {data: context}]) => {
                 const _config = omit(config, "map.maxExtent"); // remove mapExtent
-                const exportedLines = toWMC(_config, {}).split('\n').map(r => r.trim()).filter(e => e);
-                const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
-
-                zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
-                    expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+                compareLines(toWMC(_config, {}), context);
             });
         });
         it('bbox should take precedence over maxExtent', () => {
@@ -375,10 +377,7 @@ describe('WMC tests', () => {
                         }, crs: "EPSG:900913"}
                     }
                 };
-                const exportedLines = toWMC(_config, {}).split('\n').map(r => r.trim()).filter(e => e);
-                const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
-                zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
-                    expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+                compareLines(toWMC(_config, {}), context);
             });
         });
     });
