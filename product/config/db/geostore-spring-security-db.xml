@@ -22,7 +22,7 @@
         <security:csrf disabled="true"/>
         <security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-        <security:custom-filter ref="compositeOpenIdFilter" before="OPENID_FILTER"/>
+        <security:custom-filter ref="compositeOpenIdFilter" before="BASIC_AUTH_FILTER"/>
         <security:anonymous />
         <security:intercept-url pattern="/**" access="permitAll" />
     </security:http>
