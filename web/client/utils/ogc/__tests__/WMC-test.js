@@ -332,6 +332,7 @@ describe('WMC tests', () => {
             done(new Error('Expected toMapConfig to throw an error!'));
         });
     });
+<<<<<<< HEAD
     it('toWMC', () =>
         Promise.all([
             axios.get('base/web/client/test-resources/wmc/config.json'),
@@ -344,4 +345,55 @@ describe('WMC tests', () => {
                 expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
         })
     );
+=======
+    describe('WMC export tests', () => {
+        // round decimal numbers embedded in the exported text because floating point
+        // results of transcendental functions can differ across browser versions
+        const normalizeNumbers = line => line.replace(/-?\d+\.\d+/g, match => Number(match).toFixed(6));
+        const compareLines = (exported, context) => {
+            const exportedLines = exported.split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
+            const contextLines = context.split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
+
+            zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
+                expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
+        };
+        it('toWMC', () =>
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                compareLines(toWMC(config, {}), context);
+            })
+        );
+        it('Empty maxExtent should not fail', () => {
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                const _config = omit(config, "map.maxExtent"); // remove mapExtent
+                compareLines(toWMC(_config, {}), context);
+            });
+        });
+        it('bbox should take precedence over maxExtent', () => {
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/context-bbox.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                const _config = {
+                    ...config,
+                    map: {
+                        ...config.map,
+                        bbox: {bounds: {
+                            minx: -447353.25587372016,
+                            miny: 3817753.15151658,
+                            maxx: 4562023.82912628,
+                            maxy: 6138992.826157694
+                        }, crs: "EPSG:900913"}
+                    }
+                };
+                compareLines(toWMC(_config, {}), context);
+            });
+        });
+    });
+>>>>>>> a0d89c8 (Fix #12604 Tests failing on Chrome 150 due to floating point differences (#12605))
 });
