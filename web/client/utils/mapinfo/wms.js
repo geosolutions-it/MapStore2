@@ -13,6 +13,7 @@ import {getLayerUrl} from '../LayersUtils';
 import {isObject, isNil} from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { generateEnvString } from '../LayerLocalizationUtils';
+import { getFeatureInfoBuffer, getFeatureInfoMaxItems } from '../FeatureInfoRequestUtils';
 import axios from "../../libs/ajax";
 // import {parseString} from "xml2js";
 // import {stripPrefix} from "xml2js/lib/processors";
@@ -56,6 +57,8 @@ export default {
             filterObj: layer.filterObj,
             params: Object.assign({}, layer.baseParams, layer.params, defaultParams)
         });
+        const featureInfoMaxItems = getFeatureInfoMaxItems(featureInfo, maxItems);
+        const featureInfoBuffer = getFeatureInfoBuffer(featureInfo, layer);
         return {
             request: addAuthenticationToSLD({
                 service: 'WMS',
@@ -74,11 +77,12 @@ export default {
                       bounds.miny + "," +
                       bounds.maxx + "," +
                       bounds.maxy,
-                feature_count: maxItems,
                 info_format: infoFormat,
                 format: layer.format,
                 ENV,
-                ...Object.assign({}, params)
+                ...Object.assign({}, params),
+                feature_count: featureInfoMaxItems,
+                ...(featureInfoBuffer !== undefined ? { buffer: featureInfoBuffer } : {})
             }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,

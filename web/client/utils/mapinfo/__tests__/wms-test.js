@@ -12,6 +12,7 @@ import MockAdapter from "axios-mock-adapter";
 
 import axios from '../../../libs/ajax';
 import {INFO_FORMATS} from "../../FeatureInfoUtils";
+import {ServerTypes} from "../../LayersUtils";
 import {getFeatureInfo} from "../../../api/identify";
 import wms from '../wms';
 
@@ -27,6 +28,57 @@ describe('mapinfo wms utils', () => {
         }
         mockAxios = null;
         setTimeout(done);
+    });
+    it('should build a WMS GetFeatureInfo request with default feature_count', () => {
+        const { request } = wms.buildRequest({
+            type: "wms",
+            id: "test_layer",
+            name: "test_layer",
+            url: "/geoserver/wms"
+        }, {
+            point: { latlng: { lat: 0, lng: 0 } },
+            map: { projection: "EPSG:4326", resolution: 1 }
+        });
+
+        expect(request.feature_count).toBe(10);
+        expect(request.buffer).toNotExist();
+    });
+    it('should build a WMS GetFeatureInfo request with layer featureInfo maxItems', () => {
+        const layer = {
+            type: "wms",
+            id: "test_layer",
+            name: "test_layer",
+            url: "/geoserver/wms",
+            featureInfo: {
+                maxItems: 25
+            }
+        };
+        const { request } = wms.buildRequest(layer, {
+            point: { latlng: { lat: 0, lng: 0 } },
+            map: { projection: "EPSG:4326", resolution: 1 },
+            maxItems: 50
+        }, undefined, undefined, layer.featureInfo);
+
+        expect(request.feature_count).toBe(25);
+    });
+    it('should include buffer only for GeoServer WMS GetFeatureInfo requests', () => {
+        const layer = {
+            type: "wms",
+            id: "test_layer",
+            name: "test_layer",
+            url: "/geoserver/wms",
+            serverType: ServerTypes.GEOSERVER,
+            featureInfo: {
+                buffer: 8
+            }
+        };
+        const options = {
+            point: { latlng: { lat: 0, lng: 0 } },
+            map: { projection: "EPSG:4326", resolution: 1 }
+        };
+
+        expect(wms.buildRequest(layer, options, undefined, undefined, layer.featureInfo).request.buffer).toBe(8);
+        expect(wms.buildRequest({ ...layer, serverType: ServerTypes.NO_VENDOR }, options, undefined, undefined, layer.featureInfo).request.buffer).toNotExist();
     });
     it('should return the response object from getIdentifyFlow in case of 200 with empty features,', (done) => {
         const SAMPLE_LAYER = {
