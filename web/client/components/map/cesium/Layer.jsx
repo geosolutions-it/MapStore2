@@ -341,14 +341,14 @@ class CesiumLayer extends React.Component {
             {
                 ...newProps.options,
                 securityToken: newProps.securityToken,
-                forceProxy: this._isProxy,
+                forceProxy: newProps.options?.forceProxy || this._isProxy,
                 imageryLayersTreeUpdatedCount: newProps.imageryLayersTreeUpdatedCount,
                 position: newProps.position
             },
             {
                 ...oldProps.options,
                 securityToken: oldProps.securityToken,
-                forceProxy: this._prevIsProxy,
+                forceProxy: oldProps.options?.forceProxy || this._prevIsProxy,
                 imageryLayersTreeUpdatedCount: oldProps.imageryLayersTreeUpdatedCount,
                 position: oldProps.position
             },
@@ -448,9 +448,26 @@ class CesiumLayer extends React.Component {
         if (this._isProxy === undefined && newProps?.options?.url) {
             const urls = castArray(newProps.options.url);
             return axios(urls[0], { noProxy: true })
+                // this request is used only to detect if the layer needs the proxy,
+                // a failure (e.g. CORS error) is expected and must not produce an unhandled rejection
+                // preventing the error avoids an unhandled rejection in console.
+                .catch(() => {
+                    console.warn(`Failed to detect proxy for ${urls[0]}. This is expected if the server does not support CORS.`);
+                    return null;
+                })
                 .finally(() => {
                     this._isProxy = !!getProxyCacheByUrl(urls[0]);
-                    this.updateLayer(newProps, this.props);
+                    // the layer was created with the forceProxy value coming from its options,
+                    // recreate it through updateLayer only when the detection requires a different proxy setup,
+                    // otherwise the already created layer must simply be added to the map
+                    const createdWithProxy = !!newProps?.options?.forceProxy;
+                    const needsProxy = createdWithProxy || this._isProxy;
+                    if (createdWithProxy === needsProxy) {
+                        this._addLayer(newProps);
+                        this.updateZIndex(newProps.position);
+                    } else {
+                        this.updateLayer(newProps, this.props);
+                    }
                     this._prevIsProxy = this._isProxy;
                 });
         }
