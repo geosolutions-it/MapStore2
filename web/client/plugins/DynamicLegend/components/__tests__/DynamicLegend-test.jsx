@@ -10,7 +10,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import DynamicLegend from '../DynamicLegend';
+import DynamicLegend, { DYNAMIC_LEGEND_WMS_OPTIONS } from '../DynamicLegend';
 
 describe('DynamicLegend Component', () => {
     let container;
@@ -75,5 +75,9 @@ describe('DynamicLegend Component', () => {
         ReactDOM.render(<DynamicLegend {...defaultProps} />, container);
         const layerTreeIsExisting = container.querySelectorAll('.ms-layers-tree');
         expect(layerTreeIsExisting).toBeTruthy();
+    });
+
+    it('should preserve forced labels in dynamic legend WMS options', () => {
+        expect(DYNAMIC_LEGEND_WMS_OPTIONS).toBe('forceLabels:on;countMatched:true;fontAntiAliasing:true;');
     });
 });
