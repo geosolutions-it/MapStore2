@@ -7,6 +7,10 @@ The user can access the Catalog with a click on the <img src="../img/button/cata
 
 <img src="../img/catalog/catalog_panel.jpg" class="ms-docimage"  style="max-width:500px;" />
 
+The *Catalog* can also be viewed in Grid mode by clicking on the <img src="../img/button/full-view.jpg" class="ms-docbutton" style="max-height:25px;" /> button.
+
+<img src="../img/catalog/catalog_grid.jpg" class="ms-docimage" />
+
 ## Adding Layers from Remote Services
 
 In order to add a layer, the user can first of all open the catalog and choose from the following dropdown menu the Remote Service from where the layer is going to be added:
@@ -17,18 +21,20 @@ Once the Remote Service is set, it is possible to search the desired layer by ty
 
 <img src="../img/catalog/catalog_search.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/> button, the layer is finally added to the [TOC](toc.md#table-of-contents) and rendered to the map viewer:
+By clicking on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button, the layer is finally added to the [TOC](toc.md#table-of-contents) and rendered to the map viewer:
 
 <img src="../img/catalog/added_layer.jpg" class="ms-docimage"/>
 
+Users can also select multiple layers simultaneously by clicking on them or click the <img src="../img/button/select-all.jpg" class="ms-docbutton"/> button to select all layers on the page. Once selected, add them to the map by clicking the <img src="../img/button/add-to-map.jpg" class="ms-docbutton"/> button.
+
 !!! note
-    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton" style="max-height:20px;"/> button:
+    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button and clicking on the *Show full content*:
 
     <video class="ms-docimage" style="max-width:400px;" controls><source src="../img/catalog/expand_card.mp4"></video>
 
 ## Managing Remote Services
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/++++.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
 
 <img src="../img/catalog/add_edit_services.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
@@ -43,8 +49,8 @@ From here the user is allowed to set the Service options, that can be divided in
 
 * **Advanced Settings**
 
-Once the options are properly set, it is possible to <img src="../img/button/save_service.jpg" class="ms-docbutton"/> the Service. If the user wants to discard the edits, instead, there's the <img src="../img/button/cancel_service.jpg" class="ms-docbutton"/> button.
-An existing Service can finally be removed from the Services list through the <img src="../img/button/delete_service.jpg" class="ms-docbutton"/> button (this option is not available creating a new Remote Service).
+Once the options are properly set, it is possible to <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> the Service. If the user wants to discard the edits, instead, there's the <img src="../img/button/cancel-white.jpg" class="ms-docbutton"/> button.
+An existing Service can finally be removed from the Services list through the <img src="../img/button/delete-red.jpg" class="ms-docbutton"/> button (this option is not available creating a new Remote Service).
 
 ### General settings
 
@@ -66,7 +72,7 @@ MapStore also provides the possibility specify credentials for sources requestin
 
 ### Advanced settings
 
-The Advances settings section opens by clicking on the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton"/> icon:
+The Advances settings section opens by clicking on the <img src="../img/button/collapse.jpg" class="ms-docbutton"/> icon:
 
 <img src="../img/catalog/advanced_settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
@@ -85,7 +91,7 @@ MapStore actually supports only the **Dublin Core** metadata schemas. *ISO Metad
 
 In **general settings of**  CSW service the user can specify the title to assign to this service and the URL of the service.
 
-<img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
+<img src="../img/catalog/csw_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 !!! note
     If the *CSW service*, responds with metadata records that can hold more than just one type of OGC service (WMS and WFS are currently supported for this), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to choose from which service the layer should be added to the [TOC](toc.md#table-of-contents). An example can be the following: <video class="ms-docimage"  style="max-width:500px;" controls><source src="../img/catalog/csw_with_more_ogc_service.mp4"></video>
@@ -291,8 +297,8 @@ Allowed placeholder are:
 
 When the user saves this custom catalog service and clicks on search, he will see only one result, that can be added on the map: variants are not currently sopported in MapStore for this provider type.
 
-<img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
-<p class="ms-doc-caption">Browse custom TMS service. It contains only one result</p>
+!!! note
+    Browse custom TMS service. It contains only one result.
 
 ##### Sample custom
 
