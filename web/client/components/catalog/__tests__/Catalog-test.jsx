@@ -36,6 +36,94 @@ describe('Test Catalog panel', () => {
         const catalog = document.querySelector('.ms-catalog');
         expect(catalog).toBeTruthy();
     });
+    it('clears search text and refreshes the first page with a single search', () => {
+        const SERVICE = {
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
+        };
+        const actions = {
+            onChangeText: () => {},
+            onSearch: () => {}
+        };
+        const spyOnChangeText = expect.spyOn(actions, 'onChangeText');
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<Catalog
+            services={{ csw: SERVICE }}
+            selectedService="csw"
+            selectedFormat="csw"
+            searchText="layer"
+            onChangeText={actions.onChangeText}
+            onSearch={actions.onSearch}
+        />, document.getElementById('container'));
+
+        const clearButton = document.querySelector('.glyphicon-1-close').closest('button');
+        TestUtils.Simulate.click(clearButton);
+
+        expect(spyOnChangeText.calls.length).toBe(1);
+        expect(spyOnChangeText.calls[0].arguments).toEqual(['', { skipAutoSearch: true }]);
+        expect(spyOnSearch.calls.length).toBe(1);
+        expect(spyOnSearch.calls[0].arguments[0]).toEqual({
+            format: 'csw',
+            url: 'http://sample.service/catalog',
+            startPosition: 1,
+            maxRecords: 12,
+            text: '',
+            options: {
+                filters: {},
+                sort: '-date',
+                service: SERVICE
+            }
+        });
+    });
+    it('clears search text and active filters while preserving sort', () => {
+        const SERVICE = {
+            type: 'geonode',
+            url: 'http://sample.service/geonode',
+            title: 'GeoNode'
+        };
+        const filters = {
+            'filter{category.identifier.in}': ['environment']
+        };
+        const actions = {
+            onChangeText: () => {},
+            onSearch: () => {}
+        };
+        const spyOnChangeText = expect.spyOn(actions, 'onChangeText');
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<Catalog
+            services={{ geonode: SERVICE }}
+            selectedService="geonode"
+            selectedFormat="geonode"
+            searchText="layer"
+            searchOptions={{
+                url: 'http://sample.service/geonode',
+                filters,
+                sort: 'title'
+            }}
+            onChangeText={actions.onChangeText}
+            onSearch={actions.onSearch}
+        />, document.getElementById('container'));
+
+        const clearButton = document.querySelector('.glyphicon-1-close').closest('button');
+        TestUtils.Simulate.click(clearButton);
+
+        expect(spyOnChangeText.calls.length).toBe(1);
+        expect(spyOnChangeText.calls[0].arguments).toEqual(['', { skipAutoSearch: true }]);
+        expect(spyOnSearch.calls.length).toBe(1);
+        expect(spyOnSearch.calls[0].arguments[0]).toEqual({
+            format: 'geonode',
+            url: 'http://sample.service/geonode',
+            startPosition: 1,
+            maxRecords: 12,
+            text: '',
+            options: {
+                filters: {},
+                sort: 'title',
+                service: SERVICE
+            }
+        });
+    });
     it('triggers search on autoload service', (done) => {
         const SERVICE = {
             type: "csw",

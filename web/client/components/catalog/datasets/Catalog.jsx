@@ -283,6 +283,12 @@ const Catalog = ({
         search({ searchText, filters, sort: newSort, start: searchOptions?.startPosition });
     };
 
+    const onReset = () => {
+        onChangeText('', { skipAutoSearch: true });
+        setFilters({});
+        search({ searchText: '', filters: {}, sort });
+    };
+
     const hasActiveFilters = useMemo(() => serviceCapabilities.filterSupport && Object.keys(filters).length > 0, [serviceCapabilities.filterSupport, filters]);
 
     const searchInputNode = (
@@ -293,7 +299,7 @@ const Catalog = ({
             }}
             enableFilters={serviceCapabilities.filterSupport}
             onToggleFilters={() => setShowFilters(!showFilters)}
-            onResetFilters={() => onFilterChange({}, true)}
+            onReset={onReset}
             includeSearchButton={includeSearchButton}
             onShowSecurityModal={onShowSecurityModal}
             onSetProtectedServices={onSetProtectedServices}
