@@ -8,6 +8,8 @@
 import expect from 'expect';
 
 import {
+    consumeTOCInitialization,
+    TOC_INITIALIZATION_CONSUMED,
     updateTOCConfig,
     UPDATE_TOC_CONFIG
 } from '../toc';
@@ -18,5 +20,11 @@ describe('toc actions', () => {
         const action = updateTOCConfig(payload);
         expect(action.type).toBe(UPDATE_TOC_CONFIG);
         expect(action.payload).toBe(payload);
+    });
+    it('consumeTOCInitialization', () => {
+        const mapLoadedCount = 2;
+        const action = consumeTOCInitialization(mapLoadedCount);
+        expect(action.type).toBe(TOC_INITIALIZATION_CONSUMED);
+        expect(action.mapLoadedCount).toBe(mapLoadedCount);
     });
 });

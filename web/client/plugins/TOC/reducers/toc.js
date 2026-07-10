@@ -7,7 +7,10 @@
  */
 
 import { MAP_CONFIG_LOADED } from '../../../actions/config';
-import { UPDATE_TOC_CONFIG } from '../actions/toc';
+import {
+    TOC_INITIALIZATION_CONSUMED,
+    UPDATE_TOC_CONFIG
+} from '../actions/toc';
 
 function toc(state = {}, action) {
     switch (action.type) {
@@ -27,6 +30,12 @@ function toc(state = {}, action) {
                 ...state?.config,
                 ...action.payload
             }
+        };
+    }
+    case TOC_INITIALIZATION_CONSUMED: {
+        return {
+            ...state,
+            initializedMapLoadedCount: action.mapLoadedCount
         };
     }
     default:
