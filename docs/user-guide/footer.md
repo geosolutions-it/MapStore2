@@ -18,7 +18,9 @@ A selector will appear, allowing you to choose from the available systems as sho
 
 <video class="ms-docimage" controls><source src="../img/footer/CRS_selector.mp4" /></video>
 
-To customize the list of projections available in the CRS tool dropdown menu, click the <img src="../img/button/settings2" class="ms-docbutton"/> button to open the *Available Projections* panel.
+It is also possible to *Zoom to the maximum extent* of the current projection by clicking the <img src="../img/button/zoom-extent.jpg" class="ms-docbutton"/> button.
+
+To customize the list of projections available in the CRS tool dropdown menu, click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button to open the *Available Projections* panel.
 
 <img src="../img/footer/searchCRS.jpg" class="ms-docimage"/>
 
@@ -46,3 +48,7 @@ In this panel, the user can:
 
     !!! warning
         The *Camera Position* tool is not enabled by default in MapStore. However, it can be configured within [application contexts](application-context.md#configure-plugins) if needed.
+
+!!! Note
+    [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) can be configured to connect to a GeoServer endpoint exposing thousands of standard CRS definitions. This enables users to search for and add coordinate reference systems dynamically, without redeploying the application or editing configuration files.
+    This capability is disabled by default and requires additional configuration of the CRS plugin. For details on how to enable it, refer to the documentation [here](https://dev-mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.CRSSelector).
