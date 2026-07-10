@@ -293,10 +293,11 @@ function mergeItems(standard, overrides) {
         .map(item => overrideItem(item, overrides))
         .map(handleRemoved);
 }
+const UNSUPPORTED_LAYER_TYPES = ["arcgis-feature", "cog"];
 
 function filterLayer(layer = {}) {
-    // Skip layer with error and type cog
-    return !layer.loadingError && layer.type !== "cog";
+    // Skip layer with error and unsupported type
+    return !layer.loadingError && !UNSUPPORTED_LAYER_TYPES.includes(layer.type); 
 }
 
 export default {
