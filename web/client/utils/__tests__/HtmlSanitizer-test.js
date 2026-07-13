@@ -67,7 +67,7 @@ describe('HtmlSanitizer', () => {
         });
 
         it('still sanitizes CSS inside a leading style block', () => {
-            const result = sanitizeHtml('<style>@import "https://untr.example/x.css"; div { background: url(https://evil.example/leak) }</style><p>hi</p>');
+            const result = sanitizeHtml('<style>@import "https://untr.example/x.css"; div { background: url(https://untr.example/leak) }</style><p>hi</p>');
             expect(result).toContain('<style>');
             expect(result).toNotContain('@import');
             expect(result).toNotContain('https://untr.example');
