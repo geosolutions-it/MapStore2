@@ -15,15 +15,31 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
     }
 });
 
-// Sanitize CSS inside <style> elements: strip @import (external resource loading)
-// and url() with non-data schemes (data exfiltration via background-image).
+// Decode CSS backslash escapes (e.g. `u\72 l(` → `url(`) so escaped syntax
+// can't smuggle external-resource loaders past the checks below.
+const decodeCssEscapes = (css) => css
+    // A hex escape consumes one optional trailing whitespace; per CSS Syntax that
+    // whitespace set is space/tab/newline/carriage-return/form-feed, and \r\n counts
+    // as a single terminator. Match the browser exactly, else escaped url()/@import
+    // decode differently here than in the CSS parser and slip past the checks.
+    .replace(/\\([0-9a-fA-F]{1,6})(?:\r\n|[ \t\n\r\f])?/g, (match, hex) => {
+        const codePoint = parseInt(hex, 16);
+        return codePoint > 0 && codePoint <= 0x10FFFF ? String.fromCodePoint(codePoint) : '�';
+    })
+    .replace(/\\([^0-9a-fA-F\n])/g, '$1');
+
+// Sanitize CSS inside <style> elements: strip @import and image-set() (external
+// resource loading) and url() with non-data schemes (data exfiltration via
+// background-image). Escapes are decoded first so `\75rl(` can't bypass the checks.
 // <style> is needed for GetFeatureInfo HTML responses from WMS servers (HTMLViewer).
 DOMPurify.addHook('uponSanitizeElement', (node, data) => {
     if (data.tagName === 'style') {
-        const dangerous = /@import|url\s*\(\s*(?!['"]?data:)/i;
-        if (dangerous.test(node.textContent)) {
-            node.textContent = node.textContent
+        const decoded = decodeCssEscapes(node.textContent);
+        const dangerous = /@import|image-set\s*\(|url\s*\(\s*(?!['"]?data:)/i;
+        if (dangerous.test(decoded)) {
+            node.textContent = decoded
                 .replace(/@import[^;]*;?/gi, '')
+                .replace(/(-webkit-)?image-set\s*\([^)]*\)/gi, 'none')
                 .replace(/url\s*\(\s*(?!['"]?data:)[^)]*\)/gi, 'none');
         }
     }
@@ -86,7 +102,11 @@ const HTML_CONFIG = {
         // GeoStory scroll-to-section interaction links (onclick is stripped; handled via event delegation in Text.jsx)
         'data-geostory-interaction-type', 'data-geostory-interaction-params', 'data-geostory-interaction-name'
     ],
-    ADD_ATTR: ['allow']
+    ADD_ATTR: ['allow'],
+    // Without FORCE_BODY, the HTML parser hoists leading head-eligible elements
+    // (e.g. the <style> block of a WMS GetFeatureInfo HTML response) into <head>,
+    // which DOMPurify then discards. See #12618.
+    FORCE_BODY: true
 };
 
 /**
