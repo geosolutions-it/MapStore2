@@ -69,11 +69,26 @@ jobs:
 
       - name: Send coverage to Coveralls (parallel)
         uses: coverallsapp/github-action@v2
+        # coverage upload must not block CI when coveralls.io is unavailable
+        continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel: true
           flag-name: run-${{ join(matrix.*, '-') }}
-          continue-on-error: true
+
+  coveralls-finished:
+    needs: test-front-end
+    # close the parallel build even when some test job fails,
+    # otherwise the coveralls build stays open until their timeout
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close Coveralls parallel build
+        uses: coverallsapp/github-action@v2
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
 
   test-back-end:
     runs-on: ubuntu-latest
