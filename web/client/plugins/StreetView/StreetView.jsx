@@ -99,7 +99,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *        }
  *    ```
  *    - `providerSettings` (optional). The settings specific for the provider. It is an object with the following properties:
- *      - `providerSettings.StreetSmartApiURL` (optional). The URL of the StreetSmart API. Default: `https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js`.
+ *      - `providerSettings.StreetSmartApiURL` (optional). The URL of the StreetSmart API. Must be a `https://` URL on a `cyclomedia.com` host, otherwise the default is used. Default: `https://streetsmart.cyclomedia.com/api/v26.1/StreetSmartApi.js`.
  *      - `providerSettings.srs` (optional). Coordinate reference system code to use for the API. Default: `EPSG:4326`. Note that the SRS used here must be supported by the StreetSmart API **and** defined in `localConfig.json` file, in `projectionDefs`.
  *      - `providerSettings.credentials` (optional). The credentials to store for the Cyclomedia API. It is an object with `username` and `password` properties.
  *        - **Important Note**: The plugin provides the possibility to configure the credentials in the plugin configuration, but in this case you have to be aware
