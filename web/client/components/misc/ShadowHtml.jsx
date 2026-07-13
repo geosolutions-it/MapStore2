@@ -15,9 +15,6 @@ import { sanitizeHtml } from '../../utils/HtmlSanitizer';
  * of leaking into the whole document, and the application theme does not override
  * the server-provided styling.
  *
- * The HTML is sanitized with DOMPurify before injection (scripts and event handlers
- * are removed there); the shadow root's job here is CSS isolation, not sanitization.
- *
  * @param {string} html - untrusted HTML string
  */
 const ShadowHtml = ({ html, id, style = { color: '#000000' } }) => {

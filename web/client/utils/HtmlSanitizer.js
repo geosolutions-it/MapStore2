@@ -103,9 +103,6 @@ const HTML_CONFIG = {
         'data-geostory-interaction-type', 'data-geostory-interaction-params', 'data-geostory-interaction-name'
     ],
     ADD_ATTR: ['allow'],
-    // Without FORCE_BODY, the HTML parser hoists leading head-eligible elements
-    // (e.g. the <style> block of a WMS GetFeatureInfo HTML response) into <head>,
-    // which DOMPurify then discards. See #12618.
     FORCE_BODY: true
 };
 

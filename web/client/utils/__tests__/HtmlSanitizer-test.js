@@ -67,20 +67,20 @@ describe('HtmlSanitizer', () => {
         });
 
         it('still sanitizes CSS inside a leading style block', () => {
-            const result = sanitizeHtml('<style>@import "https://evil.example/x.css"; div { background: url(https://evil.example/leak) }</style><p>hi</p>');
+            const result = sanitizeHtml('<style>@import "https://untr.example/x.css"; div { background: url(https://evil.example/leak) }</style><p>hi</p>');
             expect(result).toContain('<style>');
             expect(result).toNotContain('@import');
-            expect(result).toNotContain('https://evil.example');
+            expect(result).toNotContain('https://untr.example');
         });
 
         it('blocks url() smuggled via CSS backslash escapes', () => {
-            const result = sanitizeHtml('<style>div { background: u\\72 l(https://evil.example/leak) }</style><p>hi</p>');
-            expect(result).toNotContain('evil.example');
+            const result = sanitizeHtml('<style>div { background: u\\72 l(https://untr.example/leak) }</style><p>hi</p>');
+            expect(result).toNotContain('untr.example');
         });
 
         it('blocks external resource loading via image-set()', () => {
-            const result = sanitizeHtml('<style>div { background: image-set("https://evil.example/leak" 1x) }</style><p>hi</p>');
-            expect(result).toNotContain('evil.example');
+            const result = sanitizeHtml('<style>div { background: image-set("https://untr.example/leak" 1x) }</style><p>hi</p>');
+            expect(result).toNotContain('untr.example');
         });
 
         it('keeps benign CSS escapes intact (decoded)', () => {
@@ -92,8 +92,8 @@ describe('HtmlSanitizer', () => {
         it('blocks url() smuggled via form-feed/CR-terminated CSS escapes', () => {
             // hex escape terminated by form-feed (\f) and carriage-return (\r):
             // the browser consumes these as the escape terminator, so the decoder must too.
-            expect(sanitizeHtml('<style>div { background: u\\72\fl(https://evil.example/leak) }</style><p>hi</p>')).toNotContain('evil.example');
-            expect(sanitizeHtml('<style>div { background: u\\72\rl(https://evil.example/leak) }</style><p>hi</p>')).toNotContain('evil.example');
+            expect(sanitizeHtml('<style>div { background: u\\72\fl(https://untr.example/leak) }</style><p>hi</p>')).toNotContain('untr.example');
+            expect(sanitizeHtml('<style>div { background: u\\72\rl(https://untr.example/leak) }</style><p>hi</p>')).toNotContain('untr.example');
         });
 
         it('handles null input without throwing', () => {
