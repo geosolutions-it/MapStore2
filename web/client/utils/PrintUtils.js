@@ -888,7 +888,7 @@ export const specCreators = {
     },
     osm: {
         map: (layer = {}) => ({
-            "baseURL": "https://a.tile.openstreetmap.org/",
+            "baseURL": "https://tile.openstreetmap.org/",
             "opacity": getOpacity(layer),
             "singleTile": false,
             "type": "OSM",
