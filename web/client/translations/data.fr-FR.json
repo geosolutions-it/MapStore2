@@ -4584,7 +4584,8 @@
         "errors": {
           "notLoggedIn": "Vous n'êtes pas connecté",
           "invalidCredentials": "Identifiants invalides",
-          "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur."
+          "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur.",
+          "apiLoadFailed": "Impossible de charger l'API Street Smart. Vérifiez votre connexion réseau ou contactez l'administrateur."
         },
         "reloadAPI": "Recharger l'API"
       },
