@@ -28,9 +28,6 @@ const decodeCssEscapes = (css) => css
     })
     .replace(/\\([^0-9a-fA-F\n])/g, '$1');
 
-// Sanitize CSS inside <style> elements: strip @import and image-set() (external
-// resource loading) and url() with non-data schemes (data exfiltration via
-// background-image). Escapes are decoded first so `\75rl(` can't bypass the checks.
 // <style> is needed for GetFeatureInfo HTML responses from WMS servers (HTMLViewer).
 DOMPurify.addHook('uponSanitizeElement', (node, data) => {
     if (data.tagName === 'style') {
