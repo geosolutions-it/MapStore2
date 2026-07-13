@@ -16,6 +16,7 @@ const CTButton = withConfirm(withTooltip(Button));
 import CyclomediaCredentials from './Credentials';
 import EmptyStreetView from '../EmptyStreetView';
 const PROJECTION_NOT_AVAILABLE = "Projection not available";
+const API_LOAD_FAILED = "StreetSmart API failed to load";
 const isInvalidCredentials = (error) => {
     return error?.message?.indexOf?.("code 401");
 };
@@ -26,6 +27,10 @@ const DEFAULT_STREET_SMART_API_URL = "https://streetsmart.cyclomedia.com/api/v26
  * @private
  */
 const isValidStreetSmartApiURL = (url) => {
+    if (url === '') {
+        // explicit empty string disables loading an external script (e.g. tests injecting their own mock via `scripts`)
+        return true;
+    }
     try {
         const { protocol, hostname } = new URL(url);
         return protocol === 'https:' && (hostname === 'cyclomedia.com' || hostname.endsWith('.cyclomedia.com'));
@@ -51,6 +56,9 @@ const getErrorMessage = (error, msgParams = {}) => {
     }
     if (error?.message?.indexOf?.("not logged in") >= 0) {
         return <HTML msgId="streetView.cyclomedia.errors.notLoggedIn" />;
+    }
+    if (error?.message?.indexOf?.(API_LOAD_FAILED) >= 0) {
+        return <Message msgId="streetView.cyclomedia.errors.apiLoadFailed" msgParams={msgParams} />;
     }
     return error?.message ?? "Unknown error";
 };
@@ -381,7 +389,12 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             : null}
         <iframe key="iframe" ref={viewer} onLoad={() => {
             setTargetElement(viewer.current?.contentDocument.querySelector('#ms-street-smart-viewer-container'));
-            setStreetSmartApi(viewer.current?.contentWindow.StreetSmartApi);
+            const api = viewer.current?.contentWindow.StreetSmartApi;
+            if (!api) {
+                setError(new Error(API_LOAD_FAILED));
+                return;
+            }
+            setStreetSmartApi(api);
         }} style={{ ...style, display: showPanoramaViewer ? 'block' : 'none'}}  srcDoc={srcDoc}>
 
         </iframe>
