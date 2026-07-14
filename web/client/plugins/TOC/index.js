@@ -43,7 +43,7 @@ import tooltip from '../../components/misc/enhancers/tooltip';
 import localizedProps from '../../components/misc/enhancers/localizedProps';
 import { registerCustomSaveHandler } from '../../selectors/mapsave';
 import toc from './reducers/toc';
-import { consumeTOCInitialization } from './actions/toc';
+import { initializeTOC } from './actions/toc';
 import { setControlProperty } from '../../actions/controls';
 import Message from '../../components/I18N/Message';
 const Button = tooltip(ButtonRB);
@@ -368,7 +368,7 @@ function TOC({
     toolbarButtonProps,
     init,
     onOpen,
-    onInitializationConsumed
+    onInitialize
 }, context) {
     const activateParameter = (allow, activate) => {
         const isUserAdmin = user && user.role === 'ADMIN' || false;
@@ -435,12 +435,12 @@ function TOC({
     // when default open is true
     useEffect(() => {
         if (init) {
-            onInitializationConsumed(init);
+            onInitialize(init);
             if (defaultOpen) {
                 onOpen();
             }
         }
-    }, [init, defaultOpen, onInitializationConsumed, onOpen]);
+    }, [init, defaultOpen, onInitialize, onOpen]);
 
     const targetTree = singleDefaultGroup ? tree?.[0]?.nodes : tree;
     const isEmpty = targetTree?.length === 0;
@@ -637,7 +637,7 @@ const ConnectedTOC = connect(tocSelector, {
     onChange: updateNode,
     onSelectNode: selectNode,
     onOpen: setControlProperty.bind(null, 'drawer', 'enabled', true),
-    onInitializationConsumed: consumeTOCInitialization
+    onInitialize: initializeTOC
 })(TOC);
 
 export default createPlugin('TOC', {

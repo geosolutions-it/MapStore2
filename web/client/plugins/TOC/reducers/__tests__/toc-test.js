@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import {
-    consumeTOCInitialization,
+    initializeTOC,
     updateTOCConfig
 } from '../../actions/toc';
 import { configureMap } from '../../../../actions/config';
@@ -24,7 +24,7 @@ describe('toc reducer', () => {
         const firstMapState = toc({}, configureMap());
         expect(firstMapState.initializedMapLoadedCount).toNotExist();
 
-        const initializedState = toc(firstMapState, consumeTOCInitialization(firstMapState.mapLoadedCount));
+        const initializedState = toc(firstMapState, initializeTOC(firstMapState.mapLoadedCount));
         expect(initializedState.initializedMapLoadedCount).toBe(1);
 
         const secondMapState = toc(initializedState, configureMap());

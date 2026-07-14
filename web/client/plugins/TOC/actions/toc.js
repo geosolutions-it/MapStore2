@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 export const UPDATE_TOC_CONFIG = 'TOC:UPDATE_CONFIG';
-export const TOC_INITIALIZATION_CONSUMED = 'TOC:INITIALIZATION_CONSUMED';
+export const TOC_INITIALIZED = 'TOC:INITIALIZED';
 /**
  * update configuration for table of content
  * @param {object} payload properties to update
@@ -18,11 +18,11 @@ export const updateTOCConfig = (payload) => ({
 });
 
 /**
- * mark a table of content initialization as consumed
+ * mark a table of content initialized
  * @param {number} mapLoadedCount current map configuration load count
- * @return {object} of type `TOC_INITIALIZATION_CONSUMED` with mapLoadedCount
+ * @return {object} of type `TOC_INITIALIZED` with mapLoadedCount
  */
-export const consumeTOCInitialization = (mapLoadedCount) => ({
-    type: TOC_INITIALIZATION_CONSUMED,
+export const initializeTOC = (mapLoadedCount) => ({
+    type: TOC_INITIALIZED,
     mapLoadedCount
 });
