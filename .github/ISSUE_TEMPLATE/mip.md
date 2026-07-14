@@ -58,6 +58,7 @@ Project Steering Committee:
 * @allyoucanmap:
 * @MV88:
 * @giohappy:
+* @jna4k:
 
 ## Links
 <!-- Remove unused links below. -->
