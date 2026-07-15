@@ -297,7 +297,7 @@ const UNSUPPORTED_LAYER_TYPES = ["arcgis-feature", "cog"];
 
 function filterLayer(layer = {}) {
     // Skip layer with error and unsupported type
-    return !layer.loadingError && !UNSUPPORTED_LAYER_TYPES.includes(layer.type); 
+    return !layer.loadingError && !UNSUPPORTED_LAYER_TYPES.includes(layer.type);
 }
 
 export default {
