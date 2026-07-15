@@ -59,15 +59,9 @@
     </dependency>
     <!-- servlet -->
     <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
         <version>${jakarta.servlet-api.version}</version>
-    </dependency>
-    <!-- misc -->
-    <dependency>
-        <groupId>commons-pool</groupId>
-        <artifactId>commons-pool</artifactId>
-        <version>${commons-pool.version}</version>
     </dependency>
   </dependencies>
   <build>
@@ -467,11 +461,6 @@
             </build>
             <dependencyManagement>
                 <dependencies>
-                    <dependency>
-                        <groupId>org.apache.httpcomponents</groupId>
-                        <artifactId>httpclient</artifactId>
-                        <version>${httpclient.version}</version>
-                    </dependency>
                     <!-- JUnit -->
                     <dependency>
                         <groupId>junit</groupId>
@@ -487,19 +476,13 @@
                     </dependency>
                     <!-- servlet -->
                     <dependency>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
                         <version>${jakarta.servlet-api.version}</version>
                     </dependency>
-                    <!-- misc -->
                     <dependency>
-                        <groupId>commons-pool</groupId>
-                        <artifactId>commons-pool</artifactId>
-                        <version>${commons-pool.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>javax.xml.ws</groupId>
-                        <artifactId>jaxws-api</artifactId>
+                        <groupId>jakarta.xml.ws</groupId>
+                        <artifactId>jakarta.xml.ws-api</artifactId>
                         <version>${jaxws-api.version}</version>
                     </dependency>
                 </dependencies>
