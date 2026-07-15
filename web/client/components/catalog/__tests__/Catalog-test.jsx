@@ -36,7 +36,7 @@ describe('Test Catalog panel', () => {
         const catalog = document.querySelector('.ms-catalog');
         expect(catalog).toBeTruthy();
     });
-    it('clears search text and refreshes the first page with a single search', () => {
+    it('clears search text and layer selections, then refreshes the first page with a single search', () => {
         const SERVICE = {
             type: 'csw',
             url: 'http://sample.service/catalog',
@@ -44,9 +44,11 @@ describe('Test Catalog panel', () => {
         };
         const actions = {
             onChangeText: () => {},
+            clearSelection: () => {},
             onSearch: () => {}
         };
         const spyOnChangeText = expect.spyOn(actions, 'onChangeText');
+        const spyOnClearSelection = expect.spyOn(actions, 'clearSelection');
         const spyOnSearch = expect.spyOn(actions, 'onSearch');
         ReactDOM.render(<Catalog
             services={{ csw: SERVICE }}
@@ -54,6 +56,7 @@ describe('Test Catalog panel', () => {
             selectedFormat="csw"
             searchText="layer"
             onChangeText={actions.onChangeText}
+            clearSelection={actions.clearSelection}
             onSearch={actions.onSearch}
         />, document.getElementById('container'));
 
@@ -62,6 +65,7 @@ describe('Test Catalog panel', () => {
 
         expect(spyOnChangeText.calls.length).toBe(1);
         expect(spyOnChangeText.calls[0].arguments).toEqual(['', { skipAutoSearch: true }]);
+        expect(spyOnClearSelection.calls.length).toBe(1);
         expect(spyOnSearch.calls.length).toBe(1);
         expect(spyOnSearch.calls[0].arguments[0]).toEqual({
             format: 'csw',

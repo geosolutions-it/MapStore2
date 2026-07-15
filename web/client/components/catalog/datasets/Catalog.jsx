@@ -286,6 +286,7 @@ const Catalog = ({
     const onReset = () => {
         onChangeText('', { skipAutoSearch: true });
         setFilters({});
+        clearSelection?.();
         search({ searchText: '', filters: {}, sort });
     };
 
