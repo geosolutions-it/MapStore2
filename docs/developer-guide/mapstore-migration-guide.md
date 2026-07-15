@@ -543,6 +543,17 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                 </configuration>
 ```
 
+The `backend.debug.args` property must be defined in the `<properties>` section of your root `pom.xml`, otherwise the unresolved placeholder is passed as-is to the JVM and Tomcat fails to start (Cargo times out waiting for the deploy):
+
+```diff
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <tomcat.port>8080</tomcat.port>
+        <tomcat.version>9.0.116</tomcat.version>
++        <!-- JDWP options for remote debugging of the cargo-run backend -->
++        <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8989</backend.debug.args>
+```
+
 ### Updating Local File Paths in `config.yaml` for Windows Compatibility
 
 If you are using local file paths for resources (such as print headers, logos, or styles) in your `config.yaml`, you must ensure they use the `file://` protocol prefix. Relative paths or absolute paths without the protocol may fail on Windows environments.

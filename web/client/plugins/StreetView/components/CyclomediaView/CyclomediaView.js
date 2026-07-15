@@ -16,8 +16,27 @@ const CTButton = withConfirm(withTooltip(Button));
 import CyclomediaCredentials from './Credentials';
 import EmptyStreetView from '../EmptyStreetView';
 const PROJECTION_NOT_AVAILABLE = "Projection not available";
+const API_LOAD_FAILED = "StreetSmart API failed to load";
 const isInvalidCredentials = (error) => {
     return error?.message?.indexOf?.("code 401");
+};
+const DEFAULT_STREET_SMART_API_URL = "https://streetsmart.cyclomedia.com/api/v26.1/StreetSmartApi.js";
+/**
+ * Checks that the configured StreetSmart API URL is a `cyclomedia.com` host, consistent with the
+ * other cyclomedia endpoints used by this provider.
+ * @private
+ */
+const isValidStreetSmartApiURL = (url) => {
+    if (url === '') {
+        // explicit empty string disables loading an external script (e.g. tests injecting their own mock via `scripts`)
+        return true;
+    }
+    try {
+        const { protocol, hostname } = new URL(url);
+        return protocol === 'https:' && (hostname === 'cyclomedia.com' || hostname.endsWith('.cyclomedia.com'));
+    } catch (e) {
+        return false;
+    }
 };
 /**
  * Parses the error message to show to the user in the alert an user friendly message
@@ -37,6 +56,9 @@ const getErrorMessage = (error, msgParams = {}) => {
     }
     if (error?.message?.indexOf?.("not logged in") >= 0) {
         return <HTML msgId="streetView.cyclomedia.errors.notLoggedIn" />;
+    }
+    if (error?.message?.indexOf?.(API_LOAD_FAILED) >= 0) {
+        return <Message msgId="streetView.cyclomedia.errors.apiLoadFailed" msgParams={msgParams} />;
     }
     return error?.message ?? "Unknown error";
 };
@@ -89,7 +111,7 @@ const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible, 
 
 /**
  * CyclomediaView component. It uses the Cyclomedia API to show the street view.
- * API Documentation at https://streetsmart.cyclomedia.com/api/v23.14/documentation/
+ * API Documentation at https://streetsmart.cyclomedia.com/api/v26.1/documentation/
  * This component is a wrapper of the Cyclomedia API. It uses an iframe to load the API, because actually the API uses and initializes react-dnd,
  * that must be unique in the application and it is already created and initialized by MapStore.
  * @param {object} props the component props
@@ -107,7 +129,9 @@ const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible, 
  */
 
 const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLocation = () => {}, mapPointVisible, providerSettings = {}, refreshLayer = () => {}, onClose = () => {}}) => {
-    const StreetSmartApiURL = providerSettings?.StreetSmartApiURL ?? "https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js";
+    const StreetSmartApiURL = isValidStreetSmartApiURL(providerSettings?.StreetSmartApiURL)
+        ? providerSettings.StreetSmartApiURL
+        : DEFAULT_STREET_SMART_API_URL;
     const scripts = providerSettings?.scripts ?? `
     <script type="text/javascript" src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
@@ -365,7 +389,12 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             : null}
         <iframe key="iframe" ref={viewer} onLoad={() => {
             setTargetElement(viewer.current?.contentDocument.querySelector('#ms-street-smart-viewer-container'));
-            setStreetSmartApi(viewer.current?.contentWindow.StreetSmartApi);
+            const api = viewer.current?.contentWindow.StreetSmartApi;
+            if (!api) {
+                setError(new Error(API_LOAD_FAILED));
+                return;
+            }
+            setStreetSmartApi(api);
         }} style={{ ...style, display: showPanoramaViewer ? 'block' : 'none'}}  srcDoc={srcDoc}>
 
         </iframe>

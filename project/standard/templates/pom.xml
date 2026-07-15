@@ -14,6 +14,7 @@
         <tomcat.port>8080</tomcat.port>
         <tomcat.version>10.1.55</tomcat.version>
         <jackson.version>2.19.4</jackson.version>
+        <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8989</backend.debug.args>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
