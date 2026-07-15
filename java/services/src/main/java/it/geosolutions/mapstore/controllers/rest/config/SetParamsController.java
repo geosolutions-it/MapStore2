@@ -72,21 +72,24 @@ public class SetParamsController extends BaseConfigController {
         if (contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
             node=formEncodedToJSON(new HttpServletRequestInput(request));
         else node=toJSON(request);
-        String jsString= StringEscapeUtils.escapeEcmaScript(node.toString());
+        String jsString= escapeForScript(node.toString());
         response.setContentType("text/html");
         String uuid= getUUID();
-        String itemName=QUERY_PARAMS.concat("-").concat(uuid);
+        String itemName=escapeForScript(QUERY_PARAMS.concat("-").concat(uuid));
         java.io.PrintWriter out = response.getWriter();
         out.write("<html><head>");
         out.write("<meta charset=\"UTF-8\">");
         out.write("<script>");
         out.write("let params=".concat("'").concat(jsString).concat("'; "));
         out.write("sessionStorage.setItem(\"".concat(itemName).concat("\",params); "));
-        String location=buildRedirectUrl(node, uuid);
+        String location=escapeForScript(buildRedirectUrl(node, uuid));
         out.write("location.href=\"".concat(location).concat("\"; "));
         out.write("</script></head><body></body></html>");
     }
 
+    private String escapeForScript(String value){
+        return StringEscapeUtils.escapeEcmaScript(value);
+    }
 
     private String buildRedirectUrl(JsonNode node, String uuid){
         String page=getPage(node);
