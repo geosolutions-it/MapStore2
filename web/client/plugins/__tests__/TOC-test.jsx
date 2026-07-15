@@ -20,6 +20,8 @@ import FeatureEditor from '../FeatureEditor';
 import TOCItemsSettings from '../TOCItemsSettings';
 import FilterLayer from '../FilterLayer';
 import WidgetsBuilder from '../WidgetsBuilder';
+import { configureMap } from '../../actions/config';
+import { setControlProperty } from '../../actions/controls';
 
 const dndContext = dragDropContext(TestBackend);
 
@@ -51,6 +53,72 @@ describe('TOCPlugin Plugin', () => {
         const WrappedPlugin = dndContext(Plugin);
         ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-toc-container').length).toBe(1);
+    });
+
+    describe('defaultOpen initialization', () => {
+        const getInitialState = (defaultOpen) => ({
+            controls: {
+                drawer: {
+                    enabled: false
+                }
+            },
+            toc: {
+                mapLoadedCount: 1,
+                config: {
+                    defaultOpen
+                }
+            }
+        });
+
+        it('opens and consumes the initialization when defaultOpen is true', (done) => {
+            const { Plugin, store } = getPluginForTest(TOCPlugin, getInitialState(true));
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+
+            setTimeout(() => {
+                expect(store.getState().controls.drawer.enabled).toBe(true);
+                expect(store.getState().toc.initializedMapLoadedCount).toBe(1);
+                done();
+            });
+        });
+
+        it('does not reopen on remount but opens on the next map load', (done) => {
+            const { Plugin, store } = getPluginForTest(TOCPlugin, getInitialState(true));
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+
+            setTimeout(() => {
+                expect(store.getState().controls.drawer.enabled).toBe(true);
+                store.dispatch(setControlProperty('drawer', 'enabled', false));
+                ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+                ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+
+                setTimeout(() => {
+                    expect(store.getState().controls.drawer.enabled).toBe(false);
+                    expect(store.getState().toc.initializedMapLoadedCount).toBe(1);
+
+                    store.dispatch(configureMap({ toc: { defaultOpen: true }}));
+                    setTimeout(() => {
+                        expect(store.getState().controls.drawer.enabled).toBe(true);
+                        expect(store.getState().toc.mapLoadedCount).toBe(2);
+                        expect(store.getState().toc.initializedMapLoadedCount).toBe(2);
+                        done();
+                    });
+                });
+            });
+        });
+
+        it('consumes the initialization without opening when defaultOpen is false', (done) => {
+            const { Plugin, store } = getPluginForTest(TOCPlugin, getInitialState(false));
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+
+            setTimeout(() => {
+                expect(store.getState().controls.drawer.enabled).toBe(false);
+                expect(store.getState().toc.initializedMapLoadedCount).toBe(1);
+                done();
+            });
+        });
     });
 
     it('TOCPlugin shows annotations layer in openlayers mapType', () => {
