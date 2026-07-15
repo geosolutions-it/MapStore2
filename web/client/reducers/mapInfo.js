@@ -90,10 +90,10 @@ function receiveResponse(state, action, type) {
 
         if (!isVector) {
             const updateResponse = {
-                response: action[type],
-                queryParams: action.requestParams,
                 layerMetadata: action.layerMetadata,
-                layer: action.layer
+                viewResponses: action.viewResponses,
+                layer: action.layer,
+                reqId: action.reqId
             };
             if (isHover) {
                 // Add response upon it is received

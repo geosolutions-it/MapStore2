@@ -109,6 +109,8 @@
       "elevation": "Élévation",
       "groupProperties": "Propriétés du groupe",
       "featureInfo": "Informations attributaires de l'objet",
+      "disableIdentify": "Désactiver l'identification",
+      "addIdentifyView": "Ajouter une nouvelle vue d'identification",
       "featureInfoFormatLbl": "Information, format de la réponse",
       "guideText": "Dans l'URL de l'image, vous pouvez utiliser des espaces réservés comme $\\{properties.YOUR_ATTRIBUTE\\} pour rendre l'URL paramétrique, en fonction des attributs de la fonctionnalité. Il prend en charge à la fois les URL ou les « Data URI » codés en base64.",
       "imageNotFound": "Cette image peut nécessiter une demande d\\'informations sur les fonctionnalités pour être rendue correctement",

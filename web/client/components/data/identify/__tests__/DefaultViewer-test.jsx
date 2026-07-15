@@ -184,6 +184,40 @@ describe('DefaultViewer', () => {
         expect(dom.getElementsByClassName("alert").length).toBe(0);
     });
 
+    it('renders compact shared tabs for multiple identify views', () => {
+        ReactDOM.render(
+            <DefaultViewer
+                requests={[{reqId: 'layer-1'}]}
+                responses={[{
+                    reqId: 'layer-1',
+                    viewResponses: {
+                        text: {
+                            response: 'Text view',
+                            queryParams: {info_format: 'text/plain'}
+                        },
+                        properties: {
+                            response: {features: [{id: 'feature-1'}]},
+                            queryParams: {info_format: 'application/json'}
+                        }
+                    },
+                    layerMetadata: {
+                        featureInfo: {
+                            views: [
+                                { id: 'text', title: 'Text', type: 'TEXT' },
+                                { id: 'properties', title: 'Properties', type: 'PROPERTIES' }
+                            ]
+                        }
+                    }
+                }]}/>,
+            document.getElementById("container")
+        );
+
+        const tabs = document.querySelectorAll('.ms-scrollable-tabs .nav > li > a');
+        expect(tabs.length).toBe(2);
+        expect(tabs[0].textContent).toBe('Text');
+        expect(tabs[1].textContent).toBe('Properties');
+    });
+
     it('creates the DefaultViewer component with missing results', () => {
         const viewer = ReactDOM.render(
             <DefaultViewer missingResponses={1}/>,

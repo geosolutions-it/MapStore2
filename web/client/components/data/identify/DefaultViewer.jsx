@@ -9,10 +9,11 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer, getDefaultViewer } from '../../../utils/MapInfoUtils';
+import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer, getDefaultViewer, getDefaultInfoViewMode, getLayerFeatureInfoViews } from '../../../utils/MapInfoUtils';
 import HTML from '../../../components/I18N/HTML';
 import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
+import ScrollableTabs from '../../misc/ScrollableTabs';
 import ViewerPage from './viewers/ViewerPage';
 import { isEmpty, reverse, startsWith } from 'lodash';
 import { getFormatForResponse } from '../../../utils/IdentifyUtils';
@@ -69,8 +70,15 @@ class DefaultViewer extends React.Component {
         hidePopupIfNoResults: false
     };
 
-    shouldComponentUpdate(nextProps) {
-        return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses || nextProps.index !== this.props.index;
+    state = {
+        activeViewIds: {}
+    };
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.responses !== this.props.responses
+            || nextProps.missingResponses !== this.props.missingResponses
+            || nextProps.index !== this.props.index
+            || nextState.activeViewIds !== this.state.activeViewIds;
     }
 
     /**
@@ -161,17 +169,94 @@ class DefaultViewer extends React.Component {
         return null;
     }
 
+    getActiveView = (views, reqId) => {
+        return views.find(({ id }) => id === this.state.activeViewIds[reqId]) || views[0];
+    }
+
+    getLayerMetadataForView = (layerMetadata, view) => {
+        if (!view) {
+            return layerMetadata;
+        }
+        const featureInfo = layerMetadata?.featureInfo || {};
+        return {
+            ...layerMetadata,
+            viewer: view.viewer ?? layerMetadata.viewer,
+            featureInfo: {
+                ...featureInfo,
+                ...view,
+                format: view.type,
+                template: view.template ?? featureInfo.template,
+                viewer: view.viewer ?? featureInfo.viewer
+            }
+        };
+    }
+
+    getResponseForView = (res, view) => {
+        const viewResponse = view?.id && res?.viewResponses?.[view.id];
+        return {
+            response: viewResponse?.response ?? res.response,
+            queryParams: viewResponse?.queryParams ?? res.queryParams
+        };
+    }
+
+    renderViewTabs = (views, activeView, reqId) => {
+        if (views.length <= 1) {
+            return null;
+        }
+        return (
+            <div style={{ marginBottom: 12 }}>
+                <ScrollableTabs
+                    className="ms-identify-view-tabs tabs-underline"
+                    selectedTabId={activeView.id}
+                    onSelect={(activeViewId) => {
+                        this.setState(({activeViewIds}) => ({
+                            activeViewIds: {...activeViewIds, [reqId]: activeViewId}
+                        }));
+                    }}
+                    tabs={views.map((view) => ({
+                        title: view.title,
+                        eventKey: view.id
+                    }))}/>
+            </div>
+        );
+    }
+
     renderPages = () => {
         const {validResponses: responses} = this.getResponseProperties(this.props.isMobile || this.props.renderValidOnly);
         return responses.map((res, i) => {
-            const {response, layerMetadata} = res;
-            const format = getFormatForResponse(res, this.props);
+            const {layerMetadata, layer} = res;
+            const layerWithMetadata = {
+                ...layer,
+                ...layerMetadata,
+                featureInfo: layerMetadata?.featureInfo || layer?.featureInfo
+            };
+            const views = getLayerFeatureInfoViews(layerWithMetadata, {
+                defaultType: getDefaultInfoViewMode(this.props.format) || 'PROPERTIES'
+            });
+            const activeView = this.getActiveView(views, res.reqId);
+            const layerMetadataForView = this.getLayerMetadataForView(layerWithMetadata, activeView);
+            const viewResponse = this.getResponseForView(res, activeView);
+            const format = getFormatForResponse({
+                ...res,
+                queryParams: viewResponse.queryParams
+            }, this.props);
             const PageHeader = this.props.header;
             let customViewer;
-            if (layerMetadata?.viewer?.type) {
-                customViewer = getViewer(layerMetadata.viewer.type);
+            if (layerMetadataForView?.viewer?.type) {
+                customViewer = getViewer(layerMetadataForView.viewer.type);
             }
-            const size = responses.filter(resp => !startsWith(resp.response, "no features were found")).length;
+            const size = responses.filter((resp) => {
+                const responseLayer = {
+                    ...resp.layer,
+                    ...resp.layerMetadata,
+                    featureInfo: resp.layerMetadata?.featureInfo || resp.layer?.featureInfo
+                };
+                const responseViews = getLayerFeatureInfoViews(responseLayer, {
+                    defaultType: getDefaultInfoViewMode(this.props.format) || 'PROPERTIES'
+                });
+                const response = this.getResponseForView(resp, this.getActiveView(responseViews, resp.reqId));
+                return !startsWith(response.response, "no features were found");
+            }).length;
             return (<Panel
                 eventKey={i}
                 key={i}
@@ -185,11 +270,12 @@ class DefaultViewer extends React.Component {
                     onPrevious={() => this.props.onPrevious()}/></span> : null
                 }
                 style={this.props.style}>
+                {this.renderViewTabs(views, activeView, res.reqId)}
                 <ViewerPage
-                    response={response}
+                    response={viewResponse.response}
                     format={format}
                     viewers={customViewer || this.props.viewers}
-                    layer={layerMetadata}/>
+                    layer={layerMetadataForView}/>
             </Panel>);
         });
     };

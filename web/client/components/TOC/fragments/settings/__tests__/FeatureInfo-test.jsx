@@ -10,6 +10,8 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
 
 import {getAvailableInfoFormat} from '../../../../../utils/MapInfoUtils';
 import FeatureInfo from '../FeatureInfo';
@@ -19,6 +21,11 @@ import MockAdapter from 'axios-mock-adapter';
 let mockAxios;
 
 const defaultInfoFormat = getAvailableInfoFormat();
+const DndFeatureInfo = dragDropContext(testBackend)(FeatureInfo);
+const getFeatureInfoInstance = (props = {}) => TestUtils.findRenderedComponentWithType(
+    ReactDOM.render(<DndFeatureInfo {...props}/>, document.getElementById("container")),
+    FeatureInfo
+);
 
 
 const formatCards = {
@@ -69,84 +76,69 @@ describe("test FeatureInfo", () => {
     });
 
     it('test rendering', () => {
-        ReactDOM.render(<FeatureInfo formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponent = document.getElementsByClassName('test-preview');
-        expect(testComponent.length).toBe(5);
+        getFeatureInfoInstance({formatCards, defaultInfoFormat});
+        const views = document.querySelectorAll('[data-id^="feature-info-view-"]');
+        expect(views.length).toBe(1);
+        expect(views[0].querySelector('input[placeholder="Title"]')).toExist();
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(0);
 
     });
 
-    it('test changes on click', done => {
-        ReactDOM.render(<FeatureInfo onChange={(key, value) => {
+    it('should display configured views as disabled when identify is disabled', () => {
+        ReactDOM.render(<DndFeatureInfo
+            element={{
+                featureInfo: {
+                    disabled: true,
+                    views: [
+                        { id: 'text-view', title: 'Text identify', type: 'TEXT' },
+                        { id: 'properties-view', title: 'Properties identify', type: 'PROPERTIES' }
+                    ]
+                }
+            }}
+            formatCards={formatCards}
+            defaultInfoFormat={defaultInfoFormat}/>, document.getElementById("container"));
+
+        const views = document.querySelectorAll('[data-id^="feature-info-view-"]');
+        expect(views.length).toBe(2);
+        expect(views[0].style.opacity).toBe('0.5');
+        expect(views[0].querySelector('input[placeholder="Title"]').disabled).toBe(true);
+        expect(views[0].querySelector('.Select').classList.contains('is-disabled')).toBe(true);
+        expect([...views[0].querySelectorAll('button')].every((button) => button.disabled)).toBe(true);
+        expect(document.querySelector('.btn-primary').disabled).toBe(true);
+    });
+
+    it('updates the featureInfo view configuration', done => {
+        const component = getFeatureInfoInstance({onChange: (key, value) => {
             expect(key).toBe('featureInfo');
-            expect(value.format).toBe('HIDDEN');
+            expect(value.disabled).toBe(true);
+            expect(value.views.length).toBe(1);
             done();
-        }} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat}/>, document.getElementById("container"));
-        const testComponent = document.getElementsByClassName('test-preview');
-        expect(testComponent.length).toBe(5);
-        const sideCards = document.getElementsByClassName('mapstore-side-card');
-        expect(sideCards.length).toBe(5);
-        TestUtils.Simulate.click(sideCards[0]);
+        }, formatCards, defaultInfoFormat});
+        component.updateFeatureInfo(true, component.getViews());
     });
     it('test rendering with supported infoFormats from layer props', () => {
-        ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "text/plain"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponent = document.getElementsByClassName('test-preview');
-        expect(testComponent.length).toBe(3);
+        const component = getFeatureInfoInstance({element: {infoFormats: ["text/html", "text/plain"]}, formatCards, defaultInfoFormat});
+        expect(component.getTypeOptions()).toEqual(['TEXT', 'HTML']);
     });
     it('test rendering supported infoFormats for wfs layer', () => {
-        ReactDOM.render(<FeatureInfo element={{type: "wfs"}}
-            formatCards={formatCards}
-            defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponents = document.getElementsByClassName('test-preview');
-        expect(testComponents.length).toBe(3);
-        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
-        expect(sideCards.length).toBe(3);
-        expect(sideCards[0].textContent).toBe('layerProperties.hideFormatTitle');
-        expect(sideCards[1].textContent).toBe('layerProperties.propertiesFormatTitle');
-        expect(sideCards[2].textContent).toBe('layerProperties.templateFormatTitle');
+        const component = getFeatureInfoInstance({element: {type: "wfs"}, formatCards, defaultInfoFormat});
+        expect(component.getTypeOptions()).toEqual(['PROPERTIES', 'TEMPLATE']);
     });
 
     it('test rendering supported infoFormats for wfs layer with only application/json', () => {
-        ReactDOM.render(<FeatureInfo element={{type: "wfs", infoFormats: ["application/json"]}}
-            formatCards={formatCards}
-            defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponents = document.getElementsByClassName('test-preview');
-        expect(testComponents.length).toBe(3);
-        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
-        expect(sideCards.length).toBe(3);
-        expect(sideCards[0].textContent).toBe('layerProperties.hideFormatTitle');
-        expect(sideCards[1].textContent).toBe('layerProperties.propertiesFormatTitle');
-        expect(sideCards[2].textContent).toBe('layerProperties.templateFormatTitle');
+        const component = getFeatureInfoInstance({element: {type: "wfs", infoFormats: ["application/json"]}, formatCards, defaultInfoFormat});
+        expect(component.getTypeOptions()).toEqual(['PROPERTIES', 'TEMPLATE']);
     });
 
     it('test rendering supported infoFormats for wfs layer with application/json and text/html', () => {
-        ReactDOM.render(<FeatureInfo element={{type: "wfs", infoFormats: ["application/json", "text/html"]}}
-            formatCards={formatCards}
-            defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponents = document.getElementsByClassName('test-preview');
-        expect(testComponents.length).toBe(4);
-        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
-        expect(sideCards.length).toBe(4);
-        expect(sideCards[0].textContent).toBe('layerProperties.hideFormatTitle');
-        expect(sideCards[1].textContent).toBe('layerProperties.htmlFormatTitle');
-        expect(sideCards[2].textContent).toBe('layerProperties.propertiesFormatTitle');
-        expect(sideCards[3].textContent).toBe('layerProperties.templateFormatTitle');
+        const component = getFeatureInfoInstance({element: {type: "wfs", infoFormats: ["application/json", "text/html"]}, formatCards, defaultInfoFormat});
+        expect(component.getTypeOptions()).toEqual(['HTML', 'PROPERTIES', 'TEMPLATE']);
     });
 
     it('test rendering supported infoFormats for wms layer', () => {
-        ReactDOM.render(<FeatureInfo  element={{type: "wms"}}
-            formatCards={formatCards}
-            defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponent = document.getElementsByClassName('test-preview');
-        expect(testComponent.length).toBe(5);
-        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
-        expect(sideCards.length).toBe(5);
-        expect(sideCards[0].textContent).toBe('layerProperties.hideFormatTitle');
-        expect(sideCards[1].textContent).toBe('layerProperties.textFormatTitle');
-        expect(sideCards[2].textContent).toBe('layerProperties.htmlFormatTitle');
-        expect(sideCards[3].textContent).toBe('layerProperties.propertiesFormatTitle');
-        expect(sideCards[4].textContent).toBe('layerProperties.templateFormatTitle');
+        const component = getFeatureInfoInstance({element: {type: "wms"}, formatCards, defaultInfoFormat});
+        expect(component.getTypeOptions()).toEqual(['TEXT', 'HTML', 'PROPERTIES', 'TEMPLATE']);
     });
 
     it('should request WMS GetCapabilities for wms layers', (done) => {
@@ -160,7 +152,7 @@ describe("test FeatureInfo", () => {
             done();
             return [200, {}];
         });
-        ReactDOM.render(<FeatureInfo element={{ type: "wms", url: '/geoserver/wms' }}
+        ReactDOM.render(<DndFeatureInfo element={{ type: "wms", url: '/geoserver/wms' }}
             formatCards={formatCards}
             defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
         const testComponents = document.getElementsByClassName('test-preview');
@@ -178,7 +170,7 @@ describe("test FeatureInfo", () => {
             done();
             return [200, {}];
         });
-        ReactDOM.render(<FeatureInfo element={{ type: "wfs", url: '/geoserver/wfs' }}
+        ReactDOM.render(<DndFeatureInfo element={{ type: "wfs", url: '/geoserver/wfs' }}
             formatCards={formatCards}
             defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
         const testComponents = document.getElementsByClassName('test-preview');
