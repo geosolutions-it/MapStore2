@@ -80,6 +80,34 @@ describe('Test Catalog panel', () => {
             }
         });
     });
+    it('clears layer selections when submitting a search', () => {
+        const SERVICE = {
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
+        };
+        const actions = {
+            onChangeText: () => {},
+            clearSelection: () => {}
+        };
+        const spyOnChangeText = expect.spyOn(actions, 'onChangeText');
+        const spyOnClearSelection = expect.spyOn(actions, 'clearSelection');
+        ReactDOM.render(<Catalog
+            services={{ csw: SERVICE }}
+            selectedService="csw"
+            selectedFormat="csw"
+            searchText="layer"
+            onChangeText={actions.onChangeText}
+            clearSelection={actions.clearSelection}
+        />, document.getElementById('container'));
+
+        const searchButton = document.querySelector('.glyphicon-search').closest('button');
+        TestUtils.Simulate.click(searchButton);
+
+        expect(spyOnClearSelection.calls.length).toBe(1);
+        expect(spyOnChangeText.calls.length).toBe(1);
+        expect(spyOnChangeText.calls[0].arguments[0]).toBe('layer');
+    });
     it('clears search text and active filters while preserving sort', () => {
         const SERVICE = {
             type: 'geonode',

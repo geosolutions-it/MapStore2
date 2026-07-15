@@ -296,6 +296,7 @@ const Catalog = ({
         <CatalogSearchInput
             searchText={searchText}
             onChangeText={(text, opts) => {
+                clearSelection?.();
                 onChangeText(text, opts);
             }}
             enableFilters={serviceCapabilities.filterSupport}
