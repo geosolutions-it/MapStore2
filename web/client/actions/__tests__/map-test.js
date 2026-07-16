@@ -7,6 +7,8 @@
  */
 
 import expect from 'expect';
+import proj4 from 'proj4';
+import { register } from 'ol/proj/proj4';
 
 import {
     CHANGE_MAP_VIEW,
@@ -171,6 +173,39 @@ describe('Test correctness of the map actions', () => {
                 );
             }
         }
+    });
+
+    it('changes map crs without crashing when the target CRS relies on an unavailable datum grid', () => {
+        // simulates a datum grid (e.g. NTv2/gsb) that can't be resolved for the map's current location
+        const crs = 'TEST:6265-GRID-CRS';
+        proj4.defs(crs, '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +nadgrids=unavailable-grid-6265-actions');
+        register(proj4);
+
+        const thunk = changeMapCrs(crs);
+        expect(thunk).toExist();
+        const dispatchedActions = [];
+        const dispatch = (action) => {
+            dispatchedActions.push(action);
+        };
+        expect(() => thunk(dispatch,
+            () => ({
+                layers: [{
+                    id: 'layer1',
+                    minResolution: 2000,
+                    maxResolution: 4000
+                }],
+                map: {present: {
+                    projection: "EPSG:3857",
+                    center: {x: -1.13, y: 38.0, crs: 'EPSG:4326'}
+                }}
+            }))).toNotThrow();
+
+        const updateNodeActions = dispatchedActions.filter(a => a.type === updateNode('layer1', 'layer', {}).type);
+        expect(updateNodeActions.length).toBe(1);
+        const { minResolution, maxResolution } = updateNodeActions[0].options;
+        expect(isNaN(minResolution)).toBe(false);
+        expect(isNaN(maxResolution)).toBe(false);
+        expect(dispatchedActions[dispatchedActions.length - 1]).toEqual(changeCRS(crs));
     });
 
     it('changeMapScales', () => {

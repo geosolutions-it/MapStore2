@@ -8,8 +8,9 @@
 
 import { getResolutions, convertResolution } from '../utils/MapUtils';
 import { layersSelector } from '../selectors/layers';
-import { projectionSelector } from '../selectors/map';
+import { mapSelector, projectionSelector } from '../selectors/map';
 import { updateNode } from '../actions/layers';
+import { reproject } from '../utils/CoordinatesUtils';
 import minBy from 'lodash/minBy';
 
 export const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
@@ -91,42 +92,59 @@ export const changeCRS = (crs) => ({
     type: CHANGE_MAP_CRS,
     crs: crs
 });
+/**
+ * @param {number} value resolution to snap
+ * @param {number[]} targetResolutions resolutions to snap to
+ * @returns {number|undefined} nearest resolution in targetResolutions, or undefined if value isn't finite
+ */
+function snapToResolution(value, targetResolutions) {
+    const match = Number.isFinite(value)
+        ? minBy(
+            targetResolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - value), zoom })),
+            'diff'
+        )
+        : undefined;
+    return match && targetResolutions[match.zoom];
+}
+
 export function changeMapCrs(crs) {
     return (dispatch, getState = () => {}) => {
         const state =  getState();
         const sourceCRS = projectionSelector(state);
         const layersWithLimits = layersSelector(state).filter(l => l.minResolution || l.maxResolution);
-        layersWithLimits.forEach(layer => {
-            const options = {};
+        if (layersWithLimits.length > 0) {
             const newResolutions = getResolutions(crs);
-            if (layer.minResolution) {
-                options.minResolution = convertResolution(sourceCRS, crs, layer.minResolution).transformedResolution;
-                const diffs = newResolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - options.minResolution), zoom }));
-                const { zoom } = minBy(diffs, 'diff');
-                options.minResolution = newResolutions[zoom];
-            }
-            if (layer.maxResolution) {
-                options.maxResolution = convertResolution(sourceCRS, crs, layer.maxResolution).transformedResolution;
-                const diffs = newResolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - options.maxResolution), zoom }));
-                const { zoom } = minBy(diffs, 'diff');
-                // check if min and max resolutions are not the same
-                options.maxResolution = newResolutions[zoom];
-                if (options.minResolution === options.maxResolution) {
-                    if ((zoom - 1) >= 0) {
-                        // increase max res if possible
-                        options.maxResolution = newResolutions[zoom - 1];
-                    } else if (zoom + 1 < newResolutions.length) {
-                        // decrease max res if possible
-                        options.minResolution = newResolutions[zoom + 1];
-                    } else {
-                        // keep only min res if none of the previous is happening
-                        options.maxResolution = undefined;
+            // anchor to the current map center instead of a random point, for a deterministic result
+            const center = mapSelector(state)?.center;
+            const anchorPoint = center && reproject(center, center.crs || 'EPSG:4326', sourceCRS);
+            const anchor = anchorPoint && [anchorPoint.x, anchorPoint.y];
+            layersWithLimits.forEach(layer => {
+                const options = {};
+                if (layer.minResolution) {
+                    const { transformedResolution } = convertResolution(sourceCRS, crs, layer.minResolution, anchor);
+                    options.minResolution = snapToResolution(transformedResolution, newResolutions);
+                }
+                if (layer.maxResolution) {
+                    const { transformedResolution } = convertResolution(sourceCRS, crs, layer.maxResolution, anchor);
+                    options.maxResolution = snapToResolution(transformedResolution, newResolutions);
+                    // check if min and max resolutions are not the same
+                    if (options.maxResolution !== undefined && options.minResolution === options.maxResolution) {
+                        const zoom = newResolutions.indexOf(options.maxResolution);
+                        if ((zoom - 1) >= 0) {
+                            // increase max res if possible
+                            options.maxResolution = newResolutions[zoom - 1];
+                        } else if (zoom + 1 < newResolutions.length) {
+                            // decrease max res if possible
+                            options.minResolution = newResolutions[zoom + 1];
+                        } else {
+                            // keep only min res if none of the previous is happening
+                            options.maxResolution = undefined;
+                        }
                     }
                 }
-            }
-            // the minimum difference represents the nearest zoom to the target resolution
-            dispatch(updateNode(layer.id, "layer", options));
-        });
+                dispatch(updateNode(layer.id, "layer", options));
+            });
+        }
         dispatch(changeCRS(crs));
     };
 }

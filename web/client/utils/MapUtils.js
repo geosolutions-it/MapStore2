@@ -24,7 +24,7 @@ import {
     omit,
     isObject
 } from 'lodash';
-import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
+import { get as getProjectionOL, getPointResolution } from 'ol/proj';
 import { get as getExtent } from 'ol/proj/projections';
 
 import { v1 as uuidv1 } from 'uuid';
@@ -532,9 +532,11 @@ export function getRandomPointInCRS(crs) {
  * @param {string} sourceCRS the code of a projection
  * @param {string} targetCRS the code of a projection
  * @param {number} sourceResolution the resolution to convert
+ * @param {number[]} [anchorPoint] point in sourceCRS to anchor the conversion to. Falls back to a random point
+ *  in the source extent when omitted, for backwards compatibility.
  * @returns the converted resolution
  */
-export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
+export function convertResolution(sourceCRS, targetCRS, sourceResolution, anchorPoint) {
     const sourceProjection = getProjectionOL(sourceCRS);
     const targetProjection = getProjectionOL(targetCRS);
 
@@ -542,18 +544,17 @@ export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
         throw new Error(`Invalid CRS: ${sourceCRS} or ${targetCRS}`);
     }
 
-    // Get a random point in the extent of the source CRS
-    const randomPoint = getRandomPointInCRS(sourceCRS);
+    const point = anchorPoint || getRandomPointInCRS(sourceCRS);
 
-    // Transform the resolution
+    // `point` must stay in sourceProjection's own space
     const transformedResolution = getPointResolution(
         sourceProjection,
         sourceResolution,
-        transform(randomPoint, sourceCRS, targetCRS),
+        point,
         targetProjection.getUnits()
     );
 
-    return { randomPoint, transformedResolution };
+    return { randomPoint: point, transformedResolution };
 }
 
 /**
@@ -564,10 +565,11 @@ export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
 export function getZoomFromResolution(targetResolution, resolutions = getResolutions()) {
     // compute the absolute difference for all resolutions
     // and store the idx as zoom
-    const diffs = resolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - targetResolution), zoom }));
+    const diffs = resolutions
+        .map((resolution, zoom) => ({ diff: Math.abs(resolution - targetResolution), zoom }))
+        .filter(({ diff }) => Number.isFinite(diff));
     // the minimum difference represents the nearest zoom to the target resolution
-    const { zoom } = minBy(diffs, 'diff');
-    return zoom;
+    return minBy(diffs, 'diff')?.zoom;
 }
 
 /**
