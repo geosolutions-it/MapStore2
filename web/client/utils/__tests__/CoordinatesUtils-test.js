@@ -485,7 +485,7 @@ describe('CoordinatesUtils', () => {
     });
 
     it('test getWMSBoundingBox', () => {
-        expect(getWMSBoundingBox([
+        const bbox = getWMSBoundingBox([
             {
                 $: {
                     SRS: 'EPSG:3857',
@@ -504,12 +504,13 @@ describe('CoordinatesUtils', () => {
                     maxy: "90"
                 }
             }
-        ])).toEqual({
-            minx: 11.074215226957271,
-            miny: 43.70759642778742,
-            maxx: 11.425777726908334,
-            maxy: 43.96119355022118
-        });
+        ]);
+        // reprojected values are compared with a tolerance because floating point
+        // results of transcendental functions can differ across browser versions
+        expect(bbox.minx.toFixed(8)).toBe((11.074215226957271).toFixed(8));
+        expect(bbox.miny.toFixed(8)).toBe((43.70759642778742).toFixed(8));
+        expect(bbox.maxx.toFixed(8)).toBe((11.425777726908334).toFixed(8));
+        expect(bbox.maxy.toFixed(8)).toBe((43.96119355022118).toFixed(8));
     });
     it('test fetchProjRemotely with fake url', () => {
         expect(typeof fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt")).toBe("object");

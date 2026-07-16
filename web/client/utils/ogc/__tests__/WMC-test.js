@@ -337,8 +337,11 @@ describe('WMC tests', () => {
             axios.get('base/web/client/test-resources/wmc/config.json'),
             axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
         ]).then(([{data: config}, {data: context}]) => {
-            const exportedLines = toWMC(config, {}).split('\n').map(r => r.trim()).filter(e => e);
-            const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
+            // round decimal numbers embedded in the exported text because floating point
+            // results of transcendental functions can differ across browser versions
+            const normalizeNumbers = line => line.replace(/-?\d+\.\d+/g, match => Number(match).toFixed(6));
+            const exportedLines = toWMC(config, {}).split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
+            const contextLines = context.split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
 
             zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
                 expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
