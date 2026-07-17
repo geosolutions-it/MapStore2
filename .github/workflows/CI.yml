@@ -220,12 +220,6 @@ jobs:
       ############
       # Publish
       ##########
-      - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.GS_MAVEN_MAPSTORE2_KEY }}
-      - name: Trust Maven Host
-        run: ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
         with:
@@ -233,14 +227,19 @@ jobs:
           distribution: 'temurin'
           server-id: geosolutions
           server-username: MAVEN_USERNAME
-
+          server-password: MAVEN_PASSWORD
       - name: Publish maven packages
         # Here it deploys only java modules and root, needed for MS project builds.
         # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped
         run: |
+          # Setup SSH keys for SFTP
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          # add geo-solutions.it to known hosts to avoid prompts
+          ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
           # deploys java packages
           mvn clean install deploy -f java/pom.xml
           # deploys also the root module, needed for dependencies
           mvn deploy --non-recursive
         env:
-          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_MAPSTORE2_USERNAME }}
+          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}

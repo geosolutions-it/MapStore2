@@ -163,7 +163,7 @@
             <!--.............................................-->
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
+                <artifactId>wagon-ssh</artifactId>
                 <version>3.5.3</version>
             </extension>
         </extensions>
@@ -171,7 +171,7 @@
    <distributionManagement>
         <repository>
             <id>geosolutions</id>
-            <url>scpexe://maven.geo-solutions.it/</url>
+            <url>sftp://maven.geo-solutions.it/</url>
         </repository>
     </distributionManagement>
     <profiles>
