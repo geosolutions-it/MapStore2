@@ -50,5 +50,5 @@ In this panel, the user can:
         The *Camera Position* tool is not enabled by default in MapStore. However, it can be configured within [application contexts](application-context.md#configure-plugins) if needed.
 
 !!! Note
-    [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) can be configured to connect to a GeoServer endpoint exposing thousands of standard CRS definitions. This enables users to search for and add coordinate reference systems dynamically, without redeploying the application or editing configuration files.
+    [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) can be configured to connect to a GeoServer endpoint exposing thousands of standard CRS definitions. This enables users to search for the desired CRS and its definition dynamically by fetching ti from GeoServer instead of manually defining it and so without redeploying the application or editing configuration files.
     This capability is disabled by default and requires additional configuration of the CRS plugin. For details on how to enable it, refer to the documentation [here](https://dev-mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.CRSSelector).
