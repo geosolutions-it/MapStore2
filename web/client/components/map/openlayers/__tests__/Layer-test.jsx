@@ -357,6 +357,40 @@ describe('Openlayers layer', () => {
             }, 200);
         });
     });
+    it('render wms singleTile layer with error does not request a spurious "null" url', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
+            return [200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<ows:ExceptionReport xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+            "  <ows:Exception exceptionCode=\"InvalidParameterValue\" locator=\"srsname\">\n" +
+            "    <ows:ExceptionText>msWFSGetFeature(): WFS server error. Invalid GetFeature Request</ows:ExceptionText>\n" +
+            "  </ows:Exception>\n" +
+            "</ows:ExceptionReport>"];
+        });
+        const options = {
+            type: 'wms',
+            visibility: true,
+            singleTile: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toBeTruthy();
+        layer.layer.getSource().on('imageloaderror', (e) => {
+            setTimeout(() => {
+                // the error handler must not set img.src = null, which the DOM coerces
+                // to the literal string "null" and resolves into a spurious request
+                const img = e.image.getImage();
+                expect(img.getAttribute('src') === 'null' || (img.src || '').endsWith('/null')).toBe(false);
+                done();
+            }, 200);
+        });
+    });
     it('creates a tiled wms layer for openlayers map with long url', (done) => {
         let options = {
             "type": "wms",
@@ -3604,6 +3638,47 @@ describe('Openlayers layer', () => {
 
         // refresh should NOT be called
         expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+    it('wms layer should stop auto-refreshing after repeated loadingError within the cooldown window', () => {
+        var refreshCallCount = 0;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "id": "wms-loading-error-refresh-cap-test"
+        };
+
+        // create layer
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+        wmsSource.refresh = function() {
+            refreshCallCount++;
+            originalRefresh.call(this);
+        };
+
+        // simulate the error state oscillating (fail, recover, fail, recover, ...) 5 times in a row,
+        // as happens when the underlying tile failure is intermittent rather than a one-off config mistake
+        for (let i = 0; i < 5; i++) {
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: false}} map={map} />, document.getElementById("container"));
+        }
+
+        // refresh should be capped (MAX_LOADING_ERROR_REFRESH_ATTEMPTS = 3), not called once per oscillation (5)
+        expect(refreshCallCount).toBe(3);
 
         // restore original method
         wmsSource.refresh = originalRefresh;
