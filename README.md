@@ -176,6 +176,7 @@ For more information check [this](https://github.com/geosolutions-it/MapStore2/w
 
 ## Who uses MapStore
 
+<<<<<<< HEAD
 Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add ( or remove 😟 ) your organization from this list, please, contact [simone.giannecchini@geosolutionsgroup.com](mailto:simone.giannecchini@geosolutionsgroup.com) .
 
 - [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
@@ -206,3 +207,6 @@ Here below is a small list of organizations using MapStore either directly or th
 - [Corvo Muncipality - Portugal](https://geocorvo.pt/mapstore/#/)
 - [Lajes das Flores Municipality - Portal](https://sigweb.cmlajesdasflores.pt/#/)
 - [City of Rome (Italy) Geoportal](https://geoportale.comune.roma.it/georoma/#/)
+=======
+See list of organizations using Mapstore [here](https://mapstore.io/gallery.html).
+>>>>>>> 42b555a (Update project readme to link gallery (#12685))
