@@ -96,8 +96,7 @@ const loadFunction = (options, headers) => function(image, src) {
                         throw new Error(response.dataText);
                     }
                 }).catch(errorMessage => {
-                    image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
-                    image.setState(3);            // set error state for tile and removed from the queue to prevent reloading loops
+                    image.setState(3);            // set error state for tile; this alone fires the source's tileloaderror/imageloaderror (state-based, no DOM event needed) and removes it from the queue to prevent reloading loops
                     failTiles.add(src);           // indexing fail url tile to prevent reloading loops
                     console.error(errorMessage);  // show ogc exception in console for debugging
                 });
