@@ -36,6 +36,7 @@ import {
 } from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import { ServerTypes } from '../../../../utils/LayersUtils';
+import { addElevationTile, getElevationKey } from '../../../../utils/ElevationUtils';
 
 
 import { Map, View } from 'ol';
@@ -3455,6 +3456,38 @@ describe('Openlayers layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
+    });
+    it('should return the elevation value at a map coordinate from the loaded tiles of the elevation layer', () => {
+        const options = {
+            id: 'elevation-layer',
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <OpenlayersLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        const layer = cmp.layer;
+        const tileGrid = layer.getSource().getTileGrid();
+        // the lookup coordinate is expressed in the map projection (EPSG:3857)
+        const coordinate = [1252344, 5430086];
+        const z = 12;
+        const [, x, y] = tileGrid.getTileCoordForCoordAndZ(coordinate, z);
+        // simulate a tile stored by the tileLoadFunction with a constant height of 1500 meters
+        const tileSize = 256;
+        const buffer = new ArrayBuffer(tileSize * tileSize * 2);
+        const dataView = new DataView(buffer);
+        for (let i = 0; i < tileSize * tileSize; i++) {
+            dataView.setInt16(i * 2, 1500, false);
+        }
+        addElevationTile(buffer, [z, x, y], getElevationKey(x, y, z, options.id));
+        layer.get('requestedZoomLevels').push(z);
+        expect(layer.get('getElevation')(coordinate)).toBe(1500);
     });
     it('wms layer should refresh source when loadingError changes to Error', () => {
         var refreshCalled = false;

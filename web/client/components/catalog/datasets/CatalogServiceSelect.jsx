@@ -52,28 +52,28 @@ const CatalogServiceSelect = ({
                     onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "", val?.service)}
                     placeholder={<Message msgId="catalog.servicePlaceholder" />}
                 />
-                <InputGroup.Addon>
+                {canEdit ? <InputGroup.Addon>
                     <Button
                         className= "ms-catalog-service-btn"
                         onClick={() => onConfigureClick('edit', true)}
                     >
                         <Glyphicon glyph="plus" />
                     </Button>
-                </InputGroup.Addon>
-                <InputGroup.Addon>
+                </InputGroup.Addon> : null}
+                {canEdit ? <InputGroup.Addon>
                     <Button
                         className= "ms-catalog-service-btn"
                         onClick={() => onConfigureClick('edit', false)}
-                        disabled={!canEdit || !isServiceValid}
+                        disabled={!isServiceValid}
                     >
                         <Glyphicon glyph="pencil" />
                     </Button>
-                </InputGroup.Addon>
-                {onDeleteService ? <InputGroup.Addon>
+                </InputGroup.Addon> : null}
+                {canEdit && onDeleteService ? <InputGroup.Addon>
                     <Button
                         className= "ms-catalog-service-delete-btn"
                         onClick={handleDeleteService}
-                        disabled={!canEdit || !isServiceValid}
+                        disabled={!isServiceValid}
                     >
                         <Glyphicon glyph="trash" />
                     </Button>

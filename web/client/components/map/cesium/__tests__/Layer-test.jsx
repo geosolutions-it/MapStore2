@@ -12,7 +12,7 @@ import expect from 'expect';
 import * as Cesium from 'cesium';
 import { waitFor } from '@testing-library/react';
 
-import '../../../../utils/cesium/Layers';
+import Layers from '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/TileProviderLayer';
 import '../plugins/WMSLayer';
@@ -32,6 +32,7 @@ import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
+import { setProxyCacheByUrl } from '../../../../utils/ProxyUtils';
 import { isMeaningfulCappedRectRefinement } from '../../../../utils/FlatGeobufLayerUtils';
 
 const tilesetMock = {
@@ -1817,6 +1818,68 @@ describe('Cesium layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.terrainProvider).toBeTruthy();
     });
+    it('should not reset the globe terrain provider when the terrain layer is recreated on update', (done) => {
+        const options = {
+            type: "terrain",
+            provider: "wms",
+            url: "/geoserver/wms",
+            name: "workspace:layername",
+            visibility: true,
+            options: {
+                crs: 'CRS:84'
+            }
+        };
+        const layer = Layers.createLayer('terrain', options, map);
+        layer.add();
+        // updating one of the watched properties recreates the layer implementation,
+        // this must not detach the terrain currently applied to the scene
+        // while the new one is loading (see #12579 regression)
+        Layers.updateLayer('terrain', layer, { ...options, securityToken: 'token' }, options, map);
+        layer.terrainProvider.then((provider) => {
+            return waitFor(() => expect(map.scene.globe.terrainProvider).toBe(provider));
+        }).then(() => done()).catch(done);
+    });
+    it('should not override the active terrain when removing a deselected terrain layer', (done) => {
+        const wmsOptions = {
+            type: "terrain",
+            provider: "wms",
+            url: "/geoserver/wms",
+            name: "workspace:layername",
+            visibility: true,
+            options: {
+                crs: 'CRS:84'
+            }
+        };
+        const ellipsoidOptions = {
+            type: "terrain",
+            provider: "ellipsoid",
+            visibility: false
+        };
+        // the ellipsoid terrain is initially the active one
+        const ellipsoidLayer = Layers.createLayer('terrain', ellipsoidOptions, map);
+        ellipsoidLayer.add();
+        // the wms terrain gets activated, then the deselected ellipsoid layer is removed,
+        // the scene must keep the wms terrain (see terrain switch from background selector)
+        const wmsLayer = Layers.createLayer('terrain', wmsOptions, map);
+        wmsLayer.add();
+        ellipsoidLayer.remove();
+        wmsLayer.terrainProvider.then((provider) => {
+            return waitFor(() => expect(map.scene.globe.terrainProvider).toBe(provider));
+        }).then(() => done()).catch(done);
+    });
+    it('should fallback to the ellipsoid terrain when the terrain provider fails to load', (done) => {
+        const options = {
+            type: "terrain",
+            provider: "cesium",
+            // connection refused, simulates an unreachable server or a CORS error
+            url: "https://localhost:1/terrain/",
+            visibility: true
+        };
+        const layer = Layers.createLayer('terrain', options, map);
+        layer.add();
+        waitFor(() => expect(map.scene.globe.terrainProvider instanceof Cesium.EllipsoidTerrainProvider).toBe(true))
+            .then(() => done()).catch(done);
+    });
     it('should create am elevation layer from wms layer', () => {
         const options = {
             type: 'elevation',
@@ -1834,6 +1897,78 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.getElevation).toBeTruthy();
+    });
+    it('should add the elevation layer to the map imagery layers when no proxy is needed', (done) => {
+        const url = 'https://host-sample/geoserver/wms';
+        // the detection request succeeds, the server is reachable without the proxy
+        mockAxios.onGet(url).reply(200);
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url,
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        // the proxy detection request is asynchronous,
+        // once completed the elevation layer must be part of the imagery layers
+        // so Cesium can request its tiles and make them available to the getElevation function
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                expect(cmp.layer.getElevation).toBeTruthy();
+                done();
+            }).catch(done);
+    });
+    it('should add the elevation layer to the map imagery layers when forceProxy is set in the options', (done) => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true,
+            forceProxy: true
+        };
+        ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                done();
+            }).catch(done);
+    });
+    it('should recreate the elevation layer with the proxy and add it when the proxy detection fails', (done) => {
+        const url = 'https://host-failing-cors/geoserver/wms';
+        // a network/CORS-like failure of the detection request marks the url as in need of the proxy
+        mockAxios.onGet(url).networkError();
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url,
+            name: 'workspace:layername',
+            visibility: true
+        };
+        ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                setProxyCacheByUrl(url, undefined);
+                done();
+            }).catch(done);
     });
     it('creates a arcgis layer', (done) => {
         const options = {

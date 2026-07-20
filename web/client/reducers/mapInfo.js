@@ -365,9 +365,11 @@ function mapInfo(state = initState, action) {
         };
     }
     case MAP_CONFIG_LOADED: {
+        const defaultConfiguration = state.defaultConfiguration || state.configuration || {};
         return {
             ...state,
-            configuration: action.config.mapInfoConfiguration || state.configuration || {}
+            defaultConfiguration,
+            configuration: action.config?.mapInfoConfiguration || defaultConfiguration
         };
     }
     case CHANGE_FORMAT: {

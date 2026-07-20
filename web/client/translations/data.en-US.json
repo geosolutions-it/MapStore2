@@ -4593,7 +4593,8 @@
         "errors": {
           "notLoggedIn": "You are not logged in",
           "invalidCredentials": "Invalid credentials",
-          "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
+          "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator.",
+          "apiLoadFailed": "Failed to load the Street Smart API. Please check your network connection or contact the administrator."
         },
         "reloadAPI": "Reload API"
       },
