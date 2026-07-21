@@ -509,6 +509,51 @@ describe('Test security utils methods', () => {
             expect(result.length).toBe(2);
             expect(result[0].urlPattern).toBe('.*geoserver.*');
         });
+
+        it('should keep rules without an enabled property', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', headers: { 'Authorization': 'Bearer ${securityToken}' } }
+            ];
+            setSecurityInfo({});
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result).toEqual(rulesInConfig);
+        });
+
+        it('should filter out rules with enabled: false', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', enabled: false, headers: { 'Authorization': 'Bearer ${securityToken}' } }
+            ];
+            setSecurityInfo({});
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(0);
+        });
+
+        it('should filter out rules whose enabled expression resolves to false', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', enabled: "{includes(state('usergroups'), 'editor')}" }
+            ];
+            setSecurityInfo({ user: { groups: { group: [] } } });
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(0);
+        });
+
+        it('should keep rules whose enabled expression resolves to true against usergroups state', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', enabled: "{includes(state('usergroups'), 'editor')}" }
+            ];
+            setSecurityInfo({ user: { groups: { group: [{ groupName: 'editor', enabled: true }] } } });
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(1);
+            expect(result[0].urlPattern).toBe('.*api.*');
+        });
     });
 
     describe('getAuthKeyParameter', () => {
