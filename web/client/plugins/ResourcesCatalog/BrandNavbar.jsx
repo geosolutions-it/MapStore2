@@ -8,8 +8,10 @@
 
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import get from 'lodash/get';
 
-import { createPlugin } from "../../utils/PluginsUtils";
+import { createPlugin, getMonitoredState, handleExpression } from "../../utils/PluginsUtils";
 import FlexBox from '../../components/layout/FlexBox';
 import Menu from './components/Menu';
 import usePluginItems from '../../hooks/usePluginItems';
@@ -59,12 +61,28 @@ BrandNavbarMenuItem.defaultProps = {
 };
 
 /**
+ * Filters menu items by their `enabled` property.
+ * `enabled` can be a plain boolean or a plugin expression string (e.g. `"{state('usergroups').includes('editor')}"`),
+ * evaluated with the same syntax used for `cfg.disablePluginIf` (see `utils/PluginsUtils.handleExpression`).
+ * Items without an `enabled` property are always shown.
+ * @param {object[]} menuItems the menu items to filter
+ * @param {function} state the monitored state getter, see `utils/PluginsUtils.getMonitoredState`
+ * @returns {object[]} the menu items with `enabled` resolving to a truthy value
+ */
+const filterEnabledMenuItems = (menuItems, state) =>
+    menuItems.filter(({ enabled = true }) => !!handleExpression(state, undefined, enabled));
+
+/**
  * This plugin provides a special Manager dropdown menu, that contains various administration tools
  * @memberof plugins
  * @class
  * @name BrandNavbar
  * @prop {object[]} cfg.leftMenuItems menu items configuration for left side
  * @prop {object[]} cfg.rightMenuItems menu items configuration for right side
+ * @prop {bool|string} cfg.leftMenuItems[].enabled optional, shows/hides the item. Plain boolean or a plugin expression
+ * string evaluated against the monitored state (same syntax as `cfg.disablePluginIf`), e.g.
+ * `"{state('usergroups').includes('editor')}"` or `"{hasAtLeastOne(state('usergroups'), ('editor', 'admin'))}"`.
+ * Defaults to `true` (item always shown) when not specified.
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject new menu items.
  * ```javascript
@@ -149,12 +167,16 @@ function BrandNavbar({
     leftMenuItems,
     rightMenuItems,
     items,
-    logo
+    logo,
+    monitoredState
 }, context) {
     const { loadedPlugins } = context;
+    const getState = (path) => get(monitoredState, path);
     const configuredItems = usePluginItems({ items, loadedPlugins });
     const pluginLeftMenuItems = configuredItems.filter(({ target }) => target === 'left-menu').map(item => ({ ...item, type: 'plugin' }));
     const pluginRightMenuItems = configuredItems.filter(({ target }) => target === 'right-menu').map(item => ({ ...item, type: 'plugin' }));
+    const enabledLeftMenuItems = filterEnabledMenuItems(leftMenuItems, getState);
+    const enabledRightMenuItems = filterEnabledMenuItems(rightMenuItems, getState);
     return (
         <>
             <FlexBox
@@ -184,7 +206,7 @@ function BrandNavbar({
                     variant={variant}
                     menuItemComponent={BrandNavbarMenuItem}
                     items={[
-                        ...leftMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
+                        ...enabledLeftMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
                         ...pluginLeftMenuItems
                     ].sort((a, b) => a.position - b.position)}
                 />
@@ -196,7 +218,7 @@ function BrandNavbar({
                     size={size}
                     menuItemComponent={BrandNavbarMenuItem}
                     items={[
-                        ...rightMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
+                        ...enabledRightMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
                         ...pluginRightMenuItems
                     ].sort((a, b) => a.position - b.position)}
                 />
@@ -210,7 +232,8 @@ BrandNavbar.propTypes = {
     variant: PropTypes.string,
     leftMenuItems: PropTypes.array,
     rightMenuItems: PropTypes.array,
-    items: PropTypes.array
+    items: PropTypes.array,
+    monitoredState: PropTypes.object
 };
 
 BrandNavbar.contextTypes = {
@@ -223,9 +246,14 @@ BrandNavbar.defaultProps = {
         href: '#/'
     },
     leftMenuItems: [],
-    rightMenuItems: []
+    rightMenuItems: [],
+    monitoredState: {}
 };
 
+const ConnectedBrandNavbar = connect((state) => ({
+    monitoredState: getMonitoredState(state)
+}))(BrandNavbar);
+
 export default createPlugin('BrandNavbar', {
-    component: BrandNavbar
+    component: ConnectedBrandNavbar
 });
