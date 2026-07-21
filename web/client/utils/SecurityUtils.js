@@ -20,6 +20,7 @@ import castArray from "lodash/castArray";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 import { parseUrl, WMS_GET_CAPABILITIES_VERSION } from '../api/WMS';
+import { getMonitoredState, handleExpression } from './PluginsUtils';
 
 export const USER_GROUP_ALL = 'everyone';
 
@@ -249,6 +250,20 @@ export const convertAuthenticationRulesToRequestConfiguration = (authRules = [])
 };
 
 /**
+ * Checks a request configuration rule's `enabled` property.
+ * `enabled` can be a plain boolean or a plugin expression string (e.g. `"{state('usergroups').includes('editor')}"`),
+ * evaluated with the same syntax used for `cfg.disablePluginIf` (see `PluginsUtils.handleExpression`).
+ * Rules without an `enabled` property are always applied.
+ * @param {object} rule the request configuration rule
+ * @returns {boolean} true if the rule's `enabled` resolves to a truthy value
+ */
+const isRuleEnabled = (rule) => {
+    const enabled = rule?.enabled ?? true;
+    const monitoredState = getMonitoredState(getState());
+    return !!handleExpression((path) => get(monitoredState, path), undefined, enabled);
+};
+
+/**
  * Gets all request configuration rules from Redux state or config
  * Automatically converts authenticationRules to new format if requestsConfigurationRules is missing
  * @returns {Array} Array of request configuration rules
@@ -257,19 +272,19 @@ export const getRequestConfigurationRules = () => {
     // First try to get from Redux state (if available)
     const stateRules = get(getState(), 'security.rules', []);
     if (!isEmpty(stateRules)) {
-        return stateRules;
+        return stateRules.filter(isRuleEnabled);
     }
 
     // Try to get new format from config
     const configRules = ConfigUtils.getConfigProp('requestsConfigurationRules');
     if (!isEmpty(configRules)) {
-        return configRules;
+        return configRules.filter(isRuleEnabled);
     }
 
     // If new format is missing, convert old authenticationRules format
     const authRules = ConfigUtils.getConfigProp('authenticationRules');
     if (!isEmpty(authRules)) {
-        return convertAuthenticationRulesToRequestConfiguration(authRules);
+        return convertAuthenticationRulesToRequestConfiguration(authRules).filter(isRuleEnabled);
     }
 
     // No rules found

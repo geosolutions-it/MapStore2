@@ -214,6 +214,20 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
     }
     ```
 
+  - `enabled` - Optional, a plain boolean or a plugin expression string (same syntax as a plugin's `disablePluginIf`) to
+    conditionally apply the rule, e.g. based on the current user's groups. Rules without `enabled` are always applied.
+    Example:
+
+    ```json
+    {
+      "urlPattern": ".*geoserver.*",
+      "params": {
+        "authkey": "${securityToken}"
+      },
+      "enabled": "{includes(state('usergroups'), 'editor')}"
+    }
+    ```
+
 !!! note "Backward Compatibility"
     The old `useAuthenticationRules` and `authenticationRules` configuration still works and will be automatically converted to the new format. However, the new format is recommended for better flexibility and features like expiration support.
 
