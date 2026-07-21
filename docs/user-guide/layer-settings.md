@@ -181,7 +181,7 @@ On the *Display* tab, only the following options are available for a **ArcGIS** 
 
 * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
 
-* Enable/disable the **Dynamic legend**. If this option is enable, legend will be filtered based on the map viewport.
+* Enable/disable the **Dynamic legend**. If this option is enable, legend will be filtered based on the map viewport (only for MapServer rest endpoint).
 
 #### FlatGeobuf layer
 
