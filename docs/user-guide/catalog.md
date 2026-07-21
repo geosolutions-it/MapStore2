@@ -467,8 +467,10 @@ In **General Settings** of a ArcGIS source type, it is possible to specify the s
     The tool capabilities currently available for layers from ArcGIS service are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
-    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#ifc-layer) options
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#arcgis-layer) options. For layers from the [ArcGIS Feature Service](https://developers.arcgis.com/rest/services-reference/enterprise/feature-service/), the user can also use the [Style](layer-settings.md#styling-for-arcgis-feature-service-layer) tool from the *Layer Settings* panel.
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+    * The [3D Navigation](navigation-toolbar.md#3d-navigation)
+    * The possibility of retrieving information from ArcGIS FeatureService layers using the [Identify Tool](navigation-toolbar.md#identify-tool)
 
 ### FlatGeobuf Catalog
 
@@ -490,7 +492,7 @@ In addition to the standard options, only for FGB catalog sources, through the *
     The tool capabilities currently available for FGB layers are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
-    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#cog-layer) options and the [Style](layer-settings.md#styling-for-cog-layer)
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#flatgeobuf-layer) options and the [Style](layer-settings.md#styling-for-flatgeobuf-layer)
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
     * The [3D Navigation](navigation-toolbar.md#3d-navigation)
     * The possibility of retrieving information from FGB layers using the [Identify Tool](navigation-toolbar.md#identify-tool)

@@ -171,6 +171,30 @@ On the *Display* tab, only the following options are available for a **IFC** lay
 
 * The **Heading** to set the layer heading (`DD`).
 
+#### ArcGIS layer
+
+On the *Display* tab, only the following options are available for a **ArcGIS** layer:
+
+<img src="../img/layer-settings/display-arcgis.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Opacity** to change the layer opacity.
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+* Enable/disable the **Dynamic legend**. If this option is enable, legend will be filtered based on the map viewport.
+
+#### FlatGeobuf layer
+
+On the *Display* tab, only the following options are available for a **FlatGeobuf** layer:
+
+<img src="../img/layer-settings/display-fgb.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Opacity** to change the layer opacity.
+
+* The **Max features in view** allows the user to enter the maximum number of features to be displayed on the map.
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
 ## Fields
 
 From this section of the *Settings* panel, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to add aliases to layer fields.
@@ -415,6 +439,22 @@ By default, **Constant value** is selected. If the user chooses **Property value
 
 !!!note
     The *Style with property* method is available only for **WFS** and **Vector** layers.
+
+#### Styling for ArcGIS Feature Service layer
+
+With the *Visual Style Editor*, the editor has the ability to customize the style of **ArcGIS Feature Service** layers:
+
+<img src="../img/layer-settings/arcgis-feature-service-layer_style.jpg" class="ms-docimage">
+
+The editor can customize the layer style using the [Fill rule](layer-settings.md#fill) and its associated options, such as [Classification Style](layer-settings.md#classification-style). In addition, all the styling options available under [Styling on the 3D Navigation](layer-settings.md#styling-of-vector-layer) can also be applied.
+
+#### Styling for FlatGeobuf layer
+
+With the *Visual Style Editor*, the editor has the ability to customize the style of **FlatGeobuf** layers:
+
+<img src="../img/layer-settings/flatgeobuf-layer_style.jpg" class="ms-docimage">
+
+The editor can customize the layer style using the [Visual Editor Style](layer-settings.md#visual-editor-style) options. In addition, all the styling options available under [Styling on the 3D Navigation](layer-settings.md#styling-of-vector-layer) can also be applied.
 
 ### Style Methods for Raster layer
 
