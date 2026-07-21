@@ -64,4 +64,36 @@ describe('FilterItemToolbar component', () => {
         Simulate.click(buttons[0]);
         expect(clicked).toBe(true);
     });
+
+    it('renders zoom button when showZoomButton is true and invokes onZoomToFilterExtent on click', () => {
+        const container = document.getElementById('container');
+        let zoomed = false;
+        ReactDOM.render(
+            <FilterItemToolbar
+                filterData={filterDataFeatures}
+                showZoomButton
+                onZoomToFilterExtent={() => { zoomed = true; }}
+            />,
+            container
+        );
+        const buttons = container.querySelectorAll('.ms-filter-card-toolbar button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].querySelector('.glyphicon-zoom-to')).toExist();
+        Simulate.click(buttons[0]);
+        expect(zoomed).toBe(true);
+    });
+
+    it('disables zoom button when filter is disabled', () => {
+        const container = document.getElementById('container');
+        ReactDOM.render(
+            <FilterItemToolbar
+                filterData={{...filterDataFeatures, disabled: true}}
+                showZoomButton
+                onZoomToFilterExtent={() => {}}
+            />,
+            container
+        );
+        const buttons = container.querySelectorAll('.ms-filter-card-toolbar button');
+        expect(buttons[0].className.includes('disabled')).toBe(true);
+    });
 });

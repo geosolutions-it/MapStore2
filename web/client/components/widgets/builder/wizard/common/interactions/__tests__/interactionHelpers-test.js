@@ -8,6 +8,7 @@
 import expect from 'expect';
 
 import { getInteractionTargetNodeDisabled } from '../interactionHelpers';
+import { TARGET_TYPES } from '../../../../../../../utils/InteractionUtils';
 
 const sourceNodePath = 'widgets[filter-widget].filters[filter-1]';
 const otherSourceNodePath = 'widgets[filter-widget].filters[filter-2]';
@@ -187,6 +188,61 @@ describe('interactionHelpers', () => {
             expect(result).toEqual({
                 disabled: true,
                 reasonMsgId: 'widgets.filterWidget.axisCurrentTimeDisabledTooltip'
+            });
+        });
+
+        it('should allow map time targets when timeline is available', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: elementItem,
+                target: applyDimensionTarget,
+                targetNodePath: 'map.time',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: true
+            });
+
+            expect(result).toEqual({
+                disabled: false,
+                reasonMsgId: null
+            });
+        });
+
+        it('should disable zoomTo targets when no applyFilter sibling exists for the same map', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: elementItem,
+                target: { targetType: TARGET_TYPES.APPLY_ZOOM_TO },
+                targetNodePath: 'map.applyZoomTo',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: false,
+                alreadyExistingInteractions: [] // No applyFilter connection
+            });
+
+            expect(result).toEqual({
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.zoomToRequiresApplyFilterTooltip'
+            });
+        });
+
+        it('should enable zoomTo targets when applyFilter sibling exists for the same map', () => {
+            const result = getInteractionTargetNodeDisabled({
+                item: elementItem,
+                target: { targetType: TARGET_TYPES.APPLY_ZOOM_TO },
+                targetNodePath: 'map.applyZoomTo',
+                sourceNodePath,
+                plugged: false,
+                timelineEnabled: false,
+                alreadyExistingInteractions: [{
+                    source: { nodePath: sourceNodePath },
+                    target: { nodePath: 'map.layers[layer-1]' },
+                    targetType: 'applyFilter',
+                    plugged: true
+                }]
+            });
+
+            expect(result).toEqual({
+                disabled: false,
+                reasonMsgId: null
             });
         });
 

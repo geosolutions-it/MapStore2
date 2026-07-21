@@ -18,7 +18,13 @@ import {
     isLayerDimensionTarget,
     isLayerTimeDimensionTarget,
     getDisplayInteractionTargetTree,
-    hasConnectableTargetNodes
+    hasConnectableTargetNodes,
+    promoteMapZoomToNodes,
+    TARGET_TYPES,
+    findAllApplyFiltersForZoomTo,
+    containsMultipleZoomToNodes,
+    getGlobalAutoZoom,
+    updateGlobalZoomInteractionsAutoZoom
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -763,6 +769,115 @@ describe('InteractionUtils', () => {
         });
     });
 
+    describe('map zoomTo node structure', () => {
+        const mapZoomLayers = [{
+            name: 'layer-1',
+            id: 'layer-1',
+            type: 'wms',
+            group: 'overlay'
+        }];
+
+        it('exposes the zoom-to target under the map collection in the root tree', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const mapCollection = rootTree.children[1];
+
+            expect(mapCollection.id).toBe('map');
+            const zoomNode = (mapCollection.children || []).find(child => child.id === TARGET_TYPES.APPLY_ZOOM_TO);
+            expect(zoomNode).toExist();
+            expect(zoomNode.type).toBe('element');
+            expect(zoomNode.nodePath).toBe('map.applyZoomTo');
+            expect(mapCollection.children[0].id).toBe('layers');
+        });
+
+        it('renders the zoomTo action directly on the Map node (no nested "Zoom to" child leaf)', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const display = getDisplayInteractionTargetTree(rootTree, { targetType: TARGET_TYPES.APPLY_ZOOM_TO });
+
+            expect(display.children.length).toBe(1);
+            const mapNode = display.children[0];
+            // The map wrapper collection is collapsed into the zoomTo element itself.
+            expect(mapNode.type).toBe('element');
+            expect(mapNode.title).toBe('Map');
+            expect(mapNode.nodePath).toBe('map.applyZoomTo');
+            expect(mapNode.interactionMetadata).toExist();
+            // No child leaf node should be rendered for the zoomTo action.
+            expect(mapNode.children).toNotExist();
+        });
+
+        it('keeps the map collection intact for non-zoomTo target types', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const display = getDisplayInteractionTargetTree(rootTree, { targetType: TARGET_TYPES.APPLY_FILTER });
+            const mapNode = display.children.find(child => child.id === 'map');
+
+            expect(mapNode).toExist();
+            expect(mapNode.type).toBe('collection');
+        });
+
+        it('generates zoomTo leaf node when map layers are present', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const mapNode = rootTree.children.find(child => child.id === 'map');
+            const zoomToNode = mapNode.children.find(child => child.id === TARGET_TYPES.APPLY_ZOOM_TO);
+
+            expect(zoomToNode).toExist();
+            expect(zoomToNode.type).toBe('element');
+            expect(zoomToNode.interactionMetadata.targets[0].targetType).toBe(TARGET_TYPES.APPLY_ZOOM_TO);
+        });
+    });
+
+    describe('promoteMapZoomToNodes', () => {
+        it('collapses a map wrapper collection whose only child is the zoom-to element', () => {
+            const tree = {
+                type: 'collection',
+                id: 'root',
+                children: [{
+                    type: 'collection',
+                    id: 'map',
+                    title: 'Map',
+                    icon: '1-map',
+                    children: [{
+                        type: 'element',
+                        id: TARGET_TYPES.APPLY_ZOOM_TO,
+                        title: 'Zoom to',
+                        icon: 'zoom-to',
+                        nodePath: 'map.applyZoomTo',
+                        interactionMetadata: { targets: [{ targetType: TARGET_TYPES.APPLY_ZOOM_TO }] }
+                    }]
+                }]
+            };
+
+            const result = promoteMapZoomToNodes(tree);
+            const mapNode = result.children[0];
+
+            expect(mapNode.type).toBe('element');
+            expect(mapNode.id).toBe(TARGET_TYPES.APPLY_ZOOM_TO);
+            expect(mapNode.title).toBe('Map');
+            expect(mapNode.icon).toBe('1-map');
+            expect(mapNode.nodePath).toBe('map.applyZoomTo');
+            expect(mapNode.children).toNotExist();
+        });
+
+        it('leaves collections with additional children untouched', () => {
+            const tree = {
+                type: 'collection',
+                id: 'map',
+                title: 'Map',
+                children: [{
+                    type: 'element',
+                    id: 'zoomTo',
+                    interactionMetadata: { targets: [{ targetType: TARGET_TYPES.APPLY_ZOOM_TO }] }
+                }, {
+                    type: 'element',
+                    id: 'time'
+                }]
+            };
+
+            const result = promoteMapZoomToNodes(tree);
+
+            expect(result.type).toBe('collection');
+            expect(result.children.length).toBe(2);
+        });
+    });
+
     describe('addNodePathToTree', () => {
         it('should build paths for nested elements and collections', () => {
             const rootNode = {
@@ -823,6 +938,185 @@ describe('InteractionUtils', () => {
             expect(result.children[1].nodePath).toBe('map');
             expect(result.children[1].children[0].nodePath).toBe('map.layers');
             expect(result.children[1].children[0].children[0].nodePath).toBe('map.layers[layer-1]');
+        });
+    });
+
+    describe('findAllApplyFiltersForZoomTo', () => {
+        const sourcePath = 'widgets[filter-widget].filters[filter-1]';
+        const zoomMainMap = {
+            source: { nodePath: sourcePath },
+            target: { nodePath: 'map.applyZoomTo' },
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO
+        };
+        const zoomWidgetMap = {
+            source: { nodePath: sourcePath },
+            target: { nodePath: 'widgets[map-widget].maps[map-1].zoomTo' },
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO
+        };
+
+        const siblingInteractions = [
+            {
+                id: '1',
+                plugged: true,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'map.layers[layer-1]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '2',
+                plugged: true,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'widgets[map-widget].maps[map-1].layers[layer-1]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '3',
+                plugged: false,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'map.layers[layer-2]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '4',
+                plugged: true,
+                source: { nodePath: 'widgets[other-filter].filters[f-1]' },
+                target: { nodePath: 'map.layers[layer-3]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '5',
+                plugged: true,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'widgets[table-widget]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            }
+        ];
+
+        it('finds plugged applyFilter layers for main map zoomTo', () => {
+            const result = findAllApplyFiltersForZoomTo(zoomMainMap, siblingInteractions);
+            expect(result.length).toBe(1);
+            expect(result[0].id).toBe('1');
+        });
+
+        it('finds plugged applyFilter layers for widget map zoomTo', () => {
+            const result = findAllApplyFiltersForZoomTo(zoomWidgetMap, siblingInteractions);
+            expect(result.length).toBe(1);
+            expect(result[0].id).toBe('2');
+        });
+    });
+    describe('containsMultipleZoomToNodes', () => {
+        it('returns false for an empty tree', () => {
+            expect(containsMultipleZoomToNodes(null)).toBe(false);
+            expect(containsMultipleZoomToNodes({})).toBe(false);
+        });
+
+        it('returns false when there are no zoom-to nodes', () => {
+            const tree = {
+                nodePath: 'map.layers',
+                children: [{ nodePath: 'map.layers[layer-1]' }]
+            };
+            expect(containsMultipleZoomToNodes(tree)).toBe(false);
+        });
+
+        it('returns false when there is exactly one zoom-to node', () => {
+            const tree = {
+                nodePath: 'root',
+                children: [
+                    { nodePath: 'map.applyZoomTo' },
+                    { nodePath: 'widgets[widget-1]' }
+                ]
+            };
+            expect(containsMultipleZoomToNodes(tree)).toBe(false);
+        });
+
+        it('returns true when there are multiple zoom-to nodes', () => {
+            const tree = {
+                nodePath: 'root',
+                children: [
+                    { nodePath: 'map.applyZoomTo' },
+                    { nodePath: 'widgets[widget-1].maps[map-1].applyZoomTo' }
+                ]
+            };
+            expect(containsMultipleZoomToNodes(tree)).toBe(true);
+        });
+    });
+
+    describe('getGlobalAutoZoom', () => {
+        const sourcePath = 'widgets[filter-1].filters[filter-1]';
+
+        it('returns false when interactions array is empty', () => {
+            expect(getGlobalAutoZoom([], sourcePath)).toBe(false);
+        });
+
+        it('returns false when no interaction matches the source path and zoom-to target', () => {
+            const interactions = [
+                { source: { nodePath: 'other-source' }, target: { nodePath: 'map.applyZoomTo' } },
+                { source: { nodePath: sourcePath }, target: { nodePath: 'map.layers[layer-1]' } }
+            ];
+            expect(getGlobalAutoZoom(interactions, sourcePath)).toBe(false);
+        });
+
+        it('returns false when matching interaction does not have autoZoom configured', () => {
+            const interactions = [
+                { source: { nodePath: sourcePath }, target: { nodePath: 'map.applyZoomTo' } }
+            ];
+            expect(getGlobalAutoZoom(interactions, sourcePath)).toBe(false);
+        });
+
+        it('returns true when matching interaction has autoZoom configured to true', () => {
+            const interactions = [
+                {
+                    source: { nodePath: sourcePath },
+                    target: { nodePath: 'map.applyZoomTo' },
+                    configuration: { autoZoom: true }
+                }
+            ];
+            expect(getGlobalAutoZoom(interactions, sourcePath)).toBe(true);
+        });
+    });
+
+    describe('updateGlobalZoomInteractionsAutoZoom', () => {
+        const sourcePath = 'widgets[filter-1].filters[filter-1]';
+        const interactions = [
+            {
+                id: '1',
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'map.applyZoomTo' },
+                configuration: { autoZoom: false, otherConfig: 'value' }
+            },
+            {
+                id: '2',
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'widgets[widget-1].maps[map-1].applyZoomTo' }
+            },
+            {
+                id: '3',
+                source: { nodePath: 'other-source' },
+                target: { nodePath: 'map.applyZoomTo' },
+                configuration: { autoZoom: false }
+            },
+            {
+                id: '4',
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'map.layers[layer-1]' }
+            }
+        ];
+
+        it('updates autoZoom for all matching zoom-to interactions without modifying others', () => {
+            const updated = updateGlobalZoomInteractionsAutoZoom(interactions, sourcePath, true);
+
+            // Should be updated and preserve other configs
+            expect(updated[0].configuration.autoZoom).toBe(true);
+            expect(updated[0].configuration.otherConfig).toBe('value');
+
+            // Should be updated (configuration created)
+            expect(updated[1].configuration.autoZoom).toBe(true);
+
+            // Should not be updated (wrong source)
+            expect(updated[2].configuration.autoZoom).toBe(false);
+
+            // Should not be updated (wrong target)
+            expect(updated[3].configuration).toNotExist();
         });
     });
 });

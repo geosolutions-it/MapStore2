@@ -35,6 +35,7 @@ const InteractionsRow = ({
     plugged = false,
     isPluggable = false,
     isConfigurable = false,
+    buttonsConfig = {},
     configuration,
     configurationContext,
     nodeDisabled = { disabled: false, reason: null },
@@ -77,6 +78,7 @@ const InteractionsRow = ({
                         plugged={plugged}
                         isPluggable={isPluggable}
                         isConfigurable={isConfigurable}
+                        buttonsConfig={buttonsConfig}
                         configuration={configuration}
                         setPlugged={onPlugChange}
                         showConfiguration={showConfiguration}

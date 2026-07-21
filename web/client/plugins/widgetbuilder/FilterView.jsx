@@ -28,7 +28,7 @@ import FilterNoSelectableItems from '../../components/widgets/builder/wizard/fil
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
-import { isMapTimeTarget } from '../../utils/InteractionUtils';
+import { isMapTimeTarget, TARGET_TYPES } from '../../utils/InteractionUtils';
 
 const toIsoTime = (value) => {
     if (value === undefined || value === null || value === '') {
@@ -225,7 +225,8 @@ const FilterView = ({
     onSelectableItemsChange = () => {},
     fetchError = false,
     showItemToolbar = false,
-    onToggleDisabled
+    onToggleDisabled,
+    onZoomToFilterExtent
 }) => {
     const layout = filterData?.layout ?? {};
     const Component = componentMap[layout.variant ?? 'checkbox'];
@@ -244,7 +245,7 @@ const FilterView = ({
     const filterDisabled = !!filterData?.disabled;
 
     const [isCollapsed, setIsCollapsed] = useState(
-        () => (filterData?.layout?.defaultExpanded === false)
+        () => (showItemToolbar && filterData?.layout?.defaultExpanded === false)
     );
     const handleToggleCollapse = useCallback(() => setIsCollapsed(prev => !prev), []);
 
@@ -424,11 +425,18 @@ const FilterView = ({
             className="ms-filter-collapse-toggle"
         />
     ) : null;
+    const showZoomButton = (interactions || []).some(interaction =>
+        interaction?.plugged === true
+        && interaction?.targetType === TARGET_TYPES.APPLY_ZOOM_TO
+        && interaction?.configuration?.autoZoom !== true
+    );
     const perItemToolbar = showItemToolbar ? (
         <FilterItemToolbar
             filterData={filterData}
             collapsed={effectiveCollapsed}
             onToggleDisabled={onToggleDisabled}
+            showZoomButton={showZoomButton}
+            onZoomToFilterExtent={onZoomToFilterExtent}
         />
     ) : null;
     return (
@@ -624,7 +632,8 @@ FilterView.propTypes = {
     timelineRangeEnabled: PropTypes.bool,
     currentTime: PropTypes.string,
     showItemToolbar: PropTypes.bool,
-    onToggleDisabled: PropTypes.func
+    onToggleDisabled: PropTypes.func,
+    onZoomToFilterExtent: PropTypes.func
 };
 FilterView.defaultProps = {};
 

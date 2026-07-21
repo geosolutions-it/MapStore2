@@ -46,12 +46,15 @@ ToolButton.propTypes = {
  * Per-filter card toolbar shown in the FilterView header. Supports:
  * - collapse / expand the filter body
  * - enable / disable the filter (skipped from interaction CQL composition)
+ * - manual zoom to the filtered extent (only when a plugged zoom-to interaction is in manual mode)
  */
 const FilterItemToolbar = ({
     filterData,
     collapsed = false,
     onToggleCollapse,
-    onToggleDisabled
+    onToggleDisabled,
+    showZoomButton = false,
+    onZoomToFilterExtent
 }) => {
     const enabled = !filterData?.disabled;
 
@@ -61,6 +64,15 @@ const FilterItemToolbar = ({
             style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
             onClick={(e) => e.stopPropagation()}
         >
+            {showZoomButton && onZoomToFilterExtent && (
+                <ToolButton
+                    glyph="zoom-to"
+                    tooltipKey="widgets.filterWidget.zoomToFilterExtent"
+                    tooltipId={`flt-z-${filterData?.id}`}
+                    disabled={!enabled}
+                    onClick={onZoomToFilterExtent}
+                />
+            )}
             {onToggleDisabled && (
                 <OverlayTrigger
                     placement="top"
@@ -95,7 +107,9 @@ FilterItemToolbar.propTypes = {
     filterData: PropTypes.object,
     collapsed: PropTypes.bool,
     onToggleCollapse: PropTypes.func,
-    onToggleDisabled: PropTypes.func
+    onToggleDisabled: PropTypes.func,
+    showZoomButton: PropTypes.bool,
+    onZoomToFilterExtent: PropTypes.func
 };
 
 export default FilterItemToolbar;

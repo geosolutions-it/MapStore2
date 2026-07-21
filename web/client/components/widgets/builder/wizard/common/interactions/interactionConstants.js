@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { TARGET_TYPES } from "../../../../../../utils/InteractionUtils";
+
 // Configuration metadata for UI display.
 // The visibleWhen and disabledWhen conditions support context fields such as targetType,
 // nodePath and config-specific values passed by the caller.
@@ -42,11 +44,23 @@ export const CONFIGURATION_METADATA = {
                 isEqual: true
             }
         }
+    },
+    autoZoom: {
+        label: "widgets.filterWidget.autoZoomLabel",
+        visibleWhen: {
+            targetType: {
+                isEqual: TARGET_TYPES.APPLY_ZOOM_TO
+            }
+        },
+        infoMsgByTargetType: {
+            "default": "widgets.filterWidget.autoZoomInfo"
+        }
     }
 };
 
 // Default configuration structure (simple boolean values)
 export const DEFAULT_CONFIGURATION = {
     forcePlug: false,
-    twoWaySynchronization: false
+    twoWaySynchronization: false,
+    autoZoom: false
 };

@@ -35,6 +35,7 @@ import 'ol/ol.css';
 import './mapstore-ol-overrides.css';
 import Feature from "ol/Feature";
 import RenderFeature from "ol/render/Feature";
+import { resolveZoomToExtentPadding } from '../../../utils/MapWidgetUtils';
 
 const geoJSONFormat = new GeoJSON();
 
@@ -714,13 +715,16 @@ class OpenlayersMap extends React.Component {
         const isDegenerate = bounds[0] === bounds[2] && bounds[1] === bounds[3];
         // TODO: allow maxZoom to be customizable
         const maxZoom = isDegenerate && isNil(zoomLevel) ? 21 : zoomLevel;
+        const mapEl = this.map.getTargetElement();
+        const {top = 0, right = 0, bottom = 0, left = 0} = resolveZoomToExtentPadding(mapEl, padding);
+        const paddingValues = [top, right, bottom, left];
         this.map.getView().fit(bounds, {
             size: this.map.getSize(),
             // mapPaddingSelector returns null while the layout epic is mid-computation
             // (e.g. during a setView swap on projection change). Pass undefined in that
             // case so OL applies its own [0,0,0,0] default - passing null reaches
             // View.fitInternal where padding[1] dereferences and throws.
-            ...(padding ? { padding: [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0] } : {}),
+            ...(paddingValues.some(value => value > 0) ? { padding: paddingValues } : {}),
             maxZoom,
             duration,
             nearest

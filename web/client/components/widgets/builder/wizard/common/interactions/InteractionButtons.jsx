@@ -27,10 +27,20 @@ const TButton = tooltip(Button);
  * @param {object} plugConstraints describes whether plugging is disabled and why
  * @returns {React.ReactElement}
  */
-const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable, plugConstraints = {} }) => {
+const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable, plugConstraints = {}, buttonsConfig = {}, configuration = {} }) => {
     const { disabled: isPlugConstrained = false, reason: plugConstraintReason = null } = plugConstraints;
+    const { showAutoZoom, autoZoomForAllMaps, onAutoZoomChange } = buttonsConfig;
+    const autoZoom = configuration.autoZoom || false;
     return (
         <FlexBox gap="xs" className={`ms-interaction-buttons${isPlugConstrained ? ' is-disabled' : ''}`}>
+            {showAutoZoom && plugged && <TButton
+                onClick={() => onAutoZoomChange(!autoZoom)}
+                borderTransparent
+                tooltip={autoZoomForAllMaps ? <Message msgId="widgets.filterWidget.autoZoomForAllMapsTooltip" /> : <Message msgId="widgets.filterWidget.autoZoomInfo" />}
+                variant={autoZoom ? "primary" : undefined}
+            >
+                <Message msgId="widgets.filterWidget.autoZoomLabel" />
+            </TButton>}
             {isConfigurable && <TButton
                 visible={isConfigurable}
                 onClick={() => setShowConfiguration(!showConfiguration)}
