@@ -89,3 +89,22 @@ Once multiple views are added to the *Map Views* tool it allows to visualize the
 The user can also choose to navigate each view manually using the navigation toolbar provided by the tool.
 
 <img src="../img/map-views/views-navigation-toolbar.jpg" class="ms-docimage"/>
+
+## Practical examples
+
+Here below some practical examples that can help when preparing a map storytelling with *Map Views*.
+
+### Example 1 - City overview to district detail
+
+Create a first view with a city-level extent and the main thematic layers enabled. Then add one or more views focused on specific districts.
+Set a longer animation duration on the first view and shorter durations on detail views to guide the audience from context to details.
+
+### Example 2 - Compare 2D and 3D perspectives
+
+Prepare one view in 2D mode to show the thematic distribution, then switch to 3D mode and add one or more views with terrain and `3D Tiles` visible.
+Use the *Description* field in each view to explain why the 3D perspective is useful for that step.
+
+### Example 3 - Focus analysis area with mask and clipping
+
+In 3D mode, configure a view with **Mask** to emphasize only the area of interest, then create another view using **Clipping** for a specific `3D Tiles` layer.
+This sequence is useful to first provide a global focus and then show a precise local inspection.
