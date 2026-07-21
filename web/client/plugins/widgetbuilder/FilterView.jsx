@@ -16,7 +16,7 @@ import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidge
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
 import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
-import FilterItemToolbar, { ToolButton } from '../../components/widgets/widget/FilterItemToolbar';
+import FilterItemToolbar from '../../components/widgets/widget/FilterItemToolbar';
 import Message from '../../components/I18N/Message';
 import HTML from '../../components/I18N/HTML';
 import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
@@ -241,10 +241,10 @@ const FilterView = ({
     const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
     const selectionSyncTimeoutRef = useRef(null);
     const currentSelection = Array.isArray(selections) ? selections : [];
-    const filterDisabled = !!filterData?.disabled;
+    const filterDisabled = showItemToolbar && !!filterData?.disabled;
 
     const [isCollapsed, setIsCollapsed] = useState(
-        () => (filterData?.layout?.defaultExpanded === false)
+        () => (showItemToolbar && filterData?.layout?.defaultExpanded === false)
     );
     const handleToggleCollapse = useCallback(() => setIsCollapsed(prev => !prev), []);
 
@@ -413,24 +413,7 @@ const FilterView = ({
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
     // No title means no row for the arrow, so force the filter open.
     const effectiveCollapsed = showTitle ? isCollapsed : false;
-    const collapseTool = (showItemToolbar && showTitle) ? (
-        <ToolButton
-            glyph={effectiveCollapsed ? 'next' : 'bottom'}
-            tooltipKey={effectiveCollapsed
-                ? 'widgets.filterWidget.expandFilter'
-                : 'widgets.filterWidget.collapseFilter'}
-            tooltipId={`flt-c-${filterData.id}`}
-            onClick={handleToggleCollapse}
-            className="ms-filter-collapse-toggle"
-        />
-    ) : null;
-    const perItemToolbar = showItemToolbar ? (
-        <FilterItemToolbar
-            filterData={filterData}
-            collapsed={effectiveCollapsed}
-            onToggleDisabled={onToggleDisabled}
-        />
-    ) : null;
+
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
@@ -450,7 +433,7 @@ const FilterView = ({
                 </div>
             )}
             <div className="ms-filter-selector-header">
-                {collapseTool}
+                <FilterItemToolbar collapsed={effectiveCollapsed} filterData={filterData} onClick={handleToggleCollapse} showCollapseToggle={showItemToolbar && showTitle}/>
                 {showTitle
                     ? (
                         <span
@@ -545,7 +528,7 @@ const FilterView = ({
                             allowEmptySelection={!forceSelection}
                         />
                     )}
-                    {perItemToolbar}
+                    <FilterItemToolbar filterData={filterData} onClick={onToggleDisabled} showDisableToggle={showItemToolbar} />
                 </div>
             </div>
             {disableMapTimeSelection ? (
@@ -624,7 +607,8 @@ FilterView.propTypes = {
     timelineRangeEnabled: PropTypes.bool,
     currentTime: PropTypes.string,
     showItemToolbar: PropTypes.bool,
-    onToggleDisabled: PropTypes.func
+    onToggleDisabled: PropTypes.func,
+    hasMultipleFilters: PropTypes.bool
 };
 FilterView.defaultProps = {};
 

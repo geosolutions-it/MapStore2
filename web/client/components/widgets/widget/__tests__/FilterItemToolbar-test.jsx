@@ -29,39 +29,65 @@ describe('FilterItemToolbar component', () => {
         setTimeout(done);
     });
 
-    it('renders the toggle switch and collapse chevron when handlers are provided', () => {
+    it('renders the toggle switch for Disable component', () => {
         const container = document.getElementById('container');
         ReactDOM.render(
             <FilterItemToolbar
+                showDisableToggle
                 filterData={filterDataFeatures}
-                onToggleCollapse={() => {}}
-                onToggleDisabled={() => {}}
+                onClick={() => { }}
             />,
             container
         );
-        const toolbar = container.querySelector('.ms-filter-card-toolbar');
-        expect(toolbar).toExist();
-        const buttons = toolbar.querySelectorAll('button');
-        // only the collapse chevron is a ToolButton
-        expect(buttons.length).toBe(1);
-        const toggle = toolbar.querySelector('.mapstore-switch-btn-xs input[type="checkbox"]');
+        const toggle = container.querySelector('.mapstore-switch-btn-xs input[type="checkbox"]');
         expect(toggle).toExist();
     });
 
-    it('invokes onToggleCollapse when the collapse chevron is clicked', () => {
+    it('invokes onClick when the toggle switch is clicked', () => {
         const container = document.getElementById('container');
         let clicked = false;
         ReactDOM.render(
             <FilterItemToolbar
+                showDisableToggle
                 filterData={filterDataFeatures}
-                onToggleCollapse={() => { clicked = true; }}
+                onClick={() => { clicked = true; }}
             />,
             container
         );
-        const buttons = container.querySelectorAll('.ms-filter-card-toolbar button');
-        // only the chevron is rendered
-        expect(buttons.length).toBe(1);
-        Simulate.click(buttons[0]);
+        const toggle = container.querySelector('.mapstore-switch-btn-xs input[type="checkbox"]');
+        Simulate.change(toggle);
+        expect(clicked).toBe(true);
+    });
+
+    it('renders the collapse toggle for Collapse component', () => {
+        const container = document.getElementById('container');
+        ReactDOM.render(
+            <FilterItemToolbar
+                showCollapseToggle
+                filterData={filterDataFeatures}
+                collapsed={false}
+                onClick={() => {}}
+            />,
+            container
+        );
+        const collapseBtn = container.querySelector('.ms-filter-collapse-toggle');
+        expect(collapseBtn).toExist();
+    });
+
+    it('invokes onClick when the collapse button is clicked', () => {
+        const container = document.getElementById('container');
+        let clicked = false;
+        ReactDOM.render(
+            <FilterItemToolbar
+                showCollapseToggle
+                filterData={filterDataFeatures}
+                collapsed={false}
+                onClick={() => { clicked = true; }}
+            />,
+            container
+        );
+        const collapseBtn = container.querySelector('.ms-filter-collapse-toggle');
+        Simulate.click(collapseBtn);
         expect(clicked).toBe(true);
     });
 });
