@@ -1310,11 +1310,10 @@ describe('identify Epics', () => {
         };
         const sentActions = [
             featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5", false, null, queryParamZoomOption),
-            loadFeatureInfo(123, {}, {}, {
+            loadFeatureInfo(123, {
                 isQueryJustOneLayer: true,
-                featureBbox: null,
-                queryParamZoomOption
-            }, {}, queryParamZoomOption)
+                featureBbox: null
+            }, {}, {}, queryParamZoomOption)
         ];
 
         const expectedAction = actions => {
