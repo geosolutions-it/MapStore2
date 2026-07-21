@@ -238,6 +238,8 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Single Tile* (only for the WMS service): if checked, the layers loaded from the involved catalog source are rendered as a single tile. For layers already loaded on the map, it is possible to disable this option through the [Layer Settings](layer-settings.md#display) tool as usual.
 
+* *Crop to projection extent*: If enabled, the layers loaded from the involved catalog source are cropped to the current map projection extent defined. For layers already loaded on the map, it is also possible to enable this option through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool.
+
 * *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser.
 
 * *Server Type*: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
