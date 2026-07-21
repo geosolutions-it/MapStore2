@@ -179,6 +179,7 @@ nav:
       - General:
         - GeoServer: 'developer-guide/integrations/geoserver.md'
         - Authentication: 'developer-guide/integrations/auth.md'
+        - Auth Docker Setup: 'developer-guide/integrations/auth-docker-setup.md'
         - Infrastructure: 'developer-guide/integrations/infrastructure-setups.md'
     - Projects:
       - MapStore Projects: 'developer-guide/mapstore-projects.md'
