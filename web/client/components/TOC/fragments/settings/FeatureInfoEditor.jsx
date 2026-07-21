@@ -33,9 +33,10 @@ const DescriptionEditor = withDebounceOnCallback('onEditorStateChange', 'editorS
 
 const FeatureInfoEditor = ({
     element,
+    template: templateProp,
     showEditor,
     onShowEditor,
-    onChange,
+    onSaveTemplate,
     enableIFrameModule
 }, {messages}) => {
     const [, setCounter] = useState(0);
@@ -57,14 +58,12 @@ const FeatureInfoEditor = ({
 
     }, [showEditor]);
 
-    const [template, setTemplate] = useState(element?.featureInfo?.template || '');
+    const [template, setTemplate] = useState(templateProp !== undefined ? templateProp : element?.featureInfo?.template || '');
     const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(template));
     const onClose = () => {
         onShowEditor(!showEditor);
-        onChange('featureInfo', {
-            ...(element && element.featureInfo || {}),
-            template: draftJSEditorStateToHtml(editorState)
-        });
+        const html = draftJSEditorStateToHtml(editorState);
+        onSaveTemplate(html);
     };
     const imageField = document.querySelector(".rdw-image-modal-url-section");
     return (
@@ -118,7 +117,8 @@ const FeatureInfoEditor = ({
 FeatureInfoEditor.propTypes = {
     showEditor: PropTypes.bool,
     element: PropTypes.object,
-    onChange: PropTypes.func,
+    template: PropTypes.string,
+    onSaveTemplate: PropTypes.func.isRequired,
     onShowEditor: PropTypes.func,
     enableIFrameModule: PropTypes.bool
 };
@@ -130,7 +130,6 @@ FeatureInfoEditor.defaultProps = {
     showEditor: false,
     element: {},
     enableIFrameModule: false,
-    onChange: () => {},
     onShowEditor: () => {}
 };
 

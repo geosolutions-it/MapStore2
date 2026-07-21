@@ -109,6 +109,8 @@
       "elevation": "Höhe",
       "groupProperties": "Gruppeneigenschaften",
       "featureInfo": "Feature Info",
+      "disableIdentify": "Identifizierung deaktivieren",
+      "addIdentifyView": "Neue Identifikationsansicht hinzufügen",
       "featureInfoFormatLbl": "Antwortformat festlegen",
       "guideText": "In der URL des Bildes können Sie Platzhalter wie $\\{properties.YOUR_ATTRIBUTE\\} verwenden, um die URL abhängig von den Feature-Attributen parametrisch zu machen. Es unterstützt sowohl URLs als auch „Data URI“, die in Base64 codiert sind",
       "imageNotFound": "Für die korrekte Darstellung dieses Bildes ist möglicherweise eine Feature-Info-Anfrage erforderlich",

@@ -9,20 +9,154 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import Accordion from '../../../misc/panels/Accordion';
 import { getSupportedFormat as getSupportedFormatWMS } from '../../../../api/WMS';
 import { getSupportedFormat as getSupportedFormatWFS } from '../../../../api/WFS';
 import Loader from '../../../misc/Loader';
-import { Glyphicon } from 'react-bootstrap';
-import Message from '../../../I18N/Message';
+import { Button, Checkbox, FormControl, Glyphicon } from 'react-bootstrap';
+import Select from 'react-select';
+import { DragSource as dragSource, DropTarget as dropTarget } from 'react-dnd';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
-import { getDefaultInfoViewMode } from '../../../../utils/MapInfoUtils';
+import { getDefaultInfoViewMode, getLayerFeatureInfoViews, isLayerFeatureInfoDisabled } from '../../../../utils/MapInfoUtils';
+import Message from '../../../I18N/Message';
+import FeatureInfoEditor from './FeatureInfoEditor';
 
 const supportedFormatRequests = {
     wms: getSupportedFormatWMS,
     wfs: getSupportedFormatWFS
 };
+
+const FeatureInfoView = ({
+    view,
+    views,
+    canEdit,
+    connectDragSource = cmp => cmp,
+    connectDragPreview = cmp => cmp,
+    connectDropTarget = cmp => cmp,
+    isDisabled = false,
+    isDraggable,
+    onEdit = () => {},
+    onRemove = () => {},
+    onUpdateView = () => {},
+    renderTypeSelect = () => null
+}) => {
+    const content = (
+        <div
+            data-id={`feature-info-view-${view.id}`}
+            style={{
+                alignItems: 'center',
+                border: '1px solid #ddd',
+                cursor: 'default',
+                display: 'flex',
+                gap: 12,
+                marginBottom: 12,
+                minHeight: 58,
+                opacity: isDisabled ? 0.5 : 1,
+                padding: 10
+            }}>
+            {isDraggable ? connectDragSource(
+                <div
+                    className="grab-handle"
+                    style={{
+                        alignItems: 'center',
+                        color: '#777',
+                        cursor: 'move',
+                        display: 'flex'
+                    }}
+                    onClick={(event) => event.stopPropagation()}>
+                    <Glyphicon glyph="grab-handle"/>
+                </div>
+            ) : (
+                <div
+                    className="grab-handle disabled"
+                    style={{
+                        alignItems: 'center',
+                        color: '#ccc',
+                        display: 'flex'
+                    }}>
+                    <Glyphicon glyph="grab-handle"/>
+                </div>
+            )}
+            <FormControl
+                disabled={isDisabled}
+                placeholder="Title"
+                style={{ flex: '1 1 220px' }}
+                value={view.title}
+                onChange={(event) => onUpdateView(view.id, { title: event.target.value })}/>
+            <div style={{ flex: '1 1 260px' }}>
+                {renderTypeSelect(view)}
+            </div>
+            <Button
+                disabled={isDisabled || !canEdit}
+                onClick={() => onEdit(view.id)}>
+                <Glyphicon glyph="pencil"/>
+            </Button>
+            <Button
+                disabled={isDisabled || views.length === 1}
+                onClick={() => onRemove(view.id)}>
+                <Glyphicon glyph="trash"/>
+            </Button>
+        </div>
+    );
+    return isDraggable ? connectDragPreview(connectDropTarget(content)) : content;
+};
+
+const ITEM_KEY = 'feature-info-view';
+
+const drag = dragSource(ITEM_KEY,
+    {
+        beginDrag: ({ view, index }) => ({
+            id: view.id,
+            index
+        })
+    },
+    (connect, monitor) => ({
+        connectDragSource: connect.dragSource(),
+        connectDragPreview: connect.dragPreview(),
+        isDragging: monitor.isDragging()
+    })
+);
+
+const drop = dropTarget(ITEM_KEY,
+    {
+        hover: (props, monitor) => {
+            const item = monitor.getItem();
+            const { index, view, onMove = () => {} } = props;
+            const node = document.querySelector(`[data-id="feature-info-view-${view.id}"]`);
+
+            if (!node?.getBoundingClientRect) {
+                return null;
+            }
+            const dragIndex = item.index;
+            const hoverIndex = index;
+            if (dragIndex === hoverIndex) {
+                return null;
+            }
+
+            const hoverBoundingRect = node.getBoundingClientRect();
+            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const clientOffset = monitor.getClientOffset();
+            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+                return null;
+            }
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                return null;
+            }
+
+            onMove(dragIndex, hoverIndex);
+            item.index = hoverIndex;
+            return null;
+        }
+    },
+    (connect, monitor) => ({
+        connectDropTarget: connect.dropTarget(),
+        isOver: monitor.isOver()
+    })
+);
+
+const DraggableFeatureInfoView = drag(drop(FeatureInfoView));
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info
@@ -50,7 +184,8 @@ export default class extends React.Component {
     };
 
     state = {
-        loading: false
+        loading: false,
+        editingViewId: null
     };
 
     componentDidMount() {
@@ -69,20 +204,8 @@ export default class extends React.Component {
         }
     }
 
-    getInfoViews = (infoFormats) => {
-        return Object.keys(infoFormats).map((infoFormat) => {
-            const Body = this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].body;
-            return {
-                id: infoFormat,
-                head: {
-                    preview: <Glyphicon glyph={this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].glyph || 'ext-empty'}/>,
-                    title: this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].titleId && <Message msgId={this.props.formatCards[infoFormat].titleId}/> || '',
-                    description: this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].descId && <Message msgId={this.props.formatCards[infoFormat].descId}/> || '',
-                    size: 'sm'
-                },
-                body: Body && <Body template={this.props.element.featureInfo && this.props.element.featureInfo.template || ''} {...this.props}/> || null
-            };
-        });
+    getTypeOptions = () => {
+        return Object.keys(this.transformInfoFormatsToViews(this.supportedInfoFormats()));
     }
 
     transformInfoFormatsToViews = (infoFormats) => {
@@ -97,16 +220,113 @@ export default class extends React.Component {
         return infoFormats;
     }
 
-    render() {
-        // the selected value if missing on that layer should be set to the general info format value and not the first one.
-        const data = this.getInfoViews(
-            this.transformInfoFormatsToViews(
-                {
-                    'HIDDEN': true,
-                    ...this.supportedInfoFormats()
-                }
-            )
+    getFeatureInfo = (disabled, views) => {
+        const { format, template, viewer, ...featureInfo } = this.props.element.featureInfo || {};
+        return {
+            ...featureInfo,
+            disabled,
+            views
+        };
+    }
+
+    updateFeatureInfo = (disabled, views) => {
+        this.props.onChange("featureInfo", this.getFeatureInfo(disabled, views));
+    }
+
+    getViews = () => {
+        const defaultType = this.getTypeOptions()[0] || 'PROPERTIES';
+        return getLayerFeatureInfoViews(this.props.element, {
+            defaultType,
+            includeDisabled: true
+        });
+    }
+
+    updateView = (viewId, changes) => {
+        const views = this.getViews().map((view) => view.id === viewId ? {
+            ...view,
+            ...changes
+        } : view);
+        this.updateFeatureInfo(isLayerFeatureInfoDisabled(this.props.element), views);
+    }
+
+    addView = () => {
+        const views = this.getViews();
+        const defaultType = this.getTypeOptions()[0] || 'PROPERTIES';
+        this.updateFeatureInfo(isLayerFeatureInfoDisabled(this.props.element), [
+            ...views,
+            {
+                id: `view-${Date.now()}`,
+                title: 'Identify',
+                type: defaultType
+            }
+        ]);
+    }
+
+    removeView = (viewId) => {
+        const views = this.getViews().filter((view) => view.id !== viewId);
+        this.updateFeatureInfo(isLayerFeatureInfoDisabled(this.props.element), views);
+    }
+
+    reorderView = (sourceIndex, targetIndex) => {
+        const views = this.getViews();
+        if (sourceIndex < 0 || targetIndex < 0 || sourceIndex === targetIndex) {
+            return;
+        }
+        const updatedViews = [...views];
+        const [view] = updatedViews.splice(sourceIndex, 1);
+        updatedViews.splice(targetIndex, 0, view);
+        this.updateFeatureInfo(isLayerFeatureInfoDisabled(this.props.element), updatedViews);
+    }
+
+    renderTypeSelect = (view, isDisabled) => {
+        const options = this.getTypeOptions().map((type) => ({
+            value: type,
+            label: type,
+            glyph: this.props.formatCards[type]?.glyph || 'ext-empty'
+        }));
+        return (
+            <Select
+                clearable={false}
+                disabled={isDisabled}
+                value={view.type}
+                options={options}
+                optionRenderer={this.renderTypeOption}
+                valueRenderer={this.renderTypeOption}
+                onChange={(selected) => this.updateView(view.id, { type: selected?.value })}/>
         );
+    }
+
+    renderTypeOption = (option) => {
+        return (
+            <span>
+                <Glyphicon glyph={option.glyph}/>&nbsp;{option.label}
+            </span>
+        );
+    }
+
+    renderView = (view, views, index, isDisabled) => {
+        const canEdit = view.type === 'TEMPLATE';
+        return (
+            <DraggableFeatureInfoView
+                key={view.id}
+                index={index}
+                isDisabled={isDisabled}
+                isDraggable={!isDisabled && views.length > 1}
+                view={view}
+                views={views}
+                canEdit={canEdit}
+                onEdit={(viewId) => this.setState({ editingViewId: viewId })}
+                onRemove={this.removeView}
+                onUpdateView={this.updateView}
+                onMove={this.reorderView}
+                renderTypeSelect={(featureInfoView) => this.renderTypeSelect(featureInfoView, isDisabled)}/>
+        );
+    }
+
+    render() {
+        const disabled = isLayerFeatureInfoDisabled(this.props.element);
+        const views = this.getViews();
+        const editingView = views.find((view) => view.id === this.state.editingViewId);
         return this.state.loading ? (
             <div
                 style={{
@@ -121,18 +341,41 @@ export default class extends React.Component {
             </div>
         ) : (
             <span>
-                <Accordion
-                    fillContainer
-                    activePanel={this.props.element.featureInfo && this.props.element.featureInfo.format}
-                    panels={data}
-                    onSelect={value => {
-                        const isEqualFormat = this.props.element.featureInfo && this.props.element.featureInfo.format && value === this.props.element.featureInfo.format;
-                        this.props.onChange("featureInfo", {
-                            ...(this.props.element && this.props.element.featureInfo || {}),
-                            format: !isEqualFormat ? value : '',
-                            viewer: this.props.element.featureInfo ? this.props.element.featureInfo.viewer : undefined
-                        });
-                    }}/>
+                <div
+                    style={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: 12,
+                        padding: 6
+                    }}>
+                    <Checkbox
+                        checked={disabled}
+                        style={{ margin: 0 }}
+                        onChange={(event) => this.updateFeatureInfo(event.target.checked, views)}>
+                        <Message msgId="layerProperties.disableIdentify" />
+                    </Checkbox>
+                    <Button
+                        bsStyle="primary"
+                        disabled={disabled}
+                        onClick={this.addView}>
+                        <Message msgId="layerProperties.addIdentifyView" />
+                    </Button>
+                </div>
+                <div style={{ clear: 'both' }}>
+                    {views.map((view, index) => this.renderView(view, views, index, disabled))}
+                    {!disabled && editingView ? (
+                        <FeatureInfoEditor
+                            {...this.props}
+                            template={editingView.template || ''}
+                            showEditor
+                            onShowEditor={() => this.setState({ editingViewId: null })}
+                            onSaveTemplate={(template) => {
+                                this.updateView(editingView.id, { template });
+                                this.setState({ editingViewId: null });
+                            }}/>
+                    ) : null}
+                </div>
             </span>
         );
     }

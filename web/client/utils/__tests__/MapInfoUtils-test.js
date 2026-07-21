@@ -16,12 +16,15 @@ import {
     getAvailableInfoFormatValues,
     getDefaultInfoFormatValue,
     buildIdentifyRequest,
+    buildIdentifyRequestPlan,
     getValidator,
     getViewer,
     setViewer,
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
+    getLayerFeatureInfoViews,
+    isLayerFeatureInfoDisabled,
     getMarkerLayer,
     defaultQueryableFilter,
     filterRequestParams,
@@ -292,6 +295,47 @@ describe('MapInfoUtils', () => {
         expect(req1.request.service).toBe('WMS');
         expect(req1.request.info_format).toBe('application/json');
         expect(req1.metadata.viewer.type).toBe('customViewer');
+    });
+
+    it('buildIdentifyRequestPlan supports a legacy single featureInfo format', () => {
+        const {views, requests} = buildIdentifyRequestPlan({
+            type: 'wms',
+            name: 'layer',
+            url: 'http://localhost',
+            featureInfo: {format: 'TEXT'}
+        }, {
+            map: {zoom: 0, projection: 'EPSG:4326'},
+            point: {latlng: {lat: 0, lng: 0}}
+        });
+
+        expect(views).toEqual([{id: 'default', title: 'Identify', type: 'TEXT'}]);
+        expect(requests.length).toBe(1);
+        expect(requests[0].viewIds).toEqual(['default']);
+        expect(requests[0].request.info_format).toBe('text/plain');
+    });
+
+    it('buildIdentifyRequestPlan deduplicates requests shared by configured views', () => {
+        const {requests} = buildIdentifyRequestPlan({
+            type: 'wms',
+            name: 'layer',
+            url: 'http://localhost',
+            featureInfo: {
+                views: [
+                    {id: 'properties', type: 'PROPERTIES'},
+                    {id: 'template', type: 'TEMPLATE'},
+                    {id: 'html', type: 'HTML'}
+                ]
+            }
+        }, {
+            map: {zoom: 0, projection: 'EPSG:4326'},
+            point: {latlng: {lat: 0, lng: 0}}
+        });
+
+        expect(requests.length).toBe(2);
+        expect(requests[0].viewIds).toEqual(['properties', 'template']);
+        expect(requests[0].request.info_format).toBe('application/json');
+        expect(requests[1].viewIds).toEqual(['html']);
+        expect(requests[1].request.info_format).toBe('text/html');
     });
 
     it('buildIdentifyRequest works for wmts layer', () => {
@@ -666,6 +710,8 @@ describe('MapInfoUtils', () => {
         // getDefaultInfoFormatValueFromLayer should also resolve when featureInfo.format corresponds to an info_format key rather then an info view.
         const geojsonPreConfigured = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "GEOJSON"}}, {});
         expect(geojsonPreConfigured).toBe('application/geo+json');
+        const jsonFormatFromViews = getDefaultInfoFormatValueFromLayer({featureInfo: {views: [{id: 'main', title: 'Main', type: 'PROPERTIES'}]}}, {});
+        expect(jsonFormatFromViews).toBe('application/json');
         const htmlFormat = getDefaultInfoFormatValueFromLayer({}, {format: "text/html"});
         expect(htmlFormat).toBe('text/html');
     });
@@ -674,6 +720,60 @@ describe('MapInfoUtils', () => {
         expect(getLayerFeatureInfo()).toEqual({});
         expect(getLayerFeatureInfo({})).toEqual({});
         expect(getLayerFeatureInfo({featureInfo: {format: 'TEXT'}})).toEqual({format: 'TEXT'});
+    });
+
+    it('getLayerFeatureInfoViews should normalize legacy featureInfo format', () => {
+        expect(getLayerFeatureInfoViews()).toEqual([]);
+        expect(getLayerFeatureInfoViews({})).toEqual([]);
+        expect(getLayerFeatureInfoViews({}, {defaultType: 'HTML'})).toEqual([{
+            id: 'default',
+            title: 'Identify',
+            type: 'HTML'
+        }]);
+        expect(getLayerFeatureInfoViews({featureInfo: {format: 'TEXT'}})).toEqual([{
+            id: 'default',
+            title: 'Identify',
+            type: 'TEXT'
+        }]);
+        expect(getLayerFeatureInfoViews({featureInfo: {format: 'TEMPLATE', template: '<p>{name}</p>'}})).toEqual([{
+            id: 'default',
+            title: 'Identify',
+            type: 'TEMPLATE',
+            template: '<p>{name}</p>'
+        }]);
+    });
+
+    it('getLayerFeatureInfoViews should return configured views with defaults', () => {
+        expect(getLayerFeatureInfoViews({
+            featureInfo: {
+                views: [
+                    {id: 'main', title: 'Main', type: 'PROPERTIES'},
+                    {template: '<p>{name}</p>', type: 'TEMPLATE'}
+                ]
+            }
+        })).toEqual([
+            {id: 'main', title: 'Main', type: 'PROPERTIES'},
+            {id: 'view-1', title: 'Identify', type: 'TEMPLATE', template: '<p>{name}</p>'}
+        ]);
+    });
+
+    it('isLayerFeatureInfoDisabled should support legacy HIDDEN and disabled flag', () => {
+        expect(isLayerFeatureInfoDisabled()).toBe(false);
+        expect(isLayerFeatureInfoDisabled({featureInfo: {format: 'TEXT'}})).toBe(false);
+        expect(isLayerFeatureInfoDisabled({featureInfo: {format: 'HIDDEN'}})).toBe(true);
+        expect(isLayerFeatureInfoDisabled({featureInfo: {disabled: true}})).toBe(true);
+        expect(getLayerFeatureInfoViews({featureInfo: {format: 'HIDDEN'}})).toEqual([]);
+        expect(getLayerFeatureInfoViews({featureInfo: {disabled: true, views: [{id: 'main', type: 'TEXT'}]}})).toEqual([]);
+        expect(getLayerFeatureInfoViews({
+            featureInfo: {
+                disabled: true,
+                views: [{id: 'main', type: 'TEXT'}]
+            }
+        }, {includeDisabled: true})).toEqual([{
+            id: 'main',
+            title: 'Identify',
+            type: 'TEXT'
+        }]);
     });
 
     it('filterRequestParams', () => {
@@ -795,6 +895,21 @@ describe('MapInfoUtils', () => {
         };
         let results = defaultQueryableFilter(layer4);
         expect(results).toEqual(false);
+    });
+
+    it('defaultQueryableFilter should return false if featureInfo is disabled', () => {
+        const layer = {
+            type: "wms",
+            name: "layer",
+            url: "http://localhost",
+            featureInfo: {
+                disabled: true,
+                views: [{ id: 'main', title: 'Main', type: 'TEXT' }]
+            },
+            queryable: true,
+            visibility: true
+        };
+        expect(defaultQueryableFilter(layer)).toEqual(false);
     });
 
     it("getMarkerLayer should return layer config", () => {
