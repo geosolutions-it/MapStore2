@@ -110,6 +110,14 @@
       "groupProperties": "Propriétés du groupe",
       "featureInfo": "Informations attributaires de l'objet",
       "featureInfoFormatLbl": "Information, format de la réponse",
+      "featureInfoRequestOptions": {
+        "title": "Options de requête",
+        "description": "Configurer les limites de la requête d'identification WMS",
+        "maxItems": "Nombre d'entités",
+        "maxItemsTooltip": "Nombre maximum d'entités renvoyées par une requête d'identification. La valeur par défaut est 10.",
+        "buffer": "Tampon (px)",
+        "bufferTooltip": "Paramètre fournisseur GeoServer qui étend le rayon de recherche d'identification autour du point cliqué, mesuré en pixels d'écran."
+      },
       "guideText": "Dans l'URL de l'image, vous pouvez utiliser des espaces réservés comme $\\{properties.YOUR_ATTRIBUTE\\} pour rendre l'URL paramétrique, en fonction des attributs de la fonctionnalité. Il prend en charge à la fois les URL ou les « Data URI » codés en base64.",
       "imageNotFound": "Cette image peut nécessiter une demande d\\'informations sur les fonctionnalités pour être rendue correctement",
       "legenderror": "La légende n'est pas disponible",

@@ -110,6 +110,14 @@
       "groupProperties": "Propiedades del grupo",
       "featureInfo": "Información de la capa",
       "featureInfoFormatLbl": "Identificar el formato de respuesta",
+      "featureInfoRequestOptions": {
+        "title": "Opciones de solicitud",
+        "description": "Configurar los límites de la solicitud de identificación WMS",
+        "maxItems": "Número de entidades",
+        "maxItemsTooltip": "Número máximo de entidades devueltas por una solicitud de identificación. El valor predeterminado es 10.",
+        "buffer": "Búfer (px)",
+        "bufferTooltip": "Parámetro del proveedor de GeoServer que amplía el radio de búsqueda de identificación alrededor del punto seleccionado, medido en píxeles de pantalla."
+      },
       "guideText": "En la URL de la imagen, puede utilizar marcadores de posición como $\\{properties.YOUR_ATTRIBUTE\\} para hacer que la URL sea paramétrica, según los atributos de la característica. Admite URL o \"Data URI\" codificados en base64",
       "imageNotFound": "Es posible que esta imagen necesite una solicitud de información de función para renderizarse correctamente",
       "legenderror": "La leyenda no está disponible",
