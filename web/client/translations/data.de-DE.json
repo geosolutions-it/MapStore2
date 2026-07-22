@@ -4631,7 +4631,8 @@
         "errors": {
           "notLoggedIn": "Nicht angemeldet",
           "invalidCredentials": "Ungültige Anmeldeinformationen",
-          "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
+          "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator.",
+          "apiLoadFailed": "Die Street Smart API konnte nicht geladen werden. Bitte überprüfen Sie Ihre Netzwerkverbindung oder kontaktieren Sie den Administrator."
         },
         "reloadAPI": "API neu laden"
       },

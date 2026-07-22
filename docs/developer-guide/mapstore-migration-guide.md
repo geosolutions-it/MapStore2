@@ -22,6 +22,39 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.01.02 to 2026.02.00
 
+### Dev server static configuration moved to the webpack configuration files
+
+webpack-dev-server 5 (introduced with this release) watches the static directories by default and triggers a full page reload on every file change. Projects used to pass `--static .` on the command line, so the whole project root was watched: the logs and temporary files written by the local backend (`web/target`, `mapstore.log`) continuously triggered reloads, making the dev environment unusable (see [#12665](https://github.com/geosolutions-it/MapStore2/issues/12665)).
+
+In your project:
+
+- remove `--static .` from the `fe:start` and `fe:start-prod` scripts in `package.json` (make also sure `fe:start-prod` points to `prod-webpack.config.js`)
+- add the `devServer` configuration to your `webpack.config.js` and `prod-webpack.config.js`, as in the current project templates:
+
+```javascript
+const { devServer } = require('./MapStore2/build/devServer');
+
+module.exports = require('./MapStore2/build/buildConfig')({
+    // ...existing configuration...
+    devServer: {
+        devMiddleware: { publicPath: '/dist/' },
+        ...devServer,
+        static: [{
+            directory: __dirname,
+            watch: {
+                ignored: [
+                    '**/web/target/**',
+                    '**/logs/**',
+                    '**/*.log',
+                    '**/node_modules/**',
+                    '**/.git/**'
+                ]
+            }
+        }]
+    }
+});
+```
+
 ### Custom map resolutions moved from `new.json` to the `CRSSelector` plugin
 
 Custom map resolutions used to be declared in the default map configuration (`new.json`, or the project-level equivalent) under `mapOptions.view.resolutions`. That location was tied to a single projection and was not kept in sync when the CRS was changed at runtime, which could leave saved maps with a projection that did not match the persisted resolutions.
@@ -408,6 +441,17 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                         <cargo.logging>low</cargo.logging>
                     </properties>
                 </configuration>
+```
+
+The `backend.debug.args` property must be defined in the `<properties>` section of your root `pom.xml`, otherwise the unresolved placeholder is passed as-is to the JVM and Tomcat fails to start (Cargo times out waiting for the deploy):
+
+```diff
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <tomcat.port>8080</tomcat.port>
+        <tomcat.version>9.0.116</tomcat.version>
++        <!-- JDWP options for remote debugging of the cargo-run backend -->
++        <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8989</backend.debug.args>
 ```
 
 ### Updating Local File Paths in `config.yaml` for Windows Compatibility

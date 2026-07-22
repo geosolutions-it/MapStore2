@@ -14,6 +14,7 @@
         <tomcat.port>8080</tomcat.port>
         <tomcat.version>9.0.116</tomcat.version>
         <jackson.version>2.16.1</jackson.version>
+        <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8989</backend.debug.args>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <!-- Spring Framework & Security (aligned) -->
@@ -29,7 +30,7 @@
         <mockito-core.version>4.0.0</mockito-core.version>
         <cargo.version>1.10.2</cargo.version>
         <!-- MapStore‑specific -->
-        <mapstore-services.version>1.10-SNAPSHOT</mapstore-services.version>
+        <mapstore-services.version>1.13-SNAPSHOT</mapstore-services.version>
         <geostore-webapp.version>2.6-SNAPSHOT</geostore-webapp.version>
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
         <print-lib.version>2.3.5</print-lib.version>

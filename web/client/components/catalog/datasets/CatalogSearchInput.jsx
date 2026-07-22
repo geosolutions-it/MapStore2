@@ -46,7 +46,7 @@ const CatalogSearchInput = ({
     onChangeText,
     enableFilters,
     onToggleFilters,
-    onResetFilters,
+    onReset,
     includeSearchButton = true,
     onShowSecurityModal,
     onSetProtectedServices,
@@ -64,11 +64,6 @@ const CatalogSearchInput = ({
             onChangeText(value);
         }
     };
-    const handleReset = () => {
-        onChangeText("", { skipAutoSearch: true });
-        onResetFilters?.();
-    };
-
     const isServiceSelected = !!currentService;
 
     return (
@@ -109,7 +104,7 @@ const CatalogSearchInput = ({
                 glyph={'1-close'}
                 onClick={() => {
                     if (isServiceSelected) {
-                        handleReset();
+                        onReset?.();
                     }
                 }}
                 disabled={!isServiceSelected}
