@@ -379,7 +379,10 @@ function widgetsReducer(state = emptyState, action) {
         const isLayoutArray = Array.isArray(layouts);
 
         const isWidgetArray = maximized?.widget ? Array.isArray(maximized.widget) : false;
-        const isIncluded = isWidgetArray ? maximized.widget.find(w => w.id === widget.id) : widget;
+        const maximizedWidget = isWidgetArray
+            ? maximized.widget.find(w => w.id === widget.id)
+            : maximized?.widget;
+        const isIncluded = maximizedWidget?.id === widget.id;
 
         if (isIncluded && maximized?.widget && maximized?.widget?.length > 1) {
             const maximizedState = { ...maximized, widget: maximized.widget.filter(w => w.id !== widget.id) };
@@ -407,7 +410,7 @@ function widgetsReducer(state = emptyState, action) {
                 set(`containers[${action.target}].layout`, maximized.layout),
                 set(`containers[${action.target}].layouts`, maximized.layouts),
                 set(`containers[${action.target}].maximized`, {}),
-                set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === maximized.widget.id ?
+                set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === maximizedWidget.id ?
                     {
                         ...w,
                         dataGrid: {
