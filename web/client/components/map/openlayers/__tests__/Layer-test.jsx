@@ -47,6 +47,7 @@ import axios from "../../../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
 import {get} from 'ol/proj';
 import { getResolutions } from '../../../../utils/MapUtils';
+import rateLimitManager from '../../../../utils/RateLimitManager';
 
 let mockAxios;
 
@@ -195,6 +196,8 @@ describe('Openlayers layer', () => {
 
     afterEach(() => {
         mockAxios.restore();
+        rateLimitManager.reset();
+        ConfigUtils.setConfigProp('rateLimit', undefined);
         map.setTarget(null);
         document.body.innerHTML = '';
     });
@@ -2582,6 +2585,55 @@ describe('Openlayers layer', () => {
 
         expect(layer).toBeTruthy();
         expect(layer.layer.getSource().crossOrigin).toBe("Anonymous");
+    });
+    it('delays tiled wms image load while the rate-limit bucket is blocked', (done) => {
+        ConfigUtils.setConfigProp('rateLimit', {
+            baseDelay: 1,
+            maxDelay: 10
+        });
+        const src = "http://sample.server/geoserver/wms?SERVICE=WMS&LAYERS=nurc:Arc_Sample&BBOX=1,2,3,4";
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            singleTile: false,
+            url: "http://sample.server/geoserver/wms"
+        };
+
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        let assignedSrc;
+        const imageElement = {
+            addEventListener: () => {},
+            set src(value) {
+                assignedSrc = value;
+            },
+            get src() {
+                return assignedSrc;
+            }
+        };
+        const image = {
+            getImage: () => imageElement,
+            setState: () => {}
+        };
+
+        rateLimitManager.register429(src, {'Retry-After': '0.001'});
+        layer.layer.getSource().getTileLoadFunction()(image, src);
+        expect(assignedSrc).toNotExist();
+        setTimeout(() => {
+            try {
+                expect(assignedSrc).toBe(src);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 20);
     });
     it('test crossOrigin is applied to single tile wms', () => {
         const options = {

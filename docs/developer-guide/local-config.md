@@ -63,6 +63,24 @@ This is the main structure:
         "sig": "${sasToken}"
       }
     }],
+  // optional adaptive throttling for HTTP 429 Too Many Requests responses
+  "rateLimit": {
+    // enabled by default
+    "enabled": true,
+    // base exponential backoff delay in milliseconds when Retry-After is missing
+    "baseDelay": 1000,
+    // maximum exponential backoff delay in milliseconds
+    "maxDelay": 60000,
+    // null means retry until success, cancellation, or a non-429 error
+    "maxRetries": null,
+    // default bucketing strategy: "origin", "path" or "wmsLayer"
+    "defaultBucket": "origin",
+    // optional per-server bucketing rules
+    "bucketRules": [{
+      "urlPattern": ".*geoserver/wms.*",
+      "bucket": "wmsLayer"
+    }]
+  },
   // flag for postponing mapstore 2 load time after theme
   "loadAfterTheme": false,
   // if defined, WMS layer styles localization will be added
@@ -210,6 +228,40 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 
 !!! note "Backward Compatibility"
     The old `useAuthenticationRules` and `authenticationRules` configuration still works and will be automatically converted to the new format. However, the new format is recommended for better flexibility and features like expiration support.
+
+- `rateLimit`: configures adaptive request throttling for HTTP 429 responses. MapStore respects the `Retry-After` header when present, including both seconds and HTTP-date formats, and uses exponential backoff when the header is missing.
+
+  **Configuration options:**
+  - `enabled` - Boolean to enable or disable adaptive throttling. Default is `true`.
+  - `baseDelay` - First exponential backoff delay in milliseconds when `Retry-After` is missing. Default is `1000`.
+  - `maxDelay` - Maximum exponential backoff delay in milliseconds. Default is `60000`.
+  - `maxRetries` - Maximum number of consecutive retries per bucket. `null` retries until success, cancellation, or a non-429 error. Default is `null`.
+  - `defaultBucket` - Default throttling scope. Supported values are `origin`, `path`, and `wmsLayer`. Default is `origin`.
+  - `bucketRules` - Array of `{ "urlPattern": "...", "bucket": "..." }` rules used to override the default bucket for matching URLs. `wmsLayer` ignores tile-specific parameters such as `BBOX`, `WIDTH`, `HEIGHT`, `SRS`, and `CRS`.
+
+  Example:
+
+  ```json
+  {
+    "rateLimit": {
+      "baseDelay": 1000,
+      "maxDelay": 60000,
+      "defaultBucket": "origin",
+      "bucketRules": [
+        {
+          "urlPattern": ".*geoserver/wms.*",
+          "bucket": "wmsLayer"
+        },
+        {
+          "urlPattern": ".*tiles.example.org/.*",
+          "bucket": "path"
+        }
+      ]
+    }
+  }
+  ```
+
+  Native browser image requests do not expose HTTP status or response headers to JavaScript. For WMS images loaded through native image elements, MapStore can defer requests for buckets that are already known to be rate-limited; detecting a new `Retry-After` value from the image response requires CORS or proxy visibility.
 
 ### initialState configuration
 

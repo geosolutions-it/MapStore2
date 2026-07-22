@@ -24,6 +24,7 @@ import isNil from 'lodash/isNil';
 import urlUtil from 'url';
 import { getProxyCacheByUrl, setProxyCacheByUrl } from '../utils/ProxyUtils';
 import { isEmpty } from 'lodash';
+import rateLimitManager from '../utils/RateLimitManager';
 
 /**
  * Internal helper that adds an extra paramater to an axios configuration.
@@ -106,8 +107,22 @@ const checkSameOrigin = (uri) => {
     return sameOrigin;
 };
 
-axios.interceptors.request.use(config => {
-    addAuthenticationToAxios(config);
+const getProxyUrlValue = (proxyUrl) => isObject(proxyUrl) ? proxyUrl.url : proxyUrl;
+
+const getRateLimitUrl = (config = {}) => {
+    if (config._msRateLimitUrl) {
+        return config._msRateLimitUrl;
+    }
+    return config.baseURL ? combineURLs(config.baseURL, config.url || '') : (config.url || '');
+};
+
+const getRateLimitOptions = (config = {}) => ({
+    params: config._msRateLimitParams || config.params,
+    msRateLimitBucket: config.msRateLimitBucket,
+    msRateLimitKey: config.msRateLimitKey
+});
+
+const applyProxyToAxiosConfig = (config) => {
     const uri = config.url || '';
     const sameOrigin = checkSameOrigin(uri);
     if (!sameOrigin) {
@@ -141,13 +156,36 @@ axios.interceptors.request.use(config => {
         }
     }
     return config;
+};
+
+axios.interceptors.request.use(config => {
+    addAuthenticationToAxios(config);
+    config._msRateLimitUrl = getRateLimitUrl(config);
+    config._msRateLimitParams = config.params;
+    return rateLimitManager
+        .wait(config._msRateLimitUrl, getRateLimitOptions(config))
+        .then(() => applyProxyToAxiosConfig(config));
 });
 
-axios.interceptors.response.use(response => response, (error) => {
-    let proxyUrl = ConfigUtils.getProxyUrl();
+axios.interceptors.response.use(response => {
+    if (response?.config) {
+        rateLimitManager.registerSuccess(getRateLimitUrl(response.config), getRateLimitOptions(response.config));
+    }
+    return response;
+}, (error) => {
+    let proxyUrl = getProxyUrlValue(ConfigUtils.getProxyUrl() || '');
     const sameOrigin = checkSameOrigin(error?.config?.url || '');
     const errorResponseFunc = () => Promise.reject(error.response ? {...error.response, originalError: error} : error);
-    if (error.config && !error.config.url.includes(proxyUrl.url) && !sameOrigin) {
+    if (error?.response?.status === 429 && error.config) {
+        const rateLimitUrl = getRateLimitUrl(error.config);
+        const rateLimitOptions = getRateLimitOptions(error.config);
+        const rateLimitResponse = rateLimitManager.register429(rateLimitUrl, error.response.headers, rateLimitOptions);
+        if (rateLimitResponse.shouldRetry) {
+            return rateLimitManager.wait(rateLimitUrl, rateLimitOptions)
+                .then(() => axios({ ...error.config }));
+        }
+    }
+    if (error.config && proxyUrl && !(error.config.url || '').includes(proxyUrl) && !sameOrigin) {
         if (getProxyCacheByUrl(error.config.url) === undefined && typeof error.response === 'undefined') {
             setProxyCacheByUrl(error.config.url, true);
             // noProxy is a custom configuration

@@ -66,6 +66,14 @@
       }
     }
   ],
+  "rateLimit": {
+    "enabled": true,
+    "baseDelay": 1000,
+    "maxDelay": 60000,
+    "maxRetries": null,
+    "defaultBucket": "origin",
+    "bucketRules": []
+  },
   "monitorState": [],
   "userSessions": {
     "enabled": true

@@ -18,7 +18,7 @@ const createLayer = (options) => {
         return new GeoServerBILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(options));
     }
     if (options.singleTile) {
-        layer = new Cesium.SingleTileImageryProvider(WMSUtils.wmsToCesiumOptionsSingleTile(options));
+        layer = WMSUtils.createSingleTileImageryProvider(options);
     } else {
         layer = new Cesium.WebMapServiceImageryProvider(WMSUtils.wmsToCesiumOptions(options));
     }
