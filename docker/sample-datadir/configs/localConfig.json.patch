@@ -1,0 +1,17 @@
+[
+  {
+    "op": "add",
+    "path": "/authenticationProviders",
+    "value": [
+      {
+        "type": "openID",
+        "provider": "keycloak",
+        "title": "Keycloak"
+      },
+      {
+        "type": "basic",
+        "provider": "geostore"
+      }
+    ]
+  }
+]

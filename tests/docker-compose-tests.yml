@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+
+  ldap:
+    build:
+      context: ./tests/acme-ldap/
+    image: geosolutions-mapstore/acme-ldap
+    container_name: ldap
+    profiles:
+      - base
+    networks:
+      - mapstore-network
+
+  mapstore:
+    volumes:
+      - ./tests/ldap.properties:/mapstore/datadir/ldap.properties:rw
+    depends_on:
+      - postgres
+      - ldap
