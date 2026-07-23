@@ -3608,6 +3608,47 @@ describe('Openlayers layer', () => {
         // restore original method
         wmsSource.refresh = originalRefresh;
     });
+    it('wms layer should stop auto-refreshing after repeated loadingError within the cooldown window', () => {
+        var refreshCallCount = 0;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "id": "wms-loading-error-refresh-cap-test"
+        };
+
+        // create layer
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+        wmsSource.refresh = function() {
+            refreshCallCount++;
+            originalRefresh.call(this);
+        };
+
+        // simulate the error state oscillating (fail, recover, fail, recover, ...) 5 times in a row,
+        // as happens when the underlying tile failure is intermittent rather than a one-off config mistake
+        for (let i = 0; i < 5; i++) {
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: false}} map={map} />, document.getElementById("container"));
+        }
+
+        // refresh should be capped (MAX_LOADING_ERROR_REFRESH_ATTEMPTS = 3), not called once per oscillation (5)
+        expect(refreshCallCount).toBe(3);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
     it('creates a arcgis layer (MapServer)', () => {
         const options = {
             type: 'arcgis',

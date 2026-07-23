@@ -35,6 +35,9 @@ import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/Vect
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
 
 const failTiles = new Set(); // registry of fail tile urls to prevent reloading loops
+const loadingErrorRefreshState = new Map(); // layer id -> { attempts, windowStart }
+const MAX_LOADING_ERROR_REFRESH_ATTEMPTS = 3; // caps refresh() retries within the cooldown window
+const LOADING_ERROR_REFRESH_COOLDOWN_MS = 30000; // window resets only after this much quiet time, NOT on every transient recovery (error/success can oscillate every render during a real loop, which would otherwise reset the counter before it ever caps)
 
 const loadFunction = (options, headers) => function(image, src) {
 
@@ -274,9 +277,19 @@ Layers.registerType('wms', {
         }
         // refresh/update wms layer if there is error in loading tiles like: incorrect time dimension date filter, ..etc
         if (oldOptions.loadingError !== "Error" && newOptions.loadingError === "Error") {
-            // Clear tile cache before refresh to avoid showing old broken tiles
-            wmsSource?.tileCache?.pruneExceptNewestZ?.();
-            wmsSource?.refresh();
+            const now = Date.now();
+            const prev = loadingErrorRefreshState.get(newOptions.id);
+            // only start a new cooldown window if the previous one has fully expired;
+            // do NOT reset on every transient recovery, or a fast error/success oscillation
+            // (a real reload loop) would clear the counter before it ever caps
+            const windowExpired = !prev || (now - prev.windowStart) > LOADING_ERROR_REFRESH_COOLDOWN_MS;
+            const attempts = windowExpired ? 1 : prev.attempts + 1;
+            loadingErrorRefreshState.set(newOptions.id, { attempts, windowStart: windowExpired ? now : prev.windowStart });
+            if (attempts <= MAX_LOADING_ERROR_REFRESH_ATTEMPTS) {
+                // Clear tile cache before refresh to avoid showing old broken tiles
+                wmsSource?.tileCache?.pruneExceptNewestZ?.();
+                wmsSource?.refresh();
+            }
         }
         if (oldOptions.minResolution !== newOptions.minResolution) {
             layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
