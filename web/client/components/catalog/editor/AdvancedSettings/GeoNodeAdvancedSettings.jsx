@@ -24,7 +24,8 @@ const TAG_FILTER_TYPE_OPTIONS = [
 
 const RESOURCE_TYPE_OPTIONS = [
     { value: 'dataset', label: <Message msgId="catalog.resourceTypes.dataset" /> },
-    { value: 'document', label: <Message msgId="catalog.resourceTypes.document" /> }
+    { value: 'document', label: <Message msgId="catalog.resourceTypes.document" /> },
+    { value: 'map', label: <Message msgId="catalog.resourceTypes.map" /> }
 ];
 
 /**

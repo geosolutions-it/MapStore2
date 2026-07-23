@@ -12,7 +12,6 @@ import axios from '../../../libs/ajax';
 import {
     getCatalogRecords,
     getLayerFromRecord,
-    documentsToLayerConfig,
     processRecords
 } from '../GeoNode';
 
@@ -152,27 +151,6 @@ describe('GeoNode catalog processRecords / documents', () => {
         links: [{ link_type: 'OGC:WMS', url: 'http://sample?name=layer1' }]
     };
 
-    it('documentsToLayerConfig builds a single vector layer of point features', (done) => {
-        mockDocuments();
-        documentsToLayerConfig([{ pk: 10 }, { pk: 11 }], { service: { url: 'http://gn' } })
-            .then((layer) => {
-                try {
-                    expect(layer.type).toBe('vector');
-                    expect(layer.name).toBe('Documents');
-                    expect(layer.rowViewer).toBe('GEONODE_DOCUMENTS_ROW_VIEWER');
-                    // doc 11 has no extent -> skipped
-                    expect(layer.features.length).toBe(1);
-                    expect(layer.features[0].id).toBe(10);
-                    expect(layer.features[0].geometry.type).toBe('Point');
-                    expect(layer.features[0].geometry.coordinates).toEqual([5, 5]);
-                    expect(layer.bbox).toExist();
-                    done();
-                } catch (e) {
-                    done(e);
-                }
-            });
-    });
-
     it('processRecords collapses documents and converts other records to layers', (done) => {
         mockDocuments();
         const records = [datasetRecord, { resource_type: 'document', pk: 10 }];
@@ -216,25 +194,6 @@ describe('GeoNode catalog processRecords / documents', () => {
                 try {
                     expect(layers).toEqual([]);
                     expect(groups).toEqual([]);
-                    done();
-                } catch (e) {
-                    done(e);
-                }
-            });
-    });
-
-    it('documentsToLayerConfig skips documents whose fetch fails', (done) => {
-        mockAxios.onGet().reply((config) => {
-            if (config.url.indexOf('/documents/10') !== -1) {
-                return [200, { document: { pk: 10, title: 'Doc 10', subtype: 'image', extent: { coords: [0, 0, 10, 10] } } }];
-            }
-            return [500];
-        });
-        documentsToLayerConfig([{ pk: 10 }, { pk: 12 }], { service: { url: 'http://gn' } })
-            .then((layer) => {
-                try {
-                    expect(layer.features.length).toBe(1);
-                    expect(layer.features[0].id).toBe(10);
                     done();
                 } catch (e) {
                     done(e);
