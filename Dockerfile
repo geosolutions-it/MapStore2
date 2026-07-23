@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk17 AS mother
+FROM tomcat:10.1-jdk17 AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geosolutionsgroup.com>"
 ARG MAPSTORE_WEBAPP_SRC=""
 WORKDIR /tmp/build-context
