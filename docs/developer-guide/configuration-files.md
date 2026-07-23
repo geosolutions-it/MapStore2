@@ -139,7 +139,7 @@ java -Ddatadir.location=/path/to/data-dir -jar mapstore.war
 
 In servlet containers like Tomcat, you can set Java system properties in the `setenv.sh` file (for Unix-based systems) or `setenv.bat` file (for Windows systems) located in the `bin` directory of the Tomcat installation.
 
-If you are using Tomcat as a service, you can set Java system properties in the service configuration file (for instance `/etc/default/tomcat9` in Ubuntu 20.04 ).
+If you are using Tomcat as a service, you can set Java system properties in the service configuration file (for instance `/etc/default/tomcat10` in Ubuntu).
 
 ### `datadir.location`
 

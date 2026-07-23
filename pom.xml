@@ -13,44 +13,39 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>9.0.116</tomcat.version>
-        <jackson.version>2.16.1</jackson.version>
-        <gt.version>31.3</gt.version>
+        <tomcat.version>10.1.55</tomcat.version>
+        <jackson.version>2.19.4</jackson.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
-        <spring.version>5.3.39</spring.version>
-        <spring.security.version>5.7.13</spring.security.version>
+        <spring.version>7.0.8</spring.version>
+        <spring.security.version>7.1.0</spring.security.version>
 
         <!-- other dependencies (aligned where applicable) -->
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.14.0</commons-io.version>
         <commons-logging.version>1.2</commons-logging.version>
-        <commons-pool.version>1.5.4</commons-pool.version>
-        <ehcache-web.version>2.0.4</ehcache-web.version>
-        <httpclient.version>4.5.13</httpclient.version>
-        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
-        <jaxws-api.version>2.3.1</jaxws-api.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jaxws-api.version>4.0.3</jaxws-api.version>
         <json-lib.version>2.4.2-geoserver</json-lib.version>
         <json-patch.version>1.13</json-patch.version>
         <junit.version>4.13.2</junit.version>
-        <log4j.version>2.19.0</log4j.version>
+        <log4j.version>2.26.0</log4j.version>
         <mime-util.version>2.1.3</mime-util.version>
         <mockito-core.version>4.0.0</mockito-core.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <cargo.version>1.10.2</cargo.version>
+        <cargo.version>1.10.27</cargo.version>
 
         <!-- MapStore‑specific -->
-        <geostore-webapp.version>2.6-SNAPSHOT</geostore-webapp.version>
-        <print-lib.version>2.3.5</print-lib.version>
-        <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
+        <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
+        <print-lib.version>2.5-SNAPSHOT</print-lib.version>
+        <http_proxy.version>1.7-SNAPSHOT</http_proxy.version>
 
         <!-- Commons extras -->
-        <commons-lang-version>2.3</commons-lang-version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <commons-text.version>1.13.0</commons-text.version>
     </properties>
 
@@ -140,13 +135,6 @@
                 </exclusions>
             </dependency>
 
-            <!-- HTTPClient: drop the bundled old HttpCore -->
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -160,24 +148,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-web</artifactId>
-                <version>${ehcache-web.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-pool</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${commons-pool.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons-lang-version}</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${jakarta.servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -203,8 +176,8 @@
             <!-- JAX‑WS API: keep only the Jakarta SOAP/Activation APIs you want -->
             <!-- 2) Remove old JAX‑WS/JAXB pulls -->
             <dependency>
-                <groupId>javax.xml.ws</groupId>
-                <artifactId>jaxws-api</artifactId>
+                <groupId>jakarta.xml.ws</groupId>
+                <artifactId>jakarta.xml.ws-api</artifactId>
                 <version>${jaxws-api.version}</version>
                 <exclusions>
                     <exclusion>
@@ -222,6 +195,22 @@
                     <exclusion>
                         <groupId>javax.annotation</groupId>
                         <artifactId>javax.annotation-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.activation</groupId>
+                        <artifactId>jakarta.activation-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.annotation</groupId>
+                        <artifactId>jakarta.annotation-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.xml.bind</groupId>
+                        <artifactId>jakarta.xml.bind-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.xml.soap</groupId>
+                        <artifactId>jakarta.xml.soap-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -264,7 +253,7 @@
                 </exclusions>
             </dependency>
 
-            <!-- GeoStore Webapp: drop all the old Spring 5.3.18 bits -->
+            <!-- GeoStore Webapp -->
             <dependency>
                 <groupId>it.geosolutions.geostore</groupId>
                 <artifactId>geostore-webapp</artifactId>
@@ -358,6 +347,10 @@
                     <exclusion>
                         <groupId>org.apache.httpcomponents</groupId>
                         <artifactId>httpcore</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.xml.bind</groupId>
+                        <artifactId>jakarta.xml.bind-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -458,6 +451,30 @@
                 <module>binary</module>
             </modules>
         </profile>
+        <profile>
+            <id>owasp</id>
+            <activation>
+                <property>
+                    <name>owasp</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>12.2.2</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
@@ -497,19 +514,6 @@
                         WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>9.0.9</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals><goal>check</goal></goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

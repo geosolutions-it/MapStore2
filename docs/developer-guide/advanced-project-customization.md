@@ -32,12 +32,12 @@ Find the entry for `cargo-maven3-plugin` and add the `systemProperties` tag with
             <artifactId>cargo-maven3-plugin</artifactId>
             <configuration>
                 <container>
-                    <containerId>tomcat8x</containerId>
+                    <containerId>tomcat10x</containerId>
                     <systemProperties>
                         <datadir.location>[local_path_to_your_datadir]/datadir/[customInstallationFolder]</datadir.location>
                     </systemProperties>
                     <zipUrlInstaller>
-                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip</url>
+                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/10.1.55/tomcat-10.1.55.zip</url>
                     </zipUrlInstaller>
                 </container>
                 <configuration>
