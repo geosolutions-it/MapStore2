@@ -39,7 +39,7 @@ export default ({
     options = {},
     children
 }) =>
-    (<div className={`mapstore-widget-card ${options.singleWidget  ? 'single-widget' : ''}`} id={id}>
+    (<div className={`mapstore-widget-card ${options.singleWidget  ? 'single-widget' : ''}`} id={id} data-widget-card>
         <BorderLayout className={className} header={(<div style={headerStyle} className={`mapstore-widget-info ${isDraggable ? 'draggableHandle' : ''}`}>
             <div className="mapstore-widget-header">
                 <span className="widget-icons">{icons}</span>

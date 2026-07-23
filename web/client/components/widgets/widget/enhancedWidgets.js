@@ -22,6 +22,7 @@ import dependenciesToWidget from '../enhancers/dependenciesToWidget';
 import dependenciesToExtent from '../enhancers/dependenciesToExtent';
 import dependenciesToLayers from '../enhancers/dependenciesToLayers';
 import dependenciesToMapProp from '../enhancers/dependenciesToMapProp';
+import interactionZoomToExtent from '../enhancers/interactionZoomToExtent';
 
 
 import BaseChartWidget from './ChartWidget';
@@ -77,6 +78,7 @@ export const MapWidget = compose(
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
     dependenciesToExtent,
+    interactionZoomToExtent,
     mapWidget
 )(BaseMapWidget);
 

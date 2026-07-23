@@ -2601,6 +2601,12 @@
         "onSelectionChange": "Lors du changement de sélection",
         "applyFilter": "Appliquer le filtre",
         "applyDimension": "Appliquer la dimension",
+        "zoomTo": "Zoomer sur",
+        "zoomToRequiresApplyFilterTooltip": "Connectez une cible Appliquer le filtre à une couche de cette carte avant d'activer Zoomer sur",
+        "autoZoomForAllMapsTooltip": "Effectue automatiquement un zoom sur l'étendue filtrée lorsque la sélection change. Désactivez cette option pour utiliser le zoom manuel. Un filtre ne peut utiliser qu'un seul mode de zoom ; ce paramètre s'applique donc à toutes les cartes connectées.",
+        "zoomToFilterExtent": "Zoomer sur l'étendue filtrée",
+        "autoZoomLabel": "Zoom automatique",
+        "autoZoomInfo": "Zoom automatique sur l'étendue filtrée lors des modifications de sélection. Désactiver pour utiliser le zoom manuel.",
         "noConnectableNodesAvailable": "Aucun nœud connectable disponible",
 
         "selectAll": "Tout sélectionner",

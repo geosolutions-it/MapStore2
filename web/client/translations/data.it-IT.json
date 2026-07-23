@@ -2601,6 +2601,12 @@
         "onSelectionChange": "Al cambio selezione",
         "applyFilter": "Applica filtro",
         "applyDimension": "Applica dimensione",
+        "zoomTo": "Zoom su",
+        "zoomToRequiresApplyFilterTooltip": "Collega un target Applica filtro a un layer di questa mappa prima di abilitare Zoom su",
+        "autoZoomForAllMapsTooltip": "Esegue automaticamente lo zoom sull'estensione filtrata quando la selezione cambia. Disattiva questa opzione per utilizzare lo zoom manuale. Un filtro può utilizzare una sola modalità di zoom, pertanto questa impostazione si applica a tutte le mappe collegate.",
+        "zoomToFilterExtent": "Zoom sull'estensione filtrata",
+        "autoZoomLabel": "Zoom automatico",
+        "autoZoomInfo": "Zoom automatico sull'estensione filtrata ai cambi di selezione. Disabilita per usare lo zoom manuale.",
         "noConnectableNodesAvailable": "Nessun nodo collegabile disponibile",
 
         "selectAll": "Seleziona tutto",

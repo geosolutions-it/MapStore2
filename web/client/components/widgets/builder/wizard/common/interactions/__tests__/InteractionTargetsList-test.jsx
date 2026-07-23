@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import InteractionTargetsList from '../InteractionTargetsList';
+import { DATATYPES, TARGET_TYPES } from '../../../../../../../utils/InteractionUtils';
 
 const sourceNodePath = 'widgets[filter-widget].filters[filter-1]';
 
@@ -64,6 +65,27 @@ const createLayerFilterItem = () => ({
     }
 });
 
+const zoomToTarget = {
+    targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+    expectedDataType: DATATYPES.ZOOM_TRIGGER,
+    constraints: {}
+};
+
+const createZoomToItem = (id = 'map', nodePath = 'map.applyZoomTo') => ({
+    id,
+    title: 'Zoom to',
+    icon: 'zoom-to',
+    type: 'element',
+    nodePath,
+    interactionMetadata: {
+        targets: [{
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+            expectedDataType: DATATYPES.ZOOM_TRIGGER,
+            constraints: {}
+        }]
+    }
+});
+
 const renderTargetsList = ({
     item = createLayerDimensionItem('elevation'),
     target = applyDimensionTarget,
@@ -71,6 +93,7 @@ const renderTargetsList = ({
     alreadyExistingInteractions = [],
     sourceSelectionMode,
     timelineEnabled = false,
+    filteredInteractionTree,
     onEditorChange = () => {}
 } = {}) => {
     const container = document.getElementById('container');
@@ -82,7 +105,7 @@ const renderTargetsList = ({
             interactionTree={interactionTree}
             currentSourceId="filter-1"
             onEditorChange={onEditorChange}
-            filteredInteractionTree={{ children: [item] }}
+            filteredInteractionTree={filteredInteractionTree || { children: [item] }}
             alreadyExistingInteractions={alreadyExistingInteractions}
             sourceSelectionMode={sourceSelectionMode}
             timelineEnabled={timelineEnabled}
@@ -194,5 +217,64 @@ describe('InteractionTargetsList component', () => {
         });
 
         expect(container.querySelector('.glyphicon-plug')).toBeTruthy();
+    });
+
+    it('should update all zoomTo targets when autoZoom is changed when multiple map is connected', () => {
+        let changedKey;
+        let changedInteractions;
+        const item1 = createZoomToItem('map', 'map.applyZoomTo');
+        const item2 = createZoomToItem('widget-1-map', 'widgets[widget-1].maps[map-1].applyZoomTo');
+
+        const container = renderTargetsList({
+            target: zoomToTarget,
+            filteredInteractionTree: { children: [item1, item2] },
+            alreadyExistingInteractions: [
+                {
+                    id: 'apply-filter-1',
+                    plugged: true,
+                    targetType: TARGET_TYPES.APPLY_FILTER,
+                    source: { nodePath: sourceNodePath },
+                    target: { nodePath: 'map.layers[layer-1]' }
+                },
+                {
+                    id: 'apply-filter-2',
+                    plugged: true,
+                    targetType: TARGET_TYPES.APPLY_FILTER,
+                    source: { nodePath: sourceNodePath },
+                    target: { nodePath: 'widgets[widget-1].maps[map-1].layers[layer-1]' }
+                }
+            ],
+            interactions: [{
+                id: 'zoom-1',
+                plugged: true,
+                targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+                source: { nodePath: sourceNodePath },
+                target: { nodePath: 'map.applyZoomTo' },
+                configuration: { autoZoom: false }
+            }, {
+                id: 'zoom-2',
+                plugged: true,
+                targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+                source: { nodePath: sourceNodePath },
+                target: { nodePath: 'widgets[widget-1].maps[map-1].applyZoomTo' },
+                configuration: { autoZoom: false }
+            }],
+            onEditorChange: (key, value) => {
+                changedKey = key;
+                changedInteractions = value;
+            }
+        });
+
+        const rows = container.querySelectorAll('.ms-connection-row');
+        const buttons = rows[0].parentNode.querySelectorAll('.ms-interaction-buttons button');
+        const autoZoomButton1 = buttons[0];
+
+        // simulate click on first row's auto zoom
+        ReactTestUtils.Simulate.click(autoZoomButton1);
+
+        expect(changedKey).toBe('interactions');
+        expect(changedInteractions.length).toBe(2);
+        expect(changedInteractions[0].configuration.autoZoom).toBe(true);
+        expect(changedInteractions[1].configuration.autoZoom).toBe(true);
     });
 });
