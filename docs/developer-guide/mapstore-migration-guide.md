@@ -155,6 +155,39 @@ Copy the `logging.properties` file from the MapStore repository (`product/cargo/
 
 ## Migration from 2026.01.02 to 2026.02.00
 
+### Dev server static configuration moved to the webpack configuration files
+
+webpack-dev-server 5 (introduced with this release) watches the static directories by default and triggers a full page reload on every file change. Projects used to pass `--static .` on the command line, so the whole project root was watched: the logs and temporary files written by the local backend (`web/target`, `mapstore.log`) continuously triggered reloads, making the dev environment unusable (see [#12665](https://github.com/geosolutions-it/MapStore2/issues/12665)).
+
+In your project:
+
+- remove `--static .` from the `fe:start` and `fe:start-prod` scripts in `package.json` (make also sure `fe:start-prod` points to `prod-webpack.config.js`)
+- add the `devServer` configuration to your `webpack.config.js` and `prod-webpack.config.js`, as in the current project templates:
+
+```javascript
+const { devServer } = require('./MapStore2/build/devServer');
+
+module.exports = require('./MapStore2/build/buildConfig')({
+    // ...existing configuration...
+    devServer: {
+        devMiddleware: { publicPath: '/dist/' },
+        ...devServer,
+        static: [{
+            directory: __dirname,
+            watch: {
+                ignored: [
+                    '**/web/target/**',
+                    '**/logs/**',
+                    '**/*.log',
+                    '**/node_modules/**',
+                    '**/.git/**'
+                ]
+            }
+        }]
+    }
+});
+```
+
 ### Custom map resolutions moved from `new.json` to the `CRSSelector` plugin
 
 Custom map resolutions used to be declared in the default map configuration (`new.json`, or the project-level equivalent) under `mapOptions.view.resolutions`. That location was tied to a single projection and was not kept in sync when the CRS was changed at runtime, which could leave saved maps with a projection that did not match the persisted resolutions.

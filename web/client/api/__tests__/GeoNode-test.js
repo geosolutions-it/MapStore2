@@ -221,4 +221,26 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
             options: { service: { defaultSort: '-popular_count' } }
         }).then(() => done()).catch(done);
     });
+
+    it('getMapByPk requests the maps endpoint and unwraps the map', (done) => {
+        mockAxios.onGet().reply((config) => {
+            try {
+                expect(config.url).toBe('https://example.com/api/v2/maps/2');
+            } catch (e) {
+                done(e);
+            }
+            return [200, { map: { pk: 2, title: 'mappa_gruppi', data: { map: { layers: [], groups: [] } } } }];
+        });
+
+        API.getMapByPk('https://example.com', 2).then((map) => {
+            try {
+                expect(map.pk).toBe(2);
+                expect(map.title).toBe('mappa_gruppi');
+                expect(map.data.map).toEqual({ layers: [], groups: [] });
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }).catch(done);
+    });
 });
