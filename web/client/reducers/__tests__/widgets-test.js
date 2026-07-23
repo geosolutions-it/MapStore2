@@ -515,6 +515,51 @@ describe('Test the widgets reducer', () => {
         expect(floating.layouts).toEqual(initialState.containers.floating.layouts);
         expect(floating.maximized).toEqual({});
     });
+    it('widgets toggleMaximize restores resize and drag for a single multi-view widget', () => {
+        const id = 'widget-1';
+        const layoutId = 'view-1';
+        const widgetToMaximize = {
+            id,
+            layoutId,
+            widgetType: 'text',
+            dataGrid: {
+                x: 0,
+                y: 0,
+                w: 1,
+                h: 1
+            }
+        };
+        const layout = { i: id, x: 0, y: 0, w: 1, h: 1 };
+        const initialState = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [widgetToMaximize],
+                    layouts: [{
+                        id: layoutId,
+                        name: 'Main view',
+                        color: null,
+                        md: [layout],
+                        xxs: [{ ...layout }]
+                    }],
+                    layout: [layout],
+                    selectedLayoutId: layoutId
+                }
+            }
+        };
+
+        let resultState = widgets(initialState, toggleMaximize(widgetToMaximize));
+        let floating = resultState.containers[DEFAULT_TARGET];
+        expect(floating.maximized.widget).toEqual([widgetToMaximize]);
+        expect(floating.widgets[0].dataGrid.isDraggable).toBe(false);
+        expect(floating.widgets[0].dataGrid.isResizable).toBe(false);
+
+        resultState = widgets(resultState, toggleMaximize(floating.widgets[0]));
+        floating = resultState.containers[DEFAULT_TARGET];
+        expect(floating.maximized).toEqual({});
+        expect(floating.widgets[0].dataGrid.isDraggable).toBe(true);
+        expect(floating.widgets[0].dataGrid.isResizable).toBe(true);
+        expect(floating.layouts).toEqual(initialState.containers[DEFAULT_TARGET].layouts);
+    });
     it('widgets toggleMaximize on static widget', () => {
         const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
         const id = 'b1786030-f7a9-11e8-8602-03b7e0c9537b';
