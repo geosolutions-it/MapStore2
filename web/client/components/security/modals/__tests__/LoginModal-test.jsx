@@ -112,4 +112,32 @@ describe("Test the login modal", () => {
             expect(img.src).toEqual(imageURL);
         });
     });
+    describe('close button placement', () => {
+        it('basic only: close button with the form, not in footer', () => {
+            ReactDOM.render(<LoginModal show providers={[{type: "basic", provider: "geostore"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeTruthy();
+            expect(document.querySelector('.modal-body button.btn-default')).toBeTruthy();
+            expect(document.querySelector('.modal-footer button')).toBeFalsy();
+        });
+        it('basic + openID (default): close button in footer only, not with the form', () => {
+            ReactDOM.render(<LoginModal show providers={[{type: "basic", provider: "geostore"}, {type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeTruthy();
+            expect(document.querySelector('.modal-body button.btn-default')).toBeFalsy();
+            expect(document.querySelector('.modal-footer button.btn-default')).toBeTruthy();
+            expect(document.querySelectorAll('button.btn-default').length).toBe(1);
+        });
+        it('openID only: close button in footer only', () => {
+            ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeFalsy();
+            expect(document.querySelector('.modal-body button.btn-default')).toBeFalsy();
+            expect(document.querySelector('.modal-footer button.btn-default')).toBeTruthy();
+            expect(document.querySelectorAll('button.btn-default').length).toBe(1);
+        });
+        it('basic + openID, includeCloseButton false: no close button', () => {
+            ReactDOM.render(<LoginModal show includeCloseButton={false} providers={[{type: "basic", provider: "geostore"}, {type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeTruthy();
+            expect(document.querySelector('.modal-body button.btn-default')).toBeFalsy();
+            expect(document.querySelector('.modal-footer button')).toBeFalsy();
+        });
+    });
 });

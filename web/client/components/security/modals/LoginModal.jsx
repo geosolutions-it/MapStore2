@@ -26,12 +26,18 @@ const logos = {
     keycloak
 };
 
-const Separator = ({children}) => <div style={{width: "100%", textAlign: "center", padding: 10}}>{children}</div>;
+const Separator = ({children}) => (
+    <div style={{width: "100%", display: "flex", alignItems: "center", gap: 10, padding: 10}}>
+        <hr style={{flex: 1, margin: 0}} />
+        {children}
+        <hr style={{flex: 1, margin: 0}} />
+    </div>
+);
 const LoginItem = withTooltip(({provider, onLogin}) => {
     const {title, provider: providerName, imageURL} = provider;
     const logo = imageURL ?? logos[providerName];
     const text = title;
-    return <a style={{margin: 20}} onClick={() => onLogin(provider)}>{logo ? <img src={logo} alt={text} style={{minHeight: 50}} /> : text ?? providerName}</a>;
+    return <a style={{margin: 20, cursor: 'pointer'}} onClick={() => onLogin(provider)}>{logo ? <img src={logo} alt={text} style={{minHeight: 50}} /> : text ?? providerName}</a>;
 });
 /**
  * A Modal window to show password reset form
@@ -76,10 +82,9 @@ class LoginModal extends React.Component {
         includeCloseButton: true
     };
 
-    getForm = () => {
-        const formProviders = this.props.providers.filter(({type}) => type === "basic");
+    getForm = ({formProviders, openIdProviders}) => {
         if (formProviders.length > 0) {
-            return (<LoginForm
+            return (<><LoginForm
                 loading={this.props.loading}
                 role="body"
                 ref="loginForm"
@@ -88,14 +93,26 @@ class LoginModal extends React.Component {
                 loginError={this.props.loginError}
                 onSubmit={this.props.onSubmit}
                 onError={this.props.onError}
-            />);
+            />
+
+            <FlexBox centerChildrenVertically  gap="sm">
+                <FlexBox.Fill />
+                {this.props.includeCloseButton && openIdProviders.length === 0 ? this.getCloseButton() : null}
+                <Button
+                    ref="submit"
+                    value={getMessageById(this.context.messages, "user.signIn")}
+                    variant="success"
+                    onClick={this.loginSubmit}
+                    key="submit">
+                    <Message msgId="user.signIn"/>
+                </Button>
+            </FlexBox>
+            </>);
         }
         return null;
     }
 
-    getOpenIDProviders = () => {
-        const formProviders = this.props.providers.filter(({type}) => type === "basic");
-        const openIdProviders = this.props.providers.filter(({type}) => type === "openID");
+    getOpenIDProviders = ({formProviders, openIdProviders}) => {
         if (openIdProviders.length > 0) {
             return <>
                 <Separator><Message msgId={formProviders.length > 0 ? "user.orSignInWith" : "user.signInWith"}/></Separator>
@@ -107,37 +124,34 @@ class LoginModal extends React.Component {
         return null;
     }
 
-    getFooter = () => {
-        return ( <FlexBox centerChildrenVertically  gap="sm">
-            <FlexBox.Fill />
-            {this.props.includeCloseButton ? <Button
-                key="closeButton"
-                ref="closeButton"
-                onClick={this.handleOnHide}><Message msgId="close"/></Button> : <span/>}
-            <Button
-                ref="submit"
-                value={getMessageById(this.context.messages, "user.signIn")}
-                variant="success"
-                onClick={this.loginSubmit}
-                key="submit">
-                <Message msgId="user.signIn"/>
-            </Button>
-        </FlexBox>);
-    };
 
+    getCloseButton() {
+        return (<Button
+            key="closeButton"
+            ref="closeButton"
+            onClick={this.handleOnHide}><Message msgId="close"/>
+        </Button>);
+    }
     render() {
+        const formProviders = this.props.providers.filter(({type}) => type === "basic");
+        const openIdProviders = this.props.providers.filter(({type}) => type === "openID");
         return (<Modal {...this.props.options} backdrop="static" show={this.props.show} onHide={this.handleOnHide}>
             <Modal.Header key="passwordChange" closeButton>
                 <Modal.Title><Message msgId="user.login"/></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <>
-                    {this.getForm()}
-                    {this.getOpenIDProviders()}
+                    {this.getForm({formProviders, openIdProviders})}
+                    {this.getOpenIDProviders({formProviders, openIdProviders})}
                 </>
             </Modal.Body>
             <Modal.Footer>
-                {this.getFooter()}
+                {this.props.includeCloseButton && openIdProviders.length > 0
+                    ? (<FlexBox centerChildrenVertically  gap="sm">
+                        <FlexBox.Fill />
+                        {this.getCloseButton()}
+                    </FlexBox>)
+                    : <span/>}
             </Modal.Footer>
         </Modal>);
     }
