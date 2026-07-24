@@ -1,6 +1,6 @@
 {
   "name": "mapstore2",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "MapStore 2",
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
@@ -171,7 +171,7 @@
     "history": "4.6.1",
     "html-to-draftjs": "npm:@geosolutions/html-to-draftjs@1.5.1",
     "html-to-image": "1.11.11",
-    "immutable": "4.3.8",
+    "immutable": "4.3.9",
     "ismobilejs": "0.5.0",
     "json-2-csv": "5.5.1",
     "jsonlint-mod": "1.7.5",
