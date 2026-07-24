@@ -7,6 +7,8 @@
  */
 import expect from 'expect';
 import * as Cesium from 'cesium';
+import proj4 from 'proj4';
+import { register } from 'ol/proj/proj4';
 
 import { keys, sortBy } from 'lodash';
 
@@ -2436,6 +2438,16 @@ describe('Test the MapUtils', () => {
     });
     it('convertResolution', () => {
         expect(convertResolution('EPSG:3857', 'EPSG:4326', 2000).transformedResolution).toBe(0.017986440587896155);
+    });
+    it('convertResolution does not fail when the target CRS relies on an unavailable datum grid', () => {
+        // simulates a datum grid (e.g. NTv2/gsb) that can't be resolved for the given point
+        proj4.defs('TEST:6265-GRID-CRS', '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +nadgrids=unavailable-grid-6265');
+        register(proj4);
+
+        const result = convertResolution('EPSG:3857', 'TEST:6265-GRID-CRS', 2000);
+        expect(result).toExist();
+        expect(isNaN(result.transformedResolution)).toBe(false);
+        expect(isFinite(result.transformedResolution)).toBe(true);
     });
     it('test get exact zoom level from resolution using getExactZoomFromResolution', () => {
         const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
