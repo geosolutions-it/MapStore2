@@ -1,3 +1,6 @@
+import { cleanPaths } from "./WidgetsUtils";
+import get from 'lodash/get';
+
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
     LAYER_STYLE: 'LAYER_STYLE',
@@ -102,9 +105,13 @@ export const WIDGET_TARGETS_BY_TYPE = {
  * @param {string|""} id - The layer id
  * @returns {object} Layer constraint object with name (defaults to "") and id (defaults to undefined)
  */
-export function createLayerConstraint(name) {
+export function createLayerConstraint(layer) {
+    if (!layer) {
+        return null;
+    }
     return {
-        name: name
+        name: layer.name,
+        title: layer.title || layer.name
     };
 }
 
@@ -340,7 +347,7 @@ export function generateLayerMetadataTree(layer) {
                 return {
                     ...t,
                     constraints: {
-                        layer: createLayerConstraint(layer.name)
+                        layer: createLayerConstraint(layer)
                     }
                 };
             })
@@ -517,7 +524,7 @@ export function generateChartTraceElementNode(trace) {
             targets: WIDGET_TARGETS_BY_TYPE.chartTrace.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
-                    layer: createLayerConstraint(trace?.layer?.name)
+                    layer: createLayerConstraint(trace?.layer)
                 }
             }))
         }
@@ -598,7 +605,7 @@ export function generateTableWidgetTreeNode(widget) {
             targets: WIDGET_TARGETS_BY_TYPE.table.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
-                    layer: createLayerConstraint(widget?.layer?.name)
+                    layer: createLayerConstraint(widget?.layer)
                 }
             }))
         }
@@ -619,7 +626,7 @@ export function generateCounterWidgetTreeNode(widget) {
             targets: WIDGET_TARGETS_BY_TYPE.counter.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
-                    layer: createLayerConstraint(widget?.layer?.name)
+                    layer: createLayerConstraint(widget?.layer)
                 }
             }))
         }
@@ -886,7 +893,7 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
             glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_FILTER],
             expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_FILTER],
             constraints: layerInvolved ? {
-                layer: createLayerConstraint(layerInvolved.name)
+                layer: createLayerConstraint(layerInvolved)
             } : {}
         },
         {
@@ -895,7 +902,7 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
             glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_STYLE],
             expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_STYLE],
             constraints: layerInvolved ? {
-                layer: createLayerConstraint(layerInvolved.name)
+                layer: createLayerConstraint(layerInvolved)
             } : {}
         },
         {
@@ -1066,3 +1073,61 @@ export function extractTraceFromWidgetByNodePath(widget, nodePath) {
 
     return null;
 }
+
+/**
+ * Get connected active targets
+ * @param {array} interactions - interactions
+ * @param {object} activeTargets - active targets
+ * @param {array} inactiveInteractionIds - inactive interaction IDs
+ * @param {object} targetsWithDisabledFilter - targets with disabled filter
+ * @param {string} locale - locale for the output
+ * @param {boolean} asLayerTitles - flag to return layer titles
+ * @param {boolean} withDisabledFilter - flag to include disabled filter
+ * @returns {array} the connected active targets
+ */
+export const getConnectedActiveTargets = ({
+    interactions,
+    activeTargets,
+    inactiveInteractionIds = [],
+    targetsWithDisabledFilter,
+    locale,
+    asLayerTitles = false,
+    withDisabledFilter = false
+}) => {
+    return interactions
+        .filter(({ plugged, id }) =>
+            plugged && (
+                withDisabledFilter ||
+                !inactiveInteractionIds.includes(id)
+            )
+        )
+        .map(interaction => ({
+            path: cleanPaths(interaction.target.nodePath),
+            layer: get(interaction, "target.metaData.constraints.layer")
+        }))
+        .filter(({ path }) => {
+            const isActive = Object.entries(activeTargets)
+                .some(([activePath, visibility]) =>
+                    visibility && path === cleanPaths(activePath)
+                );
+
+            if (withDisabledFilter) {
+                return isActive && targetsWithDisabledFilter?.[path] === true;
+            }
+
+            return isActive || isMapTimeTarget(path);
+        })
+        .map(({ path, layer }) => {
+            if (!asLayerTitles) {
+                return path;
+            }
+
+            const title = get(layer, "title");
+            const name = get(layer, "name");
+            return title
+                ? typeof title === "object"
+                    ? title[locale] ?? title.default
+                    : title
+                : name;
+        });
+};

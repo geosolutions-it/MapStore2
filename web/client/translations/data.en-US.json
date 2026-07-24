@@ -2649,6 +2649,8 @@
         "applyStyleFromWidgetButton": "Apply style to all connected layers from this widget",
         "dimensionChangedByWidgetInfo": "One or more connected nodes use a different dimension value than the one selected here. Click the button below to apply the selected value to all connected nodes.",
         "applyDimensionFromWidgetButton": "Apply value from this filter to all connected nodes",
+        "showConnectedLayers": "Show connected layers",
+        "showConnectedLayersTooltip": "Show target connected layers on the widget",
 
         "defaultFilter": "Default Filter",
         "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",

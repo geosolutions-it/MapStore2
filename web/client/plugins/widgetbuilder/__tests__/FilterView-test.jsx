@@ -540,4 +540,66 @@ describe('FilterView component', () => {
         expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
         expect(container.textContent).toNotContain('widgets.filterWidget.selectAll');
     });
+
+    it('renders later titles when showConnectedLayers is true and active targets exist', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('checkbox', 'single', { showConnectedLayers: true });
+        const mockInteractions = [{
+            id: 'int-1',
+            plugged: true,
+            target: {
+                nodePath: 'layer-1',
+                metaData: {
+                    constraints: {
+                        layer: { name: 'layer-1', title: 'Layer One' }
+                    }
+                }
+            }
+        }];
+        const mockActiveTargets = { 'layer-1': true };
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+                interactions={mockInteractions}
+                activeTargets={mockActiveTargets}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-layers')).toExist();
+        expect(container.textContent).toContain('Layer One');
+    });
+
+    it('does not render layer titles when showConnectedLayers is false', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('checkbox', 'single', { showConnectedLayers: false });
+        const mockInteractions = [{
+            id: 'int-1',
+            plugged: true,
+            target: {
+                nodePath: 'layer-1',
+                metaData: {
+                    constraints: {
+                        layer: { name: 'layer-1', title: 'Layer One' }
+                    }
+                }
+            }
+        }];
+        const mockActiveTargets = { 'layer-1': true };
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+                interactions={mockInteractions}
+                activeTargets={mockActiveTargets}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-layers')).toNotExist();
+    });
 });
+

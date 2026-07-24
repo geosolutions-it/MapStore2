@@ -2651,6 +2651,8 @@
         "applyStyleFromWidgetButton": "Appliquer le style à toutes les couches connectées depuis ce widget",
         "dimensionChangedByWidgetInfo": "Un ou plusieurs nœuds connectés utilisent une valeur de dimension différente de celle sélectionnée ici. Cliquez sur le bouton ci-dessous pour appliquer la valeur sélectionnée à tous les nœuds connectés.",
         "applyDimensionFromWidgetButton": "Appliquer la valeur de ce filtre à tous les nœuds connectés",
+        "showConnectedLayers": "Afficher les couches connectées",
+        "showConnectedLayersTooltip": "Afficher les couches connectées à la cible dans le widget",
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",
         "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",

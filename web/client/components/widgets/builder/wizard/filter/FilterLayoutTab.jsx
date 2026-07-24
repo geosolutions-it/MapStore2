@@ -666,6 +666,20 @@ const FilterLayoutTab = ({
                                     onChange={() => onChange('layout.defaultExpanded', !(layout.defaultExpanded !== false))}
                                 />
                             </FormGroup>
+                            <FormGroup className="form-group-flex">
+                                <ControlLabel>
+                                    <Message msgId="widgets.filterWidget.showConnectedLayers" />&nbsp;
+                                    <InfoPopover
+                                        placement="top"
+                                        text={<Message msgId="widgets.filterWidget.showConnectedLayersTooltip" />}
+                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                    />
+                                </ControlLabel>
+                                <Checkbox
+                                    checked={layout.showConnectedLayers !== false}
+                                    onChange={() => onChange('layout.showConnectedLayers', !(layout.showConnectedLayers !== false))}
+                                />
+                            </FormGroup>
                         </div>
                     </Collapse>
                 )}
