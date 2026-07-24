@@ -97,7 +97,7 @@ class LoginModal extends React.Component {
 
             <FlexBox centerChildrenVertically  gap="sm">
                 <FlexBox.Fill />
-                {openIdProviders.length > 0 && !this.props.includeCloseButton ? null : this.getCloseButton()}
+                {this.props.includeCloseButton && openIdProviders.length === 0 ? this.getCloseButton() : null}
                 <Button
                     ref="submit"
                     value={getMessageById(this.context.messages, "user.signIn")}
