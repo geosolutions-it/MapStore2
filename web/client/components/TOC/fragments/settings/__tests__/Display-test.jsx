@@ -102,7 +102,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(15);
+        expect(inputs.length).toBe(16);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -130,7 +130,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
+        expect(inputs.length).toBe(15);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();

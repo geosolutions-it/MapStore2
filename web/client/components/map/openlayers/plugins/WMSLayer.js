@@ -206,104 +206,106 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
     );
 };
 
-Layers.registerType('wms', {
-    create: createLayer,
-    update: (layer, newOptions, oldOptions, map) => {
-        const newIsVector = isVectorFormat(newOptions.format);
+const updateLayer = (layer, newOptions, oldOptions, map) => {
+    const newIsVector = isVectorFormat(newOptions.format);
 
-        if (mustCreateNewLayer(oldOptions, newOptions)) {
-            // TODO: do we need to clean anything before re-creating stuff from scratch?
-            return createLayer(newOptions, map);
-        }
-        let needsRefresh = false;
-        if (newIsVector && newOptions.vectorStyle && !isEqual(newOptions.vectorStyle, oldOptions.vectorStyle || {})) {
-            applyStyle(newOptions.vectorStyle, layer, map);
-            needsRefresh = true;
-        }
+    if (mustCreateNewLayer(oldOptions, newOptions)) {
+        // TODO: do we need to clean anything before re-creating stuff from scratch?
+        return createLayer(newOptions, map);
+    }
+    let needsRefresh = false;
+    if (newIsVector && newOptions.vectorStyle && !isEqual(newOptions.vectorStyle, oldOptions.vectorStyle || {})) {
+        applyStyle(newOptions.vectorStyle, layer, map);
+        needsRefresh = true;
+    }
 
-        const wmsSource = layer.get('wmsSource') || layer.getSource();
-        const vectorSource = newIsVector ? layer.getSource() : null;
+    const wmsSource = layer.get('wmsSource') || layer.getSource();
+    const vectorSource = newIsVector ? layer.getSource() : null;
 
-        if (oldOptions.srs !== newOptions.srs) {
-            const normalizedSrs = CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS);
-            const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
-            if (newOptions.singleTile && !newIsVector) {
-                layer.setExtent(extent);
-            } else {
-                const tileGrid = generateTileGrid(newOptions, map);
-                wmsSource.tileGrid = tileGrid;
-                if (vectorSource) {
-                    vectorSource.tileGrid = tileGrid;
-                }
+    if (oldOptions.srs !== newOptions.srs) {
+        const normalizedSrs = CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS);
+        const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
+        if (newOptions.singleTile && !newIsVector) {
+            layer.setExtent(extent);
+        } else {
+            const tileGrid = generateTileGrid(newOptions, map);
+            wmsSource.tileGrid = tileGrid;
+            if (vectorSource) {
+                vectorSource.tileGrid = tileGrid;
             }
-            needsRefresh = true;
         }
+        needsRefresh = true;
+    }
 
-        if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
-            wmsSource.setAttributions(toOLAttributions(newOptions.credits));
-            needsRefresh = true;
-        }
+    if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
+        wmsSource.setAttributions(toOLAttributions(newOptions.credits));
+        needsRefresh = true;
+    }
 
-        let changed = false;
-        let oldParams;
-        let newParams;
-        if (oldOptions && wmsSource && wmsSource.updateParams) {
-            if (oldOptions.params && newOptions.params) {
-                changed = union(
-                    Object.keys(oldOptions.params),
-                    Object.keys(newOptions.params)
-                ).reduce((found, param) => {
-                    if (newOptions.params[param] !== oldOptions.params[param]) {
-                        return true;
-                    }
-                    return found;
-                }, false);
-            } else if ((!oldOptions.params && newOptions.params) || (oldOptions.params && !newOptions.params)) {
-                changed = true;
-            }
-            oldParams = wmsToOpenlayersOptions(oldOptions);
-            newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS", "SRS", "CRS"].reduce((found, param) => {
-                if (oldParams[param] !== newParams[param]) {
+    let changed = false;
+    let oldParams;
+    let newParams;
+    if (oldOptions && wmsSource && wmsSource.updateParams) {
+        if (oldOptions.params && newOptions.params) {
+            changed = union(
+                Object.keys(oldOptions.params),
+                Object.keys(newOptions.params)
+            ).reduce((found, param) => {
+                if (newOptions.params[param] !== oldOptions.params[param]) {
                     return true;
                 }
                 return found;
             }, false);
-
-            needsRefresh = needsRefresh || changed;
+        } else if ((!oldOptions.params && newOptions.params) || (oldOptions.params && !newOptions.params)) {
+            changed = true;
         }
-        // refresh/update wms layer if there is error in loading tiles like: incorrect time dimension date filter, ..etc
-        if (oldOptions.loadingError !== "Error" && newOptions.loadingError === "Error") {
-            // Clear tile cache before refresh to avoid showing old broken tiles
-            wmsSource?.tileCache?.pruneExceptNewestZ?.();
-            wmsSource?.refresh();
-        }
-        if (oldOptions.minResolution !== newOptions.minResolution) {
-            layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
-        }
-        if (oldOptions.maxResolution !== newOptions.maxResolution) {
-            layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
-        }
-        if (needsRefresh) {
-            // forces tile cache drop
-            // this prevents old cached tiles at lower zoom levels to be
-            // rendered during new params load
-            wmsSource?.tileCache?.pruneExceptNewestZ?.();
-            if (vectorSource) {
-                vectorSource.clear();
-                vectorSource.refresh();
+        oldParams = wmsToOpenlayersOptions(oldOptions);
+        newParams = wmsToOpenlayersOptions(newOptions);
+        changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS", "SRS", "CRS"].reduce((found, param) => {
+            if (oldParams[param] !== newParams[param]) {
+                return true;
             }
+            return found;
+        }, false);
 
-            if (changed) {
-                const params = Object.assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
-
-                wmsSource.updateParams(Object.assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
-                    return !isNil(params[key]) ? previous : Object.assign(previous, {
-                        [key]: undefined
-                    });
-                }, {})));
-            }
-        }
-        return null;
+        needsRefresh = needsRefresh || changed;
     }
+    // refresh/update wms layer if there is error in loading tiles like: incorrect time dimension date filter, ..etc
+    if (oldOptions.loadingError !== "Error" && newOptions.loadingError === "Error") {
+        // Clear tile cache before refresh to avoid showing old broken tiles
+        wmsSource?.tileCache?.pruneExceptNewestZ?.();
+        wmsSource?.refresh();
+    }
+    if (oldOptions.minResolution !== newOptions.minResolution) {
+        layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+    }
+    if (oldOptions.maxResolution !== newOptions.maxResolution) {
+        layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
+    }
+    if (needsRefresh) {
+        // forces tile cache drop
+        // this prevents old cached tiles at lower zoom levels to be
+        // rendered during new params load
+        wmsSource?.tileCache?.pruneExceptNewestZ?.();
+        if (vectorSource) {
+            vectorSource.clear();
+            vectorSource.refresh();
+        }
+
+        if (changed) {
+            const params = Object.assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+
+            wmsSource.updateParams(Object.assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
+                return !isNil(params[key]) ? previous : Object.assign(previous, {
+                    [key]: undefined
+                });
+            }, {})));
+        }
+    }
+    return null;
+};
+
+Layers.registerType('wms', {
+    create: createLayer,
+    update: updateLayer
 });

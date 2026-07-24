@@ -765,7 +765,8 @@ export const saveLayer = (layer) => {
     layer.geometryType ? { geometryType: layer.geometryType } : {},
     layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {},
     !isNil(layer.maxFeaturesInView) ? { maxFeaturesInView: layer.maxFeaturesInView } : {},
-    !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : {});
+    !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : {},
+    !isNil(layer.coalesce) ? { coalesce: layer.coalesce } : {});
 };
 
 /**

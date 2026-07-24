@@ -51,7 +51,8 @@ export default class extends React.Component {
         mapBbox: PropTypes.object,
         resolutions: PropTypes.array,
         zoom: PropTypes.number,
-        hideInteractiveLegendOption: PropTypes.bool
+        hideInteractiveLegendOption: PropTypes.bool,
+        coalesceWMSLayers: PropTypes.bool
     };
 
     static defaultProps = {
@@ -296,6 +297,7 @@ export default class extends React.Component {
                                         projection={this.props.projection}
                                         onChange={this.props.onChange}
                                         disableTileGrids={!!this.props.isCesiumActive}
+                                        coalesceWMSLayers={this.props.coalesceWMSLayers}
                                     />
                                 </>
                             ))}

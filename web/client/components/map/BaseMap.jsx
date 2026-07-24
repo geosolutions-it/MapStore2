@@ -10,6 +10,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isString } from 'lodash';
 import { createVectorFeatureFilter } from '../../utils/FilterUtils';
+import { groupWMSLayers } from '../../utils/WMSCoalesceUtils';
+import ConfigUtils from '../../utils/ConfigUtils';
 
 /**
  * Base map component that renders a map.
@@ -45,7 +47,9 @@ class BaseMap extends React.Component {
         tools: PropTypes.array,
         getLayerProps: PropTypes.func,
         env: PropTypes.array,
-        zoomControl: PropTypes.bool
+        zoomControl: PropTypes.bool,
+        coalesceWMSLayers: PropTypes.bool,
+        coalesceWMSLayersMaxGroupSize: PropTypes.number
     };
 
     static defaultProps = {
@@ -85,20 +89,36 @@ class BaseMap extends React.Component {
         const projection = this.props.map && this.props.map.projection || "EPSG:3857";
         const { plugins } = this.props;
         const { Layer } = plugins;
-        return this.props.layers.map((layer, index) => {
+        return this.getLayerUnits(this.props.layers).map((unit, index) => {
             return (
                 <Layer
-                    type={layer.type}
+                    type={unit.options.type}
                     srs={projection}
                     position={index}
-                    key={layer.id || layer.name}
-                    options={layer}
-                    env={layer.localizedLayerStyles ? this.props.env : []}
+                    key={unit.key}
+                    options={unit.options}
+                    env={unit.options.localizedLayerStyles ? this.props.env : []}
                 >
-                    {this.renderLayerContent(layer, projection)}
+                    {this.renderLayerContent(unit.options, projection)}
                 </Layer>
             );
         });
+    };
+
+    isCoalesceEnabled = () => {
+        return this.props.coalesceWMSLayers ?? ConfigUtils.getConfigProp('miscSettings')?.coalesceWMSLayers;
+    };
+
+    getLayerUnits = (layers) => {
+        if (!this.isCoalesceEnabled()) {
+            return layers.map((layer) => ({ key: layer.id || layer.name, options: layer }));
+        }
+        const deps = [this.props.layers, this.props.coalesceWMSLayersMaxGroupSize];
+        if (!this._coalesceDeps || deps.some((dep, idx) => dep !== this._coalesceDeps[idx])) {
+            this._coalesceDeps = deps;
+            this._coalesceUnits = groupWMSLayers(layers, { maxGroupSize: this.props.coalesceWMSLayersMaxGroupSize });
+        }
+        return this._coalesceUnits;
     };
 
     renderLayerContent = (layer, projection) => {

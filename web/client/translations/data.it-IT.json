@@ -95,6 +95,10 @@
         "tooltip": "Il layer viene ritagliato all'estensione della proiezione quando aggiunto alla mappa con questa opzione abilitata"
       },
       "cached": "Usa la cache",
+      "coalesceLabel": "Combina le richieste",
+      "coalesceEnabled": "Abilitato",
+      "coalesceDisabled": "Disabilitato",
+      "coalesceDefault": "Usa impostazione predefinita della mappa",
       "styleCustom": "Usa stile con nome \"{value}\"",
       "styleListLoadError": "Si è verificato un errore durante il caricamento della lista degli stili",
       "stylesRefreshList": "Aggiorna lista degli stili",
@@ -580,7 +584,9 @@
           "dateTimePlaceholder": "Seleziona la data e l'ora"
         },
         "collisionDetection": "Attiva la rilevazione delle collisioni",
-        "imageryLayersOverlay": "Abilita la sovrapposizione dei livelli di immagini"
+        "imageryLayersOverlay": "Abilita la sovrapposizione dei livelli di immagini",
+        "coalesceWMSLayers": "Combina le richieste WMS (coalesce)",
+        "coalesceWMSLayersTooltip": "Imposta il comportamento predefinito per i livelli di questa mappa: se abilitato, i livelli WMS adiacenti provenienti dalla stessa sorgente vengono combinati in un'unica richiesta GetMap, riducendo il numero di richieste inviate al server. I livelli di sfondo sono esclusi"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",

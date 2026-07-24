@@ -31,13 +31,15 @@ import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
 import MultiBandEditor from '../styleeditor/MultiBandEditor';
 import { mapSelector } from '../../selectors/map';
 
-
 import { StyleSelector } from '../styleeditor/index';
 
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
 
 const ConnectedDisplay = connect(
-    createSelector([mapSelector], ({ zoom, projection, size, bbox }) => ({ zoom, projection, mapSize: size, mapBbox: bbox }))
+    createSelector([mapSelector], ({ zoom, projection, size, bbox, mapOptions }) => ({
+        zoom, projection, mapSize: size, mapBbox: bbox,
+        coalesceWMSLayers: mapOptions?.coalesceWMSLayers ?? undefined
+    }))
 )(Display);
 
 const ConnectedVectorStyleEditor = connect(

@@ -95,6 +95,10 @@
         "tooltip": "La capa se recorta a la extensión de la proyección cuando se agrega al mapa con esta opción habilitada"
       },
       "cached": "Cacheado",
+      "coalesceLabel": "Combinar solicitudes",
+      "coalesceEnabled": "Activado",
+      "coalesceDisabled": "Desactivado",
+      "coalesceDefault": "Usar predeterminado del mapa",
       "styleCustom": "Use un estilo llamado \"{value} \"",
       "styleListLoadError": "Se ha producido un error al cargar la lista de estilos",
       "stylesRefreshList": "Actualizar la lista de estilos",
@@ -580,7 +584,9 @@
           "dateTimePlaceholder": "Seleccione la fecha y hora"
         },
         "collisionDetection": "Activar detección de colisiones",
-        "imageryLayersOverlay": "Habilitar la superposición de capas de imágenes"
+        "imageryLayersOverlay": "Habilitar la superposición de capas de imágenes",
+        "coalesceWMSLayers": "Combinar solicitudes WMS (coalesce)",
+        "coalesceWMSLayersTooltip": "Establece el comportamiento predeterminado para las capas de este mapa: cuando está habilitado, las capas WMS adyacentes provenientes de la misma fuente se combinan en una sola solicitud GetMap, reduciendo el número de solicitudes enviadas al servidor. Las capas de fondo están excluidas."
       },
       "thumbnailError": {
         "error403": "Error al modificar la miniatura",

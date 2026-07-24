@@ -95,6 +95,10 @@
         "tooltip": "Die Ebene wird auf die Projektionserweiterung zugeschnitten, wenn sie mit aktivierter Option zur Karte hinzugefügt wird."
       },
       "cached": "Verwenden Sie Cache-Optionen",
+      "coalesceLabel": "Coalesce requests",
+      "coalesceEnabled": "Aktiviert",
+      "coalesceDisabled": "Deaktiviert",
+      "coalesceDefault": "Standard der Karte verwenden",
       "styleCustom": "Stil \"{value}\" nutzen",
       "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
       "stylesRefreshList": "Aktualisiere die Liste von Stilen",
@@ -618,7 +622,9 @@
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
         },
         "collisionDetection": "Geländekollisionserkennung aktivieren",
-        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren"
+        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren",
+        "coalesceWMSLayers": "WMS-Anfragen zusammenfassen (coalesce)",
+        "coalesceWMSLayersTooltip": "Legt das Standardverhalten für die Ebenen dieser Karte fest: Wenn aktiviert, werden benachbarte WMS-Ebenen aus derselben Quelle zu einer einzigen GetMap-Anfrage zusammengefasst, wodurch die Anzahl der an den Server gesendeten Anfragen reduziert wird. Hintergrundebenen sind ausgeschlossen."
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",

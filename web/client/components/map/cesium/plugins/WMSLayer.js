@@ -57,4 +57,8 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     }
     return null;
 };
-Layers.registerType('wms', {create: createLayer, update: updateLayer});
+
+Layers.registerType('wms', {
+    create: createLayer,
+    update: updateLayer
+});

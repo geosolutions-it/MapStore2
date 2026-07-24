@@ -230,6 +230,15 @@ class CesiumLayer extends React.Component {
         }
     };
 
+    /**
+     * Manage the case of coalescing multiple layers, or old layers that are grouped together
+     * @param {Object} options layer options, can be a single layer or a group of layers
+     * @param {*} callback
+     */
+    forEachCoalesceGroupId = (options, callback) => {
+        ((options && options._coalesceGroupIds) || [options && options.id]).forEach(callback);
+    };
+
     setLayerLoading = (layer, options) => {
         if (layer) {
             let loadTimeout;
@@ -239,14 +248,16 @@ class CesiumLayer extends React.Component {
                         clearTimeout(loadTimeout);
                         loadTimeout = undefined;
                     }
-                    this.props.onLayerLoading(options.id);
+                    // this.props.onLayerLoading(options.id);
+                    this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
                 },
                 onLayerLoad: (error) => {
                     if (loadTimeout) {
                         clearTimeout(loadTimeout);
                     }
                     loadTimeout = setTimeout(() => {
-                        this.props.onLayerLoad(options.id, error);
+                        // this.props.onLayerLoad(options.id, error);
+                        this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id, error));
                     }, 300);
                 }
             };
@@ -269,7 +280,8 @@ class CesiumLayer extends React.Component {
                         clearTimeout(loadTimeout);
                         loadTimeout = undefined;
                     }
-                    this.props.onLayerLoading(options.id);
+                    // this.props.onLayerLoading(options.id);
+                    this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
                 }
                 pending++;
                 const onComplete = (error) => {
@@ -279,7 +291,8 @@ class CesiumLayer extends React.Component {
                             clearTimeout(loadTimeout);
                         }
                         loadTimeout = setTimeout(() => {
-                            this.props.onLayerLoad(options.id, error);
+                            // this.props.onLayerLoad(options.id, error);
+                            this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id, error));
                         }, 300);
                     }
                 };

@@ -32,6 +32,7 @@ import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
 import { MapLibraries } from '../utils/MapTypeUtils';
+import { groupWMSLayers } from '../utils/WMSCoalesceUtils';
 import {getHighlightLayerOptions} from "../utils/HighlightUtils";
 import Spinner from '../components/layout/Spinner';
 
@@ -154,6 +155,8 @@ import Spinner from '../components/layout/Spinner';
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
+ * @prop {boolean} coalesceWMSLayers when true, adjacent WMS layers from the same source with compatible options are combined into a single GetMap request to reduce the number of requests sent to the server (default false); if not set, falls back to the current map's `mapOptions.coalesceWMSLayers` (set from Map Settings) and then to `miscSettings.coalesceWMSLayers` in localConfig.json; a layer can opt out with `coalesce: false` in its own options
+ * @prop {number} coalesceWMSLayersMaxGroupSize maximum number of WMS layers that can be combined into a single coalesced GetMap request (default 10)
  * @prop {object} mapOptions map options grouped by map type
  * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
  * @prop {boolean} mapOptions.cesium.showSkyAtmosphere enable sky atmosphere of the globe (default true)
@@ -213,7 +216,9 @@ class MapPlugin extends React.Component {
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
         pluginsCreator: PropTypes.func,
-        mapTitle: PropTypes.string
+        mapTitle: PropTypes.string,
+        coalesceWMSLayers: PropTypes.bool,
+        coalesceWMSLayersMaxGroupSize: PropTypes.number
     };
 
     static defaultProps = {
@@ -339,22 +344,47 @@ class MapPlugin extends React.Component {
             });
         }
         const plugins = this.state.plugins;
-        // all layers must have a valid id to avoid useless re-render
-        return [...this.props.layers, ...this.props.additionalLayers.map(({ id, ...layer }, idx) => ({ ...layer, id: id ? id : `additional-layers-${idx}` }))].filter(this.filterLayer).map((layer, index) => {
+        const layers = [
+            ...this.props.layers,
+            ...this.props.additionalLayers.map(({ id, ...layer }, idx) => ({ ...layer, id: id ? id : `additional-layers-${idx}` }))
+        ].filter(this.filterLayer);
+
+        return this.getLayerUnits(layers).map((unit, index) => {
             return (
                 <plugins.Layer
-                    type={layer.type}
+                    type={unit.options.type}
                     srs={projection}
                     position={index}
-                    key={layer.id || layer.name}
-                    options={layer}
+                    key={unit.key}
+                    options={unit.options}
                     securityToken={this.props.securityToken}
                     env={env}
                 >
-                    {this.renderLayerContent(layer, projection)}
+                    {this.renderLayerContent(unit.options, projection)}
                 </plugins.Layer>
             );
         }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length, env) || []);
+    };
+
+    getLayerUnits = (layers) => {
+        if (!this.isCoalesceEnabled()) {
+            return layers.map((layer) => ({ key: layer.id || layer.name, options: layer }));
+        }
+        const deps = [this.props.layers, this.props.additionalLayers, this.props.elevationEnabled, this.props.mapType, this.props.coalesceWMSLayersMaxGroupSize, this.props.map?.mapOptions?.coalesceWMSLayers];
+        if (!this._coalesceDeps || deps.some((dep, idx) => dep !== this._coalesceDeps[idx])) {
+            this._coalesceDeps = deps;
+            this._coalesceUnits = groupWMSLayers(layers, { maxGroupSize: this.props.coalesceWMSLayersMaxGroupSize });
+        }
+        return this._coalesceUnits;
+    };
+    /**
+     * Logic for coalescing priority is: layer option > plugin cfg > map settings > config miscSettings
+     * @returns true if coalescing is enabled, false otherwise
+     */
+    isCoalesceEnabled = () => {
+        return this.props.coalesceWMSLayers
+            ?? this.props.map?.mapOptions?.coalesceWMSLayers
+            ?? ConfigUtils.getConfigProp('miscSettings')?.coalesceWMSLayers;
     };
 
     renderLayerContent = (layer, projection) => {
@@ -371,7 +401,6 @@ class MapPlugin extends React.Component {
                         geometry={feature.geometry}
                         features={feature.features}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
-                        // FEATURE STYLE OVERWRITE LAYER STYLE
                         layerStyle={layer.style}
                         style={ feature.style || layer.style || null }
                         properties={feature.properties}/>

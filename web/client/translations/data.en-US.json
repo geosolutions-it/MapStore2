@@ -94,6 +94,10 @@
         "label": "Crop to projection extent",
         "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
       },
+      "coalesceLabel": "Coalesce requests",
+      "coalesceEnabled": "Enabled",
+      "coalesceDisabled": "Disabled",
+      "coalesceDefault": "Use map default",
       "cached": "Use cache options",
       "styleCustom": "Use style named \"{value}\"",
       "styleListLoadError": "There was an error loading the styles list",
@@ -580,7 +584,9 @@
           "dateTimePlaceholder": "Select the dateTime"
         },
         "collisionDetection": "Enable terrain collision detection",
-        "imageryLayersOverlay": "Enable imagery layers overlay"
+        "imageryLayersOverlay": "Enable imagery layers overlay",
+        "coalesceWMSLayers": "Combine WMS requests (coalesce)",
+        "coalesceWMSLayersTooltip": "Sets the default behavior for layers of this map: when enabled, adjacent WMS layers coming from the same source are combined into a single GetMap request, reducing the number of requests sent to the server. Background layers are excluded."
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",

@@ -5,6 +5,8 @@
       "glyph": "1-map",
       "mandatory": true,
       "defaultConfig": {
+        "coalesceWMSLayers": false,
+        "coalesceWMSLayersMaxGroupSize": 10,
         "mapOptions": {
           "openlayers": {
             "interactions": {
