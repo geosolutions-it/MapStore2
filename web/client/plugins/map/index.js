@@ -35,6 +35,7 @@ import {
     snappingLayerSelector
 } from "../../selectors/draw";
 import { mapPopupsSelector } from '../../selectors/mapPopups';
+import { autorefreshTicksSelector } from '../AutoRefresh/selectors/autorefresh';
 
 const Empty = () => { return <span/>; };
 
@@ -99,7 +100,9 @@ const pluginsCreator = (mapType, actions) => {
             changeSelectionState
         })(components.SelectionSupport || Empty);
 
-        const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
+        const LLayer = connect((state) => ({
+            autorefreshTicks: autorefreshTicksSelector(state)
+        }), {onWarning: warning})( components.Layer || Empty);
 
         const PopupSupport = connect(
             createSelector(

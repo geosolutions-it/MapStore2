@@ -305,5 +305,26 @@ Layers.registerType('wms', {
             }
         }
         return null;
+    },
+    refresh: (layer) => {
+        // *source.refresh() doesn't trigger an HTTPS request to reload tiles
+        // *source.updateParams() with a dummy parameter forces the source to reload tiles
+        const wmsSource = layer.get('wmsSource');
+        if (wmsSource) {
+            wmsSource.updateParams(
+                Object.assign({}, wmsSource.getParams(), {
+                    _refreshCounter: Date.now()
+                })
+            );
+        }
+
+        const vectorSource = layer.getSource();
+        if (vectorSource) {
+            vectorSource.updateParams(
+                Object.assign({}, vectorSource.getParams(), {
+                    _refreshCounter: Date.now()
+                })
+            );
+        }
     }
 });

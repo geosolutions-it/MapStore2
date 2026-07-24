@@ -49,6 +49,17 @@
       "descriptionAdmin": "Please contact the administrator"
     },
     "autorefresh": {
+      "selector":"Set layers auto refresh interval",
+      "label": {
+        "default":"Activate AutoRefresh" ,
+        "lastUpdated": "Last Refresh",
+        "addLayer": "Add layer",
+        "addLayerPlaceholder": "Select...",
+        "removeLayer": "Remove layer",
+        "layersSummary": "Layers automatically refreshed",
+        "noLayers":"None found",
+        "informations": "Which layers are configured"
+      },
       "of": "of",
       "updating": "Updating...",
       "layers": "layers"
@@ -3952,6 +3963,10 @@
       "Isochrone": {
         "description": "This plugin allows to calculate isochrones and isodistances",
         "title": "Isochrone"
+      },
+      "AutoRefresh": {
+        "description": "This plugin allows to set an auto refresh time interval on layers",
+        "title": "Auto Refresh"
       }
     },
     "contextCreator": {
