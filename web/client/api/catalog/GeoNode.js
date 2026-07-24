@@ -6,21 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
-import { v4 as uuid } from 'uuid';
-import isEmpty from 'lodash/isEmpty';
-import turfCenter from '@turf/center';
-import { textSearch as geonodeTextSearch, getDatasetByPk, getResourceByPk, getDocumentByPk } from '../GeoNode';
+import { textSearch as geonodeTextSearch, getDatasetByPk, getResourceByPk, getDocumentByPk, getMapByPk } from '../GeoNode';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
-import { getMessageById } from '../../utils/LocaleUtils';
 import {
     resourceToLayerConfig,
     isDefaultDatasetSubtype,
     getTagConfig,
-    ResourceTypes,
-    GEONODE_DOCUMENTS_ROW_VIEWER
+    documentsToLayerConfig as documentsToLayerConfigSync,
+    resourceMapToLayerGroup,
+    ResourceTypes
 } from '../../utils/GeoNodeUtils';
-import { getPolygonFromExtent } from '../../utils/CoordinatesUtils';
 import { getConfigProp } from '../../utils/ConfigUtils';
 import {
     preprocess as commonPreprocess,
@@ -99,7 +94,11 @@ export const getCatalogRecords = (records, options) => {
                 tagFilterType,
                 creator: record.owner?.username,
                 identifier: record?.pk,
-                icon: record.resource_type === ResourceTypes.DOCUMENT ? { glyph: 'document' } : undefined,
+                icon: record.resource_type === ResourceTypes.DOCUMENT
+                    ? { glyph: 'document' }
+                    : record.resource_type === ResourceTypes.MAP
+                        ? { glyph: '1-map' }
+                        : undefined,
                 isValid: true
             };
         });
@@ -120,93 +119,6 @@ export const getLayerFromRecord = (record, options, asPromise = false) => {
         .then((resource) => resourceToLayerConfig({ ...record, ...resource }, options));
 };
 
-const calculateBbox = (coordinates) => {
-    const validCoords = (coordinates || []).filter(coord => coord && coord.length === 2);
-    if (validCoords.length === 0) {
-        return null;
-    }
-    const lons = validCoords.map(coord => coord[0]);
-    const lats = validCoords.map(coord => coord[1]);
-    return {
-        bounds: {
-            minx: Math.min(...lons),
-            miny: Math.min(...lats),
-            maxx: Math.max(...lons),
-            maxy: Math.max(...lats)
-        },
-        crs: 'EPSG:4326'
-    };
-};
-
-const documentMarkerSymbolizer = (glyph) => [{
-    kind: 'Icon',
-    size: 46,
-    image: { args: [{ color: 'blue', glyph, shape: 'circle' }], name: 'msMarkerIcon' },
-    anchor: 'bottom',
-    rotate: 0,
-    opacity: 1,
-    symbolizerId: '01',
-    msBringToFront: false,
-    msHeightReference: 'none'
-}];
-
-const getDocumentsStyle = (locales) => ({
-    format: 'geostyler',
-    metadata: { editorType: 'visual' },
-    body: {
-        rules: [
-            { name: getMessageById(locales, 'catalog.subtypes.video'), ruleId: '01', mandatory: false, filter: ['&&', ['==', 'subtype', 'video']], symbolizers: documentMarkerSymbolizer('video-camera') },
-            { name: getMessageById(locales, 'catalog.subtypes.image'), ruleId: '02', mandatory: false, filter: ['&&', ['==', 'subtype', 'image']], symbolizers: documentMarkerSymbolizer('camera') },
-            { name: getMessageById(locales, 'catalog.subtypes.file'), ruleId: '03', mandatory: false, filter: ['&&', ['!=', 'subtype', 'image'], ['!=', 'subtype', 'video']], symbolizers: documentMarkerSymbolizer('file') }
-        ]
-    }
-});
-
-/**
- * Build a single MapStore vector layer that collects the given GeoNode documents
- * as point features (located at the center of each document extent). Documents
- * without an extent are skipped.
- */
-export const documentsToLayerConfig = (documents = [], options = {}) => {
-    const baseURL = options?.service?.url;
-    const locales = options?.locales;
-    // resilient per document: a failed fetch is skipped, not fatal to the whole layer
-    return Promise.all(documents.map(doc => getDocumentByPk(baseURL, doc.pk).catch(() => null)))
-        .then((fullDocs) => {
-            const features = fullDocs
-                .map((doc) => {
-                    const extent = doc?.extent?.coords;
-                    const polygon = !isEmpty(extent) ? getPolygonFromExtent(extent) : null;
-                    const center = polygon ? turfCenter(polygon) : null;
-                    if (!center) {
-                        return null;
-                    }
-                    return {
-                        type: 'Feature',
-                        properties: doc,
-                        geometry: {
-                            type: 'Point',
-                            coordinates: center.geometry.coordinates
-                        },
-                        id: doc.pk
-                    };
-                })
-                .filter(Boolean);
-            const bbox = calculateBbox(features.map(feature => feature.geometry.coordinates));
-            return {
-                id: uuid(),
-                type: 'vector',
-                visibility: true,
-                name: 'Documents',
-                title: `${getMessageById(locales, 'catalog.resourceTypes.document')} (${features.length})`,
-                ...(bbox && { bbox }),
-                features,
-                style: getDocumentsStyle(locales),
-                rowViewer: GEONODE_DOCUMENTS_ROW_VIEWER
-            };
-        });
-};
-
 /**
  * Process the whole selected record set into map content (N records -> M layers).
  * GeoNode documents collapse into a single vector layer; every other record type
@@ -217,20 +129,55 @@ export const processRecords = (records = [], options = {}, locales) => {
     const applySecurity = (layer) => layer && protectedId
         ? { ...layer, security: { type: 'basic', sourceId: protectedId } }
         : layer;
+
+    const others = records.filter(record => ![ResourceTypes.DOCUMENT, ResourceTypes.MAP].includes(record.resource_type));
     const documents = records.filter(record => record.resource_type === ResourceTypes.DOCUMENT);
-    const others = records.filter(record => record.resource_type !== ResourceTypes.DOCUMENT);
+    const maps = records.filter(record => record.resource_type === ResourceTypes.MAP);
+
     const otherLayersPromise = Promise.all(
         // resilient per record: a failed conversion is skipped, not fatal to the batch
         others.map(record => getLayerFromRecord(record, options, true).then(applySecurity).catch(() => null))
     );
     const documentsLayerPromise = documents.length
-        ? documentsToLayerConfig(documents, { ...options, locales }).catch(() => null)
+        ? Promise.all(
+            documents.map(doc => getDocumentByPk(options?.service?.url, doc.pk).catch(() => null))
+        )
+            .then((docs) => documentsToLayerConfigSync(docs, locales))
+            .catch(() => null)
         : Promise.resolve(null);
-    return Promise.all([otherLayersPromise, documentsLayerPromise])
-        .then(([otherLayers, documentsLayer]) => ({
-            layers: [...otherLayers, documentsLayer].filter(Boolean),
-            groups: []
-        }));
+
+    const mapContentsPromise = Promise.all(
+        maps.map(record => getMapByPk(options?.service?.url, record.pk)
+            .then((mapResource) => resourceMapToLayerGroup(mapResource))
+            .catch(() => null))
+    );
+    return Promise.all([
+        otherLayersPromise,
+        documentsLayerPromise,
+        mapContentsPromise
+    ])
+        .then(([otherLayers, documentsLayer, mapContents]) => {
+            const validMapContents = mapContents.filter(Boolean);
+            return {
+                layers: [
+                    ...otherLayers,
+                    documentsLayer,
+                    ...validMapContents.flatMap(content => content.layers.map(applySecurity))
+                ].filter(Boolean),
+                groups: validMapContents.flatMap(content => content.groups)
+            };
+        });
+};
+
+// used by https://github.com/GeoNode/geonode-mapstore-client/issues/2583
+export const documentsToLayerConfig = (documents = [], options = {}) => {
+    const baseURL = options?.service?.url;
+    const locales = options?.locales;
+    // resilient per document: a failed fetch is skipped, not fatal to the whole layer
+    return Promise.all(documents.map(doc => getDocumentByPk(baseURL, doc.pk).catch(() => null)))
+        .then((fullDocs) => {
+            return documentsToLayerConfigSync(fullDocs, locales);
+        });
 };
 
 export const getCapabilities = ({ service } = {}) => {

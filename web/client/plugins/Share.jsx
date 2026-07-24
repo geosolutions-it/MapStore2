@@ -156,10 +156,11 @@ const ActionCardShareButton = connect(
 const shareButtonSelector = createSelector([
     mapIdSelector,
     dashboardResource,
-    geostoryResourceSelector
-], (mapId, dashboard, geostory) => {
+    geostoryResourceSelector,
+    currentContextSelector
+], (mapId, dashboard, geostory, context) => {
     return {
-        style: mapId || dashboard?.id || geostory?.id ? { } : { display: 'none' }
+        style: mapId || dashboard?.id || geostory?.id || context ? { } : { display: 'none' }
     };
 });
 

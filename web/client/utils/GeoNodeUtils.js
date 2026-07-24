@@ -6,14 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isImageServerUrl } from './ArcGISUtils';
-import { getConfigProp } from './ConfigUtils';
-import { getSupportedLocales, shortLocale } from './LocaleUtils';
+
 import { v4 as uuid } from 'uuid';
 import { isEmpty } from 'lodash';
 import queryString from 'query-string';
 import url from 'url';
+import turfCenter from '@turf/center';
+
+import { isImageServerUrl } from './ArcGISUtils';
+import { getConfigProp } from './ConfigUtils';
+import { getSupportedLocales, shortLocale, getMessageById } from './LocaleUtils';
 import { ServerTypes } from './LayersUtils';
+import { getPolygonFromExtent } from './CoordinatesUtils';
 
 export const SOURCE_TYPES = {
     LOCAL: 'LOCAL',
@@ -305,6 +309,63 @@ const getLocalizedValues = (resource, key, defaultValue) => {
     return defaultValue;
 };
 
+const calculateBbox = (coordinates) => {
+    const validCoords = (coordinates || []).filter(coord => coord && coord.length === 2);
+    if (validCoords.length === 0) {
+        return null;
+    }
+    const lons = validCoords.map(coord => coord[0]);
+    const lats = validCoords.map(coord => coord[1]);
+    return {
+        bounds: {
+            minx: Math.min(...lons),
+            miny: Math.min(...lats),
+            maxx: Math.max(...lons),
+            maxy: Math.max(...lats)
+        },
+        crs: 'EPSG:4326'
+    };
+};
+
+const documentMarkerSymbolizer = (glyph) => [{
+    kind: 'Icon',
+    size: 46,
+    image: { args: [{ color: 'blue', glyph, shape: 'circle' }], name: 'msMarkerIcon' },
+    anchor: 'bottom',
+    rotate: 0,
+    opacity: 1,
+    symbolizerId: '01',
+    msBringToFront: false,
+    msHeightReference: 'none'
+}];
+
+const getDocumentsStyle = (locales) => ({
+    format: 'geostyler',
+    metadata: { editorType: 'visual' },
+    body: {
+        rules: [
+            {   name: getMessageById(locales, 'catalog.subtypes.video'),
+                ruleId: '01',
+                mandatory: false,
+                filter: ['&&', ['==', 'subtype', 'video']],
+                symbolizers: documentMarkerSymbolizer('video-camera')
+            },
+            {   name: getMessageById(locales, 'catalog.subtypes.image'),
+                ruleId: '02',
+                mandatory: false,
+                filter: ['&&', ['==', 'subtype', 'image']],
+                symbolizers: documentMarkerSymbolizer('camera')
+            },
+            {   name: getMessageById(locales, 'catalog.subtypes.file'),
+                ruleId: '03',
+                mandatory: false,
+                filter: ['&&', ['!=', 'subtype', 'image'], ['!=', 'subtype', 'video']],
+                symbolizers: documentMarkerSymbolizer('file')
+            }
+        ]
+    }
+});
+
 /**
 * convert resource layer configuration to a mapstore layer object
 * @param {object} resource geonode layer resource
@@ -461,25 +522,88 @@ export const resourceToLayerConfig = (resource, options) => {
 };
 
 
-// For map : if we need to also add map then we need this
-export const resourceToLayers = (resource) => {
-    if (resource?.resource_type === ResourceTypes.DATASET) {
-        return [{...resourceToLayerConfig(resource), isDataset: true}];
-    }
-    if (resource.maplayers && resource?.resource_type === ResourceTypes.MAP) {
-        return resource.maplayers
-            .map(maplayer => {
-                maplayer.dataset ? resourceToLayerConfig(maplayer.dataset) : null;
-                if (maplayer.dataset) {
-                    const layer = resourceToLayerConfig(maplayer.dataset);
-                    return {
-                        ...layer,
-                        style: maplayer.current_style
-                    };
-                }
+/**
+ * Build a single MapStore vector layer that collects the given GeoNode documents
+ * as point features (located at the center of each document extent). Documents
+ * without an extent are skipped.
+ * @param {array} documents - array of GeoNode document resources
+ * @param {object} options - options object, may include locales
+ * @returns {object} a MapStore vector layer config
+ */
+export const documentsToLayerConfig = (documents = [], locales) => {
+    const features = documents
+        .map((doc) => {
+            const extent = doc?.extent?.coords;
+            const polygon = !isEmpty(extent) ? getPolygonFromExtent(extent) : null;
+            const center = polygon ? turfCenter(polygon) : null;
+            if (!center) {
                 return null;
-            })
-            .filter(value => value);
-    }
-    return [];
+            }
+            return {
+                type: 'Feature',
+                properties: doc,
+                geometry: {
+                    type: 'Point',
+                    coordinates: center.geometry.coordinates
+                },
+                id: doc.pk
+            };
+        })
+        .filter(Boolean);
+    const bbox = calculateBbox(features.map(feature => feature.geometry.coordinates));
+    return {
+        id: uuid(),
+        type: 'vector',
+        visibility: true,
+        name: 'Documents',
+        title: `${getMessageById(locales, 'catalog.resourceTypes.document')} (${features.length})`,
+        ...(bbox && { bbox }),
+        features,
+        style: getDocumentsStyle(locales),
+        rowViewer: GEONODE_DOCUMENTS_ROW_VIEWER
+    };
+};
+
+/**
+* Convert a GeoNode map resource into structure `{ layers, groups }` ready for the catalog container:
+* all the map layers exclude backgrounds, nested under a new parent group titled how the map name.
+* @param {object} - GeoNode map resource
+* @returns {object} - `{ layers, groups }` where `layers` is an array of layer objects and `groups` is an array of group objects
+*/
+export const resourceMapToLayerGroup = (mapResource) => {
+    const mapConfig = mapResource?.data?.map || {};
+    const parentId = `Default.${uuid()}`;
+    const parentGroup = {
+        title: mapResource?.title,
+        parent: 'Default',
+        options: { id: parentId },
+        asFirst: true
+    };
+    const oldToNewPath = { Default: parentId };
+    const groups = (mapConfig.groups || [])
+        .filter((group) => group?.id && group.id !== 'Default')
+        .sort((a, b) => a.id.split('.').length - b.id.split('.').length)
+        .map((group) => {
+            const segments = group.id.split('.');
+            const oldParentPath = segments.slice(0, -1).join('.');
+            const newParentPath = oldToNewPath[oldParentPath] || parentId;
+            const newSegment = uuid();
+            const newPath = `${newParentPath}.${newSegment}`;
+            oldToNewPath[group.id] = newPath;
+            const { id, title, ...groupOptions } = group;
+            return {
+                title,
+                parent: newParentPath,
+                options: { ...groupOptions, id: newPath, name: newSegment },
+                asFirst: false
+            };
+        });
+    const layers = (mapConfig.layers || [])
+        .filter((layer) => layer?.group !== 'background')
+        .map((layer) => ({
+            ...layer,
+            id: uuid(),
+            group: oldToNewPath[layer?.group] || parentId
+        }));
+    return { layers, groups: [parentGroup, ...groups] };
 };

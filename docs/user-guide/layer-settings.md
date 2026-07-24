@@ -84,6 +84,8 @@ In particular, the user is allowed to:
 
 * Enable/disable the *Force proxy* layer option. If enabled, forces the application to check the source and applies proxy if needed.
 
+* Enable/disable the *Crop to projection extent*.  If enabled, the layer is cropped to the current map projection extent selected.
+
 * Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
 When the *Use cache options* is enabled, more controls are enabled so that it is possible for the user to check if the current map settings match any GWC ***standard*** Gridset defined on the server side for the given WMS layer (**Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/>). At the same time, it is also possible to change the setting strategy (based on the WMTS service response) to strictly adapt layer settings on the client side to the ones matching any remote ***custom*** Gridset defined for the current map settings (**Use remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> button).
 
@@ -170,6 +172,30 @@ On the *Display* tab, only the following options are available for a **IFC** lay
 * The **Height** to set the layer height from the ground (`m`).
 
 * The **Heading** to set the layer heading (`DD`).
+
+#### ArcGIS layer
+
+On the *Display* tab, only the following options are available for a **ArcGIS** layer:
+
+<img src="../img/layer-settings/display-arcgis.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Opacity** to change the layer opacity.
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+* Enable/disable the **Dynamic legend**. If this option is enable, legend will be filtered based on the map viewport (only for MapServer rest endpoint).
+
+#### FlatGeobuf layer
+
+On the *Display* tab, only the following options are available for a **FlatGeobuf** layer:
+
+<img src="../img/layer-settings/display-fgb.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Opacity** to change the layer opacity.
+
+* The **Max features in view** allows the user to enter the maximum number of features to be displayed on the map.
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
 
 ## Fields
 
@@ -415,6 +441,22 @@ By default, **Constant value** is selected. If the user chooses **Property value
 
 !!!note
     The *Style with property* method is available only for **WFS** and **Vector** layers.
+
+#### Styling for ArcGIS Feature Service layer
+
+With the *Visual Style Editor*, the editor has the ability to customize the style of **ArcGIS Feature Service** layers:
+
+<img src="../img/layer-settings/arcgis-feature-service-layer_style.jpg" class="ms-docimage">
+
+The editor can customize the layer style using the [Fill rule](layer-settings.md#fill) and its associated options, such as [Classification Style](layer-settings.md#classification-style). In addition, all the styling options available under [Styling on the 3D Navigation](layer-settings.md#styling-of-vector-layer) can also be applied.
+
+#### Styling for FlatGeobuf layer
+
+With the *Visual Style Editor*, the editor has the ability to customize the style of **FlatGeobuf** layers:
+
+<img src="../img/layer-settings/flatgeobuf-layer_style.jpg" class="ms-docimage">
+
+The editor can customize the layer style using the [Visual Editor Style](layer-settings.md#visual-editor-style) options. In addition, all the styling options available under [Styling on the 3D Navigation](layer-settings.md#styling-of-vector-layer) can also be applied.
 
 ### Style Methods for Raster layer
 

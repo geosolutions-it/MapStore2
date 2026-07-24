@@ -20,7 +20,173 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.02.00 to 2026.03.00
+
+### Spring 7 / Jakarta EE 10 upgrade
+
+MapStore has been upgraded to Spring Framework 7 and Spring Security 7, moving from the Java EE (`javax.*`) to the Jakarta EE 10 (`jakarta.*`) platform. This is a **breaking change** for the deployment environment and for MapStore projects.
+
+#### New deployment requirements
+
+- **Java 17** is now the minimum supported version (Java 8/11 are no longer supported). The CI still tests on Java 17 and 21.
+- **Tomcat 10.1** (Jakarta Servlet API 6.0) is the new reference servlet container. The binary distribution ships Tomcat 11. **Tomcat 9 or older cannot run this version of MapStore**, since they are based on the `javax.*` servlet API.
+
+#### Updating a MapStore project
+
+The following changes must be applied to your project (see the updated [project templates](https://github.com/geosolutions-it/MapStore2/tree/master/project/standard/templates) for reference):
+
+**`pom.xml` properties**: update the dependency versions:
+
+```diff
+-        <tomcat.version>9.0.116</tomcat.version>
+-        <jackson.version>2.16.1</jackson.version>
++        <tomcat.version>10.1.55</tomcat.version>
++        <jackson.version>2.19.4</jackson.version>
+         <!-- Spring Framework & Security (aligned) -->
+-        <spring.version>5.3.39</spring.version>
+-        <spring.security.version>5.7.13</spring.security.version>
++        <spring.version>7.0.8</spring.version>
++        <spring.security.version>7.1.0</spring.security.version>
+-        <commons-pool.version>1.5.4</commons-pool.version>
+-        <ehcache-web.version>2.0.4</ehcache-web.version>
+-        <httpclient.version>4.5.13</httpclient.version>
+-        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+-        <jaxws-api.version>2.3.1</jaxws-api.version>
++        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
++        <jaxws-api.version>4.0.3</jaxws-api.version>
+-        <cargo.version>1.10.2</cargo.version>
++        <cargo.version>1.10.27</cargo.version>
+         <!-- MapStore‑specific -->
+-        <mapstore-services.version>1.10-SNAPSHOT</mapstore-services.version>
+-        <geostore-webapp.version>2.6-SNAPSHOT</geostore-webapp.version>
+-        <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
+-        <print-lib.version>2.3.5</print-lib.version>
++        <mapstore-services.version>1.12-SNAPSHOT</mapstore-services.version>
++        <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
++        <http_proxy.version>1.7-SNAPSHOT</http_proxy.version>
++        <print-lib.version>2.5-SNAPSHOT</print-lib.version>
+```
+
+**`web/pom.xml` dependencies**: replace the `javax` artifacts with their `jakarta` equivalents and remove the dependencies that are not used anymore (`net.sf.ehcache:ehcache-web`, `commons-pool:commons-pool`):
+
+```diff
+     <dependency>
+-        <groupId>javax.servlet</groupId>
+-        <artifactId>javax.servlet-api</artifactId>
+-        <version>${javax.servlet-api.version}</version>
++        <groupId>jakarta.servlet</groupId>
++        <artifactId>jakarta.servlet-api</artifactId>
++        <version>${jakarta.servlet-api.version}</version>
+     </dependency>
+-    <!-- gzip compression filter -->
+-    <dependency>
+-        <groupId>net.sf.ehcache</groupId>
+-        <artifactId>ehcache-web</artifactId>
+-        <version>${ehcache-web.version}</version>
+-    </dependency>
+-    <dependency>
+-        <groupId>commons-pool</groupId>
+-        <artifactId>commons-pool</artifactId>
+-    </dependency>
+     <dependency>
+-        <groupId>javax.xml.ws</groupId>
+-        <artifactId>jaxws-api</artifactId>
++        <groupId>jakarta.xml.ws</groupId>
++        <artifactId>jakarta.xml.ws-api</artifactId>
+         <version>${jaxws-api.version}</version>
+     </dependency>
+```
+
+**`web/pom.xml` `printing` profile**: if your project defines the `printing` profile, the same `javax` artifacts appear again in its `<dependencyManagement>` section. Replace them with the `jakarta` equivalents as above, and remove the `httpclient`, `ehcache-web` and `commons-pool` entries: their version properties no longer exist in the root `pom.xml`, so a build with `-Pprinting` would fail on the unresolved placeholders.
+
+**`web/src/main/webapp/WEB-INF/web.xml`**: update the schema declaration to Jakarta EE 10 and remove the GZip `CompressionFilter`, together with its three `filter-mapping` entries (the filter class comes from the removed `ehcache-web` library, which is not available for the `jakarta.*` namespace):
+
+```diff
+-<web-app id="WebApp_ID" version="2.4"
++<web-app id="WebApp_ID" version="6.0"
+     xmlns:javaee="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
++    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+```
+
+!!! note
+    The removed `CompressionFilter` used to gzip `*.js`, `*.css` and `*.html` responses out of the box. Compression has to be configured in the deployment environment instead:
+
+    - **Tomcat exposed directly**: enable compression on the connector in `conf/server.xml`:
+
+        ```xml
+        <Connector port="8080" ... compression="on"
+            compressibleMimeType="text/html,text/css,text/plain,application/javascript,application/json,application/xml,image/svg+xml"/>
+        ```
+
+    - **Behind a reverse proxy (recommended)**: enable gzip (or brotli) in the proxy; e.g. for nginx:
+
+        ```nginx
+        gzip on;
+        gzip_vary on;
+        gzip_types text/css text/plain application/javascript application/json application/xml image/svg+xml;
+        ```
+
+    - **Docker composition**: nothing to do, compression is already enabled in the bundled nginx configuration (`docker/mapstore.conf`).
+
+    Without it MapStore still works, but the JavaScript bundles are quite big and the first load becomes noticeably slower.
+
+**`WEB-INF/*-servlet.xml`** (`configs-servlet.xml`, `extensions-servlet.xml`, `loadAssets-servlet.xml`): Spring Security 7 replaced the `global-method-security` element:
+
+```diff
+-    <security:global-method-security secured-annotations="enabled" />
++    <security:method-security secured-enabled="true"/>
+```
+
+**Security configuration overrides**: if your project overrides `geostore-spring-security.xml` (e.g. for [LDAP](integrations/users/ldap.md) or database authentication), the file must be aligned with the new Spring Security 7 syntax. Copy the updated reference files from the MapStore repository (`web/src/config/db/geostore-spring-security-db.xml`, `web/src/config/ldap/geostore-spring-security-ldap.xml`) and re-apply your customizations on top of them.
+
+**Cargo (local test container)**: update the container id and add the logging configuration file:
+
+```diff
+-                    <containerId>tomcat9x</containerId>
++                    <containerId>tomcat10x</containerId>
+```
+
+Copy the `logging.properties` file from the MapStore repository (`product/cargo/logging.properties`) into the `web/cargo/` folder of your project and reference it in `cargo.jvmargs` with `-Djava.util.logging.config.file=${project.basedir}/cargo/logging.properties`. Note that `${project.basedir}` points to the `web` module, where the Cargo plugin runs. New projects created from the templates already include this file.
+
+**Custom Java code**: any custom backend code must be migrated from the `javax.*` to the `jakarta.*` namespace (e.g. `javax.servlet.http.HttpServletRequest` → `jakarta.servlet.http.HttpServletRequest`) and compiled with source/target 17.
+
+**CI/CD**: update your build infrastructure to use JDK 17 as the build JDK.
+
 ## Migration from 2026.01.02 to 2026.02.00
+
+### Dev server static configuration moved to the webpack configuration files
+
+webpack-dev-server 5 (introduced with this release) watches the static directories by default and triggers a full page reload on every file change. Projects used to pass `--static .` on the command line, so the whole project root was watched: the logs and temporary files written by the local backend (`web/target`, `mapstore.log`) continuously triggered reloads, making the dev environment unusable (see [#12665](https://github.com/geosolutions-it/MapStore2/issues/12665)).
+
+In your project:
+
+- remove `--static .` from the `fe:start` and `fe:start-prod` scripts in `package.json` (make also sure `fe:start-prod` points to `prod-webpack.config.js`)
+- add the `devServer` configuration to your `webpack.config.js` and `prod-webpack.config.js`, as in the current project templates:
+
+```javascript
+const { devServer } = require('./MapStore2/build/devServer');
+
+module.exports = require('./MapStore2/build/buildConfig')({
+    // ...existing configuration...
+    devServer: {
+        devMiddleware: { publicPath: '/dist/' },
+        ...devServer,
+        static: [{
+            directory: __dirname,
+            watch: {
+                ignored: [
+                    '**/web/target/**',
+                    '**/logs/**',
+                    '**/*.log',
+                    '**/node_modules/**',
+                    '**/.git/**'
+                ]
+            }
+        }]
+    }
+});
+```
 
 ### Custom map resolutions moved from `new.json` to the `CRSSelector` plugin
 
