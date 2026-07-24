@@ -20,7 +20,7 @@
 	<!-- ==================================================================== -->
     <security:method-security secured-enabled="true"/>
 
-	<security:http auto-config="true" create-session="never" >
+	<security:http auto-config="true" create-session="never" authentication-manager-ref="authenticationManager">
 		<security:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
         <security:csrf disabled="true"/>
 		<security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
@@ -42,7 +42,9 @@
 	</bean>
 	<!-- GeoStore Auth Provider -->
 	<bean id="geoStoreUserServiceAuthenticationProvider"
-		class="it.geosolutions.geostore.services.rest.security.UserServiceAuthenticationProvider">
+		class="it.geosolutions.geostore.services.rest.security.UserServiceAuthenticationProvider"
+		lazy-init="true"
+		depends-on="entityManager">
 	</bean>
 
     <bean id="authenticationTokenProcessingFilter"
@@ -57,7 +59,7 @@
           depends-on="entityManager">
     </bean>
 
-	<security:authentication-manager>
+	<security:authentication-manager alias="authenticationManager">
         <security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
         <security:authentication-provider ref='geostoreLdapProvider' />
     </security:authentication-manager>
