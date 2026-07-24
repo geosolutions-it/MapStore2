@@ -451,7 +451,7 @@ describe('FilterView component', () => {
         expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 
-    it('renders the per-item toolbar and collapse toggle when showItemToolbar is set', () => {
+    it('renders the per-item disable toggle and collapse toggle when showItemToolbar is set', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox', 'multiple');
 
@@ -465,7 +465,9 @@ describe('FilterView component', () => {
             container
         );
 
-        expect(container.querySelector('.ms-filter-card-toolbar')).toExist();
+        // check for the Disable toggle
+        expect(container.querySelector('.mapstore-switch-btn-xs')).toExist();
+        // check for the Collapse toggle
         expect(container.querySelector('.ms-filter-collapse-toggle')).toExist();
     });
 
@@ -505,6 +507,20 @@ describe('FilterView component', () => {
         expect(container.querySelector('.ms-filter-checkbox-list')).toNotExist();
         expect(container.querySelector('.ms-filter-collapse-toggle')).toExist();
     });
+    it('hide expand/collapse in Filter wizard', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('checkbox', 'multiple', { defaultExpanded: false });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+        expect(container.querySelector('.ms-filter-collapse-toggle')).toNotExist();
+    });
 
     it('renders the description info popover when layout.description is set', () => {
         const container = document.getElementById("container");
@@ -538,6 +554,7 @@ describe('FilterView component', () => {
         const dimmed = container.querySelector('div[style*="pointer-events: none"]');
         expect(dimmed).toExist();
         expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+        expect(container.querySelector('.ms-filter-disable-toggle')).toExist();
         expect(container.textContent).toNotContain('widgets.filterWidget.selectAll');
     });
 });

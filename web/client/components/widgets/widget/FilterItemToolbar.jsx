@@ -17,30 +17,22 @@ const tip = (id, msgId) => (
     <Tooltip id={id}><Message msgId={msgId} /></Tooltip>
 );
 
-const ToolButton = ({ glyph, tooltipKey, tooltipId, disabled, onClick, className = 'ms-filter-card-tool-btn' }) => (
-    <OverlayTrigger placement="top" overlay={tip(tooltipId, tooltipKey)}>
-        <Button
-            bsSize="xsmall"
-            bsStyle="link"
-            disabled={disabled}
-            onClick={(e) => { e.stopPropagation(); if (!disabled) { onClick(); } }}
-            className={className}
-        >
-            <Glyphicon glyph={glyph} />
-        </Button>
+const ToolButton = ({ glyph, tooltipKey, tooltipId, disabled, onClick, className = 'ms-filter-card-tool-btn', placement = 'top', children }) => (
+    <OverlayTrigger placement={placement} overlay={tip(tooltipId, tooltipKey)}>
+        {children ||
+        (
+            <Button
+                bsSize="xsmall"
+                bsStyle="link"
+                disabled={disabled}
+                onClick={(e) => { e.stopPropagation(); if (!disabled) { onClick(); } }}
+                className={className}
+            >
+                <Glyphicon glyph={glyph} />
+            </Button>
+        )}
     </OverlayTrigger>
 );
-
-export { ToolButton };
-
-ToolButton.propTypes = {
-    glyph: PropTypes.string.isRequired,
-    tooltipKey: PropTypes.string.isRequired,
-    tooltipId: PropTypes.string.isRequired,
-    disabled: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
-    className: PropTypes.string
-};
 
 /**
  * Per-filter card toolbar shown in the FilterView header. Supports:
@@ -50,9 +42,14 @@ ToolButton.propTypes = {
 const FilterItemToolbar = ({
     filterData,
     collapsed = false,
-    onToggleCollapse,
-    onToggleDisabled
+    onClick,
+    showCollapseToggle = false,
+    showDisableToggle = false
 }) => {
+    if (!showCollapseToggle && !showDisableToggle) {
+        return null;
+    }
+
     const enabled = !filterData?.disabled;
 
     return (
@@ -61,30 +58,28 @@ const FilterItemToolbar = ({
             style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
             onClick={(e) => e.stopPropagation()}
         >
-            {onToggleDisabled && (
-                <OverlayTrigger
-                    placement="top"
-                    overlay={tip(`fitr-en-${filterData?.id}`, enabled
-                        ? 'widgets.filterWidget.disableFilter'
-                        : 'widgets.filterWidget.enableFilter')}
+            {showDisableToggle && (
+                <ToolButton
+                    glyph=""
+                    tooltipKey={`widgets.filterWidget.${enabled ? 'disableFilter' : 'enableFilter'}`}
+                    tooltipId={`filter-disable-${filterData?.id}`}
                 >
                     <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                         <SwitchButton
                             checked={enabled}
-                            onChange={(checked) => onToggleDisabled(!checked)}
-                            className="mapstore-switch-btn-xs"
+                            onChange={(checked) => onClick(!checked)}
+                            className="mapstore-switch-btn-xs ms-filter-disable-toggle"
                         />
                     </span>
-                </OverlayTrigger>
+                </ToolButton>
             )}
-            {onToggleCollapse && (
+            {showCollapseToggle && (
                 <ToolButton
                     glyph={collapsed ? 'next' : 'bottom'}
-                    tooltipKey={collapsed
-                        ? 'widgets.filterWidget.expandFilter'
-                        : 'widgets.filterWidget.collapseFilter'}
-                    tooltipId={`flt-c-${filterData?.id}`}
-                    onClick={onToggleCollapse}
+                    tooltipKey={`widgets.filterWidget.${collapsed ? 'expandFilter' : 'collapseFilter'}`}
+                    tooltipId={`filter-collapse-${filterData?.id}`}
+                    onClick={onClick}
+                    className="ms-filter-collapse-toggle"
                 />
             )}
         </div>

@@ -67,7 +67,9 @@ describe('FilterWidget per-filter card UX', () => {
             updateProperty: () => {}
         });
         const toolbars = document.querySelectorAll('.ms-filter-card-toolbar');
-        expect(toolbars.length).toBe(1);
+        expect(toolbars.length).toBe(2);
+        expect(document.querySelectorAll('.ms-filter-collapse-toggle').length).toBe(1);
+        expect(document.querySelectorAll('.ms-filter-disable-toggle').length).toBe(1);
     });
 
     it('toggling the disabled switch calls updateProperty(filters, ...) with disabled=true', () => {
@@ -147,6 +149,8 @@ describe('FilterWidget per-filter card UX', () => {
         expect(selectableItems.length).toBe(0);
         // header (toolbar) must still be visible
         const toolbars = document.querySelectorAll('.ms-filter-card-toolbar');
-        expect(toolbars.length).toBe(1);
+        expect(toolbars.length).toBe(2);
+        expect(document.querySelectorAll('.ms-filter-collapse-toggle').length).toBe(1);
+        expect(document.querySelectorAll('.ms-filter-disable-toggle').length).toBe(1);
     });
 });
