@@ -2690,6 +2690,8 @@
         "applyStyleFromWidgetButton": "Stil auf alle verbundenen Ebenen aus diesem Widget anwenden",
         "dimensionChangedByWidgetInfo": "Ein oder mehrere verbundene Knoten verwenden einen anderen Dimensionswert als den hier ausgewählten. Klicken Sie auf die Schaltfläche unten, um den ausgewählten Wert auf alle verbundenen Knoten anzuwenden.",
         "applyDimensionFromWidgetButton": "Wert aus diesem Filter auf alle verbundenen Knoten anwenden",
+        "showConnectedLayers": "Verbundene Layer anzeigen",
+        "showConnectedLayersTooltip": "Mit dem Ziel verbundene Layer im Widget anzeigen",
         "labelAttribute": "Beschriftungsattribut",
         "maxHeightPlaceholder": "Maximale Höhe eingeben..",
         "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",

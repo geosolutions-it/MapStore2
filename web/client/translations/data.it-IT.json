@@ -2651,6 +2651,8 @@
         "applyStyleFromWidgetButton": "Applica stile a tutti i livelli connessi da questo widget",
         "dimensionChangedByWidgetInfo": "Uno o più nodi connessi utilizzano un valore di dimensione diverso da quello selezionato qui. Fare clic sul pulsante sottostante per applicare il valore selezionato a tutti i nodi connessi.",
         "applyDimensionFromWidgetButton": "Applica il valore di questo filtro a tutti i nodi connessi",
+        "showConnectedLayers": "Mostra i layer collegati",
+        "showConnectedLayersTooltip": "Mostra i layer collegati alla destinazione nel widget",
         "labelAttribute": "Attributo etichetta",
         "maxHeightPlaceholder": "Inserisci altezza massima..",
         "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",

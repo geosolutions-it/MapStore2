@@ -18,7 +18,10 @@ import {
     isLayerDimensionTarget,
     isLayerTimeDimensionTarget,
     getDisplayInteractionTargetTree,
-    hasConnectableTargetNodes
+    hasConnectableTargetNodes,
+    createLayerConstraint,
+    getConnectedActiveTargets,
+    generateLayerMetadataTree
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -302,6 +305,12 @@ describe('InteractionUtils', () => {
             expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
             expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:table_layer');
         });
+
+        it('handles table widget without layer gracefully', () => {
+            const tree = generateTableWidgetTreeNode({ id: 'table-widget-no-layer', widgetType: 'table' });
+            expect(tree.type).toBe('element');
+            expect(tree.interactionMetadata.targets[0].constraints.layer).toBe(null);
+        });
     });
 
     describe('generateCounterWidgetTreeNode', () => {
@@ -313,6 +322,12 @@ describe('InteractionUtils', () => {
             expect(tree.interactionMetadata !== undefined).toBe(true);
             expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
             expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:counter_layer');
+        });
+
+        it('handles counter widget without layer gracefully', () => {
+            const tree = generateCounterWidgetTreeNode({ id: 'counter-widget-no-layer', widgetType: 'counter' });
+            expect(tree.type).toBe('element');
+            expect(tree.interactionMetadata.targets[0].constraints.layer).toBe(null);
         });
     });
 
@@ -825,4 +840,142 @@ describe('InteractionUtils', () => {
             expect(result.children[1].children[0].children[0].nodePath).toBe('map.layers[layer-1]');
         });
     });
+
+    describe('createLayerConstraint', () => {
+        it('returns layer constraint object with name and title from layer title', () => {
+            const layer = { name: 'gs:states', title: 'US States' };
+            const result = createLayerConstraint(layer);
+            expect(result).toEqual({ name: 'gs:states', title: 'US States' });
+        });
+
+        it('falls back to layer name as title when layer title is missing', () => {
+            const layer = { name: 'gs:states' };
+            const result = createLayerConstraint(layer);
+            expect(result).toEqual({ name: 'gs:states', title: 'gs:states' });
+        });
+
+        it('returns null when layer is falsy or undefined', () => {
+            expect(createLayerConstraint(undefined)).toBe(null);
+            expect(createLayerConstraint(null)).toBe(null);
+        });
+    });
+
+    describe('generateLayerMetadataTree', () => {
+        it('generates layer metadata tree with constraint layer when layer is provided', () => {
+            const layer = { name: 'layer-1', title: 'Layer One' };
+            const node = generateLayerMetadataTree(layer);
+            expect(node.type).toBe('element');
+            expect(node.interactionMetadata.targets[0].constraints.layer).toEqual({
+                name: 'layer-1',
+                title: 'Layer One'
+            });
+        });
+
+        it('handles undefined layer gracefully without throwing', () => {
+            const node = generateLayerMetadataTree(undefined);
+            expect(node.type).toBe('element');
+            expect(node.interactionMetadata.targets[0].constraints.layer).toBe(null);
+        });
+    });
+
+    describe('getConnectedActiveTargets', () => {
+        const sampleInteractions = [
+            {
+                id: 'int-1',
+                plugged: true,
+                target: {
+                    nodePath: 'widgets[map-1].layers[layer-1]',
+                    metaData: {
+                        constraints: {
+                            layer: { name: 'layer-1', title: 'Layer One Title' }
+                        }
+                    }
+                }
+            },
+            {
+                id: 'int-2',
+                plugged: true,
+                target: {
+                    nodePath: 'widgets[map-1].layers[layer-2]',
+                    metaData: {
+                        constraints: {
+                            layer: { name: 'layer-2', title: { 'en-US': 'Layer Two EN', "default": 'Layer Two Def' } }
+                        }
+                    }
+                }
+            },
+            {
+                id: 'int-3',
+                plugged: false,
+                target: {
+                    nodePath: 'widgets[map-1].layers[layer-3]',
+                    metaData: {
+                        constraints: {
+                            layer: { name: 'layer-3', title: 'Layer Three' }
+                        }
+                    }
+                }
+            }
+        ];
+
+        it('returns active target paths when asLayerTitles is false', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true,
+                'widgets[map-1].layers[layer-2]': false
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                asLayerTitles: false
+            });
+            expect(result).toEqual(['widgets[map-1].layers[layer-1]']);
+        });
+
+        it('returns layer titles when asLayerTitles is true', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true,
+                'widgets[map-1].layers[layer-2]': true
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                locale: 'en-US',
+                asLayerTitles: true
+            });
+            expect(result).toEqual(['Layer One Title', 'Layer Two EN']);
+        });
+
+        it('respects inactiveInteractionIds when withDisabledFilter is false', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true,
+                'widgets[map-1].layers[layer-2]': true
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                inactiveInteractionIds: ['int-1'],
+                asLayerTitles: false
+            });
+            expect(result).toEqual(['widgets[map-1].layers[layer-2]']);
+        });
+
+        it('includes inactive interactions when withDisabledFilter is true and targetsWithDisabledFilter matches', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true
+            };
+            const targetsWithDisabledFilter = {
+                'widgets[map-1].layers[layer-1]': true
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                inactiveInteractionIds: ['int-1'],
+                targetsWithDisabledFilter,
+                withDisabledFilter: true,
+                asLayerTitles: false
+            });
+            expect(result).toEqual(['widgets[map-1].layers[layer-1]']);
+        });
+    });
 });
+

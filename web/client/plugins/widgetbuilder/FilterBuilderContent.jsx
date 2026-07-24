@@ -26,6 +26,7 @@ const FilterBuilderContent = ({
     layer,
     dashBoardEditing,
     step,
+    locale,
     setPage,
     onFinish,
     setValid
@@ -212,6 +213,7 @@ const FilterBuilderContent = ({
             filters={filters}
             selections={selections}
             selectedFilterId={selectedFilterId}
+            locale={locale}
             onFilterSelect={handleFilterSelect}
             onAddFilter={handleAddFilter}
             onDeleteFilter={handleDeleteFilter}

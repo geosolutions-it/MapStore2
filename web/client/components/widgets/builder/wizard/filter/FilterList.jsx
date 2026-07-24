@@ -13,6 +13,7 @@ const FilterList = ({
     showNoTargetsInfo, // override to pass to FilterView for preview purposes
     filters = [],
     selections = {},
+    locale,
     getSelectionHandler = () => () => {},
     selectedFilterId,
     onSelectableItemsChange = () => {}
@@ -64,6 +65,7 @@ const FilterList = ({
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={getSelectionHandler(filter.id)}
                                 missingParameters={missingParameters}
+                                locale={locale}
                                 onSelectableItemsChange={onSelectableItemsChange}
                             />
                         </div>

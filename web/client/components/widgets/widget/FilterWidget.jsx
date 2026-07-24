@@ -17,6 +17,7 @@ import './filter-widget.less';
 import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector } from '../../../selectors/widgets';
 import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
 import { isMapTimeTarget } from '../../../utils/InteractionUtils';
+import { currentLocaleSelector } from '../../../selectors/locale';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -44,6 +45,7 @@ const FilterWidget = ({
     options = {},
     dataGrid = {},
     confirmDelete = false,
+    locale,
     onDelete = () => {},
     onApplyInteractions = () => {},
     target = 'floating' // Default target container
@@ -121,6 +123,7 @@ const FilterWidget = ({
                                 onSelectionChange={handleSelectionChange(filter.id)}
                                 showItemToolbar // toolbar shown inside the widget, not in the builder preview
                                 onToggleDisabled={handleToggleDisabled(filter.id)}
+                                locale={locale}
                             />
                         </div>);
                     })
@@ -170,7 +173,8 @@ export default connect(createStructuredSelector({
     applyDimensionOutOfSyncForWidget: (state, ownProps) => getApplyDimensionOutOfSyncForFilterWidget(state, ownProps?.id),
     inactiveInteractionIds: (state, ownProps) => inactiveInteractionIdsForWidgetSelector(state, ownProps?.id),
     currentTime: currentTimeSelector,
-    timelineRangeEnabled: offsetEnabledSelector
+    timelineRangeEnabled: offsetEnabledSelector,
+    locale: currentLocaleSelector
 }), {
     onApplyInteractions: applyFilterWidgetInteractions
 })(FilterWidget);

@@ -2647,6 +2647,8 @@
         "applyStyleFromWidgetButton": "Aplicar estilo a todas las capas conectadas desde este widget",
         "dimensionChangedByWidgetInfo": "Uno o más nodos conectados utilizan un valor de dimensión distinto al seleccionado aquí. Pulse el botón siguiente para aplicar el valor seleccionado a todos los nodos conectados.",
         "applyDimensionFromWidgetButton": "Aplicar el valor de este filtro a todos los nodos conectados",
+        "showConnectedLayers": "Mostrar capas conectadas",
+        "showConnectedLayersTooltip": "Mostrar las capas conectadas al objetivo en el widget",
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",

@@ -312,4 +312,24 @@ describe('FilterLayoutTab component', () => {
         expect(fillTickLabelsButton).toExist();
         Simulate.click(fillTickLabelsButton);
     });
+
+    it('should call onChange when toggling layout.showConnectedLayers', (done) => {
+        ReactDOM.render(<FilterLayoutTab
+            data={{ layout: { showConnectedLayers: true } }}
+            onChange={(key, value) => {
+                if (key === 'layout.showConnectedLayers') {
+                    expect(value).toBe(false);
+                    done();
+                }
+            }}
+        />, document.getElementById('container'));
+        const container = document.getElementById('container');
+        const formGroups = Array.from(container.querySelectorAll('.form-group-flex'));
+        const target = formGroups.find(g => /showConnectedLayers/.test(g.innerHTML));
+        expect(target).toExist();
+        const input = target.querySelector('input[type="checkbox"]');
+        expect(input).toExist();
+        Simulate.change(input);
+    });
 });
+
