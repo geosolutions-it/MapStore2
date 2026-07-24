@@ -29,6 +29,13 @@
 		<security:anonymous />
         <security:intercept-url pattern="/**" access="permitAll" />
 	</security:http>
+
+    <bean id="entityManager"
+          class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+        <property name="entityManagerFactory" ref="geostoreEntityManagerFactory"/>
+        <property name="persistenceUnitName" value="geostore"/>
+    </bean>
+
 	<!-- Entry point -->
 	<bean id="restAuthenticationEntryPoint" class="it.geosolutions.geostore.services.rest.security.RestAuthenticationEntryPoint" >
 		<property name="realmName" value="GeoStore"></property>
