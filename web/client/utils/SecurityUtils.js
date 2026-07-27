@@ -14,6 +14,7 @@ import head from "lodash/head";
 import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
+import isString from "lodash/isString";
 import template from "lodash/template";
 import get from "lodash/get";
 import castArray from "lodash/castArray";
@@ -250,17 +251,20 @@ export const convertAuthenticationRulesToRequestConfiguration = (authRules = [])
 };
 
 /**
- * Checks a request configuration rule's `enabled` property.
- * `enabled` can be a plain boolean or a plugin expression string (e.g. `"{state('usergroups').includes('editor')}"`),
+ * Filters out the request configuration rules whose `enabled` property resolves to a falsy value.
+ * `enabled` can be a plain boolean or a plugin expression string (e.g. `"{includes(state('usergroups'), 'editor')}"`),
  * evaluated with the same syntax used for `cfg.disablePluginIf` (see `PluginsUtils.handleExpression`).
  * Rules without an `enabled` property are always applied.
- * @param {object} rule the request configuration rule
- * @returns {boolean} true if the rule's `enabled` resolves to a truthy value
+ * The monitored state is resolved only when at least one rule needs it, because building it requires
+ * serializing every monitored entry.
+ * @param {object[]} rules the request configuration rules
+ * @returns {object[]} the enabled rules
  */
-const isRuleEnabled = (rule) => {
-    const enabled = rule?.enabled ?? true;
-    const monitoredState = getMonitoredState(getState());
-    return !!handleExpression((path) => get(monitoredState, path), undefined, enabled);
+const filterEnabledRules = (rules = []) => {
+    const needsMonitoredState = rules.some(rule => isString(rule?.enabled));
+    const monitoredState = needsMonitoredState ? getMonitoredState(getState(), ConfigUtils.getConfigProp('monitorState')) : {};
+    const getMonitored = (path) => get(monitoredState, path);
+    return rules.filter(rule => !!handleExpression(getMonitored, undefined, rule?.enabled ?? true));
 };
 
 /**
@@ -272,19 +276,19 @@ export const getRequestConfigurationRules = () => {
     // First try to get from Redux state (if available)
     const stateRules = get(getState(), 'security.rules', []);
     if (!isEmpty(stateRules)) {
-        return stateRules.filter(isRuleEnabled);
+        return filterEnabledRules(stateRules);
     }
 
     // Try to get new format from config
     const configRules = ConfigUtils.getConfigProp('requestsConfigurationRules');
     if (!isEmpty(configRules)) {
-        return configRules.filter(isRuleEnabled);
+        return filterEnabledRules(configRules);
     }
 
     // If new format is missing, convert old authenticationRules format
     const authRules = ConfigUtils.getConfigProp('authenticationRules');
     if (!isEmpty(authRules)) {
-        return convertAuthenticationRulesToRequestConfiguration(authRules).filter(isRuleEnabled);
+        return filterEnabledRules(convertAuthenticationRulesToRequestConfiguration(authRules));
     }
 
     // No rules found
