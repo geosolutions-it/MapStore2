@@ -589,4 +589,135 @@ describe('Test the mapInfo reducer', () => {
         // Should keep responses array
         expect(newState.responses.length).toBeGreaterThan(0);
     });
+    it('receiveResponse selects the first valid response when the retained response finishes empty', () => {
+        const state = {
+            index: 0,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test0' },
+                { reqId: 11, request: 'test1' },
+                { reqId: 12, request: 'test2' }
+            ],
+            responses: [
+                { response: null, layerMetadata: {title: 'empty'} },
+                { response: 'data1', layerMetadata: {title: 'valid1'} }
+            ]
+        };
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: 'data2',
+            layerMetadata: {title: 'valid2'},
+            reqId: 12
+        };
+
+        const newState = mapInfo(state, action);
+
+        expect(newState.loaded).toBe(true);
+        expect(newState.index).toBe(1);
+    });
+    it('receiveResponse does not treat a sparse response array as fully loaded', () => {
+        const state = {
+            index: 0,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test0' },
+                { reqId: 11, request: 'test1' },
+                { reqId: 12, request: 'test2' }
+            ],
+            responses: []
+        };
+        const lastRequestAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: 'data2',
+            layerMetadata: {title: 'valid2'},
+            reqId: 12
+        };
+
+        const sparseState = mapInfo(state, lastRequestAction);
+
+        expect(sparseState.responses.length).toBe(3);
+        expect(sparseState.loaded).toBe(undefined);
+        expect(sparseState.index).toBe(0);
+
+        const retainedResponseAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: null,
+            layerMetadata: {title: 'empty0'},
+            reqId: 10
+        };
+        const fallbackState = mapInfo(sparseState, retainedResponseAction);
+
+        expect(fallbackState.loaded).toBe(true);
+        expect(fallbackState.index).toBe(2);
+    });
+    it('receiveResponse preserves a retained response when it is still valid', () => {
+        const state = {
+            index: 1,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test0' },
+                { reqId: 11, request: 'test1' }
+            ],
+            responses: [
+                { response: 'data0', layerMetadata: {title: 'valid0'} }
+            ]
+        };
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: 'data1',
+            layerMetadata: {title: 'valid1'},
+            reqId: 11
+        };
+
+        const newState = mapInfo(state, action);
+
+        expect(newState.loaded).toBe(true);
+        expect(newState.index).toBe(1);
+    });
+    it('receiveResponse recovers from a negative retained index', () => {
+        const state = {
+            index: -1,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test0' }
+            ],
+            responses: []
+        };
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: 'data0',
+            layerMetadata: {title: 'valid0'},
+            reqId: 10
+        };
+
+        const newState = mapInfo(state, action);
+
+        expect(newState.loaded).toBe(true);
+        expect(newState.index).toBe(0);
+    });
+    it('receiveResponse clears the index when all responses are empty', () => {
+        const state = {
+            loaded: true,
+            index: 0,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test0' },
+                { reqId: 11, request: 'test1' }
+            ],
+            responses: [
+                { response: null, layerMetadata: {title: 'empty0'} }
+            ]
+        };
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: null,
+            layerMetadata: {title: 'empty1'},
+            reqId: 11
+        };
+
+        const newState = mapInfo(state, action);
+
+        expect(newState.loaded).toBe(true);
+        expect(newState.index).toBe(undefined);
+    });
 });
