@@ -37,7 +37,15 @@ const LoginItem = withTooltip(({provider, onLogin}) => {
     const {title, provider: providerName, imageURL} = provider;
     const logo = imageURL ?? logos[providerName];
     const text = title;
-    return <a style={{margin: 20, cursor: 'pointer'}} onClick={() => onLogin(provider)}>{logo ? <img src={logo} alt={text} style={{minHeight: 50}} /> : text ?? providerName}</a>;
+    return (
+        <Button
+            className="login-provider"
+            borderTransparent
+            style={{margin: 20}}
+            onClick={() => onLogin(provider)}>
+            {logo ? <img src={logo} alt={text} style={{minHeight: 50}} /> : text ?? providerName}
+        </Button>
+    );
 });
 /**
  * A Modal window to show password reset form
