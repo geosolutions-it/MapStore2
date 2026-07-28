@@ -27,6 +27,10 @@
     "showMore": "Show more...",
     "collapse": "Collapse",
     "expand": "Expand",
+    "scrollableTabs": {
+      "scrollLeft": "Scroll tabs left",
+      "scrollRight": "Scroll tabs right"
+    },
     "Links": "Links",
     "Forbidden": "Forbidden",
     "height": "Height",

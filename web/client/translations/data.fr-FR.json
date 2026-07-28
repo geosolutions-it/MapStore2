@@ -27,6 +27,10 @@
     "showMore": "Montrer plus...",
     "collapse": "réduire",
     "expand": "étendre",
+    "scrollableTabs": {
+      "scrollLeft": "Faire défiler les onglets vers la gauche",
+      "scrollRight": "Faire défiler les onglets vers la droite"
+    },
     "Links": "Liens",
     "Forbidden": "Interdit",
     "height": "Hauteur",

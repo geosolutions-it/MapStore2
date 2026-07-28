@@ -29,12 +29,6 @@ const getFeatureInfoInstance = (props = {}) => TestUtils.findRenderedComponentWi
 
 
 const formatCards = {
-    HIDDEN: {
-        titleId: 'layerProperties.hideFormatTitle',
-        descId: 'layerProperties.hideFormatDescription',
-        glyph: 'hide-marker',
-        body: () => <div className="test-preview"/>
-    },
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
         descId: 'layerProperties.textFormatDescription',
@@ -79,15 +73,15 @@ describe("test FeatureInfo", () => {
         getFeatureInfoInstance({formatCards, defaultInfoFormat});
         const views = document.querySelectorAll('[data-id^="feature-info-view-"]');
         expect(views.length).toBe(1);
-        expect(views[0].querySelector('input[placeholder="Title"]')).toExist();
+        expect(views[0].querySelector('.ms-feature-info-view-title')).toExist();
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(0);
 
     });
 
     it('should display configured views as disabled when identify is disabled', () => {
-        ReactDOM.render(<DndFeatureInfo
-            element={{
+        getFeatureInfoInstance({
+            element: {
                 featureInfo: {
                     disabled: true,
                     views: [
@@ -95,14 +89,15 @@ describe("test FeatureInfo", () => {
                         { id: 'properties-view', title: 'Properties identify', type: 'PROPERTIES' }
                     ]
                 }
-            }}
-            formatCards={formatCards}
-            defaultInfoFormat={defaultInfoFormat}/>, document.getElementById("container"));
+            },
+            formatCards,
+            defaultInfoFormat
+        });
 
         const views = document.querySelectorAll('[data-id^="feature-info-view-"]');
         expect(views.length).toBe(2);
-        expect(views[0].style.opacity).toBe('0.5');
-        expect(views[0].querySelector('input[placeholder="Title"]').disabled).toBe(true);
+        expect(views[0].classList.contains('disabled')).toBe(true);
+        expect(views[0].querySelector('.ms-feature-info-view-title').disabled).toBe(true);
         expect(views[0].querySelector('.Select').classList.contains('is-disabled')).toBe(true);
         expect([...views[0].querySelectorAll('button')].every((button) => button.disabled)).toBe(true);
         expect(document.querySelector('.btn-primary').disabled).toBe(true);

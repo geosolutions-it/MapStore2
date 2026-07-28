@@ -24,11 +24,6 @@ const responses = {
 };
 
 const formatCards = {
-    HIDDEN: {
-        titleId: 'layerProperties.hideFormatTitle',
-        descId: 'layerProperties.hideFormatDescription',
-        glyph: 'hide-marker'
-    },
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
         descId: 'layerProperties.textFormatDescription',

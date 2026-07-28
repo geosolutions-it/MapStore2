@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { getSupportedFormat as getSupportedFormatWMS } from '../../../../api/WMS';
 import { getSupportedFormat as getSupportedFormatWFS } from '../../../../api/WFS';
 import Loader from '../../../misc/Loader';
-import { Button, Checkbox, FormControl, Glyphicon } from 'react-bootstrap';
+import { Button, Checkbox, FormControl as FormControlRB, Glyphicon } from 'react-bootstrap';
 import Select from 'react-select';
 import { DragSource as dragSource, DropTarget as dropTarget } from 'react-dnd';
 import includes from 'lodash/includes';
@@ -20,6 +20,9 @@ import isEmpty from 'lodash/isEmpty';
 import { getDefaultInfoViewMode, getLayerFeatureInfoViews, isLayerFeatureInfoDisabled } from '../../../../utils/MapInfoUtils';
 import Message from '../../../I18N/Message';
 import FeatureInfoEditor from './FeatureInfoEditor';
+import localizedProps from '../../../misc/enhancers/localizedProps';
+
+const FormControl = localizedProps('placeholder')(FormControlRB);
 
 const supportedFormatRequests = {
     wms: getSupportedFormatWMS,
@@ -43,55 +46,35 @@ const FeatureInfoView = ({
     const content = (
         <div
             data-id={`feature-info-view-${view.id}`}
-            style={{
-                alignItems: 'center',
-                border: '1px solid #ddd',
-                cursor: 'default',
-                display: 'flex',
-                gap: 12,
-                marginBottom: 12,
-                minHeight: 58,
-                opacity: isDisabled ? 0.5 : 1,
-                padding: 10
-            }}>
+            className={`ms-feature-info-view${isDisabled ? ' disabled' : ''}`}>
             {isDraggable ? connectDragSource(
                 <div
                     className="grab-handle"
-                    style={{
-                        alignItems: 'center',
-                        color: '#777',
-                        cursor: 'move',
-                        display: 'flex'
-                    }}
                     onClick={(event) => event.stopPropagation()}>
                     <Glyphicon glyph="grab-handle"/>
                 </div>
             ) : (
-                <div
-                    className="grab-handle disabled"
-                    style={{
-                        alignItems: 'center',
-                        color: '#ccc',
-                        display: 'flex'
-                    }}>
+                <div className="grab-handle disabled">
                     <Glyphicon glyph="grab-handle"/>
                 </div>
             )}
             <FormControl
+                className="ms-feature-info-view-title"
                 disabled={isDisabled}
-                placeholder="Title"
-                style={{ flex: '1 1 220px' }}
+                placeholder="layerProperties.title"
                 value={view.title}
                 onChange={(event) => onUpdateView(view.id, { title: event.target.value })}/>
-            <div style={{ flex: '1 1 260px' }}>
+            <div className="ms-feature-info-view-type">
                 {renderTypeSelect(view)}
             </div>
             <Button
+                className="square-button no-border ms-feature-info-view-action ms-feature-info-view-edit"
                 disabled={isDisabled || !canEdit}
                 onClick={() => onEdit(view.id)}>
                 <Glyphicon glyph="pencil"/>
             </Button>
             <Button
+                className="square-button no-border ms-feature-info-view-action ms-feature-info-view-remove"
                 disabled={isDisabled || views.length === 1}
                 onClick={() => onRemove(view.id)}>
                 <Glyphicon glyph="trash"/>
@@ -281,7 +264,9 @@ export default class extends React.Component {
     renderTypeSelect = (view, isDisabled) => {
         const options = this.getTypeOptions().map((type) => ({
             value: type,
-            label: type,
+            label: this.props.formatCards[type]?.titleId
+                ? <Message msgId={this.props.formatCards[type].titleId}/>
+                : type,
             glyph: this.props.formatCards[type]?.glyph || 'ext-empty'
         }));
         return (
@@ -340,15 +325,8 @@ export default class extends React.Component {
                 <Loader size={150}/>
             </div>
         ) : (
-            <span>
-                <div
-                    style={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginBottom: 12,
-                        padding: 6
-                    }}>
+            <span className="ms-feature-info-settings">
+                <div className="ms-feature-info-toolbar">
                     <Checkbox
                         checked={disabled}
                         style={{ margin: 0 }}
@@ -362,7 +340,7 @@ export default class extends React.Component {
                         <Message msgId="layerProperties.addIdentifyView" />
                     </Button>
                 </div>
-                <div style={{ clear: 'both' }}>
+                <div className="ms-feature-info-views">
                     {views.map((view, index) => this.renderView(view, views, index, disabled))}
                     {!disabled && editingView ? (
                         <FeatureInfoEditor

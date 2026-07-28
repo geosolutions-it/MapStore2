@@ -26,6 +26,10 @@
     "pageInfoShowMore": "Ergebnisse {count} von {total}",
     "showMore": "Zeig mehr...",
     "collapse": "Zuklappen",
+    "scrollableTabs": {
+      "scrollLeft": "Tabs nach links scrollen",
+      "scrollRight": "Tabs nach rechts scrollen"
+    },
     "Links": "Links",
     "Forbidden": "Verboten",
     "height": "Höhe",

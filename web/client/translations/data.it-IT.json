@@ -27,6 +27,10 @@
     "showMore": "Mostra altri...",
     "collapse": "Collassa",
     "expand": "Espandi",
+    "scrollableTabs": {
+      "scrollLeft": "Scorri le schede a sinistra",
+      "scrollRight": "Scorri le schede a destra"
+    },
     "Links": "Collegamenti",
     "Forbidden": "Vietato",
     "height": "Altezza",

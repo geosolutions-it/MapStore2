@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import useCheckScroll from '../../hooks/useCheckScroll';
 import Tabs from '../catalog/resources/Tabs';
+import { ButtonWithTooltip as Button } from './Button';
 
 /**
  * Renders underline tabs in a horizontally scrollable strip with optional controls.
@@ -14,11 +15,10 @@ const ScrollableTabs = ({ className, tabs, ...props }) => {
         <div className="ms-scrollable-tabs">
             {showButtons ? (
                 <Button
-                    aria-label="Scroll tabs left"
                     className="square-button ms-scrollable-tabs-control"
                     disabled={isLeftDisabled}
                     onClick={() => scroll('left')}
-                    title="Scroll tabs left">
+                    tooltipId="scrollableTabs.scrollLeft">
                     <Glyphicon glyph="chevron-left"/>
                 </Button>
             ) : null}
@@ -30,11 +30,10 @@ const ScrollableTabs = ({ className, tabs, ...props }) => {
             </div>
             {showButtons ? (
                 <Button
-                    aria-label="Scroll tabs right"
                     className="square-button ms-scrollable-tabs-control"
                     disabled={isRightDisabled}
                     onClick={() => scroll('right')}
-                    title="Scroll tabs right">
+                    tooltipId="scrollableTabs.scrollRight">
                     <Glyphicon glyph="chevron-right"/>
                 </Button>
             ) : null}

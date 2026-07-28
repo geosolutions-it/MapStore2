@@ -27,6 +27,10 @@
     "showMore": "Mostrar más...",
     "collapse": "Colapso",
     "expand": "Expandir",
+    "scrollableTabs": {
+      "scrollLeft": "Desplazar las pestañas a la izquierda",
+      "scrollRight": "Desplazar las pestañas a la derecha"
+    },
     "Links": "Enlaces",
     "Forbidden": "Prohibido",
     "height": "Altura",
