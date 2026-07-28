@@ -20,6 +20,7 @@ import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 
 import ImageLayer from 'ol/layer/Image';
+import ImageState from 'ol/ImageState';
 import ImageWMS from 'ol/source/ImageWMS';
 import {get} from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
@@ -36,10 +37,26 @@ import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, gene
 
 const failTiles = new Set(); // registry of fail tile urls to prevent reloading loops
 
+/**
+ * Flags a tile/image as failed, so the source emits tileloaderror/imageloaderror
+ * and stops re-requesting it.
+ * Tiled layers get an `ol/ImageTile` (has `setState`), single tile layers get an
+ * `ol/Image`, that exposes no setter and needs the state change to be notified manually.
+ * @param {object} image the `ol/ImageTile` or `ol/Image` passed to the load function
+ */
+const setErrorState = (image) => {
+    if (image.setState) {
+        image.setState(ImageState.ERROR);
+        return;
+    }
+    image.state = ImageState.ERROR;
+    image.changed();
+};
+
 const loadFunction = (options, headers) => function(image, src) {
 
     if (failTiles.has(src)) {  // avoids custom reload in cases of tiles that have already returned exceptions
-        image.setState(3);
+        setErrorState(image);
         return;
     }
 
@@ -74,7 +91,7 @@ const loadFunction = (options, headers) => function(image, src) {
                 }
             }
         }).catch(e => {
-            image.setState(3);
+            setErrorState(image);
             failTiles.add(src);
             console.error(e);
         });
@@ -96,7 +113,7 @@ const loadFunction = (options, headers) => function(image, src) {
                         throw new Error(response.dataText);
                     }
                 }).catch(errorMessage => {
-                    image.setState(3);            // set error state for tile; this alone fires the source's tileloaderror/imageloaderror (state-based, no DOM event needed) and removes it from the queue to prevent reloading loops
+                    setErrorState(image);         // set error state for tile and removed from the queue to prevent reloading loops
                     failTiles.add(src);           // indexing fail url tile to prevent reloading loops
                     console.error(errorMessage);  // show ogc exception in console for debugging
                 });
