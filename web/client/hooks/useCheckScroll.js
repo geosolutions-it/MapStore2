@@ -37,7 +37,7 @@ export default function useCheckScroll({ data }) {
             element?.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
         };
-    }, [data, showButtons]);
+    }, [data]);
 
     const scroll = (direction) => {
         const element = scrollRef.current;
