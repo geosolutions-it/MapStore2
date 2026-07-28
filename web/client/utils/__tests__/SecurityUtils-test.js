@@ -480,6 +480,10 @@ describe('Test security utils methods', () => {
     });
 
     describe('getRequestConfigurationRules', () => {
+        afterEach(() => {
+            ConfigUtils.removeConfigProp('monitorState');
+        });
+
         it('should return rules from Redux state first', () => {
             const rulesInState = [
                 { urlPattern: '.*api.*', headers: { 'Authorization': 'Bearer ${securityToken}' } }
@@ -508,6 +512,78 @@ describe('Test security utils methods', () => {
             // Unsupported methods are filtered out, so we expect 2 rules
             expect(result.length).toBe(2);
             expect(result[0].urlPattern).toBe('.*geoserver.*');
+        });
+
+        it('should keep rules without an enabled property', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', headers: { 'Authorization': 'Bearer ${securityToken}' } }
+            ];
+            setSecurityInfo({});
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result).toEqual(rulesInConfig);
+        });
+
+        it('should filter out rules with enabled: false', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', enabled: false, headers: { 'Authorization': 'Bearer ${securityToken}' } }
+            ];
+            setSecurityInfo({});
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(0);
+        });
+
+        it('should filter out rules whose enabled expression resolves to false', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', enabled: "{includes(state('usergroups'), 'editor')}" }
+            ];
+            setSecurityInfo({ user: { groups: { group: [] } } });
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(0);
+        });
+
+        it('should keep rules whose enabled expression resolves to true against usergroups state', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', enabled: "{includes(state('usergroups'), 'editor')}" }
+            ];
+            setSecurityInfo({ user: { groups: { group: [{ groupName: 'editor', enabled: true }] } } });
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(1);
+            expect(result[0].urlPattern).toBe('.*api.*');
+        });
+
+        it('should evaluate enabled expressions on rules mixed with rules without enabled', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*always.*' },
+                { urlPattern: '.*editor.*', enabled: "{includes(state('usergroups'), 'editor')}" },
+                { urlPattern: '.*admin.*', enabled: "{includes(state('usergroups'), 'admin')}" }
+            ];
+            setSecurityInfo({ user: { groups: { group: [{ groupName: 'editor', enabled: true }] } } });
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(2);
+            expect(result.map(rule => rule.urlPattern)).toEqual(['.*always.*', '.*editor.*']);
+        });
+
+        it('should evaluate enabled expressions against monitorState entries from configuration', () => {
+            const rulesInConfig = [
+                { urlPattern: '.*api.*', enabled: "{includes(state('customrole'), 'ADMIN')}" }
+            ];
+            ConfigUtils.setConfigProp('monitorState', [{ name: 'customrole', path: 'security.user.role' }]);
+            setSecurityInfo({ user: { role: 'ADMIN' } });
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rulesInConfig);
+
+            const result = SecurityUtils.getRequestConfigurationRules();
+            expect(result.length).toBe(1);
+            expect(result[0].urlPattern).toBe('.*api.*');
         });
     });
 
