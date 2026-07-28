@@ -27,7 +27,7 @@ export const settingsState = compose(
  * - onSave: triggers onHideSettings
  * Lifecycle:
  * - UNSAFE_componentWillMount: set original and initial settings of current node
- * - UNSAFE_componentWillReceiveProps: in case of missing description of node, it sends a get capabilities requiest to retrieve data of layer
+ * - UNSAFE_componentWillReceiveProps: in case of missing description of node, it sends a get capabilities request to retrieve data of layer
  * - UNSAFE_componentWillUpdate: check if current settings are not expanded and next are expanded to restore initial and original settings of component
  * @memberof enhancers.settingsLifecycle
  * @class
