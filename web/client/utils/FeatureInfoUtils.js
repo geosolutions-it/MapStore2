@@ -42,10 +42,14 @@ const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
 export function parseHTMLResponse(res) {
     if ( typeof res.response === "string") {
         let match = res.response.match(regexpBody);
-        if ( res.layerMetadata && res.layerMetadata.regex ) {
-            return match && match[1] && match[1].match(res.layerMetadata.regex);
+        const content = (match?.[1] ?? res.response).trim();
+        if (!match && content.indexOf("<?xml") === 0) {
+            return false;
         }
-        return match && match[1] && match[1].trim().length > 0;
+        if ( res.layerMetadata && res.layerMetadata.regex ) {
+            return !!content.match(res.layerMetadata.regex);
+        }
+        return content.length > 0;
     }
     return false;
 }
