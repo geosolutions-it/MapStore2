@@ -65,12 +65,6 @@ const createLayerFilterItem = () => ({
     }
 });
 
-const zoomToTarget = {
-    targetType: TARGET_TYPES.APPLY_ZOOM_TO,
-    expectedDataType: DATATYPES.ZOOM_TRIGGER,
-    constraints: {}
-};
-
 const createZoomToItem = (id = 'map', nodePath = 'map.applyZoomTo') => ({
     id,
     title: 'Zoom to',
