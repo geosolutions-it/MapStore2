@@ -96,16 +96,24 @@ const renderTargetsList = ({
     filteredInteractionTree,
     onEditorChange = () => {}
 } = {}) => {
+    const finalFilteredInteractionTree = filteredInteractionTree || { children: [item] };
     const container = document.getElementById('container');
+    const fullInteractionTree = {
+        ...interactionTree,
+        children: [
+            ...interactionTree.children,
+            ...(finalFilteredInteractionTree.children || [])
+        ]
+    };
     ReactDOM.render(
         <InteractionTargetsList
             target={target}
             interactions={interactions}
             sourceWidgetId="filter-widget"
-            interactionTree={interactionTree}
+            interactionTree={fullInteractionTree}
             currentSourceId="filter-1"
             onEditorChange={onEditorChange}
-            filteredInteractionTree={filteredInteractionTree || { children: [item] }}
+            filteredInteractionTree={finalFilteredInteractionTree}
             alreadyExistingInteractions={alreadyExistingInteractions}
             sourceSelectionMode={sourceSelectionMode}
             timelineEnabled={timelineEnabled}
@@ -219,45 +227,30 @@ describe('InteractionTargetsList component', () => {
         expect(container.querySelector('.glyphicon-plug')).toBeTruthy();
     });
 
-    it('should update all zoomTo targets when autoZoom is changed when multiple map is connected', () => {
+    it('should automatically unplug dependent interactions when an interaction is unplugged', () => {
         let changedKey;
         let changedInteractions;
-        const item1 = createZoomToItem('map', 'map.applyZoomTo');
-        const item2 = createZoomToItem('widget-1-map', 'widgets[widget-1].maps[map-1].applyZoomTo');
+
+        const applyFilterItem = createLayerFilterItem();
+        const zoomToItem = createZoomToItem('map', 'map.applyZoomTo');
 
         const container = renderTargetsList({
-            target: zoomToTarget,
-            filteredInteractionTree: { children: [item1, item2] },
-            alreadyExistingInteractions: [
-                {
-                    id: 'apply-filter-1',
-                    plugged: true,
-                    targetType: TARGET_TYPES.APPLY_FILTER,
-                    source: { nodePath: sourceNodePath },
-                    target: { nodePath: 'map.layers[layer-1]' }
-                },
-                {
-                    id: 'apply-filter-2',
-                    plugged: true,
-                    targetType: TARGET_TYPES.APPLY_FILTER,
-                    source: { nodePath: sourceNodePath },
-                    target: { nodePath: 'widgets[widget-1].maps[map-1].layers[layer-1]' }
-                }
-            ],
+            target: applyFilterTarget,
+            item: applyFilterItem,
+            alreadyExistingInteractions: [],
+            filteredInteractionTree: { children: [applyFilterItem, zoomToItem] },
             interactions: [{
+                id: 'apply-filter-1',
+                plugged: true,
+                targetType: 'applyFilter',
+                source: { nodePath: sourceNodePath },
+                target: { nodePath: 'map.layers[layer-1]' }
+            }, {
                 id: 'zoom-1',
                 plugged: true,
                 targetType: TARGET_TYPES.APPLY_ZOOM_TO,
                 source: { nodePath: sourceNodePath },
-                target: { nodePath: 'map.applyZoomTo' },
-                configuration: { autoZoom: false }
-            }, {
-                id: 'zoom-2',
-                plugged: true,
-                targetType: TARGET_TYPES.APPLY_ZOOM_TO,
-                source: { nodePath: sourceNodePath },
-                target: { nodePath: 'widgets[widget-1].maps[map-1].applyZoomTo' },
-                configuration: { autoZoom: false }
+                target: { nodePath: 'map.applyZoomTo' }
             }],
             onEditorChange: (key, value) => {
                 changedKey = key;
@@ -266,15 +259,18 @@ describe('InteractionTargetsList component', () => {
         });
 
         const rows = container.querySelectorAll('.ms-connection-row');
-        const buttons = rows[0].parentNode.querySelectorAll('.ms-interaction-buttons button');
-        const autoZoomButton1 = buttons[0];
-
-        // simulate click on first row's auto zoom
-        ReactTestUtils.Simulate.click(autoZoomButton1);
+        // Unplug the applyFilter connection
+        const plugButton = rows[0].querySelector('.ms-interaction-buttons button');
+        ReactTestUtils.Simulate.click(plugButton);
 
         expect(changedKey).toBe('interactions');
         expect(changedInteractions.length).toBe(2);
-        expect(changedInteractions[0].configuration.autoZoom).toBe(true);
-        expect(changedInteractions[1].configuration.autoZoom).toBe(true);
+
+        const unpluggedFilter = changedInteractions.find(i => i.targetType === 'applyFilter');
+        const unpluggedZoomTo = changedInteractions.find(i => i.targetType === TARGET_TYPES.APPLY_ZOOM_TO);
+
+        expect(unpluggedFilter.plugged).toBe(false);
+        // The applyZoomTo interaction should be automatically unplugged!
+        expect(unpluggedZoomTo.plugged).toBe(false);
     });
 });

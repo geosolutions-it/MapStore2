@@ -12,10 +12,7 @@ import {
     isLayerDimensionTarget,
     isLayerTimeDimensionTarget,
     isMapTimeTarget,
-    isMapZoomToTarget,
-    isMapLayerPath,
-    isAnyLayerPath,
-    extractMapIdFromNodePath,
+    findAllApplyFiltersForZoomTo,
     TARGET_TYPES
 } from '../../../../../../utils/InteractionUtils';
 
@@ -24,30 +21,6 @@ const DEFAULT_NODE_DISABLED = {
     reasonMsgId: null
 };
 
-/**
- * Checks whether the filter (source) is connected via `applyFilter`
- * to a layer in the same map as the given zoomTo target.
- * @param {string} zoomTargetNodePath the zoomTo target node path (map.zoomTo or widgets[id].maps[mapId].zoomTo)
- * @param {object[]} sourceConnections interactions sharing the same source (filter) node path
- * @returns {boolean}
- */
-function hasApplyFilterSibling(zoomTargetNodePath, sourceConnections) {
-    const applyFilterConnections = sourceConnections.filter(connection =>
-        connection.targetType === TARGET_TYPES.APPLY_FILTER
-        && connection.plugged
-        && isAnyLayerPath(connection?.target?.nodePath)
-    );
-
-    if (isMapZoomToTarget(zoomTargetNodePath)) {
-        return applyFilterConnections.some(connection => isMapLayerPath(connection?.target?.nodePath));
-    }
-
-    const zoomMapId = extractMapIdFromNodePath(zoomTargetNodePath);
-    return applyFilterConnections.some(connection => {
-        const layerNodePath = connection?.target?.nodePath;
-        return !isMapLayerPath(layerNodePath) && extractMapIdFromNodePath(layerNodePath) === zoomMapId;
-    });
-}
 
 /**
  * Helper: Build interaction object from item, event, and target metadata
@@ -189,8 +162,12 @@ export const getInteractionTargetNodeDisabled = ({
     }
 
     if (target.targetType === TARGET_TYPES.APPLY_ZOOM_TO) {
-        const zoomSourceConnections = alreadyExistingInteractions.filter(i => i?.source?.nodePath === sourceNodePath);
-        if (!hasApplyFilterSibling(targetNodePath, zoomSourceConnections)) {
+        const zoomInteraction = {
+            source: { nodePath: sourceNodePath },
+            target: { nodePath: targetNodePath }
+        };
+        const zoomDependencies = findAllApplyFiltersForZoomTo(zoomInteraction, alreadyExistingInteractions);
+        if (zoomDependencies.length === 0) {
             return {
                 disabled: true,
                 reasonMsgId: 'widgets.filterWidget.zoomToRequiresApplyFilterTooltip'

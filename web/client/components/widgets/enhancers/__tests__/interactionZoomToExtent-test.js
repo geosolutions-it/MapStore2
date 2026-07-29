@@ -8,6 +8,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
+import { act } from 'react-dom/test-utils';
 import interactionZoomToExtent from '../interactionZoomToExtent';
 import { ZOOM_TO_EXTENT_HOOK } from '../../../../utils/MapUtils';
 
@@ -62,15 +63,17 @@ describe('interactionZoomToExtent enhancer', () => {
             }
         }];
 
-        ReactDOM.render(
-            <EnhancedComponent
-                id="widget-1"
-                maps={maps}
-                hookRegister={hookRegister}
-                updateProperty={updateProperty}
-            />,
-            container
-        );
+        act(() => {
+            ReactDOM.render(
+                <EnhancedComponent
+                    id="widget-1"
+                    maps={maps}
+                    hookRegister={hookRegister}
+                    updateProperty={updateProperty}
+                />,
+                container
+            );
+        });
 
         expect(hookCalled).toBe(true);
         expect(updateCalled).toBe(true);
@@ -94,15 +97,17 @@ describe('interactionZoomToExtent enhancer', () => {
 
         const maps = [{ mapId: 'map-1' }];
 
-        ReactDOM.render(
-            <EnhancedComponent
-                id="widget-1"
-                maps={maps}
-                hookRegister={hookRegister}
-                updateProperty={updateProperty}
-            />,
-            container
-        );
+        act(() => {
+            ReactDOM.render(
+                <EnhancedComponent
+                    id="widget-1"
+                    maps={maps}
+                    hookRegister={hookRegister}
+                    updateProperty={updateProperty}
+                />,
+                container
+            );
+        });
 
         expect(hookCalled).toBe(false);
         expect(updateCalled).toBe(false);

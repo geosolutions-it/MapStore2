@@ -7,9 +7,8 @@
  */
 import React from 'react';
 import FlexBox from '../../../../../layout/FlexBox';
-// import { filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
 import Message from '../../../../../I18N/Message';
-import { findNodeById, getItemPluggableStatus, isMapTimeTarget, isAnyZoomToTarget, getGlobalAutoZoom, updateGlobalZoomInteractionsAutoZoom, containsMultipleZoomToNodes } from '../../../../../../utils/InteractionUtils';
+import { findNodeById, getItemPluggableStatus, isMapTimeTarget, isAnyZoomToTarget } from '../../../../../../utils/InteractionUtils';
 import InteractionsRow from './InteractionsRow';
 import { buildInteractionObject, findInteraction, getInteractionTargetNodeDisabled } from './interactionHelpers';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
@@ -19,12 +18,6 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
         const sourceNode = findNodeById(interactionTree, currentSourceId);
         return sourceNode?.nodePath || null;
     }, [interactionTree, currentSourceId]);
-
-    const hasMultipleZoomToNodes = React.useMemo(
-        () => containsMultipleZoomToNodes(filteredInteractionTree),
-        [filteredInteractionTree]);
-
-    const globalAutoZoom = React.useMemo(() => getGlobalAutoZoom(interactions, sourceNodePath), [interactions, sourceNodePath]);
 
     const getNodeDisabled = React.useCallback(({ item, target: rowTarget, targetNodePath, sourceNodePath: rowSourceNodePath, plugged }) => {
         const nodeDisabled = getInteractionTargetNodeDisabled({
@@ -52,31 +45,50 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
         if (!sourceWidgetId || !onEditorChange) {
             return;
         }
-
+        let newInteractions = [];
         if (existingInteraction) {
             const updatedInteraction = {
                 ...existingInteraction,
                 ...updates
             };
-            const updatedInteractions = (interactions || []).map(interaction =>
+            newInteractions = (interactions || []).map(interaction =>
                 interaction.id === existingInteraction.id ? updatedInteraction : interaction
             );
-            onEditorChange('interactions', updatedInteractions);
-            return;
+        } else {
+            const interaction = buildInteractionObject({
+                sourceNodePath,
+                targetNodePath,
+                configuration: {
+                    ...(updates.configuration || DEFAULT_CONFIGURATION)
+                },
+                plugged: updates.plugged || false,
+                targetMetaData,
+                targetType: target.targetType
+            });
+            newInteractions = [...(interactions || []), interaction];
         }
-
-        const interaction = buildInteractionObject({
-            sourceNodePath,
-            targetNodePath,
-            configuration: {
-                ...(updates.configuration || DEFAULT_CONFIGURATION),
-                ...(isAnyZoomToTarget(targetNodePath) ? { autoZoom: globalAutoZoom } : {})
-            },
-            plugged: updates.plugged || false,
-            targetMetaData,
-            targetType: target.targetType
+        newInteractions = newInteractions.map(interaction => {
+            if (interaction.plugged) {
+                const item = findNodeById(interactionTree, interaction.target.nodePath);
+                if (item) {
+                    const nodeDisabled = getInteractionTargetNodeDisabled({
+                        item,
+                        target: { targetType: interaction.targetType },
+                        targetNodePath: interaction.target.nodePath,
+                        sourceNodePath: interaction.source.nodePath,
+                        plugged: interaction.plugged,
+                        alreadyExistingInteractions: newInteractions,
+                        sourceSelectionMode,
+                        timelineEnabled
+                    });
+                    if (nodeDisabled.disabled) {
+                        return { ...interaction, plugged: false };
+                    }
+                }
+            }
+            return interaction;
         });
-        onEditorChange('interactions', [...(interactions || []), interaction]);
+        onEditorChange('interactions', newInteractions);
     }, [sourceWidgetId, onEditorChange, interactions, sourceNodePath, target]);
 
     const renderRow = (item, idx) => {
@@ -115,28 +127,8 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
         const handleConfigurationChange = (newConfiguration) => {
             updateInteraction({
                 configuration: newConfiguration,
-                plugged: !isMapTime && !newConfiguration.forcePlug ? false : plugged
+                plugged: !isMapTime && !isZoomTo && !newConfiguration.forcePlug ? false : plugged
             });
-        };
-
-        const handleAutoZoomChange = (nextAutoZoom) => {
-            if (isZoomTo) {
-                onEditorChange(
-                    'interactions',
-                    updateGlobalZoomInteractionsAutoZoom(interactions, sourceNodePath, nextAutoZoom)
-                );
-            } else {
-                updateInteraction({
-                    configuration: { ...configuration, autoZoom: nextAutoZoom },
-                    plugged
-                });
-            }
-        };
-
-        const buttonsConfig = {
-            showAutoZoom: isZoomTo,
-            autoZoomForAllMaps: hasMultipleZoomToNodes,
-            onAutoZoomChange: handleAutoZoomChange
         };
 
         return (
@@ -148,7 +140,6 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
                 isPluggable={directlyPluggable || configuredToForcePlug || configuration.forcePlug}
                 isConfigurable={!directlyPluggable || isMapTime}
                 configuration={configuration}
-                buttonsConfig={buttonsConfig}
                 configurationContext={{
                     hasOtherThanMapTimeConnected: hasOtherThanMapTimeConnected
                 }}

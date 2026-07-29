@@ -26,15 +26,15 @@ describe('InteractionButtons component', () => {
         ReactDOM.render(<InteractionButtons />, document.getElementById("container"));
         const container = document.getElementById('container');
         const buttons = container.querySelectorAll('button');
-        // By default, showAutoZoom and isConfigurable are false, so only the plug button is rendered.
+        // By default, no inline buttons and isConfigurable are false, so only the plug button is rendered.
         expect(buttons.length).toBe(1);
     });
 
-    it('renders Auto Zoom button when showAutoZoom and plugged are true', () => {
+    it('renders inline configuration buttons when visible (e.g. autoZoom for applyZoomTo when plugged)', () => {
         ReactDOM.render(
             <InteractionButtons
-                buttonsConfig={{ showAutoZoom: true }}
                 plugged
+                context={{ targetType: 'applyZoomTo' }}
                 configuration={{ autoZoom: true }}
             />, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -42,27 +42,14 @@ describe('InteractionButtons component', () => {
         // plug button + auto zoom button
         expect(buttons.length).toBe(2);
         // The first button should be the auto zoom button
-        expect(buttons[0].querySelector('.glyphicon-zoom-to') || buttons[0].textContent.includes('widgets.filterWidget.autoZoomLabel') || buttons[0].querySelector('span')).toExist();
+        expect(buttons[0].textContent.includes('widgets.filterWidget.autoZoomLabel') || buttons[0].querySelector('span')).toExist();
     });
 
-    it('renders Auto Zoom button with autoZoomForAllMaps tooltip', () => {
+    it('does not render autoZoom button when plugged is false', () => {
         ReactDOM.render(
             <InteractionButtons
-                buttonsConfig={{ showAutoZoom: true, autoZoomForAllMaps: true }}
-                plugged
-                configuration={{ autoZoom: true }}
-            />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const buttons = container.querySelectorAll('button');
-        // plug button + auto zoom button
-        expect(buttons.length).toBe(2);
-    });
-
-    it('does not render Auto Zoom button when plugged is false', () => {
-        ReactDOM.render(
-            <InteractionButtons
-                buttonsConfig={{ showAutoZoom: true }}
                 plugged={false}
+                context={{ targetType: 'applyZoomTo' }}
                 configuration={{ autoZoom: true }}
             />, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -71,22 +58,23 @@ describe('InteractionButtons component', () => {
         expect(buttons.length).toBe(1);
     });
 
-    it('triggers onAutoZoomChange when Auto Zoom button is clicked', () => {
+    it('triggers setConfiguration when inline configuration button is clicked', () => {
         const actions = {
-            onAutoZoomChange: () => {}
+            setConfiguration: () => {}
         };
-        const spy = expect.spyOn(actions, 'onAutoZoomChange');
+        const spy = expect.spyOn(actions, 'setConfiguration');
         ReactDOM.render(
             <InteractionButtons
                 plugged
+                context={{ targetType: 'applyZoomTo' }}
                 configuration={{ autoZoom: false }}
-                buttonsConfig={{showAutoZoom: true, onAutoZoomChange: actions.onAutoZoomChange}}
+                setConfiguration={actions.setConfiguration}
             />, document.getElementById("container"));
         const container = document.getElementById('container');
         const buttons = container.querySelectorAll('button');
         ReactTestUtils.Simulate.click(buttons[0]);
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[0].arguments[0]).toBe(true); // Should toggle from false to true
+        expect(spy.calls[0].arguments[0]).toEqual({ autoZoom: true });
     });
 
     it('renders configuration button when isConfigurable is true', () => {

@@ -1,3 +1,5 @@
+import { CONFIGURATION_METADATA, CONFIGURATION_RENDER_MODES } from "../components/widgets/builder/wizard/common/interactions/interactionConstants";
+
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
     LAYER_STYLE: 'LAYER_STYLE',
@@ -988,7 +990,7 @@ export const FILTER_WIDGET_OPTIONAL_TARGET_TYPES = [TARGET_TYPES.APPLY_DIMENSION
 /**
  * Finds a node by its id in the tree and returns the node object.
  * @param {object} tree root metadata tree
- * @param {string} nodeId the id of the node to find
+ * @param {string} nodeId the id or path of the node to find
  * @returns {object|null} the found node object, or null if not found
  */
 export function findNodeById(tree, nodeId) {
@@ -997,7 +999,7 @@ export function findNodeById(tree, nodeId) {
     }
 
     const search = (node) => {
-        if (node?.id === nodeId) {
+        if (node?.id === nodeId || node?.nodePath === nodeId) {
             return node;
         }
 
@@ -1209,59 +1211,57 @@ export const findAllApplyFiltersForZoomTo = (zoomInteraction, siblingInteraction
 };
 
 /**
- * Checks if there are multiple zoom-to nodes in the tree.
- * @param {object} tree - The tree to search
- * @returns {boolean}
+ * Checks if a condition is met for the given context
+ * @param {object} condition - The condition to check
+ * @param {object} context - The context to check against
+ * @returns {boolean} True if the condition is met, false otherwise
  */
-export const containsMultipleZoomToNodes = (tree) => {
-    let count = 0;
-    const visit = (node) => {
-        if (!node || count > 1) return;
-        if (isAnyZoomToTarget(node.nodePath)) {
-            count++;
+export const matchesCondition = (condition = {}, context = {}) => {
+    return Object.keys(condition).every((field) => {
+        const rule = condition[field];
+        const value = context[field];
+
+        if (rule?.isEqual !== undefined) {
+            return value === rule.isEqual;
         }
-        node.children?.forEach(visit);
-    };
-    visit(tree);
-    return count > 1;
-};
 
-const isGlobalZoomToInteraction = (interaction = {}, sourceNodePath) =>
-    isAnyZoomToTarget(interaction.target?.nodePath)
-    && interaction.source?.nodePath === sourceNodePath;
+        if (rule?.isNotEqual !== undefined) {
+            return value !== rule.isNotEqual;
+        }
 
-/**
- * Returns whether auto-zoom is enabled for the global zoom To interaction
- * originating from the specified source node.
- * @param {object[]} interactions Array of interactions
- * @param {string} sourceNodePath Source node path
- * @returns {boolean}
- */
-export const getGlobalAutoZoom = (interactions = [], sourceNodePath) => {
-    return interactions.find(
-        (interaction) => isGlobalZoomToInteraction(interaction, sourceNodePath)
-    )?.configuration?.autoZoom ?? false;
+        return value === rule;
+    });
 };
 
 /**
- * Updates the auto-zoom setting for all zoom To interactions associated with the specified source node.
- * Filter interactions (per filter) share a single auto-zoom behavior across all target maps,
- * so the setting is applied consistently to every matching interaction.
- * @param {object[]} interactions Array of interactions
- * @param {string} sourceNodePath Source node path
- * @param {boolean} autoZoom Auto-zoom value to set
- * @returns {object[]} Updated interactions
+ * Checks if a configuration is visible for the given context
+ * @param {object} metadata - The configuration metadata
+ * @param {object} context - The context to check against
+ * @returns {boolean} True if the configuration is visible, false otherwise
  */
-export const updateGlobalZoomInteractionsAutoZoom = (interactions = [], sourceNodePath, autoZoom) => {
-    return interactions.map((interaction) =>
-        isGlobalZoomToInteraction(interaction, sourceNodePath)
-            ? {
-                ...interaction,
-                configuration: {
-                    ...(interaction.configuration || {}),
-                    autoZoom
-                }
-            }
-            : interaction
-    );
+export const isConfigurationVisible = (metadata, context) => {
+    if (!metadata) {
+        return false;
+    }
+    if (!metadata.visibleWhen) {
+        return true;
+    }
+    return matchesCondition(metadata.visibleWhen, context);
 };
+
+/**
+ * Returns the configuration keys that are visible for the given context and render mode.
+ * @param {object} configuration - The configuration object
+ * @param {object} context - The context object
+ * @param {string} renderAs - The render mode
+ * @returns {string[]} Array of visible configuration keys
+ */
+export const getVisibleConfigurationKeys = (
+    configuration = {},
+    context = {},
+    renderAs = CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX
+) =>
+    Object.keys(configuration).filter((key) =>
+        isConfigurationVisible(CONFIGURATION_METADATA[key], context)
+        && (CONFIGURATION_METADATA[key]?.renderAs ?? CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX) === renderAs);
+

@@ -9,6 +9,8 @@
 import Rx from 'rxjs';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
+import { resolveZoomToExtentPadding } from '../utils/MapWidgetUtils';
+import { mapPaddingSelector } from '../selectors/maplayout';
 import bbox from '@turf/bbox';
 import xml2js from 'xml2js';
 
@@ -37,6 +39,7 @@ import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/fil
 import { getChartAxisDependencyPath, getMapDependencyPath } from '../utils/WidgetsUtils';
 import { shouldSkipInteraction } from '../selectors/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
+import { mapSelector } from '../selectors/map';
 
 // ============================================================================
 // Node Path Utilities
@@ -1099,7 +1102,15 @@ function applyInteractionEffectForZoomTo(interaction, filterWidget, state, targe
                 }
             });
 
-            const actions = uniqueTargets.map(target => buildZoomToExtentAction(unionExtent, target, targetContainer));
+            const actions = uniqueTargets.map(target => {
+                let padding;
+                if (!target.mapWidgetId) {
+                    const mapEl = document.getElementById(mapSelector(state)?.mapStateSource || 'map');
+                    const layoutPadding = mapPaddingSelector(state);
+                    padding = mapEl ? resolveZoomToExtentPadding(mapEl, layoutPadding) : layoutPadding;
+                }
+                return buildZoomToExtentAction(unionExtent, target, targetContainer, padding);
+            });
             return Rx.Observable.from(actions);
         })
         .catch(() => Rx.Observable.empty());

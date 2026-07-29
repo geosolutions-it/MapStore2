@@ -28,7 +28,7 @@ import FilterNoSelectableItems from '../../components/widgets/builder/wizard/fil
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
-import { isMapTimeTarget, TARGET_TYPES } from '../../utils/InteractionUtils';
+import { isMapTimeTarget } from '../../utils/InteractionUtils';
 
 const toIsoTime = (value) => {
     if (value === undefined || value === null || value === '') {
@@ -226,7 +226,8 @@ const FilterView = ({
     fetchError = false,
     showItemToolbar = false,
     onToggleDisabled,
-    onZoomToFilterExtent
+    onZoomToFilterExtent,
+    widgets = []
 }) => {
     const layout = filterData?.layout ?? {};
     const Component = componentMap[layout.variant ?? 'checkbox'];
@@ -425,17 +426,13 @@ const FilterView = ({
             className="ms-filter-collapse-toggle"
         />
     ) : null;
-    const showZoomButton = (interactions || []).some(interaction =>
-        interaction?.plugged === true
-        && interaction?.targetType === TARGET_TYPES.APPLY_ZOOM_TO
-        && interaction?.configuration?.autoZoom !== true
-    );
     const perItemToolbar = showItemToolbar ? (
         <FilterItemToolbar
             filterData={filterData}
+            interactions={interactions}
+            widgets={widgets}
             collapsed={effectiveCollapsed}
             onToggleDisabled={onToggleDisabled}
-            showZoomButton={showZoomButton}
             onZoomToFilterExtent={onZoomToFilterExtent}
         />
     ) : null;
@@ -633,7 +630,8 @@ FilterView.propTypes = {
     currentTime: PropTypes.string,
     showItemToolbar: PropTypes.bool,
     onToggleDisabled: PropTypes.func,
-    onZoomToFilterExtent: PropTypes.func
+    onZoomToFilterExtent: PropTypes.func,
+    widgets: PropTypes.array
 };
 FilterView.defaultProps = {};
 

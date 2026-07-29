@@ -14,7 +14,7 @@ import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions, zoomToFilterExtent } from '../../../actions/interactions';
 import './filter-widget.less';
-import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector, getFloatingWidgets } from '../../../selectors/widgets';
 import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
 import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
@@ -35,6 +35,7 @@ const FilterWidget = ({
     currentTime,
     timelineRangeEnabled,
     inactiveInteractionIds = [],
+    widgets = [],
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
     icons,
@@ -124,6 +125,7 @@ const FilterWidget = ({
                                 syncCurrentTime={syncCurrentTime}
                                 timelineRangeEnabled={timelineRangeEnabled}
                                 onSelectionChange={handleSelectionChange(filter.id)}
+                                widgets={widgets}
                                 showItemToolbar // toolbar shown inside the widget, not in the builder preview
                                 onToggleDisabled={handleToggleDisabled(filter.id)}
                                 onZoomToFilterExtent={handleZoomToFilterExtent(filter.id)}
@@ -167,6 +169,7 @@ FilterWidget.propTypes = {
     onZoomToFilterExtent: PropTypes.func,
     timelineRangeEnabled: PropTypes.bool,
     inactiveInteractionIds: PropTypes.array,
+    widgets: PropTypes.array,
     target: PropTypes.string
 };
 
@@ -176,6 +179,7 @@ export default connect(createStructuredSelector({
     applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
     applyDimensionOutOfSyncForWidget: (state, ownProps) => getApplyDimensionOutOfSyncForFilterWidget(state, ownProps?.id),
     inactiveInteractionIds: (state, ownProps) => inactiveInteractionIdsForWidgetSelector(state, ownProps?.id),
+    widgets: getFloatingWidgets,
     currentTime: currentTimeSelector,
     timelineRangeEnabled: offsetEnabledSelector
 }), {

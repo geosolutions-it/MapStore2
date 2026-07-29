@@ -65,13 +65,13 @@ describe('FilterItemToolbar component', () => {
         expect(clicked).toBe(true);
     });
 
-    it('renders zoom button when showZoomButton is true and invokes onZoomToFilterExtent on click', () => {
+    it('renders zoom button when there are zoomTo interactions in manual mode', () => {
         const container = document.getElementById('container');
         let zoomed = false;
         ReactDOM.render(
             <FilterItemToolbar
                 filterData={filterDataFeatures}
-                showZoomButton
+                interactions={[{ plugged: true, targetType: 'applyZoomTo', configuration: { autoZoom: false } }]}
                 onZoomToFilterExtent={() => { zoomed = true; }}
             />,
             container
@@ -88,7 +88,7 @@ describe('FilterItemToolbar component', () => {
         ReactDOM.render(
             <FilterItemToolbar
                 filterData={{...filterDataFeatures, disabled: true}}
-                showZoomButton
+                interactions={[{ plugged: true, targetType: 'applyZoomTo', configuration: { autoZoom: false } }]}
                 onZoomToFilterExtent={() => {}}
             />,
             container

@@ -11,6 +11,8 @@ import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
 import tooltip from '../../../../../misc/enhancers/tooltip';
 import Message from '../../../../../I18N/Message';
+import { getVisibleConfigurationKeys } from '../../../../../../utils/InteractionUtils';
+import { CONFIGURATION_METADATA, CONFIGURATION_RENDER_MODES } from './interactionConstants';
 
 const TButton = tooltip(Button);
 
@@ -27,20 +29,21 @@ const TButton = tooltip(Button);
  * @param {object} plugConstraints describes whether plugging is disabled and why
  * @returns {React.ReactElement}
  */
-const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable, plugConstraints = {}, buttonsConfig = {}, configuration = {} }) => {
+const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable, plugConstraints = {}, configuration = {}, context = {}, setConfiguration = () => {} }) => {
     const { disabled: isPlugConstrained = false, reason: plugConstraintReason = null } = plugConstraints;
-    const { showAutoZoom, autoZoomForAllMaps, onAutoZoomChange } = buttonsConfig;
-    const autoZoom = configuration.autoZoom || false;
+    const contextUpdated = {...context, plugged};
+    const inlineKeys = getVisibleConfigurationKeys(configuration, contextUpdated, CONFIGURATION_RENDER_MODES.INLINE_BUTTON);
     return (
         <FlexBox gap="xs" className={`ms-interaction-buttons${isPlugConstrained ? ' is-disabled' : ''}`}>
-            {showAutoZoom && plugged && <TButton
-                onClick={() => onAutoZoomChange(!autoZoom)}
-                borderTransparent
-                tooltip={autoZoomForAllMaps ? <Message msgId="widgets.filterWidget.autoZoomForAllMapsTooltip" /> : <Message msgId="widgets.filterWidget.autoZoomInfo" />}
-                variant={autoZoom ? "primary" : undefined}
-            >
-                <Message msgId="widgets.filterWidget.autoZoomLabel" />
-            </TButton>}
+            {inlineKeys.map(key => {
+                const metadata = CONFIGURATION_METADATA[key];
+                return (<TButton key={key} borderTransparent
+                    variant={configuration[key] ? "primary" : undefined}
+                    tooltip={<Message msgId={metadata.infoMsgByTargetType?.[contextUpdated.targetType] ?? metadata.infoMsgByTargetType?.default} />}
+                    onClick={() => setConfiguration({ ...configuration, [key]: !configuration[key] })}>
+                    <Message msgId={metadata.label} />
+                </TButton>);
+            })}
             {isConfigurable && <TButton
                 visible={isConfigurable}
                 onClick={() => setShowConfiguration(!showConfiguration)}

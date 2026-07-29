@@ -22,10 +22,10 @@ import {
     promoteMapZoomToNodes,
     TARGET_TYPES,
     findAllApplyFiltersForZoomTo,
-    containsMultipleZoomToNodes,
-    getGlobalAutoZoom,
-    updateGlobalZoomInteractionsAutoZoom
+    findNodeById,
+    getVisibleConfigurationKeys
 } from '../InteractionUtils';
+import { CONFIGURATION_RENDER_MODES } from '../../components/widgets/builder/wizard/common/interactions/interactionConstants';
 
 // Shared test data for all widget tests
 const testWidgets = {
@@ -1004,119 +1004,95 @@ describe('InteractionUtils', () => {
             expect(result[0].id).toBe('2');
         });
     });
-    describe('containsMultipleZoomToNodes', () => {
-        it('returns false for an empty tree', () => {
-            expect(containsMultipleZoomToNodes(null)).toBe(false);
-            expect(containsMultipleZoomToNodes({})).toBe(false);
+
+    describe('findNodeById', () => {
+        it('returns null if tree or nodeId is empty', () => {
+            expect(findNodeById(null, 'id-1')).toBe(null);
+            expect(findNodeById({}, null)).toBe(null);
         });
 
-        it('returns false when there are no zoom-to nodes', () => {
+        it('returns node matching id', () => {
             const tree = {
-                nodePath: 'map.layers',
-                children: [{ nodePath: 'map.layers[layer-1]' }]
-            };
-            expect(containsMultipleZoomToNodes(tree)).toBe(false);
-        });
-
-        it('returns false when there is exactly one zoom-to node', () => {
-            const tree = {
-                nodePath: 'root',
+                id: 'root',
                 children: [
-                    { nodePath: 'map.applyZoomTo' },
-                    { nodePath: 'widgets[widget-1]' }
+                    { id: 'child-1' },
+                    { id: 'child-2' }
                 ]
             };
-            expect(containsMultipleZoomToNodes(tree)).toBe(false);
+            const result = findNodeById(tree, 'child-2');
+            expect(result).toExist();
+            expect(result.id).toBe('child-2');
         });
 
-        it('returns true when there are multiple zoom-to nodes', () => {
+        it('returns node matching nodePath', () => {
             const tree = {
-                nodePath: 'root',
+                id: 'root',
                 children: [
-                    { nodePath: 'map.applyZoomTo' },
-                    { nodePath: 'widgets[widget-1].maps[map-1].applyZoomTo' }
+                    { id: '1', nodePath: 'map.layers[layer-1]' },
+                    { id: '2', nodePath: 'widgets[widget-1]' }
                 ]
             };
-            expect(containsMultipleZoomToNodes(tree)).toBe(true);
+            const result = findNodeById(tree, 'widgets[widget-1]');
+            expect(result).toExist();
+            expect(result.id).toBe('2');
+        });
+
+        it('returns null if node is not found', () => {
+            const tree = {
+                id: 'root',
+                children: [
+                    { id: '1' }
+                ]
+            };
+            expect(findNodeById(tree, 'non-existent')).toBe(null);
         });
     });
 
-    describe('getGlobalAutoZoom', () => {
-        const sourcePath = 'widgets[filter-1].filters[filter-1]';
+    describe('getVisibleConfigurationKeys', () => {
+        const configuration = {
+            forcePlug: false,
+            twoWaySynchronization: false,
+            autoZoom: false
+        };
 
-        it('returns false when interactions array is empty', () => {
-            expect(getGlobalAutoZoom([], sourcePath)).toBe(false);
+        it('returns empty array when context makes everything invisible', () => {
+            const context = {
+                targetType: 'unsupported',
+                nodePath: 'map.time'
+            };
+            expect(getVisibleConfigurationKeys(configuration, context)).toEqual([]);
         });
 
-        it('returns false when no interaction matches the source path and zoom-to target', () => {
-            const interactions = [
-                { source: { nodePath: 'other-source' }, target: { nodePath: 'map.applyZoomTo' } },
-                { source: { nodePath: sourcePath }, target: { nodePath: 'map.layers[layer-1]' } }
-            ];
-            expect(getGlobalAutoZoom(interactions, sourcePath)).toBe(false);
+        it('returns forcePlug for panel checkbox when nodePath is not map.time', () => {
+            const context = {
+                nodePath: 'map.layers[layer-1]'
+            };
+            const keys = getVisibleConfigurationKeys(configuration, context, CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX);
+            expect(keys).toContain('forcePlug');
+            expect(keys).toNotContain('twoWaySynchronization');
+            expect(keys).toNotContain('autoZoom');
         });
 
-        it('returns false when matching interaction does not have autoZoom configured', () => {
-            const interactions = [
-                { source: { nodePath: sourcePath }, target: { nodePath: 'map.applyZoomTo' } }
-            ];
-            expect(getGlobalAutoZoom(interactions, sourcePath)).toBe(false);
+        it('returns twoWaySynchronization for panel checkbox when targetType is applyDimension and nodePath is map.time', () => {
+            const context = {
+                targetType: 'applyDimension',
+                nodePath: 'map.time'
+            };
+            const keys = getVisibleConfigurationKeys(configuration, context, CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX);
+            expect(keys).toNotContain('forcePlug');
+            expect(keys).toContain('twoWaySynchronization');
+            expect(keys).toNotContain('autoZoom');
         });
 
-        it('returns true when matching interaction has autoZoom configured to true', () => {
-            const interactions = [
-                {
-                    source: { nodePath: sourcePath },
-                    target: { nodePath: 'map.applyZoomTo' },
-                    configuration: { autoZoom: true }
-                }
-            ];
-            expect(getGlobalAutoZoom(interactions, sourcePath)).toBe(true);
-        });
-    });
-
-    describe('updateGlobalZoomInteractionsAutoZoom', () => {
-        const sourcePath = 'widgets[filter-1].filters[filter-1]';
-        const interactions = [
-            {
-                id: '1',
-                source: { nodePath: sourcePath },
-                target: { nodePath: 'map.applyZoomTo' },
-                configuration: { autoZoom: false, otherConfig: 'value' }
-            },
-            {
-                id: '2',
-                source: { nodePath: sourcePath },
-                target: { nodePath: 'widgets[widget-1].maps[map-1].applyZoomTo' }
-            },
-            {
-                id: '3',
-                source: { nodePath: 'other-source' },
-                target: { nodePath: 'map.applyZoomTo' },
-                configuration: { autoZoom: false }
-            },
-            {
-                id: '4',
-                source: { nodePath: sourcePath },
-                target: { nodePath: 'map.layers[layer-1]' }
-            }
-        ];
-
-        it('updates autoZoom for all matching zoom-to interactions without modifying others', () => {
-            const updated = updateGlobalZoomInteractionsAutoZoom(interactions, sourcePath, true);
-
-            // Should be updated and preserve other configs
-            expect(updated[0].configuration.autoZoom).toBe(true);
-            expect(updated[0].configuration.otherConfig).toBe('value');
-
-            // Should be updated (configuration created)
-            expect(updated[1].configuration.autoZoom).toBe(true);
-
-            // Should not be updated (wrong source)
-            expect(updated[2].configuration.autoZoom).toBe(false);
-
-            // Should not be updated (wrong target)
-            expect(updated[3].configuration).toNotExist();
+        it('returns autoZoom for inline button when targetType is applyZoomTo and plugged is true', () => {
+            const context = {
+                targetType: 'applyZoomTo',
+                plugged: true
+            };
+            const keys = getVisibleConfigurationKeys(configuration, context, CONFIGURATION_RENDER_MODES.INLINE_BUTTON);
+            expect(keys).toContain('autoZoom');
+            expect(keys).toNotContain('forcePlug');
+            expect(keys).toNotContain('twoWaySynchronization');
         });
     });
 });
