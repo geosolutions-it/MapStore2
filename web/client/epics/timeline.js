@@ -277,7 +277,7 @@ export const updateTimelineDataOnMapLoad = (action$) =>
             const snapRadioButtonEnabled = config?.timelineData?.snapRadioButtonEnabled;
             const layers = config?.timelineData?.layers;
             return Rx.Observable.of(
-                ...(!isEmpty(selectedLayer) ? [initializeSelectLayer(selectedLayer)] : []),
+                ...(!isEmpty(selectedLayer) ? [initializeSelectLayer(selectedLayer, isEmpty(currentTime))] : []),
                 ...(!isNil(endValuesSupport) ? [setEndValuesSupport(endValuesSupport)] : []),
                 ...(!isNil(snapRadioButtonEnabled) ? [setSnapRadioButtonEnabled(snapRadioButtonEnabled)] : []),
                 ...(!isEmpty(layers) ? [setTimeLayers(layers)] : [])
@@ -356,7 +356,8 @@ export const syncTimelineGuideLayer = (action$, { getState = () => { } } = {}) =
             const state = getState();
             const firstTimeLayer = get(timelineLayersSelector(state), "[0].id");
             if (isAutoSelectEnabled(state) && firstTimeLayer) {
-                return Rx.Observable.of(selectLayer(firstTimeLayer)); // Select the first guide layer from the list and snap time
+                // select the first guide layer; snap the time only when no current time is set, so a restored/saved time is preserved
+                return Rx.Observable.of(selectLayer(firstTimeLayer, isEmpty(currentTimeSelector(state))));
             }
             return Rx.Observable.empty();
         });
