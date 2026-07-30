@@ -1741,7 +1741,8 @@
       "resourceTypes": {
         "label": "Ressourcentypen",
         "dataset": "Datensätze",
-        "document": "Dokumente"
+        "document": "Dokumente",
+        "map": "Karten"
       },
       "subtypes": {
         "label": "Inhaltstyp",

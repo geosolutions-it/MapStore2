@@ -1702,7 +1702,8 @@
       "resourceTypes": {
         "label": "Types de ressource",
         "dataset": "Jeux de données",
-        "document": "Documents"
+        "document": "Documents",
+        "map": "Cartes"
       },
       "subtypes": {
         "label": "Type de contenu",

@@ -89,7 +89,7 @@ class DownloadOptions extends React.Component {
         this.props.formatOptionsFetch(this.props.layer);
     };
 
-    componentWillReceiveProps = (newProps) => {
+    UNSAFE_componentWillReceiveProps = (newProps) => {
         if ( !isEqual( this.props.formats, newProps.formats)) {
             const format = get(newProps, "downloadOptions.selectedFormat") || get(head(newProps.formats), "name");
             newProps.onChange("selectedFormat", format);

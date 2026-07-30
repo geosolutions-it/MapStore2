@@ -192,7 +192,7 @@ class NumericInput extends Component {
      *     2. Then trim it.
      *     3. Then parse it to number (delegating to this.props.parse if any)
      */
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this._isStrict = !!props.strict;
         let nextState = this._propsToState(props);
         if (Object.keys(nextState).length) {
@@ -206,7 +206,7 @@ class NumericInput extends Component {
     /**
      * Save the input selection right before rendering
      */
-    componentWillUpdate() {
+    UNSAFE_componentWillUpdate() {
         this.saveSelection();
     }
 
