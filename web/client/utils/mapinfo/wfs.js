@@ -33,7 +33,7 @@ const CLIENT_WORKFLOW = 'client';
 const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, featureInfo) => {
     if (point?.intersectedFeatures) {
         const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
-        const isRemote = infoFormat === 'text/html';
+        const isRemote = infoFormat === 'text/html' && layer.infoFormats.includes('text/html');
         return {
             request: {
                 features: [...features],
