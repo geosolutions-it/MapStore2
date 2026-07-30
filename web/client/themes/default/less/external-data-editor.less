@@ -1,0 +1,102 @@
+// External Data configuration shown below a Feature Info view.
+.ms-external-data-editor {
+    border: 1px solid @ms2-color-shade-lighter;
+    margin: -12px 0 12px;
+    padding: 12px;
+
+    .ms-external-data-url-row {
+        display: flex;
+        gap: 8px;
+
+        .form-control {
+            flex: 1;
+        }
+    }
+
+    .ms-external-data-loading {
+        margin-bottom: 12px;
+    }
+
+    .ms-external-data-attributes {
+        .layer-fields {
+            margin-top: 4px;
+        }
+    }
+
+    .ms-external-data-validation {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+
+        .alert {
+            margin: 0;
+            width: 100%;
+        }
+    }
+
+    .ms-external-data-validation-details,
+    .ms-external-data-validation-result {
+        width: 100%;
+    }
+
+    .ms-external-data-validation-result {
+        pre {
+            max-height: 240px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    }
+}
+
+// Related WFS results shown in the Identify viewer.
+.ms-external-data-viewer {
+    .ms-external-data-result {
+        border-bottom: 1px solid @ms2-color-shade-lighter;
+        padding: 0 0 12px;
+
+        + .ms-external-data-result {
+            padding-top: 12px;
+        }
+
+        > h4 {
+            margin: 0 0 8px;
+        }
+    }
+
+    .ms-external-data-runtime-loading {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        min-height: 48px;
+    }
+
+    .ms-external-data-runtime-error-header {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        justify-content: space-between;
+    }
+
+    .ms-external-data-runtime-error-details {
+        margin-top: 8px;
+
+        summary {
+            cursor: pointer;
+        }
+
+        pre {
+            margin: 8px 0 0;
+            max-height: 200px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    }
+
+    .alert {
+        margin-bottom: 0;
+    }
+}

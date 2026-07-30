@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ControlLabel, FormControl, FormGroup, Alert, Glyphicon, Button } from 'react-bootstrap';
+import { ControlLabel, FormControl, FormGroup, Alert, Glyphicon, Button, Checkbox } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import LocalizedInput from '../../../misc/LocalizedInput';
@@ -35,11 +35,21 @@ const isGeometryType = (type) =>
  * @prop {string} currentLocale the current locale (for instance "en-US") used to show the localized alias
  * @name Fields
  */
-const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onClear = () => {}, loading, error, currentLocale }) => {
+const Fields = ({
+    fields = [],
+    onLoadFields = () => {},
+    onChange = () => {},
+    onClear = () => {},
+    loading,
+    error,
+    currentLocale,
+    showToolbar = true,
+    showVisibility = false
+}) => {
     return (<BorderLayout
         className="layer-fields"
         header={<div key="row-header" className="layer-fields-header">
-            <div key="row-toolbar" className="layer-fields-toolbar">
+            {showToolbar ? <div key="row-toolbar" className="layer-fields-toolbar">
                 <Toolbar key="toolbar" btnDefaultProps={{ className: 'square-button', bsStyle: 'primary', disabled: loading }}
                     buttons={[{
                         glyph: 'refresh',
@@ -62,8 +72,11 @@ const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onCl
 
                     }]}
                 />
-            </div>
+            </div> : null}
             <div key="row-labels" className="layer-fields-row-header">
+                {showVisibility ? <FormGroup className="layer-field-visibility">
+                    <ControlLabel><Message msgId="layerProperties.externalData.show"/></ControlLabel>
+                </FormGroup> : null}
                 <FormGroup className="layer-field-name">
                     <ControlLabel><Message msgId="layerProperties.fields.name"/></ControlLabel>
                 </FormGroup>
@@ -82,8 +95,14 @@ const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onCl
     >
         {fields
             .filter(({type}) => !isGeometryType(type)) // exclude geometry fields
-            .map(({name, alias, type}) => {
+            .map(({name, alias, type, visible}) => {
                 return (<div key={`field-${name}`} className="layer-fields-row">
+                    {showVisibility ? <FormGroup className="layer-field-visibility">
+                        <Checkbox
+                            checked={visible !== false}
+                            disabled={loading}
+                            onChange={(event) => onChange(name, "visible", event.target.checked)}/>
+                    </FormGroup> : null}
                     <FormGroup className="layer-field-name">
                         <FormControl disabled value={name} />
                     </FormGroup>
@@ -105,7 +124,10 @@ Fields.propTypes = {
     onChange: PropTypes.func,
     onClear: PropTypes.func,
     loading: PropTypes.bool,
-    error: PropTypes.bool
+    error: PropTypes.bool,
+    currentLocale: PropTypes.string,
+    showToolbar: PropTypes.bool,
+    showVisibility: PropTypes.bool
 };
 
 export default Fields;

@@ -20,6 +20,9 @@
     .legend-preview {
         .background-color-var(@theme-vars[main-bg]);
     }
+    .ms-feature-info-view.has-error {
+        .border-color-var(@theme-vars[danger]);
+    }
 }
 
 // **************
@@ -180,6 +183,17 @@
         gap: 5px;
         .layer-field-alias {
             flex: 1;
+        }
+        .layer-field-visibility {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+            width: 48px;
+
+            .checkbox {
+                margin: 0;
+            }
         }
         .layer-field-name {
             width: 150px;

@@ -48,7 +48,8 @@ describe('MapInfoUtils', () => {
             "TEXT": "TEXT",
             "PROPERTIES": "PROPERTIES",
             "HTML": "HTML",
-            "TEMPLATE": "TEMPLATE"
+            "TEMPLATE": "TEMPLATE",
+            "EXTERNAL_DATA": "EXTERNAL_DATA"
         };
         let results = getInfoViewModes();
         expect(results).toExist();
@@ -837,6 +838,30 @@ describe('MapInfoUtils', () => {
                 views
             }
         })).toEqual(views);
+    });
+    it('getLayerFeatureInfoViews should hide invalid external data views only at runtime', () => {
+        const layer = {
+            featureInfo: {
+                views: [{
+                    id: 'invalid-external',
+                    type: 'EXTERNAL_DATA',
+                    externalData: {}
+                }, {
+                    id: 'valid-external',
+                    type: 'EXTERNAL_DATA',
+                    externalData: {
+                        url: '/geoserver/wfs',
+                        layerName: 'workspace:external',
+                        cqlFilter: "source_id = '${properties.id}'"
+                    }
+                }]
+            }
+        };
+
+        expect(getLayerFeatureInfoViews(layer).map(({ id }) => id))
+            .toEqual(['valid-external']);
+        expect(getLayerFeatureInfoViews(layer, { includeInvalid: true }).map(({ id }) => id))
+            .toEqual(['invalid-external', 'valid-external']);
     });
 
     it('isLayerFeatureInfoDisabled should support legacy HIDDEN and disabled flag', () => {

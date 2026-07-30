@@ -28,6 +28,8 @@ import FeatureInfoEditor from './FeatureInfoEditor';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import FeatureInfoRequestOptions from '../../../misc/FeatureInfoRequestOptions';
 import { isGeoServerLayer } from '../../../../utils/FeatureInfoRequestUtils';
+import ExternalDataEditor from './ExternalDataEditor';
+import { EXTERNAL_DATA, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
@@ -44,6 +46,8 @@ const FeatureInfoView = ({
     connectDropTarget = cmp => cmp,
     isDisabled = false,
     isDraggable,
+    isEditing = false,
+    isInvalid = false,
     onEdit = () => {},
     onRemove = () => {},
     onUpdateView = () => {},
@@ -52,7 +56,7 @@ const FeatureInfoView = ({
     const content = (
         <div
             data-id={`feature-info-view-${view.id}`}
-            className={`ms-feature-info-view${isDisabled ? ' disabled' : ''}`}>
+            className={`ms-feature-info-view${isDisabled ? ' disabled' : ''}${isInvalid ? ' has-error' : ''}`}>
             {isDraggable ? connectDragSource(
                 <div
                     className="grab-handle"
@@ -75,10 +79,17 @@ const FeatureInfoView = ({
             </div>
             <Button
                 className="square-button no-border ms-feature-info-view-action ms-feature-info-view-edit"
+                bsStyle={isEditing ? 'primary' : undefined}
                 disabled={isDisabled || !canEdit}
                 onClick={() => onEdit(view.id)}>
                 <Glyphicon glyph="pencil"/>
             </Button>
+            {isInvalid ? (
+                <Glyphicon
+                    className="text-danger"
+                    glyph="warning-sign"
+                    title="Invalid configuration"/>
+            ) : null}
             <Button
                 className="square-button no-border ms-feature-info-view-action ms-feature-info-view-remove"
                 disabled={isDisabled}
@@ -162,7 +173,8 @@ export default class extends React.Component {
         element: PropTypes.object,
         defaultInfoFormat: PropTypes.object,
         onChange: PropTypes.func,
-        formatCards: PropTypes.object
+        formatCards: PropTypes.object,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -194,7 +206,9 @@ export default class extends React.Component {
     }
 
     getTypeOptions = () => {
-        return Object.keys(this.transformInfoFormatsToViews(this.supportedInfoFormats()));
+        const types = Object.keys(this.transformInfoFormatsToViews(this.supportedInfoFormats()));
+        // External Data needs a structured source response to read feature properties.
+        return types.includes('PROPERTIES') ? [...types, EXTERNAL_DATA] : types;
     }
 
     transformInfoFormatsToViews = (infoFormats) => {
@@ -223,7 +237,10 @@ export default class extends React.Component {
     }
 
     getViews = () => {
-        return getLayerFeatureInfoViews(this.props.element, { includeDisabled: true });
+        return getLayerFeatureInfoViews(this.props.element, {
+            includeDisabled: true,
+            includeInvalid: true
+        });
     }
 
     updateView = (viewId, changes) => {
@@ -279,7 +296,10 @@ export default class extends React.Component {
                 options={options}
                 optionRenderer={this.renderTypeOption}
                 valueRenderer={this.renderTypeOption}
-                onChange={(selected) => this.updateView(view.id, { type: selected?.value })}/>
+                onChange={(selected) => {
+                    this.updateView(view.id, { type: selected?.value });
+                    this.setState({ editingViewId: selected?.value === EXTERNAL_DATA ? view.id : null });
+                }}/>
         );
     }
 
@@ -292,21 +312,34 @@ export default class extends React.Component {
     }
 
     renderView = (view, views, index, isDisabled) => {
-        const canEdit = view.type === 'TEMPLATE';
+        const canEdit = view.type === 'TEMPLATE' || view.type === EXTERNAL_DATA;
         return (
-            <DraggableFeatureInfoView
-                key={view.id}
-                index={index}
-                isDisabled={isDisabled}
-                isDraggable={!isDisabled && views.length > 1}
-                view={view}
-                views={views}
-                canEdit={canEdit}
-                onEdit={(viewId) => this.setState({ editingViewId: viewId })}
-                onRemove={this.removeView}
-                onUpdateView={this.updateView}
-                onMove={this.reorderView}
-                renderTypeSelect={(featureInfoView) => this.renderTypeSelect(featureInfoView, isDisabled)}/>
+            <div key={view.id}>
+                <DraggableFeatureInfoView
+                    index={index}
+                    isDisabled={isDisabled}
+                    isDraggable={!isDisabled && views.length > 1}
+                    isEditing={view.type === EXTERNAL_DATA && this.state.editingViewId === view.id}
+                    isInvalid={view.type === EXTERNAL_DATA && !!validateExternalDataConfiguration(view.externalData)}
+                    view={view}
+                    views={views}
+                    canEdit={canEdit}
+                    onEdit={(viewId) => this.setState(({ editingViewId }) => ({
+                        editingViewId: editingViewId === viewId ? null : viewId
+                    }))}
+                    onRemove={this.removeView}
+                    onUpdateView={this.updateView}
+                    onMove={this.reorderView}
+                    renderTypeSelect={(featureInfoView) => this.renderTypeSelect(featureInfoView, isDisabled)}/>
+                {/* External Data uses an inline editor; templates keep their existing editor below the list. */}
+                {!isDisabled && this.state.editingViewId === view.id && view.type === EXTERNAL_DATA ? (
+                    <ExternalDataEditor
+                        sourceLayer={this.props.element}
+                        currentLocale={this.props.currentLocale}
+                        value={view.externalData}
+                        onChange={(externalData) => this.updateView(view.id, { externalData })}/>
+                ) : null}
+            </div>
         );
     }
 
@@ -357,7 +390,7 @@ export default class extends React.Component {
                         </div>
                     ) : null}
                     {views.map((view, index) => this.renderView(view, views, index, disabled))}
-                    {!disabled && editingView ? (
+                    {!disabled && editingView?.type === 'TEMPLATE' ? (
                         <FeatureInfoEditor
                             {...this.props}
                             template={editingView.template || ''}
