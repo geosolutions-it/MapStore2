@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { TARGET_TYPES } from "../../../../../../utils/InteractionUtils";
+
 export const CONFIGURATION_RENDER_MODES = {
     INLINE_BUTTON: "inline-button",
     PANEL_CHECKBOX: "panel-checkbox"
@@ -53,7 +55,7 @@ export const CONFIGURATION_METADATA = {
         renderAs: CONFIGURATION_RENDER_MODES.INLINE_BUTTON,
         visibleWhen: {
             targetType: {
-                isEqual: 'applyZoomTo'
+                isEqual: TARGET_TYPES.APPLY_ZOOM_TO
             },
             plugged: { isEqual: true }
         },

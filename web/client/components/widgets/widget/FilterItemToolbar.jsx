@@ -12,7 +12,6 @@ import { Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Button from '../../misc/Button';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Message from '../../I18N/Message';
-import HTML from '../../I18N/HTML';
 import { TARGET_TYPES } from '../../../utils/InteractionUtils';
 import { getWidgetByDependencyPath } from '../../../utils/WidgetsUtils';
 
@@ -86,7 +85,7 @@ const FilterItemToolbar = ({
                     glyph="zoom-to"
                     tooltipElement={
                         <Tooltip id={`filter-zoom-${filterData?.id}`}>
-                            <HTML msgId="widgets.filterWidget.zoomToFilterExtent" msgParams={{ names: zoomToMapNames.length ? `: ${zoomToMapNames.join(', ')}` : ''}} />
+                            <Message msgId="widgets.filterWidget.zoomToFilterExtent" msgParams={{ names: zoomToMapNames.length ? `: ${zoomToMapNames.join(', ')}` : ''}} />
                         </Tooltip>
                     }
                     disabled={!enabled}

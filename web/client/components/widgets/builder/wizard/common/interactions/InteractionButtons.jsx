@@ -11,7 +11,7 @@ import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
 import tooltip from '../../../../../misc/enhancers/tooltip';
 import Message from '../../../../../I18N/Message';
-import { getVisibleConfigurationKeys } from '../../../../../../utils/InteractionUtils';
+import { getVisibleConfigurationKeys } from './interactionHelpers';
 import { CONFIGURATION_METADATA, CONFIGURATION_RENDER_MODES } from './interactionConstants';
 
 const TButton = tooltip(Button);

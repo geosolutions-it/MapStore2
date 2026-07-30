@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { v1 as uuid } from 'uuid';
-import { DEFAULT_CONFIGURATION } from './interactionConstants';
+import { CONFIGURATION_METADATA, CONFIGURATION_RENDER_MODES, DEFAULT_CONFIGURATION } from './interactionConstants';
 import {
     isChartAxisDimensionTarget,
     isLayerDimensionTarget,
@@ -20,6 +20,74 @@ const DEFAULT_NODE_DISABLED = {
     disabled: false,
     reasonMsgId: null
 };
+
+/**
+ * Checks if a condition is met for the given context
+ * @param {object} condition - The condition to check
+ * @param {object} context - The context to check against
+ * @returns {boolean} True if the condition is met, false otherwise
+ */
+export const matchesCondition = (condition = {}, context = {}) => {
+    return Object.keys(condition).every((field) => {
+        const rule = condition[field];
+        const value = context[field];
+
+        if (rule?.isEqual !== undefined) {
+            return value === rule.isEqual;
+        }
+
+        if (rule?.isNotEqual !== undefined) {
+            return value !== rule.isNotEqual;
+        }
+
+        return value === rule;
+    });
+};
+
+/**
+ * Checks if a configuration is visible for the given context
+ * @param {object} metadata - The configuration metadata
+ * @param {object} context - The context to check against
+ * @returns {boolean} True if the configuration is visible, false otherwise
+ */
+export const isConfigurationVisible = (metadata, context) => {
+    if (!metadata) {
+        return false;
+    }
+    if (!metadata.visibleWhen) {
+        return true;
+    }
+    return matchesCondition(metadata.visibleWhen, context);
+};
+
+/**
+ * Checks if a configuration is disabled for the given context
+ * @param {object} metadata - The configuration metadata
+ * @param {object} context - The context to check against
+ * @returns {boolean} True if the configuration is disabled, false otherwise
+ */
+export const isConfigurationDisabled = (metadata, context) => {
+    if (!metadata?.disabledWhen) {
+        return false;
+    }
+    return matchesCondition(metadata.disabledWhen, context);
+};
+
+/**
+ * Returns the configuration keys that are visible for the given context and render mode.
+ * @param {object} configuration - The configuration object
+ * @param {object} context - The context object
+ * @param {string} renderAs - The render mode
+ * @returns {string[]} Array of visible configuration keys
+ */
+export const getVisibleConfigurationKeys = (
+    configuration = {},
+    context = {},
+    renderAs = CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX
+) =>
+    Object.keys(configuration).filter((key) =>
+        isConfigurationVisible(CONFIGURATION_METADATA[key], context)
+        && (CONFIGURATION_METADATA[key]?.renderAs ?? CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX) === renderAs);
 
 
 /**

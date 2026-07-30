@@ -10,14 +10,7 @@ import FlexBox from '../../../../../layout/FlexBox';
 import { Glyphicon, Checkbox, OverlayTrigger, Popover } from 'react-bootstrap';
 import { CONFIGURATION_METADATA } from './interactionConstants';
 import Message from '../../../../../I18N/Message';
-import { getVisibleConfigurationKeys, matchesCondition } from '../../../../../../utils/InteractionUtils';
-
-const isConfigurationDisabled = (metadata, context) => {
-    if (!metadata?.disabledWhen) {
-        return false;
-    }
-    return matchesCondition(metadata.disabledWhen, context);
-};
+import { getVisibleConfigurationKeys, isConfigurationDisabled } from './interactionHelpers';
 
 const InteractionConfiguration = ({show, configuration, setConfiguration, setPlugged = () => {}, target, context = {}}) => {
     if (!show) return null;

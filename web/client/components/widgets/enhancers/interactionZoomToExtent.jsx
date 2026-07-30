@@ -15,18 +15,21 @@ import { ZOOM_TO_EXTENT_HOOK } from '../../../utils/MapUtils';
  */
 export default (Component) => memo((props) => {
     const { id, maps = [], updateProperty = () => {}, hookRegister } = props;
+    const targetMap = maps.find(m => m?.zoomToRequest);
+    const mapId = targetMap?.mapId;
+    const zoomToRequest = targetMap?.zoomToRequest;
 
     useEffect(() => {
-        const targetMap = maps.find(m => m?.zoomToRequest);
-        if (targetMap) {
-            const hook = hookRegister?.getHook(ZOOM_TO_EXTENT_HOOK);
-            if (hook) {
-                const { extent, crs, maxZoom, padding } = targetMap.zoomToRequest;
-                hook(extent, { crs, maxZoom, ...(padding ? { padding } : {}) });
-            }
-            updateProperty(id, 'maps', { mapId: targetMap.mapId, zoomToRequest: undefined }, 'merge');
+        if (!zoomToRequest) {
+            return;
         }
-    }, [id, maps, updateProperty, hookRegister]);
+        const hook = hookRegister?.getHook(ZOOM_TO_EXTENT_HOOK);
+        if (hook) {
+            const { extent, crs, maxZoom, padding } = zoomToRequest;
+            hook(extent, { crs, maxZoom, ...(padding ? { padding } : {}) });
+        }
+        updateProperty(id, 'maps', { mapId, zoomToRequest: undefined }, 'merge');
+    }, [zoomToRequest]);
 
     return <Component {...props} />;
 });

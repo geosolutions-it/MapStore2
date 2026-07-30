@@ -14,7 +14,7 @@ import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions, zoomToFilterExtent } from '../../../actions/interactions';
 import './filter-widget.less';
-import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector, getFloatingWidgets } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector, getWidgetsByTarget } from '../../../selectors/widgets';
 import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
 import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
@@ -179,7 +179,7 @@ export default connect(createStructuredSelector({
     applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
     applyDimensionOutOfSyncForWidget: (state, ownProps) => getApplyDimensionOutOfSyncForFilterWidget(state, ownProps?.id),
     inactiveInteractionIds: (state, ownProps) => inactiveInteractionIdsForWidgetSelector(state, ownProps?.id),
-    widgets: getFloatingWidgets,
+    widgets: (state, ownProps) => getWidgetsByTarget(state, ownProps?.target),
     currentTime: currentTimeSelector,
     timelineRangeEnabled: offsetEnabledSelector
 }), {

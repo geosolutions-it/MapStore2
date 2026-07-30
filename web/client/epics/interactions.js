@@ -8,8 +8,9 @@
 
 import Rx from 'rxjs';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import sortBy from 'lodash/sortBy';
-import { resolveZoomToExtentPadding } from '../utils/MapWidgetUtils';
+import { getMainMapZoomToPadding } from '../utils/MapWidgetUtils';
 import { mapPaddingSelector } from '../selectors/maplayout';
 import bbox from '@turf/bbox';
 import xml2js from 'xml2js';
@@ -30,7 +31,8 @@ import {
     isMapLayerPath,
     isMapTimeTarget,
     TARGET_TYPES,
-    findAllApplyFiltersForZoomTo
+    findAllApplyFiltersForZoomTo,
+    unplugOrphanZoomToInteractions
 } from '../utils/InteractionUtils';
 import { defaultLayerFilter, toOGCFilter } from '../utils/FilterUtils';
 import { getWpsUrl } from '../utils/LayersUtils';
@@ -39,7 +41,6 @@ import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/fil
 import { getChartAxisDependencyPath, getMapDependencyPath } from '../utils/WidgetsUtils';
 import { shouldSkipInteraction } from '../selectors/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
-import { mapSelector } from '../selectors/map';
 
 // ============================================================================
 // Node Path Utilities
@@ -836,15 +837,18 @@ function cleanupAfterLayerDeletion(deletedLayerId, state, targetContainer = 'flo
 
     filterWidgets.forEach(filterWidget => {
         const interactions = filterWidget.interactions || [];
-        const filteredInteractions = interactions.filter(interaction => {
-            const targetNodePath = interaction?.target?.nodePath || '';
-            if (!isMapLayerPath(targetNodePath)) {
-                return true;
-            }
-            return extractLayerIdFromNodePath(targetNodePath) !== deletedLayerId;
-        });
+        const filteredInteractions = unplugOrphanZoomToInteractions(
+            interactions.filter(interaction => {
+                const targetNodePath = interaction?.target?.nodePath || '';
+                if (!isMapLayerPath(targetNodePath)) {
+                    return true;
+                }
+                return extractLayerIdFromNodePath(targetNodePath) !== deletedLayerId;
+            })
+        );
 
-        if (filteredInteractions.length !== interactions.length) {
+        // compares by value: unplugging an orphaned zoom-to keeps the array length unchanged
+        if (!isEqual(filteredInteractions, interactions)) {
             actions.push(updateWidgetProperty(filterWidget.id, 'interactions', filteredInteractions, 'replace', targetContainer));
         }
     });
@@ -1103,12 +1107,9 @@ function applyInteractionEffectForZoomTo(interaction, filterWidget, state, targe
             });
 
             const actions = uniqueTargets.map(target => {
-                let padding;
-                if (!target.mapWidgetId) {
-                    const mapEl = document.getElementById(mapSelector(state)?.mapStateSource || 'map');
-                    const layoutPadding = mapPaddingSelector(state);
-                    padding = mapEl ? resolveZoomToExtentPadding(mapEl, layoutPadding) : layoutPadding;
-                }
+                const padding = target.mapWidgetId
+                    ? undefined
+                    : getMainMapZoomToPadding(mapPaddingSelector(state));
                 return buildZoomToExtentAction(unionExtent, target, targetContainer, padding);
             });
             return Rx.Observable.from(actions);

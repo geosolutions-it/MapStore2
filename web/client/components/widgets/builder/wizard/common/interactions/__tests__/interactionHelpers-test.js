@@ -7,7 +7,8 @@
  */
 import expect from 'expect';
 
-import { getInteractionTargetNodeDisabled } from '../interactionHelpers';
+import { getInteractionTargetNodeDisabled, getVisibleConfigurationKeys } from '../interactionHelpers';
+import { CONFIGURATION_RENDER_MODES } from '../interactionConstants';
 import { TARGET_TYPES } from '../../../../../../../utils/InteractionUtils';
 
 const sourceNodePath = 'widgets[filter-widget].filters[filter-1]';
@@ -287,6 +288,54 @@ describe('interactionHelpers', () => {
                 disabled: true,
                 reasonMsgId: 'widgets.filterWidget.targetAlreadyConnectedToTimeTooltip'
             });
+        });
+    });
+
+    describe('getVisibleConfigurationKeys', () => {
+        const configuration = {
+            forcePlug: false,
+            twoWaySynchronization: false,
+            autoZoom: false
+        };
+
+        it('returns empty array when context makes everything invisible', () => {
+            const context = {
+                targetType: 'unsupported',
+                nodePath: 'map.time'
+            };
+            expect(getVisibleConfigurationKeys(configuration, context)).toEqual([]);
+        });
+
+        it('returns forcePlug for panel checkbox when nodePath is not map.time', () => {
+            const context = {
+                nodePath: 'map.layers[layer-1]'
+            };
+            const keys = getVisibleConfigurationKeys(configuration, context, CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX);
+            expect(keys).toContain('forcePlug');
+            expect(keys).toNotContain('twoWaySynchronization');
+            expect(keys).toNotContain('autoZoom');
+        });
+
+        it('returns twoWaySynchronization for panel checkbox when targetType is applyDimension and nodePath is map.time', () => {
+            const context = {
+                targetType: 'applyDimension',
+                nodePath: 'map.time'
+            };
+            const keys = getVisibleConfigurationKeys(configuration, context, CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX);
+            expect(keys).toNotContain('forcePlug');
+            expect(keys).toContain('twoWaySynchronization');
+            expect(keys).toNotContain('autoZoom');
+        });
+
+        it('returns autoZoom for inline button when targetType is applyZoomTo and plugged is true', () => {
+            const context = {
+                targetType: 'applyZoomTo',
+                plugged: true
+            };
+            const keys = getVisibleConfigurationKeys(configuration, context, CONFIGURATION_RENDER_MODES.INLINE_BUTTON);
+            expect(keys).toContain('autoZoom');
+            expect(keys).toNotContain('forcePlug');
+            expect(keys).toNotContain('twoWaySynchronization');
         });
     });
 });

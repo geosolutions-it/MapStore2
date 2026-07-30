@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { MAIN_MAP_CONTAINER_ID } from './MapUtils';
+
 export const WIDGET_CARD_SELECTOR = '[data-widget-card]';
 
 /**
@@ -162,4 +164,17 @@ export const resolveZoomToExtentPadding = (mapContainer, layoutPadding, doc = do
         left: Math.max(layoutPadding?.left || 0, widgetPadding.left),
         right: Math.max(layoutPadding?.right || 0, widgetPadding.right)
     };
+};
+
+/**
+ * Resolve the zoom padding for the main map.
+ * @param {object} layoutPadding padding from map layout selectors
+ * @param {Document} doc
+ * @returns {object} padding for the main map
+ */
+export const getMainMapZoomToPadding = (layoutPadding, doc = document) => {
+    const mapContainer = doc.getElementById(MAIN_MAP_CONTAINER_ID);
+    return mapContainer
+        ? resolveZoomToExtentPadding(mapContainer, layoutPadding, doc)
+        : layoutPadding;
 };

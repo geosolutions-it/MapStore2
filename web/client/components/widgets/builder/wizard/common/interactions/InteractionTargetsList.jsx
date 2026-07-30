@@ -89,7 +89,7 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
             return interaction;
         });
         onEditorChange('interactions', newInteractions);
-    }, [sourceWidgetId, onEditorChange, interactions, sourceNodePath, target]);
+    }, [sourceWidgetId, onEditorChange, interactions, sourceNodePath, target, interactionTree, sourceSelectionMode, timelineEnabled]);
 
     const renderRow = (item, idx) => {
         const targetNodePath = item.nodePath;

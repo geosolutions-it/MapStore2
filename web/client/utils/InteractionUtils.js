@@ -1,5 +1,3 @@
-import { CONFIGURATION_METADATA, CONFIGURATION_RENDER_MODES } from "../components/widgets/builder/wizard/common/interactions/interactionConstants";
-
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
     LAYER_STYLE: 'LAYER_STYLE',
@@ -1211,57 +1209,16 @@ export const findAllApplyFiltersForZoomTo = (zoomInteraction, siblingInteraction
 };
 
 /**
- * Checks if a condition is met for the given context
- * @param {object} condition - The condition to check
- * @param {object} context - The context to check against
- * @returns {boolean} True if the condition is met, false otherwise
+ * Unplugs zoom-to interactions left without an applyFilter sibling, keeping them configured so they
+ * can be plugged again once a layer connection is restored.
+ * @param {object[]} interactions - Interactions of a filter widget
+ * @returns {object[]} Interactions with orphaned zoom-to entries unplugged
  */
-export const matchesCondition = (condition = {}, context = {}) => {
-    return Object.keys(condition).every((field) => {
-        const rule = condition[field];
-        const value = context[field];
-
-        if (rule?.isEqual !== undefined) {
-            return value === rule.isEqual;
-        }
-
-        if (rule?.isNotEqual !== undefined) {
-            return value !== rule.isNotEqual;
-        }
-
-        return value === rule;
-    });
-};
-
-/**
- * Checks if a configuration is visible for the given context
- * @param {object} metadata - The configuration metadata
- * @param {object} context - The context to check against
- * @returns {boolean} True if the configuration is visible, false otherwise
- */
-export const isConfigurationVisible = (metadata, context) => {
-    if (!metadata) {
-        return false;
-    }
-    if (!metadata.visibleWhen) {
-        return true;
-    }
-    return matchesCondition(metadata.visibleWhen, context);
-};
-
-/**
- * Returns the configuration keys that are visible for the given context and render mode.
- * @param {object} configuration - The configuration object
- * @param {object} context - The context object
- * @param {string} renderAs - The render mode
- * @returns {string[]} Array of visible configuration keys
- */
-export const getVisibleConfigurationKeys = (
-    configuration = {},
-    context = {},
-    renderAs = CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX
-) =>
-    Object.keys(configuration).filter((key) =>
-        isConfigurationVisible(CONFIGURATION_METADATA[key], context)
-        && (CONFIGURATION_METADATA[key]?.renderAs ?? CONFIGURATION_RENDER_MODES.PANEL_CHECKBOX) === renderAs);
+export const unplugOrphanZoomToInteractions = (interactions = []) =>
+    interactions.map(interaction =>
+        interaction.plugged
+        && interaction.targetType === TARGET_TYPES.APPLY_ZOOM_TO
+        && findAllApplyFiltersForZoomTo(interaction, interactions).length === 0
+            ? { ...interaction, plugged: false }
+            : interaction);
 

@@ -142,6 +142,9 @@ import proj4 from "proj4";
 
 export const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
 
+// id of the DOM container rendered by the Map plugin for the main map
+export const MAIN_MAP_CONTAINER_ID = 'map';
+
 /**
  * `ZOOM_TO_EXTENT_HOOK` hook takes 2 arguments:
  * - `extent`: array of the extent [minx, miny, maxx, maxy]
