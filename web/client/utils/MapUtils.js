@@ -24,7 +24,7 @@ import {
     omit,
     isObject
 } from 'lodash';
-import { get as getProjectionOL, getPointResolution } from 'ol/proj';
+import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
 import { get as getExtent } from 'ol/proj/projections';
 
 import { v1 as uuidv1 } from 'uuid';
@@ -546,15 +546,47 @@ export function convertResolution(sourceCRS, targetCRS, sourceResolution, anchor
 
     const point = anchorPoint || getRandomPointInCRS(sourceCRS);
 
-    // `point` must stay in sourceProjection's own space
-    const transformedResolution = getPointResolution(
-        sourceProjection,
-        sourceResolution,
-        point,
-        targetProjection.getUnits()
-    );
+    // getPointResolution expects the point in the space of the projection passed as first argument,
+    // so `point` stays in sourceCRS: measuring the source resolution needs no target transform
+    const groundResolution = getPointResolution(sourceProjection, sourceResolution, point, 'm');
+
+    // ground meters covered by one targetCRS unit at the same location
+    let metersPerTargetUnit;
+    try {
+        const targetPoint = transform(point, sourceCRS, targetCRS);
+        if (targetPoint.every((value) => Number.isFinite(value))) {
+            metersPerTargetUnit = getPointResolution(targetProjection, 1, targetPoint, 'm');
+        }
+    } catch (e) {
+        metersPerTargetUnit = undefined;
+    }
+
+    const transformedResolution = metersPerTargetUnit > 0
+        ? groundResolution / metersPerTargetUnit
+        // targetCRS not reachable from this point: convert by units only, ignoring its local distortion
+        : getPointResolution(sourceProjection, sourceResolution, point, targetProjection.getUnits());
 
     return { randomPoint: point, transformedResolution };
+}
+
+/**
+ * Convert a resolution between two CRSs through the meters-per-unit ratio of their units.
+ *
+ * This is the ratio the map view uses as well when it looks for the zoom level that keeps the
+ * current scale on a projection change: resolutions converted this way keep the same relation
+ * with the view resolution, which is what preserves layer visibility across a CRS switch.
+ * Converting through the local point resolution instead would be closer to the real size on the
+ * ground, but it would drift from the view by the local scale factor of the projection
+ * (1 / cos(lat) for Mercator, one full zoom level around 45 degrees of latitude).
+ *
+ * @param {string} sourceCRS the code of the source projection
+ * @param {string} targetCRS the code of the target projection
+ * @param {number} sourceResolution the resolution to convert, in sourceCRS units
+ * @returns {number} the resolution in targetCRS units
+ */
+export function convertResolutionByUnits(sourceCRS, targetCRS, sourceResolution) {
+    const metersPerCRSUnit = (code) => getMetersPerUnit(getUnits(code), 1);
+    return sourceResolution * metersPerCRSUnit(sourceCRS) / metersPerCRSUnit(targetCRS);
 }
 
 /**

@@ -58,6 +58,7 @@ import {
     UPDATE_MAP_OPTIONS
 } from '../map';
 import {updateNode} from '../layers';
+import { METERS_PER_UNIT } from '../../utils/MapUtils';
 
 describe('Test correctness of the map actions', () => {
 
@@ -157,9 +158,12 @@ describe('Test correctness of the map actions', () => {
                 }],
                 map: {present: {projection: "EPSG:3857"}}
             }));
+        // metres are converted to degrees through the meters-per-unit of the units, the same ratio
+        // the map view uses to keep the scale when the projection changes
+        const metersPerDegree = METERS_PER_UNIT.degrees;
         const expectedActions = [
-            updateNode('layer1', 'layer', { minResolution: 0.02197265625, maxResolution: 0.0439453125 }),
-            updateNode('layer2', 'layer', { minResolution: 0.0439453125 }),
+            updateNode('layer1', 'layer', { minResolution: 2000 / metersPerDegree, maxResolution: 4000 / metersPerDegree }),
+            updateNode('layer2', 'layer', { minResolution: 5000 / metersPerDegree }),
             changeCRS(crs)
         ];
         for (let i = 0; i < expectedActions.length; i++) {
@@ -206,6 +210,26 @@ describe('Test correctness of the map actions', () => {
         expect(isNaN(minResolution)).toBe(false);
         expect(isNaN(maxResolution)).toBe(false);
         expect(dispatchedActions[dispatchedActions.length - 1]).toEqual(changeCRS(crs));
+    });
+
+    it('changes map crs back and forth without altering the layer resolution limits', () => {
+        proj4.defs('TEST:UTM30N', '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs');
+        register(proj4);
+        const limitsAfter = (sourceCRS, targetCRS, layer) => {
+            const dispatched = [];
+            changeMapCrs(targetCRS)((action) => dispatched.push(action), () => ({
+                layers: [layer],
+                map: { present: { projection: sourceCRS } }
+            }));
+            return dispatched[0].options;
+        };
+
+        const inGeographic = limitsAfter('TEST:UTM30N', 'EPSG:4326', { id: 'layer1', minResolution: 0.5, maxResolution: 100 });
+        const backInMetric = limitsAfter('EPSG:4326', 'TEST:UTM30N', { id: 'layer1', ...inGeographic });
+
+        // the ratio is applied in both directions, so the round trip is stable down to float rounding
+        expect(Math.abs(backInMetric.minResolution / 0.5 - 1)).toBeLessThan(1e-12);
+        expect(Math.abs(backInMetric.maxResolution / 100 - 1)).toBeLessThan(1e-12);
     });
 
     it('changeMapScales', () => {
