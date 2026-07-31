@@ -308,7 +308,7 @@ describe('MapInfoUtils', () => {
             point: {latlng: {lat: 0, lng: 0}}
         });
 
-        expect(views).toEqual([{id: 'default', title: 'Identify', type: 'TEXT'}]);
+        expect(views).toEqual([{id: 'default', type: 'TEXT'}]);
         expect(requests.length).toBe(1);
         expect(requests[0].viewIds).toEqual(['default']);
         expect(requests[0].request.info_format).toBe('text/plain');
@@ -523,6 +523,78 @@ describe('MapInfoUtils', () => {
         expect(validResponses.length).toBe(1);
     });
 
+    it('getValidator applies layerMetadata regex to view responses', () => {
+        const html = '<html><body><div class="sample">TEST text</div></body></html>';
+        const viewResponses = {
+            html: {
+                response: html,
+                queryParams: {info_format: 'text/html'}
+            }
+        };
+        const notMatching = {
+            layerMetadata: {title: 'layer', regex: "<table[^>]*>[\\s\\S]*<\\/table>"},
+            viewResponses
+        };
+        const matching = {
+            layerMetadata: {title: 'layer', regex: "<div[^>]*>[\\s\\S]*<\\/div>"},
+            viewResponses
+        };
+
+        const validator = getValidator();
+        expect(validator.getValidResponses([notMatching]).length).toBe(0);
+        expect(validator.getNoValidResponses([notMatching]).length).toBe(1);
+        expect(validator.getValidResponses([matching]).length).toBe(1);
+        expect(validator.getNoValidResponses([matching]).length).toBe(0);
+    });
+
+    it('getValidator applies layerMetadata regex to responses without views', () => {
+        const html = '<html><body><div class="sample">TEST text</div></body></html>';
+        const validator = getValidator();
+        expect(validator.getValidResponses([{
+            response: html,
+            queryParams: {info_format: 'text/html'},
+            layerMetadata: {regex: "<table[^>]*>[\\s\\S]*<\\/table>"}
+        }]).length).toBe(0);
+        expect(validator.getValidResponses([{
+            response: html,
+            queryParams: {info_format: 'text/html'},
+            layerMetadata: {regex: "<div[^>]*>[\\s\\S]*<\\/div>"}
+        }]).length).toBe(1);
+    });
+
+    it('getValidator validates a response when any of its views has content', () => {
+        const emptyTextView = {
+            response: 'no features were found',
+            queryParams: {info_format: 'text/plain'}
+        };
+        const withFeatures = {
+            layerMetadata: {title: 'layer'},
+            viewResponses: {
+                text: emptyTextView,
+                properties: {
+                    response: {features: [{id: 'feature-1'}]},
+                    queryParams: {info_format: 'application/json'}
+                }
+            }
+        };
+        const withoutFeatures = {
+            layerMetadata: {title: 'layer'},
+            viewResponses: {
+                text: emptyTextView,
+                properties: {
+                    response: {features: []},
+                    queryParams: {info_format: 'application/json'}
+                }
+            }
+        };
+
+        const validator = getValidator();
+        expect(validator.getValidResponses([withFeatures]).length).toBe(1);
+        expect(validator.getNoValidResponses([withFeatures]).length).toBe(0);
+        expect(validator.getValidResponses([withoutFeatures]).length).toBe(0);
+        expect(validator.getNoValidResponses([withoutFeatures]).length).toBe(1);
+    });
+
     it('getValidResponses for vector layer', ()=>{
         let response = [
             {
@@ -727,17 +799,14 @@ describe('MapInfoUtils', () => {
         expect(getLayerFeatureInfoViews({})).toEqual([]);
         expect(getLayerFeatureInfoViews({}, {defaultType: 'HTML'})).toEqual([{
             id: 'default',
-            title: 'Identify',
             type: 'HTML'
         }]);
         expect(getLayerFeatureInfoViews({featureInfo: {format: 'TEXT'}})).toEqual([{
             id: 'default',
-            title: 'Identify',
             type: 'TEXT'
         }]);
         expect(getLayerFeatureInfoViews({featureInfo: {format: 'TEMPLATE', template: '<p>{name}</p>'}})).toEqual([{
             id: 'default',
-            title: 'Identify',
             type: 'TEMPLATE',
             template: '<p>{name}</p>'
         }]);
@@ -753,8 +822,21 @@ describe('MapInfoUtils', () => {
             }
         })).toEqual([
             {id: 'main', title: 'Main', type: 'PROPERTIES'},
-            {id: 'view-1', title: 'Identify', type: 'TEMPLATE', template: '<p>{name}</p>'}
+            {id: 'view-1', type: 'TEMPLATE', template: '<p>{name}</p>'}
         ]);
+    });
+
+    it('getLayerFeatureInfoViews should prefer views over the legacy format', () => {
+        const views = [
+            {id: 'template-view', title: 'Template identify', type: 'TEMPLATE', template: '<p>NAME</p>'},
+            {id: 'text-view', title: 'Text identify', type: 'TEXT'}
+        ];
+        expect(getLayerFeatureInfoViews({
+            featureInfo: {
+                format: 'TEXT',
+                views
+            }
+        })).toEqual(views);
     });
 
     it('isLayerFeatureInfoDisabled should support legacy HIDDEN and disabled flag', () => {
@@ -771,7 +853,6 @@ describe('MapInfoUtils', () => {
             }
         }, {includeDisabled: true})).toEqual([{
             id: 'main',
-            title: 'Identify',
             type: 'TEXT'
         }]);
     });

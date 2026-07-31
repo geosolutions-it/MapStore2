@@ -31,9 +31,9 @@ describe('Test the mapInfo reducer', () => {
         },
         responses: [],
         requests: [
-            {reqId: 10, request: "test"},
-            {reqId: 11, request: "test1"},
-            {reqId: 3, request: "test3"}
+            {reqId: 10},
+            {reqId: 11},
+            {reqId: 3}
         ]};
 
     it('returns original state on unrecognized action', () => {
@@ -159,9 +159,9 @@ describe('Test the mapInfo reducer', () => {
             },
             responses: [],
             requests: [
-                {reqId: 10, request: "test"},
-                {reqId: 11, request: "test1"},
-                {reqId: 3, request: "test3"}
+                {reqId: 10},
+                {reqId: 11},
+                {reqId: 3}
             ],
             showAllResponses: true
         }, testAction);
@@ -179,9 +179,9 @@ describe('Test the mapInfo reducer', () => {
             },
             responses: [{response: "test"}, {response: "test1"}],
             requests: [
-                {reqId: 10, request: "test"},
-                {reqId: 11, request: "test1"},
-                {reqId: 3, request: "test3"}
+                {reqId: 10},
+                {reqId: 11},
+                {reqId: 3}
             ],
             showAllResponses: true
         }, {...testAction, reqId: 3, layerMetadata: "meta3"});
@@ -262,21 +262,20 @@ describe('Test the mapInfo reducer', () => {
     });
 
     it('creates a new mapinfo request', () => {
-        let state = mapInfo({}, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
+        let state = mapInfo({}, {type: 'NEW_MAPINFO_REQUEST', reqId: 1});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(1);
-        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1).length).toBe(1);
 
-        state = mapInfo({requests: [] }, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
+        state = mapInfo({requests: [] }, {type: 'NEW_MAPINFO_REQUEST', reqId: 1});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(1);
-        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1).length).toBe(1);
 
-        state = mapInfo( appState, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
+        state = mapInfo( appState, {type: 'NEW_MAPINFO_REQUEST', reqId: 1});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(4);
-        expect(state.requests.filter((req) => req.reqId === 10)[0].request).toBe("test");
-        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1).length).toBe(1);
     });
 
     it('clear request queue', () => {

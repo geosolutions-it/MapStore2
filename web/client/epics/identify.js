@@ -56,7 +56,7 @@ import { mouseOutSelector } from '../selectors/mousePosition';
 import { hideEmptyPopupSelector } from '../selectors/mapPopups';
 import {getBbox, getCurrentResolution} from '../utils/MapUtils';
 import { parseLayoutValue } from '../utils/LayoutUtils';
-import {buildIdentifyRequest, buildIdentifyRequestPlan, defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
+import {defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
@@ -64,17 +64,7 @@ const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f 
 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureGridOpen(state) && (gridEditingSelector(state) || gridGeometryQuickFilter(state));
 
-const associateResponsesToViews = (responses) => responses.reduce((viewResponses, { response, requestParams, viewIds = [] }) => {
-    viewIds.forEach((viewId) => {
-        viewResponses[viewId] = {
-            response: response.data,
-            queryParams: requestParams
-        };
-    });
-    return viewResponses;
-}, {});
-
-import {getFeatureInfo} from '../api/identify';
+import {getFeatureInfoForViews} from '../api/identify';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
@@ -130,45 +120,31 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                 .mergeMap(layer => {
                     let env = localizedLayerStylesEnvSelector(getState());
                     const identifyOptions = {...identifyOptionsSelector(getState()), env};
-                    const { views, requests: requestConfigs } = buildIdentifyRequestPlan(layer, identifyOptions);
-                    // Metadata belongs to the layer, not to one of its view requests.
-                    const { metadata: layerMetadata = {} } = buildIdentifyRequest(layer, identifyOptions);
                     const appParams = filterRequestParams(layer, includeOptions, excludeParams);
                     const attachJSON = isHighlightEnabledSelector(getState());
                     const itemId = itemIdSelector(getState());
                     const reqId = uuidv1();
-                    const identifyRequests = requestConfigs.map(({ url, request, metadata, viewIds }) => {
-                        let requestParams = request;
-                        // request override
-                        if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
-                            requestParams = {...requestParams, ...overrideParamsSelector(getState())[layer.name]};
+                    const viewResponses$ = getFeatureInfoForViews(layer, identifyOptions, {
+                        params: appParams,
+                        requestOptions: {attachJSON, itemId},
+                        mapRequestParams: (request) => {
+                            let requestParams = request;
+                            // request override
+                            if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
+                                requestParams = {...requestParams, ...overrideParamsSelector(getState())[layer.name]};
+                            }
+                            if (overrideParams[layer.name]) {
+                                requestParams = {...requestParams, ...overrideParams[layer.name]};
+                            }
+                            return requestParams;
                         }
-                        if (overrideParams[layer.name]) {
-                            requestParams = {...requestParams, ...overrideParams[layer.name]};
-                        }
-                        const param = { ...appParams, ...requestParams };
-                        return {
-                            basePath: url,
-                            metadata,
-                            param,
-                            requestParams,
-                            viewIds
-                        };
                     });
-                    if (identifyRequests.length) {
-                        return Rx.Observable.forkJoin(identifyRequests.map(({basePath, param, requestParams, viewIds}) =>
-                            getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
-                            // this 0 delay is needed for vector/3dtiles layer because makes the response async and give time to the GUI to render
-                            // these type of layers don't perform requests to the server because the values are taken from the client map so the response were applied synchronously
-                            // this delay allows the panel to open and show the spinner for the first one
-                            // this delay mitigates the freezing of the app when there are a great amount of queried layers at the same time
-                                .delay(0)
-                                .map((response) => ({response, requestParams, viewIds}))
-                        ))
-                            .map((responses) => {
-                                const featureResponse = responses.find(({response}) => response.features?.length)
-                                    || responses.find(({response}) => response.features)
-                                    || responses[0];
+                    if (viewResponses$) {
+                        return viewResponses$
+                            .map(({views, layerMetadata, viewResponses, features, featuresCrs, error}) => {
+                                if (error) {
+                                    return errorFeatureInfo(reqId, error);
+                                }
                                 return loadFeatureInfo(
                                     reqId,
                                     {
@@ -177,13 +153,13 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                                             ...(layer.featureInfo || {}),
                                             views
                                         },
-                                        features: featureResponse.response.features,
-                                        featuresCrs: featureResponse.response.featuresCrs,
+                                        features,
+                                        featuresCrs,
                                         isQueryJustOneLayer,
                                         sidebarIsOpened,
                                         featureBbox: (queryParamZoomOption?.overrideZoomLvl || queryParamZoomOption?.isCoordsProvided) ? null : bbox
                                     },
-                                    associateResponsesToViews(responses),
+                                    viewResponses,
                                     layer,
                                     queryParamZoomOption
                                 );
@@ -314,7 +290,7 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
                     const hoverIdentifyActive = isMouseMoveIdentifyActiveSelector(state);
                     const noResultFeatures = loadFeatInfoAction.type === LOAD_FEATURE_INFO
                         && Object.values(loadFeatInfoAction?.viewResponses || {})
-                            .some(({response}) => typeof response === "string" && response.includes("no features were found"));
+                            .every(({response}) => typeof response === "string" && response.includes("no features were found"));
                     // remove marker in case activated identify hover mode and no fetched results plus existing hideIdentifyPopupIfNoResults = true
                     if (noResultFeatures && hideIdentifyPopupIfNoResults && hoverIdentifyActive) {
                         return Rx.Observable.from([updateCenterToMarker('disabled'), hideMapinfoMarker()]);

@@ -9,7 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer, getDefaultViewer, getDefaultInfoViewMode, getLayerFeatureInfoViews } from '../../../utils/MapInfoUtils';
+import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer, getDefaultViewer, getDefaultInfoViewMode, getInfoViewModes, getInfoViewModeTitleIds, getLayerFeatureInfoViews } from '../../../utils/MapInfoUtils';
 import HTML from '../../../components/I18N/HTML';
 import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
@@ -169,8 +169,12 @@ class DefaultViewer extends React.Component {
         return null;
     }
 
-    getActiveView = (views, reqId) => {
-        return views.find(({ id }) => id === this.state.activeViewIds[reqId]) || views[0];
+    getViewKey = (res) => res?.layer?.id ?? res?.reqId;
+
+    getActiveView = (views, res) => {
+        return views.find(({ id }) => id === this.state.activeViewIds[this.getViewKey(res)])
+            || views.find((view) => this.isViewResponseValid(res, view))
+            || views[0];
     }
 
     getLayerMetadataForView = (layerMetadata, view) => {
@@ -185,7 +189,7 @@ class DefaultViewer extends React.Component {
                 ...featureInfo,
                 ...view,
                 format: view.type,
-                template: view.template ?? featureInfo.template,
+                template: view.template,
                 viewer: view.viewer ?? featureInfo.viewer
             }
         };
@@ -199,64 +203,75 @@ class DefaultViewer extends React.Component {
         };
     }
 
-    renderViewTabs = (views, activeView, reqId) => {
+    isViewResponseValid = (res, view) => {
+        const {response, queryParams} = this.getResponseForView(res, view);
+        return this.props.validator(this.props.format)
+            .getValidResponses([{response, queryParams, layerMetadata: res?.layerMetadata}]).length > 0;
+    }
+
+    renderViewTypeTitle = (type) => {
+        const titleId = getInfoViewModeTitleIds()[type];
+        return titleId ? <Message msgId={titleId}/> : type;
+    }
+
+    renderViewTabs = (views, activeView, res) => {
         if (views.length <= 1) {
             return null;
         }
+        const viewKey = this.getViewKey(res);
         return (
-            <div style={{ marginBottom: 12 }}>
+            <div className="ms-identify-view-tabs">
                 <ScrollableTabs
-                    className="ms-identify-view-tabs tabs-underline"
+                    className="tabs-underline"
                     selectedTabId={activeView.id}
                     onSelect={(activeViewId) => {
                         this.setState(({activeViewIds}) => ({
-                            activeViewIds: {...activeViewIds, [reqId]: activeViewId}
+                            activeViewIds: {...activeViewIds, [viewKey]: activeViewId}
                         }));
                     }}
                     tabs={views.map((view) => ({
-                        title: view.title,
+                        title: view.title || this.renderViewTypeTitle(view.type),
                         eventKey: view.id
                     }))}/>
             </div>
         );
     }
 
-    renderPages = () => {
-        const {validResponses: responses} = this.getResponseProperties(this.props.isMobile || this.props.renderValidOnly);
-        return responses.map((res, i) => {
+    getPages = (responses) => {
+        const defaultType = getDefaultInfoViewMode(this.props.format) || getInfoViewModes().PROPERTIES;
+        return responses.map((res) => {
             const {layerMetadata, layer} = res;
             const layerWithMetadata = {
                 ...layer,
                 ...layerMetadata,
                 featureInfo: layerMetadata?.featureInfo || layer?.featureInfo
             };
-            const views = getLayerFeatureInfoViews(layerWithMetadata, {
-                defaultType: getDefaultInfoViewMode(this.props.format) || 'PROPERTIES'
-            });
-            const activeView = this.getActiveView(views, res.reqId);
-            const layerMetadataForView = this.getLayerMetadataForView(layerWithMetadata, activeView);
-            const viewResponse = this.getResponseForView(res, activeView);
+            const views = getLayerFeatureInfoViews(layerWithMetadata, { defaultType });
+            const activeView = this.getActiveView(views, res);
+            return {
+                res,
+                views,
+                activeView,
+                layerMetadata,
+                layerMetadataForView: this.getLayerMetadataForView(layerWithMetadata, activeView),
+                viewResponse: this.getResponseForView(res, activeView)
+            };
+        });
+    }
+
+    renderPages = () => {
+        const {validResponses: responses} = this.getResponseProperties(this.props.isMobile || this.props.renderValidOnly);
+        const pages = this.getPages(responses);
+        const size = pages.filter(({viewResponse}) => !startsWith(viewResponse.response, "no features were found")).length;
+        const PageHeader = this.props.header;
+        return pages.map(({res, views, activeView, layerMetadata, layerMetadataForView, viewResponse}, i) => {
             const format = getFormatForResponse({
                 ...res,
                 queryParams: viewResponse.queryParams
             }, this.props);
-            const PageHeader = this.props.header;
-            let customViewer;
-            if (layerMetadataForView?.viewer?.type) {
-                customViewer = getViewer(layerMetadataForView.viewer.type);
-            }
-            const size = responses.filter((resp) => {
-                const responseLayer = {
-                    ...resp.layer,
-                    ...resp.layerMetadata,
-                    featureInfo: resp.layerMetadata?.featureInfo || resp.layer?.featureInfo
-                };
-                const responseViews = getLayerFeatureInfoViews(responseLayer, {
-                    defaultType: getDefaultInfoViewMode(this.props.format) || 'PROPERTIES'
-                });
-                const response = this.getResponseForView(resp, this.getActiveView(responseViews, resp.reqId));
-                return !startsWith(response.response, "no features were found");
-            }).length;
+            const customViewer = layerMetadataForView?.viewer?.type
+                ? getViewer(layerMetadataForView.viewer.type)
+                : undefined;
             return (<Panel
                 eventKey={i}
                 key={i}
@@ -270,12 +285,18 @@ class DefaultViewer extends React.Component {
                     onPrevious={() => this.props.onPrevious()}/></span> : null
                 }
                 style={this.props.style}>
-                {this.renderViewTabs(views, activeView, res.reqId)}
-                <ViewerPage
-                    response={viewResponse.response}
-                    format={format}
-                    viewers={customViewer || this.props.viewers}
-                    layer={layerMetadataForView}/>
+                {this.renderViewTabs(views, activeView, res)}
+                {views.length > 1 && !this.isViewResponseValid(res, activeView) ? (
+                    <Alert bsStyle="danger">
+                        <h4><HTML msgId="noFeatureInfo"/></h4>
+                    </Alert>
+                ) : (
+                    <ViewerPage
+                        response={viewResponse.response}
+                        format={format}
+                        viewers={customViewer || this.props.viewers}
+                        layer={layerMetadataForView}/>
+                )}
             </Panel>);
         });
     };

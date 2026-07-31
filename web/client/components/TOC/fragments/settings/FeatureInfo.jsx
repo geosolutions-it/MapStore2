@@ -17,6 +17,7 @@ import Select from 'react-select';
 import { DragSource as dragSource, DropTarget as dropTarget } from 'react-dnd';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import { v1 as uuidv1 } from 'uuid';
 import { getDefaultInfoViewMode, getLayerFeatureInfoViews, isLayerFeatureInfoDisabled } from '../../../../utils/MapInfoUtils';
 import Message from '../../../I18N/Message';
 import FeatureInfoEditor from './FeatureInfoEditor';
@@ -62,7 +63,7 @@ const FeatureInfoView = ({
                 className="ms-feature-info-view-title"
                 disabled={isDisabled}
                 placeholder="layerProperties.title"
-                value={view.title}
+                value={view.title || ''}
                 onChange={(event) => onUpdateView(view.id, { title: event.target.value })}/>
             <div className="ms-feature-info-view-type">
                 {renderTypeSelect(view)}
@@ -142,14 +143,14 @@ const drop = dropTarget(ITEM_KEY,
 const DraggableFeatureInfoView = drag(drop(FeatureInfoView));
 
 /**
- * Component for rendering FeatureInfo an Accordion with current available format for get feature info
+ * Component for rendering the list of identify views configured on a layer
  * @memberof components.TOC.fragments.settings
  * @name FeatureInfo
  * @class
  * @prop {object} element data of the current selected node
- * @prop {array} defaultInfoFormat array of formats
- * @prop {object} formatCards object that represents the panels of accordion, e.g.: { FORMAT_NAME: { titleId: 'titleMsgId', descId: 'descMsgId', glyph: 'ext-empty', body: () => <div/> } }
- * @prop {function} onChange called when a format has been selected
+ * @prop {object} defaultInfoFormat supported info formats, by view type
+ * @prop {object} formatCards label and glyph of every view type, e.g.: { FORMAT_NAME: { titleId: 'titleMsgId', glyph: 'ext-empty' } }
+ * @prop {function} onChange called when the views configuration changes
  */
 export default class extends React.Component {
     static propTypes = {
@@ -238,8 +239,8 @@ export default class extends React.Component {
         this.updateFeatureInfo(isLayerFeatureInfoDisabled(this.props.element), [
             ...views,
             {
-                id: `view-${Date.now()}`,
-                title: 'Identify',
+                id: `view-${uuidv1()}`,
+                title: '',
                 type: defaultType
             }
         ]);

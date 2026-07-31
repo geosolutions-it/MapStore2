@@ -24,15 +24,14 @@ const DescriptionEditor = withDebounceOnCallback('onEditorStateChange', 'editorS
  * @memberof components.TOC.fragments.settings
  * @name FeatureInfoEditor
  * @class
- * @prop {object} element data of the current selected node
+ * @prop {string} template the template to edit
  * @prop {boolean} showEditor show/hide modal
  * @prop {function} onShowEditor called when click on close buttons
- * @prop {function} onChange called when text in editor has been changed
+ * @prop {function} onSaveTemplate called with the edited template on close
  * @prop {boolean} enableIFrameModule enable iframe in editor, default true
  */
 
 const FeatureInfoEditor = ({
-    element,
     template: templateProp,
     showEditor,
     onShowEditor,
@@ -58,7 +57,7 @@ const FeatureInfoEditor = ({
 
     }, [showEditor]);
 
-    const [template, setTemplate] = useState(templateProp !== undefined ? templateProp : element?.featureInfo?.template || '');
+    const [template, setTemplate] = useState(templateProp ?? '');
     const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(template));
     const onClose = () => {
         onShowEditor(!showEditor);
@@ -116,7 +115,6 @@ const FeatureInfoEditor = ({
 
 FeatureInfoEditor.propTypes = {
     showEditor: PropTypes.bool,
-    element: PropTypes.object,
     template: PropTypes.string,
     onSaveTemplate: PropTypes.func.isRequired,
     onShowEditor: PropTypes.func,
@@ -128,7 +126,6 @@ FeatureInfoEditor.contextTypes = {
 
 FeatureInfoEditor.defaultProps = {
     showEditor: false,
-    element: {},
     enableIFrameModule: false,
     onShowEditor: () => {}
 };

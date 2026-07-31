@@ -40,11 +40,24 @@ const INFO_VIEW_MODES = {
     TEMPLATE: "TEMPLATE"
 };
 
+const INFO_VIEW_MODE_TITLE_IDS = {
+    [INFO_VIEW_MODES.TEXT]: 'layerProperties.textFormatTitle',
+    [INFO_VIEW_MODES.PROPERTIES]: 'layerProperties.propertiesFormatTitle',
+    [INFO_VIEW_MODES.HTML]: 'layerProperties.htmlFormatTitle',
+    [INFO_VIEW_MODES.TEMPLATE]: 'layerProperties.templateFormatTitle'
+};
+
 /**
  * @returns {object} Map of views which are used to display feature info data (identify tools).
  */
 export const getInfoViewModes = () => {
     return {...INFO_VIEW_MODES};
+};
+/**
+ * @returns {object} Map of the message id describing every info view mode.
+ */
+export const getInfoViewModeTitleIds = () => {
+    return {...INFO_VIEW_MODE_TITLE_IDS};
 };
 /**
  * Given an `infoFormat` mime-type passed, it returns the default view mode (e.g. `PROPERTIES`, `HTML`, `TEXT`) for the format selected.
@@ -194,7 +207,6 @@ export const getLayerFeatureInfoViews = (layer, { defaultType, includeDisabled =
         return featureInfo.views.map((view, idx) => ({
             ...view,
             id: view.id || `view-${idx}`,
-            title: view.title || 'Identify',
             type: view.type || view.format || INFO_VIEW_MODES.PROPERTIES
         }));
     }
@@ -203,13 +215,11 @@ export const getLayerFeatureInfoViews = (layer, { defaultType, includeDisabled =
         return [{
             ...config,
             id: 'default',
-            title: 'Identify',
             type: format
         }];
     }
     return defaultType ? [{
         id: 'default',
-        title: 'Identify',
         type: defaultType
     }] : [];
 };
@@ -419,7 +429,10 @@ export const getValidator = (format) => {
     const isValidResponse = (current) => {
         const viewResponses = Object.values(current?.viewResponses || {});
         if (viewResponses.length) {
-            return viewResponses.some((response) => determineValidator(response, format).isValidResponse(response));
+            return viewResponses.some((viewResponse) => {
+                const response = {...viewResponse, layerMetadata: current.layerMetadata};
+                return determineValidator(response, format).isValidResponse(response);
+            });
         }
         return determineValidator(current, format).isValidResponse(current);
     };

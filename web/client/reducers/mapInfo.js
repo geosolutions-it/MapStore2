@@ -285,10 +285,10 @@ function mapInfo(state = initState, action) {
         });
     }
     case NEW_MAPINFO_REQUEST: {
-        const {reqId, request} = action;
+        const {reqId} = action;
         const requests = state.requests || [];
         return Object.assign({}, state, {
-            requests: [...requests, {request, reqId}]
+            requests: [...requests, {reqId}]
         });
     }
     case PURGE_MAPINFO_RESULTS:

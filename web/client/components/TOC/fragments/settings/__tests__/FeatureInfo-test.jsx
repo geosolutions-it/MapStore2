@@ -31,27 +31,19 @@ const getFeatureInfoInstance = (props = {}) => TestUtils.findRenderedComponentWi
 const formatCards = {
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
-        descId: 'layerProperties.textFormatDescription',
-        glyph: 'ext-txt',
-        body: () => <div className="test-preview"/>
+        glyph: 'ext-txt'
     },
     HTML: {
         titleId: 'layerProperties.htmlFormatTitle',
-        descId: 'layerProperties.htmlFormatDescription',
-        glyph: 'ext-html',
-        body: () => <div className="test-preview"/>
+        glyph: 'ext-html'
     },
     PROPERTIES: {
         titleId: 'layerProperties.propertiesFormatTitle',
-        descId: 'layerProperties.propertiesFormatDescription',
-        glyph: 'ext-json',
-        body: () => <div className="test-preview"/>
+        glyph: 'ext-json'
     },
     TEMPLATE: {
         titleId: 'layerProperties.templateFormatTitle',
-        descId: 'layerProperties.templateFormatDescription',
-        glyph: 'ext-empty',
-        body: () => <div className="test-preview"/>
+        glyph: 'ext-empty'
     }
 };
 
@@ -112,6 +104,30 @@ describe("test FeatureInfo", () => {
         }, formatCards, defaultInfoFormat});
         component.updateFeatureInfo(true, component.getViews());
     });
+    it('drops the legacy format, template and viewer when saving views', done => {
+        const component = getFeatureInfoInstance({
+            element: {
+                featureInfo: {
+                    format: 'TEMPLATE',
+                    template: '<p>${properties.NAME}</p>',
+                    viewer: { type: 'customViewer' },
+                    featureInfoRegex: '<div[^>]*>'
+                }
+            },
+            onChange: (key, value) => {
+                expect(key).toBe('featureInfo');
+                expect(value.format).toNotExist();
+                expect(value.template).toNotExist();
+                expect(value.viewer).toNotExist();
+                expect(value.featureInfoRegex).toBe('<div[^>]*>');
+                expect(value.views.length).toBe(1);
+                done();
+            },
+            formatCards,
+            defaultInfoFormat
+        });
+        component.updateFeatureInfo(false, component.getViews());
+    });
     it('test rendering with supported infoFormats from layer props', () => {
         const component = getFeatureInfoInstance({element: {infoFormats: ["text/html", "text/plain"]}, formatCards, defaultInfoFormat});
         expect(component.getTypeOptions()).toEqual(['TEXT', 'HTML']);
@@ -150,8 +166,6 @@ describe("test FeatureInfo", () => {
         ReactDOM.render(<DndFeatureInfo element={{ type: "wms", url: '/geoserver/wms' }}
             formatCards={formatCards}
             defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponents = document.getElementsByClassName('test-preview');
-        expect(testComponents.length).toBe(0);
     });
 
     it('should request WFS GetCapabilities for wfs layers', (done) => {
@@ -168,7 +182,5 @@ describe("test FeatureInfo", () => {
         ReactDOM.render(<DndFeatureInfo element={{ type: "wfs", url: '/geoserver/wfs' }}
             formatCards={formatCards}
             defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponents = document.getElementsByClassName('test-preview');
-        expect(testComponents.length).toBe(0);
     });
 });

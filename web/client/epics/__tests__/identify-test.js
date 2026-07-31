@@ -75,6 +75,8 @@ import { changeVisualizationMode } from './../../actions/maptype';
 import { FORCE_UPDATE_MAP_LAYOUT } from '../../actions/maplayout';
 import { VisualizationModes } from '../../utils/MapTypeUtils';
 import ProjectionRegistry from '../../utils/ProjectionRegistry';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
 
 const TEST_MAP_STATE = {
     present: {
@@ -461,6 +463,93 @@ describe('identify Epics', () => {
                 done();
             } catch (ex) {
                 done(ex);
+            }
+        }, state);
+    });
+    it('getFeatureInfoOnFeatureInfoClick keeps the views that succeeded when one view request fails', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply((config) => config.params?.info_format === 'text/html'
+            ? [500, 'error']
+            : [200, {type: 'FeatureCollection', features: [{id: 'feature-1', properties: {name: 'Feature 1'}}]}]);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    title: "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    featureInfo: {
+                        views: [
+                            {id: 'properties', type: 'PROPERTIES'},
+                            {id: 'html', type: 'HTML'}
+                        ]
+                    }
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+            try {
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.type).toBe(LOAD_FEATURE_INFO);
+                expect(Object.keys(a2.viewResponses)).toEqual(['properties']);
+                expect(a2.viewResponses.properties.response.features.length).toBe(1);
+                expect(a2.layerMetadata.featureInfo.views.length).toBe(2);
+                done();
+            } catch (ex) {
+                done(ex);
+            } finally {
+                mockAxios.restore();
+            }
+        }, state);
+    });
+    it('getFeatureInfoOnFeatureInfoClick triggers ERROR_FEATURE_INFO when every view request fails', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply(() => [500, 'error']);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    title: "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    featureInfo: {
+                        views: [
+                            {id: 'properties', type: 'PROPERTIES'},
+                            {id: 'html', type: 'HTML'}
+                        ]
+                    }
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+            try {
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.type).toBe(ERROR_FEATURE_INFO);
+                expect(a2.error).toExist();
+                expect(a2.reqId).toExist();
+                done();
+            } catch (ex) {
+                done(ex);
+            } finally {
+                mockAxios.restore();
             }
         }, state);
     });
@@ -1183,6 +1272,51 @@ describe('identify Epics', () => {
         };
 
         testEpic(zoomToVisibleAreaEpic,  2, sentActions, expectedAction, state);
+    });
+    it('test zoomToVisibleAreaEpic keeps the marker when only some views have no results', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+
+        const state = {
+            mapInfo: {
+                centerToMarker: true
+            },
+            mapPopups: {
+                hideEmptyPopupOption: true
+            },
+            map: {present: {...TEST_MAP_STATE.present, eventListeners: {mousemove: ["identifyFloatingTool"]}}},
+            maplayout: {
+                boundingMapRect: {
+                    left: 500,
+                    bottom: 250
+                }
+            }
+        };
+
+        const sentActions = [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }),
+            loadFeatureInfo(1, {}, {
+                text: {
+                    response: "no features were found"
+                },
+                properties: {
+                    response: {features: [{id: 'feature-1'}]}
+                }
+            })
+        ];
+
+        const expectedAction = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_CENTER_TO_MARKER);
+                expect(actions[0].status).toBe('disabled');
+            } catch (ex) {
+                done(ex);
+            }
+            done();
+        };
+
+        testEpic(zoomToVisibleAreaEpic,  1, sentActions, expectedAction, state);
     });
     it('test zoomToVisibleAreaEpic if "isQueryJustOneLayer" = true', (done) => {
         // remove previous hook
