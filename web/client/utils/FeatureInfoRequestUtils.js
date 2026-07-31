@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isNil } from 'lodash';
+import { clamp, isNil } from 'lodash';
 
 import { ServerTypes } from './LayersUtils';
 
 export const DEFAULT_FEATURE_COUNT = 10;
+export const MAX_FEATURE_INFO_BUFFER = 1000;
 
 const sanitizeInteger = (value, min) => {
     const parsed = value === '' || isNil(value) ? NaN : Number(value);
@@ -19,7 +20,10 @@ const sanitizeInteger = (value, min) => {
 
 export const sanitizeFeatureInfoMaxItems = (value) => sanitizeInteger(value, 1);
 
-export const sanitizeFeatureInfoBuffer = (value) => sanitizeInteger(value, 0);
+export const sanitizeFeatureInfoBuffer = (value) => {
+    const buffer = sanitizeInteger(value, 0);
+    return buffer === undefined ? undefined : clamp(buffer, 0, MAX_FEATURE_INFO_BUFFER);
+};
 
 export const isGeoServerLayer = (layer = {}) => {
     return layer.serverType !== ServerTypes.NO_VENDOR;

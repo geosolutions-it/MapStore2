@@ -14,6 +14,7 @@ import Message from '../I18N/Message';
 import InfoPopover from '../widgets/widget/InfoPopover';
 import {
     DEFAULT_FEATURE_COUNT,
+    MAX_FEATURE_INFO_BUFFER,
     sanitizeFeatureInfoBuffer,
     sanitizeFeatureInfoMaxItems
 } from '../../utils/FeatureInfoRequestUtils';
@@ -59,6 +60,7 @@ const FeatureInfoRequestOptions = ({
                         data-qa="feature-info-buffer"
                         type="number"
                         min={0}
+                        max={MAX_FEATURE_INFO_BUFFER}
                         step={1}
                         value={featureInfo.buffer === undefined ? '' : featureInfo.buffer}
                         onChange={(event) => onChange(updateOption(featureInfo, 'buffer', event.target.value, sanitizeFeatureInfoBuffer))} />

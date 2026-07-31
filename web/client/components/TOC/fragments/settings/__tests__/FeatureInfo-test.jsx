@@ -175,6 +175,7 @@ describe("test FeatureInfo", () => {
             formatCards={formatCards}
             defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
         expect(document.querySelector('[data-qa="feature-info-buffer"]')).toBeTruthy();
+        expect(document.querySelector('[data-qa="feature-info-buffer"]').max).toBe('1000');
         expect(document.querySelector('[data-qa="feature-info-max-items"]').value).toBe('10');
         TestUtils.Simulate.change(document.querySelector('[data-qa="feature-info-max-items"]'), {target: {value: "25"}});
     });
@@ -187,6 +188,28 @@ describe("test FeatureInfo", () => {
         expect(document.querySelector('[data-qa="feature-info-max-items"]')).toBeTruthy();
         expect(document.querySelector('[data-qa="feature-info-max-items"]').value).toBe('10');
         expect(document.querySelector('[data-qa="feature-info-buffer"]')).toNotExist();
+    });
+
+    it('test WMS feature info buffer is clamped to the maximum immediately', done => {
+        ReactDOM.render(<FeatureInfo
+            element={{
+                type: "wms",
+                serverType: "geoserver",
+                featureInfo: {}
+            }}
+            onChange={(key, value) => {
+                try {
+                    expect(key).toBe('featureInfo');
+                    expect(value.buffer).toBe(1000);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }}
+            formatCards={formatCards}
+            defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
+        const bufferInput = document.querySelector('[data-qa="feature-info-buffer"]');
+        TestUtils.Simulate.change(bufferInput, {target: {value: "1001"}});
     });
 
     it('should request WMS GetCapabilities for wms layers', (done) => {

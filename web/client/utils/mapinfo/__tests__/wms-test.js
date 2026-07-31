@@ -78,6 +78,9 @@ describe('mapinfo wms utils', () => {
         };
 
         expect(wms.buildRequest(layer, options, undefined, undefined, layer.featureInfo).request.buffer).toBe(8);
+        expect(wms.buildRequest(layer, options, undefined, undefined, { buffer: 1000 }).request.buffer).toBe(1000);
+        expect(wms.buildRequest(layer, options, undefined, undefined, { buffer: 1001 }).request.buffer).toBe(1000);
+        expect(wms.buildRequest(layer, options, undefined, undefined, { buffer: 'invalid' }).request.buffer).toNotExist();
         expect(wms.buildRequest({ ...layer, serverType: ServerTypes.NO_VENDOR }, options, undefined, undefined, layer.featureInfo).request.buffer).toNotExist();
     });
     it('should return the response object from getIdentifyFlow in case of 200 with empty features,', (done) => {
