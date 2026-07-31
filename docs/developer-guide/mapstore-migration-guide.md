@@ -20,6 +20,34 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.02.02 to 2026.03.00
+
+### Identify supports multiple views per layer
+
+The `featureInfo` of a layer describes a list of views instead of a single format. The identify panel renders one tab per view.
+
+```json
+{
+  "featureInfo": {
+    "disabled": false,
+    "views": [
+      { "id": "properties", "type": "PROPERTIES" },
+      { "id": "report", "title": "Report", "type": "TEMPLATE", "template": "<p>${properties.NAME}</p>" }
+    ]
+  }
+}
+```
+
+The previous configuration is still read, so existing maps keep working. `format: "HIDDEN"` is equivalent to `disabled: true`.
+
+```json
+{ "featureInfo": { "format": "TEMPLATE", "template": "<p>${properties.NAME}</p>" } }
+```
+
+Saving the Feature Info settings replaces `format`, `template` and `viewer` with `disabled` and `views`, and previous versions do not read that shape: they fall back to the identify format of the map settings and they query again a layer with identify disabled.
+
+Custom code reading the identify results from the state finds the response of every view in `viewResponses`, keyed by view id, instead of a single `response` and `queryParams`.
+
 ## Migration from 2026.01.02 to 2026.02.00
 
 ### Custom map resolutions moved from `new.json` to the `CRSSelector` plugin
