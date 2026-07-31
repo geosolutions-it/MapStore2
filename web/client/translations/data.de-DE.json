@@ -2648,6 +2648,11 @@
         "onSelectionChange": "Bei Auswahländerung",
         "applyFilter": "Filter anwenden",
         "applyDimension": "Dimension anwenden",
+        "zoomTo": "Zoom auf",
+        "zoomToRequiresApplyFilterTooltip": "Verbinden Sie ein Filter-anwenden-Ziel mit einer Ebene dieser Karte, bevor Sie Zoom auf aktivieren",
+        "zoomToFilterExtent": "Auf gefilterte Ausdehnung zoomen {names}",
+        "autoZoomLabel": "Automatischer Zoom",
+        "autoZoomInfo": "Automatischer Zoom auf gefilterte Ausdehnung bei Auswahländerungen. Deaktivieren für manuellen Zoom.",
         "noConnectableNodesAvailable": "Keine verbindbaren Knoten verfügbar",
 
         "selectAll": "Alle auswählen",

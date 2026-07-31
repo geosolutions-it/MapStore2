@@ -34,6 +34,7 @@ import API from '../api/catalog';
 import { MapLibraries } from '../utils/MapTypeUtils';
 import {getHighlightLayerOptions} from "../utils/HighlightUtils";
 import Spinner from '../components/layout/Spinner';
+import { MAIN_MAP_CONTAINER_ID } from '../utils/MapUtils';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -399,7 +400,7 @@ class MapPlugin extends React.Component {
             const {mapOptions = {}} = this.props.map;
 
             return (
-                <this.state.plugins.Map id="map"
+                <this.state.plugins.Map id={MAIN_MAP_CONTAINER_ID}
                     {...this.props.options}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}

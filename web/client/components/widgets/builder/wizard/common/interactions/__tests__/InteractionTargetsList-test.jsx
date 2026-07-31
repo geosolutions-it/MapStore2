@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import InteractionTargetsList from '../InteractionTargetsList';
+import { DATATYPES, TARGET_TYPES } from '../../../../../../../utils/InteractionUtils';
 
 const sourceNodePath = 'widgets[filter-widget].filters[filter-1]';
 
@@ -64,6 +65,21 @@ const createLayerFilterItem = () => ({
     }
 });
 
+const createZoomToItem = (id = 'map', nodePath = 'map.applyZoomTo') => ({
+    id,
+    title: 'Zoom to',
+    icon: 'zoom-to',
+    type: 'element',
+    nodePath,
+    interactionMetadata: {
+        targets: [{
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+            expectedDataType: DATATYPES.ZOOM_TRIGGER,
+            constraints: {}
+        }]
+    }
+});
+
 const renderTargetsList = ({
     item = createLayerDimensionItem('elevation'),
     target = applyDimensionTarget,
@@ -71,18 +87,27 @@ const renderTargetsList = ({
     alreadyExistingInteractions = [],
     sourceSelectionMode,
     timelineEnabled = false,
+    filteredInteractionTree,
     onEditorChange = () => {}
 } = {}) => {
+    const finalFilteredInteractionTree = filteredInteractionTree || { children: [item] };
     const container = document.getElementById('container');
+    const fullInteractionTree = {
+        ...interactionTree,
+        children: [
+            ...interactionTree.children,
+            ...(finalFilteredInteractionTree.children || [])
+        ]
+    };
     ReactDOM.render(
         <InteractionTargetsList
             target={target}
             interactions={interactions}
             sourceWidgetId="filter-widget"
-            interactionTree={interactionTree}
+            interactionTree={fullInteractionTree}
             currentSourceId="filter-1"
             onEditorChange={onEditorChange}
-            filteredInteractionTree={{ children: [item] }}
+            filteredInteractionTree={finalFilteredInteractionTree}
             alreadyExistingInteractions={alreadyExistingInteractions}
             sourceSelectionMode={sourceSelectionMode}
             timelineEnabled={timelineEnabled}
@@ -194,5 +219,52 @@ describe('InteractionTargetsList component', () => {
         });
 
         expect(container.querySelector('.glyphicon-plug')).toBeTruthy();
+    });
+
+    it('should automatically unplug dependent interactions when an interaction is unplugged', () => {
+        let changedKey;
+        let changedInteractions;
+
+        const applyFilterItem = createLayerFilterItem();
+        const zoomToItem = createZoomToItem('map', 'map.applyZoomTo');
+
+        const container = renderTargetsList({
+            target: applyFilterTarget,
+            item: applyFilterItem,
+            alreadyExistingInteractions: [],
+            filteredInteractionTree: { children: [applyFilterItem, zoomToItem] },
+            interactions: [{
+                id: 'apply-filter-1',
+                plugged: true,
+                targetType: 'applyFilter',
+                source: { nodePath: sourceNodePath },
+                target: { nodePath: 'map.layers[layer-1]' }
+            }, {
+                id: 'zoom-1',
+                plugged: true,
+                targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+                source: { nodePath: sourceNodePath },
+                target: { nodePath: 'map.applyZoomTo' }
+            }],
+            onEditorChange: (key, value) => {
+                changedKey = key;
+                changedInteractions = value;
+            }
+        });
+
+        const rows = container.querySelectorAll('.ms-connection-row');
+        // Unplug the applyFilter connection
+        const plugButton = rows[0].querySelector('.ms-interaction-buttons button');
+        ReactTestUtils.Simulate.click(plugButton);
+
+        expect(changedKey).toBe('interactions');
+        expect(changedInteractions.length).toBe(2);
+
+        const unpluggedFilter = changedInteractions.find(i => i.targetType === 'applyFilter');
+        const unpluggedZoomTo = changedInteractions.find(i => i.targetType === TARGET_TYPES.APPLY_ZOOM_TO);
+
+        expect(unpluggedFilter.plugged).toBe(false);
+        // The applyZoomTo interaction should be automatically unplugged!
+        expect(unpluggedZoomTo.plugged).toBe(false);
     });
 });
