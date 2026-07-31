@@ -8,6 +8,7 @@
 
 
 export const APPLY_FILTER_WIDGET_INTERACTIONS = 'INTERACTIONS:APPLY_FILTER_WIDGET_INTERACTIONS';
+export const ZOOM_TO_FILTER_EXTENT = 'INTERACTIONS:ZOOM_TO_FILTER_EXTENT';
 
 /**
  * Apply interaction effects for all filters in a filter widget
@@ -17,6 +18,19 @@ export const APPLY_FILTER_WIDGET_INTERACTIONS = 'INTERACTIONS:APPLY_FILTER_WIDGE
  */
 export const applyFilterWidgetInteractions = (widgetId, target = 'floating', filterId) => ({
     type: APPLY_FILTER_WIDGET_INTERACTIONS,
+    widgetId,
+    target,
+    filterId
+});
+
+/**
+ * Manually trigger a zoom-to interaction effect for a filter widget's filter.
+ * @param {string} widgetId - The filter widget ID
+ * @param {string} [target='floating'] - The target container (defaults to 'floating')
+ * @param {string} filterId - The filter ID whose plugged zoom-to interaction(s) should zoom
+ */
+export const zoomToFilterExtent = (widgetId, target = 'floating', filterId) => ({
+    type: ZOOM_TO_FILTER_EXTENT,
     widgetId,
     target,
     filterId

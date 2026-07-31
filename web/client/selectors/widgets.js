@@ -59,6 +59,8 @@ export const getSelectedLayoutId = state => {
 
 export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
+export const getWidgetsByTarget = (state, target = DEFAULT_TARGET) => get(state, `widgets.containers[${target}].widgets`);
+
 
 export const getFloatingWidgetsPerView = createSelector(
     getFloatingWidgets,

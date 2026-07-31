@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import { Simulate } from 'react-dom/test-utils';
 
 import { FilterView } from '../FilterView';
+import { TARGET_TYPES } from '../../../utils/InteractionUtils';
 
 // Mock Redux store - FilterView renders ApplyStyleOutOfSyncInfo (a connected component) when showNoTargetsInfoTool is true
 const store = {
@@ -451,7 +452,7 @@ describe('FilterView component', () => {
         expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 
-    it('renders the per-item toolbar and collapse toggle when showItemToolbar is set', () => {
+    it('renders the per-item toolbar when showItemToolbar is set', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox', 'multiple');
 
@@ -466,29 +467,10 @@ describe('FilterView component', () => {
         );
 
         expect(container.querySelector('.ms-filter-card-toolbar')).toExist();
-        expect(container.querySelector('.ms-filter-collapse-toggle')).toExist();
     });
 
-    it('collapses the body when the collapse toggle is clicked', () => {
-        const container = document.getElementById("container");
-        const filterData = createMockFilterData('checkbox', 'multiple');
 
-        renderWithProvider(
-            <FilterView
-                filterData={filterData}
-                selectableItems={mockSelectableItems}
-                showItemToolbar
-                onToggleDisabled={() => {}}
-            />,
-            container
-        );
-
-        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
-        Simulate.click(container.querySelector('.ms-filter-collapse-toggle'));
-        expect(container.querySelector('.ms-filter-checkbox-list')).toNotExist();
-    });
-
-    it('starts collapsed when layout.defaultExpanded is false', () => {
+    it('starts collapsed when layout.defaultExpanded is false and showItemToolbar is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox', 'multiple', { defaultExpanded: false });
 
@@ -503,7 +485,46 @@ describe('FilterView component', () => {
         );
 
         expect(container.querySelector('.ms-filter-checkbox-list')).toNotExist();
-        expect(container.querySelector('.ms-filter-collapse-toggle')).toExist();
+    });
+
+    it('does not start collapsed when layout.defaultExpanded is false but showItemToolbar is false', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('checkbox', 'multiple', { defaultExpanded: false });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+                onToggleDisabled={() => {}}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+    });
+
+    it('passes showZoomButton correctly to FilterItemToolbar based on interactions', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('checkbox', 'multiple');
+        const interactions = [{
+            plugged: true,
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+            target: {},
+            configuration: { autoZoom: false }
+        }];
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+                showItemToolbar
+                interactions={interactions}
+                onZoomToFilterExtent={() => {}}
+            />,
+            container
+        );
+        const zoomBtn = container.querySelector('.ms-filter-card-toolbar .glyphicon-zoom-to');
+        expect(zoomBtn).toExist();
     });
 
     it('renders the description info popover when layout.description is set', () => {
