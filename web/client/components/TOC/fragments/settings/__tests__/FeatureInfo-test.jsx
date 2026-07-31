@@ -62,13 +62,47 @@ describe("test FeatureInfo", () => {
     });
 
     it('test rendering', () => {
-        getFeatureInfoInstance({formatCards, defaultInfoFormat});
+        getFeatureInfoInstance({
+            element: {
+                featureInfo: {
+                    views: [{ id: 'text-view', title: 'Text identify', type: 'TEXT' }]
+                }
+            },
+            formatCards,
+            defaultInfoFormat
+        });
         const views = document.querySelectorAll('[data-id^="feature-info-view-"]');
         expect(views.length).toBe(1);
         expect(views[0].querySelector('.ms-feature-info-view-title')).toExist();
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(0);
 
+    });
+
+    it('should not configure any view when the layer has no featureInfo', () => {
+        getFeatureInfoInstance({formatCards, defaultInfoFormat});
+        expect(document.querySelectorAll('[data-id^="feature-info-view-"]').length).toBe(0);
+        expect(document.querySelector('.ms-feature-info-views-empty')).toExist();
+    });
+
+    it('should allow to remove the last view to fall back on the map settings format', done => {
+        const component = getFeatureInfoInstance({
+            element: {
+                featureInfo: {
+                    views: [{ id: 'text-view', title: 'Text identify', type: 'TEXT' }]
+                }
+            },
+            onChange: (key, value) => {
+                expect(key).toBe('featureInfo');
+                expect(value.views).toEqual([]);
+                done();
+            },
+            formatCards,
+            defaultInfoFormat
+        });
+        const removeButton = document.querySelector('.ms-feature-info-view-remove');
+        expect(removeButton.disabled).toBe(false);
+        component.removeView('text-view');
     });
 
     it('should display configured views as disabled when identify is disabled', () => {
@@ -96,12 +130,21 @@ describe("test FeatureInfo", () => {
     });
 
     it('updates the featureInfo view configuration', done => {
-        const component = getFeatureInfoInstance({onChange: (key, value) => {
-            expect(key).toBe('featureInfo');
-            expect(value.disabled).toBe(true);
-            expect(value.views.length).toBe(1);
-            done();
-        }, formatCards, defaultInfoFormat});
+        const component = getFeatureInfoInstance({
+            element: {
+                featureInfo: {
+                    views: [{ id: 'text-view', title: 'Text identify', type: 'TEXT' }]
+                }
+            },
+            onChange: (key, value) => {
+                expect(key).toBe('featureInfo');
+                expect(value.disabled).toBe(true);
+                expect(value.views.length).toBe(1);
+                done();
+            },
+            formatCards,
+            defaultInfoFormat
+        });
         component.updateFeatureInfo(true, component.getViews());
     });
     it('drops the legacy format, template and viewer when saving views', done => {

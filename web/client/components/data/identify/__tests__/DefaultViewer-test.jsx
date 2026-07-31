@@ -298,6 +298,48 @@ describe('DefaultViewer', () => {
         expect(document.querySelector('.swipeable-view').textContent).toNotContain('Text view content');
     });
 
+    it('keeps the layer navigation when an empty view is selected', () => {
+        const responses = [{
+            reqId: 'layer-1',
+            layer: {id: 'layer-1'},
+            viewResponses: {
+                properties: {
+                    response: {features: [{id: 'feature-1', properties: {name: 'Feature 1'}}]},
+                    queryParams: {info_format: 'application/json'}
+                },
+                text: {
+                    response: 'no features were found',
+                    queryParams: {info_format: 'text/plain'}
+                }
+            },
+            layerMetadata: {
+                title: 'a',
+                featureInfo: {
+                    views: [
+                        { id: 'properties', title: 'Properties', type: 'PROPERTIES' },
+                        { id: 'text', title: 'Text', type: 'TEXT' }
+                    ]
+                }
+            }
+        }, {
+            reqId: 'layer-2',
+            layer: {id: 'layer-2'},
+            response: 'Second layer',
+            layerMetadata: {title: 'b'}
+        }];
+        ReactDOM.render(
+            <DefaultViewer requests={[{reqId: 'layer-1'}, {reqId: 'layer-2'}]} responses={responses} header={SwipeHeader}/>,
+            document.getElementById("container")
+        );
+
+        expect(document.querySelectorAll('.ms-identify-swipe-header-arrow').length).toBe(4);
+
+        TestUtils.Simulate.click(document.querySelectorAll('.ms-scrollable-tabs .nav > li > button')[1]);
+
+        expect(document.querySelector('.nav > li.active > button').textContent).toBe('Text');
+        expect(document.querySelectorAll('.ms-identify-swipe-header-arrow').length).toBe(4);
+    });
+
     it('keeps the selected view of a layer across identify requests', () => {
         const views = [
             { id: 'text', title: 'Text', type: 'TEXT' },

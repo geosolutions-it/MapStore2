@@ -113,6 +113,7 @@
       "elevation": "Élévation",
       "groupProperties": "Propriétés du groupe",
       "featureInfo": "Informations attributaires de l'objet",
+      "noIdentifyView": "Aucune vue d'identification n'est configurée, le format des Paramètres de la carte est utilisé.",
       "disableIdentify": "Désactiver l'identification",
       "addIdentifyView": "Ajouter une nouvelle vue d'identification",
       "featureInfoFormatLbl": "Information, format de la réponse",

@@ -160,56 +160,35 @@ const initState = {
  * ```
  * @prop {object} configuration contains the configuration for getFeatureInfo tool.
  * @prop {boolean} showInMapPopup if true, the results are always shown in a popup (if configuration.hover = true, they are by default)
- * @prop {array} requests the requests performed. Here a sample:
+ * @prop {array} requests the requests performed, one entry for every queried layer. Here a sample:
  * ```javascript
  * {
- *     request: {
- *         service: 'WMS',
- *         version: '1.1.1',
- *         request: 'GetFeatureInfo',
- *         exceptions: 'application/json',
- *         id: 'tiger:poi__7',
- *         layers: 'tiger:poi',
- *         query_layers: 'tiger:poi',
- *         x: 51,
- *         y: 51,
- *         height: 101,
- *         width: 101,
- *         srs: 'EPSG:3857',
- *         bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
- *         feature_count: 10,
- *         info_format: 'text/plain',
- *         ENV: 'locale:it'
- *     },
  *     reqId: '4e030000-514a-11e9-90f1-3db233bf30bf'
  * }
  * ```
- * @prop {array} responses the responses to the requests performed. This is a sample response
+ * @prop {array} responses the responses to the requests performed, with the response of every
+ * configured feature info view keyed by view id. This is a sample response
  * ```javascript
  * {
- *     response: 'Results for FeatureType', // text
- *     queryParams: {
- *         service: 'WMS',
- *         version: '1.1.1',
- *         request: 'GetFeatureInfo',
- *         exceptions: 'application/json',
- *         id: 'tiger:poi__7',
- *         layers: 'tiger:poi',
- *         query_layers: 'tiger:poi',
- *         x: 51,
- *         y: 51,
- *         height: 101,
- *         width: 101,
- *         srs: 'EPSG:3857',
- *         bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
- *         feature_count: 10,
- *         info_format: 'text/plain',
- *         ENV: 'locale:it'
+ *     reqId: '4e030000-514a-11e9-90f1-3db233bf30bf',
+ *     viewResponses: {
+ *         properties: {
+ *             response: { features: [] },
+ *             queryParams: {
+ *                 service: 'WMS',
+ *                 version: '1.1.1',
+ *                 request: 'GetFeatureInfo',
+ *                 query_layers: 'tiger:poi',
+ *                 info_format: 'application/json',
+ *                 ENV: 'locale:it'
+ *             }
+ *         }
  *     },
+ *     layer: {},
  *     layerMetadata: {
  *         title: 'Manhattan (NY) points of interest',
  *         viewer: {},
- *         featureInfo: {}
+ *         featureInfo: { views: [] }
  *     }
  * }
  * ```

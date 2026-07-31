@@ -262,7 +262,8 @@ class DefaultViewer extends React.Component {
     renderPages = () => {
         const {validResponses: responses} = this.getResponseProperties(this.props.isMobile || this.props.renderValidOnly);
         const pages = this.getPages(responses);
-        const size = pages.filter(({viewResponse}) => !startsWith(viewResponse.response, "no features were found")).length;
+        const size = pages.filter(({res, views}) => views.some((view) =>
+            !startsWith(this.getResponseForView(res, view).response, "no features were found"))).length;
         const PageHeader = this.props.header;
         return pages.map(({res, views, activeView, layerMetadata, layerMetadataForView, viewResponse}, i) => {
             const format = getFormatForResponse({

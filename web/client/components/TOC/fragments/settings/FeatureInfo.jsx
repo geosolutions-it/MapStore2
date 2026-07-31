@@ -32,7 +32,6 @@ const supportedFormatRequests = {
 
 const FeatureInfoView = ({
     view,
-    views,
     canEdit,
     connectDragSource = cmp => cmp,
     connectDragPreview = cmp => cmp,
@@ -76,7 +75,7 @@ const FeatureInfoView = ({
             </Button>
             <Button
                 className="square-button no-border ms-feature-info-view-action ms-feature-info-view-remove"
-                disabled={isDisabled || views.length === 1}
+                disabled={isDisabled}
                 onClick={() => onRemove(view.id)}>
                 <Glyphicon glyph="trash"/>
             </Button>
@@ -218,11 +217,7 @@ export default class extends React.Component {
     }
 
     getViews = () => {
-        const defaultType = this.getTypeOptions()[0] || 'PROPERTIES';
-        return getLayerFeatureInfoViews(this.props.element, {
-            defaultType,
-            includeDisabled: true
-        });
+        return getLayerFeatureInfoViews(this.props.element, { includeDisabled: true });
     }
 
     updateView = (viewId, changes) => {
@@ -342,6 +337,11 @@ export default class extends React.Component {
                     </Button>
                 </div>
                 <div className="ms-feature-info-views">
+                    {views.length === 0 ? (
+                        <div className="ms-feature-info-views-empty">
+                            <Message msgId="layerProperties.noIdentifyView" />
+                        </div>
+                    ) : null}
                     {views.map((view, index) => this.renderView(view, views, index, disabled))}
                     {!disabled && editingView ? (
                         <FeatureInfoEditor

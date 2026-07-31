@@ -113,6 +113,7 @@
       "elevation": "Elevación",
       "groupProperties": "Propiedades del grupo",
       "featureInfo": "Información de la capa",
+      "noIdentifyView": "No hay ninguna vista de identificación configurada, se usa el formato de la Configuración del mapa.",
       "disableIdentify": "Desactivar identificación",
       "addIdentifyView": "Añadir nueva vista de identificación",
       "featureInfoFormatLbl": "Identificar el formato de respuesta",

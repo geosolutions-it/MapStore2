@@ -113,6 +113,7 @@
       "elevation": "Höhe",
       "groupProperties": "Gruppeneigenschaften",
       "featureInfo": "Feature Info",
+      "noIdentifyView": "Keine Identify-Ansicht konfiguriert, es wird das Format aus den Karteneinstellungen verwendet.",
       "disableIdentify": "Identifizierung deaktivieren",
       "addIdentifyView": "Neue Identifikationsansicht hinzufügen",
       "featureInfoFormatLbl": "Antwortformat festlegen",

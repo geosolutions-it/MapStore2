@@ -113,6 +113,7 @@
       "elevation": "Elevation",
       "groupProperties": "Group properties",
       "featureInfo": "Feature Info",
+      "noIdentifyView": "No identify view is configured, the format from Map Settings is used.",
       "disableIdentify": "Disable Identify",
       "addIdentifyView": "Add new identify view",
       "featureInfoFormatLbl": "Identify response format",

@@ -113,6 +113,7 @@
       "elevation": "Elevazione",
       "groupProperties": "Proprietà del gruppo",
       "featureInfo": "Feature Info",
+      "noIdentifyView": "Nessuna vista di identificazione configurata, verrà usato il formato configurato globalmente nelle impostazioni di mappa.",
       "disableIdentify": "Disabilita Identify",
       "addIdentifyView": "Aggiungi una nuova vista Identify",
       "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
