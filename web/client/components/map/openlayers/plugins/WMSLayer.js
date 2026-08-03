@@ -20,6 +20,7 @@ import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 
 import ImageLayer from 'ol/layer/Image';
+import ImageState from 'ol/ImageState';
 import ImageWMS from 'ol/source/ImageWMS';
 import {get} from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
@@ -34,7 +35,34 @@ import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/Vect
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
 
+const failTiles = new Set(); // registry of fail tile urls to prevent reloading loops
+const loadingErrorRefreshState = new Map(); // layer id -> { attempts, windowStart }
+const MAX_LOADING_ERROR_REFRESH_ATTEMPTS = 3; // caps refresh() retries within the cooldown window
+const LOADING_ERROR_REFRESH_COOLDOWN_MS = 30000; // window resets only after this much quiet time, NOT on every transient recovery (error/success can oscillate every render during a real loop, which would otherwise reset the counter before it ever caps)
+
+/**
+ * Flags a tile/image as failed, so the source emits tileloaderror/imageloaderror
+ * and stops re-requesting it.
+ * Tiled layers get an `ol/ImageTile` (has `setState`), single tile layers get an
+ * `ol/Image`, that exposes no setter and needs the state change to be notified manually.
+ * @param {object} image the `ol/ImageTile` or `ol/Image` passed to the load function
+ */
+const setErrorState = (image) => {
+    if (image.setState) {
+        image.setState(ImageState.ERROR);
+        return;
+    }
+    image.state = ImageState.ERROR;
+    image.changed();
+};
+
 const loadFunction = (options, headers) => function(image, src) {
+
+    if (failTiles.has(src)) {  // avoids custom reload in cases of tiles that have already returned exceptions
+        setErrorState(image);
+        return;
+    }
+
     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
     let img = image.getImage();
     let newSrc = proxySource(options.forceProxy, src);
@@ -66,27 +94,32 @@ const loadFunction = (options, headers) => function(image, src) {
                 }
             }
         }).catch(e => {
+            setErrorState(image);
+            failTiles.add(src);
             console.error(e);
         });
     } else {
-        if (headers) {
+        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
             axios.get(newSrc, {
                 headers,
                 responseType: 'blob'
-            }).then(response => {
-                if (isValidResponse(response)) {
-                    image.getImage().src = URL.createObjectURL(response.data);
-                } else {
-                    // #10701 this is needed to trigger the imageloaderror event
-                    // in ol otherwise this event is not triggered if you assign
-                    // the xml content of the exception to the src attribute
-                    image.getImage().src = null;
-                    console.error("error: " + response.data);
-                }
-            }).catch(e => {
-                image.getImage().src = null;
-                console.error(e);
-            });
+            })
+                .then((response) => {
+                    return response.data.type === "text/xml"
+                        ? response.data.text().then(dataText => ({...response, dataText}))
+                        : response;
+                })
+                .then(response => {
+                    if (isValidResponse(response)) { // not contains OGC exception
+                        image.getImage().src = URL.createObjectURL(response.data);
+                    } else {
+                        throw new Error(response.dataText);
+                    }
+                }).catch(errorMessage => {
+                    setErrorState(image);         // set error state for tile and removed from the queue to prevent reloading loops
+                    failTiles.add(src);           // indexing fail url tile to prevent reloading loops
+                    console.error(errorMessage);  // show ogc exception in console for debugging
+                });
         } else {
             img.src = newSrc;
         }
@@ -260,9 +293,19 @@ Layers.registerType('wms', {
         }
         // refresh/update wms layer if there is error in loading tiles like: incorrect time dimension date filter, ..etc
         if (oldOptions.loadingError !== "Error" && newOptions.loadingError === "Error") {
-            // Clear tile cache before refresh to avoid showing old broken tiles
-            wmsSource?.tileCache?.pruneExceptNewestZ?.();
-            wmsSource?.refresh();
+            const now = Date.now();
+            const prev = loadingErrorRefreshState.get(newOptions.id);
+            // only start a new cooldown window if the previous one has fully expired;
+            // do NOT reset on every transient recovery, or a fast error/success oscillation
+            // (a real reload loop) would clear the counter before it ever caps
+            const windowExpired = !prev || (now - prev.windowStart) > LOADING_ERROR_REFRESH_COOLDOWN_MS;
+            const attempts = windowExpired ? 1 : prev.attempts + 1;
+            loadingErrorRefreshState.set(newOptions.id, { attempts, windowStart: windowExpired ? now : prev.windowStart });
+            if (attempts <= MAX_LOADING_ERROR_REFRESH_ATTEMPTS) {
+                // Clear tile cache before refresh to avoid showing old broken tiles
+                wmsSource?.tileCache?.pruneExceptNewestZ?.();
+                wmsSource?.refresh();
+            }
         }
         if (oldOptions.minResolution !== newOptions.minResolution) {
             layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
