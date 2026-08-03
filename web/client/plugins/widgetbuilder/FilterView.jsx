@@ -225,7 +225,9 @@ const FilterView = ({
     onSelectableItemsChange = () => {},
     fetchError = false,
     showItemToolbar = false,
-    onToggleDisabled
+    onToggleDisabled,
+    onZoomToFilterExtent,
+    widgets = []
 }) => {
     const layout = filterData?.layout ?? {};
     const Component = componentMap[layout.variant ?? 'checkbox'];
@@ -244,7 +246,7 @@ const FilterView = ({
     const filterDisabled = !!filterData?.disabled;
 
     const [isCollapsed, setIsCollapsed] = useState(
-        () => (filterData?.layout?.defaultExpanded === false)
+        () => (showItemToolbar && filterData?.layout?.defaultExpanded === false)
     );
     const handleToggleCollapse = useCallback(() => setIsCollapsed(prev => !prev), []);
 
@@ -427,8 +429,11 @@ const FilterView = ({
     const perItemToolbar = showItemToolbar ? (
         <FilterItemToolbar
             filterData={filterData}
+            interactions={interactions}
+            widgets={widgets}
             collapsed={effectiveCollapsed}
             onToggleDisabled={onToggleDisabled}
+            onZoomToFilterExtent={onZoomToFilterExtent}
         />
     ) : null;
     return (
@@ -624,7 +629,9 @@ FilterView.propTypes = {
     timelineRangeEnabled: PropTypes.bool,
     currentTime: PropTypes.string,
     showItemToolbar: PropTypes.bool,
-    onToggleDisabled: PropTypes.func
+    onToggleDisabled: PropTypes.func,
+    onZoomToFilterExtent: PropTypes.func,
+    widgets: PropTypes.array
 };
 FilterView.defaultProps = {};
 

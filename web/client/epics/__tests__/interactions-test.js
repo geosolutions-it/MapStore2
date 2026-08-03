@@ -7,11 +7,12 @@
  */
 import expect from 'expect';
 
-import { testEpic, addTimeoutEpic } from './epicTestUtils';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { applyFilterWidgetInteractionsEpic, cleanupAndReapplyFilterWidgetInteractionsEpic } from '../interactions';
-import {  applyFilterWidgetInteractions } from '../../actions/interactions';
+import { applyFilterWidgetInteractions, zoomToFilterExtent } from '../../actions/interactions';
 import { UPDATE_PROPERTY, DELETE, insertWidget } from '../../actions/widgets';
 import { CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, removeNode } from '../../actions/layers';
+import { TARGET_TYPES } from '../../utils/InteractionUtils';
 
 const FILTER_ID = 'filter-1';
 const FILTER_WIDGET_ID = 'filter-widget-1';
@@ -406,6 +407,80 @@ describe('interactions epics', () => {
                     expect(actions[0].id).toBe(CHART_WIDGET_ID);
                     expect(actions[0].key).toBe('charts[0].xAxisOpts[1].appliedCurrentTime');
                     expect(actions[0].value).toBe('2020-01-01T00:00:00Z');
+                },
+                state,
+                done
+            );
+        });
+
+        it('only processes zoomTo interactions when isManualZoomTrigger is true (ZOOM_TO_FILTER_EXTENT)', (done) => {
+            const LAYER_ID = 'layer-1';
+            const filterWidget = makeFilterWidget({
+                interactions: [
+                    {
+                        id: 'int-map-layer',
+                        plugged: true,
+                        targetType: TARGET_TYPES.APPLY_FILTER,
+                        source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                        target: { nodePath: `map.layers[${LAYER_ID}]` }
+                    },
+                    {
+                        id: 'int-zoom-to',
+                        plugged: true,
+                        targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+                        source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                        target: { nodePath: 'map.zoomTo' }
+                    }
+                ]
+            });
+            const layersState = { flat: [{ id: LAYER_ID, name: 'test:layer' }] };
+            const state = makeState([filterWidget], layersState);
+
+            testEpic(
+                addTimeoutEpic(applyFilterWidgetInteractionsEpic, 10),
+                1,
+                [zoomToFilterExtent(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    // It should not dispatch CHANGE_LAYER_PROPERTIES because applyFilter is skipped.
+                    // Instead it times out waiting for zoomTo async WFS request (which fails silently).
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
+                },
+                state,
+                done
+            );
+        });
+
+        it('processes zoomTo interactions after other interactions (using concatMap)', (done) => {
+            const LAYER_ID = 'layer-1';
+            const filterWidget = makeFilterWidget({
+                interactions: [
+                    {
+                        id: 'int-zoom-to', // Placed first, but sortBy should move it to the end
+                        plugged: true,
+                        targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+                        source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                        target: { nodePath: 'map.zoomTo' }
+                    },
+                    {
+                        id: 'int-map-layer',
+                        plugged: true,
+                        targetType: TARGET_TYPES.APPLY_FILTER,
+                        source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                        target: { nodePath: `map.layers[${LAYER_ID}]` }
+                    }
+                ]
+            });
+            const layersState = { flat: [{ id: LAYER_ID, name: 'test:layer' }] };
+            const state = makeState([filterWidget], layersState);
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    // Even with zoomTo placed first, applyFilter should still be executed and emit its action.
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(CHANGE_LAYER_PROPERTIES);
                 },
                 state,
                 done

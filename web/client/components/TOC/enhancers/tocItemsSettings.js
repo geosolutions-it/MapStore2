@@ -16,8 +16,8 @@ import { compose, lifecycle, withHandlers } from 'recompose';
  * - onSave: triggers onHideSettings
  * Lifecycle:
  * - UNSAFE_componentWillMount: set original and initial settings of current node
- * - componentWillReceiveProps: in case of missing description of node, it sends a get capabilities requiest to retrieve data of layer
- * - componentWillUpdate: check if current settings are not expanded and next are expanded to restore initial and original settings of component
+ * - UNSAFE_componentWillReceiveProps: in case of missing description of node, it sends a get capabilities request to retrieve data of layer
+ * - UNSAFE_componentWillUpdate: check if current settings are not expanded and next are expanded to restore initial and original settings of component
  * @memberof enhancers.settingsLifecycle
  * @class
  */
@@ -37,7 +37,7 @@ export const settingsLifecycle = compose(
         }
     }),
     lifecycle({
-        componentWillReceiveProps(newProps) {
+        UNSAFE_componentWillReceiveProps(newProps) {
             // an empty description does not trigger the single layer getCapabilites,
             // it does only for missing description
             const {
@@ -49,7 +49,7 @@ export const settingsLifecycle = compose(
                 onRetrieveLayerData(newProps.element);
             }
         },
-        componentWillUpdate(newProps) {
+        UNSAFE_componentWillUpdate(newProps) {
             const {
                 initialActiveTab = 'general',
                 settings = {},

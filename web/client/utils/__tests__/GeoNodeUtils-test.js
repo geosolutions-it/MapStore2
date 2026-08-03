@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import { setSupportedLocales, getSupportedLocales } from '../LocaleUtils';
-import { resourceToLayerConfig, getDimensions, resolveApiPresetParams, mergePresetParams } from '../GeoNodeUtils';
+import { resourceToLayerConfig, getDimensions, resolveApiPresetParams, mergePresetParams, documentsToLayerConfig } from '../GeoNodeUtils';
 
 describe('GeoNodeUtils', () => {
     describe('resourceToLayerConfig', () => {
@@ -277,4 +277,33 @@ describe('GeoNodeUtils', () => {
             expect(merged.exclude).toContain('*');
         });
     });
+
+    describe('GeoNode catalog documents, maps', () => {
+
+        it('documentsToLayerConfig builds a single vector layer of point features', () => {
+            const layer = documentsToLayerConfig([
+                { pk: 10, title: 'Doc 10', subtype: 'image', detail_url: '/documents/10', extent: { coords: [0, 0, 10, 10] } },
+                { pk: 11, title: 'Doc 11', subtype: 'document', detail_url: '/documents/11' }
+            ]);
+            expect(layer.type).toBe('vector');
+            expect(layer.name).toBe('Documents');
+            expect(layer.rowViewer).toBe('GEONODE_DOCUMENTS_ROW_VIEWER');
+            // doc 11 has no extent -> skipped
+            expect(layer.features.length).toBe(1);
+            expect(layer.features[0].id).toBe(10);
+            expect(layer.features[0].geometry.type).toBe('Point');
+            expect(layer.features[0].geometry.coordinates).toEqual([5, 5]);
+            expect(layer.bbox).toExist();
+        });
+
+        it('documentsToLayerConfig skips documents whose fetch fails', () => {
+            const layer = documentsToLayerConfig([
+                { pk: 10, title: 'Doc 10', subtype: 'image', extent: { coords: [0, 0, 10, 10] } },
+                null
+            ]);
+            expect(layer.features.length).toBe(1);
+            expect(layer.features[0].id).toBe(10);
+        });
+    });
+
 });

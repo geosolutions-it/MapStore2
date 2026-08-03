@@ -8,14 +8,10 @@ It makes possible to observe the layers' evolution over time, to inspect the lay
 !!! Warning
     The Timeline tool currently works only with WMS layers from GeoServer where the [WMTS-Multidim extension](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) is installed (WMS time values in WMS Capabilities is not supported yet). To use the MapStore Timeline at least **GeoServer 2.14.5** is required, but the recommended version is **GeoServer 2.15.2** to have a complete support for all of the features the Timeline tool can provide (e.g. the filter by viewport).
     From now on, the layers that the Timeline can manage will be addressed as *time layers*.
-    From now on, the layers that the Timeline can manage will be addressed as *time layers*.
 
 When a layer with a time dimension is added to the map, the Timeline panel becomes automatically visible and it allows the user to browse the layer over time.
 
 <img src="../img/timeline/timeline-base.jpg" class="ms-docimage"/>
-
-!!! Note
-    Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#manage-existing-widgets) to learn more about this.
 
 ## Timeline histogram
 
@@ -23,14 +19,15 @@ The Histogram panel opens through the **Expand time slider** button <img src="..
 
 <img src="../img/timeline/timeline-histogram.jpg" class="ms-docimage"/>
 
-In the Histogram panel some of the most relevant elements are the following ones:
+The *Histogram* panel displays, on the left, a list of the layers present in the map for which the time dimension is available, along with the corresponding histogram that shows the layer's data for each defined time interval.
 
-* A list of layers present in map with the time dimension available. It is possible to hide this list with the **Hide layers names** button <img src="../img/button/timeline-layers-list-button.jpg" class="ms-docbutton"/>
+To manage the panel, the user can:
 
-* The relative histogram that shows the layer' data for each time in which it is defined. In order to manage the panel the user can zoom in/out on the histogram, scroll the time axis and drag the current time cursor along it
+* Zoom in or out on the histogram
 
-!!! Note
-    The highlighted layer is the one whose histogram is displayed on the panel.
+* Scroll along the time axis
+
+* Drag the current time cursor along the axis
 
 !!! Note
     The highlighted layer in the *time layers* ' list drives the time management, from now on it will be addressed as *guide layer* (See in the [Animation Settings](#animation-settings) > **Timeline Settings** >  **Snap to guide layer** option ).
@@ -63,8 +60,6 @@ Based on the timeline configuration, the reset button <img src="../img/button/re
 
 Sometimes you might be interested to show in the timeline histogram only the times instants currently visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync** button <img src="../img/button/viewport-filter.jpg" class="ms-docbutton"/> . When this tool is active the timeline will show only the times of the features available in the current map viewport.
 
-<img src="../img/timeline/timeline-sync-example.jpg" class="ms-docimage"/>
-
 !!! Note
     Map Sync feature need at least GeoServer 2.15.2
 
@@ -94,15 +89,13 @@ The animation behavior can be customized through the **Settings** button <img sr
 
 <img src="../img/timeline/timeline-animation-settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
+!!! Note
+    If the time dimension of the layer has time ranges defined (start/end time) instead of time instants, the user can choose the **Time interval snap point** by selecting the option **Start** or **End**. An example of snapping to the *End* point could be the following:
+    <video class="ms-docimage"controls><source src="../img/timeline/time-interval-snap-point.mp4"/></video>
+
 By default, the **Snap to guide layer** is enabled. It allows to force the time cursor to snap to the selected layer's data.
 
-<img src="../img/timeline/snap-to-guide-layer.jpg" class="ms-docimage"/>
-
-If the time dimension of the layer has time ranges defined (start/end time) instead of time instants, the user can choose the **Time interval snap point** by selecting the option `Start` or `End`. An example of snapping to the `End` point could be the following:
-
-<video class="ms-docimage"controls><source src="../img/timeline/time-interval-snap-point.mp4"/></video>
-
-The user can disable *Snap to guide layer* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one:
+If the user disable *Snap to guide layer* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one:
 
 <img src="../img/timeline/animation-passage.jpg" class="ms-docimage"/>
 

@@ -2,8 +2,8 @@
   "start": "npm run app:start",
   "app:start": "concurrently -n frontend,backend -c green,blue \"npm:fe:start\" \"npm:be:start\"",
 
-  "fe:start": "webpack serve --progress --color --port 8081 --hot --config webpack.config.js --static .",
-  "fe:start-prod": "webpack serve --progress --color --port 8081 --hot --config prod.webpack.config.js --static .",
+  "fe:start": "webpack serve --progress --color --port 8081 --hot --config webpack.config.js",
+  "fe:start-prod": "webpack serve --progress --color --port 8081 --hot --config prod-webpack.config.js",
   "fe:build": "npm run clean && mkdirp ./dist && webpack build --progress --color --config prod-webpack.config.js",
   "compile": "npm run fe:build",
 

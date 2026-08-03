@@ -116,6 +116,46 @@ npm run lint
 
 More information on frontend building tools and configuration is available [here](frontend-building-tools-and-configuration)
 
+### Docker-based integration tests
+
+The repository also provides a Docker Compose test setup under the `tests` directory. It includes SQL initialization scripts, test-specific MapStore configuration files, an LDAP test service and a `sut` container that runs `tests.py`.
+
+Before running the stack locally, make sure Docker Compose is available and that the MapStore WAR expected by the test override is present as `mapstore.war` in the repository root. You can build the WAR with `./build.sh` and copy or symlink `product/target/mapstore.war` to `mapstore.war`.
+
+The Compose files are layered deliberately:
+
+* `docker-compose.yml` defines the default MapStore, PostgreSQL and proxy services.
+* `docker-compose-override.yml` adds the test database initialization, test MapStore overrides and the `sut` service.
+* `tests/docker-compose-tests.yml` adds the LDAP test service and the test LDAP wiring for MapStore.
+
+Use the same file list for both commands so Docker Compose always works with the same test stack definition.
+
+Start the base services first:
+
+```sh
+docker compose --profile base -f docker-compose.yml -f docker-compose-override.yml -f tests/docker-compose-tests.yml up -d --build
+```
+
+Then start the test container:
+
+```sh
+docker compose --profile test -f docker-compose.yml -f docker-compose-override.yml -f tests/docker-compose-tests.yml up --build --exit-code-from sut
+```
+
+The `base` profile starts the services required by the tests, including PostgreSQL, MapStore and the LDAP test container. The `test` profile enables the `sut` service; keep `--exit-code-from sut` so the command returns the result of `tests.py`.
+
+When the local test run is complete, stop the Compose stack with:
+
+```sh
+docker compose --profile base --profile test -f docker-compose.yml -f docker-compose-override.yml -f tests/docker-compose-tests.yml down
+```
+
+If you need a clean database initialization for another run, remove the Compose volumes too:
+
+```sh
+docker compose --profile base --profile test -f docker-compose.yml -f docker-compose-override.yml -f tests/docker-compose-tests.yml down -v
+```
+
 ## Backend
 
 In order to have a full running MapStore in development environment, you need to run also the backend java part locally.

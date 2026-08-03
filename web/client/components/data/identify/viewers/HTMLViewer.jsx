@@ -9,7 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import HtmlRenderer from '../../../misc/HtmlRenderer';
+import ShadowHtml from '../../../misc/ShadowHtml';
 
 const regexpBody = /^[\s\S]*<body>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
@@ -31,7 +31,9 @@ class HTMLViewer extends React.Component {
         style = style.replace(/body[,]+/g, '');
         // gets feature info managing an eventually empty response
         let content = response.replace(regexpBody, '$1').trim();
-        return <HtmlRenderer html={style + content} />;
+        // rendered in a shadow root (ShadowHtml) so the WMS <style> block is scoped
+        // to this panel and does not restyle the rest of the application.
+        return <ShadowHtml html={style + content} />;
     }
 }
 

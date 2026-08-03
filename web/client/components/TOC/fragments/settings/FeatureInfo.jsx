@@ -18,10 +18,16 @@ import { DragSource as dragSource, DropTarget as dropTarget } from 'react-dnd';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
 import { v1 as uuidv1 } from 'uuid';
-import { getDefaultInfoViewMode, getLayerFeatureInfoViews, isLayerFeatureInfoDisabled } from '../../../../utils/MapInfoUtils';
+import {
+    getDefaultInfoViewMode,
+    getLayerFeatureInfoViews,
+    isLayerFeatureInfoDisabled
+} from '../../../../utils/MapInfoUtils';
 import Message from '../../../I18N/Message';
 import FeatureInfoEditor from './FeatureInfoEditor';
 import localizedProps from '../../../misc/enhancers/localizedProps';
+import FeatureInfoRequestOptions from '../../../misc/FeatureInfoRequestOptions';
+import { isGeoServerLayer } from '../../../../utils/FeatureInfoRequestUtils';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
@@ -322,6 +328,14 @@ export default class extends React.Component {
             </div>
         ) : (
             <span className="ms-feature-info-settings">
+                 {this.props.element.type === 'wms' ? (
+                    <div style={{ padding: "15px 15px 0 15px" }}>
+                        <FeatureInfoRequestOptions
+                            featureInfo={this.props.element.featureInfo || {}}
+                            showBuffer={isGeoServerLayer(this.props.element)}
+                            onChange={(featureInfo) => this.props.onChange("featureInfo", featureInfo)} />
+                    </div>
+                ) : null}
                 <div className="ms-feature-info-toolbar">
                     <Checkbox
                         checked={disabled}

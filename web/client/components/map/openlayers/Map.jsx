@@ -179,7 +179,7 @@ class OpenlayersMap extends React.Component {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
                 const latLng = this.coordinateToLatLng(event.coordinate);
                 if (!latLng) return;
-                const { pos, lat, lng } = latLng;
+                const { lat, lng } = latLng;
                 /*
                  * Handle special case for vector features with handleClickOnLayer=true
                  * Modifies the clicked point coordinates to center the marker and sets the layerInfo for
@@ -213,7 +213,7 @@ class OpenlayersMap extends React.Component {
                     latlng: {
                         lat: finalLat,
                         lng: finalLng,
-                        z: this.getElevation(pos, event.pixel)
+                        z: this.getElevation(event.coordinate, event.pixel)
                     },
                     rawPos: event.coordinate.slice(),
                     modifiers: {
@@ -534,10 +534,12 @@ class OpenlayersMap extends React.Component {
         if (!event.dragging && event.coordinate) {
             const latLng = this.coordinateToLatLng(event.coordinate);
             if (!latLng) return;
-            const { pos, lat, lng } = latLng;
+            const { lat, lng } = latLng;
             const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
             const intersectedPixels = this.getIntersectedPixels(this.map, event?.pixel);
-            const elevation = this.getElevation(pos, event.pixel);
+            // the elevation lookup works with the native map coordinate,
+            // the tile grid of the elevation layer is expressed in map projection units
+            const elevation = this.getElevation(event.coordinate, event.pixel);
             this.props.onMouseMove({
                 y: lat || 0.0,
                 x: lng || 0.0,

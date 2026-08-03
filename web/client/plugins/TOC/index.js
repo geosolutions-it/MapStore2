@@ -43,6 +43,7 @@ import tooltip from '../../components/misc/enhancers/tooltip';
 import localizedProps from '../../components/misc/enhancers/localizedProps';
 import { registerCustomSaveHandler } from '../../selectors/mapsave';
 import toc from './reducers/toc';
+import { initializeTOC } from './actions/toc';
 import { setControlProperty } from '../../actions/controls';
 import Message from '../../components/I18N/Message';
 const Button = tooltip(ButtonRB);
@@ -366,7 +367,8 @@ function TOC({
     visualizationMode,
     toolbarButtonProps,
     init,
-    onOpen
+    onOpen,
+    onInitialize
 }, context) {
     const activateParameter = (allow, activate) => {
         const isUserAdmin = user && user.role === 'ADMIN' || false;
@@ -432,10 +434,13 @@ function TOC({
     // automatically open the toc
     // when default open is true
     useEffect(() => {
-        if (init && defaultOpen) {
-            onOpen();
+        if (init) {
+            onInitialize(init);
+            if (defaultOpen) {
+                onOpen();
+            }
         }
-    }, [init]);
+    }, [init, defaultOpen, onInitialize, onOpen]);
 
     const targetTree = singleDefaultGroup ? tree?.[0]?.nodes : tree;
     const isEmpty = targetTree?.length === 0;
@@ -569,10 +574,12 @@ const getTOCConfig = (state, props) => {
     const config = state?.toc?.config || {};
     const layers = layersSelector(state).filter(({ group }) => group !== 'background');
     const mapLoadedCount = state?.toc?.mapLoadedCount;
-    const defaultOpen = config.defaultOpen ?? props?.defaultOpen;
+    const initializedMapLoadedCount = state?.toc?.initializedMapLoadedCount;
     return {
-        // use the mapLoadedCount as trigger for the toc initialization
-        init: mapLoadedCount ? `${mapLoadedCount}:${!!defaultOpen}` : false,
+        // consume defaultOpen once for each map configuration load
+        init: mapLoadedCount && mapLoadedCount !== initializedMapLoadedCount
+            ? mapLoadedCount
+            : false,
         defaultOpen: config.defaultOpen ?? props?.defaultOpen,
         theme: config.theme ?? props?.theme,
         hideOpacitySlider: config.hideOpacitySlider ?? props?.hideOpacitySlider ?? props?.activateOpacityTool,
@@ -629,7 +636,8 @@ const ConnectedTOC = connect(tocSelector, {
     onSort: moveNode,
     onChange: updateNode,
     onSelectNode: selectNode,
-    onOpen: setControlProperty.bind(null, 'drawer', 'enabled', true)
+    onOpen: setControlProperty.bind(null, 'drawer', 'enabled', true),
+    onInitialize: initializeTOC
 })(TOC);
 
 export default createPlugin('TOC', {
