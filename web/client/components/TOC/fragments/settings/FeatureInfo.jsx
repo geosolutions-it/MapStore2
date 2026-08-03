@@ -328,7 +328,7 @@ export default class extends React.Component {
             </div>
         ) : (
             <span className="ms-feature-info-settings">
-                 {this.props.element.type === 'wms' ? (
+                {this.props.element.type === 'wms' ? (
                     <div style={{ padding: "15px 15px 0 15px" }}>
                         <FeatureInfoRequestOptions
                             featureInfo={this.props.element.featureInfo || {}}
