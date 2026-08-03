@@ -58,6 +58,44 @@ describe('HtmlSanitizer', () => {
             expect(result).toContain('referrerpolicy');
         });
 
+        it('preserves a leading style block (GetFeatureInfo HTML from WMS)', () => {
+            const input = '<style>table.featureInfo, table.featureInfo td, table.featureInfo th { border: 1px solid #ddd; }</style><table class="featureInfo"><tr><th>name</th></tr><tr><td>value</td></tr></table>';
+            const result = sanitizeHtml(input);
+            expect(result).toContain('<style>');
+            expect(result).toContain('table.featureInfo');
+            expect(result).toContain('<table class="featureInfo">');
+        });
+
+        it('still sanitizes CSS inside a leading style block', () => {
+            const result = sanitizeHtml('<style>@import "https://untr.example/x.css"; div { background: url(https://untr.example/leak) }</style><p>hi</p>');
+            expect(result).toContain('<style>');
+            expect(result).toNotContain('@import');
+            expect(result).toNotContain('https://untr.example');
+        });
+
+        it('blocks url() smuggled via CSS backslash escapes', () => {
+            const result = sanitizeHtml('<style>div { background: u\\72 l(https://untr.example/leak) }</style><p>hi</p>');
+            expect(result).toNotContain('untr.example');
+        });
+
+        it('blocks external resource loading via image-set()', () => {
+            const result = sanitizeHtml('<style>div { background: image-set("https://untr.example/leak" 1x) }</style><p>hi</p>');
+            expect(result).toNotContain('untr.example');
+        });
+
+        it('keeps benign CSS escapes intact (decoded)', () => {
+            const result = sanitizeHtml('<style>td::after { content: "\\2014"; color: red }</style><table><tr><td>v</td></tr></table>');
+            expect(result).toContain('<style>');
+            expect(result).toContain('color: red');
+        });
+
+        it('blocks url() smuggled via form-feed/CR-terminated CSS escapes', () => {
+            // hex escape terminated by form-feed (\f) and carriage-return (\r):
+            // the browser consumes these as the escape terminator, so the decoder must too.
+            expect(sanitizeHtml('<style>div { background: u\\72\fl(https://untr.example/leak) }</style><p>hi</p>')).toNotContain('untr.example');
+            expect(sanitizeHtml('<style>div { background: u\\72\rl(https://untr.example/leak) }</style><p>hi</p>')).toNotContain('untr.example');
+        });
+
         it('handles null input without throwing', () => {
             expect(() => sanitizeHtml(null)).toNotThrow();
             expect(sanitizeHtml(null)).toBe('');

@@ -80,3 +80,14 @@ Through the navigation toolbar it is possible to:
 * **Download** the cyclorama image in `png` format through the <img src="../img/button/cyclomedia-download-button.jpg" class="ms-docbutton"/> button.
 
 * Open the **Image Info** pop-up, through the <img src="../img/button/image-info-button.jpg" class="ms-docbutton"/> button to access image metadata such as: general image information as well as geospatial references of the image itself.
+
+## Panoramax provider for Street View
+
+If [Panoramax](https://docs.panoramax.fr/) has been configured as a provider for the **Street View** tool, the user experience remains the same. The tool can be activated using the <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button in the [Side Toolbar](mapstore-toolbars.md#side-toolbar).
+
+!!! note
+    The **Panoramax** provider can be configured for the **Street View** plugin as described [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView).
+
+Once the tool is activated, the available panorama locations are highlighted on the map. Click one of the highlighted points to open the corresponding panorama in the **Street View** panel.
+
+<img src="../img/street-view/panoramax-popup.jpg" class="ms-docimage" />

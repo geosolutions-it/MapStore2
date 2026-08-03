@@ -25,10 +25,10 @@ describe('Test CatalogServiceSelect', () => {
         ReactDOM.render(<CatalogServiceSelect services={{}} />, document.getElementById("container"));
         expect(document.getElementById('container')).toBeTruthy();
         expect(document.querySelector('input')).toBeTruthy();
-        expect(document.querySelector('.glyphicon-plus')).toBeTruthy();
-        expect(document.querySelector('.glyphicon-pencil')).toBeTruthy();
+        expect(document.querySelector('.glyphicon-plus')).toBeFalsy();
+        expect(document.querySelector('.glyphicon-pencil')).toBeFalsy();
     });
-    it('keeps edit and delete disabled without permissions', () => {
+    it('hides add, edit and delete without permissions', () => {
         ReactDOM.render(<CatalogServiceSelect
             services={{
                 csw: {
@@ -43,12 +43,11 @@ describe('Test CatalogServiceSelect', () => {
         />, document.getElementById("container"));
         expect(document.getElementById('container')).toBeTruthy();
         const serviceButtons = document.querySelectorAll('.ms-catalog-service-btn');
-        expect(serviceButtons.length).toBe(2);
-        expect(serviceButtons[1].disabled).toBe(true);
+        expect(serviceButtons.length).toBe(0);
         const deleteButton = document.querySelector('.ms-catalog-service-delete-btn');
-        expect(deleteButton.disabled).toBe(true);
+        expect(deleteButton).toBeFalsy();
     });
-    it('enables edit and delete with permissions and selected service', () => {
+    it('enables add, edit and delete with permissions and selected service', () => {
         ReactDOM.render(<CatalogServiceSelect
             services={{
                 csw: {
@@ -63,9 +62,23 @@ describe('Test CatalogServiceSelect', () => {
         />, document.getElementById("container"));
         const serviceButtons = document.querySelectorAll('.ms-catalog-service-btn');
         expect(serviceButtons.length).toBe(2);
+        expect(serviceButtons[0].disabled).toBe(false);
         expect(serviceButtons[1].disabled).toBe(false);
         const deleteButton = document.querySelector('.ms-catalog-service-delete-btn');
         expect(deleteButton.disabled).toBe(false);
+    });
+    it('disables edit and delete with permissions and without a selected service', () => {
+        ReactDOM.render(<CatalogServiceSelect
+            services={{}}
+            canEdit
+            onDeleteService={() => {}}
+        />, document.getElementById("container"));
+        const serviceButtons = document.querySelectorAll('.ms-catalog-service-btn');
+        expect(serviceButtons.length).toBe(2);
+        expect(serviceButtons[0].disabled).toBe(false);
+        expect(serviceButtons[1].disabled).toBe(true);
+        const deleteButton = document.querySelector('.ms-catalog-service-delete-btn');
+        expect(deleteButton.disabled).toBe(true);
     });
     it('calls delete service callback', () => {
         const actions = {

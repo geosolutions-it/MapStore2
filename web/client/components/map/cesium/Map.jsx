@@ -609,6 +609,50 @@ class CesiumMap extends React.Component {
         this.clickStream$ = clickStream$;
         this.pauserStream$ = pauserStream$;
     };
+
+    applyPaddingToBounds = (
+        bounds,
+        padding,
+        { width, height },
+        maxZoom,
+        getHeightFromZoom
+    ) => {
+        let [west, south, east, north] = bounds;
+        const { top = 0, right = 0, bottom = 0, left = 0 } = padding || {};
+
+        if (!(top || right || bottom || left) || !width || !height) {
+            return bounds;
+        }
+
+        let deltaX = east - west;
+        let deltaY = north - south;
+
+        if (deltaX === 0 && deltaY === 0) {
+            const centerLat = (south + north) / 2;
+            const fallbackHeight = getHeightFromZoom(maxZoom);
+            const metersPerDegreeLat = 111320;
+            const metersPerDegreeLon = metersPerDegreeLat * Math.max(
+                Math.cos(Cesium.Math.toRadians(centerLat)),
+                0.01
+            );
+
+            deltaX = fallbackHeight / metersPerDegreeLon;
+            deltaY = fallbackHeight / metersPerDegreeLat;
+        }
+
+        const innerWidth = Math.max(1, width - left - right);
+        const innerHeight = Math.max(1, height - top - bottom);
+        const padX = deltaX / innerWidth;
+        const padY = deltaY / innerHeight;
+
+        return [
+            west - padX * left,
+            south - padY * bottom,
+            east + padX * right,
+            north + padY * top
+        ];
+    };
+
     registerHooks = () => {
         // Unregister hooks as coming from a leaflet or openlayer map retains hooks
         // causing issue in feature info click
@@ -622,7 +666,13 @@ class CesiumMap extends React.Component {
                 return;
             }
             const ellipsoid = this.map.scene.globe.ellipsoid;
-            const [west, south, east, north] = bounds;
+            const [west, south, east, north] = this.applyPaddingToBounds(
+                bounds,
+                padding,
+                { width: this.map.canvas?.clientWidth, height: this.map.canvas?.clientHeight },
+                maxZoom,
+                this.getHeightFromZoom
+            );
             const height = options?.height ?? options?.altitude ?? 0;
 
             const centerLon = (west + east) / 2;

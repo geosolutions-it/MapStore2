@@ -19,6 +19,8 @@ import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import '../assets/dynamicLegend.css';
 import Text from '../../../components/layout/Text';
 
+export const DYNAMIC_LEGEND_WMS_OPTIONS = "forceLabels:on;countMatched:true;fontAntiAliasing:true;";
+
 /**
  * Main component for the DynamicLegend plugin.
  *
@@ -105,7 +107,7 @@ const DynamicLegend = ({
                     zoom: currentZoomLvl,
                     layerOptions: {
                         legendOptions: {
-                            WMSLegendOptions: "countMatched:true;fontAntiAliasing:true;",
+                            WMSLegendOptions: DYNAMIC_LEGEND_WMS_OPTIONS,
                             legendWidth: 12,
                             legendHeight: 12,
                             mapBbox

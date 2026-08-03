@@ -7,6 +7,10 @@ The user can access the Catalog with a click on the <img src="../img/button/cata
 
 <img src="../img/catalog/catalog_panel.jpg" class="ms-docimage"  style="max-width:500px;" />
 
+The *Catalog* can also be viewed in Grid mode by clicking on the <img src="../img/button/full-view.jpg" class="ms-docbutton" style="max-height:25px;" /> button.
+
+<img src="../img/catalog/catalog_grid.jpg" class="ms-docimage" />
+
 ## Adding Layers from Remote Services
 
 In order to add a layer, the user can first of all open the catalog and choose from the following dropdown menu the Remote Service from where the layer is going to be added:
@@ -17,18 +21,20 @@ Once the Remote Service is set, it is possible to search the desired layer by ty
 
 <img src="../img/catalog/catalog_search.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/> button, the layer is finally added to the [TOC](toc.md#table-of-contents) and rendered to the map viewer:
+By clicking on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button, the layer is finally added to the [TOC](toc.md#table-of-contents) and rendered to the map viewer:
 
 <img src="../img/catalog/added_layer.jpg" class="ms-docimage"/>
 
+Users can also select multiple layers simultaneously by clicking on them or click the <img src="../img/button/select-all.jpg" class="ms-docbutton"/> button to select all layers on the page. Once selected, add them to the map by clicking the <img src="../img/button/add-to-map.jpg" class="ms-docbutton"/> button.
+
 !!! note
-    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton" style="max-height:20px;"/> button:
+    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button and clicking on the *Show full content*:
 
     <video class="ms-docimage" style="max-width:400px;" controls><source src="../img/catalog/expand_card.mp4"></video>
 
 ## Managing Remote Services
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/++++.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
 
 <img src="../img/catalog/add_edit_services.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
@@ -43,8 +49,8 @@ From here the user is allowed to set the Service options, that can be divided in
 
 * **Advanced Settings**
 
-Once the options are properly set, it is possible to <img src="../img/button/save_service.jpg" class="ms-docbutton"/> the Service. If the user wants to discard the edits, instead, there's the <img src="../img/button/cancel_service.jpg" class="ms-docbutton"/> button.
-An existing Service can finally be removed from the Services list through the <img src="../img/button/delete_service.jpg" class="ms-docbutton"/> button (this option is not available creating a new Remote Service).
+Once the options are properly set, it is possible to <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> the Service. If the user wants to discard the edits, instead, there's the <img src="../img/button/cancel-white.jpg" class="ms-docbutton"/> button.
+An existing Service can finally be removed from the Services list through the <img src="../img/button/delete-red.jpg" class="ms-docbutton"/> button (this option is not available creating a new Remote Service).
 
 ### General settings
 
@@ -66,7 +72,7 @@ MapStore also provides the possibility specify credentials for sources requestin
 
 ### Advanced settings
 
-The Advances settings section opens by clicking on the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton"/> icon:
+The Advances settings section opens by clicking on the <img src="../img/button/collapse.jpg" class="ms-docbutton"/> icon:
 
 <img src="../img/catalog/advanced_settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
@@ -85,7 +91,7 @@ MapStore actually supports only the **Dublin Core** metadata schemas. *ISO Metad
 
 In **general settings of**  CSW service the user can specify the title to assign to this service and the URL of the service.
 
-<img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
+<img src="../img/catalog/csw_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 !!! note
     If the *CSW service*, responds with metadata records that can hold more than just one type of OGC service (WMS and WFS are currently supported for this), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to choose from which service the layer should be added to the [TOC](toc.md#table-of-contents). An example can be the following: <video class="ms-docimage"  style="max-width:500px;" controls><source src="../img/catalog/csw_with_more_ogc_service.mp4"></video>
@@ -232,6 +238,8 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Single Tile* (only for the WMS service): if checked, the layers loaded from the involved catalog source are rendered as a single tile. For layers already loaded on the map, it is possible to disable this option through the [Layer Settings](layer-settings.md#display) tool as usual.
 
+* *Crop to projection extent*: If enabled, the layers loaded from the involved catalog source are cropped to the current map projection extent defined. For layers already loaded on the map, it is also possible to enable this option through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool.
+
 * *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser.
 
 * *Server Type*: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
@@ -291,8 +299,8 @@ Allowed placeholder are:
 
 When the user saves this custom catalog service and clicks on search, he will see only one result, that can be added on the map: variants are not currently sopported in MapStore for this provider type.
 
-<img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
-<p class="ms-doc-caption">Browse custom TMS service. It contains only one result</p>
+!!! note
+    Browse custom TMS service. It contains only one result.
 
 ##### Sample custom
 
@@ -461,11 +469,32 @@ In **General Settings** of a ArcGIS source type, it is possible to specify the s
     The tool capabilities currently available for layers from ArcGIS service are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
-    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#ifc-layer) options
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#arcgis-layer) options. For layers from the [ArcGIS Feature Service](https://developers.arcgis.com/rest/services-reference/enterprise/feature-service/), the user can also use the [Style](layer-settings.md#styling-for-arcgis-feature-service-layer) tool from the *Layer Settings* panel.
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+    * The [3D Navigation](navigation-toolbar.md#3d-navigation)
+    * The possibility of retrieving information from ArcGIS FeatureService layers using the [Identify Tool](navigation-toolbar.md#identify-tool)
 
 ### FlatGeobuf Catalog
 
 A [FlatGeobuf (FGB)](https://flatgeobuf.org/) is a vector file format designed to be served through a standard HTTP server. Its internal structure enables fast and selective data access by leveraging HTTP Range Requests: clients can request only the portions of the file they need, without having to download the entire dataset.
 
 In MapStore, FGB files can be added as layers. Through the Catalog tool, it is possible to configure multiple FlatGeobuf URL sources: each URL is interpreted as a single layer and added to the map directly and efficiently.
+
+<img src="../img/catalog/fgb_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+#### Advanced Settings
+
+In addition to the standard options, only for FGB catalog sources, through the **Advanced Settings** the user can configure also the following option:
+
+<img src="../img/catalog/advanced_settings_fgb.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+* *Max features in view*: enter the maximum number of features to be displayed on the map when the layer is added to the [TOC](toc.md#table-of-contents).
+
+!!! Note
+    The tool capabilities currently available for FGB layers are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#flatgeobuf-layer) options and the [Style](layer-settings.md#styling-for-flatgeobuf-layer)
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+    * The [3D Navigation](navigation-toolbar.md#3d-navigation)
+    * The possibility of retrieving information from FGB layers using the [Identify Tool](navigation-toolbar.md#identify-tool)

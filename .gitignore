@@ -46,3 +46,12 @@ GEMINI.md
 AGENTS.md
 .copilot/
 .github/copilot-instructions.md
+mapstore.war
+mapstore**.war
+.env
+
+# Local auth overrides and runtime bootstrap files
+/docker/keycloak/realm-mapstore.json
+# datadir runtime files
+datadir/
+datadir/*

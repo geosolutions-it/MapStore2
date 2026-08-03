@@ -397,6 +397,54 @@ describe('Test the mapInfo reducer', () => {
         expect(state.configuration.infoFormat).toBe(newInfoFormat);
     });
 
+    it('MAP_CONFIG_LOADED should restore default mapInfo configuration when loading a map without mapInfoConfiguration', () => {
+        const defaultConfiguration = {
+            infoFormat: "application/json",
+            showEmptyMessageGFI: false
+        };
+        let state = mapInfo({
+            configuration: defaultConfiguration
+        }, {
+            type: MAP_CONFIG_LOADED,
+            config: {
+                mapInfoConfiguration: {
+                    infoFormat: "text/html",
+                    showEmptyMessageGFI: true
+                }
+            }
+        });
+
+        expect(state.configuration.infoFormat).toBe("text/html");
+        expect(state.configuration.showEmptyMessageGFI).toBe(true);
+
+        state = mapInfo(state, {
+            type: MAP_CONFIG_LOADED,
+            config: {}
+        });
+
+        expect(state.configuration).toEqual(defaultConfiguration);
+    });
+
+    it('MAP_CONFIG_LOADED should reset mapInfo configuration when no default is configured', () => {
+        let state = mapInfo(undefined, {
+            type: MAP_CONFIG_LOADED,
+            config: {
+                mapInfoConfiguration: {
+                    infoFormat: "text/html"
+                }
+            }
+        });
+
+        expect(state.configuration.infoFormat).toBe("text/html");
+
+        state = mapInfo(state, {
+            type: MAP_CONFIG_LOADED,
+            config: {}
+        });
+
+        expect(state.configuration).toEqual({});
+    });
+
     it('toggleShowCoordinateEditor', () => {
         let state = mapInfo({}, toggleShowCoordinateEditor(true));
         expect(state).toExist();

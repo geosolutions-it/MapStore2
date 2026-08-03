@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(15);
+        expect(fields.length).toBe(17);
         // check disabled refresh button
 
     });
@@ -42,7 +42,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(13);
+        expect(fields.length).toBe(15);
         const refreshButton = document.querySelectorAll('button')[0];
         expect(refreshButton).toBeTruthy();
         expect(refreshButton.disabled).toBe(false);
@@ -266,6 +266,29 @@ describe('Test Raster advanced settings', () => {
         TestUtils.Simulate.keyDown(serverTypeOption, { keyCode: 9, key: 'Tab' });
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'layerOptions', { serverType: "geoserver" } ]);
+    });
+    it('test component onChangeServiceProperty feature info request options', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+        ReactDOM.render(<RasterAdvancedSettings
+            onChangeServiceProperty={action.onChangeServiceProperty}
+            service={{ type: "wms", layerOptions: {serverType: 'geoserver'} }}
+        />, document.getElementById("container"));
+        expect(document.querySelector('[data-qa="feature-info-buffer"]')).toBeTruthy();
+        expect(document.querySelector('[data-qa="feature-info-max-items"]').value).toBe('10');
+        TestUtils.Simulate.change(document.querySelector('[data-qa="feature-info-max-items"]'), { target: { value: "15" }});
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'layerOptions', { serverType: "geoserver", featureInfo: { maxItems: 15 } } ]);
+    });
+    it('test component hides catalog feature info buffer for non GeoServer', () => {
+        ReactDOM.render(<RasterAdvancedSettings
+            service={{ type: "wms", layerOptions: {serverType: 'no-vendor'} }}
+        />, document.getElementById("container"));
+        expect(document.querySelector('[data-qa="feature-info-max-items"]')).toBeTruthy();
+        expect(document.querySelector('[data-qa="feature-info-max-items"]').value).toBe('10');
+        expect(document.querySelector('[data-qa="feature-info-buffer"]')).toNotExist();
     });
     it('test component onChangeServiceProperty infoFormat', () => {
         const action = {

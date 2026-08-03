@@ -36,9 +36,12 @@ import {
 } from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import { ServerTypes } from '../../../../utils/LayersUtils';
+import { addElevationTile, getElevationKey } from '../../../../utils/ElevationUtils';
 
 
 import { Map, View } from 'ol';
+import ImageState from 'ol/ImageState';
+import TileState from 'ol/TileState';
 import VectorSource from 'ol/source/Vector';
 import { defaults as defaultControls } from 'ol/control';
 
@@ -357,6 +360,111 @@ describe('Openlayers layer', () => {
                 expect(e).toBeTruthy();
                 done();
             }, 200);
+        });
+    });
+    it('render wms singleTile layer with error does not request a spurious "null" url', (done) => {
+        ConfigUtils.setConfigProp('requestsConfigurationRules', [{
+            urlPattern: '.*\\/geoserver.*',
+            headers: {
+                Authorization: 'Bearer ${securityToken}'
+            }
+        }]);
+        setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let request;
+        mockAxios.onGet().reply((r) => {
+            request = r;
+            return [200, new Blob(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<ows:ExceptionReport xmlns:ows=\"http://www.opengis.net/ows\">\n" +
+            "  <ows:Exception exceptionCode=\"InvalidParameterValue\" locator=\"srsname\">\n" +
+            "    <ows:ExceptionText>WMS server error. Invalid GetMap Request</ows:ExceptionText>\n" +
+            "  </ows:Exception>\n" +
+            "</ows:ExceptionReport>"], {type: 'text/xml'})];
+        });
+        const options = {
+            type: 'wms',
+            visibility: true,
+            singleTile: true,
+            url: '/geoserver/wms',
+            name: 'ws:layer'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options
+            }}
+            map={map}
+            securityToken="########-####-####-####-###########" />, document.getElementById("container"));
+        ConfigUtils.setConfigProp('requestsConfigurationRules', undefined);
+        expect(layer.layer.getSource()).toBeTruthy();
+        layer.layer.getSource().once('imageloaderror', (e) => {
+            // the custom load function must have been used, so the exception comes from the OGC response
+            expect(request).toBeTruthy();
+            expect(request.headers.Authorization).toBe('Bearer ########-####-####-####-###########');
+            // ol/Image has no setState, the error state must be notified anyway
+            expect(e.image.getState()).toBe(ImageState.ERROR);
+            // the error handler must not set img.src = null, which the DOM coerces
+            // to the literal string "null" and resolves into a spurious request
+            const img = e.image.getImage();
+            expect(img.getAttribute('src') === 'null' || (img.src || '').endsWith('/null')).toBe(false);
+            done();
+        });
+    });
+    it('render wms tiled layer with error does not request a spurious "null" url', (done) => {
+        ConfigUtils.setConfigProp('requestsConfigurationRules', [{
+            urlPattern: '.*\\/geoserver.*',
+            headers: {
+                Authorization: 'Bearer ${securityToken}'
+            }
+        }]);
+        setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let request;
+        mockAxios.onGet().reply((r) => {
+            request = r;
+            return [200, new Blob(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<ows:ExceptionReport xmlns:ows=\"http://www.opengis.net/ows\">\n" +
+            "  <ows:Exception exceptionCode=\"InvalidParameterValue\" locator=\"srsname\">\n" +
+            "    <ows:ExceptionText>WMS server error. Invalid GetMap Request</ows:ExceptionText>\n" +
+            "  </ows:Exception>\n" +
+            "</ows:ExceptionReport>"], {type: 'text/xml'})];
+        });
+        const options = {
+            type: 'wms',
+            visibility: true,
+            singleTile: false,
+            url: '/geoserver/wms',
+            name: 'ws:tiled_layer'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options
+            }}
+            map={map}
+            securityToken="########-####-####-####-###########" />, document.getElementById("container"));
+        ConfigUtils.setConfigProp('requestsConfigurationRules', undefined);
+        expect(layer.layer.getSource()).toBeTruthy();
+        layer.layer.getSource().once('tileloaderror', (e) => {
+            // the custom load function must have been used, so the exception comes from the OGC response
+            expect(request).toBeTruthy();
+            expect(request.headers.Authorization).toBe('Bearer ########-####-####-####-###########');
+            expect(e.tile.getState()).toBe(TileState.ERROR);
+            // the error handler must not set img.src = null, which the DOM coerces
+            // to the literal string "null" and resolves into a spurious request
+            const img = e.tile.getImage();
+            expect(img.getAttribute('src') === 'null' || (img.src || '').endsWith('/null')).toBe(false);
+            done();
         });
     });
     it('creates a tiled wms layer for openlayers map with long url', (done) => {
@@ -3508,6 +3616,38 @@ describe('Openlayers layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
     });
+    it('should return the elevation value at a map coordinate from the loaded tiles of the elevation layer', () => {
+        const options = {
+            id: 'elevation-layer',
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <OpenlayersLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        const layer = cmp.layer;
+        const tileGrid = layer.getSource().getTileGrid();
+        // the lookup coordinate is expressed in the map projection (EPSG:3857)
+        const coordinate = [1252344, 5430086];
+        const z = 12;
+        const [, x, y] = tileGrid.getTileCoordForCoordAndZ(coordinate, z);
+        // simulate a tile stored by the tileLoadFunction with a constant height of 1500 meters
+        const tileSize = 256;
+        const buffer = new ArrayBuffer(tileSize * tileSize * 2);
+        const dataView = new DataView(buffer);
+        for (let i = 0; i < tileSize * tileSize; i++) {
+            dataView.setInt16(i * 2, 1500, false);
+        }
+        addElevationTile(buffer, [z, x, y], getElevationKey(x, y, z, options.id));
+        layer.get('requestedZoomLevels').push(z);
+        expect(layer.get('getElevation')(coordinate)).toBe(1500);
+    });
     it('wms layer should refresh source when loadingError changes to Error', () => {
         var refreshCalled = false;
         const options = {
@@ -3623,6 +3763,47 @@ describe('Openlayers layer', () => {
 
         // refresh should NOT be called
         expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+    it('wms layer should stop auto-refreshing after repeated loadingError within the cooldown window', () => {
+        var refreshCallCount = 0;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "id": "wms-loading-error-refresh-cap-test"
+        };
+
+        // create layer
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+        wmsSource.refresh = function() {
+            refreshCallCount++;
+            originalRefresh.call(this);
+        };
+
+        // simulate the error state oscillating (fail, recover, fail, recover, ...) 5 times in a row,
+        // as happens when the underlying tile failure is intermittent rather than a one-off config mistake
+        for (let i = 0; i < 5; i++) {
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: false}} map={map} />, document.getElementById("container"));
+        }
+
+        // refresh should be capped (MAX_LOADING_ERROR_REFRESH_ATTEMPTS = 3), not called once per oscillation (5)
+        expect(refreshCallCount).toBe(3);
 
         // restore original method
         wmsSource.refresh = originalRefresh;
