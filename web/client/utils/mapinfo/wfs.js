@@ -9,11 +9,12 @@
 import {Observable} from 'rxjs';
 
 import {normalizeSRS} from '../CoordinatesUtils';
-import { getLayerUrl } from '../LayersUtils';
+import { getCapabilitiesUrl, getLayerUrl } from '../LayersUtils';
 import { isObject } from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
-import { describeFeatureType, getFeature } from '../../api/WFS';
+import { describeFeatureType, getFeature, getSupportedFormat } from '../../api/WFS';
 import { extractGeometryAttributeName } from '../WFSLayerUtils';
+import { INFO_FORMATS } from '../FeatureInfoUtils';
 
 
 import {addAuthenticationToSLD} from '../SecurityUtils';
@@ -33,11 +34,12 @@ const CLIENT_WORKFLOW = 'client';
 const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, featureInfo) => {
     if (point?.intersectedFeatures) {
         const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
-        const isRemote = infoFormat === 'text/html' && layer.infoFormats.includes('text/html');
+        // unknown supported formats keep the remote workflow
+        const isRemote = infoFormat === INFO_FORMATS.HTML && layer.infoFormats?.includes(INFO_FORMATS.HTML) !== false;
         return {
             request: {
                 features: [...features],
-                outputFormat: isRemote ? 'text/html' : 'application/json'
+                outputFormat: isRemote ? INFO_FORMATS.HTML : INFO_FORMATS.JSON
             },
             metadata: {
                 title: isObject(layer.title)
@@ -98,6 +100,24 @@ const getIdentifyGeometry = point => {
 
 export default {
     buildRequest,
+    /**
+     * Detects the supported info formats, text/html is the only one a WFS service could be missing.
+     * @param {object} layer
+     * @param {string} infoFormat the info format needed by the identify request
+     * @return {Promise} resolves with the layer, with `infoFormats` when they could be detected
+     */
+    resolveLayer: (layer, infoFormat) => {
+        if (infoFormat !== INFO_FORMATS.HTML || layer.infoFormats?.length || !layer.url) {
+            return Promise.resolve(layer);
+        }
+        // layer specific capabilities is a smaller document
+        const capabilitiesUrl = layer.name
+            ? getCapabilitiesUrl({ url: layer.url, name: layer.name })
+            : getLayerUrl(layer);
+        return getSupportedFormat(capabilitiesUrl)
+            .then(({ infoFormats }) => ({ ...layer, infoFormats }))
+            .catch(() => layer);
+    },
     getIdentifyFlow: (layer = {}, baseURL, defaultParams) => {
         const { point, features, ...baseParams } = defaultParams || {};
         if (features) {

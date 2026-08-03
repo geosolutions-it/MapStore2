@@ -7,7 +7,7 @@
  */
 import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import { get, isNaN, find, groupBy } from 'lodash';
+import { get, isNaN, find } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
@@ -34,7 +34,7 @@ import { detailsLoaded } from '../actions/details';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
-import { ADD_LAYER, changeLayerProperties } from '../actions/layers';
+import { changeLayerProperties } from '../actions/layers';
 import { createBackgroundsList } from '../actions/backgroundselector';
 import {
     FORMAT_OPTIONS_FETCH,
@@ -46,7 +46,6 @@ import {
     getFormatUrlUsedSelector
 } from '../selectors/catalog';
 import { getSupportedFormat } from '../api/WMS';
-import { getSupportedFormat as getSupportedFormatWFS } from '../api/WFS';
 import { wrapStartStop } from '../observables/epics';
 import { error } from '../actions/notifications';
 import { applyOverrides } from '../utils/ConfigUtils';
@@ -330,35 +329,5 @@ export const getSupportedFormatsEpic = (action$, {getState = ()=> {}} = {}) =>
                             );
                         }
                     )
-                );
-        });
-
-/**
- * Fetch WFS GetFeature formats when layers are loaded so identify can
- * distinguish unsupported HTML from capability metadata that is still unknown.
- */
-export const fetchWFSInfoFormatsEpic = action$ =>
-    action$.ofType(MAP_CONFIG_LOADED, ADD_LAYER)
-        .mergeMap((action) => {
-            const layers = action.type === MAP_CONFIG_LOADED
-                ? action.config?.map?.layers || []
-                : [action.layer];
-            const layersByUrl = Object.values(groupBy(
-                layers.filter((layer) =>
-                    layer?.id
-                    && layer.type === 'wfs'
-                    && !layer.infoFormats?.length
-                    && layer.url
-                ),
-                (layer) => JSON.stringify(layer.url)
-            ));
-            return Observable.from(layersByUrl)
-                .mergeMap((layersWithSameUrl) =>
-                    Observable.defer(() => getSupportedFormatWFS(layersWithSameUrl[0].url))
-                        .mergeMap(({ infoFormats }) =>
-                            Observable.from(layersWithSameUrl.map((layer) =>
-                                changeLayerProperties(layer.id, { infoFormats })
-                            ))
-                        )
                 );
         });

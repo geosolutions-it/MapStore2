@@ -9,8 +9,7 @@
 import expect from 'expect';
 import {head} from 'lodash';
 import {
-    loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic,
-    getSupportedFormatsEpic, fetchWFSInfoFormatsEpic
+    loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic, getSupportedFormatsEpic
 } from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
@@ -41,7 +40,6 @@ import {
     SET_FORMAT_OPTIONS,
     SHOW_FORMAT_ERROR
 } from '../../actions/catalog';
-import { CHANGE_LAYER_PROPERTIES } from '../../actions/layers';
 const api = {
     getResource: (id, {includeAttributes = true, withData = true}) => {
         if (!includeAttributes && !withData) {
@@ -84,43 +82,6 @@ describe('config epics', () => {
             done();
         }, {
             catalog: {}
-        });
-    });
-
-    it('fetchWFSInfoFormatsEpic should populate formats for WFS layers loaded from a map', (done) => {
-        const wfsMockAxios = new MockAdapter(axios);
-        wfsMockAxios.onGet().reply(200, `
-            <wfs:WFS_Capabilities>
-                <ows:OperationsMetadata>
-                    <ows:Operation name="GetFeature">
-                        <ows:Parameter name="outputFormat">
-                            <ows:Value>application/json</ows:Value>
-                        </ows:Parameter>
-                    </ows:Operation>
-                </ows:OperationsMetadata>
-            </wfs:WFS_Capabilities>
-        `);
-        testEpic(fetchWFSInfoFormatsEpic, 1, configureMap({
-            map: {
-                layers: [{
-                    id: 'wfs-layer',
-                    type: 'wfs',
-                    url: '/geoserver/wfs'
-                }]
-            }
-        }), ([action]) => {
-            try {
-                expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
-                expect(action.layer).toBe('wfs-layer');
-                expect(action.newProperties).toEqual({
-                    infoFormats: ['application/json']
-                });
-                wfsMockAxios.restore();
-                done();
-            } catch (error) {
-                wfsMockAxios.restore();
-                done(error);
-            }
         });
     });
     describe('loadMapConfigAndConfigureMap', () => {

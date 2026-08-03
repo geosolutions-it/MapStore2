@@ -19,7 +19,8 @@ import {
     defaultQueryableFilter,
     buildIdentifyRequest,
     filterRequestParams,
-    getValidator
+    getValidator,
+    resolveIdentifyLayer
 } from '../../../utils/MapInfoUtils';
 
 import { isInsideResolutionsLimits } from '../../../utils/LayersUtils';
@@ -58,50 +59,55 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                 });
             }
 
+            const identifyOptions = {
+                format: mapInfoFormat,
+                map,
+                point,
+                currentLocale: "en-US"
+            };
             return Observable.from(queryableLayers)
-                .mergeMap(layer => {
-                    let { url, request, metadata } = buildIdentifyRequest(layer, {
-                        format: mapInfoFormat,
-                        map,
-                        point,
-                        currentLocale: "en-US"});
-                    const basePath = url;
-                    const queryParams = request;
-                    const appParams = filterRequestParams(layer, includeOptions, excludeParams);
-                    const param = { ...appParams, ...queryParams };
-                    const reqId = uuidv1();
-                    return getFeatureInfo(basePath, param, layer)
-                        .map((response) =>
-                            response.data.exceptions
-                                ? ({
-                                    reqId,
-                                    exceptions: response.data.exceptions,
-                                    queryParams,
-                                    layerMetadata: metadata
-                                })
-                                : ({
-                                    data: response.data,
-                                    reqId: reqId,
-                                    queryParams,
-                                    layerMetadata: {
-                                        ...metadata,
-                                        features: response.features,
-                                        featuresCrs: response.featuresCrs
-                                    }
-                                })
-                        )
-                        .catch((e) => Observable.of({
-                            error: e.data || e.statusText || e.status,
-                            reqId,
-                            queryParams,
-                            layerMetadata: metadata
-                        }))
-                        .startWith(({
-                            start: true,
-                            reqId,
-                            request: param
-                        }));
-                }).scan(({requests, responses, validResponses}, action) => {
+                .mergeMap(identifyLayer => Observable
+                    .defer(() => resolveIdentifyLayer(identifyLayer, identifyOptions))
+                    .mergeMap(layer => {
+                        let { url, request, metadata } = buildIdentifyRequest(layer, identifyOptions);
+                        const basePath = url;
+                        const queryParams = request;
+                        const appParams = filterRequestParams(layer, includeOptions, excludeParams);
+                        const param = { ...appParams, ...queryParams };
+                        const reqId = uuidv1();
+                        return getFeatureInfo(basePath, param, layer)
+                            .map((response) =>
+                                response.data.exceptions
+                                    ? ({
+                                        reqId,
+                                        exceptions: response.data.exceptions,
+                                        queryParams,
+                                        layerMetadata: metadata
+                                    })
+                                    : ({
+                                        data: response.data,
+                                        reqId: reqId,
+                                        queryParams,
+                                        layerMetadata: {
+                                            ...metadata,
+                                            features: response.features,
+                                            featuresCrs: response.featuresCrs
+                                        }
+                                    })
+                            )
+                            .catch((e) => Observable.of({
+                                error: e.data || e.statusText || e.status,
+                                reqId,
+                                queryParams,
+                                layerMetadata: metadata
+                            }))
+                            .startWith(({
+                                start: true,
+                                reqId,
+                                request: param
+                            }));
+                    }))
+                .scan(({requests, responses, validResponses}, action) => {
                     if (action.start) {
                         const {reqId, request} = action;
                         return {requests: requests.concat({ reqId, request }), responses, validResponses};
