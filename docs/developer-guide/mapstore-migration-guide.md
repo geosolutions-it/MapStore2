@@ -48,7 +48,6 @@ Saving the Feature Info settings replaces `format`, `template` and `viewer` with
 
 Custom code reading the identify results from the state finds the response of every view in `viewResponses`, keyed by view id, instead of a single `response` and `queryParams`.
 
-
 ### Spring 7 / Jakarta EE 10 upgrade
 
 MapStore has been upgraded to Spring Framework 7 and Spring Security 7, moving from the Java EE (`javax.*`) to the Jakarta EE 10 (`jakarta.*`) platform. This is a **breaking change** for the deployment environment and for MapStore projects.
