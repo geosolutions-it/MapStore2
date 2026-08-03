@@ -196,7 +196,7 @@ describe("test FeatureInfo", () => {
     });
 
     it('test WMS feature info request options preserve existing feature info configuration', done => {
-        ReactDOM.render(<FeatureInfo
+        ReactDOM.render(<DndFeatureInfo
             element={{
                 type: "wms",
                 serverType: "geoserver",
