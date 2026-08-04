@@ -51,7 +51,8 @@ export const createNewFilter = (filtersCount = 0) => {
             },
             forceSelection: false,
             // initial collapsed state on the widget card. defaults to expanded.
-            defaultExpanded: true
+            defaultExpanded: true,
+            showConnectedLayers: true
         },
         items: [],
         addedOptionalTargets: [],
