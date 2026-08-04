@@ -43,7 +43,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.28.4",
+    "@babel/core": "7.29.6",
     "@babel/preset-env": "7.28.3",
     "@babel/preset-react": "7.27.1",
     "@geosolutions/acorn-jsx": "4.0.2",
@@ -104,7 +104,7 @@
     "webpack": "5.104.1",
     "webpack-bundle-size-analyzer": "2.0.2",
     "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.2.5"
+    "webpack-dev-server": "5.2.6"
   },
   "dependencies": {
     "@babel/standalone": "7.23.9",
@@ -138,7 +138,7 @@
     "@znemz/cesium-navigation": "4.0.0",
     "ajv": "8.18.0",
     "assert": "2.0.0",
-    "axios": "0.32.0",
+    "axios": "0.33.0",
     "bootstrap": "3.4.1",
     "buffer": "6.0.3",
     "canvas-to-blob": "0.0.0",
