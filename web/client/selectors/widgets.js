@@ -335,8 +335,47 @@ export const dependenciesSelector = createShallowSelector(
     }), {})
 );
 
-export const getUpdatedLayout = createSelector(
+const hasMaximizedWidgets = (maximized = {}) => Array.isArray(maximized.widget)
+    ? maximized.widget.length > 0
+    : !!maximized.widget;
+
+/**
+ * Returns widgets without transient changes applied by maximization.
+ * Widget content is read from the current state, while dataGrid is restored
+ * from the snapshot captured when the widget was maximized.
+ */
+export const getWidgetsForSave = createSelector(
+    getFloatingWidgets,
+    getMaximizedState,
+    (widgets = [], maximized = {}) => {
+        if (!hasMaximizedWidgets(maximized) || !Array.isArray(widgets)) {
+            return widgets;
+        }
+        const maximizedWidgets = Array.isArray(maximized.widget)
+            ? maximized.widget
+            : [maximized.widget];
+        return widgets.map(widget => {
+            const maximizedWidget = maximizedWidgets.find(({ id } = {}) => id === widget.id);
+            return maximizedWidget?.dataGrid
+                ? { ...widget, dataGrid: { ...maximizedWidget.dataGrid } }
+                : widget;
+        });
+    }
+);
+
+/**
+ * Returns the normal layouts captured before maximization.
+ */
+export const getLayoutsForSave = createSelector(
     getFloatingWidgetsLayout,
+    getMaximizedState,
+    (layouts, maximized = {}) => hasMaximizedWidgets(maximized) && maximized.layouts !== undefined
+        ? maximized.layouts
+        : layouts
+);
+
+export const getUpdatedLayout = createSelector(
+    getLayoutsForSave,
     (layouts) => {
         const isLayoutArray = Array.isArray(layouts);
         return isLayoutArray
@@ -349,7 +388,7 @@ export const getUpdatedLayout = createSelector(
 
 export const filterLinkedWidgets = createSelector(
     getUpdatedLayout,
-    getFloatingWidgets,
+    getWidgetsForSave,
     (layouts, widgets = []) => {
         const isLayoutArray = Array.isArray(layouts);
         if (isLayoutArray) {
