@@ -10,7 +10,7 @@ import { isNil } from 'lodash';
 import { createSelector } from 'reselect';
 
 import { showConnectionsSelector, isDashboardEditing } from '../../selectors/dashboard';
-import { currentLocaleLanguageSelector } from '../../selectors/locale';
+import { currentLocaleLanguageSelector, currentLocaleSelector } from '../../selectors/locale';
 import {
     isLocalizedLayerStylesEnabledDashboardsSelector,
     localizedLayerStylesEnvSelector
@@ -44,13 +44,15 @@ export const wizardSelector = createSelector(
     getEditorSettings,
     getFloatingWidgets,
     isDashboardEditing,
-    (layer, layers, editorData, settings, widgets, dashBoardEditing) => ({
+    currentLocaleSelector,
+    (layer, layers, editorData, settings, widgets, dashBoardEditing, locale) => ({
         layer,
         layers,
         editorData,
         settings,
         widgets,
-        dashBoardEditing
+        dashBoardEditing,
+        locale
     })
 );
 export const dashboardSelector = createSelector(
