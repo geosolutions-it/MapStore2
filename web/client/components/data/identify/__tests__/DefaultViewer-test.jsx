@@ -8,6 +8,7 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 import DefaultViewer from '../DefaultViewer.jsx';
 import SwipeHeader from '../SwipeHeader';
 
@@ -182,6 +183,267 @@ describe('DefaultViewer', () => {
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(0);
+    });
+
+    it('renders compact shared tabs for multiple identify views', () => {
+        ReactDOM.render(
+            <DefaultViewer
+                requests={[{reqId: 'layer-1'}]}
+                responses={[{
+                    reqId: 'layer-1',
+                    viewResponses: {
+                        text: {
+                            response: 'Text view',
+                            queryParams: {info_format: 'text/plain'}
+                        },
+                        properties: {
+                            response: {features: [{id: 'feature-1'}]},
+                            queryParams: {info_format: 'application/json'}
+                        }
+                    },
+                    layerMetadata: {
+                        featureInfo: {
+                            views: [
+                                { id: 'text', title: 'Text', type: 'TEXT' },
+                                { id: 'properties', title: 'Properties', type: 'PROPERTIES' }
+                            ]
+                        }
+                    }
+                }]}/>,
+            document.getElementById("container")
+        );
+
+        const tabs = document.querySelectorAll('.ms-scrollable-tabs .nav > li > button');
+        expect(tabs.length).toBe(2);
+        expect(tabs[0].textContent).toBe('Text');
+        expect(tabs[1].textContent).toBe('Properties');
+        // an href would navigate away from the app
+        expect(document.querySelectorAll('.ms-scrollable-tabs .nav a').length).toBe(0);
+    });
+
+    it('labels a view without title with its type', () => {
+        ReactDOM.render(
+            <DefaultViewer
+                requests={[{reqId: 'layer-1'}]}
+                responses={[{
+                    reqId: 'layer-1',
+                    layer: {id: 'layer-1'},
+                    viewResponses: {
+                        text: {
+                            response: 'Text view content',
+                            queryParams: {info_format: 'text/plain'}
+                        },
+                        properties: {
+                            response: {features: [{id: 'feature-1', properties: {name: 'Feature 1'}}]},
+                            queryParams: {info_format: 'application/json'}
+                        }
+                    },
+                    layerMetadata: {
+                        title: 'a',
+                        featureInfo: {
+                            views: [
+                                { id: 'text', type: 'TEXT' },
+                                { id: 'properties', title: 'Custom title', type: 'PROPERTIES' }
+                            ]
+                        }
+                    }
+                }]}/>,
+            document.getElementById("container")
+        );
+
+        const tabs = document.querySelectorAll('.ms-scrollable-tabs .nav > li > button');
+        expect(tabs.length).toBe(2);
+        expect(tabs[0].textContent).toBe('layerProperties.textFormatTitle');
+        expect(tabs[1].textContent).toBe('Custom title');
+    });
+
+    it('switches the rendered response when a view tab is clicked', () => {
+        ReactDOM.render(
+            <DefaultViewer
+                requests={[{reqId: 'layer-1'}]}
+                responses={[{
+                    reqId: 'layer-1',
+                    viewResponses: {
+                        text: {
+                            response: 'Text view content',
+                            queryParams: {info_format: 'text/plain'}
+                        },
+                        properties: {
+                            response: {features: [{id: 'feature-1', properties: {name: 'Feature 1'}}]},
+                            queryParams: {info_format: 'application/json'}
+                        }
+                    },
+                    layerMetadata: {
+                        title: 'a',
+                        featureInfo: {
+                            views: [
+                                { id: 'text', title: 'Text', type: 'TEXT' },
+                                { id: 'properties', title: 'Properties', type: 'PROPERTIES' }
+                            ]
+                        }
+                    }
+                }]}/>,
+            document.getElementById("container")
+        );
+
+        expect(document.querySelector('.nav > li.active > button').textContent).toBe('Text');
+        expect(document.querySelectorAll('.mapstore-json-viewer').length).toBe(0);
+        expect(document.querySelector('.swipeable-view').textContent).toContain('Text view content');
+
+        const tabs = document.querySelectorAll('.ms-scrollable-tabs .nav > li > button');
+        TestUtils.Simulate.click(tabs[1]);
+
+        expect(document.querySelector('.nav > li.active > button').textContent).toBe('Properties');
+        expect(document.querySelectorAll('.mapstore-json-viewer').length).toBe(1);
+        expect(document.querySelector('.swipeable-view').textContent).toNotContain('Text view content');
+    });
+
+    it('keeps the layer navigation when an empty view is selected', () => {
+        const responses = [{
+            reqId: 'layer-1',
+            layer: {id: 'layer-1'},
+            viewResponses: {
+                properties: {
+                    response: {features: [{id: 'feature-1', properties: {name: 'Feature 1'}}]},
+                    queryParams: {info_format: 'application/json'}
+                },
+                text: {
+                    response: 'no features were found',
+                    queryParams: {info_format: 'text/plain'}
+                }
+            },
+            layerMetadata: {
+                title: 'a',
+                featureInfo: {
+                    views: [
+                        { id: 'properties', title: 'Properties', type: 'PROPERTIES' },
+                        { id: 'text', title: 'Text', type: 'TEXT' }
+                    ]
+                }
+            }
+        }, {
+            reqId: 'layer-2',
+            layer: {id: 'layer-2'},
+            response: 'Second layer',
+            layerMetadata: {title: 'b'}
+        }];
+        ReactDOM.render(
+            <DefaultViewer requests={[{reqId: 'layer-1'}, {reqId: 'layer-2'}]} responses={responses} header={SwipeHeader}/>,
+            document.getElementById("container")
+        );
+
+        expect(document.querySelectorAll('.ms-identify-swipe-header-arrow').length).toBe(4);
+
+        TestUtils.Simulate.click(document.querySelectorAll('.ms-scrollable-tabs .nav > li > button')[1]);
+
+        expect(document.querySelector('.nav > li.active > button').textContent).toBe('Text');
+        expect(document.querySelectorAll('.ms-identify-swipe-header-arrow').length).toBe(4);
+    });
+
+    it('keeps the selected view of a layer across identify requests', () => {
+        const views = [
+            { id: 'text', title: 'Text', type: 'TEXT' },
+            { id: 'properties', title: 'Properties', type: 'PROPERTIES' }
+        ];
+        const buildResponse = (reqId) => ({
+            reqId,
+            layer: {id: 'layer-1'},
+            viewResponses: {
+                text: {
+                    response: 'Text view content',
+                    queryParams: {info_format: 'text/plain'}
+                },
+                properties: {
+                    response: {features: [{id: 'feature-1', properties: {name: 'Feature 1'}}]},
+                    queryParams: {info_format: 'application/json'}
+                }
+            },
+            layerMetadata: {title: 'a', featureInfo: {views}}
+        });
+        const render = (reqId) => ReactDOM.render(
+            <DefaultViewer requests={[{reqId}]} responses={[buildResponse(reqId)]}/>,
+            document.getElementById("container")
+        );
+
+        render('req-1');
+        TestUtils.Simulate.click(document.querySelectorAll('.ms-scrollable-tabs .nav > li > button')[1]);
+        expect(document.querySelector('.nav > li.active > button').textContent).toBe('Properties');
+
+        // a new identify on the same layer produces a new reqId
+        render('req-2');
+        expect(document.querySelector('.nav > li.active > button').textContent).toBe('Properties');
+    });
+
+    it('selects the first identify view with content', () => {
+        ReactDOM.render(
+            <DefaultViewer
+                requests={[{reqId: 'layer-1'}]}
+                responses={[{
+                    reqId: 'layer-1',
+                    viewResponses: {
+                        text: {
+                            response: 'no features were found',
+                            queryParams: {info_format: 'text/plain'}
+                        },
+                        properties: {
+                            response: {features: [{id: 'feature-1', properties: {name: 'Feature 1'}}]},
+                            queryParams: {info_format: 'application/json'}
+                        }
+                    },
+                    layerMetadata: {
+                        title: 'a',
+                        featureInfo: {
+                            views: [
+                                { id: 'text', title: 'Text', type: 'TEXT' },
+                                { id: 'properties', title: 'Properties', type: 'PROPERTIES' }
+                            ]
+                        }
+                    }
+                }]}/>,
+            document.getElementById("container")
+        );
+
+        expect(document.querySelector('.nav > li.active > button').textContent).toBe('Properties');
+        expect(document.querySelectorAll('.mapstore-json-viewer').length).toBe(1);
+        expect(document.querySelectorAll('.alert-danger').length).toBe(0);
+        expect(document.querySelector('.swipeable-view').textContent).toNotContain('no features were found');
+    });
+
+    it('renders the empty message instead of the raw response of an empty identify view', () => {
+        ReactDOM.render(
+            <DefaultViewer
+                requests={[{reqId: 'layer-1'}, {reqId: 'layer-2'}]}
+                responses={[{
+                    reqId: 'layer-1',
+                    response: 'Text',
+                    layerMetadata: {title: 'a'}
+                }, {
+                    reqId: 'layer-2',
+                    viewResponses: {
+                        text: {
+                            response: 'no features were found',
+                            queryParams: {info_format: 'text/plain'}
+                        },
+                        html: {
+                            response: '<html><body></body></html>',
+                            queryParams: {info_format: 'text/html'}
+                        }
+                    },
+                    layerMetadata: {
+                        title: 'b',
+                        featureInfo: {
+                            views: [
+                                { id: 'text', title: 'Text', type: 'TEXT' },
+                                { id: 'html', title: 'Html', type: 'HTML' }
+                            ]
+                        }
+                    }
+                }]}/>,
+            document.getElementById("container")
+        );
+
+        expect(document.querySelectorAll('.alert-danger').length).toBe(1);
+        expect(document.querySelector('.swipeable-view').textContent).toNotContain('no features were found');
     });
 
     it('creates the DefaultViewer component with missing results', () => {

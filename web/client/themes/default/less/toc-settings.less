@@ -212,3 +212,67 @@
         align-items: center;
     }
 }
+
+.ms-feature-info-settings {
+    display: block;
+
+    .ms-feature-info-toolbar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding: 6px 15px;
+    }
+
+    .ms-feature-info-views {
+        padding: 0 15px;
+    }
+
+    .ms-feature-info-views-empty {
+        color: var(--ms-disabled-color);
+        padding: 15px 0;
+    }
+
+    .ms-feature-info-view {
+        align-items: center;
+        border: 1px solid var(--ms-main-border-color, @ms-main-border-color);
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+        padding: 6px 10px;
+
+        &.disabled {
+            opacity: 0.5;
+        }
+
+        .grab-handle {
+            align-items: center;
+            color: var(--ms-main-color, @ms-main-color);
+            cursor: move;
+            display: flex;
+            flex: 0 0 20px;
+            justify-content: center;
+
+            &.disabled {
+                color: var(--ms-disabled-color, @ms-disabled-color);
+                cursor: default;
+            }
+        }
+
+        .ms-feature-info-view-title {
+            flex: 4 1 0;
+        }
+
+        .ms-feature-info-view-type {
+            flex: 5 1 0;
+        }
+
+        .ms-feature-info-view-action {
+            flex: 0 0 @square-btn-size;
+        }
+
+        .ms-feature-info-view-edit[disabled] {
+            background-color: var(--ms-disabled-bg, @ms-disabled-bg);
+        }
+    }
+}
