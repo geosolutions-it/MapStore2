@@ -56,7 +56,7 @@ import { mouseOutSelector } from '../selectors/mousePosition';
 import { hideEmptyPopupSelector } from '../selectors/mapPopups';
 import {getBbox, getCurrentResolution} from '../utils/MapUtils';
 import { parseLayoutValue } from '../utils/LayoutUtils';
-import {defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
+import {defaultQueryableFilter, filterRequestParams, resolveIdentifyLayer} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
@@ -117,66 +117,70 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             // filtering a subset of layers
                 return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
             })))
-                .mergeMap(layer => {
+                .mergeMap(identifyLayer => {
                     let env = localizedLayerStylesEnvSelector(getState());
                     const identifyOptions = {...identifyOptionsSelector(getState()), env};
-                    const appParams = filterRequestParams(layer, includeOptions, excludeParams);
-                    const attachJSON = isHighlightEnabledSelector(getState());
-                    const itemId = itemIdSelector(getState());
-                    const reqId = uuidv1();
-                    const viewResponses$ = getFeatureInfoForViews(layer, identifyOptions, {
-                        params: appParams,
-                        requestOptions: {attachJSON, itemId},
-                        mapRequestParams: (request) => {
-                            let requestParams = request;
-                            // request override
-                            if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
-                                requestParams = {...requestParams, ...overrideParamsSelector(getState())[layer.name]};
-                            }
-                            if (overrideParams[layer.name]) {
-                                requestParams = {...requestParams, ...overrideParams[layer.name]};
-                            }
-                            return requestParams;
-                        }
-                    });
-                    if (viewResponses$) {
-                        return viewResponses$
-                            .map(({views, layerMetadata, viewResponses, features, featuresCrs, error}) => {
-                                if (error) {
-                                    return errorFeatureInfo(reqId, error);
+                    return Rx.Observable
+                        .defer(() => resolveIdentifyLayer(identifyLayer, identifyOptions))
+                        .mergeMap(layer => {
+                            const appParams = filterRequestParams(layer, includeOptions, excludeParams);
+                            const attachJSON = isHighlightEnabledSelector(getState());
+                            const itemId = itemIdSelector(getState());
+                            const reqId = uuidv1();
+                            const viewResponses$ = getFeatureInfoForViews(layer, identifyOptions, {
+                                params: appParams,
+                                requestOptions: {attachJSON, itemId},
+                                mapRequestParams: (request) => {
+                                    let requestParams = request;
+                                    // request override
+                                    if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
+                                        requestParams = {...requestParams, ...overrideParamsSelector(getState())[layer.name]};
+                                    }
+                                    if (overrideParams[layer.name]) {
+                                        requestParams = {...requestParams, ...overrideParams[layer.name]};
+                                    }
+                                    return requestParams;
                                 }
-                                return loadFeatureInfo(
-                                    reqId,
-                                    {
-                                        ...layerMetadata,
-                                        featureInfo: {
-                                            ...(layer.featureInfo || {}),
-                                            views
-                                        },
-                                        features,
-                                        featuresCrs,
-                                        isQueryJustOneLayer,
-                                        sidebarIsOpened,
-                                        featureBbox: (queryParamZoomOption?.overrideZoomLvl || queryParamZoomOption?.isCoordsProvided) ? null : bbox
-                                    },
-                                    viewResponses,
-                                    layer,
-                                    queryParamZoomOption
-                                );
-                            })
-                            .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e)))
-                            .concat(Rx.Observable.defer(() => {
-                                // update the layout only after the initial response
-                                // we don't need to trigger this for each query layer
-                                if (!layoutUpdated) {
-                                    layoutUpdated = true;
-                                    return Rx.Observable.of(forceUpdateMapLayout());
-                                }
-                                return Rx.Observable.empty();
-                            }))
-                            .startWith(newMapInfoRequest(reqId));
-                    }
-                    return Rx.Observable.of(forceUpdateMapLayout());
+                            });
+                            if (viewResponses$) {
+                                return viewResponses$
+                                    .map(({views, layerMetadata, viewResponses, features, featuresCrs, error}) => {
+                                        if (error) {
+                                            return errorFeatureInfo(reqId, error);
+                                        }
+                                        return loadFeatureInfo(
+                                            reqId,
+                                            {
+                                                ...layerMetadata,
+                                                featureInfo: {
+                                                    ...(layer.featureInfo || {}),
+                                                    views
+                                                },
+                                                features,
+                                                featuresCrs,
+                                                isQueryJustOneLayer,
+                                                sidebarIsOpened,
+                                                featureBbox: (queryParamZoomOption?.overrideZoomLvl || queryParamZoomOption?.isCoordsProvided) ? null : bbox
+                                            },
+                                            viewResponses,
+                                            layer,
+                                            queryParamZoomOption
+                                        );
+                                    })
+                                    .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e)))
+                                    .concat(Rx.Observable.defer(() => {
+                                        // update the layout only after the initial response
+                                        // we don't need to trigger this for each query layer
+                                        if (!layoutUpdated) {
+                                            layoutUpdated = true;
+                                            return Rx.Observable.of(forceUpdateMapLayout());
+                                        }
+                                        return Rx.Observable.empty();
+                                    }))
+                                    .startWith(newMapInfoRequest(reqId));
+                            }
+                            return Rx.Observable.of(forceUpdateMapLayout());
+                        });
                 });
             // NOTE: multiSelection is inside the event
             // TODO: move this flag in the application state

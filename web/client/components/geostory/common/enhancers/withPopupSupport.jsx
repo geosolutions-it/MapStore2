@@ -23,7 +23,8 @@ import { isInsideResolutionsLimits } from "../../../../utils/LayersUtils";
 import {
     defaultQueryableFilter,
     filterRequestParams,
-    getValidator
+    getValidator,
+    resolveIdentifyLayer
 } from "../../../../utils/MapInfoUtils";
 import {Observable} from "rxjs";
 import { getFeatureInfoForViews } from "../../../../api/identify";
@@ -83,47 +84,51 @@ const withIdentifyRequest  = mapPropsStream(props$ => {
                 });
             }
 
+            const identifyOptions = {
+                format: mapInfoFormat,
+                map,
+                point,
+                currentLocale: "en-US"
+            };
             return Observable.from(queryableLayers)
-                .mergeMap(layer => {
-                    const appParams = filterRequestParams(layer, includeOptions, excludeParams);
-                    const reqId = uuidv1();
-                    const viewResponses$ = getFeatureInfoForViews(layer, {
-                        format: mapInfoFormat,
-                        map,
-                        point,
-                        currentLocale: "en-US"
-                    }, { params: appParams });
-                    if (!viewResponses$) {
-                        return Observable.empty();
-                    }
-                    return viewResponses$
-                        .map(({views, layerMetadata, viewResponses, features, featuresCrs, primaryResponse, error}) => error
-                            ? ({ reqId, error, layer, layerMetadata })
-                            : ({
+                .mergeMap(identifyLayer => Observable
+                    .defer(() => resolveIdentifyLayer(identifyLayer, identifyOptions))
+                    .mergeMap(layer => {
+                        const appParams = filterRequestParams(layer, includeOptions, excludeParams);
+                        const reqId = uuidv1();
+                        const viewResponses$ = getFeatureInfoForViews(layer, identifyOptions, { params: appParams });
+                        if (!viewResponses$) {
+                            return Observable.empty();
+                        }
+                        return viewResponses$
+                            .map(({views, layerMetadata, viewResponses, features, featuresCrs, primaryResponse, error}) => error
+                                ? ({ reqId, error, layer, layerMetadata })
+                                : ({
+                                    reqId,
+                                    layer,
+                                    ...primaryResponse,
+                                    viewResponses,
+                                    layerMetadata: {
+                                        ...layerMetadata,
+                                        featureInfo: {
+                                            ...(layer.featureInfo || {}),
+                                            views
+                                        },
+                                        features,
+                                        featuresCrs
+                                    }
+                                })
+                            )
+                            .catch((e) => Observable.of({
                                 reqId,
-                                layer,
-                                ...primaryResponse,
-                                viewResponses,
-                                layerMetadata: {
-                                    ...layerMetadata,
-                                    featureInfo: {
-                                        ...(layer.featureInfo || {}),
-                                        views
-                                    },
-                                    features,
-                                    featuresCrs
-                                }
-                            })
-                        )
-                        .catch((e) => Observable.of({
-                            reqId,
-                            error: e.data || e.statusText || e.status
-                        }))
-                        .startWith(({
-                            start: true,
-                            reqId
-                        }));
-                }).scan(({requests, responses, validResponses}, action) => {
+                                error: e.data || e.statusText || e.status
+                            }))
+                            .startWith(({
+                                start: true,
+                                reqId
+                            }));
+                    }))
+                .scan(({requests, responses, validResponses}, action) => {
                     if (action.start) {
                         const {reqId} = action;
                         return {requests: requests.concat({ reqId }), responses, validResponses};
