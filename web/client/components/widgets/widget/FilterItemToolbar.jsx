@@ -44,10 +44,12 @@ const FilterItemToolbar = ({
     filterData,
     collapsed = false,
     showZoomButton = false,
-    zoomToMapNames = [],
     showCollapseToggle = false,
     showDisableToggle = false,
-    onClick
+    toolProps = {},
+    onToggleCollapse,
+    onToggleDisabled,
+    onZoomToFilterExtent
 }) => {
     if (!showCollapseToggle && !showDisableToggle) {
         return null;
@@ -61,19 +63,19 @@ const FilterItemToolbar = ({
             style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
             onClick={(e) => e.stopPropagation()}
         >
-            {showZoomButton && (
+            {showZoomButton && onZoomToFilterExtent && (
                 <ToolButton
                     glyph="zoom-to"
                     tooltipElement={
                         <Tooltip id={`filter-zoom-${filterData?.id}`}>
-                            <Message msgId="widgets.filterWidget.zoomToFilterExtent" msgParams={{ names: zoomToMapNames.length ? `: ${zoomToMapNames.join(', ')}` : ''}} />
+                            <Message msgId="widgets.filterWidget.zoomToFilterExtent" msgParams={{ names: toolProps?.zoomToMapNames?.length ? `: ${toolProps?.zoomToMapNames?.join(', ')}` : ''}} />
                         </Tooltip>
                     }
                     disabled={!enabled}
-                    onClick={onClick}
+                    onClick={onZoomToFilterExtent}
                 />
             )}
-            {showDisableToggle && (
+            {showDisableToggle && onToggleDisabled && (
                 <ToolButton
                     glyph=""
                     tooltipKey={`widgets.filterWidget.${enabled ? 'disableFilter' : 'enableFilter'}`}
@@ -82,18 +84,18 @@ const FilterItemToolbar = ({
                     <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                         <SwitchButton
                             checked={enabled}
-                            onChange={(checked) => onClick(!checked)}
+                            onChange={(checked) => onToggleDisabled(!checked)}
                             className="mapstore-switch-btn-xs ms-filter-disable-toggle"
                         />
                     </span>
                 </ToolButton>
             )}
-            {showCollapseToggle && (
+            {showCollapseToggle && onToggleCollapse && (
                 <ToolButton
                     glyph={collapsed ? 'next' : 'bottom'}
                     tooltipKey={`widgets.filterWidget.${collapsed ? 'expandFilter' : 'collapseFilter'}`}
                     tooltipId={`filter-collapse-${filterData?.id}`}
-                    onClick={onClick}
+                    onClick={onToggleCollapse}
                     className="ms-filter-collapse-toggle"
                 />
             )}
@@ -103,7 +105,10 @@ const FilterItemToolbar = ({
 
 FilterItemToolbar.propTypes = {
     filterData: PropTypes.object,
-    collapsed: PropTypes.bool,
+    showZoomButton: PropTypes.bool,
+    zoomToMapNames: PropTypes.array,
+    showCollapseToggle: PropTypes.bool,
+    showDisableToggle: PropTypes.bool,
     onToggleCollapse: PropTypes.func,
     onToggleDisabled: PropTypes.func,
     onZoomToFilterExtent: PropTypes.func

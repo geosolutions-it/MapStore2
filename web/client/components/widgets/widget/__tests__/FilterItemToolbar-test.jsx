@@ -35,7 +35,7 @@ describe('FilterItemToolbar component', () => {
             <FilterItemToolbar
                 showDisableToggle
                 filterData={filterDataFeatures}
-                onClick={() => { }}
+                onToggleDisabled={() => {}}
             />,
             container
         );
@@ -43,14 +43,14 @@ describe('FilterItemToolbar component', () => {
         expect(toggle).toExist();
     });
 
-    it('invokes onClick when the toggle switch is clicked', () => {
+    it('invokes onToggleDisabled when the toggle switch is clicked', () => {
         const container = document.getElementById('container');
         let clicked = false;
         ReactDOM.render(
             <FilterItemToolbar
                 showDisableToggle
                 filterData={filterDataFeatures}
-                onClick={() => { clicked = true; }}
+                onToggleDisabled={(disabled) => { clicked = disabled; }}
             />,
             container
         );
@@ -66,7 +66,7 @@ describe('FilterItemToolbar component', () => {
                 showCollapseToggle
                 filterData={filterDataFeatures}
                 collapsed={false}
-                onClick={() => {}}
+                onToggleCollapse={() => {}}
             />,
             container
         );
@@ -74,7 +74,7 @@ describe('FilterItemToolbar component', () => {
         expect(collapseBtn).toExist();
     });
 
-    it('invokes onClick when the collapse button is clicked', () => {
+    it('invokes onToggleCollapse when the collapse button is clicked', () => {
         const container = document.getElementById('container');
         let clicked = false;
         ReactDOM.render(
@@ -82,7 +82,7 @@ describe('FilterItemToolbar component', () => {
                 showCollapseToggle
                 filterData={filterDataFeatures}
                 collapsed={false}
-                onClick={() => { clicked = true; }}
+                onToggleCollapse={() => { clicked = true; }}
             />,
             container
         );
@@ -91,13 +91,15 @@ describe('FilterItemToolbar component', () => {
         expect(clicked).toBe(true);
     });
 
-    it('renders zoom button when there are zoomTo interactions in manual mode', () => {
+    it('renders zoom button when showZoomButton is true', () => {
         const container = document.getElementById('container');
         let zoomed = false;
         ReactDOM.render(
             <FilterItemToolbar
                 filterData={filterDataFeatures}
-                interactions={[{ plugged: true, targetType: 'applyZoomTo', configuration: { autoZoom: false } }]}
+                showZoomButton
+                showDisableToggle
+                onToggleDisabled={() => {}}
                 onZoomToFilterExtent={() => { zoomed = true; }}
             />,
             container
@@ -114,7 +116,9 @@ describe('FilterItemToolbar component', () => {
         ReactDOM.render(
             <FilterItemToolbar
                 filterData={{...filterDataFeatures, disabled: true}}
-                interactions={[{ plugged: true, targetType: 'applyZoomTo', configuration: { autoZoom: false } }]}
+                showZoomButton
+                showDisableToggle
+                onToggleDisabled={() => {}}
                 onZoomToFilterExtent={() => {}}
             />,
             container

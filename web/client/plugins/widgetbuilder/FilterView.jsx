@@ -250,6 +250,19 @@ const FilterView = ({
     );
     const handleToggleCollapse = useCallback(() => setIsCollapsed(prev => !prev), []);
 
+    const zoomToInteractions = useMemo(() => (interactions || [])
+        .filter(interaction =>
+            interaction?.plugged === true
+                && interaction?.targetType === TARGET_TYPES.APPLY_ZOOM_TO
+                && interaction?.configuration?.autoZoom !== true
+        ),
+    [interactions]);
+    const zoomToMapNames = useMemo(() => zoomToInteractions
+        .map(i => getWidgetByDependencyPath(i?.target?.nodePath, widgets)?.title)
+        .filter(Boolean),
+    [zoomToInteractions, widgets]);
+    const showZoomButton = zoomToInteractions.length > 0;
+
     useEffect(() => {
         if (typeof onSelectableItemsChange === 'function') {
             onSelectableItemsChange(selectableItems);
@@ -416,19 +429,6 @@ const FilterView = ({
     // No title means no row for the arrow, so force the filter open.
     const effectiveCollapsed = showTitle ? isCollapsed : false;
 
-    const zoomToInteractions = useMemo(() => (interactions || [])
-        .filter(interaction =>
-            interaction?.plugged === true
-                && interaction?.targetType === TARGET_TYPES.APPLY_ZOOM_TO
-                && interaction?.configuration?.autoZoom !== true
-        ),
-    [interactions]);
-    const zoomToMapNames = useMemo(() => zoomToInteractions
-        .map(i => getWidgetByDependencyPath(i?.target?.nodePath, widgets)?.title)
-        .filter(Boolean),
-    [zoomToInteractions, widgets]);
-    const showZoomButton = zoomToInteractions.length > 0;
-
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
@@ -448,7 +448,7 @@ const FilterView = ({
                 </div>
             )}
             <div className="ms-filter-selector-header">
-                <FilterItemToolbar collapsed={effectiveCollapsed} filterData={filterData} onClick={handleToggleCollapse} showCollapseToggle={showItemToolbar && showTitle}/>
+                <FilterItemToolbar collapsed={effectiveCollapsed} filterData={filterData} onToggleCollapse={handleToggleCollapse} showCollapseToggle={showItemToolbar && showTitle}/>
                 {showTitle
                     ? (
                         <span
@@ -543,7 +543,13 @@ const FilterView = ({
                             allowEmptySelection={!forceSelection}
                         />
                     )}
-                    <FilterItemToolbar filterData={filterData} onClick={onToggleDisabled} showDisableToggle={showItemToolbar} showZoomButton={showZoomButton} zoomToMapNames={zoomToMapNames}/>
+                    <FilterItemToolbar
+                        filterData={filterData}
+                        onToggleDisabled={onToggleDisabled}
+                        onZoomToFilterExtent={onZoomToFilterExtent}
+                        showDisableToggle={showItemToolbar}
+                        showZoomButton={showZoomButton}
+                        toolProps={{zoomToMapNames}}/>
                 </div>
             </div>
             {disableMapTimeSelection ? (
