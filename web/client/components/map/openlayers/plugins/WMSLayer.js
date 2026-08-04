@@ -62,17 +62,6 @@ const getRateLimitOptions = (options = {}) => ({
     msRateLimitKey: options.msRateLimitKey
 });
 
-const setImageError = (image) => {
-    if (typeof image.setState === 'function') {
-        image.setState(3);
-    } else {
-        image.state = 3;
-        if (typeof image.changed === 'function') {
-            image.changed();
-        }
-    }
-};
-
 const retryImageLoad = (image, src, options) => {
     if (typeof image.load === 'function' && !failTiles.has(src)) {
         rateLimitManager.wait(src, getRateLimitOptions(options)).then(() => image.load());
@@ -123,7 +112,7 @@ const loadFunction = (options, headers) => function(image, src) {
                     }
                 }
             }).catch(e => {
-                setImageError(image);
+                setErrorState(image);
                 failTiles.add(src);
                 console.error(e);
             });
@@ -146,8 +135,7 @@ const loadFunction = (options, headers) => function(image, src) {
                             throw new Error(response.dataText);
                         }
                     }).catch(errorMessage => {
-                        image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
-                        setImageError(image);          // set error state for tile and removed from the queue to prevent reloading loops
+                        setErrorState(image);          // set error state for tile and removed from the queue to prevent reloading loops
                         failTiles.add(src);            // indexing fail url tile to prevent reloading loops
                         console.error(errorMessage);   // show ogc exception in console for debugging
                     });
@@ -174,7 +162,7 @@ const loadFunction = (options, headers) => function(image, src) {
                                 retryImageLoad(image, src, options);
                                 return;
                             }
-                            setImageError(image);
+                            setErrorState(image);
                             failTiles.add(src);
                             console.error(errorMessage);
                         });
@@ -184,35 +172,6 @@ const loadFunction = (options, headers) => function(image, src) {
                 }
                 img.src = newSrc;
             }
-        }).catch(e => {
-            setErrorState(image);
-            failTiles.add(src);
-            console.error(e);
-        });
-    } else {
-        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
-            axios.get(newSrc, {
-                headers,
-                responseType: 'blob'
-            })
-                .then((response) => {
-                    return response.data.type === "text/xml"
-                        ? response.data.text().then(dataText => ({...response, dataText}))
-                        : response;
-                })
-                .then(response => {
-                    if (isValidResponse(response)) { // not contains OGC exception
-                        image.getImage().src = URL.createObjectURL(response.data);
-                    } else {
-                        throw new Error(response.dataText);
-                    }
-                }).catch(errorMessage => {
-                    setErrorState(image);         // set error state for tile and removed from the queue to prevent reloading loops
-                    failTiles.add(src);           // indexing fail url tile to prevent reloading loops
-                    console.error(errorMessage);  // show ogc exception in console for debugging
-                });
-        } else {
-            img.src = newSrc;
         }
     });
 };
