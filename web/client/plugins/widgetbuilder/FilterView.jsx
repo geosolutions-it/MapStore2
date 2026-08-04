@@ -27,8 +27,8 @@ import FilterSlider from '../../components/widgets/builder/wizard/filter/FilterS
 import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
-import { cleanPaths } from '../../utils/WidgetsUtils';
-import { isMapTimeTarget } from '../../utils/InteractionUtils';
+import { cleanPaths, getWidgetByDependencyPath } from '../../utils/WidgetsUtils';
+import { isMapTimeTarget, TARGET_TYPES } from '../../utils/InteractionUtils';
 
 const toIsoTime = (value) => {
     if (value === undefined || value === null || value === '') {
@@ -225,7 +225,9 @@ const FilterView = ({
     onSelectableItemsChange = () => {},
     fetchError = false,
     showItemToolbar = false,
-    onToggleDisabled
+    onToggleDisabled,
+    onZoomToFilterExtent,
+    widgets = []
 }) => {
     const layout = filterData?.layout ?? {};
     const Component = componentMap[layout.variant ?? 'checkbox'];
@@ -414,6 +416,19 @@ const FilterView = ({
     // No title means no row for the arrow, so force the filter open.
     const effectiveCollapsed = showTitle ? isCollapsed : false;
 
+    const zoomToInteractions = useMemo(() => (interactions || [])
+        .filter(interaction =>
+            interaction?.plugged === true
+                && interaction?.targetType === TARGET_TYPES.APPLY_ZOOM_TO
+                && interaction?.configuration?.autoZoom !== true
+        ),
+    [interactions]);
+    const zoomToMapNames = useMemo(() => zoomToInteractions
+        .map(i => getWidgetByDependencyPath(i?.target?.nodePath, widgets)?.title)
+        .filter(Boolean),
+    [zoomToInteractions, widgets]);
+    const showZoomButton = zoomToInteractions.length > 0;
+
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
@@ -528,7 +543,7 @@ const FilterView = ({
                             allowEmptySelection={!forceSelection}
                         />
                     )}
-                    <FilterItemToolbar filterData={filterData} onClick={onToggleDisabled} showDisableToggle={showItemToolbar} />
+                    <FilterItemToolbar filterData={filterData} onClick={onToggleDisabled} showDisableToggle={showItemToolbar} showZoomButton={showZoomButton} zoomToMapNames={zoomToMapNames}/>
                 </div>
             </div>
             {disableMapTimeSelection ? (
@@ -608,7 +623,8 @@ FilterView.propTypes = {
     currentTime: PropTypes.string,
     showItemToolbar: PropTypes.bool,
     onToggleDisabled: PropTypes.func,
-    hasMultipleFilters: PropTypes.bool
+    onZoomToFilterExtent: PropTypes.func,
+    widgets: PropTypes.array
 };
 FilterView.defaultProps = {};
 

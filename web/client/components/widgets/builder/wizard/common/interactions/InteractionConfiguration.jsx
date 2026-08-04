@@ -10,51 +10,12 @@ import FlexBox from '../../../../../layout/FlexBox';
 import { Glyphicon, Checkbox, OverlayTrigger, Popover } from 'react-bootstrap';
 import { CONFIGURATION_METADATA } from './interactionConstants';
 import Message from '../../../../../I18N/Message';
+import { getVisibleConfigurationKeys, isConfigurationDisabled } from './interactionHelpers';
 
-const matchesCondition = (condition = {}, context = {}) => {
-    return Object.keys(condition).every((field) => {
-        const rule = condition[field];
-        const value = context[field];
-
-        if (rule?.isEqual !== undefined) {
-            return value === rule.isEqual;
-        }
-
-        if (rule?.isNotEqual !== undefined) {
-            return value !== rule.isNotEqual;
-        }
-
-        return value === rule;
-    });
-};
-
-const isConfigurationVisible = (metadata, context) => {
-    if (!metadata) {
-        return false;
-    }
-    if (!metadata.visibleWhen) {
-        return true;
-    }
-    return matchesCondition(metadata.visibleWhen, context);
-};
-
-const isConfigurationDisabled = (metadata, context) => {
-    if (!metadata?.disabledWhen) {
-        return false;
-    }
-    return matchesCondition(metadata.disabledWhen, context);
-};
-
-const InteractionConfiguration = ({show, configuration, setConfiguration, setPlugged = () => {}, target, nodePath, configurationContext = {}}) => {
+const InteractionConfiguration = ({show, configuration, setConfiguration, setPlugged = () => {}, target, context = {}}) => {
     if (!show) return null;
     if (!configuration) return null;
-    const context = {
-        targetType: target?.targetType,
-        nodePath,
-        ...configurationContext
-    };
-    const visibleConfigurationKeys = Object.keys(configuration)
-        .filter(key => isConfigurationVisible(CONFIGURATION_METADATA[key], context));
+    const visibleConfigurationKeys = getVisibleConfigurationKeys(configuration, context);
     return (<div className="ms-interaction-configuration">
         {visibleConfigurationKeys.map((key) => {
             const configValue = configuration[key];

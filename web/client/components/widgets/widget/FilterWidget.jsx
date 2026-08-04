@@ -12,9 +12,9 @@ import { createStructuredSelector } from 'reselect';
 
 import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
-import { applyFilterWidgetInteractions } from '../../../actions/interactions';
+import { applyFilterWidgetInteractions, zoomToFilterExtent } from '../../../actions/interactions';
 import './filter-widget.less';
-import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget, inactiveInteractionIdsForWidgetSelector, getWidgetsByTarget } from '../../../selectors/widgets';
 import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
 import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
@@ -35,6 +35,7 @@ const FilterWidget = ({
     currentTime,
     timelineRangeEnabled,
     inactiveInteractionIds = [],
+    widgets = [],
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
     icons,
@@ -46,6 +47,7 @@ const FilterWidget = ({
     confirmDelete = false,
     onDelete = () => {},
     onApplyInteractions = () => {},
+    onZoomToFilterExtent = () => {},
     target = 'floating' // Default target container
 } = {}) => {
 
@@ -55,6 +57,10 @@ const FilterWidget = ({
         setTimeout(() => {
             onApplyInteractions(id, target, filterId);
         }, 0);
+    };
+
+    const handleZoomToFilterExtent = (filterId) => () => {
+        onZoomToFilterExtent(id, target, filterId);
     };
 
     // Handle selection change for a specific filter
@@ -119,8 +125,10 @@ const FilterWidget = ({
                                 syncCurrentTime={syncCurrentTime}
                                 timelineRangeEnabled={timelineRangeEnabled}
                                 onSelectionChange={handleSelectionChange(filter.id)}
+                                widgets={widgets}
                                 showItemToolbar // toolbar shown inside the widget, not in the builder preview
                                 onToggleDisabled={handleToggleDisabled(filter.id)}
+                                onZoomToFilterExtent={handleZoomToFilterExtent(filter.id)}
                             />
                         </div>);
                     })
@@ -158,8 +166,10 @@ FilterWidget.propTypes = {
     confirmDelete: PropTypes.bool,
     onDelete: PropTypes.func,
     onApplyInteractions: PropTypes.func,
+    onZoomToFilterExtent: PropTypes.func,
     timelineRangeEnabled: PropTypes.bool,
     inactiveInteractionIds: PropTypes.array,
+    widgets: PropTypes.array,
     target: PropTypes.string
 };
 
@@ -169,8 +179,10 @@ export default connect(createStructuredSelector({
     applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
     applyDimensionOutOfSyncForWidget: (state, ownProps) => getApplyDimensionOutOfSyncForFilterWidget(state, ownProps?.id),
     inactiveInteractionIds: (state, ownProps) => inactiveInteractionIdsForWidgetSelector(state, ownProps?.id),
+    widgets: (state, ownProps) => getWidgetsByTarget(state, ownProps?.target),
     currentTime: currentTimeSelector,
     timelineRangeEnabled: offsetEnabledSelector
 }), {
-    onApplyInteractions: applyFilterWidgetInteractions
+    onApplyInteractions: applyFilterWidgetInteractions,
+    onZoomToFilterExtent: zoomToFilterExtent
 })(FilterWidget);

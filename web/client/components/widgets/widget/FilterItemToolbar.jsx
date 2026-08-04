@@ -17,8 +17,8 @@ const tip = (id, msgId) => (
     <Tooltip id={id}><Message msgId={msgId} /></Tooltip>
 );
 
-const ToolButton = ({ glyph, tooltipKey, tooltipId, disabled, onClick, className = 'ms-filter-card-tool-btn', placement = 'top', children }) => (
-    <OverlayTrigger placement={placement} overlay={tip(tooltipId, tooltipKey)}>
+const ToolButton = ({ glyph, tooltipKey, tooltipElement, tooltipId, disabled, onClick, className = 'ms-filter-card-tool-btn', placement = 'top', children }) => (
+    <OverlayTrigger placement={placement} overlay={tooltipElement || tip(tooltipId, tooltipKey)}>
         {children ||
         (
             <Button
@@ -38,13 +38,16 @@ const ToolButton = ({ glyph, tooltipKey, tooltipId, disabled, onClick, className
  * Per-filter card toolbar shown in the FilterView header. Supports:
  * - collapse / expand the filter body
  * - enable / disable the filter (skipped from interaction CQL composition)
+ * - manual zoom to the filtered extent (only when a plugged zoom-to interaction is in manual mode)
  */
 const FilterItemToolbar = ({
     filterData,
     collapsed = false,
-    onClick,
+    showZoomButton = false,
+    zoomToMapNames = [],
     showCollapseToggle = false,
-    showDisableToggle = false
+    showDisableToggle = false,
+    onClick
 }) => {
     if (!showCollapseToggle && !showDisableToggle) {
         return null;
@@ -58,6 +61,18 @@ const FilterItemToolbar = ({
             style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
             onClick={(e) => e.stopPropagation()}
         >
+            {showZoomButton && (
+                <ToolButton
+                    glyph="zoom-to"
+                    tooltipElement={
+                        <Tooltip id={`filter-zoom-${filterData?.id}`}>
+                            <Message msgId="widgets.filterWidget.zoomToFilterExtent" msgParams={{ names: zoomToMapNames.length ? `: ${zoomToMapNames.join(', ')}` : ''}} />
+                        </Tooltip>
+                    }
+                    disabled={!enabled}
+                    onClick={onClick}
+                />
+            )}
             {showDisableToggle && (
                 <ToolButton
                     glyph=""
@@ -90,7 +105,8 @@ FilterItemToolbar.propTypes = {
     filterData: PropTypes.object,
     collapsed: PropTypes.bool,
     onToggleCollapse: PropTypes.func,
-    onToggleDisabled: PropTypes.func
+    onToggleDisabled: PropTypes.func,
+    onZoomToFilterExtent: PropTypes.func
 };
 
 export default FilterItemToolbar;

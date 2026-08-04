@@ -20,7 +20,8 @@ import tooltip from '../../../../misc/enhancers/tooltip';
 const FILTER_INTERACTION_TARGET_MSG_IDS = {
     [TARGET_TYPES.APPLY_FILTER]: 'widgets.filterWidget.applyFilter',
     [TARGET_TYPES.APPLY_STYLE]: 'widgets.filterWidget.applyStyle',
-    [TARGET_TYPES.APPLY_DIMENSION]: 'widgets.filterWidget.applyDimension'
+    [TARGET_TYPES.APPLY_DIMENSION]: 'widgets.filterWidget.applyDimension',
+    [TARGET_TYPES.APPLY_ZOOM_TO]: 'widgets.filterWidget.zoomTo'
 };
 const EMPTY_ARRAY = [];
 const TDropdownButton = tooltip(DropdownButton);
@@ -90,7 +91,7 @@ const FilterActionsTab = ({
         () =>
             isStyle
                 ? allTargetDescriptors.filter(t => t.targetType === TARGET_TYPES.APPLY_STYLE)
-                : allTargetDescriptors.filter(t => t.targetType === TARGET_TYPES.APPLY_FILTER),
+                : allTargetDescriptors.filter(t => t.targetType === TARGET_TYPES.APPLY_FILTER || t.targetType === TARGET_TYPES.APPLY_ZOOM_TO),
         [allTargetDescriptors, isStyle]
     );
 

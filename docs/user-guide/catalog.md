@@ -238,6 +238,8 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Single Tile* (only for the WMS service): if checked, the layers loaded from the involved catalog source are rendered as a single tile. For layers already loaded on the map, it is possible to disable this option through the [Layer Settings](layer-settings.md#display) tool as usual.
 
+* *Crop to projection extent*: If enabled, the layers loaded from the involved catalog source are cropped to the current map projection extent defined. For layers already loaded on the map, it is also possible to enable this option through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool.
+
 * *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser.
 
 * *Server Type*: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
@@ -467,8 +469,10 @@ In **General Settings** of a ArcGIS source type, it is possible to specify the s
     The tool capabilities currently available for layers from ArcGIS service are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
-    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#ifc-layer) options
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#arcgis-layer) options. For layers from the [ArcGIS Feature Service](https://developers.arcgis.com/rest/services-reference/enterprise/feature-service/), the user can also use the [Style](layer-settings.md#styling-for-arcgis-feature-service-layer) tool from the *Layer Settings* panel.
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+    * The [3D Navigation](navigation-toolbar.md#3d-navigation)
+    * The possibility of retrieving information from ArcGIS FeatureService layers using the [Identify Tool](navigation-toolbar.md#identify-tool)
 
 ### FlatGeobuf Catalog
 
@@ -490,7 +494,7 @@ In addition to the standard options, only for FGB catalog sources, through the *
     The tool capabilities currently available for FGB layers are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
-    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#cog-layer) options and the [Style](layer-settings.md#styling-for-cog-layer)
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#flatgeobuf-layer) options and the [Style](layer-settings.md#styling-for-flatgeobuf-layer)
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
     * The [3D Navigation](navigation-toolbar.md#3d-navigation)
     * The possibility of retrieving information from FGB layers using the [Identify Tool](navigation-toolbar.md#identify-tool)
