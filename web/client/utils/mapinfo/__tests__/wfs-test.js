@@ -123,6 +123,7 @@ describe("mapinfo wfs utils", () => {
             id: "layer-id",
             title: "Title",
             url: '/geoserver/wfs',
+            infoFormats: ['application/json', 'text/html'],
             fields: [{
                 name: "key",
                 type: "string",
@@ -159,6 +160,91 @@ describe("mapinfo wfs utils", () => {
                 featureInfo: undefined
             },
             url: '/geoserver/wfs'
+        });
+    });
+
+    it('should keep the remote workflow when supported formats are unknown', () => {
+        const layer = {
+            id: "layer-id",
+            title: "Title",
+            url: '/geoserver/wfs',
+            fields: [{
+                name: "key",
+                type: "string",
+                alias: "alias"
+            }]
+        };
+        const point = {
+            intersectedFeatures: [
+                {
+                    id: "layer-id",
+                    features: [
+                        {
+                            type: "Feature",
+                            id: 'feature.1',
+                            properties: { key: "value" },
+                            geometry: null
+                        }
+                    ]
+                }
+            ]
+        };
+        expect(wfs.buildRequest(layer, { point }, 'text/html')).toEqual({
+            request: {
+                features: [
+                    { type: 'Feature', id: 'feature.1', properties: { key: 'value' }, geometry: null }
+                ],
+                outputFormat: 'text/html'
+            },
+            metadata: {
+                title: 'Title',
+                regex: undefined,
+                fields: [ { name: 'key', type: 'string', alias: 'alias' } ],
+                viewer: undefined,
+                featureInfo: undefined
+            },
+            url: '/geoserver/wfs'
+        });
+    });
+
+    it('should use the client workflow when text/html is explicitly unsupported', () => {
+        const layer = {
+            id: "layer-id",
+            title: "Title",
+            url: '/geoserver/wfs',
+            infoFormats: ['application/json']
+        };
+        const point = {
+            intersectedFeatures: [
+                {
+                    id: "layer-id",
+                    features: [
+                        {
+                            type: "Feature",
+                            id: 'feature.1',
+                            properties: { key: "value" },
+                            geometry: null
+                        }
+                    ]
+                }
+            ]
+        };
+
+        expect(wfs.buildRequest(layer, { point }, 'text/html')).toEqual({
+            request: {
+                features: [
+                    { type: 'Feature', id: 'feature.1', properties: { key: 'value' }, geometry: null }
+                ],
+                outputFormat: 'application/json'
+            },
+            metadata: {
+                title: 'Title',
+                regex: undefined,
+                fields: undefined,
+                viewer: undefined,
+                featureInfo: undefined
+            },
+            url: 'client'
         });
     });
 

@@ -9,7 +9,7 @@
 import expect from 'expect';
 import {head} from 'lodash';
 import {
-    loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic,    getSupportedFormatsEpic
+    loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic, getSupportedFormatsEpic
 } from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
@@ -578,4 +578,3 @@ describe('config epics', () => {
         });
     });
 });
-
