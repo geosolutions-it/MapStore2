@@ -142,6 +142,9 @@ import proj4 from "proj4";
 
 export const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
 
+// id of the DOM container rendered by the Map plugin for the main map
+export const MAIN_MAP_CONTAINER_ID = 'map';
+
 /**
  * `ZOOM_TO_EXTENT_HOOK` hook takes 2 arguments:
  * - `extent`: array of the extent [minx, miny, maxx, maxy]
@@ -532,9 +535,11 @@ export function getRandomPointInCRS(crs) {
  * @param {string} sourceCRS the code of a projection
  * @param {string} targetCRS the code of a projection
  * @param {number} sourceResolution the resolution to convert
+ * @param {number[]} [anchorPoint] point in sourceCRS to anchor the conversion to. Falls back to a random point
+ *  in the source extent when omitted, for backwards compatibility.
  * @returns the converted resolution
  */
-export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
+export function convertResolution(sourceCRS, targetCRS, sourceResolution, anchorPoint) {
     const sourceProjection = getProjectionOL(sourceCRS);
     const targetProjection = getProjectionOL(targetCRS);
 
@@ -542,18 +547,49 @@ export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
         throw new Error(`Invalid CRS: ${sourceCRS} or ${targetCRS}`);
     }
 
-    // Get a random point in the extent of the source CRS
-    const randomPoint = getRandomPointInCRS(sourceCRS);
+    const point = anchorPoint || getRandomPointInCRS(sourceCRS);
 
-    // Transform the resolution
-    const transformedResolution = getPointResolution(
-        sourceProjection,
-        sourceResolution,
-        transform(randomPoint, sourceCRS, targetCRS),
-        targetProjection.getUnits()
-    );
+    // getPointResolution expects the point in the space of the projection passed as first argument,
+    // so `point` stays in sourceCRS: measuring the source resolution needs no target transform
+    const groundResolution = getPointResolution(sourceProjection, sourceResolution, point, 'm');
 
-    return { randomPoint, transformedResolution };
+    // ground meters covered by one targetCRS unit at the same location
+    let metersPerTargetUnit;
+    try {
+        const targetPoint = transform(point, sourceCRS, targetCRS);
+        if (targetPoint.every((value) => Number.isFinite(value))) {
+            metersPerTargetUnit = getPointResolution(targetProjection, 1, targetPoint, 'm');
+        }
+    } catch (e) {
+        metersPerTargetUnit = undefined;
+    }
+
+    const transformedResolution = metersPerTargetUnit > 0
+        ? groundResolution / metersPerTargetUnit
+        // targetCRS not reachable from this point: convert by units only, ignoring its local distortion
+        : getPointResolution(sourceProjection, sourceResolution, point, targetProjection.getUnits());
+
+    return { randomPoint: point, transformedResolution };
+}
+
+/**
+ * Convert a resolution between two CRSs through the meters-per-unit ratio of their units.
+ *
+ * This is the ratio the map view uses as well when it looks for the zoom level that keeps the
+ * current scale on a projection change: resolutions converted this way keep the same relation
+ * with the view resolution, which is what preserves layer visibility across a CRS switch.
+ * Converting through the local point resolution instead would be closer to the real size on the
+ * ground, but it would drift from the view by the local scale factor of the projection
+ * (1 / cos(lat) for Mercator, one full zoom level around 45 degrees of latitude).
+ *
+ * @param {string} sourceCRS the code of the source projection
+ * @param {string} targetCRS the code of the target projection
+ * @param {number} sourceResolution the resolution to convert, in sourceCRS units
+ * @returns {number} the resolution in targetCRS units
+ */
+export function convertResolutionByUnits(sourceCRS, targetCRS, sourceResolution) {
+    const metersPerCRSUnit = (code) => getMetersPerUnit(getUnits(code), 1);
+    return sourceResolution * metersPerCRSUnit(sourceCRS) / metersPerCRSUnit(targetCRS);
 }
 
 /**
@@ -564,10 +600,11 @@ export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
 export function getZoomFromResolution(targetResolution, resolutions = getResolutions()) {
     // compute the absolute difference for all resolutions
     // and store the idx as zoom
-    const diffs = resolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - targetResolution), zoom }));
+    const diffs = resolutions
+        .map((resolution, zoom) => ({ diff: Math.abs(resolution - targetResolution), zoom }))
+        .filter(({ diff }) => Number.isFinite(diff));
     // the minimum difference represents the nearest zoom to the target resolution
-    const { zoom } = minBy(diffs, 'diff');
-    return zoom;
+    return minBy(diffs, 'diff')?.zoom;
 }
 
 /**

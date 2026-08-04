@@ -6,6 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { TARGET_TYPES } from "../../../../../../utils/InteractionUtils";
+
+export const CONFIGURATION_RENDER_MODES = {
+    INLINE_BUTTON: "inline-button",
+    PANEL_CHECKBOX: "panel-checkbox"
+};
+
 // Configuration metadata for UI display.
 // The visibleWhen and disabledWhen conditions support context fields such as targetType,
 // nodePath and config-specific values passed by the caller.
@@ -42,11 +49,25 @@ export const CONFIGURATION_METADATA = {
                 isEqual: true
             }
         }
+    },
+    autoZoom: {
+        label: "widgets.filterWidget.autoZoomLabel",
+        renderAs: CONFIGURATION_RENDER_MODES.INLINE_BUTTON,
+        visibleWhen: {
+            targetType: {
+                isEqual: TARGET_TYPES.APPLY_ZOOM_TO
+            },
+            plugged: { isEqual: true }
+        },
+        infoMsgByTargetType: {
+            "default": "widgets.filterWidget.autoZoomInfo"
+        }
     }
 };
 
 // Default configuration structure (simple boolean values)
 export const DEFAULT_CONFIGURATION = {
     forcePlug: false,
-    twoWaySynchronization: false
+    twoWaySynchronization: false,
+    autoZoom: false
 };

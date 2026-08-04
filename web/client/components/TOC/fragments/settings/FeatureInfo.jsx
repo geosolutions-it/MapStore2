@@ -18,6 +18,8 @@ import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
 import { getDefaultInfoViewMode } from '../../../../utils/MapInfoUtils';
+import FeatureInfoRequestOptions from '../../../misc/FeatureInfoRequestOptions';
+import { isGeoServerLayer } from '../../../../utils/FeatureInfoRequestUtils';
 
 const supportedFormatRequests = {
     wms: getSupportedFormatWMS,
@@ -121,6 +123,14 @@ export default class extends React.Component {
             </div>
         ) : (
             <span>
+                {this.props.element.type === 'wms' ? (
+                    <div style={{ padding: "15px 15px 0 15px" }}>
+                        <FeatureInfoRequestOptions
+                            featureInfo={this.props.element.featureInfo || {}}
+                            showBuffer={isGeoServerLayer(this.props.element)}
+                            onChange={(featureInfo) => this.props.onChange("featureInfo", featureInfo)} />
+                    </div>
+                ) : null}
                 <Accordion
                     fillContainer
                     activePanel={this.props.element.featureInfo && this.props.element.featureInfo.format}

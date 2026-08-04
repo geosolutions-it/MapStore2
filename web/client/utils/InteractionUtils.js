@@ -4,7 +4,8 @@ import get from 'lodash/get';
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
     LAYER_STYLE: 'LAYER_STYLE',
-    LAYER_DIMENSION: 'LAYER_DIMENSION'
+    LAYER_DIMENSION: 'LAYER_DIMENSION',
+    ZOOM_TRIGGER: 'ZOOM_TRIGGER'
 };
 
 export const EVENTS = {
@@ -14,21 +15,24 @@ export const EVENTS = {
 export const TARGET_TYPES = {
     APPLY_FILTER: 'applyFilter',
     APPLY_STYLE: 'applyStyle',
-    APPLY_DIMENSION: 'applyDimension'
+    APPLY_DIMENSION: 'applyDimension',
+    APPLY_ZOOM_TO: 'applyZoomTo'
 };
 
 // Human-readable labels for target types
 export const TARGET_TYPE_LABELS = {
     [TARGET_TYPES.APPLY_FILTER]: 'Apply filter',
     [TARGET_TYPES.APPLY_STYLE]: 'Apply style',
-    [TARGET_TYPES.APPLY_DIMENSION]: 'Apply dimension'
+    [TARGET_TYPES.APPLY_DIMENSION]: 'Apply dimension',
+    [TARGET_TYPES.APPLY_ZOOM_TO]: 'Zoom to'
 };
 
 // Glyph icons for target types
 export const TARGET_TYPE_GLYPHS = {
     [TARGET_TYPES.APPLY_FILTER]: 'filter',
     [TARGET_TYPES.APPLY_STYLE]: 'style',
-    [TARGET_TYPES.APPLY_DIMENSION]: 'record'
+    [TARGET_TYPES.APPLY_DIMENSION]: 'record',
+    [TARGET_TYPES.APPLY_ZOOM_TO]: 'zoom-to'
 };
 
 /**
@@ -42,7 +46,8 @@ export const EVENT_TARGET_MAP = {
 export const TARGET_EVENT_DATA_TYPES = {
     [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER,
     [TARGET_TYPES.APPLY_STYLE]: DATATYPES.LAYER_STYLE,
-    [TARGET_TYPES.APPLY_DIMENSION]: DATATYPES.LAYER_DIMENSION
+    [TARGET_TYPES.APPLY_DIMENSION]: DATATYPES.LAYER_DIMENSION,
+    [TARGET_TYPES.APPLY_ZOOM_TO]: DATATYPES.ZOOM_TRIGGER
 };
 
 // Events available by widget type
@@ -94,6 +99,13 @@ export const WIDGET_TARGETS_BY_TYPE = {
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
+            constraints: {}
+        }
+    ],
+    map: [
+        {
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+            expectedDataType: DATATYPES.ZOOM_TRIGGER,
             constraints: {}
         }
     ]
@@ -310,6 +322,32 @@ function createMapTimeLeafNode(layer) {
     };
 }
 
+/**
+ * Creates the interaction target metadata for a "zoom to" map target.
+ * @returns {object} the zoom-to target metadata
+ */
+function createMapZoomToTargetMetadata() {
+    const [metadata] = WIDGET_TARGETS_BY_TYPE.map;
+    return { ...metadata };
+}
+
+/**
+ * Creates the "zoom to" leaf node for a map or dashboard widget.
+ * @returns {object} the zoom-to map leaf node
+ */
+function createMapZoomToLeafNode() {
+    return {
+        type: 'element',
+        id: TARGET_TYPES.APPLY_ZOOM_TO,
+        title: 'Zoom to',
+        icon: 'zoom-to',
+        nodePathMode: 'dot',
+        interactionMetadata: {
+            targets: [createMapZoomToTargetMetadata()]
+        }
+    };
+}
+
 function createLayerDimensionNodes(layer) {
     const dimensionNodes = [];
     if (hasTimeDimension(layer)) {
@@ -435,12 +473,13 @@ export function generateMapWidgetLayersTree(maps, options = {}) {
                 "1-layer",
                 "layers"
             );
+            const mapZoomToNode = createMapZoomToLeafNode();
             const baseNode = createBaseElementNode(map, '1-map');
             return {
                 ...baseNode,
                 type: "collection",
                 ...createBaseProperties(map.name || "No Title", "1-map", map.mapId),
-                children: [layersCollection]
+                children: [layersCollection, mapZoomToNode]
             };
         });
 
@@ -765,11 +804,12 @@ export function generateRootTree(widgets, mapLayers, options = {}) {
         createBaseCollectionNode("Layers", createLayerNodesForLayers(mapLayers, options), "1-layer", "layers")
     ] : [];
     const mapTimeNode = createMapTimeNode(mapLayers || [], options);
+    const mapZoomToNode = mapLayers?.length > 0 ? createMapZoomToLeafNode() : null;
 
     const widgetsCollection = createBaseCollectionNode("Widgets", widgetNodes, "widgets", "widgets");
     const collections = [widgetsCollection];
     if (mapLayersNodes.length > 0) {
-        const mapsCollection = createBaseCollectionNode("Map", [mapTimeNode, ...mapLayersNodes].filter(Boolean), "1-map", "map");
+        const mapsCollection = createBaseCollectionNode("Map", [mapTimeNode, ...mapLayersNodes, mapZoomToNode].filter(Boolean), "1-map", "map");
         collections.push(mapsCollection);
     }
 
@@ -865,12 +905,38 @@ export function filterTreeWithTarget(tree, target) {
     return cloneWithFilteredChildren(tree);
 }
 
+/**
+ * Promotes zoom-to to the Map node when it is the only remaining child.
+ * @param {object} node the tree node to process
+ * @returns {object} the tree with map zoom-to wrappers promoted
+ */
+export function promoteMapZoomToNodes(node) {
+    if (!node) {
+        return node;
+    }
+    if (node.type === 'collection'
+        && Array.isArray(node.children)
+        && node.children.length === 1
+        && node.children[0]?.id === TARGET_TYPES.APPLY_ZOOM_TO
+        && node.children[0]?.type === 'element') {
+        const zoomChild = node.children[0];
+        return { ...zoomChild, title: node.title, icon: node.icon };
+    }
+    if (Array.isArray(node.children)) {
+        return { ...node, children: node.children.map(promoteMapZoomToNodes) };
+    }
+    return node;
+}
+
 export function getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType) {
     const filteredTree = filterTreeWithTarget(interactionTree, target) || { children: [] };
     const targetTree = target?.targetType === TARGET_TYPES.APPLY_DIMENSION
         ? filterDimensionTreeByValueAttributeType(filteredTree, valueAttributeType)
         : filteredTree;
-    return detachSingleChildCollections(targetTree, ['widgets', 'traces', 'map', 'layers']) || { children: [] };
+    const detachedTree = detachSingleChildCollections(targetTree, ['widgets', 'traces', 'map', 'layers']) || { children: [] };
+    return target?.targetType === TARGET_TYPES.APPLY_ZOOM_TO
+        ? promoteMapZoomToNodes(detachedTree)
+        : detachedTree;
 }
 
 export function hasConnectableTargetNodes(interactionTree, target, valueAttributeType) {
@@ -911,6 +977,13 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
             glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_DIMENSION],
             expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_DIMENSION],
             constraints: {}
+        },
+        {
+            title: TARGET_TYPE_LABELS[TARGET_TYPES.APPLY_ZOOM_TO],
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO,
+            glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_ZOOM_TO],
+            expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_ZOOM_TO],
+            constraints: {}
         }
         ];
     }
@@ -922,7 +995,7 @@ export const FILTER_WIDGET_OPTIONAL_TARGET_TYPES = [TARGET_TYPES.APPLY_DIMENSION
 /**
  * Finds a node by its id in the tree and returns the node object.
  * @param {object} tree root metadata tree
- * @param {string} nodeId the id of the node to find
+ * @param {string} nodeId the id or path of the node to find
  * @returns {object|null} the found node object, or null if not found
  */
 export function findNodeById(tree, nodeId) {
@@ -931,7 +1004,7 @@ export function findNodeById(tree, nodeId) {
     }
 
     const search = (node) => {
-        if (node?.id === nodeId) {
+        if (node?.id === nodeId || node?.nodePath === nodeId) {
             return node;
         }
 
@@ -988,6 +1061,47 @@ export function isAnyLayerPath(nodePath) {
  */
 export function isMapTimeTarget(nodePath) {
     return !!nodePath && /(?:^|\.)map\.time$/.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to the main map's zoom-to field (map.applyZoomTo).
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isMapZoomToTarget(nodePath) {
+    const MAIN_MAP_ZOOM_REGEX = new RegExp(`^map\\.${TARGET_TYPES.APPLY_ZOOM_TO}$`);
+    return !!nodePath && MAIN_MAP_ZOOM_REGEX.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a dashboard map widget's zoom-to field
+ * (widgets[widgetId].maps[mapId].applyZoomTo).
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isWidgetMapZoomToTarget(nodePath) {
+    const DASHBOARD_MAP_ZOOM_REGEX = new RegExp(`\\.maps\\[[^\\]]+\\]\\.${TARGET_TYPES.APPLY_ZOOM_TO}$`);
+    return !!nodePath && DASHBOARD_MAP_ZOOM_REGEX.test(nodePath);
+}
+
+/**
+ * Returns true when the interaction target points to a zoom-to field, either main map or dashboard map widget.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isAnyZoomToTarget(nodePath) {
+    return isMapZoomToTarget(nodePath) || isWidgetMapZoomToTarget(nodePath);
+}
+
+/**
+ * Extracts the map id from an interaction target node path (widgets[widgetId].maps[mapId]...).
+ * @param {string} nodePath - The node path
+ * @returns {string|null} Map ID or null
+ */
+export function extractMapIdFromNodePath(nodePath) {
+    if (!nodePath) return null;
+    const match = nodePath.match(/\.maps\[([^\]]+)\]/);
+    return match ? match[1] : null;
 }
 
 /**
@@ -1131,3 +1245,45 @@ export const getConnectedActiveTargets = ({
                 : name;
         });
 };
+
+/**
+ * Resolves all plugged applyFilter interactions (same source filter) that target layers
+ * inside the same map as the given zoom-to interaction. Supports multiple connected layers
+ * @param {object} zoomInteraction - The plugged zoom-to interaction
+ * @param {array} siblingInteractions - All interactions from the same filter widget
+ * @returns {array} Array of matching applyFilter interactions
+ */
+export const findAllApplyFiltersForZoomTo = (zoomInteraction, siblingInteractions) => {
+    const applyFilterConnections = siblingInteractions.filter(i =>
+        i.targetType === TARGET_TYPES.APPLY_FILTER
+        && i.plugged === true
+        && i?.source?.nodePath === zoomInteraction?.source?.nodePath
+        && isAnyLayerPath(i?.target?.nodePath)
+    );
+
+    const zoomNodePath = zoomInteraction?.target?.nodePath;
+    if (isMapZoomToTarget(zoomNodePath)) {
+        return applyFilterConnections.filter(i => isMapLayerPath(i?.target?.nodePath));
+    }
+
+    const zoomMapId = extractMapIdFromNodePath(zoomNodePath);
+    return applyFilterConnections.filter(i => {
+        const layerNodePath = i?.target?.nodePath;
+        return !isMapLayerPath(layerNodePath) && extractMapIdFromNodePath(layerNodePath) === zoomMapId;
+    });
+};
+
+/**
+ * Unplugs zoom-to interactions left without an applyFilter sibling, keeping them configured so they
+ * can be plugged again once a layer connection is restored.
+ * @param {object[]} interactions - Interactions of a filter widget
+ * @returns {object[]} Interactions with orphaned zoom-to entries unplugged
+ */
+export const unplugOrphanZoomToInteractions = (interactions = []) =>
+    interactions.map(interaction =>
+        interaction.plugged
+        && interaction.targetType === TARGET_TYPES.APPLY_ZOOM_TO
+        && findAllApplyFiltersForZoomTo(interaction, interactions).length === 0
+            ? { ...interaction, plugged: false }
+            : interaction);
+
