@@ -2742,6 +2742,120 @@ describe('Openlayers layer', () => {
             }
         }, 20);
     });
+    it('releases the tile queue and retries after a long rate-limit wait', (done) => {
+        ConfigUtils.setConfigProp('rateLimit', {
+            baseDelay: 1,
+            maxDelay: 100,
+            maxTileWait: 0
+        });
+        const src = "http://sample.server/geoserver/wms?SERVICE=WMS&LAYERS=nurc:Long_Wait&BBOX=1,2,3,4";
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Long_Wait",
+            format: "image/png",
+            singleTile: false,
+            url: "http://sample.server/geoserver/wms"
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        let errorState;
+        let loadCalls = 0;
+        const image = {
+            getImage: () => ({ addEventListener: () => {} }),
+            setState: (state) => {
+                errorState = state;
+            },
+            load: () => {
+                loadCalls++;
+            }
+        };
+
+        rateLimitManager.register429(src, {'Retry-After': '0.05'});
+        layer.layer.getSource().getTileLoadFunction()(image, src);
+
+        expect(errorState).toBe(ImageState.ERROR);
+        expect(loadCalls).toBe(0);
+        setTimeout(() => {
+            try {
+                expect(loadCalls).toBe(1);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 100);
+    });
+    it('stops the native image fallback after its 429 retries are exhausted', (done) => {
+        ConfigUtils.setConfigProp('rateLimit', {
+            baseDelay: 0,
+            maxDelay: 0,
+            maxRetries: 0
+        });
+        const src = "http://sample.server/geoserver/wms?SERVICE=WMS&LAYERS=nurc:No_Retry_Loop&BBOX=1,2,3,4";
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:No_Retry_Loop",
+            format: "image/png",
+            singleTile: false,
+            url: "http://sample.server/geoserver/wms",
+            msRateLimitKey: "native-image-fallback"
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        let errorListener;
+        let errorState;
+        let loadCalls = 0;
+        let assignedSrc;
+        const imageElement = {
+            addEventListener: (event, listener) => {
+                if (event === 'error') {
+                    errorListener = listener;
+                }
+            },
+            set src(value) {
+                assignedSrc = value;
+            }
+        };
+        const image = {
+            getImage: () => imageElement,
+            setState: (state) => {
+                errorState = state;
+            },
+            load: () => {
+                loadCalls++;
+            }
+        };
+        mockAxios.onGet(src).reply(429, {});
+
+        layer.layer.getSource().getTileLoadFunction()(image, src);
+        setTimeout(() => {
+            try {
+                expect(errorListener).toBeA('function');
+                expect(assignedSrc).toBe(src);
+                errorListener();
+            } catch (e) {
+                done(e);
+                return;
+            }
+            setTimeout(() => {
+                try {
+                    expect(errorState).toBe(ImageState.ERROR);
+                    expect(loadCalls).toBe(0);
+                    expect(rateLimitManager.buckets['native-image-fallback'].consecutive429).toBe(1);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, 20);
+        }, 0);
+    });
     it('test crossOrigin is applied to single tile wms', () => {
         const options = {
             type: "wms",

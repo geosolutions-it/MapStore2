@@ -172,14 +172,16 @@ describe('Test the WMSUtil for Cesium', () => {
             .catch(done);
     });
 
-    it('createSingleTileImageryProvider returns a provider with rate-limit aware resource', () => {
-        const provider = createSingleTileImageryProvider({
+    it('createSingleTileImageryProvider uses the public provider API without rate-limit overrides', () => {
+        const options = {
             type: 'wms',
             url: '/geoserver/wms',
             name: 'workspace:layer'
-        });
+        };
+        const cesiumOptions = wmsToCesiumOptionsSingleTile(options);
+        const provider = createSingleTileImageryProvider(options);
 
         expect(provider.requestImage).toBeA('function');
-        expect(provider._resource.retryCallback).toBeA('function');
+        expect(cesiumOptions.url.retryCallback).toNotExist();
     });
 });

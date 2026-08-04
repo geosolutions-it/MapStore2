@@ -37,6 +37,19 @@ describe('RateLimitManager', () => {
         expect(manager.register429(url).delay).toBe(3000);
     });
 
+    it('caps Retry-After delays with maxDelay', () => {
+        const manager = new RateLimitManager({
+            getConfig: () => ({
+                maxDelay: 3000
+            }),
+            now: () => now
+        });
+        const url = 'https://example.com/geoserver/wms?LAYERS=workspace:layer';
+
+        expect(manager.register429(url, { 'Retry-After': '3600' }).delay).toBe(3000);
+        expect(manager.getWaitDelay(url)).toBe(3000);
+    });
+
     it('waits until the current bucket backoff has elapsed', (done) => {
         let currentTime = now;
         const manager = new RateLimitManager({
@@ -51,10 +64,11 @@ describe('RateLimitManager', () => {
             }
         });
 
-        manager.register429('https://example.com/wms');
-        manager.wait('https://example.com/wms')
+        const url = 'https://example.com/wms?LAYERS=workspace:layer';
+        manager.register429(url);
+        manager.wait(url)
             .then(() => {
-                expect(manager.getWaitDelay('https://example.com/wms')).toBe(0);
+                expect(manager.getWaitDelay(url)).toBe(0);
                 done();
             })
             .catch(done);
@@ -72,7 +86,7 @@ describe('RateLimitManager', () => {
                 scheduled.push({ resolve, delay });
             }
         });
-        const url = 'https://example.com/wms';
+        const url = 'https://example.com/wms?LAYERS=workspace:layer';
 
         manager.register429(url, { 'retry-after': '1' });
         let resolved = false;
@@ -105,7 +119,7 @@ describe('RateLimitManager', () => {
             .catch(done);
     });
 
-    it('resets consecutive failures after a successful response', () => {
+    it('decays consecutive failures after a successful response', () => {
         const manager = new RateLimitManager({
             getConfig: () => ({
                 baseDelay: 1000,
@@ -113,13 +127,37 @@ describe('RateLimitManager', () => {
             }),
             now: () => now
         });
-        const url = 'https://example.com/wms';
+        const url = 'https://example.com/wms?LAYERS=workspace:layer';
 
         manager.register429(url);
         manager.register429(url);
         manager.registerSuccess(url);
 
-        expect(manager.register429(url).delay).toBe(1000);
+        expect(manager.register429(url).delay).toBe(2000);
+    });
+
+    it('does not clear an active backoff when another request succeeds', () => {
+        const manager = new RateLimitManager({
+            getConfig: () => ({
+                baseDelay: 1000
+            }),
+            now: () => now
+        });
+        const url = 'https://example.com/wms?LAYERS=workspace:layer';
+
+        manager.register429(url);
+        manager.registerSuccess(url);
+
+        expect(manager.getWaitDelay(url)).toBe(1000);
+    });
+
+    it('does not create a default bucket for MapStore API requests', () => {
+        const manager = new RateLimitManager();
+        const apiUrl = '/mapstore/rest/geostore/data/1';
+
+        expect(manager.getBucketKey(apiUrl)).toNotExist();
+        expect(manager.register429(apiUrl).shouldRetry).toBe(false);
+        expect(Object.keys(manager.buckets).length).toBe(0);
     });
 
     it('normalizes bucket keys by origin, path and WMS layer', () => {
@@ -153,9 +191,16 @@ describe('RateLimitManager', () => {
             }),
             now: () => now
         });
-        const url = 'https://example.com/wms';
+        const url = 'https://example.com/wms?LAYERS=workspace:layer';
 
         expect(manager.register429(url).shouldRetry).toBe(true);
         expect(manager.register429(url).shouldRetry).toBe(false);
+    });
+
+    it('defaults to three retries and a two-second OpenLayers wait', () => {
+        const manager = new RateLimitManager();
+
+        expect(manager.getRetryAttempts()).toBe(3);
+        expect(manager.getMaxTileWait()).toBe(2000);
     });
 });

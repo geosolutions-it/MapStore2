@@ -12,8 +12,9 @@ const DEFAULT_CONFIG = {
     enabled: true,
     baseDelay: 1000,
     maxDelay: 60000,
-    maxRetries: null,
-    defaultBucket: 'origin',
+    maxRetries: 3,
+    maxTileWait: 2000,
+    defaultBucket: 'wmsLayer',
     bucketRules: []
 };
 
@@ -25,6 +26,10 @@ const normalizeConfig = (config = {}) => ({
     enabled: config.enabled !== false,
     baseDelay: Number.isFinite(config.baseDelay) ? config.baseDelay : DEFAULT_CONFIG.baseDelay,
     maxDelay: Number.isFinite(config.maxDelay) ? config.maxDelay : DEFAULT_CONFIG.maxDelay,
+    maxRetries: config.maxRetries === null || Number.isFinite(config.maxRetries)
+        ? config.maxRetries
+        : DEFAULT_CONFIG.maxRetries,
+    maxTileWait: Number.isFinite(config.maxTileWait) ? config.maxTileWait : DEFAULT_CONFIG.maxTileWait,
     bucketRules: Array.isArray(config.bucketRules) ? config.bucketRules : []
 });
 
@@ -156,7 +161,7 @@ export class RateLimitManager {
             const layers = normalizeLayers(getWMSLayersValue(parsedUrl, options));
             return layers
                 ? `${parsedUrl.origin}${parsedUrl.pathname}?LAYERS=${layers}`
-                : `${parsedUrl.origin}${parsedUrl.pathname}`;
+                : null;
         }
         return parsedUrl.origin;
     }
@@ -228,6 +233,12 @@ export class RateLimitManager {
             };
         }
         const bucket = this.getBucket(url, options);
+        if (!bucket) {
+            return {
+                shouldRetry: false,
+                delay: 0
+            };
+        }
         bucket.consecutive429 += 1;
 
         const retryAfter = options.retryAfter ?? getHeaderValue(headers, 'retry-after');
@@ -236,7 +247,10 @@ export class RateLimitManager {
             config.maxDelay,
             config.baseDelay * Math.pow(2, Math.max(0, bucket.consecutive429 - 1))
         );
-        const delay = Number.isFinite(retryAfterDelay) ? retryAfterDelay : exponentialDelay;
+        const delay = Math.min(
+            config.maxDelay,
+            Number.isFinite(retryAfterDelay) ? retryAfterDelay : exponentialDelay
+        );
         bucket.blockedUntil = Math.max(bucket.blockedUntil, this.now() + delay);
 
         const maxRetries = config.maxRetries;
@@ -250,18 +264,15 @@ export class RateLimitManager {
     }
 
     registerSuccess(url, options = {}) {
-        const bucket = this.getBucket(url, options);
+        const key = this.getBucketKey(url, options);
+        const bucket = key ? this.buckets[key] : null;
         if (bucket) {
-            bucket.consecutive429 = 0;
-            bucket.blockedUntil = 0;
-            const waiters = bucket.pendingWaiters.splice(0);
-            waiters.forEach((waiter) => {
-                if (!waiter.resolved) {
-                    waiter.resolved = true;
-                    waiter.resolve();
-                }
-            });
+            bucket.consecutive429 = Math.max(0, bucket.consecutive429 - 1);
         }
+    }
+
+    getMaxTileWait() {
+        return this.getEffectiveConfig().maxTileWait;
     }
 
     getRetryAttempts() {

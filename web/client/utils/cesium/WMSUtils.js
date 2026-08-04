@@ -197,8 +197,7 @@ export function wmsToCesiumOptionsSingleTile(options) {
         url: new Cesium.Resource({
             url,
             headers,
-            proxy: getProxy(options),
-            ...getRateLimitResourceOptions(options, url)
+            proxy: getProxy(options)
         }),
         tileWidth: width,
         tileHeight: height
@@ -206,34 +205,7 @@ export function wmsToCesiumOptionsSingleTile(options) {
 }
 
 export function createSingleTileImageryProvider(options) {
-    const provider = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(options));
-    const originalRequestImage = provider.requestImage.bind(provider);
-    provider.requestImage = (x, y, level, request) => {
-        if (provider._image || provider._hasError || !provider._resource) {
-            return originalRequestImage(x, y, level, request);
-        }
-        const resource = provider._resource.getDerivedResource({ request });
-        const imageRequest = resource.fetchImage({
-            preferBlob: true,
-            preferImageBitmap: true,
-            flipY: true
-        });
-        if (!imageRequest) {
-            return originalRequestImage(x, y, level, request);
-        }
-        return imageRequest
-            .then((image) => {
-                provider._image = image;
-                return image;
-            })
-            .catch((error) => {
-                if (error?.statusCode === 429) {
-                    return Promise.reject(error);
-                }
-                return originalRequestImage(x, y, level, request);
-            });
-    };
-    return provider;
+    return new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(options));
 }
 
 export default {

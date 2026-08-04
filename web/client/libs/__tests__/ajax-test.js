@@ -560,7 +560,8 @@ describe('Tests ajax library', () => {
             maxDelay: 60000
         });
         let requests = 0;
-        mockAxios.onGet('/rate-limited').reply(() => {
+        const url = '/geoserver/wms?LAYERS=workspace:layer';
+        mockAxios.onGet(url).reply(() => {
             requests++;
             if (requests === 1) {
                 return [429, {}, {'Retry-After': '0'}];
@@ -568,7 +569,7 @@ describe('Tests ajax library', () => {
             return [200, {ok: true}];
         });
 
-        axios.get('/rate-limited')
+        axios.get(url)
             .then((response) => {
                 expect(response.status).toBe(200);
                 expect(response.data).toEqual({ok: true});
@@ -584,7 +585,8 @@ describe('Tests ajax library', () => {
             maxDelay: 1000
         });
         let requests = 0;
-        mockAxios.onGet('/rate-limited-backoff').reply(() => {
+        const url = '/geoserver/wms?LAYERS=workspace:layer';
+        mockAxios.onGet(url).reply(() => {
             requests++;
             if (requests === 1) {
                 return [429, {}];
@@ -592,12 +594,50 @@ describe('Tests ajax library', () => {
             return [200, {}];
         });
 
-        axios.get('/rate-limited-backoff')
+        axios.get(url)
             .then(() => {
                 expect(requests).toBe(2);
                 done();
             })
             .catch(done);
+    });
+
+    it('stops retrying after the default maximum', (done) => {
+        ConfigUtils.setConfigProp("rateLimit", {
+            baseDelay: 0,
+            maxDelay: 0
+        });
+        let requests = 0;
+        const url = '/geoserver/wms?LAYERS=workspace:layer';
+        mockAxios.onGet(url).reply(() => {
+            requests++;
+            return [429, {}];
+        });
+
+        axios.get(url)
+            .then(() => done(new Error('Expected request to stop retrying')))
+            .catch((error) => {
+                expect(error.status).toBe(429);
+                expect(requests).toBe(4);
+                done();
+            });
+    });
+
+    it('does not rate-limit MapStore API requests by default', (done) => {
+        let requests = 0;
+        const url = '/mapstore/rest/geostore/data/1';
+        mockAxios.onGet(url).reply(() => {
+            requests++;
+            return [429, {}];
+        });
+
+        axios.get(url)
+            .then(() => done(new Error('Expected request to fail')))
+            .catch((error) => {
+                expect(error.status).toBe(429);
+                expect(requests).toBe(1);
+                done();
+            });
     });
 
     it('preserves original URL for rate-limit bucketing when proxy rewrites the request', (done) => {

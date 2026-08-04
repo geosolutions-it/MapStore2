@@ -62,15 +62,29 @@ const getRateLimitOptions = (options = {}) => ({
     msRateLimitKey: options.msRateLimitKey
 });
 
-const retryImageLoad = (image, src, options) => {
-    if (typeof image.load === 'function' && !failTiles.has(src)) {
-        rateLimitManager.wait(src, getRateLimitOptions(options)).then(() => image.load());
-    }
-};
+const getRateLimitRequestConfig = (options, src) => ({
+    _msRateLimitUrl: src,
+    ...getRateLimitOptions(options)
+});
 
-const isRateLimitError = (error) => error?.status === 429
-    || error?.response?.status === 429
-    || error?.originalError?.response?.status === 429;
+const loadWhenRateLimitAllows = (image, src, options, load) => {
+    const rateLimitOptions = getRateLimitOptions(options);
+    const waitDelay = rateLimitManager.getWaitDelay(src, rateLimitOptions);
+    if (waitDelay > rateLimitManager.getMaxTileWait()) {
+        // Release the shared OpenLayers tile queue during long backoffs. The tile
+        // remains retryable because it is deliberately not added to failTiles.
+        setErrorState(image);
+        if (typeof image.load === 'function') {
+            rateLimitManager.wait(src, rateLimitOptions).then(() => {
+                if (!failTiles.has(src)) {
+                    image.load();
+                }
+            });
+        }
+        return;
+    }
+    rateLimitManager.wait(src, rateLimitOptions).then(load);
+};
 
 const loadFunction = (options, headers) => function(image, src) {
 
@@ -79,7 +93,7 @@ const loadFunction = (options, headers) => function(image, src) {
         return;
     }
 
-    rateLimitManager.wait(src, getRateLimitOptions(options)).then(() => {
+    loadWhenRateLimitAllows(image, src, options, () => {
         // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
         let img = image.getImage();
         let newSrc = proxySource(options.forceProxy, src);
@@ -96,7 +110,7 @@ const loadFunction = (options, headers) => function(image, src) {
                     ...headers
                 },
                 responseType: 'arraybuffer',
-                _msRateLimitUrl: src
+                ...getRateLimitRequestConfig(options, src)
             }).then(response => {
                 if (response.status === 200) {
                     const uInt8Array = new Uint8Array(response.data);
@@ -121,7 +135,7 @@ const loadFunction = (options, headers) => function(image, src) {
                 axios.get(newSrc, {
                     headers,
                     responseType: 'blob',
-                    _msRateLimitUrl: src
+                    ...getRateLimitRequestConfig(options, src)
                 })
                     .then((response) => {
                         return response.data.type === "text/xml"
@@ -143,7 +157,7 @@ const loadFunction = (options, headers) => function(image, src) {
                 const onDirectImageError = () => {
                     axios.get(newSrc, {
                         responseType: 'blob',
-                        _msRateLimitUrl: src
+                        ...getRateLimitRequestConfig(options, src)
                     })
                         .then((response) => {
                             return response.data.type === "text/xml"
@@ -152,16 +166,12 @@ const loadFunction = (options, headers) => function(image, src) {
                         })
                         .then((response) => {
                             if (isValidResponse(response)) {
-                                retryImageLoad(image, src, options);
+                                image.getImage().src = URL.createObjectURL(response.data);
                             } else {
                                 throw new Error(response.dataText);
                             }
                         })
                         .catch((errorMessage) => {
-                            if (isRateLimitError(errorMessage)) {
-                                retryImageLoad(image, src, options);
-                                return;
-                            }
                             setErrorState(image);
                             failTiles.add(src);
                             console.error(errorMessage);

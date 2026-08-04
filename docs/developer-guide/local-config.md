@@ -69,16 +69,18 @@ This is the main structure:
     "enabled": true,
     // base exponential backoff delay in milliseconds when Retry-After is missing
     "baseDelay": 1000,
-    // maximum exponential backoff delay in milliseconds
+    // maximum delay in milliseconds, including values received in Retry-After
     "maxDelay": 60000,
-    // null means retry until success, cancellation, or a non-429 error
-    "maxRetries": null,
+    // maximum consecutive retries; null explicitly enables unlimited retries
+    "maxRetries": 3,
+    // maximum time an OpenLayers tile can occupy the loading queue while waiting
+    "maxTileWait": 2000,
     // default bucketing strategy: "origin", "path" or "wmsLayer"
-    "defaultBucket": "origin",
+    "defaultBucket": "wmsLayer",
     // optional per-server bucketing rules
     "bucketRules": [{
-      "urlPattern": ".*geoserver/wms.*",
-      "bucket": "wmsLayer"
+      "urlPattern": ".*tiles.example.org/.*",
+      "bucket": "path"
     }]
   },
   // flag for postponing mapstore 2 load time after theme
@@ -248,10 +250,11 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
   **Configuration options:**
   - `enabled` - Boolean to enable or disable adaptive throttling. Default is `true`.
   - `baseDelay` - First exponential backoff delay in milliseconds when `Retry-After` is missing. Default is `1000`.
-  - `maxDelay` - Maximum exponential backoff delay in milliseconds. Default is `60000`.
-  - `maxRetries` - Maximum number of consecutive retries per bucket. `null` retries until success, cancellation, or a non-429 error. Default is `null`.
-  - `defaultBucket` - Default throttling scope. Supported values are `origin`, `path`, and `wmsLayer`. Default is `origin`.
-  - `bucketRules` - Array of `{ "urlPattern": "...", "bucket": "..." }` rules used to override the default bucket for matching URLs. `wmsLayer` ignores tile-specific parameters such as `BBOX`, `WIDTH`, `HEIGHT`, `SRS`, and `CRS`.
+  - `maxDelay` - Maximum delay in milliseconds for both exponential backoff and `Retry-After`. Default is `60000`.
+  - `maxRetries` - Maximum number of consecutive retries per bucket. Default is `3`; set it explicitly to `null` to retry until success, cancellation, or a non-429 error.
+  - `maxTileWait` - Maximum time in milliseconds that an OpenLayers tile stays in the shared loading queue while waiting for a rate-limit bucket. For longer delays, the tile enters the error state to release the queue and is loaded again after the backoff. Default is `2000`.
+  - `defaultBucket` - Default throttling scope. Supported values are `origin`, `path`, and `wmsLayer`. Default is `wmsLayer`.
+  - `bucketRules` - Array of `{ "urlPattern": "...", "bucket": "..." }` rules used to override the default bucket for matching URLs. A `wmsLayer` key contains the URL origin, path, and normalized `LAYERS` value; it ignores every other query parameter. Requests without a layer name, including MapStore API requests, are not assigned to the default `wmsLayer` bucket. Use an explicit `origin` or `path` rule to opt other endpoints into throttling.
 
   Example:
 
@@ -260,17 +263,32 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
     "rateLimit": {
       "baseDelay": 1000,
       "maxDelay": 60000,
-      "defaultBucket": "origin",
+      "maxRetries": 3,
+      "maxTileWait": 2000,
+      "defaultBucket": "wmsLayer",
       "bucketRules": [
-        {
-          "urlPattern": ".*geoserver/wms.*",
-          "bucket": "wmsLayer"
-        },
         {
           "urlPattern": ".*tiles.example.org/.*",
           "bucket": "path"
         }
       ]
+    }
+  }
+  ```
+
+  WMS layers can override the matching `bucketRules` entry with these layer properties:
+
+  - `msRateLimitBucket` - Uses `origin`, `path`, or `wmsLayer` bucketing for the layer.
+  - `msRateLimitKey` - Uses an explicit bucket key. Layers with the same key share their backoff state; this takes precedence over `msRateLimitBucket` and `bucketRules`.
+
+  The properties can be set directly on a layer or inherited by all layers created from a catalog service through `layerOptions`:
+
+  ```json
+  {
+    "type": "wms",
+    "url": "https://example.com/geoserver/wms",
+    "layerOptions": {
+      "msRateLimitBucket": "wmsLayer"
     }
   }
   ```
