@@ -27,6 +27,10 @@
     "showMore": "Mostrar más...",
     "collapse": "Colapso",
     "expand": "Expandir",
+    "scrollableTabs": {
+      "scrollLeft": "Desplazar las pestañas a la izquierda",
+      "scrollRight": "Desplazar las pestañas a la derecha"
+    },
     "Links": "Enlaces",
     "Forbidden": "Prohibido",
     "height": "Altura",
@@ -109,6 +113,9 @@
       "elevation": "Elevación",
       "groupProperties": "Propiedades del grupo",
       "featureInfo": "Información de la capa",
+      "noIdentifyView": "No hay ninguna vista de identificación configurada, se usa el formato de la Configuración del mapa.",
+      "disableIdentify": "Desactivar identificación",
+      "addIdentifyView": "Añadir nueva vista de identificación",
       "featureInfoFormatLbl": "Identificar el formato de respuesta",
       "featureInfoRequestOptions": {
         "title": "Opciones de solicitud",
@@ -122,21 +129,13 @@
       "imageNotFound": "Es posible que esta imagen necesite una solicitud de información de función para renderizarse correctamente",
       "legenderror": "La leyenda no está disponible",
       "editCustomFormat": "Editar formato personalizado",
-      "exampleOfResponse": "Ejemplo",
       "changedSettings": "Configuraciones modificadas",
       "changedSettingsAlert": "Está cerrando el panel de configuraciones sin guardar sus cambios",
       "textFormatTitle": "TEXTO",
-      "textFormatDescription": "Muestra resultados de información de la capa como texto sin formato",
       "htmlFormatTitle": "HTML",
-      "htmlFormatDescription": "Muestra resultados de información de la capa como html",
       "propertiesFormatTitle": "PROPIEDADES",
-      "propertiesFormatDescription": "Muestra resultados de información de la capa como lista de propiedades",
       "templateFormatTitle": "PLANTILLA",
-      "templateFormatDescription": "Personalizar el formato de resultados de información de la capa",
-      "hideFormatTitle": "DESACTIVAR IDENTIFICAR",
-      "hideFormatDescription": "Deshabilite la información de la entidad para esta capa",
       "styleWarning": "El editor de estilo de capa para el tipo de geometría '{geometryType}' no es compatible.",
-      "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
       "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
       "heightOffset": "Desplazamiento de altura (m)",
       "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
@@ -241,9 +240,7 @@
         "label": "Habilitar leyenda dinámica",
         "info": "Si esta opción está habilitada, la leyenda se actualizará en función de la ventana del mapa y los filtros de capa"
       },
-      "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
       "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
-      "templatePreview": "Vista previa de la plantilla",
       "enableLocalizedLayerStyles": {
         "label": "Habilitar estilo localizado",
         "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"

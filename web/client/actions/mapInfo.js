@@ -43,15 +43,14 @@ export const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
 
 /**
  * Private
- * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
+ * @return a LOAD_FEATURE_INFO action containing the responses for all configured views
  */
-export function loadFeatureInfo(reqId, data, rParams, lMetaData, layer, queryParamZoomOption = null) {
+export function loadFeatureInfo(reqId, layerMetadata, viewResponses, layer, queryParamZoomOption = null) {
     return {
         type: LOAD_FEATURE_INFO,
-        data: data,
-        reqId: reqId,
-        requestParams: rParams,
-        layerMetadata: lMetaData,
+        reqId,
+        layerMetadata,
+        viewResponses,
         layer,
         queryParamZoomOption
     };
@@ -61,13 +60,11 @@ export function loadFeatureInfo(reqId, data, rParams, lMetaData, layer, queryPar
  * Private
  * @return a ERROR_FEATURE_INFO action with the error occurred
  */
-export function errorFeatureInfo(reqId, e, rParams, lMetaData) {
+export function errorFeatureInfo(reqId, e) {
     return {
         type: ERROR_FEATURE_INFO,
         error: e,
-        reqId: reqId,
-        requestParams: rParams,
-        layerMetadata: lMetaData
+        reqId
     };
 }
 
@@ -98,11 +95,10 @@ export function clearWarning() {
     };
 }
 
-export function newMapInfoRequest(reqId, reqConfig) {
+export function newMapInfoRequest(reqId) {
     return {
         type: NEW_MAPINFO_REQUEST,
-        reqId: reqId,
-        request: reqConfig
+        reqId
     };
 }
 
