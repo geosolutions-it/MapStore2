@@ -1304,7 +1304,7 @@
           "layersExcluded": "Solo i layer provenienti dalla stessa sorgente possono essere selezionati come layer di destinazione per questo filtro layer"
         }
       },
-      "changedFilter": "Filtero modificato",
+      "changedFilter": "Filtro modificato",
       "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
       "resetFilter": "Reset",
       "confirmReset": "Conferma",
