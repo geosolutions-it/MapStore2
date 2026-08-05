@@ -9,7 +9,7 @@
 import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, JSON_MIME_TYPE, GEOJSON_MIME_TYPE, validator } from './FeatureInfoUtils';
 
 import pointOnSurface from 'turf-point-on-surface';
-import { findIndex } from 'lodash';
+import { findIndex, omit } from 'lodash';
 import iconUrl from '../components/map/openlayers/img/marker-icon.png';
 import JSONViewer from '../components/data/identify/viewers/JSONViewer';
 import HTMLViewer from '../components/data/identify/viewers/HTMLViewer';
@@ -40,11 +40,24 @@ const INFO_VIEW_MODES = {
     TEMPLATE: "TEMPLATE"
 };
 
+const INFO_VIEW_MODE_TITLE_IDS = {
+    [INFO_VIEW_MODES.TEXT]: 'layerProperties.textFormatTitle',
+    [INFO_VIEW_MODES.PROPERTIES]: 'layerProperties.propertiesFormatTitle',
+    [INFO_VIEW_MODES.HTML]: 'layerProperties.htmlFormatTitle',
+    [INFO_VIEW_MODES.TEMPLATE]: 'layerProperties.templateFormatTitle'
+};
+
 /**
  * @returns {object} Map of views which are used to display feature info data (identify tools).
  */
 export const getInfoViewModes = () => {
     return {...INFO_VIEW_MODES};
+};
+/**
+ * @returns {object} Map of the message id describing every info view mode.
+ */
+export const getInfoViewModeTitleIds = () => {
+    return {...INFO_VIEW_MODE_TITLE_IDS};
 };
 /**
  * Given an `infoFormat` mime-type passed, it returns the default view mode (e.g. `PROPERTIES`, `HTML`, `TEXT`) for the format selected.
@@ -167,6 +180,50 @@ export const getLayerFeatureInfo = (layer) => {
     return layer && layer.featureInfo && {...layer.featureInfo} || {};
 };
 /**
+ * returns true if the layer has identify disabled.
+ * It supports both the legacy HIDDEN format and the new disabled flag.
+ * @param layer {object} layer object
+ * @return {boolean} true if identify is disabled for the layer
+ */
+export const isLayerFeatureInfoDisabled = (layer) => {
+    const featureInfo = getLayerFeatureInfo(layer);
+    return !!featureInfo.disabled || featureInfo.format === 'HIDDEN';
+};
+/**
+ * returns the normalized feature info views configured for a layer.
+ * Legacy single featureInfo format is exposed as a single view.
+ * @param layer {object} layer object
+ * @param options {object} resolver options
+ * @param options.defaultType {string} view type used when the layer has no saved configuration
+ * @param options.includeDisabled {boolean} includes configured views while editing a disabled layer
+ * @return {object[]} feature info views
+ */
+export const getLayerFeatureInfoViews = (layer, { defaultType, includeDisabled = false } = {}) => {
+    const featureInfo = getLayerFeatureInfo(layer);
+    if (isLayerFeatureInfoDisabled(layer) && !includeDisabled) {
+        return [];
+    }
+    if (Array.isArray(featureInfo.views) && featureInfo.views.length) {
+        return featureInfo.views.map((view, idx) => ({
+            ...view,
+            id: view.id || `view-${idx}`,
+            type: view.type || view.format || INFO_VIEW_MODES.PROPERTIES
+        }));
+    }
+    if (featureInfo.format && featureInfo.format !== 'HIDDEN') {
+        const { format, ...config } = featureInfo;
+        return [{
+            ...config,
+            id: 'default',
+            type: format
+        }];
+    }
+    return defaultType ? [{
+        id: 'default',
+        type: defaultType
+    }] : [];
+};
+/**
  * Extracts the proper mime time to use for the layer, given the passed props that determine the preferred type. This
  *  helps to convert, for instance, the mime-type set as default for the map (e.g. `application/json`) into the effective
  * mime type requested by the server (e.g. `application/geo+json`)
@@ -175,7 +232,7 @@ export const getLayerFeatureInfo = (layer) => {
  * @return {string} the info format value from layer, otherwise the info format in settings
  */
 export const getDefaultInfoFormatValueFromLayer = (layer, props) => {
-    const featInfoFormat = getLayerFeatureInfo(layer)?.format;
+    const featInfoFormat = getLayerFeatureInfoViews(layer)?.[0]?.type;
     if (featInfoFormat) {
         // When the user explicitly configures the format from the layer settings => feature info page, return directly from definition map.
         // Check if featInfoFormat is an actual view, otherwise retrieve infoFormat directly.
@@ -205,6 +262,10 @@ export const getLayerFeatureInfoViewer = (layer) => {
     if (layer.featureInfo
         && layer.featureInfo.viewer) {
         return layer.featureInfo.viewer;
+    }
+    const viewer = getLayerFeatureInfoViews(layer)?.[0]?.viewer;
+    if (viewer) {
+        return viewer;
     }
     return {};
 };
@@ -281,6 +342,52 @@ export const buildIdentifyRequest = (layer, options) => {
     return {};
 };
 /**
+ * Creates the minimum set of identify requests needed by the configured views.
+ * Views using the same request share its response (for example PROPERTIES and TEMPLATE).
+ * @param {object} layer the layer object
+ * @param {object} options the identify request options
+ * @return {object} effective views and deduplicated request configurations
+ */
+export const buildIdentifyRequestPlan = (layer, options) => {
+    const defaultType = getDefaultInfoViewMode(options?.format || MapInfoUtils.getDefaultInfoFormatValue()) || INFO_VIEW_MODES.PROPERTIES;
+    const views = getLayerFeatureInfoViews(layer, { defaultType });
+    if (isLayerFeatureInfoDisabled(layer)) {
+        return { views, requests: [] };
+    }
+    const requests = views.reduce((requestConfigs, view) => {
+        // View-specific settings must not override the view currently being planned.
+        const featureInfo = omit(layer.featureInfo || {}, ['format', 'template', 'viewer']);
+        const requestConfig = buildIdentifyRequest({
+            ...layer,
+            featureInfo: {
+                ...featureInfo,
+                views: [view]
+            }
+        }, options);
+        if (!requestConfig.url) {
+            return requestConfigs;
+        }
+        const requestKey = JSON.stringify({
+            url: requestConfig.url,
+            request: requestConfig.request
+        });
+        const existingRequest = requestConfigs.find(({ key }) => key === requestKey);
+        if (existingRequest) {
+            existingRequest.viewIds.push(view.id);
+            return requestConfigs;
+        }
+        return [
+            ...requestConfigs,
+            {
+                ...requestConfig,
+                key: requestKey,
+                viewIds: [view.id]
+            }
+        ];
+    }, []);
+    return { views, requests };
+};
+/**
  * Returns an Observable that emits the response when ready.
  * @param {object} layer the layer
  * @param {string} baseURL the URL for the request
@@ -291,6 +398,20 @@ export const getIdentifyFlow = (layer, baseURL, params) => {
         return MapInfoUtils.services[layer.type].getIdentifyFlow(layer, baseURL, params);
     }
     return null;
+};
+/**
+ * Resolves layer properties not persisted in the configuration, when the service supports it.
+ * It must be applied before `buildIdentifyRequest`.
+ * @param {object} layer the layer object
+ * @param {object} options the options for the request (see `buildIdentifyRequest`)
+ * @return {Promise} resolves with the layer to use for the identify request
+ */
+export const resolveIdentifyLayer = (layer, options = {}) => {
+    const service = MapInfoUtils.services[layer?.type];
+    if (!service?.resolveLayer) {
+        return Promise.resolve(layer);
+    }
+    return service.resolveLayer(layer, MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, options));
 };
 
 const deduceInfoFormat = (response) => {
@@ -319,11 +440,21 @@ const determineValidator = (response, format) => {
 };
 
 export const getValidator = (format) => {
+    const isValidResponse = (current) => {
+        const viewResponses = Object.values(current?.viewResponses || {});
+        if (viewResponses.length) {
+            return viewResponses.some((viewResponse) => {
+                const response = {...viewResponse, layerMetadata: current.layerMetadata};
+                return determineValidator(response, format).isValidResponse(response);
+            });
+        }
+        return determineValidator(current, format).isValidResponse(current);
+    };
     return {
         getValidResponses: (responses) => {
             return responses.filter((current) => {
                 if (current) {
-                    return determineValidator(current, format).isValidResponse(current);
+                    return isValidResponse(current);
                 }
                 return false;
             });
@@ -331,7 +462,7 @@ export const getValidator = (format) => {
         getNoValidResponses: (responses) => {
             return responses.filter((current) => {
                 if (current) {
-                    return !determineValidator(current, format).isValidResponse(current);
+                    return !isValidResponse(current);
                 }
                 return false;
             });
@@ -367,7 +498,8 @@ export const defaultQueryableFilter = (l) => {
     return l.visibility &&
         MapInfoUtils.services[l.type] &&
         (l.queryable === undefined || l.queryable) &&
-        l.group !== "background" && l?.featureInfo?.format !== 'HIDDEN'
+        l.group !== "background" &&
+        !MapInfoUtils.isLayerFeatureInfoDisabled(l)
     ;
 };
 export const services = {
@@ -446,8 +578,10 @@ MapInfoUtils = {
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfoViewer,
     getLayerFeatureInfo,
+    getLayerFeatureInfoViews,
+    isLayerFeatureInfoDisabled,
+    buildIdentifyRequestPlan,
     VIEWERS: {},
     registerRowViewer,
     getRowViewer
 };
-
