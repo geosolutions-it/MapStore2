@@ -137,6 +137,12 @@
       "templateFormatTitle": "PLANTILLA",
       "styleWarning": "El editor de estilo de capa para el tipo de geometría '{geometryType}' no es compatible.",
       "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
+      "propertiesView": {
+        "attributes": "Atributos",
+        "noAttributes": "El esquema de la capa no contiene atributos que se puedan mostrar.",
+        "attributesError": "No se pudieron cargar los atributos de la capa actual",
+        "retry": "Reintentar"
+      },
       "externalData": {
         "title": "DATOS EXTERNOS",
         "description": "Consultar atributos de una fuente WFS externa",

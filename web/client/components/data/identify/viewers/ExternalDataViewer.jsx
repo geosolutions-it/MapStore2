@@ -14,7 +14,8 @@ import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import { getFeature } from '../../../../api/WFS';
 import { interpolateExternalDataCQL } from '../../../../utils/mapinfo/ExternalDataUtils';
-import FeatureAttributes from './FeatureAttributes';
+import RowViewer from './row/RowViewer';
+import { getVisibleFeatureRow } from '../../../../utils/IdentifyUtils';
 import {
     createExternalDataCacheKey,
     deleteExternalDataCacheEntry,
@@ -245,12 +246,15 @@ const ExternalDataViewer = ({ response, layer }) => {
                     </Alert>
                 ) : null}
                 {result.status === 'success'
-                    ? result.features.map((feature, featureIndex) => (
-                        <FeatureAttributes
-                            key={feature.id ?? featureIndex}
-                            feature={feature}
-                            attributes={attributes}/>
-                    ))
+                    ? result.features.map((feature, featureIndex) => {
+                        const row = getVisibleFeatureRow(feature, attributes);
+                        return (
+                            <RowViewer
+                                key={feature.id ?? featureIndex}
+                                feature={row.feature}
+                                layer={{ fields: row.fields }}/>
+                        );
+                    })
                     : null}
             </section>
         );

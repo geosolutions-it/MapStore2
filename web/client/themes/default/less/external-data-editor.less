@@ -1,9 +1,26 @@
-// External Data configuration shown below a Feature Info view.
-.ms-external-data-editor {
+// Attribute configuration shared by Feature Info view editors.
+.ms-external-data-editor,
+.ms-properties-view-editor {
     border: 1px solid @ms2-color-shade-lighter;
     margin: -12px 0 12px;
     padding: 12px;
+}
 
+.ms-properties-view-editor {
+    .ms-properties-view-loading {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        min-height: 48px;
+    }
+
+    .layer-fields {
+        margin-top: 4px;
+    }
+}
+
+// External Data configuration shown below a Feature Info view.
+.ms-external-data-editor {
     .ms-external-data-url-row {
         display: flex;
         gap: 8px;

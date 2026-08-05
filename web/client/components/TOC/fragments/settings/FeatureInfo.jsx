@@ -29,6 +29,7 @@ import localizedProps from '../../../misc/enhancers/localizedProps';
 import FeatureInfoRequestOptions from '../../../misc/FeatureInfoRequestOptions';
 import { isGeoServerLayer } from '../../../../utils/FeatureInfoRequestUtils';
 import ExternalDataEditor from './ExternalDataEditor';
+import PropertiesEditor from './PropertiesEditor';
 import { EXTERNAL_DATA, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
@@ -298,7 +299,11 @@ export default class extends React.Component {
                 valueRenderer={this.renderTypeOption}
                 onChange={(selected) => {
                     this.updateView(view.id, { type: selected?.value });
-                    this.setState({ editingViewId: selected?.value === EXTERNAL_DATA ? view.id : null });
+                    this.setState({
+                        editingViewId: [EXTERNAL_DATA, 'PROPERTIES'].includes(selected?.value)
+                            ? view.id
+                            : null
+                    });
                 }}/>
         );
     }
@@ -312,14 +317,15 @@ export default class extends React.Component {
     }
 
     renderView = (view, views, index, isDisabled) => {
-        const canEdit = view.type === 'TEMPLATE' || view.type === EXTERNAL_DATA;
+        const canEdit = ['TEMPLATE', 'PROPERTIES', EXTERNAL_DATA].includes(view.type);
         return (
             <div key={view.id}>
                 <DraggableFeatureInfoView
                     index={index}
                     isDisabled={isDisabled}
                     isDraggable={!isDisabled && views.length > 1}
-                    isEditing={view.type === EXTERNAL_DATA && this.state.editingViewId === view.id}
+                    isEditing={[EXTERNAL_DATA, 'PROPERTIES'].includes(view.type)
+                        && this.state.editingViewId === view.id}
                     isInvalid={view.type === EXTERNAL_DATA && !!validateExternalDataConfiguration(view.externalData)}
                     view={view}
                     views={views}
@@ -331,13 +337,20 @@ export default class extends React.Component {
                     onUpdateView={this.updateView}
                     onMove={this.reorderView}
                     renderTypeSelect={(featureInfoView) => this.renderTypeSelect(featureInfoView, isDisabled)}/>
-                {/* External Data uses an inline editor; templates keep their existing editor below the list. */}
+                {/* Structured views use inline editors; templates keep their existing editor below the list. */}
                 {!isDisabled && this.state.editingViewId === view.id && view.type === EXTERNAL_DATA ? (
                     <ExternalDataEditor
                         sourceLayer={this.props.element}
                         currentLocale={this.props.currentLocale}
                         value={view.externalData}
                         onChange={(externalData) => this.updateView(view.id, { externalData })}/>
+                ) : null}
+                {!isDisabled && this.state.editingViewId === view.id && view.type === 'PROPERTIES' ? (
+                    <PropertiesEditor
+                        sourceLayer={this.props.element}
+                        currentLocale={this.props.currentLocale}
+                        value={view.attributes}
+                        onChange={(attributes) => this.updateView(view.id, { attributes })}/>
                 ) : null}
             </div>
         );

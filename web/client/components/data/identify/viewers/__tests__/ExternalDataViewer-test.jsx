@@ -15,7 +15,8 @@ import { IntlProvider } from 'react-intl';
 
 import axios from '../../../../../libs/ajax';
 import ExternalDataViewer from '../ExternalDataViewer';
-import FeatureAttributes from '../FeatureAttributes';
+import RowViewer from '../row/RowViewer';
+import { getVisibleFeatureRow } from '../../../../../utils/IdentifyUtils';
 import { clearExternalDataCacheForIdentifyRequests } from '../../../../../utils/mapinfo/ExternalDataCache';
 
 const layer = {
@@ -175,18 +176,22 @@ describe('ExternalDataViewer', () => {
     });
 
     it('renders external attribute aliases in the current locale', () => {
+        const row = getVisibleFeatureRow(
+            {properties: {label: 'Valore'}},
+            [{
+                name: 'label',
+                alias: {
+                    'default': 'External label',
+                    'it-IT': 'Etichetta esterna'
+                },
+                visible: true
+            }]
+        );
         ReactDOM.render(
             <IntlProvider locale="it-IT">
-                <FeatureAttributes
-                    feature={{properties: {label: 'Valore'}}}
-                    attributes={[{
-                        name: 'label',
-                        alias: {
-                            'default': 'External label',
-                            'it-IT': 'Etichetta esterna'
-                        },
-                        visible: true
-                    }]}/>
+                <RowViewer
+                    feature={row.feature}
+                    layer={{fields: row.fields}}/>
             </IntlProvider>,
             document.getElementById('container')
         );

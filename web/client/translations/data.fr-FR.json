@@ -138,6 +138,12 @@
       "styleWarning": "L'éditeur de style de calque pour le type de géométrie '{geometryType}' n'est pas pris en charge.",
       "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
       "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
+      "propertiesView": {
+        "attributes": "Attributs",
+        "noAttributes": "Le schéma de la couche ne contient aucun attribut affichable.",
+        "attributesError": "Impossible de charger les attributs de la couche actuelle",
+        "retry": "Réessayer"
+      },
       "externalData": {
         "title": "DONNÉES EXTERNES",
         "description": "Interroger les attributs d'une source WFS externe",

@@ -138,6 +138,12 @@
       "styleWarning": "Ebenenstil-Editor für Geometrietyp '{geometryType}' wird nicht unterstützt.",
       "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
       "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
+      "propertiesView": {
+        "attributes": "Attribute",
+        "noAttributes": "Das Layerschema enthält keine darstellbaren Attribute.",
+        "attributesError": "Attribute des aktuellen Layers konnten nicht geladen werden",
+        "retry": "Erneut versuchen"
+      },
       "externalData": {
         "title": "EXTERNE DATEN",
         "description": "Attribute aus einer externen WFS-Quelle abfragen",

@@ -138,6 +138,12 @@
       "styleWarning": "Layer style editor for geometry type '{geometryType}' is not supported.",
       "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
       "templateError": "There was an error applying the template to the information returned by the server, please check the template",
+      "propertiesView": {
+        "attributes": "Attributes",
+        "noAttributes": "The layer schema contains no displayable attributes.",
+        "attributesError": "Unable to load attributes from the current layer",
+        "retry": "Retry"
+      },
       "externalData": {
         "title": "EXTERNAL DATA",
         "description": "Query attributes from an external WFS source",

@@ -15,7 +15,8 @@ import { castArray, get } from 'lodash';
 import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import Fields from '../LayerFields/Fields';
-import FeatureAttributes from '../../../data/identify/viewers/FeatureAttributes';
+import RowViewer from '../../../data/identify/viewers/row/RowViewer';
+import { getVisibleFeatureRow } from '../../../../utils/IdentifyUtils';
 import { getCapabilities, describeFeatureType, getFeature, getFeatureURL } from '../../../../api/WFS';
 import { isGeometryType } from '../../../../utils/ogc/WFS/base';
 import {
@@ -92,12 +93,15 @@ export const ExternalDataSampleResponse = ({ response = {}, attributes = [] }) =
     }
     return (
         <div className="ms-external-data-viewer ms-external-data-sample-response">
-            {features.map((feature, index) => (
-                <FeatureAttributes
-                    key={feature.id ?? index}
-                    feature={feature}
-                    attributes={attributes}/>
-            ))}
+            {features.map((feature, index) => {
+                const row = getVisibleFeatureRow(feature, attributes);
+                return (
+                    <RowViewer
+                        key={feature.id ?? index}
+                        feature={row.feature}
+                        layer={{ fields: row.fields }}/>
+                );
+            })}
         </div>
     );
 };
