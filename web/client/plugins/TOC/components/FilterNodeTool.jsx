@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { isFilterEmpty } from '../../../utils/FilterUtils';
+import { isFilterEmpty, getFilterWidgetIds, isFilterFromWidgetOnly } from '../../../utils/FilterUtils';
 
 const FilterNodeTool = ({
     node,
@@ -19,11 +19,16 @@ const FilterNodeTool = ({
         return null;
     }
     const { disabled } = layerFilter || {};
+    const widgetIds = getFilterWidgetIds(layerFilter);
+    const isWidgetOnly = isFilterFromWidgetOnly(layerFilter);
+    const filterType = isWidgetOnly ? 'filterWidget' : widgetIds.length > 0 ? 'filterAndWidget' : 'filter';
+    const tooltipId = `toc.${filterType}Icon${disabled ? 'Disabled' : 'Enabled'}`;
+
     return (
         <ItemComponent
-            glyph="filter"
+            glyph={isWidgetOnly ? 'filter-widget' : 'filter'}
             active={!disabled}
-            tooltipId={!disabled ? 'toc.filterIconEnabled' : 'toc.filterIconDisabled'}
+            tooltipId={tooltipId}
             onClick={() => {
                 onChange({ layerFilter: { ...layerFilter, disabled: !layerFilter.disabled }});
             }}
