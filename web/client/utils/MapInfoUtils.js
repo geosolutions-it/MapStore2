@@ -483,7 +483,6 @@ export const getViewers = () => {
     return {
         [INFO_VIEW_MODES.TEMPLATE]: JSONViewer,
         [INFO_VIEW_MODES.PROPERTIES]: JSONViewer,
-        [INFO_VIEW_MODES.EXTERNAL_DATA]: JSONViewer,
         [INFO_VIEW_MODES.HTML]: HTMLViewer,
         [INFO_VIEW_MODES.TEXT]: TextViewer
     };
