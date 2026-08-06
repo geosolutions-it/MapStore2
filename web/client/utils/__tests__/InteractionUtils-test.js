@@ -18,7 +18,14 @@ import {
     isLayerDimensionTarget,
     isLayerTimeDimensionTarget,
     getDisplayInteractionTargetTree,
-    hasConnectableTargetNodes
+    hasConnectableTargetNodes,
+    createLayerConstraint,
+    getConnectedActiveTargets,
+    generateLayerMetadataTree,
+    promoteMapZoomToNodes,
+    TARGET_TYPES,
+    findAllApplyFiltersForZoomTo,
+    findNodeById
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -302,6 +309,12 @@ describe('InteractionUtils', () => {
             expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
             expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:table_layer');
         });
+
+        it('handles table widget without layer gracefully', () => {
+            const tree = generateTableWidgetTreeNode({ id: 'table-widget-no-layer', widgetType: 'table' });
+            expect(tree.type).toBe('element');
+            expect(tree.interactionMetadata.targets[0].constraints.layer).toBe(null);
+        });
     });
 
     describe('generateCounterWidgetTreeNode', () => {
@@ -313,6 +326,12 @@ describe('InteractionUtils', () => {
             expect(tree.interactionMetadata !== undefined).toBe(true);
             expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
             expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:counter_layer');
+        });
+
+        it('handles counter widget without layer gracefully', () => {
+            const tree = generateCounterWidgetTreeNode({ id: 'counter-widget-no-layer', widgetType: 'counter' });
+            expect(tree.type).toBe('element');
+            expect(tree.interactionMetadata.targets[0].constraints.layer).toBe(null);
         });
     });
 
@@ -763,6 +782,115 @@ describe('InteractionUtils', () => {
         });
     });
 
+    describe('map zoomTo node structure', () => {
+        const mapZoomLayers = [{
+            name: 'layer-1',
+            id: 'layer-1',
+            type: 'wms',
+            group: 'overlay'
+        }];
+
+        it('exposes the zoom-to target under the map collection in the root tree', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const mapCollection = rootTree.children[1];
+
+            expect(mapCollection.id).toBe('map');
+            const zoomNode = (mapCollection.children || []).find(child => child.id === TARGET_TYPES.APPLY_ZOOM_TO);
+            expect(zoomNode).toExist();
+            expect(zoomNode.type).toBe('element');
+            expect(zoomNode.nodePath).toBe('map.applyZoomTo');
+            expect(mapCollection.children[0].id).toBe('layers');
+        });
+
+        it('renders the zoomTo action directly on the Map node (no nested "Zoom to" child leaf)', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const display = getDisplayInteractionTargetTree(rootTree, { targetType: TARGET_TYPES.APPLY_ZOOM_TO });
+
+            expect(display.children.length).toBe(1);
+            const mapNode = display.children[0];
+            // The map wrapper collection is collapsed into the zoomTo element itself.
+            expect(mapNode.type).toBe('element');
+            expect(mapNode.title).toBe('Map');
+            expect(mapNode.nodePath).toBe('map.applyZoomTo');
+            expect(mapNode.interactionMetadata).toExist();
+            // No child leaf node should be rendered for the zoomTo action.
+            expect(mapNode.children).toNotExist();
+        });
+
+        it('keeps the map collection intact for non-zoomTo target types', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const display = getDisplayInteractionTargetTree(rootTree, { targetType: TARGET_TYPES.APPLY_FILTER });
+            const mapNode = display.children.find(child => child.id === 'map');
+
+            expect(mapNode).toExist();
+            expect(mapNode.type).toBe('collection');
+        });
+
+        it('generates zoomTo leaf node when map layers are present', () => {
+            const rootTree = generateRootTree([], mapZoomLayers);
+            const mapNode = rootTree.children.find(child => child.id === 'map');
+            const zoomToNode = mapNode.children.find(child => child.id === TARGET_TYPES.APPLY_ZOOM_TO);
+
+            expect(zoomToNode).toExist();
+            expect(zoomToNode.type).toBe('element');
+            expect(zoomToNode.interactionMetadata.targets[0].targetType).toBe(TARGET_TYPES.APPLY_ZOOM_TO);
+        });
+    });
+
+    describe('promoteMapZoomToNodes', () => {
+        it('collapses a map wrapper collection whose only child is the zoom-to element', () => {
+            const tree = {
+                type: 'collection',
+                id: 'root',
+                children: [{
+                    type: 'collection',
+                    id: 'map',
+                    title: 'Map',
+                    icon: '1-map',
+                    children: [{
+                        type: 'element',
+                        id: TARGET_TYPES.APPLY_ZOOM_TO,
+                        title: 'Zoom to',
+                        icon: 'zoom-to',
+                        nodePath: 'map.applyZoomTo',
+                        interactionMetadata: { targets: [{ targetType: TARGET_TYPES.APPLY_ZOOM_TO }] }
+                    }]
+                }]
+            };
+
+            const result = promoteMapZoomToNodes(tree);
+            const mapNode = result.children[0];
+
+            expect(mapNode.type).toBe('element');
+            expect(mapNode.id).toBe(TARGET_TYPES.APPLY_ZOOM_TO);
+            expect(mapNode.title).toBe('Map');
+            expect(mapNode.icon).toBe('1-map');
+            expect(mapNode.nodePath).toBe('map.applyZoomTo');
+            expect(mapNode.children).toNotExist();
+        });
+
+        it('leaves collections with additional children untouched', () => {
+            const tree = {
+                type: 'collection',
+                id: 'map',
+                title: 'Map',
+                children: [{
+                    type: 'element',
+                    id: 'zoomTo',
+                    interactionMetadata: { targets: [{ targetType: TARGET_TYPES.APPLY_ZOOM_TO }] }
+                }, {
+                    type: 'element',
+                    id: 'time'
+                }]
+            };
+
+            const result = promoteMapZoomToNodes(tree);
+
+            expect(result.type).toBe('collection');
+            expect(result.children.length).toBe(2);
+        });
+    });
+
     describe('addNodePathToTree', () => {
         it('should build paths for nested elements and collections', () => {
             const rootNode = {
@@ -825,4 +953,249 @@ describe('InteractionUtils', () => {
             expect(result.children[1].children[0].children[0].nodePath).toBe('map.layers[layer-1]');
         });
     });
+
+    describe('createLayerConstraint', () => {
+        it('returns layer constraint object with name and title from layer title', () => {
+            const layer = { name: 'gs:states', title: 'US States' };
+            const result = createLayerConstraint(layer);
+            expect(result).toEqual({ name: 'gs:states', title: 'US States' });
+        });
+
+        it('falls back to layer name as title when layer title is missing', () => {
+            const layer = { name: 'gs:states' };
+            const result = createLayerConstraint(layer);
+            expect(result).toEqual({ name: 'gs:states', title: 'gs:states' });
+        });
+
+        it('returns null when layer is falsy or undefined', () => {
+            expect(createLayerConstraint(undefined)).toBe(null);
+            expect(createLayerConstraint(null)).toBe(null);
+        });
+    });
+
+    describe('generateLayerMetadataTree', () => {
+        it('generates layer metadata tree with constraint layer when layer is provided', () => {
+            const layer = { name: 'layer-1', title: 'Layer One' };
+            const node = generateLayerMetadataTree(layer);
+            expect(node.type).toBe('element');
+            expect(node.interactionMetadata.targets[0].constraints.layer).toEqual({
+                name: 'layer-1',
+                title: 'Layer One'
+            });
+        });
+
+        it('handles undefined layer gracefully without throwing', () => {
+            const node = generateLayerMetadataTree(undefined);
+            expect(node.type).toBe('element');
+            expect(node.interactionMetadata.targets[0].constraints.layer).toBe(null);
+        });
+    });
+
+    describe('getConnectedActiveTargets', () => {
+        const sampleInteractions = [
+            {
+                id: 'int-1',
+                plugged: true,
+                target: {
+                    nodePath: 'widgets[map-1].layers[layer-1]',
+                    metaData: {
+                        constraints: {
+                            layer: { name: 'layer-1', title: 'Layer One Title' }
+                        }
+                    }
+                }
+            },
+            {
+                id: 'int-2',
+                plugged: true,
+                target: {
+                    nodePath: 'widgets[map-1].layers[layer-2]',
+                    metaData: {
+                        constraints: {
+                            layer: { name: 'layer-2', title: { 'en-US': 'Layer Two EN', "default": 'Layer Two Def' } }
+                        }
+                    }
+                }
+            },
+            {
+                id: 'int-3',
+                plugged: false,
+                target: {
+                    nodePath: 'widgets[map-1].layers[layer-3]',
+                    metaData: {
+                        constraints: {
+                            layer: { name: 'layer-3', title: 'Layer Three' }
+                        }
+                    }
+                }
+            }
+        ];
+
+        it('returns active target paths when asLayerTitles is false', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true,
+                'widgets[map-1].layers[layer-2]': false
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                asLayerTitles: false
+            });
+            expect(result).toEqual(['widgets[map-1].layers[layer-1]']);
+        });
+
+        it('returns layer titles when asLayerTitles is true', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true,
+                'widgets[map-1].layers[layer-2]': true
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                locale: 'en-US',
+                asLayerTitles: true
+            });
+            expect(result).toEqual(['Layer One Title', 'Layer Two EN']);
+        });
+
+        it('respects inactiveInteractionIds when withDisabledFilter is false', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true,
+                'widgets[map-1].layers[layer-2]': true
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                inactiveInteractionIds: ['int-1'],
+                asLayerTitles: false
+            });
+            expect(result).toEqual(['widgets[map-1].layers[layer-2]']);
+        });
+
+        it('includes inactive interactions when withDisabledFilter is true and targetsWithDisabledFilter matches', () => {
+            const activeTargets = {
+                'widgets[map-1].layers[layer-1]': true
+            };
+            const targetsWithDisabledFilter = {
+                'widgets[map-1].layers[layer-1]': true
+            };
+            const result = getConnectedActiveTargets({
+                interactions: sampleInteractions,
+                activeTargets,
+                inactiveInteractionIds: ['int-1'],
+                targetsWithDisabledFilter,
+                withDisabledFilter: true,
+                asLayerTitles: false
+            });
+            expect(result).toEqual(['widgets[map-1].layers[layer-1]']);
+        });
+    });
+    describe('findAllApplyFiltersForZoomTo', () => {
+        const sourcePath = 'widgets[filter-widget].filters[filter-1]';
+        const zoomMainMap = {
+            source: { nodePath: sourcePath },
+            target: { nodePath: 'map.applyZoomTo' },
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO
+        };
+        const zoomWidgetMap = {
+            source: { nodePath: sourcePath },
+            target: { nodePath: 'widgets[map-widget].maps[map-1].zoomTo' },
+            targetType: TARGET_TYPES.APPLY_ZOOM_TO
+        };
+
+        const siblingInteractions = [
+            {
+                id: '1',
+                plugged: true,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'map.layers[layer-1]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '2',
+                plugged: true,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'widgets[map-widget].maps[map-1].layers[layer-1]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '3',
+                plugged: false,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'map.layers[layer-2]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '4',
+                plugged: true,
+                source: { nodePath: 'widgets[other-filter].filters[f-1]' },
+                target: { nodePath: 'map.layers[layer-3]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            },
+            {
+                id: '5',
+                plugged: true,
+                source: { nodePath: sourcePath },
+                target: { nodePath: 'widgets[table-widget]' },
+                targetType: TARGET_TYPES.APPLY_FILTER
+            }
+        ];
+
+        it('finds plugged applyFilter layers for main map zoomTo', () => {
+            const result = findAllApplyFiltersForZoomTo(zoomMainMap, siblingInteractions);
+            expect(result.length).toBe(1);
+            expect(result[0].id).toBe('1');
+        });
+
+        it('finds plugged applyFilter layers for widget map zoomTo', () => {
+            const result = findAllApplyFiltersForZoomTo(zoomWidgetMap, siblingInteractions);
+            expect(result.length).toBe(1);
+            expect(result[0].id).toBe('2');
+        });
+    });
+
+    describe('findNodeById', () => {
+        it('returns null if tree or nodeId is empty', () => {
+            expect(findNodeById(null, 'id-1')).toBe(null);
+            expect(findNodeById({}, null)).toBe(null);
+        });
+
+        it('returns node matching id', () => {
+            const tree = {
+                id: 'root',
+                children: [
+                    { id: 'child-1' },
+                    { id: 'child-2' }
+                ]
+            };
+            const result = findNodeById(tree, 'child-2');
+            expect(result).toExist();
+            expect(result.id).toBe('child-2');
+        });
+
+        it('returns node matching nodePath', () => {
+            const tree = {
+                id: 'root',
+                children: [
+                    { id: '1', nodePath: 'map.layers[layer-1]' },
+                    { id: '2', nodePath: 'widgets[widget-1]' }
+                ]
+            };
+            const result = findNodeById(tree, 'widgets[widget-1]');
+            expect(result).toExist();
+            expect(result.id).toBe('2');
+        });
+
+        it('returns null if node is not found', () => {
+            const tree = {
+                id: 'root',
+                children: [
+                    { id: '1' }
+                ]
+            };
+            expect(findNodeById(tree, 'non-existent')).toBe(null);
+        });
+    });
+
 });
+

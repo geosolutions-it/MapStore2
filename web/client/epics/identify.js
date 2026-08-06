@@ -56,7 +56,7 @@ import { mouseOutSelector } from '../selectors/mousePosition';
 import { hideEmptyPopupSelector } from '../selectors/mapPopups';
 import {getBbox, getCurrentResolution} from '../utils/MapUtils';
 import { parseLayoutValue } from '../utils/LayoutUtils';
-import {buildIdentifyRequest, defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
+import {defaultQueryableFilter, filterRequestParams, resolveIdentifyLayer} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
@@ -64,7 +64,7 @@ const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f 
 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureGridOpen(state) && (gridEditingSelector(state) || gridGeometryQuickFilter(state));
 
-import {getFeatureInfo} from '../api/identify';
+import {getFeatureInfoForViews} from '../api/identify';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
@@ -110,52 +110,77 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                 "propertyName"
             ];
 
-            let firstResponseReturned = false;
+            let layoutUpdated = false;
             // 'isQueryJustOneLayer' if just one layer to query
             const isQueryJustOneLayer = queryableLayers.filter(l => filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true)?.length === 1;
             const out$ = Rx.Observable.from((queryableLayers.filter(l => {
             // filtering a subset of layers
                 return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
             })))
-                .mergeMap(layer => {
+                .mergeMap(identifyLayer => {
                     let env = localizedLayerStylesEnvSelector(getState());
-                    let { url, request, metadata } = buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
-                    // request override
-                    if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
-                        request = {...request, ...overrideParamsSelector(getState())[layer.name]};
-                    }
-                    if (overrideParams[layer.name]) {
-                        request = {...request, ...overrideParams[layer.name]};
-                    }
-                    if (url) {
-                        const basePath = url;
-                        const requestParams = request;
-                        const lMetaData = metadata;
-                        const appParams = filterRequestParams(layer, includeOptions, excludeParams);
-                        const attachJSON = isHighlightEnabledSelector(getState());
-                        const itemId = itemIdSelector(getState());
-                        const reqId = uuidv1();
-                        const param = { ...appParams, ...requestParams };
-                        return getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
-                            // this 0 delay is needed for vector/3dtiles layer because makes the response async and give time to the GUI to render
-                            // these type of layers don't perform requests to the server because the values are taken from the client map so the response were applied synchronously
-                            // this delay allows the panel to open and show the spinner for the first one
-                            // this delay mitigates the freezing of the app when there are a great amount of queried layers at the same time
-                            .delay(0)
-                            .map((response) =>loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs, isQueryJustOneLayer, sidebarIsOpened, featureBbox: (queryParamZoomOption?.overrideZoomLvl || queryParamZoomOption?.isCoordsProvided) ? null : bbox }, layer, queryParamZoomOption))
-                            .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e, requestParams, lMetaData)))
-                            .concat(Rx.Observable.defer(() => {
-                                // update the layout only after the initial response
-                                // we don't need to trigger this for each query layer
-                                if (!firstResponseReturned) {
-                                    firstResponseReturned = true;
-                                    return Rx.Observable.of(forceUpdateMapLayout());
+                    const identifyOptions = {...identifyOptionsSelector(getState()), env};
+                    return Rx.Observable
+                        .defer(() => resolveIdentifyLayer(identifyLayer, identifyOptions))
+                        .mergeMap(layer => {
+                            const appParams = filterRequestParams(layer, includeOptions, excludeParams);
+                            const attachJSON = isHighlightEnabledSelector(getState());
+                            const itemId = itemIdSelector(getState());
+                            const reqId = uuidv1();
+                            const viewResponses$ = getFeatureInfoForViews(layer, identifyOptions, {
+                                params: appParams,
+                                requestOptions: {attachJSON, itemId},
+                                mapRequestParams: (request) => {
+                                    let requestParams = request;
+                                    // request override
+                                    if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
+                                        requestParams = {...requestParams, ...overrideParamsSelector(getState())[layer.name]};
+                                    }
+                                    if (overrideParams[layer.name]) {
+                                        requestParams = {...requestParams, ...overrideParams[layer.name]};
+                                    }
+                                    return requestParams;
                                 }
-                                return Rx.Observable.empty();
-                            }))
-                            .startWith(newMapInfoRequest(reqId, param));
-                    }
-                    return Rx.Observable.of(forceUpdateMapLayout());
+                            });
+                            if (viewResponses$) {
+                                return viewResponses$
+                                    .map(({views, layerMetadata, viewResponses, features, featuresCrs, error}) => {
+                                        if (error) {
+                                            return errorFeatureInfo(reqId, error);
+                                        }
+                                        return loadFeatureInfo(
+                                            reqId,
+                                            {
+                                                ...layerMetadata,
+                                                featureInfo: {
+                                                    ...(layer.featureInfo || {}),
+                                                    views
+                                                },
+                                                features,
+                                                featuresCrs,
+                                                isQueryJustOneLayer,
+                                                sidebarIsOpened,
+                                                featureBbox: (queryParamZoomOption?.overrideZoomLvl || queryParamZoomOption?.isCoordsProvided) ? null : bbox
+                                            },
+                                            viewResponses,
+                                            layer,
+                                            queryParamZoomOption
+                                        );
+                                    })
+                                    .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e)))
+                                    .concat(Rx.Observable.defer(() => {
+                                        // update the layout only after the initial response
+                                        // we don't need to trigger this for each query layer
+                                        if (!layoutUpdated) {
+                                            layoutUpdated = true;
+                                            return Rx.Observable.of(forceUpdateMapLayout());
+                                        }
+                                        return Rx.Observable.empty();
+                                    }))
+                                    .startWith(newMapInfoRequest(reqId));
+                            }
+                            return Rx.Observable.of(forceUpdateMapLayout());
+                        });
                 });
             // NOTE: multiSelection is inside the event
             // TODO: move this flag in the application state
@@ -164,6 +189,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             }
             return out$.startWith(purgeMapInfoResults());
         });
+
 /**
  * if `clickLayer` is present, this means that `handleClickOnLayer` is true for the clicked layer, so the marker have to be hidden, because
  * it's managed by the layer itself (e.g. annotations). So the marker have to be hidden.
@@ -266,7 +292,9 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
                     const state = store.getState();
                     const hideIdentifyPopupIfNoResults = hideEmptyPopupSelector(state);
                     const hoverIdentifyActive = isMouseMoveIdentifyActiveSelector(state);
-                    const noResultFeatures = loadFeatInfoAction.type === LOAD_FEATURE_INFO && typeof loadFeatInfoAction?.data === "string" && loadFeatInfoAction?.data?.includes("no features were found");
+                    const noResultFeatures = loadFeatInfoAction.type === LOAD_FEATURE_INFO
+                        && Object.values(loadFeatInfoAction?.viewResponses || {})
+                            .every(({response}) => typeof response === "string" && response.includes("no features were found"));
                     // remove marker in case activated identify hover mode and no fetched results plus existing hideIdentifyPopupIfNoResults = true
                     if (noResultFeatures && hideIdentifyPopupIfNoResults && hoverIdentifyActive) {
                         return Rx.Observable.from([updateCenterToMarker('disabled'), hideMapinfoMarker()]);
