@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import DOMPurify from 'dompurify';
 import React, { useRef, Suspense, lazy, useState, useCallback, useEffect, useReducer } from 'react';
 import {
     ButtonGroup,
@@ -611,7 +612,7 @@ function MapViewsSupport({
                         </div>
                         {(!expanded && showDescription && selected?.description) && <div
                             className="ms-map-views-description">
-                            <div dangerouslySetInnerHTML={{ __html: selected.description }} />
+                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selected.description) }} />
                         </div>
                         }
                     </div>

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import DOMPurify from 'dompurify';
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
@@ -101,7 +102,7 @@ export default ({
                 </Row>
             </div>
             {detailsText && <div className="ms-details-preview-container">
-                {detailsText !== '' ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: detailsText }} />
+                {detailsText !== '' ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(detailsText) }} />
                     : <div className="ms-details-preview"> <Message msgId="maps.feedback.noDetailsAvailable" /></div>}
             </div>}
         </div>

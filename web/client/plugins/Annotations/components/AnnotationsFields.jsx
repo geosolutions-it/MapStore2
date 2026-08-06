@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+import DOMPurify from 'dompurify';
 import React, { useState } from 'react';
 import isFunction from 'lodash/isFunction';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from "react-bootstrap";
@@ -48,7 +49,7 @@ function AnnotationsFields({
                         {showLabel && <div className="ms-annotations-field-label">
                             <Message msgId={`annotations.field.${field.name}`} />
                         </div>}
-                        <div className="ms-annotations-field-value" dangerouslySetInnerHTML={{ __html: properties[field.name] }} />
+                        <div className="ms-annotations-field-value" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(properties[field.name]) }} />
                     </div>
                 );
             })}
@@ -107,7 +108,7 @@ function AnnotationsFields({
                                         }
                                     }}
                                 />
-                                : <div dangerouslySetInnerHTML={{ __html: properties[field.name] }} />}
+                                : <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(properties[field.name]) }} />}
                             {validator && !isValid && <HelpBlock><Message msgId={validateError} /></HelpBlock>}
                         </FormGroup>
                     );

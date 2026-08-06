@@ -89,11 +89,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
                 div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
                 document.body.appendChild(div);
             }
-            div.innerHTML = `<pre>
-                Position: ${latlng},
-                Heading: ${heading}
-                speed: ${speed}
-            </pre>`;
+            div.textContent = `Position: ${latlng}, Heading: ${heading} speed: ${speed}`;
         }
     },
     _setClasses: function(state) {

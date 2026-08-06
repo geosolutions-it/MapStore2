@@ -8,6 +8,7 @@
 
 import { isString } from 'lodash';
 
+import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { containsHTML } from '../../../../../utils/StringUtils';
@@ -47,7 +48,7 @@ class PropertiesViewer extends React.Component {
                         key={key}
                         style={this.props.listStyle}>
                         <div className="ms-properties-viewer-key"><LocalizedString value={label} /></div>
-                        {containsHTML(val) ? <div className="ms-properties-viewer-value" dangerouslySetInnerHTML={{__html: val}}/> : <div className="ms-properties-viewer-value">{val}</div>}
+                        {containsHTML(val) ? <div className="ms-properties-viewer-value" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(val)}}/> : <div className="ms-properties-viewer-value">{val}</div>}
                     </li>);
             });
     };

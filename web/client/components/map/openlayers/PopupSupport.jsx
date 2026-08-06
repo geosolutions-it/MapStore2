@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import DOMPurify from 'dompurify';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -66,7 +67,7 @@ export default class PopupSupport extends React.Component {
             if (!!PopupContent) {
                 El = React.isValidElement(PopupContent) && PopupContent || <PopupContent {...props}/>;
             } else if (content) {
-                El = Utils.isHTML(content) ? <div dangerouslySetInnerHTML={{__html: content}}/> : content;
+                El = Utils.isHTML(content) ? <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(content)}}/> : content;
             }
             return context && ReactDOM.createPortal(
                 <div className="map-popup-ol" key={id} onMouseUp={this.convertToClick}>
