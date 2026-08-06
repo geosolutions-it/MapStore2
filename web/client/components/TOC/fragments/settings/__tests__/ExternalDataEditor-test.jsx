@@ -262,6 +262,61 @@ describe('ExternalDataEditor', () => {
         }, 50);
     });
 
+    it('preserves alias and visibility when the same feature type is selected again', (done) => {
+        mockAxios.onGet().reply(({ url }) => {
+            const decodedUrl = decodeURIComponent(url);
+            if (decodedUrl.includes('request=GetCapabilities')) {
+                return [200, getCapabilitiesResponse('workspace:table', 'Table')];
+            }
+            return [200, {
+                featureTypes: [{
+                    properties: [
+                        { name: 'name', type: 'xsd:string', localType: 'string' },
+                        { name: 'geom', type: 'gml:Point', localType: 'Point' }
+                    ]
+                }]
+            }];
+        });
+        let value = {
+            url: '/external-data-reselect/wfs',
+            layerName: 'workspace:table',
+            cqlFilter: '',
+            attributes: [{ name: 'name', type: 'string', alias: 'Label', visible: false }]
+        };
+        const ControlledEditor = () => {
+            const [currentValue, setCurrentValue] = React.useState(value);
+            return (
+                <ExternalDataEditor
+                    value={currentValue}
+                    onChange={(nextValue) => {
+                        value = nextValue;
+                        setCurrentValue(nextValue);
+                    }}/>
+            );
+        };
+        ReactDOM.render(<ControlledEditor/>, document.getElementById('container'));
+
+        setTimeout(() => {
+            try {
+                const select = document.querySelector('.ms-external-data-layer-select');
+                TestUtils.Simulate.mouseDown(select.querySelector('.Select-arrow'), { button: 0 });
+                TestUtils.Simulate.mouseDown(document.querySelector('.Select-option'), { button: 0 });
+                setTimeout(() => {
+                    try {
+                        expect(value.attributes).toEqual([
+                            { name: 'name', type: 'string', alias: 'Label', visible: false }
+                        ]);
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
+                }, 50);
+            } catch (error) {
+                done(error);
+            }
+        }, 50);
+    });
+
     it('validates the complete source and external WFS request flow', (done) => {
         mockAxios.onGet().reply(({ url }) => {
             const decodedUrl = decodeURIComponent(url);

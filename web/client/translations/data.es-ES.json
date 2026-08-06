@@ -139,9 +139,7 @@
       "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
       "propertiesView": {
         "attributes": "Atributos",
-        "noAttributes": "El esquema de la capa no contiene atributos que se puedan mostrar.",
-        "attributesError": "No se pudieron cargar los atributos de la capa actual",
-        "retry": "Reintentar"
+        "noAttributes": "El esquema de la capa no contiene atributos que se puedan mostrar."
       },
       "externalData": {
         "title": "DATOS EXTERNOS",
@@ -152,7 +150,6 @@
         "cqlFilter": "Plantilla de filtro CQL",
         "cqlFilterHelp": "Use comillas simples alrededor de los marcadores de texto; deje sin comillas los marcadores numéricos y booleanos.",
         "attributes": "Atributos",
-        "attributesError": "No se pudieron cargar los atributos de la capa",
         "show": "Mostrar",
         "validate": "Validar",
         "validation": {

@@ -8,10 +8,10 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Button, ControlLabel, Glyphicon } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
-import LoadingSpinner from '../../../misc/LoadingSpinner';
+import useIsMounted from '../../../../hooks/useIsMounted';
 import Fields from '../LayerFields/Fields';
 import { describeFeatureType } from '../../../../observables/wfs';
 import { isGeometryType } from '../../../../utils/ogc/WFS/base';
@@ -44,17 +44,15 @@ const getAttributes = (fields = [], configuredAttributes = []) => {
  * It loads the current layer schema when field metadata is not already available.
  */
 const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, currentLocale }) => {
-    const [loadedFields, setLoadedFields] = useState([]);
-    const [loadKey, setLoadKey] = useState(0);
-    const [loadStatus, setLoadStatus] = useState('idle');
-    const fields = sourceLayer.fields || EMPTY_FIELDS;
-    const attributes = getAttributes(fields.length ? fields : loadedFields, value);
+    const [describedFields, setDescribedFields] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const isMounted = useIsMounted();
+    const layerFields = sourceLayer.fields || EMPTY_FIELDS;
+    const schemaFields = describedFields ?? (layerFields.length ? layerFields : EMPTY_FIELDS);
+    const attributes = getAttributes(schemaFields, value);
 
-    useEffect(() => {
-        if (fields.length || value.length) {
-            setLoadStatus('ready');
-            return () => {};
-        }
+    const loadAttributes = (merge) => {
         const layerName = sourceLayer.search?.name
             || sourceLayer.search?.typeName
             || sourceLayer.name;
@@ -62,51 +60,40 @@ const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, c
             || sourceLayer.search?.url
             || sourceLayer.url;
         if (!sourceUrl || !layerName) {
-            setLoadedFields([]);
-            setLoadStatus('error');
-            return () => {};
+            setError(true);
+            return;
         }
-        let cancelled = false;
-        setLoadedFields([]);
-        setLoadStatus('loading');
+        setError(false);
+        setLoading(true);
         describeFeatureType({
             layer: {
                 ...sourceLayer,
                 name: layerName
             }
         }).toPromise()
-            .then(({ data }) => {
-                if (!cancelled) {
-                    const nextFields = (data?.featureTypes?.[0]?.properties || [])
-                        .filter((field) => !isGeometryType(field))
-                        .map((field) => ({
-                            name: field.name,
-                            type: field.localType || field.type,
-                            alias: ''
-                        }));
-                    setLoadedFields(nextFields);
-                    setLoadStatus('ready');
-                }
-            })
-            .catch(() => {
-                if (!cancelled) {
-                    setLoadStatus('error');
-                }
-            });
-        return () => {
-            cancelled = true;
-        };
-    }, [
-        fields,
-        value.length,
-        loadKey,
-        sourceLayer.describeFeatureTypeURL,
-        sourceLayer.name,
-        sourceLayer.search?.name,
-        sourceLayer.search?.typeName,
-        sourceLayer.search?.url,
-        sourceLayer.url
-    ]);
+            .then(({ data }) => isMounted(() => {
+                const nextFields = (data?.featureTypes?.[0]?.properties || [])
+                    .filter((field) => !isGeometryType(field))
+                    .map((field) => ({
+                        name: field.name,
+                        type: field.localType || field.type,
+                        alias: ''
+                    }));
+                setLoading(false);
+                setDescribedFields(nextFields);
+                onChange(getAttributes(nextFields, merge ? value : []));
+            }))
+            .catch(() => isMounted(() => {
+                setLoading(false);
+                setError(true);
+            }));
+    };
+
+    useEffect(() => {
+        if (!layerFields.length && !value.length) {
+            loadAttributes(true);
+        }
+    }, []);
 
     const updateAttribute = (name, property, nextValue) => {
         onChange(attributes.map((attribute) => attribute.name === name
@@ -116,35 +103,19 @@ const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, c
 
     return (
         <div className="ms-properties-view-editor">
-            <ControlLabel><Message msgId="layerProperties.propertiesView.attributes" /></ControlLabel>
-            {loadStatus === 'loading' ? (
-                <div className="ms-properties-view-loading">
-                    <LoadingSpinner /> <Message msgId="loading" />
-                </div>
-            ) : null}
-            {loadStatus !== 'loading' && attributes.length ? (
-                <Fields
-                    fields={attributes}
-                    currentLocale={currentLocale}
-                    showToolbar={false}
-                    showVisibility
-                    onChange={updateAttribute}/>
-            ) : null}
-            {loadStatus === 'ready' && !attributes.length ? (
+            <Fields
+                title={<Message msgId="layerProperties.propertiesView.attributes" />}
+                fields={attributes}
+                currentLocale={currentLocale}
+                loading={loading}
+                error={error}
+                showVisibility
+                onChange={updateAttribute}
+                onLoadFields={() => loadAttributes(true)}
+                onClear={() => loadAttributes(false)}/>
+            {!loading && !error && !attributes.length ? (
                 <Alert bsStyle="info">
                     <Message msgId="layerProperties.propertiesView.noAttributes" />
-                </Alert>
-            ) : null}
-            {loadStatus === 'error' ? (
-                <Alert bsStyle="danger">
-                    <Message msgId="layerProperties.propertiesView.attributesError" />
-                    <Button
-                        className="pull-right"
-                        bsStyle="link"
-                        onClick={() => setLoadKey((key) => key + 1)}>
-                        <Glyphicon glyph="refresh" />&nbsp;
-                        <Message msgId="layerProperties.propertiesView.retry" />
-                    </Button>
                 </Alert>
             ) : null}
         </div>

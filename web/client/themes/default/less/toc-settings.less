@@ -169,6 +169,19 @@
         .layer-fields-toolbar {
             text-align: center;
             margin: 15px;
+
+            .layer-fields-title {
+                font-weight: bold;
+            }
+
+            &:has(.layer-fields-title) {
+                align-items: center;
+                display: flex;
+                gap: 8px;
+                justify-content: space-between;
+                margin: 5px;
+                text-align: left;
+            }
         }
         .layer-fields-row-header {
             height: 25px;

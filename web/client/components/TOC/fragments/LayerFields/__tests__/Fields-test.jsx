@@ -139,7 +139,7 @@ describe('TOC Settings - Fields component', () => {
         const rows = container.querySelectorAll('.ms2-border-layout-body .layer-fields-row');
         expect(rows.length).toBe(2);
     });
-    it('optionally renders visibility controls without the toolbar', () => {
+    it('optionally renders visibility controls', () => {
         const actions = {
             onChange: () => {}
         };
@@ -148,12 +148,11 @@ describe('TOC Settings - Fields component', () => {
             <Fields
                 fields={[...TEST_FIELDS, {name: 'hidden', type: 'string', visible: false}]}
                 onChange={actions.onChange}
-                showToolbar={false}
                 showVisibility/>,
             document.getElementById('container')
         );
         const container = document.getElementById('container');
-        expect(container.querySelector('.layer-fields-toolbar')).toNotExist();
+        expect(container.querySelector('.layer-fields-toolbar')).toExist();
         const visibilityInputs = container.querySelectorAll('.layer-fields-row .layer-field-visibility input');
         expect(visibilityInputs.length).toBe(3);
         expect(visibilityInputs[0].checked).toBe(true);

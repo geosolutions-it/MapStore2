@@ -43,13 +43,14 @@ const Fields = ({
     loading,
     error,
     currentLocale,
-    showToolbar = true,
+    title,
     showVisibility = false
 }) => {
     return (<BorderLayout
         className="layer-fields"
         header={<div key="row-header" className="layer-fields-header">
-            {showToolbar ? <div key="row-toolbar" className="layer-fields-toolbar">
+            <div key="row-toolbar" className="layer-fields-toolbar">
+                {title ? <div className="layer-fields-title">{title}</div> : null}
                 <Toolbar key="toolbar" btnDefaultProps={{ className: 'square-button', bsStyle: 'primary', disabled: loading }}
                     buttons={[{
                         glyph: 'refresh',
@@ -72,7 +73,7 @@ const Fields = ({
 
                     }]}
                 />
-            </div> : null}
+            </div>
             <div key="row-labels" className="layer-fields-row-header">
                 {showVisibility ? <FormGroup className="layer-field-visibility">
                     <ControlLabel><Message msgId="layerProperties.externalData.show"/></ControlLabel>
@@ -126,7 +127,7 @@ Fields.propTypes = {
     loading: PropTypes.bool,
     error: PropTypes.bool,
     currentLocale: PropTypes.string,
-    showToolbar: PropTypes.bool,
+    title: PropTypes.node,
     showVisibility: PropTypes.bool
 };
 

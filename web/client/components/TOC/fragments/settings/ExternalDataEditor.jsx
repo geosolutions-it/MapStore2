@@ -13,7 +13,7 @@ import Select from 'react-select';
 import { castArray, get } from 'lodash';
 
 import Message from '../../../I18N/Message';
-import LoadingSpinner from '../../../misc/LoadingSpinner';
+import Spinner from '../../../layout/Spinner';
 import Fields from '../LayerFields/Fields';
 import RowViewer from '../../../data/identify/viewers/row/RowViewer';
 import { getVisibleFeatureRow } from '../../../../utils/IdentifyUtils';
@@ -221,26 +221,16 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         requestCapabilities(url);
     };
 
-    const onLayerChange = (selected) => {
-        const layerName = selected?.value || '';
-        updateValue({ layerName, attributes: [] });
-        if (!layerName) {
-            updateState({ attributesStatus: 'empty' });
-            return;
-        }
+    const loadAttributes = (layerName, previousAttributes) => {
         const currentRequestId = describeRequestId.current + 1;
         describeRequestId.current = currentRequestId;
         updateState({ attributesStatus: 'loading' });
         describeFeatureType(valueRef.current.url, layerName)
             .then((description) => {
                 if (currentRequestId === describeRequestId.current) {
-                    const attributes = getExternalAttributes(
-                        description,
-                        valueRef.current.layerName === layerName ? valueRef.current.attributes : []
-                    );
                     updateValue({
                         layerName,
-                        attributes
+                        attributes: getExternalAttributes(description, previousAttributes)
                     });
                     updateState({ attributesStatus: 'valid' });
                 }
@@ -250,6 +240,19 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                     updateState({ attributesStatus: 'error' });
                 }
             });
+    };
+
+    const onLayerChange = (selected) => {
+        const layerName = selected?.value || '';
+        const previousAttributes = valueRef.current.layerName === layerName
+            ? valueRef.current.attributes || []
+            : [];
+        updateValue({ layerName, attributes: [] });
+        if (!layerName) {
+            updateState({ attributesStatus: 'empty' });
+            return;
+        }
+        loadAttributes(layerName, previousAttributes);
     };
 
     const updateAttribute = (name, changes) => {
@@ -392,7 +395,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                         disabled={!url?.trim() || capabilitiesStatus === 'loading'}
                         onClick={() => requestCapabilities(url, 0)}>
                         {capabilitiesStatus === 'loading'
-                            ? <LoadingSpinner />
+                            ? <Spinner />
                             : <Glyphicon glyph="refresh"/>}
                     </Button>
                 </div>
@@ -414,9 +417,6 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                         label: title === name ? name : `${title} (${name})`
                     }))}
                     onChange={onLayerChange}/>
-                {attributesStatus === 'error' ? (
-                    <span className="help-block"><Message msgId="layerProperties.externalData.attributesError" /></span>
-                ) : null}
             </FormGroup>
 
             <FormGroup>
@@ -433,20 +433,20 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                 </span>
             </FormGroup>
 
-            {attributesStatus === 'loading' ? (
-                <div className="ms-external-data-loading"><LoadingSpinner /> <Message msgId="loading" /></div>
-            ) : null}
-            {attributes.length ? (
+            {layerName ? (
                 <div className="ms-external-data-attributes">
-                    <ControlLabel><Message msgId="layerProperties.externalData.attributes" /></ControlLabel>
                     <Fields
+                        title={<Message msgId="layerProperties.externalData.attributes" />}
                         fields={attributes}
                         currentLocale={currentLocale}
-                        showToolbar={false}
+                        loading={attributesStatus === 'loading'}
+                        error={attributesStatus === 'error'}
                         showVisibility
                         onChange={(name, property, nextValue) => updateAttribute(name, {
                             [property]: nextValue
-                        })}/>
+                        })}
+                        onLoadFields={() => loadAttributes(layerName, attributes)}
+                        onClear={() => loadAttributes(layerName, [])}/>
                 </div>
             ) : null}
 
@@ -456,7 +456,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                     disabled={state.validationStatus === 'loading'}
                     onClick={validate}>
                     {state.validationStatus === 'loading'
-                        ? <LoadingSpinner />
+                        ? <Spinner />
                         : <Glyphicon glyph="ok" />}&nbsp;
                     <Message msgId="layerProperties.externalData.validate" />
                 </Button>

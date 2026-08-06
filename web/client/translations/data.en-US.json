@@ -140,9 +140,7 @@
       "templateError": "There was an error applying the template to the information returned by the server, please check the template",
       "propertiesView": {
         "attributes": "Attributes",
-        "noAttributes": "The layer schema contains no displayable attributes.",
-        "attributesError": "Unable to load attributes from the current layer",
-        "retry": "Retry"
+        "noAttributes": "The layer schema contains no displayable attributes."
       },
       "externalData": {
         "title": "EXTERNAL DATA",
@@ -153,7 +151,6 @@
         "cqlFilter": "CQL filter template",
         "cqlFilterHelp": "Use single quotes around string placeholders; leave numeric and boolean placeholders unquoted.",
         "attributes": "Attributes",
-        "attributesError": "Unable to load the layer attributes",
         "show": "Show",
         "validate": "Validate",
         "validation": {

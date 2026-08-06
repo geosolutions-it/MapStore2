@@ -140,9 +140,7 @@
       "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
       "propertiesView": {
         "attributes": "Attributs",
-        "noAttributes": "Le schéma de la couche ne contient aucun attribut affichable.",
-        "attributesError": "Impossible de charger les attributs de la couche actuelle",
-        "retry": "Réessayer"
+        "noAttributes": "Le schéma de la couche ne contient aucun attribut affichable."
       },
       "externalData": {
         "title": "DONNÉES EXTERNES",
@@ -153,7 +151,6 @@
         "cqlFilter": "Modèle de filtre CQL",
         "cqlFilterHelp": "Utilisez des apostrophes autour des espaces réservés de texte ; laissez les espaces réservés numériques et booléens sans guillemets.",
         "attributes": "Attributs",
-        "attributesError": "Impossible de charger les attributs de la couche",
         "show": "Afficher",
         "validate": "Valider",
         "validation": {

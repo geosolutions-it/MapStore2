@@ -140,9 +140,7 @@
       "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
       "propertiesView": {
         "attributes": "Attribute",
-        "noAttributes": "Das Layerschema enthält keine darstellbaren Attribute.",
-        "attributesError": "Attribute des aktuellen Layers konnten nicht geladen werden",
-        "retry": "Erneut versuchen"
+        "noAttributes": "Das Layerschema enthält keine darstellbaren Attribute."
       },
       "externalData": {
         "title": "EXTERNE DATEN",
@@ -153,7 +151,6 @@
         "cqlFilter": "CQL-Filtervorlage",
         "cqlFilterHelp": "Setzen Sie Platzhalter für Zeichenfolgen in einfache Anführungszeichen; lassen Sie Platzhalter für Zahlen und boolesche Werte ohne Anführungszeichen.",
         "attributes": "Attribute",
-        "attributesError": "Die Layerattribute konnten nicht geladen werden",
         "show": "Anzeigen",
         "validate": "Validieren",
         "validation": {
