@@ -35,7 +35,6 @@ export const INFO_FORMATS_BY_MIME_TYPE = {
 };
 
 const regexpXML = /^[\s\S]*<gml:featureMembers[^>]*>([\s\S]*)<\/gml:featureMembers>[\s\S]*$/i;
-
 const regexpBody = /^[\s\S]*<body[^>]*>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
 
