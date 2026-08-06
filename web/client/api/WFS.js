@@ -160,7 +160,7 @@ export const describeFeatureType = function(url, typeName) {
 /**
  * Fetch the supported formats of the WFS service
  * @param url
- * @return {object} { infoFormats }
+ * @return {Promise} resolves with { infoFormats }
  */
 export const getSupportedFormat = (url) => {
     return getCapabilities(url)
@@ -168,12 +168,11 @@ export const getSupportedFormat = (url) => {
             const operations = castArray(response?.['wfs:WFS_Capabilities']?.['ows:OperationsMetadata']?.['ows:Operation'] || []);
             const getFeatureOperation = operations.find(operation => operation?.$?.name === 'GetFeature');
             const parameters = castArray(getFeatureOperation?.['ows:Parameter'] || []);
-            const outputFormats = parameters.find((parameter) => parameter?.$?.name === 'outputFormat')?.['ows:Value'] || [];
+            const outputFormats = castArray(parameters.find((parameter) => parameter?.$?.name === 'outputFormat')?.['ows:Value'] || []);
             const infoFormats = outputFormats.filter(isValidGetFeatureInfoFormat);
             return {
                 infoFormats: infoFormats?.length ? infoFormats : ['application/json']
             };
-        })
-        .catch(() => ({ infoFormats: ['application/json'] }));
+        });
 };
 

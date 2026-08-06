@@ -292,6 +292,20 @@ export const getIdentifyFlow = (layer, baseURL, params) => {
     }
     return null;
 };
+/**
+ * Resolves layer properties not persisted in the configuration, when the service supports it.
+ * It must be applied before `buildIdentifyRequest`.
+ * @param {object} layer the layer object
+ * @param {object} options the options for the request (see `buildIdentifyRequest`)
+ * @return {Promise} resolves with the layer to use for the identify request
+ */
+export const resolveIdentifyLayer = (layer, options = {}) => {
+    const service = MapInfoUtils.services[layer?.type];
+    if (!service?.resolveLayer) {
+        return Promise.resolve(layer);
+    }
+    return service.resolveLayer(layer, MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, options));
+};
 
 const deduceInfoFormat = (response) => {
     let infoFormat;
