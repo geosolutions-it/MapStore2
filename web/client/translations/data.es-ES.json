@@ -173,8 +173,7 @@
         "unsafeSourceValue": "No se pueden cargar los datos externos porque «{property}» contiene texto donde se espera un número.",
         "invalidInterpolatedCql": "El filtro CQL construido a partir de la entidad de origen no es válido",
         "invalidResponse": "El WFS externo no devolvió un GeoJSON válido",
-        "retry": "Reintentar",
-        "errorDetails": "Detalles del error"
+        "retry": "Reintentar"
       },
       "heightOffset": "Desplazamiento de altura (m)",
       "wmsLayerTileSize": "Tamaño del mosaico (WMS)",

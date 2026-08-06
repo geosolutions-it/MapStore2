@@ -50,19 +50,13 @@ const normalizeExternalResponse = (data) => {
     return response;
 };
 
-const stringifyErrorData = (data) => {
-    if (!data) {
-        return '';
-    }
-    return typeof data === 'string' ? data : JSON.stringify(data, null, 2);
-};
-
+// the response of an external service must not be rendered to map viewers
 const getErrorPresentation = (error) => {
+    console.error('External data view could not be loaded', error);
     if (error?.code === 'MISSING_SOURCE_PROPERTY') {
         return {
             messageId: 'layerProperties.externalData.missingProperty',
-            messageParams: { property: error.propertyName },
-            details: error.message
+            messageParams: { property: error.propertyName }
         };
     }
     if (error?.code === 'UNSAFE_SOURCE_VALUE') {
@@ -78,18 +72,11 @@ const getErrorPresentation = (error) => {
     }
     if (error?.code === 'INVALID_EXTERNAL_RESPONSE') {
         return {
-            messageId: 'layerProperties.externalData.invalidResponse',
-            details: stringifyErrorData(error.data) || error.message
+            messageId: 'layerProperties.externalData.invalidResponse'
         };
     }
-    const status = error?.response?.status || error?.status;
-    const responseDetails = stringifyErrorData(error?.response?.data || error?.data);
     return {
-        messageId: 'layerProperties.externalData.requestError',
-        details: [
-            status ? `HTTP ${status}` : '',
-            responseDetails || error?.message || `${error}`
-        ].filter(Boolean).join('\n')
+        messageId: 'layerProperties.externalData.requestError'
     };
 };
 
@@ -241,14 +228,6 @@ const ExternalDataViewer = ({ response, layer }) => {
                                 <Message msgId="layerProperties.externalData.retry" />
                             </Button>
                         </div>
-                        {result.details ? (
-                            <details className="ms-external-data-runtime-error-details">
-                                <summary>
-                                    <Message msgId="layerProperties.externalData.errorDetails" />
-                                </summary>
-                                <pre>{result.details}</pre>
-                            </details>
-                        ) : null}
                     </Alert>
                 ) : null}
                 {result.status === 'success' && !result.features.length ? (

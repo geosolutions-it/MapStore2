@@ -174,8 +174,7 @@
         "unsafeSourceValue": "Die externen Daten können nicht geladen werden, da „{property}“ Text enthält, wo eine Zahl erwartet wird.",
         "invalidInterpolatedCql": "Der aus dem Quellfeature erstellte CQL-Filter ist nicht gültig",
         "invalidResponse": "Der externe WFS hat kein gültiges GeoJSON zurückgegeben",
-        "retry": "Erneut versuchen",
-        "errorDetails": "Fehlerdetails"
+        "retry": "Erneut versuchen"
       },
       "heightOffset": "Höhenversatz (m)",
       "wmsLayerTileSize": "Kachelgröße (WMS)",

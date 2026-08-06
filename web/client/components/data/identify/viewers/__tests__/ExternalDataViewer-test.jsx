@@ -278,9 +278,10 @@ describe('ExternalDataViewer', () => {
 
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(0);
-            expect(document.querySelector('.alert-danger')).toExist();
-            expect(document.querySelector('.ms-external-data-runtime-error-details').textContent)
-                .toContain('sourceId');
+            const alert = document.querySelector('.alert-danger');
+            expect(alert).toExist();
+            expect(alert.textContent).toContain('layerProperties.externalData.missingProperty');
+            expect(alert.querySelector('details')).toNotExist();
             done();
         });
     });

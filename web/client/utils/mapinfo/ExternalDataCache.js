@@ -48,6 +48,13 @@ export const deleteExternalDataCacheEntry = (key) => {
 };
 
 /**
+ * Drops every cached request, for example when the session ends.
+ */
+export const clearExternalDataCache = () => {
+    requestCache.clear();
+};
+
+/**
  * Removes cached requests when their identify results are discarded.
  */
 export const clearExternalDataCacheForIdentifyRequests = (identifyRequestIds = []) => {

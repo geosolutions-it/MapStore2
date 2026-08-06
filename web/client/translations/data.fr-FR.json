@@ -174,8 +174,7 @@
         "unsafeSourceValue": "Les données externes ne peuvent pas être chargées car « {property} » contient du texte alors qu’un nombre est attendu.",
         "invalidInterpolatedCql": "Le filtre CQL construit à partir de l’entité source n’est pas valide",
         "invalidResponse": "Le WFS externe n'a pas renvoyé de GeoJSON valide",
-        "retry": "Réessayer",
-        "errorDetails": "Détails de l'erreur"
+        "retry": "Réessayer"
       },
       "heightOffset": "Décalage en hauteur (m)",
       "wmsLayerTileSize": "Taille de la tuile (WMS)",

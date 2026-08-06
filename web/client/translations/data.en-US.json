@@ -174,8 +174,7 @@
         "unsafeSourceValue": "The external data cannot be loaded because “{property}” contains text where a number is expected.",
         "invalidInterpolatedCql": "The CQL filter built from the source feature is not valid",
         "invalidResponse": "The external WFS did not return valid GeoJSON",
-        "retry": "Retry",
-        "errorDetails": "Error details"
+        "retry": "Retry"
       },
       "heightOffset": "Height offset (m)",
       "wmsLayerTileSize": "Tile size (WMS)",
