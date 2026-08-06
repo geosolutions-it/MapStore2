@@ -212,7 +212,7 @@
     "react-dnd-html5-backend": "2.6.0",
     "react-dnd-test-backend": "2.6.0",
     "react-dock": "0.2.4",
-    "react-dom": "16.10.1",
+    "react-dom": "16.14.0",
     "react-draft-wysiwyg": "npm:@geosolutions/react-draft-wysiwyg@1.14.8",
     "react-draggable": "2.2.6",
     "react-dropzone": "3.13.1",
