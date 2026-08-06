@@ -839,7 +839,7 @@ describe('MapInfoUtils', () => {
             }
         })).toEqual(views);
     });
-    it('getLayerFeatureInfoViews should hide invalid external data views only at runtime', () => {
+    it('getLayerFeatureInfoViews should report external data views regardless of their configuration', () => {
         const layer = {
             featureInfo: {
                 views: [{
@@ -859,8 +859,6 @@ describe('MapInfoUtils', () => {
         };
 
         expect(getLayerFeatureInfoViews(layer).map(({ id }) => id))
-            .toEqual(['valid-external']);
-        expect(getLayerFeatureInfoViews(layer, { includeInvalid: true }).map(({ id }) => id))
             .toEqual(['invalid-external', 'valid-external']);
     });
 

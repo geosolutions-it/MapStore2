@@ -168,6 +168,7 @@
           "response": "Risposta"
         },
         "noSourceFeatures": "Nessuna feature identificata è disponibile per questa vista dati esterni",
+        "notConfigured": "Questa vista di Identify non è configurata correttamente. Contatta chi ha creato la mappa.",
         "noResults": "Nessun dato esterno trovato",
         "requestError": "Impossibile caricare i dati esterni",
         "missingProperty": "La feature sorgente non contiene la proprietà “{property}”",

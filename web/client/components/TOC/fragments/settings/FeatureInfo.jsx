@@ -238,10 +238,7 @@ export default class extends React.Component {
     }
 
     getViews = () => {
-        return getLayerFeatureInfoViews(this.props.element, {
-            includeDisabled: true,
-            includeInvalid: true
-        });
+        return getLayerFeatureInfoViews(this.props.element, { includeDisabled: true });
     }
 
     updateView = (viewId, changes) => {

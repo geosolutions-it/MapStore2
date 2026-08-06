@@ -167,6 +167,7 @@
           "response": "Respuesta"
         },
         "noSourceFeatures": "No hay entidades identificadas disponibles para esta vista de datos externos",
+        "notConfigured": "Esta vista de Identify no está configurada correctamente. Póngase en contacto con quien creó el mapa.",
         "noResults": "No se encontraron datos externos",
         "requestError": "No se pudieron cargar los datos externos",
         "missingProperty": "La entidad de origen no contiene la propiedad «{property}»",

@@ -168,6 +168,7 @@
           "response": "Réponse"
         },
         "noSourceFeatures": "Aucune entité identifiée n'est disponible pour cette vue de données externes",
+        "notConfigured": "Cette vue Identify n’est pas configurée correctement. Contactez la personne qui a créé la carte.",
         "noResults": "Aucune donnée externe trouvée",
         "requestError": "Impossible de charger les données externes",
         "missingProperty": "L'entité source ne contient pas la propriété « {property} »",

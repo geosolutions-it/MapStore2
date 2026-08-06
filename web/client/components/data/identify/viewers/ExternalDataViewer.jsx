@@ -13,7 +13,7 @@ import { Alert, Button, Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import { getFeature } from '../../../../api/WFS';
-import { interpolateExternalDataCQL } from '../../../../utils/mapinfo/ExternalDataUtils';
+import { interpolateExternalDataCQL, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
 import RowViewer from './row/RowViewer';
 import { getVisibleFeatureRow } from '../../../../utils/IdentifyUtils';
 import {
@@ -177,7 +177,12 @@ const ExternalDataViewer = ({ response, layer }) => {
 
     const featureInfo = layer?.featureInfo || {};
     const configuration = featureInfo.externalData || {};
+    const configurationError = validateExternalDataConfiguration(configuration);
     useEffect(() => {
+        if (configurationError) {
+            console.error(`External data view is not configured: ${configurationError}`);
+            return () => {};
+        }
         mounted.current = true;
         loadGeneration.current += 1;
         loadRef.current(loadGeneration.current);
@@ -187,6 +192,7 @@ const ExternalDataViewer = ({ response, layer }) => {
         };
     }, [
         response,
+        configurationError,
         featureInfo.identifyRequestId,
         featureInfo.id,
         configuration.url,
@@ -250,6 +256,13 @@ const ExternalDataViewer = ({ response, layer }) => {
         );
     };
 
+    if (configurationError) {
+        return (
+            <Alert bsStyle="warning">
+                <Message msgId="layerProperties.externalData.notConfigured" />
+            </Alert>
+        );
+    }
     const sourceFeatures = getSourceFeatures();
     if (!sourceFeatures.length) {
         return (

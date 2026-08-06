@@ -24,7 +24,7 @@ import model from './mapinfo/model';
 import arcgis from './mapinfo/arcgis';
 import cog from './mapinfo/cog';
 import flatgeobuf from './mapinfo/flatgeobuf';
-import { EXTERNAL_DATA, validateExternalDataConfiguration } from './mapinfo/ExternalDataUtils';
+import { EXTERNAL_DATA } from './mapinfo/ExternalDataUtils';
 // TODO import only index in ./mapinfo
 
 let MapInfoUtils;
@@ -200,10 +200,9 @@ export const isLayerFeatureInfoDisabled = (layer) => {
  * @param options {object} resolver options
  * @param options.defaultType {string} view type used when the layer has no saved configuration
  * @param options.includeDisabled {boolean} includes configured views while editing a disabled layer
- * @param options.includeInvalid {boolean} includes incomplete External Data views while editing
  * @return {object[]} feature info views
  */
-export const getLayerFeatureInfoViews = (layer, { defaultType, includeDisabled = false, includeInvalid = false } = {}) => {
+export const getLayerFeatureInfoViews = (layer, { defaultType, includeDisabled = false } = {}) => {
     const featureInfo = getLayerFeatureInfo(layer);
     if (isLayerFeatureInfoDisabled(layer) && !includeDisabled) {
         return [];
@@ -214,11 +213,7 @@ export const getLayerFeatureInfoViews = (layer, { defaultType, includeDisabled =
                 ...view,
                 id: view.id || `view-${idx}`,
                 type: view.type || view.format || INFO_VIEW_MODES.PROPERTIES
-            }))
-            // Runtime ignores incomplete External Data views; settings can request them.
-            .filter((view) => includeInvalid
-                || view.type !== INFO_VIEW_MODES.EXTERNAL_DATA
-                || !validateExternalDataConfiguration(view.externalData));
+            }));
     }
     if (featureInfo.format && featureInfo.format !== 'HIDDEN') {
         const { format, ...config } = featureInfo;

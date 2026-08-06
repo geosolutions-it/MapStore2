@@ -168,6 +168,7 @@
           "response": "Response"
         },
         "noSourceFeatures": "No identified features are available for this external data view",
+        "notConfigured": "This Identify view is not configured correctly. Contact whoever created the map.",
         "noResults": "No external data found",
         "requestError": "Unable to load external data",
         "missingProperty": "The source feature does not contain the property “{property}”",

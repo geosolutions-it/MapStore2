@@ -168,6 +168,7 @@
           "response": "Antwort"
         },
         "noSourceFeatures": "Für diese externe Datenansicht sind keine identifizierten Features verfügbar",
+        "notConfigured": "Diese Identify-Ansicht ist nicht korrekt konfiguriert. Wenden Sie sich an die Person, die die Karte erstellt hat.",
         "noResults": "Keine externen Daten gefunden",
         "requestError": "Externe Daten konnten nicht geladen werden",
         "missingProperty": "Das Quellfeature enthält die Eigenschaft „{property}“ nicht",
