@@ -110,7 +110,6 @@ const isSupportedLayerFunc = (layer, maptype) => {
     return Layers.isSupported(layer.type) && !layer.invalid;
 };
 
-
 const checkInvalidParam = (layer) => {
     return layer && layer.invalid ? Object.assign({}, layer, {invalid: false}) : layer;
 };
@@ -740,7 +739,8 @@ export const saveLayer = (layer) => {
         legendOptions: layer.legendOptions,
         tileSize: layer.tileSize,
         version: layer.version,
-        expanded: layer.expanded || false
+        expanded: layer.expanded || false,
+        autorefreshInterval: layer.autorefreshInterval
     },
     layer?.enableInteractiveLegend !== undefined ? { enableInteractiveLegend: layer?.enableInteractiveLegend } : {},
     layer?.enableDynamicLegend !== undefined ? { enableDynamicLegend: layer?.enableDynamicLegend } : {},
@@ -1228,6 +1228,19 @@ export const isBackgroundCompatibleWithProjection = (background, projection) => 
     const compatibleWmts = background.type === "wmts" && has(background.allowedSRS, projection);
     const valid = ((validCrs || compatibleWmts || includes(["wms", "empty", "osm", "tileprovider"], background.type)) && !background.invalid );
     return valid;
+};
+
+/**
+ * Checks if a layer has auto-refresh capability based on its type and the map type.
+ * @param {string} layerType - The type of the layer
+ * @param {string} maptype - The type of the map
+ * @returns {boolean} True if the layer has auto-refresh capability
+ */
+export const hasAutoRefreshCapability = (layerType, maptype) => {
+    const LayersUtil = require('./' + maptype + '/Layers');
+    const Layers = LayersUtil.default || LayersUtil;
+
+    return Layers.hasAutoRefreshCapability(layerType);
 };
 
 LayersUtils = {

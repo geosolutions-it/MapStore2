@@ -23,7 +23,6 @@ const sameOptions = (o1 = {}, o2 = {}) =>
 import { getWpsUrl } from '../../../utils/LayersUtils';
 import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
 
-
 /**
  * Stream of props -> props to retrieve data from WPS aggregate process on params changes.
  * Can be used with widgets and charts to auto-update data on property changes.
@@ -32,20 +31,32 @@ import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets}) => {
+        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets, shouldAutorefresh }) => {
+            const isValid = layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
+
+            if (shouldAutorefresh) {
+                return isValid;
+            }
+
             // Check if mapSync is enabled (true), dependencyMap has mapSync dependency to Map widget and dependencies.viewport is null or falsy
             // If this condition is true, return false to filter out the event.
             // This prevents an extra API call from being triggered when the viewport is not available.
             if (mapSync && checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) && !dependencies?.viewport) {
                 return false;
             }
-            return layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
+            return isValid;
         })
         .distinctUntilChanged(
-            ({layer = {}, options = {}, filter}, newProps) =>
-                (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
+            ({layer = {}, options = {}, filter }, newProps) => {
+                if (newProps.shouldAutorefresh) {
+                    return false;
+                }
+
+                return (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
                 && sameOptions(options, newProps.options)
-                && sameFilter(filter, newProps.filter))
+                && sameFilter(filter, newProps.filter);
+            }
+        )
         .switchMap(
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(
