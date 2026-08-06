@@ -151,7 +151,6 @@
         "cqlFilter": "Template filtro CQL",
         "cqlFilterHelp": "Usa gli apici singoli per i segnaposto di testo; lascia senza apici i segnaposto numerici e booleani.",
         "attributes": "Attributi",
-        "show": "Mostra",
         "validate": "Valida",
         "validation": {
           "missingFields": "URL WFS, nome layer e template del filtro CQL sono obbligatori",
@@ -303,6 +302,7 @@
       "forceProxy": "Forza proxy",
       "fields": {
         "refresh": "Recupera i campi dalla sorgente dati",
+        "showAll": "Mostra o nascondi tutti gli attributi",
         "title": "Campi",
         "tooltip": "Campi",
         "name": "Nome",

@@ -101,6 +101,10 @@ const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, c
             : attribute));
     };
 
+    const updateAllAttributes = (property, nextValue) => {
+        onChange(attributes.map((attribute) => ({ ...attribute, [property]: nextValue })));
+    };
+
     return (
         <div className="ms-properties-view-editor">
             <Fields
@@ -111,6 +115,7 @@ const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, c
                 error={error}
                 showVisibility
                 onChange={updateAttribute}
+                onChangeAll={updateAllAttributes}
                 onLoadFields={() => loadAttributes(true)}
                 onClear={() => loadAttributes(false)}/>
             {!loading && !error && !attributes.length ? (

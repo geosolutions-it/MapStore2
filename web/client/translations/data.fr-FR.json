@@ -151,7 +151,6 @@
         "cqlFilter": "Modèle de filtre CQL",
         "cqlFilterHelp": "Utilisez des apostrophes autour des espaces réservés de texte ; laissez les espaces réservés numériques et booléens sans guillemets.",
         "attributes": "Attributs",
-        "show": "Afficher",
         "validate": "Valider",
         "validation": {
           "missingFields": "L'URL WFS, le nom de la couche et le modèle de filtre CQL sont obligatoires",
@@ -303,6 +302,7 @@
       "forceProxy": "Forcer le proxy",
       "fields": {
         "refresh": "Récupérer les formats pris en charge",
+        "showAll": "Afficher ou masquer tous les attributs",
         "title": "Champs",
         "tooltip": "Champs",
         "name": "Nom",

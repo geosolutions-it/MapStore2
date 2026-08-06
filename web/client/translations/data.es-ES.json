@@ -150,7 +150,6 @@
         "cqlFilter": "Plantilla de filtro CQL",
         "cqlFilterHelp": "Use comillas simples alrededor de los marcadores de texto; deje sin comillas los marcadores numéricos y booleanos.",
         "attributes": "Atributos",
-        "show": "Mostrar",
         "validate": "Validar",
         "validation": {
           "missingFields": "La URL WFS, el nombre de capa y la plantilla de filtro CQL son obligatorios",
@@ -303,6 +302,7 @@
       "forceProxy": "Forzar proxy",
       "fields": {
         "refresh": "Obtener campos",
+        "showAll": "Mostrar u ocultar todos los atributos",
         "title": "Campos",
         "tooltip": "Campos",
         "name": "Nombre",

@@ -151,7 +151,6 @@
         "cqlFilter": "CQL-Filtervorlage",
         "cqlFilterHelp": "Setzen Sie Platzhalter für Zeichenfolgen in einfache Anführungszeichen; lassen Sie Platzhalter für Zahlen und boolesche Werte ohne Anführungszeichen.",
         "attributes": "Attribute",
-        "show": "Anzeigen",
         "validate": "Validieren",
         "validation": {
           "missingFields": "WFS-URL, Layername und CQL-Filtervorlage sind erforderlich",
@@ -303,6 +302,7 @@
       "forceProxy": "Proxy erzwingen",
       "fields": {
         "refresh": "Felder aus der Datenquelle neu laden",
+        "showAll": "Alle Attribute ein- oder ausblenden",
         "title": "Felder",
         "tooltip": "Felder",
         "name": "Name",

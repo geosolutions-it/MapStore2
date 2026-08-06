@@ -151,7 +151,6 @@
         "cqlFilter": "CQL filter template",
         "cqlFilterHelp": "Use single quotes around string placeholders; leave numeric and boolean placeholders unquoted.",
         "attributes": "Attributes",
-        "show": "Show",
         "validate": "Validate",
         "validation": {
           "missingFields": "WFS URL, layer name and CQL filter template are required",
@@ -303,6 +302,7 @@
       "forceProxy": "Force proxy",
       "fields": {
         "refresh": "Reload fields from the data source",
+        "showAll": "Show or hide all attributes",
         "title": "Fields",
         "tooltip": "Fields",
         "name": "Name",

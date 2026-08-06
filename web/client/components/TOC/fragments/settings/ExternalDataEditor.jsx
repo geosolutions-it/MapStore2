@@ -262,6 +262,13 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         });
     };
 
+    const updateAllAttributes = (property, nextValue) => {
+        updateValue({
+            attributes: (valueRef.current.attributes || []).map((attribute) =>
+                ({ ...attribute, [property]: nextValue }))
+        });
+    };
+
     const getSourceRequest = () => {
         const currentSourceLayer = sourceLayer || {};
         const sourceUrl = currentSourceLayer.search?.url
@@ -445,6 +452,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                         onChange={(name, property, nextValue) => updateAttribute(name, {
                             [property]: nextValue
                         })}
+                        onChangeAll={updateAllAttributes}
                         onLoadFields={() => loadAttributes(layerName, attributes)}
                         onClear={() => loadAttributes(layerName, [])}/>
                 </div>

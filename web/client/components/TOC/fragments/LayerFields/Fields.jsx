@@ -11,6 +11,7 @@ import withTooltip from '../../../data/featuregrid/enhancers/withTooltip';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 
 const ConfirmButton = localizedProps("tooltip")(withTooltip(withConfirm(Button)));
+const CheckboxWithTooltip = localizedProps("tooltip")(withTooltip(Checkbox));
 
 const isGeometryType = (type) =>
     ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'Geometry'].includes(type);
@@ -29,6 +30,7 @@ const isGeometryType = (type) =>
  * - type: the type of the field
  * @prop {function} onLoadFields callback to reload the fields of the layer (for instance in case of WFS it will perform a new DescribeFeatureType request to reload the fields)
  * @prop {function} onChange callback to be called when the alias of a field is changed. The arguments are the `name` of the field, the property changed and the new value. For instance `onChange("NAME", "alias", "new alias")`
+ * @prop {function} onChangeAll callback to be called when the same property is set on every field. For instance `onChangeAll("visible", false)`
  * @prop {function} onClear callback to be called when the customization of the fields is cleared
  * @prop {boolean} loading true if the fields are loading
  * @prop {boolean} error true if there is an error loading the fields
@@ -39,6 +41,7 @@ const Fields = ({
     fields = [],
     onLoadFields = () => {},
     onChange = () => {},
+    onChangeAll = () => {},
     onClear = () => {},
     loading,
     error,
@@ -46,6 +49,8 @@ const Fields = ({
     title,
     showVisibility = false
 }) => {
+    const displayedFields = fields.filter(({type}) => !isGeometryType(type));
+    const visibleCount = displayedFields.filter(({visible = true}) => visible).length;
     return (<BorderLayout
         className="layer-fields"
         header={<div key="row-header" className="layer-fields-header">
@@ -76,7 +81,17 @@ const Fields = ({
             </div>
             <div key="row-labels" className="layer-fields-row-header">
                 {showVisibility ? <FormGroup className="layer-field-visibility">
-                    <ControlLabel><Message msgId="layerProperties.externalData.show"/></ControlLabel>
+                    <CheckboxWithTooltip
+                        tooltip="layerProperties.fields.showAll"
+                        checked={!!visibleCount && visibleCount === displayedFields.length}
+                        disabled={loading || !displayedFields.length}
+                        // react does not map an indeterminate prop onto the input
+                        inputRef={(input) => {
+                            if (input) {
+                                input.indeterminate = visibleCount > 0 && visibleCount < displayedFields.length;
+                            }
+                        }}
+                        onChange={(event) => onChangeAll("visible", event.target.checked)}/>
                 </FormGroup> : null}
                 <FormGroup className="layer-field-name">
                     <ControlLabel><Message msgId="layerProperties.fields.name"/></ControlLabel>
@@ -94,8 +109,7 @@ const Fields = ({
             {error && <Alert bsStyle="danger" className="layer-fields-error"><Message msgId="layerProperties.fields.error"/></Alert>}
         </div>}
     >
-        {fields
-            .filter(({type}) => !isGeometryType(type)) // exclude geometry fields
+        {displayedFields
             .map(({name, alias, type, visible}) => {
                 return (<div key={`field-${name}`} className="layer-fields-row">
                     {showVisibility ? <FormGroup className="layer-field-visibility">
@@ -123,6 +137,7 @@ Fields.propTypes = {
     fields: PropTypes.array,
     onLoadFields: PropTypes.func,
     onChange: PropTypes.func,
+    onChangeAll: PropTypes.func,
     onClear: PropTypes.func,
     loading: PropTypes.bool,
     error: PropTypes.bool,
