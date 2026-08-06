@@ -27,6 +27,12 @@ import {
 const URL_VALIDATION_DELAY = 500;
 const SAMPLE_RESPONSE_LIMIT = 10;
 
+const INTERPOLATION_MESSAGE_IDS = {
+    MISSING_SOURCE_PROPERTY: 'layerProperties.externalData.missingProperty',
+    UNSAFE_SOURCE_VALUE: 'layerProperties.externalData.validation.unquotedPlaceholder',
+    INVALID_INTERPOLATED_CQL: 'layerProperties.externalData.invalidInterpolatedCql'
+};
+
 /**
  * Normalizes the feature-type list returned by different WFS versions.
  */
@@ -120,6 +126,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         capabilitiesStatus: value.url ? 'idle' : 'empty',
         attributesStatus: value.layerName ? 'idle' : 'empty',
         validationMessage: null,
+        validationMessageParams: null,
         validationSuccess: false,
         validationStatus: 'idle',
         validationDetails: null,
@@ -144,6 +151,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         validationRequestId.current += 1;
         updateState({
             validationMessage: null,
+            validationMessageParams: null,
             validationSuccess: false,
             validationStatus: 'idle',
             validationDetails: null,
@@ -353,12 +361,14 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
             .catch((error) => {
                 if (currentValidationRequestId === validationRequestId.current) {
                     updateState({
-                        validationMessage: error.messageId
+                        validationMessage: INTERPOLATION_MESSAGE_IDS[error.code]
+                            || error.messageId
                             || 'layerProperties.externalData.validation.testRequestFailed',
+                        validationMessageParams: error.propertyName ? { property: error.propertyName } : null,
                         validationSuccess: false,
                         validationStatus: 'error',
                         validationDetails: null,
-                        validationErrorDetails: getErrorDetails(error)
+                        validationErrorDetails: error.cqlFilter || getErrorDetails(error)
                     });
                 }
             });
@@ -451,7 +461,9 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                     <Message msgId="layerProperties.externalData.validate" />
                 </Button>
                 {state.validationMessage ? (
-                    <Alert bsStyle="danger"><Message msgId={state.validationMessage} /></Alert>
+                    <Alert bsStyle="danger">
+                        <Message msgId={state.validationMessage} msgParams={state.validationMessageParams} />
+                    </Alert>
                 ) : null}
                 {state.validationSuccess ? (
                     <Alert bsStyle="success"><Message msgId="layerProperties.externalData.validation.valid" /></Alert>

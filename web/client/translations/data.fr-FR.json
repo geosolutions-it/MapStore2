@@ -161,6 +161,7 @@
           "invalidPlaceholder": "Utilisez au moins un espace réservé valide ${properties.name} ou ${properties['name']}",
           "invalidDoubleQuotedPlaceholder": "Les guillemets doubles identifient les noms de champs en CQL. Utilisez des apostrophes autour des espaces réservés de texte.",
           "invalidCql": "Le modèle de filtre CQL n'est pas valide",
+          "unquotedPlaceholder": "Dans le filtre, la référence au champ « {property} » n’est pas entourée de guillemets simples, elle n’accepte donc que des nombres. Ajoutez les guillemets pour utiliser des valeurs textuelles.",
           "valid": "La configuration des données externes est valide",
           "sourceUnavailable": "Une URL WFS source et un nom de couche sont nécessaires pour exécuter la requête d'exemple",
           "sampleNotFound": "La couche source n'a renvoyé aucune entité d'exemple",
@@ -173,6 +174,8 @@
         "noResults": "Aucune donnée externe trouvée",
         "requestError": "Impossible de charger les données externes",
         "missingProperty": "L'entité source ne contient pas la propriété « {property} »",
+        "unsafeSourceValue": "Les données externes ne peuvent pas être chargées car « {property} » contient du texte alors qu’un nombre est attendu.",
+        "invalidInterpolatedCql": "Le filtre CQL construit à partir de l’entité source n’est pas valide",
         "invalidResponse": "Le WFS externe n'a pas renvoyé de GeoJSON valide",
         "retry": "Réessayer",
         "errorDetails": "Détails de l'erreur"

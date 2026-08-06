@@ -49,6 +49,51 @@ describe('ExternalDataUtils', () => {
         })).toBe(null);
     });
 
+    it('interpolates a quoted placeholder that is not adjacent to its quotes', () => {
+        expect(interpolateExternalDataCQL(
+            "label LIKE '${properties.prefix}%'",
+            { properties: { prefix: "O'B" } }
+        )).toBe("label LIKE 'O''B%'");
+    });
+
+    it('rejects a value that would alter the filter through an unquoted placeholder', () => {
+        try {
+            interpolateExternalDataCQL(
+                'external_id = ${properties.id}',
+                { properties: { id: '1 OR external_id > 0' } }
+            );
+            throw new Error('Expected interpolation to fail');
+        } catch (error) {
+            expect(error.code).toBe('UNSAFE_SOURCE_VALUE');
+            expect(error.propertyName).toBe('id');
+        }
+    });
+
+    it('accepts numeric and boolean values for unquoted placeholders', () => {
+        expect(interpolateExternalDataCQL(
+            'external_id = ${properties.id}',
+            { properties: { id: -1.5 } }
+        )).toBe('external_id = -1.5');
+
+        expect(interpolateExternalDataCQL(
+            'active = ${properties.active}',
+            { properties: { active: true } }
+        )).toBe('active = true');
+    });
+
+    it('throws a typed error when the interpolated filter is not valid CQL', () => {
+        try {
+            interpolateExternalDataCQL(
+                "code = '${properties.code}' AND",
+                { properties: { code: 'a' } }
+            );
+            throw new Error('Expected interpolation to fail');
+        } catch (error) {
+            expect(error.code).toBe('INVALID_INTERPOLATED_CQL');
+            expect(error.cqlFilter).toBe("code = 'a' AND");
+        }
+    });
+
     it('throws a typed error when the source property is missing', () => {
         expect(() => interpolateExternalDataCQL(
             "code = '${properties.code}'",

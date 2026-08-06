@@ -65,6 +65,17 @@ const getErrorPresentation = (error) => {
             details: error.message
         };
     }
+    if (error?.code === 'UNSAFE_SOURCE_VALUE') {
+        return {
+            messageId: 'layerProperties.externalData.unsafeSourceValue',
+            messageParams: { property: error.propertyName }
+        };
+    }
+    if (error?.code === 'INVALID_INTERPOLATED_CQL') {
+        return {
+            messageId: 'layerProperties.externalData.invalidInterpolatedCql'
+        };
+    }
     if (error?.code === 'INVALID_EXTERNAL_RESPONSE') {
         return {
             messageId: 'layerProperties.externalData.invalidResponse',

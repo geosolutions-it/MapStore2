@@ -161,6 +161,7 @@
           "invalidPlaceholder": "Verwenden Sie mindestens einen gültigen Platzhalter ${properties.name} oder ${properties['name']}",
           "invalidDoubleQuotedPlaceholder": "Doppelte Anführungszeichen kennzeichnen Feldnamen in CQL. Verwenden Sie einfache Anführungszeichen für Zeichenfolgen-Platzhalter.",
           "invalidCql": "Die CQL-Filtervorlage ist ungültig",
+          "unquotedPlaceholder": "Im Filter ist der Verweis auf das Feld „{property}“ nicht in einfache Anführungszeichen gesetzt und akzeptiert daher nur Zahlen. Fügen Sie die Anführungszeichen hinzu, um Textwerte zu verwenden.",
           "valid": "Die Konfiguration der externen Daten ist gültig",
           "sourceUnavailable": "Zum Ausführen der Beispielanfrage sind eine WFS-Quell-URL und ein Layername erforderlich",
           "sampleNotFound": "Der Quelllayer hat kein Beispielfeature zurückgegeben",
@@ -173,6 +174,8 @@
         "noResults": "Keine externen Daten gefunden",
         "requestError": "Externe Daten konnten nicht geladen werden",
         "missingProperty": "Das Quellfeature enthält die Eigenschaft „{property}“ nicht",
+        "unsafeSourceValue": "Die externen Daten können nicht geladen werden, da „{property}“ Text enthält, wo eine Zahl erwartet wird.",
+        "invalidInterpolatedCql": "Der aus dem Quellfeature erstellte CQL-Filter ist nicht gültig",
         "invalidResponse": "Der externe WFS hat kein gültiges GeoJSON zurückgegeben",
         "retry": "Erneut versuchen",
         "errorDetails": "Fehlerdetails"

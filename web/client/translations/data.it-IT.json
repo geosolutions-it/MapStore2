@@ -161,6 +161,7 @@
           "invalidPlaceholder": "Usa almeno un segnaposto valido ${properties.name} o ${properties['name']}",
           "invalidDoubleQuotedPlaceholder": "Le virgolette doppie identificano i nomi dei campi in CQL. Usa gli apici singoli per i segnaposto di testo.",
           "invalidCql": "Il template del filtro CQL non è valido",
+          "unquotedPlaceholder": "Nel filtro, il riferimento al campo “{property}” non è racchiuso tra virgolette singole, quindi accetta solo numeri. Aggiungi le virgolette per usare valori di testo.",
           "valid": "La configurazione dei dati esterni è valida",
           "sourceUnavailable": "Per eseguire la richiesta di esempio sono necessari un URL WFS sorgente e un nome layer",
           "sampleNotFound": "Il layer sorgente non ha restituito una feature di esempio",
@@ -173,6 +174,8 @@
         "noResults": "Nessun dato esterno trovato",
         "requestError": "Impossibile caricare i dati esterni",
         "missingProperty": "La feature sorgente non contiene la proprietà “{property}”",
+        "unsafeSourceValue": "Impossibile caricare i dati esterni perché “{property}” contiene testo dove è previsto un numero.",
+        "invalidInterpolatedCql": "Il filtro CQL costruito dalla feature sorgente non è valido",
         "invalidResponse": "Il WFS esterno non ha restituito un GeoJSON valido",
         "retry": "Riprova",
         "errorDetails": "Dettagli dell'errore"

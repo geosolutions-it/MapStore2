@@ -161,6 +161,7 @@
           "invalidPlaceholder": "Use at least one valid ${properties.name} or ${properties['name']} placeholder",
           "invalidDoubleQuotedPlaceholder": "Double quotes identify field names in CQL. Use single quotes around string placeholders.",
           "invalidCql": "The CQL filter template is not valid",
+          "unquotedPlaceholder": "In the filter, the reference to “{property}” is not wrapped in single quotes, so it only accepts numbers. Add the quotes to use text values.",
           "valid": "The external data configuration is valid",
           "sourceUnavailable": "A WFS source URL and layer name are required to run the sample request",
           "sampleNotFound": "The source layer did not return a sample feature",
@@ -173,6 +174,8 @@
         "noResults": "No external data found",
         "requestError": "Unable to load external data",
         "missingProperty": "The source feature does not contain the property “{property}”",
+        "unsafeSourceValue": "The external data cannot be loaded because “{property}” contains text where a number is expected.",
+        "invalidInterpolatedCql": "The CQL filter built from the source feature is not valid",
         "invalidResponse": "The external WFS did not return valid GeoJSON",
         "retry": "Retry",
         "errorDetails": "Error details"

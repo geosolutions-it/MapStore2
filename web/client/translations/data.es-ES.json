@@ -160,6 +160,7 @@
           "invalidPlaceholder": "Use al menos un marcador válido ${properties.name} o ${properties['name']}",
           "invalidDoubleQuotedPlaceholder": "Las comillas dobles identifican nombres de campos en CQL. Use comillas simples alrededor de los marcadores de texto.",
           "invalidCql": "La plantilla de filtro CQL no es válida",
+          "unquotedPlaceholder": "En el filtro, la referencia al campo «{property}» no está entre comillas simples, por lo que solo acepta números. Añada las comillas para usar valores de texto.",
           "valid": "La configuración de datos externos es válida",
           "sourceUnavailable": "Se necesitan una URL WFS de origen y un nombre de capa para ejecutar la solicitud de ejemplo",
           "sampleNotFound": "La capa de origen no devolvió una entidad de ejemplo",
@@ -172,6 +173,8 @@
         "noResults": "No se encontraron datos externos",
         "requestError": "No se pudieron cargar los datos externos",
         "missingProperty": "La entidad de origen no contiene la propiedad «{property}»",
+        "unsafeSourceValue": "No se pueden cargar los datos externos porque «{property}» contiene texto donde se espera un número.",
+        "invalidInterpolatedCql": "El filtro CQL construido a partir de la entidad de origen no es válido",
         "invalidResponse": "El WFS externo no devolvió un GeoJSON válido",
         "retry": "Reintentar",
         "errorDetails": "Detalles del error"
