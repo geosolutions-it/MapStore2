@@ -694,6 +694,22 @@ describe('Test correctness of the CSW catalog APIs', () => {
         expect(records[0].thumbnail).toBe("/thumb");
     });
 
+    it('csw with DC thumbnail from dc:URI with non-thumbnail name and image protocol (#10504)', () => {
+        const cswRecords = [{
+            dc: {
+                URI: [{
+                    TYPE_NAME: 'DC_1_1.URI',
+                    protocol: 'image/png',
+                    name: 'My description',
+                    value: 'https://site.com/img/fish.png'
+                }]
+            }
+        }];
+        const records = getCatalogRecords({ records: cswRecords }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].thumbnail).toBe('https://site.com/img/fish.png');
+    });
+
     it('csw with DC references, no url, with thumbnail, with uri', () => {
         const cswRecords = [{
             dc: {
