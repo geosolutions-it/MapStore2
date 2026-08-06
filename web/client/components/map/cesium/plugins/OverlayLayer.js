@@ -9,7 +9,6 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 
-import eventListener from 'eventlistener';
 import isEqual from 'lodash/isEqual';
 /**
  * Created by thomas on 27/01/14.
@@ -160,11 +159,11 @@ const cloneOriginalOverlay = (original, options) => {
     // handle optional close button on overlay
     const closeClassName = options.closeClass || 'close';
     if (options.onClose && cloned.getElementsByClassName(closeClassName).length === 1) {
-        const close = cloned.getElementsByClassName(closeClassName)[0];
+        const closeElement = cloned.getElementsByClassName(closeClassName)[0];
         const onClose = (e) => {
             options.onClose(e.target.getAttribute('data-overlayid'));
         };
-        eventListener.add(close, 'click', onClose);
+        closeElement?.addEventListener('click', onClose);
     }
     return cloned;
 };
