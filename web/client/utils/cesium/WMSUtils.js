@@ -15,6 +15,7 @@ import { creditsToAttribution, getAuthenticationParam, getURLs, getWMSVendorPara
 import { isVectorFormat } from '../VectorTileUtils';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { randomInt } from '../RandomUtils';
+import rateLimitManager from '../RateLimitManager';
 
 function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
@@ -22,6 +23,38 @@ function getQueryString(parameters) {
 
 const PARAM_OPTIONS = ["layers", "styles", "style", "format", "transparent", "version", "tiled", "zindex", "srs", "singletile", "_v_", "filterobj" ];
 
+const getRateLimitOptions = (options = {}) => ({
+    params: {
+        layers: options.name
+    },
+    msRateLimitBucket: options.msRateLimitBucket,
+    msRateLimitKey: options.msRateLimitKey
+});
+
+const getResourceUrl = (resource, fallbackUrl) => {
+    if (resource && typeof resource.getUrlComponent === 'function') {
+        return resource.getUrlComponent(true, false);
+    }
+    return resource?.url || fallbackUrl;
+};
+
+const createRateLimitRetryCallback = (options, fallbackUrl) => (resource, error) => {
+    if (error?.statusCode !== 429) {
+        return false;
+    }
+    const url = getResourceUrl(resource, fallbackUrl);
+    const rateLimitOptions = getRateLimitOptions(options);
+    const response = rateLimitManager.register429(url, error.responseHeaders, rateLimitOptions);
+    if (!response.shouldRetry) {
+        return false;
+    }
+    return rateLimitManager.wait(url, rateLimitOptions).then(() => true);
+};
+
+const getRateLimitResourceOptions = (options, fallbackUrl) => ({
+    retryCallback: createRateLimitRetryCallback(options, fallbackUrl),
+    retryAttempts: rateLimitManager.getRetryAttempts()
+});
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -107,7 +140,8 @@ export function wmsToCesiumOptions(options) {
         url: new Cesium.Resource({
             url: "{s}",
             headers,
-            proxy: getProxy(options)
+            proxy: getProxy(options),
+            ...getRateLimitResourceOptions(options, urls[0])
         }),
         // #7516 this helps Cesium to use CORS requests in a proper way, even when headers are not
         // present in the Resource
@@ -170,10 +204,15 @@ export function wmsToCesiumOptionsSingleTile(options) {
     };
 }
 
+export function createSingleTileImageryProvider(options) {
+    return new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(options));
+}
+
 export default {
     PARAM_OPTIONS,
     wmsToCesiumOptionsBIL,
     wmsToCesiumOptions,
     wmsToCesiumOptionsSingleTile,
+    createSingleTileImageryProvider,
     getProxy
 };
