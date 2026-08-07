@@ -105,7 +105,7 @@ describe('test Layer Properties Display module component', () => {
         expect(inputs.length).toBe(16);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
-        inputs[8].click();
+        document.getElementById("container").querySelector('input[value="singleTile"]').click();
         expect(spy.calls.length).toBe(1);
     });
     it('tests Display component for wms for dashboard or geostory', () => {
@@ -133,8 +133,33 @@ describe('test Layer Properties Display module component', () => {
         expect(inputs.length).toBe(15);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
-        inputs[8].click();
+        document.getElementById("container").querySelector('input[value="singleTile"]').click();
         expect(spy.calls.length).toBe(1);
+    });
+    it('tests coalesce exclude checkbox is available also for no-vendor wms servers', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            serverType: ServerTypes.NO_VENDOR
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const spy = expect.spyOn(handlers, "onChange");
+        ReactDOM.render(<Display element={l} settings={{ options: {} }} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const container = document.getElementById("container");
+        expect(container.querySelector('.ms-wms-cache-options')).toBeFalsy();
+        const coalesce = container.querySelector('input[value="coalesce"]');
+        expect(coalesce).toBeTruthy();
+        expect(coalesce.checked).toBe(false);
+        coalesce.click();
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments[0]).toBe('coalesce');
+        expect(spy.calls[0].arguments[1]).toBe(false);
     });
     it('tests Display component for wms with format fetch', (done) => {
         const l = {

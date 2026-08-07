@@ -86,6 +86,29 @@ describe('WMSCoalesceUtils', () => {
             const b = { ...baseWms, id: 'b', name: 'workspace:b', tiled: false };
             expect(mergeable(a, b)).toBe(false);
         });
+        it('check visibility limits differ', () => {
+            const a = { ...baseWms, id: 'a', name: 'workspace:a', minResolution: 10 };
+            const b = { ...baseWms, id: 'b', name: 'workspace:b' };
+            expect(mergeable(a, b)).toBe(false);
+            const c = { ...baseWms, id: 'c', name: 'workspace:c', maxResolution: 500 };
+            const d = { ...baseWms, id: 'd', name: 'workspace:d', maxResolution: 100 };
+            expect(mergeable(c, d)).toBe(false);
+        });
+    });
+    it('groupWMSLayers keeps excluded layers out of any group', () => {
+        const baseWms = {
+            type: 'wms',
+            url: 'http://localhost:8080/geoserver/wms',
+            format: 'image/png',
+            visibility: true
+        };
+        const layers = ['a', 'b', 'x', 'c', 'd'].map((id) => ({ ...baseWms, id, name: `workspace:${id}` }));
+        const units = groupWMSLayers(layers, { excludeIds: ['x'] });
+        expect(units.length).toBe(3);
+        expect(units[0].key).toBe('wmsgroup:a,b');
+        expect(units[1].key).toBe('x');
+        expect(units[1].options).toBe(layers[2]);
+        expect(units[2].key).toBe('wmsgroup:c,d');
     });
     it('groupWMSLayers coalesces adjacent compatible wms layers and keeps the others unchanged', () => {
         const baseWms = {
