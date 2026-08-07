@@ -27,9 +27,10 @@ import { pathnameSelector } from '../selectors/router';
 import { isLoggedIn, isLoginWindowOpen } from '../selectors/security';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCookieValue, eraseCookie} from '../utils/CookieUtils';
+import { consumeLoginRedirect } from '../utils/LoginRedirectUtils';
 import AuthenticationAPI from '../api/GeoStoreDAO';
 import Rx from 'rxjs';
-import { push, LOCATION_CHANGE } from 'connected-react-router';
+import { push, replace, LOCATION_CHANGE } from 'connected-react-router';
 import url from 'url';
 import { get } from 'lodash';
 import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
@@ -116,6 +117,22 @@ export const redirectOnLogout = action$ =>
         .switchMap(({ redirectUrl }) => Rx.Observable.of(push(redirectUrl)));
 
 /**
+ * Restores the hash route saved before an external login.
+ * @memberof epics.login
+ * @return {external:Observable} emitting a router replace action when a valid route is available
+ */
+export const restoreLoginRedirect = action$ =>
+    action$.ofType(LOGIN_SUCCESS)
+        .switchMap(() => {
+            const redirectHash = consumeLoginRedirect();
+            const isInternalRoute = /^#\/(?!\/)/.test(redirectHash ?? '');
+            if (!isInternalRoute || redirectHash === window.location.hash) {
+                return Rx.Observable.empty();
+            }
+            return Rx.Observable.of(replace(redirectHash.slice(1)));
+        });
+
+/**
  * Verifies the session from the cookie.
  * This is present if login has been done using OpenID.
  * @memberof epics.login
@@ -184,5 +201,6 @@ export default {
     closeLoginPromptOnLoginSuccess,
     initCatalogOnLoginOutEpic,
     verifyOpenIdSessionCookie,
+    restoreLoginRedirect,
     redirectOnLogout
 };
