@@ -155,7 +155,7 @@ import Spinner from '../components/layout/Spinner';
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
- * @prop {boolean} coalesceWMSLayers when true, adjacent WMS layers from the same source with compatible options are combined into a single GetMap request to reduce the number of requests sent to the server (default false); if not set, falls back to the current map's `mapOptions.coalesceWMSLayers` (set from Map Settings) and then to `miscSettings.coalesceWMSLayers` in localConfig.json; a layer can opt out with `coalesce: false` in its own options
+ * @prop {boolean} coalesceWMSLayers when true, adjacent WMS layers from the same source with compatible options are combined into a single GetMap request to reduce the number of requests sent to the server (default false); if not set, falls back to the current map's `mapOptions.coalesceWMSLayers` (set from Map Settings) and then to `miscSettings.coalesceWMSLayers` in localConfig.json; a layer can opt out with `coalesce: false` in its own options; not supported on leaflet, where it is always disabled
  * @prop {number} coalesceWMSLayersMaxGroupSize maximum number of WMS layers that can be combined into a single coalesced GetMap request (default 10)
  * @prop {object} mapOptions map options grouped by map type
  * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
@@ -386,6 +386,9 @@ class MapPlugin extends React.Component {
      * @returns true if coalescing is enabled, false otherwise
      */
     isCoalesceEnabled = () => {
+        if (this.props.mapType === MapLibraries.LEAFLET) {
+            return false;
+        }
         return this.props.coalesceWMSLayers
             ?? this.props.map?.mapOptions?.coalesceWMSLayers
             ?? ConfigUtils.getConfigProp('miscSettings')?.coalesceWMSLayers;
