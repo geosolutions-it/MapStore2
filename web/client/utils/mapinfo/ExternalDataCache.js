@@ -18,14 +18,14 @@ export const createExternalDataCacheKey = ({
     sourceFeatureId,
     sourceFeatureIndex,
     url,
-    layerName,
+    typeName,
     cqlFilter
 }) => JSON.stringify([
     identifyRequestId,
     sourceFeatureId,
     sourceFeatureIndex,
     url,
-    layerName,
+    typeName,
     cqlFilter
 ]);
 

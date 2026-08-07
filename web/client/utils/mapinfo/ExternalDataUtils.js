@@ -27,8 +27,8 @@ const createError = (message, code, properties = {}) =>
  * Validates the required fields, property placeholders and CQL syntax.
  * @return {string|null} translation key for the error, or null when valid
  */
-export const validateExternalDataConfiguration = ({ url, layerName, cqlFilter } = {}) => {
-    if (!url?.trim() || !layerName?.trim() || !cqlFilter?.trim()) {
+export const validateExternalDataConfiguration = ({ url, typeName, cqlFilter } = {}) => {
+    if (!url?.trim() || !typeName?.trim() || !cqlFilter?.trim()) {
         return 'layerProperties.externalData.validation.missingFields';
     }
     const placeholders = cqlFilter.match(PLACEHOLDER) || [];

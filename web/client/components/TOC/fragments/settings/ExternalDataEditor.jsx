@@ -87,7 +87,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
     const [state, setState] = useState({
         featureTypes: [],
         capabilitiesStatus: value.url ? 'idle' : 'empty',
-        attributesStatus: value.layerName ? 'idle' : 'empty',
+        attributesStatus: value.typeName ? 'idle' : 'empty',
         validation: IDLE_VALIDATION
     });
     const [capabilitiesRequest, setCapabilitiesRequest] = useState({
@@ -109,6 +109,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         validationRequestId.current += 1;
         updateState({ validation: IDLE_VALIDATION });
         onChange({
+            type: 'wfs',
             ...valueRef.current,
             ...changes
         });
@@ -163,7 +164,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
     const onUrlChange = (event) => {
         const url = event.target.value;
         describeRequestId.current += 1;
-        updateValue({ url, layerName: '', attributes: [] });
+        updateValue({ url, typeName: '', attributes: [] });
         updateState({
             attributesStatus: 'empty',
             featureTypes: [],
@@ -172,16 +173,16 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         requestCapabilities(url);
     };
 
-    const loadAttributes = (layerName, previousAttributes) => {
+    const loadAttributes = (typeName, previousAttributes) => {
         const currentRequestId = describeRequestId.current + 1;
         describeRequestId.current = currentRequestId;
         updateState({ attributesStatus: 'loading' });
-        describeFeatureType({ layer: { url: valueRef.current.url, name: layerName } })
+        describeFeatureType({ layer: { url: valueRef.current.url, name: typeName } })
             .toPromise()
             .then(({ data }) => {
                 if (currentRequestId === describeRequestId.current) {
                     updateValue({
-                        layerName,
+                        typeName,
                         attributes: getExternalAttributes(data, previousAttributes)
                     });
                     updateState({ attributesStatus: 'valid' });
@@ -195,16 +196,16 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
     };
 
     const onLayerChange = (selected) => {
-        const layerName = selected?.value || '';
-        const previousAttributes = valueRef.current.layerName === layerName
+        const typeName = selected?.value || '';
+        const previousAttributes = valueRef.current.typeName === typeName
             ? valueRef.current.attributes || []
             : [];
-        updateValue({ layerName, attributes: [] });
-        if (!layerName) {
+        updateValue({ typeName, attributes: [] });
+        if (!typeName) {
             updateState({ attributesStatus: 'empty' });
             return;
         }
-        loadAttributes(layerName, previousAttributes);
+        loadAttributes(typeName, previousAttributes);
     };
 
     const updateAttribute = (name, changes) => {
@@ -273,13 +274,13 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                     configuration.cqlFilter,
                     sampleFeature
                 );
-                return getFeature(configuration.url, configuration.layerName, {
+                return getFeature(configuration.url, configuration.typeName, {
                     CQL_FILTER: cqlFilter,
                     maxFeatures: 1,
                     outputFormat: 'application/json'
-                }).then(({ data: externalData }) => ({
+                }).then(({ data: externalResponse }) => ({
                     cqlFilter,
-                    response: parseResponse(externalData)
+                    response: parseResponse(externalResponse)
                 }));
             })
             .then(({ cqlFilter, response }) => {
@@ -311,7 +312,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
             });
     };
 
-    const { url = '', layerName = '', cqlFilter = '', attributes = [] } = value;
+    const { url = '', typeName = '', cqlFilter = '', attributes = [] } = value;
     const { capabilitiesStatus, attributesStatus, validation } = state;
     return (
         <div className="ms-external-data-editor">
@@ -345,10 +346,12 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                     clearable
                     disabled={capabilitiesStatus !== 'valid'}
                     isLoading={attributesStatus === 'loading'}
-                    value={layerName}
-                    options={state.featureTypes.map(({ name, title }) => ({
-                        value: name,
-                        label: title === name ? name : `${title} (${name})`
+                    value={typeName}
+                    options={state.featureTypes.map((featureType) => ({
+                        value: featureType.name,
+                        label: featureType.title === featureType.name
+                            ? featureType.name
+                            : `${featureType.title} (${featureType.name})`
                     }))}
                     onChange={onLayerChange}/>
             </FormGroup>
@@ -397,7 +400,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                 ) : null}
             </div>
 
-            {layerName ? (
+            {typeName ? (
                 <div className="ms-external-data-attributes">
                     <Fields
                         title={<Message msgId="layerProperties.externalData.attributes" />}
@@ -410,8 +413,8 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                             [property]: nextValue
                         })}
                         onChangeAll={updateAllAttributes}
-                        onLoadFields={() => loadAttributes(layerName, attributes)}
-                        onClear={() => loadAttributes(layerName, [])}/>
+                        onLoadFields={() => loadAttributes(typeName, attributes)}
+                        onClear={() => loadAttributes(typeName, [])}/>
                 </div>
             ) : null}
         </div>

@@ -323,7 +323,7 @@ export default class extends React.Component {
                     isDraggable={!isDisabled && views.length > 1}
                     isEditing={[EXTERNAL_DATA, 'PROPERTIES'].includes(view.type)
                         && this.state.editingViewId === view.id}
-                    isInvalid={view.type === EXTERNAL_DATA && !!validateExternalDataConfiguration(view.externalData)}
+                    isInvalid={view.type === EXTERNAL_DATA && !!validateExternalDataConfiguration(view.featuresService)}
                     view={view}
                     views={views}
                     canEdit={canEdit}
@@ -339,8 +339,8 @@ export default class extends React.Component {
                     <ExternalDataEditor
                         sourceLayer={this.props.element}
                         currentLocale={this.props.currentLocale}
-                        value={view.externalData}
-                        onChange={(externalData) => this.updateView(view.id, { externalData })}/>
+                        value={view.featuresService}
+                        onChange={(featuresService) => this.updateView(view.id, { featuresService })}/>
                 ) : null}
                 {!isDisabled && this.state.editingViewId === view.id && view.type === 'PROPERTIES' ? (
                     <PropertiesEditor

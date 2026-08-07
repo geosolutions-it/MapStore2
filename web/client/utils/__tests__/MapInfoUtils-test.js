@@ -845,13 +845,13 @@ describe('MapInfoUtils', () => {
                 views: [{
                     id: 'invalid-external',
                     type: 'EXTERNAL_DATA',
-                    externalData: {}
+                    featuresService: {}
                 }, {
                     id: 'valid-external',
                     type: 'EXTERNAL_DATA',
-                    externalData: {
+                    featuresService: {
                         url: '/geoserver/wfs',
-                        layerName: 'workspace:external',
+                        typeName: 'workspace:external',
                         cqlFilter: "source_id = '${properties.id}'"
                     }
                 }]

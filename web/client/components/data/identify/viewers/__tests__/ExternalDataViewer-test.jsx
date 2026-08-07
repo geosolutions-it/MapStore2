@@ -23,9 +23,9 @@ const layer = {
     featureInfo: {
         id: 'external-view',
         identifyRequestId: 'identify-external',
-        externalData: {
+        featuresService: {
             url: '/external/wfs',
-            layerName: 'workspace:external',
+            typeName: 'workspace:external',
             cqlFilter: "source_id = '${properties.sourceId}'",
             attributes: [{ name: 'label', alias: 'External label', visible: true }]
         }
@@ -246,8 +246,8 @@ describe('ExternalDataViewer', () => {
             featureInfo: {
                 ...layer.featureInfo,
                 id: 'second-view',
-                externalData: {
-                    ...layer.featureInfo.externalData,
+                featuresService: {
+                    ...layer.featureInfo.featuresService,
                     attributes: [{ name: 'code', alias: 'Second view code', visible: true }]
                 }
             }

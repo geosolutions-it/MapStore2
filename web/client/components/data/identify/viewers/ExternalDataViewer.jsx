@@ -95,7 +95,7 @@ const ExternalDataViewer = ({ response, layer }) => {
         parseResponse(propsRef.current.response)?.features || [];
 
     const getConfiguration = () =>
-        propsRef.current.layer?.featureInfo?.externalData || {};
+        propsRef.current.layer?.featureInfo?.featuresService || {};
 
     const getCacheKey = (sourceFeature, index, cqlFilter) => {
         const featureInfo = propsRef.current.layer?.featureInfo || {};
@@ -105,7 +105,7 @@ const ExternalDataViewer = ({ response, layer }) => {
             sourceFeatureId: sourceFeature?.id,
             sourceFeatureIndex: index,
             url: configuration.url,
-            layerName: configuration.layerName,
+            typeName: configuration.typeName,
             cqlFilter
         });
     };
@@ -146,7 +146,7 @@ const ExternalDataViewer = ({ response, layer }) => {
         const cachedRequest = getExternalDataCacheEntry(cacheKey);
         // Reuse both completed and still-running requests when the view rerenders.
         const request = cachedRequest || setExternalDataCacheEntry(cacheKey,
-            getFeature(configuration.url, configuration.layerName, {
+            getFeature(configuration.url, configuration.typeName, {
                 CQL_FILTER: cqlFilter,
                 maxFeatures: EXTERNAL_RESPONSE_LIMIT,
                 outputFormat: 'application/json'
@@ -176,7 +176,7 @@ const ExternalDataViewer = ({ response, layer }) => {
     loadRef.current = load;
 
     const featureInfo = layer?.featureInfo || {};
-    const configuration = featureInfo.externalData || {};
+    const configuration = featureInfo.featuresService || {};
     const configurationError = validateExternalDataConfiguration(configuration);
     useEffect(() => {
         if (configurationError) {
@@ -196,7 +196,7 @@ const ExternalDataViewer = ({ response, layer }) => {
         featureInfo.identifyRequestId,
         featureInfo.id,
         configuration.url,
-        configuration.layerName,
+        configuration.typeName,
         configuration.cqlFilter
     ]);
 

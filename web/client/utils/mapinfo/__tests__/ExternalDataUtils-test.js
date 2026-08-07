@@ -38,13 +38,13 @@ describe('ExternalDataUtils', () => {
     it('rejects placeholders surrounded by CQL double quotes', () => {
         expect(validateExternalDataConfiguration({
             url: '/geoserver/wfs',
-            layerName: 'workspace:external',
+            typeName: 'workspace:external',
             cqlFilter: 'code = "${properties.code}"'
         })).toBe('layerProperties.externalData.validation.invalidDoubleQuotedPlaceholder');
 
         expect(validateExternalDataConfiguration({
             url: '/geoserver/wfs',
-            layerName: 'workspace:external',
+            typeName: 'workspace:external',
             cqlFilter: "code = '${properties.code}'"
         })).toBe(null);
     });

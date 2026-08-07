@@ -22,7 +22,7 @@ describe('ExternalDataCache', () => {
         sourceFeatureId: 'feature-1',
         sourceFeatureIndex: 0,
         url: '/external/wfs',
-        layerName: 'workspace:external',
+        typeName: 'workspace:external',
         cqlFilter: "source_id = '1'"
     });
 
@@ -59,7 +59,7 @@ describe('ExternalDataCache', () => {
             sourceFeatureId: 'feature-1',
             sourceFeatureIndex: 0,
             url: '/external/wfs',
-            layerName: 'workspace:external',
+            typeName: 'workspace:external',
             cqlFilter: "source_id = '1'"
         };
         const key = createExternalDataCacheKey(request);
@@ -70,7 +70,7 @@ describe('ExternalDataCache', () => {
             { sourceFeatureId: 'feature-2' },
             { sourceFeatureIndex: 1 },
             { url: '/other/wfs' },
-            { layerName: 'workspace:other' },
+            { typeName: 'workspace:other' },
             { cqlFilter: "source_id = '2'" }
         ].forEach((change) => {
             expect(createExternalDataCacheKey({ ...request, ...change })).toNotBe(key);

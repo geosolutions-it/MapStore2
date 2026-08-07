@@ -75,17 +75,17 @@ describe('ExternalDataEditor', () => {
         );
         expect(validateExternalDataConfiguration({
             url: '/geoserver/wfs',
-            layerName: 'workspace:table',
+            typeName: 'workspace:table',
             cqlFilter: "target_id = '${feature.id}'"
         })).toBe('layerProperties.externalData.validation.invalidPlaceholder');
         expect(validateExternalDataConfiguration({
             url: '/geoserver/wfs',
-            layerName: 'workspace:table',
+            typeName: 'workspace:table',
             cqlFilter: "target_id = '${properties.source_id}' AND"
         })).toBe('layerProperties.externalData.validation.invalidCql');
         expect(validateExternalDataConfiguration({
             url: '/geoserver/wfs',
-            layerName: 'workspace:table',
+            typeName: 'workspace:table',
             cqlFilter: "target_id = '${properties['source_id']}'"
         })).toBe(null);
     });
@@ -93,7 +93,7 @@ describe('ExternalDataEditor', () => {
     it('renders and updates CQL and attribute presentation settings', () => {
         let value = {
             url: '',
-            layerName: 'workspace:table',
+            typeName: 'workspace:table',
             cqlFilter: "target_id = '${properties.id}'",
             attributes: [{ name: 'name', type: 'string', alias: '', visible: true }]
         };
@@ -133,7 +133,7 @@ describe('ExternalDataEditor', () => {
             <ExternalDataEditor
                 value={{
                     url: '/external-data-test/wfs',
-                    layerName: '',
+                    typeName: '',
                     cqlFilter: '',
                     attributes: []
                 }}/>,
@@ -169,7 +169,7 @@ describe('ExternalDataEditor', () => {
         const ControlledEditor = () => {
             const [currentValue, setCurrentValue] = React.useState({
                 url: '/external-data-first/wfs',
-                layerName: '',
+                typeName: '',
                 cqlFilter: '',
                 attributes: []
             });
@@ -226,7 +226,7 @@ describe('ExternalDataEditor', () => {
         const ControlledEditor = () => {
             const [currentValue, setCurrentValue] = React.useState({
                 url: '/external-data-describe/wfs',
-                layerName: '',
+                typeName: '',
                 cqlFilter: '',
                 attributes: []
             });
@@ -279,7 +279,7 @@ describe('ExternalDataEditor', () => {
         });
         let value = {
             url: '/external-data-reselect/wfs',
-            layerName: 'workspace:table',
+            typeName: 'workspace:table',
             cqlFilter: '',
             attributes: [{ name: 'name', type: 'string', alias: 'Label', visible: false }]
         };
@@ -354,7 +354,7 @@ describe('ExternalDataEditor', () => {
                 }}
                 value={{
                     url: '/external-validation/wfs',
-                    layerName: 'workspace:external',
+                    typeName: 'workspace:external',
                     cqlFilter: "source_id = '${properties.sourceId}'",
                     attributes: [{
                         name: 'label',

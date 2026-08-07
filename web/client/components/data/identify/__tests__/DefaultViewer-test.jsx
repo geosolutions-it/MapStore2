@@ -208,9 +208,9 @@ describe('DefaultViewer', () => {
                             views: [{
                                 id: 'external',
                                 type: 'EXTERNAL_DATA',
-                                externalData: {
+                                featuresService: {
                                     url: '/external/wfs',
-                                    layerName: 'workspace:external',
+                                    typeName: 'workspace:external',
                                     cqlFilter: "source_id = '${properties.sourceId}'"
                                 }
                             }]
@@ -231,7 +231,7 @@ describe('DefaultViewer', () => {
             sourceFeatureId: 'feature-1',
             sourceFeatureIndex: 0,
             url: '/external/wfs',
-            layerName: 'workspace:external',
+            typeName: 'workspace:external',
             cqlFilter: "source_id = '1'"
         });
         setExternalDataCacheEntry(key, Promise.resolve({}), 'identify-cache');
@@ -260,7 +260,7 @@ describe('DefaultViewer', () => {
             sourceFeatureId: 'feature-1',
             sourceFeatureIndex: 0,
             url: '/external/wfs',
-            layerName: 'workspace:external',
+            typeName: 'workspace:external',
             cqlFilter: "source_id = '1'"
         });
         setExternalDataCacheEntry(key, Promise.resolve({}), 'identify-unmount');
