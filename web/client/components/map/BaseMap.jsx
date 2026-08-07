@@ -67,7 +67,8 @@ class BaseMap extends React.Component {
             onLayerError: () => {}
         },
         env: [],
-        zoomControl: false
+        zoomControl: false,
+        coalesceWMSLayersMaxGroupSize: 10
     };
 
     getTool = (tool) => {
@@ -106,7 +107,10 @@ class BaseMap extends React.Component {
     };
 
     isCoalesceEnabled = () => {
-        return this.props.coalesceWMSLayers ?? ConfigUtils.getConfigProp('miscSettings')?.coalesceWMSLayers;
+        return this.props.map?.mapOptions?.coalesceWMSLayers
+            ?? this.props.coalesceWMSLayers
+            ?? ConfigUtils.getConfigProp('miscSettings')?.coalesceWMSLayers
+            ?? false;
     };
 
     getLayerUnits = (layers) => {

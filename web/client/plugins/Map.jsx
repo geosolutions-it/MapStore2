@@ -257,7 +257,8 @@ class MapPlugin extends React.Component {
         items: [],
         onLoadingMapPlugins: () => {},
         onMapTypeLoaded: () => {},
-        pluginsCreator
+        pluginsCreator,
+        coalesceWMSLayersMaxGroupSize: 10
     };
 
     state = {};
@@ -371,7 +372,7 @@ class MapPlugin extends React.Component {
         if (!this.isCoalesceEnabled()) {
             return layers.map((layer) => ({ key: layer.id || layer.name, options: layer }));
         }
-        const deps = [this.props.layers, this.props.additionalLayers, this.props.elevationEnabled, this.props.mapType, this.props.coalesceWMSLayersMaxGroupSize, this.props.map?.mapOptions?.coalesceWMSLayers, this.props.coalesceExcludeIds];
+        const deps = [this.props.layers, this.props.additionalLayers, this.props.elevationEnabled, this.props.mapType, this.props.coalesceWMSLayersMaxGroupSize, this.props.coalesceExcludeIds];
         if (!this._coalesceDeps || deps.some((dep, idx) => dep !== this._coalesceDeps[idx])) {
             this._coalesceDeps = deps;
             this._coalesceUnits = groupWMSLayers(layers, {
@@ -382,16 +383,18 @@ class MapPlugin extends React.Component {
         return this._coalesceUnits;
     };
     /**
-     * Logic for coalescing priority is: layer option > plugin cfg > map settings > config miscSettings
+     * Logic for coalescing priority is: map settings > plugin cfg > config miscSettings.
+     * A single layer can always opt out with `coalesce: false` in its own options.
      * @returns true if coalescing is enabled, false otherwise
      */
     isCoalesceEnabled = () => {
         if (this.props.mapType === MapLibraries.LEAFLET) {
             return false;
         }
-        return this.props.coalesceWMSLayers
-            ?? this.props.map?.mapOptions?.coalesceWMSLayers
-            ?? ConfigUtils.getConfigProp('miscSettings')?.coalesceWMSLayers;
+        return this.props.map?.mapOptions?.coalesceWMSLayers
+            ?? this.props.coalesceWMSLayers
+            ?? ConfigUtils.getConfigProp('miscSettings')?.coalesceWMSLayers
+            ?? false;
     };
 
     renderLayerContent = (layer, projection) => {

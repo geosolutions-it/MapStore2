@@ -276,8 +276,6 @@
       {
         "name": "Map",
         "cfg": {
-          "coalesceWMSLayers": false,
-          "coalesceWMSLayersMaxGroupSize": 10,
           "mapOptions": {
             "openlayers": {
               "interactions": {
@@ -405,8 +403,6 @@
       {
         "name": "Map",
         "cfg": {
-          "coalesceWMSLayers": false,
-          "coalesceWMSLayersMaxGroupSize": 10,
           "containerPosition": "background",
           "mapOptions": {
             "openlayers": {
@@ -679,8 +675,6 @@
       {
         "name": "Map",
         "cfg": {
-          "coalesceWMSLayers": false,
-          "coalesceWMSLayersMaxGroupSize": 10,
           "mapOptions": {
             "openlayers": {
               "interactions": {
