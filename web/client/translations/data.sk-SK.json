@@ -104,7 +104,6 @@
       "templateFormatInfoAlert1": "Kliknutím na tlačidlo Upraviť pridáš novú šablónu.",
       "templateFormatInfoAlert2": "Použi ${ attribute } pre zoskupenie vlastností, ktoré potrebuješ na zobrazenie",
       "templateFormatInfoAlertExample": "ID tejto funkcie je ${ properties }",
-      "templatePreview": "Náhľad šablóny",
       "heightOffset": "Height offset (m)",
       "visibilityLimits": {
         "title": "Limity viditeľnosti",
