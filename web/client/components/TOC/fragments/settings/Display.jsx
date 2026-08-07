@@ -274,11 +274,6 @@ export default class extends React.Component {
                                 onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
                                 <Message msgId="layerProperties.singleTile"/>
                             </Checkbox>
-                            <Checkbox key="coalesce" value="coalesce"
-                                checked={this.props.element?.coalesce === false}
-                                onChange={(e) => this.props.onChange("coalesce", e.target.checked ? false : undefined)}>
-                                <Message msgId="layerProperties.coalesceExclude.label" />{' '}<InfoPopover text={<Message msgId="layerProperties.coalesceExclude.tooltip" />} />
-                            </Checkbox>
                             {(this.props.isLocalizedLayerStylesEnabled && this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
                                 <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
                                     data-qa="display-lacalized-layer-styles-option"
@@ -304,6 +299,11 @@ export default class extends React.Component {
                                     />
                                 </>
                             ))}
+                            <Checkbox key="coalesce" value="coalesce"
+                                checked={this.props.element?.coalesce === false}
+                                onChange={(e) => this.props.onChange("coalesce", e.target.checked ? false : undefined)}>
+                                <Message msgId="layerProperties.coalesceExclude.label" />{' '}<InfoPopover text={<Message msgId="layerProperties.coalesceExclude.tooltip" />} />
+                            </Checkbox>
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>
