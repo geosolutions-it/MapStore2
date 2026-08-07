@@ -99,6 +99,10 @@
         "tooltip": "La couche est recadrée à l'étendue de la projection lorsqu'elle est ajoutée à la carte avec cette option activée"
       },
       "cached": "Utiliser les options de cache",
+      "coalesceExclude": {
+        "label": "Exclure des requêtes combinées",
+        "tooltip": "Conserve cette couche en dehors des requêtes WMS combinées, afin qu'elle soit toujours demandée séparément. Sans effet lorsque les requêtes combinées sont désactivées pour la carte."
+      },
       "styleCustom": "Utiliser un style nommé \"{value} \"",
       "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",
       "stylesRefreshList": "Actualiser la liste des styles",
@@ -623,7 +627,9 @@
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
         },
         "collisionDetection": "Activer la détection de collisions",
-        "imageryLayersOverlay": "Activer la superposition des couches d’images"
+        "imageryLayersOverlay": "Activer la superposition des couches d’images",
+        "coalesceWMSLayers": "Combiner les requêtes WMS (coalesce)",
+        "coalesceWMSLayersTooltip": "Définit le comportement par défaut pour les couches de cette carte : lorsqu'il est activé, les couches WMS adjacentes provenant de la même source sont combinées en une seule requête GetMap, réduisant ainsi le nombre de requêtes envoyées au serveur. Les couches de fond sont exclues."
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",

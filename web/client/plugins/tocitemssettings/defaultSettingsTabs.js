@@ -31,7 +31,6 @@ import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
 import MultiBandEditor from '../styleeditor/MultiBandEditor';
 import { mapSelector } from '../../selectors/map';
 
-
 import { StyleSelector } from '../styleeditor/index';
 
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);

@@ -5,6 +5,7 @@ import { highlighedFeatures } from '../../selectors/highlight';
 import { securityTokenSelector } from '../../selectors/security';
 import { currentLocaleLanguageSelector } from '../../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesNameSelector } from '../../selectors/localizedLayerStyles';
+import { coalesceExcludeIdsSelector } from '../../selectors/coalesce';
 import { createShallowSelectorCreator } from '../../utils/ReselectUtils';
 import isEqual from 'lodash/isEqual';
 
@@ -25,7 +26,8 @@ export default createShallowSelectorCreator(isEqual)(
     localizedLayerStylesNameSelector,
     currentLocaleLanguageSelector,
     mapNameSelector,
-    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage, mapTitle) => ({
+    coalesceExcludeIdsSelector,
+    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage, mapTitle, coalesceExcludeIds) => ({
         projectionDefs,
         map,
         mapType,
@@ -37,6 +39,7 @@ export default createShallowSelectorCreator(isEqual)(
         isLocalizedLayerStylesEnabled,
         localizedLayerStylesName,
         currentLocaleLanguage,
-        mapTitle
+        mapTitle,
+        coalesceExcludeIds
     })
 );
