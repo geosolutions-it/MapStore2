@@ -8,7 +8,6 @@
 
 import isEqual from 'lodash/isEqual';
 import isArray from 'lodash/isArray';
-// import omit from 'lodash/omit';
 import { isVectorFormat } from './VectorTileUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
 import { getWMSURLs, wmsToOpenlayersOptions } from './openlayers/WMSUtils';

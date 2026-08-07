@@ -248,7 +248,6 @@ class CesiumLayer extends React.Component {
                         clearTimeout(loadTimeout);
                         loadTimeout = undefined;
                     }
-                    // this.props.onLayerLoading(options.id);
                     this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
                 },
                 onLayerLoad: (error) => {
@@ -256,7 +255,6 @@ class CesiumLayer extends React.Component {
                         clearTimeout(loadTimeout);
                     }
                     loadTimeout = setTimeout(() => {
-                        // this.props.onLayerLoad(options.id, error);
                         this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id, error));
                     }, 300);
                 }
@@ -280,7 +278,6 @@ class CesiumLayer extends React.Component {
                         clearTimeout(loadTimeout);
                         loadTimeout = undefined;
                     }
-                    // this.props.onLayerLoading(options.id);
                     this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
                 }
                 pending++;
@@ -291,7 +288,6 @@ class CesiumLayer extends React.Component {
                             clearTimeout(loadTimeout);
                         }
                         loadTimeout = setTimeout(() => {
-                            // this.props.onLayerLoad(options.id, error);
                             this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id, error));
                         }, 300);
                     }

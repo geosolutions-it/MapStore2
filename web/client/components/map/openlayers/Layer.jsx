@@ -248,7 +248,6 @@ export default class OpenlayersLayer extends React.Component {
             }
             this.layer.getSource().on('tileloadstart', () => {
                 if (this.tilestoload === 0) {
-                    // this.props.onLayerLoading(options.id);
                     this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
                     this.tilestoload++;
                 } else {
@@ -276,14 +275,11 @@ export default class OpenlayersLayer extends React.Component {
                     next: (tileEvents) => {
                         const errors = tileEvents.filter(e => e.type === 'tileloaderror');
                         if (errors.length > 0 && (options && !options.hideErrors || !options)) {
-                            // this.props.onLayerLoad(options.id, {error: true});
-                            // this.props.onLayerError(options.id, tileEvents.length, errors.length);
                             this.forEachCoalesceGroupId(options, (id) => {
                                 this.props.onLayerLoad(id, {error: true});
                                 this.props.onLayerError(id, tileEvents.length, errors.length);
                             });
                         } else {
-                            // this.props.onLayerLoad(options.id);
                             this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id));
                         }
                     }
@@ -297,7 +293,6 @@ export default class OpenlayersLayer extends React.Component {
 
             this.layer.getSource().on('imageloadstart', () => {
                 if (this.imagestoload === 0) {
-                    // this.props.onLayerLoading(options.id);
                     this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
                     this.imagestoload++;
                 } else {
@@ -325,10 +320,6 @@ export default class OpenlayersLayer extends React.Component {
                     next: (imageEvents) => {
                         const errors = imageEvents.filter(e => e.type === 'imageloaderror');
                         if (errors.length > 0) {
-                            // this.props.onLayerLoad(options.id, {error: true});
-                            // if (options && !options.hideErrors || !options) {
-                            //     this.props.onLayerError(options.id, imageEvents.length, errors.length);
-                            // }
                             this.forEachCoalesceGroupId(options, (id) => {
                                 this.props.onLayerLoad(id, {error: true});
                                 if (options && !options.hideErrors || !options) {
@@ -336,7 +327,6 @@ export default class OpenlayersLayer extends React.Component {
                                 }
                             });
                         } else {
-                            // this.props.onLayerLoad(options.id);
                             this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id));
                         }
                     }
