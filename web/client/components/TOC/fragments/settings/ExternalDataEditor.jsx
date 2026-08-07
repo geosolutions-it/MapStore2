@@ -15,7 +15,8 @@ import { castArray, get } from 'lodash';
 import Message from '../../../I18N/Message';
 import Spinner from '../../../layout/Spinner';
 import Fields from '../LayerFields/Fields';
-import { getCapabilities, describeFeatureType, getFeature } from '../../../../api/WFS';
+import { getCapabilities, getFeature } from '../../../../api/WFS';
+import { describeFeatureType } from '../../../../observables/wfs';
 import { isGeometryType } from '../../../../utils/ogc/WFS/base';
 import {
     interpolateExternalDataCQL,
@@ -175,12 +176,13 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         const currentRequestId = describeRequestId.current + 1;
         describeRequestId.current = currentRequestId;
         updateState({ attributesStatus: 'loading' });
-        describeFeatureType(valueRef.current.url, layerName)
-            .then((description) => {
+        describeFeatureType({ layer: { url: valueRef.current.url, name: layerName } })
+            .toPromise()
+            .then(({ data }) => {
                 if (currentRequestId === describeRequestId.current) {
                     updateValue({
                         layerName,
-                        attributes: getExternalAttributes(description, previousAttributes)
+                        attributes: getExternalAttributes(data, previousAttributes)
                     });
                     updateState({ attributesStatus: 'valid' });
                 }
