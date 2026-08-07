@@ -51,8 +51,7 @@ export default class extends React.Component {
         mapBbox: PropTypes.object,
         resolutions: PropTypes.array,
         zoom: PropTypes.number,
-        hideInteractiveLegendOption: PropTypes.bool,
-        coalesceWMSLayers: PropTypes.bool
+        hideInteractiveLegendOption: PropTypes.bool
     };
 
     static defaultProps = {
@@ -275,6 +274,11 @@ export default class extends React.Component {
                                 onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
                                 <Message msgId="layerProperties.singleTile"/>
                             </Checkbox>
+                            <Checkbox key="coalesce" value="coalesce"
+                                checked={this.props.element?.coalesce === false}
+                                onChange={(e) => this.props.onChange("coalesce", e.target.checked ? false : undefined)}>
+                                <Message msgId="layerProperties.coalesceExclude.label" />{' '}<InfoPopover text={<Message msgId="layerProperties.coalesceExclude.tooltip" />} />
+                            </Checkbox>
                             {(this.props.isLocalizedLayerStylesEnabled && this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
                                 <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
                                     data-qa="display-lacalized-layer-styles-option"
@@ -297,7 +301,6 @@ export default class extends React.Component {
                                         projection={this.props.projection}
                                         onChange={this.props.onChange}
                                         disableTileGrids={!!this.props.isCesiumActive}
-                                        coalesceWMSLayers={this.props.coalesceWMSLayers}
                                     />
                                 </>
                             ))}

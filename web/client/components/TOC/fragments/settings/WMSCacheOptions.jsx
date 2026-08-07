@@ -7,8 +7,7 @@
  */
 
 import React, { useState } from 'react';
-import { Checkbox, Glyphicon, Button as ButtonRB, Table, Alert, FormGroup, Row, Col } from 'react-bootstrap';
-import Select from 'react-select';
+import { Checkbox, Glyphicon, Button as ButtonRB, Table, Alert } from 'react-bootstrap';
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 import Message from '../../../I18N/Message';
@@ -20,14 +19,6 @@ import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { getTileGridFromLayerOptions } from '../../../../utils/WMSUtils';
 
 const Button = tooltip(ButtonRB);
-
-const coalesceValues = {
-    'default': undefined,  // inherited from map options
-    enabled: true,         // force coalescing enabled for layer
-    disabled: false        // force coalescing disabled for layer
-};
-
-const coalesceValueToMode = (coalesce) => coalesce === true ? 'enabled' : coalesce === false ? 'disabled' : 'default';
 
 const infoText = {
     custom: ({
@@ -198,14 +189,12 @@ const infoText = {
  * @prop {object} layer layer configuration
  * @prop {boolean} disableTileGrids disable tile grids toolbar
  * @prop {function} onChange callback triggered after changing the form
- * @prop {boolean} coalesceWMSLayers effective map-level coalesce default (mapOptions.coalesceWMSLayers, falling back to miscSettings), shown in the "default" option label
  */
 function WMSCacheOptions({
     layer = {},
     projection,
     onChange,
-    disableTileGrids,
-    coalesceWMSLayers
+    disableTileGrids
 }) {
 
     const [tileGridLoading, setTileGridLoading] = useState(false);
@@ -279,14 +268,6 @@ function WMSCacheOptions({
 
     const InfoText = infoText[layer.tileGridStrategy] || infoText.standard;
 
-    const coalesceOptions = [
-        {
-            value: 'default', // `coalesceWMSLayers` get from map settings
-            label: <><Message msgId="layerProperties.coalesceDefault" />{' ('}{coalesceWMSLayers ? 'enabled' : 'disabled'}{')'}</>
-        },
-        { value: 'enabled', label: <Message msgId="layerProperties.coalesceEnabled" /> },
-        { value: 'disabled', label: <Message msgId="layerProperties.coalesceDisabled" /> }
-    ];
     return (
         <div className="ms-wms-cache-options">
             <div className="ms-wms-cache-options-content">
@@ -365,22 +346,6 @@ function WMSCacheOptions({
             {!layer.singleTile && tiled && tileGridsResponseMsgId && <Alert bsStyle={tileGridsResponseMsgStyle || 'warning'}>
                 <Message msgId={tileGridsResponseMsgId} msgParams={{ requestUrl }} />
             </Alert>}
-            <br />
-            <Row>
-                <Col xs={12}>
-                    <FormGroup style={{ margin: 0 }}>
-                        <div style={{ flex: 1 }}>
-                            <Message msgId="map.settings.coalesceWMSLayers" />&nbsp;<InfoPopover text={<Message msgId="map.settings.coalesceWMSLayersTooltip" />} />
-                        </div>
-                        <Select
-                            clearable={false}
-                            options={coalesceOptions}
-                            value={coalesceValueToMode(layer.coalesce)}
-                            onChange={({ value }) => onChange({ coalesce: coalesceValues[value] })}
-                        />
-                    </FormGroup>
-                </Col>
-            </Row>
         </div>
     );
 }

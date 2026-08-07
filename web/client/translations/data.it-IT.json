@@ -95,10 +95,10 @@
         "tooltip": "Il layer viene ritagliato all'estensione della proiezione quando aggiunto alla mappa con questa opzione abilitata"
       },
       "cached": "Usa la cache",
-      "coalesceLabel": "Combina le richieste",
-      "coalesceEnabled": "Abilitato",
-      "coalesceDisabled": "Disabilitato",
-      "coalesceDefault": "Usa impostazione predefinita della mappa",
+      "coalesceExclude": {
+        "label": "Escludi dalle richieste combinate",
+        "tooltip": "Mantiene questo livello fuori dalle richieste WMS combinate, in modo che venga sempre richiesto singolarmente. Non ha effetto se le richieste combinate sono disabilitate per la mappa."
+      },
       "styleCustom": "Usa stile con nome \"{value}\"",
       "styleListLoadError": "Si è verificato un errore durante il caricamento della lista degli stili",
       "stylesRefreshList": "Aggiorna lista degli stili",

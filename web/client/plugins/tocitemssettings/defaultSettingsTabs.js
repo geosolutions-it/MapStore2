@@ -36,10 +36,7 @@ import { StyleSelector } from '../styleeditor/index';
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
 
 const ConnectedDisplay = connect(
-    createSelector([mapSelector], ({ zoom, projection, size, bbox, mapOptions }) => ({
-        zoom, projection, mapSize: size, mapBbox: bbox,
-        coalesceWMSLayers: mapOptions?.coalesceWMSLayers ?? undefined
-    }))
+    createSelector([mapSelector], ({ zoom, projection, size, bbox }) => ({ zoom, projection, mapSize: size, mapBbox: bbox }))
 )(Display);
 
 const ConnectedVectorStyleEditor = connect(

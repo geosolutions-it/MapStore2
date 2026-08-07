@@ -94,10 +94,10 @@
         "label": "Crop to projection extent",
         "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
       },
-      "coalesceLabel": "Coalesce requests",
-      "coalesceEnabled": "Enabled",
-      "coalesceDisabled": "Disabled",
-      "coalesceDefault": "Use map default",
+      "coalesceExclude": {
+        "label": "Exclude from combined requests",
+        "tooltip": "Keeps this layer out of combined WMS requests, so it is always requested on its own. It has no effect while combined requests are disabled for the map."
+      },
       "cached": "Use cache options",
       "styleCustom": "Use style named \"{value}\"",
       "styleListLoadError": "There was an error loading the styles list",

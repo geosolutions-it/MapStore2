@@ -95,10 +95,10 @@
         "tooltip": "Die Ebene wird auf die Projektionserweiterung zugeschnitten, wenn sie mit aktivierter Option zur Karte hinzugefügt wird."
       },
       "cached": "Verwenden Sie Cache-Optionen",
-      "coalesceLabel": "Coalesce requests",
-      "coalesceEnabled": "Aktiviert",
-      "coalesceDisabled": "Deaktiviert",
-      "coalesceDefault": "Standard der Karte verwenden",
+      "coalesceExclude": {
+        "label": "Von kombinierten Anfragen ausschließen",
+        "tooltip": "Hält diese Ebene aus kombinierten WMS-Anfragen heraus, sodass sie immer einzeln angefordert wird. Ohne Wirkung, solange kombinierte Anfragen für die Karte deaktiviert sind."
+      },
       "styleCustom": "Stil \"{value}\" nutzen",
       "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
       "stylesRefreshList": "Aktualisiere die Liste von Stilen",

@@ -95,10 +95,10 @@
         "tooltip": "La capa se recorta a la extensión de la proyección cuando se agrega al mapa con esta opción habilitada"
       },
       "cached": "Cacheado",
-      "coalesceLabel": "Combinar solicitudes",
-      "coalesceEnabled": "Activado",
-      "coalesceDisabled": "Desactivado",
-      "coalesceDefault": "Usar predeterminado del mapa",
+      "coalesceExclude": {
+        "label": "Excluir de las solicitudes combinadas",
+        "tooltip": "Mantiene esta capa fuera de las solicitudes WMS combinadas, de modo que siempre se solicite por separado. No tiene efecto mientras las solicitudes combinadas estén deshabilitadas para el mapa."
+      },
       "styleCustom": "Use un estilo llamado \"{value} \"",
       "styleListLoadError": "Se ha producido un error al cargar la lista de estilos",
       "stylesRefreshList": "Actualizar la lista de estilos",

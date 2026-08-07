@@ -95,10 +95,10 @@
         "tooltip": "La couche est recadrée à l'étendue de la projection lorsqu'elle est ajoutée à la carte avec cette option activée"
       },
       "cached": "Utiliser les options de cache",
-      "coalesceLabel": "Combiner les requêtes",
-      "coalesceEnabled": "Activé",
-      "coalesceDisabled": "Désactivé",
-      "coalesceDefault": "Utiliser le paramètre par défaut de la carte",
+      "coalesceExclude": {
+        "label": "Exclure des requêtes combinées",
+        "tooltip": "Conserve cette couche en dehors des requêtes WMS combinées, afin qu'elle soit toujours demandée séparément. Sans effet lorsque les requêtes combinées sont désactivées pour la carte."
+      },
       "styleCustom": "Utiliser un style nommé \"{value} \"",
       "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",
       "stylesRefreshList": "Actualiser la liste des styles",
