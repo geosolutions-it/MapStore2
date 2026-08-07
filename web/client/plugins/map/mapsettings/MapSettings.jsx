@@ -76,11 +76,6 @@ const Component = ({
         </form>
         {isCesium && (
             <form>
-                <FormGroup>
-                    <ControlLabel>
-                        <Message msgId="map.settings.title" />
-                    </ControlLabel>
-                </FormGroup>
                 <Checkbox
                     checked={mapOptions.showSkyAtmosphere}
                     onChange={() => handleConfigUpdate(mapOptions, 'showSkyAtmosphere')}
