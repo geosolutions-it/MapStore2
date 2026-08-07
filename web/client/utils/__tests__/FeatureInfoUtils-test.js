@@ -7,6 +7,46 @@ describe('FeatureInfoUtils', () => {
     // **********************************
     const styleSample = '<style type="text/css">.sample {border:1px solid #ddd;}</style>';
     const bodySample = '<div class="sample">TEST text</div>';
+    const lizmapFragment = `
+        <div class="lizmapPopupSingleFeature" data-feature-id="23" data-layer-id="v_cat20180426181713938">
+    <h4 class="lizmapPopupTitle">Cat houses</h4>
+
+    <div class="lizmapPopupDiv">
+    <input type="hidden" value="v_cat20180426181713938.23" class="lizmap-popup-layer-feature-id"/>
+<input type="hidden" value="POINT (-8201386.38562475 4976532.96066171)" class="lizmap-popup-layer-feature-geometry"/>
+<input type="hidden" value="" class="lizmap-popup-layer-feature-crs"/>
+<input type="hidden" value="-8201386.38562475" class="lizmap-popup-layer-feature-bbox-minx"/>
+<input type="hidden" value="4976532.96066171" class="lizmap-popup-layer-feature-bbox-miny"/>
+<input type="hidden" value="-8201386.38562475" class="lizmap-popup-layer-feature-bbox-maxx"/>
+<input type="hidden" value="4976532.96066171" class="lizmap-popup-layer-feature-bbox-maxy"/>
+<lizmap-feature-toolbar edition-restricted="true" value="v_cat20180426181713938.23" crs="" bbox-minx="-8201386.38562475" bbox-miny="4976532.96066171" bbox-maxx="-8201386.38562475" bbox-maxy="4976532.96066171" ></lizmap-feature-toolbar>
+<script language="javascript">
+    var cat_image_load_attempt = 0;
+
+    function imgError(image) {
+        if(cat_image_load_attempt == 0){
+            image.src = image.src.replace('.jpg', '-600x403.jpg');
+        }
+        if(cat_image_load_attempt == 1){
+            image.src = 'http://cattracker.org/wp-content/uploads/missing-cat-600x403.jpg';
+        }
+        cat_image_load_attempt+= 1;
+    }
+
+</script>
+
+<p style="width:100%;font-width:14px;color:black;font-weight:bold;text-align:center;border:2px solid #6600FF">Schubie2</p>
+
+<img id="cat_image" src="https://demo.lizmap.com/lizmap/index.php/view/media/getMedia?repository=features&project=cats&path=media%2Fdata_cats%2Fschubie.jpg" style="width:100%;" alt="" onerror="imgError(this);">
+
+<table class="table table-condensed table-striped">
+<tr><td>Territory area (ha)</td><td>3,03</td></tr>
+<tr><td>Survey duration (days)</td><td>41</td></tr>
+<tr><td>Start</td><td>2014-10-31T01:30:08.384Z</td></tr>
+<tr><td>End</td><td>2014-12-10T22:45:29.856Z</td></tr>
+</table>    </div>
+</div>
+    `;
     const rowHTML = '<html>'
         + '<head>'
         + '<title>Geoserver GetFeatureInfo output</title>'
@@ -51,6 +91,16 @@ describe('FeatureInfoUtils', () => {
         expect(valid).toBe(true);
 
         valid = responseValidator.isValidResponse({response: rowHTML, layerMetadata: {regex: invalidRegex }});
+        expect(valid).toBe(false);
+    });
+
+    it('HTML Validator accepts a non-empty HTML fragment without a body element', () => {
+        const valid = validator("HTML").isValidResponse({response: lizmapFragment});
+        expect(valid).toBe(true);
+    });
+
+    it('HTML Validator rejects a whitespace-only HTML fragment', () => {
+        const valid = validator("HTML").isValidResponse({response: ' \n\t '});
         expect(valid).toBe(false);
     });
 
