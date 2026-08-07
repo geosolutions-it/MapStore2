@@ -18,6 +18,8 @@ export const SHARED_KEYS = [
     'baseParams',
     'format',
     'localizedLayerStyles',
+    'maxResolution',
+    'minResolution',
     'params',
     'security',
     'securityToken',
