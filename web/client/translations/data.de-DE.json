@@ -154,7 +154,7 @@
         "validate": "Validieren",
         "validation": {
           "missingFields": "WFS-URL, Layername und CQL-Filtervorlage sind erforderlich",
-          "invalidPlaceholder": "Verwenden Sie mindestens einen gültigen Platzhalter ${properties.name} oder ${properties['name']}",
+          "invalidPlaceholder": "Die CQL-Filtervorlage muss mindestens einen gültigen Feldverweis enthalten",
           "invalidDoubleQuotedPlaceholder": "Doppelte Anführungszeichen kennzeichnen Feldnamen in CQL. Verwenden Sie einfache Anführungszeichen für Zeichenfolgen-Platzhalter.",
           "invalidCql": "Die CQL-Filtervorlage ist ungültig",
           "unquotedPlaceholder": "Im Filter ist der Verweis auf das Feld „{property}“ nicht in einfache Anführungszeichen gesetzt und akzeptiert daher nur Zahlen. Fügen Sie die Anführungszeichen hinzu, um Textwerte zu verwenden.",
@@ -165,7 +165,8 @@
           "generatedCql": "Generiertes CQL"
         },
         "noSourceFeatures": "Für diese externe Datenansicht sind keine identifizierten Features verfügbar",
-        "notConfigured": "Diese Identify-Ansicht ist nicht korrekt konfiguriert. Wenden Sie sich an die Person, die die Karte erstellt hat.",
+        "invalidConfiguration": "Ungültige Konfiguration",
+        "notConfigured": "Diese Identify-Ansicht ist nicht korrekt konfiguriert.",
         "noResults": "Keine externen Daten gefunden",
         "requestError": "Externe Daten konnten nicht geladen werden",
         "missingProperty": "Das Quellfeature enthält die Eigenschaft „{property}“ nicht",

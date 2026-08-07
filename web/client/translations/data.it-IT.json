@@ -154,7 +154,7 @@
         "validate": "Valida",
         "validation": {
           "missingFields": "URL WFS, nome layer e template del filtro CQL sono obbligatori",
-          "invalidPlaceholder": "Usa almeno un segnaposto valido ${properties.name} o ${properties['name']}",
+          "invalidPlaceholder": "Il template del filtro CQL deve contenere almeno un riferimento valido ad un campo",
           "invalidDoubleQuotedPlaceholder": "Le virgolette doppie identificano i nomi dei campi in CQL. Usa gli apici singoli per i segnaposto di testo.",
           "invalidCql": "Il template del filtro CQL non è valido",
           "unquotedPlaceholder": "Nel filtro, il riferimento al campo “{property}” non è racchiuso tra virgolette singole, quindi accetta solo numeri. Aggiungi le virgolette per usare valori di testo.",
@@ -165,7 +165,8 @@
           "generatedCql": "CQL generato"
         },
         "noSourceFeatures": "Nessuna feature identificata è disponibile per questa vista dati esterni",
-        "notConfigured": "Questa vista di Identify non è configurata correttamente. Contatta chi ha creato la mappa.",
+        "invalidConfiguration": "Configurazione non valida",
+        "notConfigured": "Questa vista di Identify non è configurata correttamente.",
         "noResults": "Nessun dato esterno trovato",
         "requestError": "Impossibile caricare i dati esterni",
         "missingProperty": "La feature sorgente non contiene la proprietà “{property}”",

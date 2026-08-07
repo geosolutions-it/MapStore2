@@ -13,6 +13,7 @@ import Select from 'react-select';
 import { castArray, get } from 'lodash';
 
 import Message from '../../../I18N/Message';
+import localizedProps from '../../../misc/enhancers/localizedProps';
 import Spinner from '../../../layout/Spinner';
 import Fields from '../LayerFields/Fields';
 import { getCapabilities, getFeature } from '../../../../api/WFS';
@@ -22,6 +23,8 @@ import {
     interpolateExternalDataCQL,
     validateExternalDataConfiguration
 } from '../../../../utils/mapinfo/ExternalDataUtils';
+
+const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
 const URL_VALIDATION_DELAY = 500;
 
@@ -321,11 +324,11 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
             <FormGroup validationState={capabilitiesStatus === 'error' ? 'error' : null}>
                 <ControlLabel><Message msgId="layerProperties.externalData.wfsUrl" /> *</ControlLabel>
                 <div className="ms-external-data-url-row">
-                    <FormControl
+                    <LocalizedFormControl
                         data-qa="external-data-url"
                         type="text"
                         value={url}
-                        placeholder="WFS URL"
+                        placeholder="layerProperties.externalData.wfsUrl"
                         onChange={onUrlChange}
                         onBlur={() => requestCapabilities(url, 0)}/>
                     <Button

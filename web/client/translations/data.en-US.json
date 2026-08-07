@@ -154,7 +154,7 @@
         "validate": "Validate",
         "validation": {
           "missingFields": "WFS URL, layer name and CQL filter template are required",
-          "invalidPlaceholder": "Use at least one valid ${properties.name} or ${properties['name']} placeholder",
+          "invalidPlaceholder": "The CQL filter template must contain at least one valid field reference",
           "invalidDoubleQuotedPlaceholder": "Double quotes identify field names in CQL. Use single quotes around string placeholders.",
           "invalidCql": "The CQL filter template is not valid",
           "unquotedPlaceholder": "In the filter, the reference to “{property}” is not wrapped in single quotes, so it only accepts numbers. Add the quotes to use text values.",
@@ -165,7 +165,8 @@
           "generatedCql": "Generated CQL"
         },
         "noSourceFeatures": "No identified features are available for this external data view",
-        "notConfigured": "This Identify view is not configured correctly. Contact whoever created the map.",
+        "invalidConfiguration": "Invalid configuration",
+        "notConfigured": "This Identify view is not configured correctly.",
         "noResults": "No external data found",
         "requestError": "Unable to load external data",
         "missingProperty": "The source feature does not contain the property “{property}”",

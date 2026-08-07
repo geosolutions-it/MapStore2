@@ -154,7 +154,7 @@
         "validate": "Valider",
         "validation": {
           "missingFields": "L'URL WFS, le nom de la couche et le modèle de filtre CQL sont obligatoires",
-          "invalidPlaceholder": "Utilisez au moins un espace réservé valide ${properties.name} ou ${properties['name']}",
+          "invalidPlaceholder": "Le modèle de filtre CQL doit contenir au moins une référence de champ valide",
           "invalidDoubleQuotedPlaceholder": "Les guillemets doubles identifient les noms de champs en CQL. Utilisez des apostrophes autour des espaces réservés de texte.",
           "invalidCql": "Le modèle de filtre CQL n'est pas valide",
           "unquotedPlaceholder": "Dans le filtre, la référence au champ « {property} » n’est pas entourée de guillemets simples, elle n’accepte donc que des nombres. Ajoutez les guillemets pour utiliser des valeurs textuelles.",
@@ -165,7 +165,8 @@
           "generatedCql": "CQL généré"
         },
         "noSourceFeatures": "Aucune entité identifiée n'est disponible pour cette vue de données externes",
-        "notConfigured": "Cette vue Identify n’est pas configurée correctement. Contactez la personne qui a créé la carte.",
+        "invalidConfiguration": "Configuration non valide",
+        "notConfigured": "Cette vue Identify n’est pas configurée correctement.",
         "noResults": "Aucune donnée externe trouvée",
         "requestError": "Impossible de charger les données externes",
         "missingProperty": "L'entité source ne contient pas la propriété « {property} »",

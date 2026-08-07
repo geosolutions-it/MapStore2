@@ -153,7 +153,7 @@
         "validate": "Validar",
         "validation": {
           "missingFields": "La URL WFS, el nombre de capa y la plantilla de filtro CQL son obligatorios",
-          "invalidPlaceholder": "Use al menos un marcador válido ${properties.name} o ${properties['name']}",
+          "invalidPlaceholder": "La plantilla de filtro CQL debe contener al menos una referencia de campo válida",
           "invalidDoubleQuotedPlaceholder": "Las comillas dobles identifican nombres de campos en CQL. Use comillas simples alrededor de los marcadores de texto.",
           "invalidCql": "La plantilla de filtro CQL no es válida",
           "unquotedPlaceholder": "En el filtro, la referencia al campo «{property}» no está entre comillas simples, por lo que solo acepta números. Añada las comillas para usar valores de texto.",
@@ -164,7 +164,8 @@
           "generatedCql": "CQL generado"
         },
         "noSourceFeatures": "No hay entidades identificadas disponibles para esta vista de datos externos",
-        "notConfigured": "Esta vista de Identify no está configurada correctamente. Póngase en contacto con quien creó el mapa.",
+        "invalidConfiguration": "Configuración no válida",
+        "notConfigured": "Esta vista de Identify no está configurada correctamente.",
         "noResults": "No se encontraron datos externos",
         "requestError": "No se pudieron cargar los datos externos",
         "missingProperty": "La entidad de origen no contiene la propiedad «{property}»",

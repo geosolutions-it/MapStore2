@@ -33,6 +33,7 @@ import PropertiesEditor from './PropertiesEditor';
 import { EXTERNAL_DATA, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
+const GlyphiconWithTitle = localizedProps('title')(Glyphicon);
 
 const supportedFormatRequests = {
     wms: getSupportedFormatWMS,
@@ -86,10 +87,10 @@ const FeatureInfoView = ({
                 <Glyphicon glyph="pencil"/>
             </Button>
             {isInvalid ? (
-                <Glyphicon
+                <GlyphiconWithTitle
                     className="text-danger"
                     glyph="warning-sign"
-                    title="Invalid configuration"/>
+                    title="layerProperties.externalData.invalidConfiguration"/>
             ) : null}
             <Button
                 className="square-button no-border ms-feature-info-view-action ms-feature-info-view-remove"
