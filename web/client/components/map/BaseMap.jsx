@@ -21,6 +21,8 @@ import ConfigUtils from '../../utils/ConfigUtils';
  * @prop {object} options. Options to pass to the map component (generically constant)
  * @prop {object} map the map properties (projection...) This is generically the dynamic part of the map options.
  * @prop {object[]} layers the layers to add to the map
+ * @prop {boolean} coalesceWMSLayers combine adjacent compatible WMS layers into a single GetMap request (default false)
+ * @prop {number} coalesceWMSLayersMaxGroupSize max WMS layers combined in a single request (default 10)
  * @prop {object} plugins specific implementation of the components to render.
  * Must contain implementations for:
  *  - Map React component for Map
