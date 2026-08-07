@@ -76,7 +76,7 @@ describe('ExternalDataViewer', () => {
 
         setTimeout(() => {
             const container = document.getElementById('container');
-            expect(container.querySelector('.ms-external-data-result h4').textContent)
+            expect(container.querySelector('.ms-external-data-result-title').textContent)
                 .toBe('source.1');
             expect(container.textContent).toContain('external.1');
             expect(container.textContent).toContain('External label');
@@ -117,10 +117,10 @@ describe('ExternalDataViewer', () => {
                 const results = document.querySelectorAll('.ms-external-data-result');
                 expect(mockAxios.history.get.length).toBe(2);
                 expect(results.length).toBe(2);
-                expect(results[0].querySelector('h4').textContent).toBe('source.A');
+                expect(results[0].querySelector('.ms-external-data-result-title').textContent).toBe('source.A');
                 expect(results[0].textContent).toContain('Related A');
                 expect(results[0].textContent).toNotContain('Related B');
-                expect(results[1].querySelector('h4').textContent).toBe('source.B');
+                expect(results[1].querySelector('.ms-external-data-result-title').textContent).toBe('source.B');
                 expect(results[1].textContent).toContain('Related B');
                 expect(results[1].textContent).toNotContain('Related A');
                 done();
