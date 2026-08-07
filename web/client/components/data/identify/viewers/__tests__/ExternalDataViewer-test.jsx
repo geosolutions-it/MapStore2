@@ -220,6 +220,29 @@ describe('ExternalDataViewer', () => {
         });
     });
 
+    it('limits the related features with the layer maxItems setting', (done) => {
+        mockAxios.onGet().reply(({ url }) => {
+            expect(decodeURIComponent(url)).toContain('maxFeatures=3');
+            return [200, { type: 'FeatureCollection', features: [] }];
+        });
+
+        ReactDOM.render(
+            <ExternalDataViewer
+                layer={{ featureInfo: { ...layer.featureInfo, maxItems: 3 } }}
+                response={response}/>,
+            document.getElementById('container')
+        );
+
+        setTimeout(() => {
+            try {
+                expect(mockAxios.history.get.length).toBe(1);
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+    });
+
     it('does not reload when the layer object changes but the configuration does not', (done) => {
         let requestCount = 0;
         mockAxios.onGet().reply(() => {

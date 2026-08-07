@@ -14,6 +14,7 @@ import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import { getFeature } from '../../../../api/WFS';
 import { interpolateExternalDataCQL, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
+import { getFeatureInfoMaxItems } from '../../../../utils/FeatureInfoRequestUtils';
 import useIsMounted from '../../../../hooks/useIsMounted';
 import RowViewer from './row/RowViewer';
 import { getVisibleFeatureRow } from '../../../../utils/IdentifyUtils';
@@ -23,8 +24,6 @@ import {
     getExternalDataCacheEntry,
     setExternalDataCacheEntry
 } from '../../../../utils/mapinfo/ExternalDataCache';
-
-const EXTERNAL_RESPONSE_LIMIT = 10;
 
 const parseResponse = (response) => {
     if (typeof response === 'string') {
@@ -92,6 +91,7 @@ const ExternalDataViewer = ({ response, layer }) => {
     const { identifyRequestId, featuresService = {} } = layer?.featureInfo || {};
     const { url, typeName, cqlFilter, attributes = [] } = featuresService;
     const configurationError = validateExternalDataConfiguration(featuresService);
+    const maxItems = getFeatureInfoMaxItems(layer?.featureInfo || {});
 
     const sourceFeatures = useMemo(
         () => parseResponse(response)?.features || [],
@@ -140,7 +140,7 @@ const ExternalDataViewer = ({ response, layer }) => {
         const request = cachedRequest || setExternalDataCacheEntry(cacheKey,
             getFeature(url, typeName, {
                 CQL_FILTER: interpolatedCql,
-                maxFeatures: EXTERNAL_RESPONSE_LIMIT,
+                maxFeatures: maxItems,
                 outputFormat: 'application/json'
             }).then(({ data }) => normalizeExternalResponse(data)),
             identifyRequestId
@@ -157,7 +157,7 @@ const ExternalDataViewer = ({ response, layer }) => {
                     ...getErrorPresentation(error)
                 }, generation);
             });
-    }, [url, typeName, cqlFilter, identifyRequestId, updateResult]);
+    }, [url, typeName, cqlFilter, maxItems, identifyRequestId, updateResult]);
 
     const load = useCallback((generation) => {
         setResults(sourceFeatures.map(() => ({ status: 'loading' })));
