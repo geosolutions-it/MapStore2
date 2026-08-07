@@ -15,9 +15,7 @@ import { castArray, get } from 'lodash';
 import Message from '../../../I18N/Message';
 import Spinner from '../../../layout/Spinner';
 import Fields from '../LayerFields/Fields';
-import RowViewer from '../../../data/identify/viewers/row/RowViewer';
-import { getVisibleFeatureRow } from '../../../../utils/IdentifyUtils';
-import { getCapabilities, describeFeatureType, getFeature, getFeatureURL } from '../../../../api/WFS';
+import { getCapabilities, describeFeatureType, getFeature } from '../../../../api/WFS';
 import { isGeometryType } from '../../../../utils/ogc/WFS/base';
 import {
     interpolateExternalDataCQL,
@@ -25,7 +23,13 @@ import {
 } from '../../../../utils/mapinfo/ExternalDataUtils';
 
 const URL_VALIDATION_DELAY = 500;
-const SAMPLE_RESPONSE_LIMIT = 10;
+
+const IDLE_VALIDATION = {
+    status: 'idle',
+    messageId: null,
+    messageParams: null,
+    cqlFilter: null
+};
 
 const INTERPOLATION_MESSAGE_IDS = {
     MISSING_SOURCE_PROPERTY: 'layerProperties.externalData.missingProperty',
@@ -75,48 +79,6 @@ const parseResponse = (data) => {
     return data;
 };
 
-const getErrorDetails = (error) => {
-    const responseData = error?.response?.data || error?.data;
-    if (responseData) {
-        return typeof responseData === 'string'
-            ? responseData
-            : JSON.stringify(responseData, null, 2);
-    }
-    return error?.message || `${error}`;
-};
-
-/**
- * Uses the runtime external-feature presentation for the sample response.
- */
-export const ExternalDataSampleResponse = ({ response = {}, attributes = [] }) => {
-    const features = Array.isArray(response?.features) ? response.features : [];
-    if (!features.length) {
-        return (
-            <Alert bsStyle="info">
-                <Message msgId="layerProperties.externalData.noResults" />
-            </Alert>
-        );
-    }
-    return (
-        <div className="ms-external-data-viewer ms-external-data-sample-response">
-            {features.map((feature, index) => {
-                const row = getVisibleFeatureRow(feature, attributes);
-                return (
-                    <RowViewer
-                        key={feature.id ?? index}
-                        feature={row.feature}
-                        layer={{ fields: row.fields }}/>
-                );
-            })}
-        </div>
-    );
-};
-
-ExternalDataSampleResponse.propTypes = {
-    response: PropTypes.object,
-    attributes: PropTypes.array
-};
-
 /**
  * Configures and validates the WFS query used by an External Data view.
  */
@@ -125,12 +87,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
         featureTypes: [],
         capabilitiesStatus: value.url ? 'idle' : 'empty',
         attributesStatus: value.layerName ? 'idle' : 'empty',
-        validationMessage: null,
-        validationMessageParams: null,
-        validationSuccess: false,
-        validationStatus: 'idle',
-        validationDetails: null,
-        validationErrorDetails: null
+        validation: IDLE_VALIDATION
     });
     const [capabilitiesRequest, setCapabilitiesRequest] = useState({
         url: value.url,
@@ -149,14 +106,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
 
     const updateValue = (changes) => {
         validationRequestId.current += 1;
-        updateState({
-            validationMessage: null,
-            validationMessageParams: null,
-            validationSuccess: false,
-            validationStatus: 'idle',
-            validationDetails: null,
-            validationErrorDetails: null
-        });
+        updateState({ validation: IDLE_VALIDATION });
         onChange({
             ...valueRef.current,
             ...changes
@@ -281,37 +231,27 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
 
     const validate = () => {
         const configuration = valueRef.current;
-        const validationMessage = validateExternalDataConfiguration(configuration);
-        if (validationMessage) {
+        const configurationMessage = validateExternalDataConfiguration(configuration);
+        if (configurationMessage) {
             updateState({
-                validationMessage,
-                validationSuccess: false,
-                validationStatus: 'idle',
-                validationDetails: null,
-                validationErrorDetails: null
+                validation: { ...IDLE_VALIDATION, status: 'error', messageId: configurationMessage }
             });
             return;
         }
         const sourceRequest = getSourceRequest();
         if (!sourceRequest.url || !sourceRequest.layerName) {
             updateState({
-                validationMessage: 'layerProperties.externalData.validation.sourceUnavailable',
-                validationSuccess: false,
-                validationStatus: 'error',
-                validationDetails: null,
-                validationErrorDetails: null
+                validation: {
+                    ...IDLE_VALIDATION,
+                    status: 'error',
+                    messageId: 'layerProperties.externalData.validation.sourceUnavailable'
+                }
             });
             return;
         }
         const currentValidationRequestId = validationRequestId.current + 1;
         validationRequestId.current = currentValidationRequestId;
-        updateState({
-            validationMessage: null,
-            validationSuccess: false,
-            validationStatus: 'loading',
-            validationDetails: null,
-            validationErrorDetails: null
-        });
+        updateState({ validation: { ...IDLE_VALIDATION, status: 'loading' } });
         // First get a source feature, then use it to test the external WFS query.
         getFeature(sourceRequest.url, sourceRequest.layerName, {
             maxFeatures: 1,
@@ -331,61 +271,46 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                     configuration.cqlFilter,
                     sampleFeature
                 );
-                const params = {
+                return getFeature(configuration.url, configuration.layerName, {
                     CQL_FILTER: cqlFilter,
-                    maxFeatures: SAMPLE_RESPONSE_LIMIT,
+                    maxFeatures: 1,
                     outputFormat: 'application/json'
-                };
-                const requestUrl = getFeatureURL(
-                    configuration.url,
-                    configuration.layerName,
-                    params
-                );
-                return getFeature(
-                    configuration.url,
-                    configuration.layerName,
-                    params
-                ).then(({ data: externalData }) => ({
+                }).then(({ data: externalData }) => ({
                     cqlFilter,
-                    requestUrl,
-                    response: parseResponse(externalData),
-                    sampleFeature
+                    response: parseResponse(externalData)
                 }));
             })
-            .then((details) => {
-                if (!Array.isArray(details.response?.features)) {
+            .then(({ cqlFilter, response }) => {
+                if (!Array.isArray(response?.features)) {
                     const error = new Error('The external WFS did not return a GeoJSON FeatureCollection');
-                    error.data = details.response;
+                    error.cqlFilter = cqlFilter;
                     throw error;
                 }
                 if (currentValidationRequestId === validationRequestId.current) {
                     updateState({
-                        validationMessage: null,
-                        validationSuccess: true,
-                        validationStatus: 'success',
-                        validationDetails: details,
-                        validationErrorDetails: null
+                        validation: { ...IDLE_VALIDATION, status: 'success', cqlFilter }
                     });
                 }
             })
             .catch((error) => {
                 if (currentValidationRequestId === validationRequestId.current) {
                     updateState({
-                        validationMessage: INTERPOLATION_MESSAGE_IDS[error.code]
-                            || error.messageId
-                            || 'layerProperties.externalData.validation.testRequestFailed',
-                        validationMessageParams: error.propertyName ? { property: error.propertyName } : null,
-                        validationSuccess: false,
-                        validationStatus: 'error',
-                        validationDetails: null,
-                        validationErrorDetails: error.cqlFilter || getErrorDetails(error)
+                        validation: {
+                            ...IDLE_VALIDATION,
+                            status: 'error',
+                            messageId: INTERPOLATION_MESSAGE_IDS[error.code]
+                                || error.messageId
+                                || 'layerProperties.externalData.validation.testRequestFailed',
+                            messageParams: error.propertyName ? { property: error.propertyName } : null,
+                            cqlFilter: error.cqlFilter || null
+                        }
                     });
                 }
             });
     };
 
     const { url = '', layerName = '', cqlFilter = '', attributes = [] } = value;
-    const { capabilitiesStatus, attributesStatus } = state;
+    const { capabilitiesStatus, attributesStatus, validation } = state;
     return (
         <div className="ms-external-data-editor">
             <FormGroup validationState={capabilitiesStatus === 'error' ? 'error' : null}>
@@ -440,6 +365,36 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                 </span>
             </FormGroup>
 
+            <div className="ms-external-data-validation">
+                <Button
+                    bsStyle="primary"
+                    disabled={validation.status === 'loading'}
+                    onClick={validate}>
+                    {validation.status === 'loading'
+                        ? <Spinner />
+                        : <Glyphicon glyph="ok" />}&nbsp;
+                    <Message msgId="layerProperties.externalData.validate" />
+                </Button>
+                {validation.messageId ? (
+                    <Alert bsStyle="danger">
+                        <Message msgId={validation.messageId} msgParams={validation.messageParams} />
+                    </Alert>
+                ) : null}
+                {validation.status === 'success' ? (
+                    <Alert bsStyle="success">
+                        <Message msgId="layerProperties.externalData.validation.valid" />
+                    </Alert>
+                ) : null}
+                {validation.cqlFilter ? (
+                    <div className="ms-external-data-generated-cql">
+                        <ControlLabel>
+                            <Message msgId="layerProperties.externalData.validation.generatedCql" />
+                        </ControlLabel>
+                        <pre>{validation.cqlFilter}</pre>
+                    </div>
+                ) : null}
+            </div>
+
             {layerName ? (
                 <div className="ms-external-data-attributes">
                     <Fields
@@ -457,49 +412,6 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                         onClear={() => loadAttributes(layerName, [])}/>
                 </div>
             ) : null}
-
-            <div className="ms-external-data-validation">
-                <Button
-                    bsStyle="primary"
-                    disabled={state.validationStatus === 'loading'}
-                    onClick={validate}>
-                    {state.validationStatus === 'loading'
-                        ? <Spinner />
-                        : <Glyphicon glyph="ok" />}&nbsp;
-                    <Message msgId="layerProperties.externalData.validate" />
-                </Button>
-                {state.validationMessage ? (
-                    <Alert bsStyle="danger">
-                        <Message msgId={state.validationMessage} msgParams={state.validationMessageParams} />
-                    </Alert>
-                ) : null}
-                {state.validationSuccess ? (
-                    <Alert bsStyle="success"><Message msgId="layerProperties.externalData.validation.valid" /></Alert>
-                ) : null}
-                {state.validationErrorDetails ? (
-                    <pre className="ms-external-data-validation-details">
-                        {state.validationErrorDetails}
-                    </pre>
-                ) : null}
-                {state.validationDetails ? (
-                    <div className="ms-external-data-validation-result">
-                        <ControlLabel>
-                            <Message msgId="layerProperties.externalData.validation.generatedCql" />
-                        </ControlLabel>
-                        <pre>{state.validationDetails.cqlFilter}</pre>
-                        <ControlLabel>
-                            <Message msgId="layerProperties.externalData.validation.requestUrl" />
-                        </ControlLabel>
-                        <pre>{state.validationDetails.requestUrl}</pre>
-                        <ControlLabel>
-                            <Message msgId="layerProperties.externalData.validation.response" />
-                        </ControlLabel>
-                        <ExternalDataSampleResponse
-                            response={state.validationDetails.response}
-                            attributes={attributes}/>
-                    </div>
-                ) : null}
-            </div>
         </div>
     );
 };

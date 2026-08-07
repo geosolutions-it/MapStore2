@@ -162,9 +162,7 @@
           "sourceUnavailable": "Une URL WFS source et un nom de couche sont nécessaires pour exécuter la requête d'exemple",
           "sampleNotFound": "La couche source n'a renvoyé aucune entité d'exemple",
           "testRequestFailed": "La requête de test des données externes a échoué",
-          "generatedCql": "CQL généré",
-          "requestUrl": "Requête WFS externe",
-          "response": "Réponse"
+          "generatedCql": "CQL généré"
         },
         "noSourceFeatures": "Aucune entité identifiée n'est disponible pour cette vue de données externes",
         "notConfigured": "Cette vue Identify n’est pas configurée correctement. Contactez la personne qui a créé la carte.",

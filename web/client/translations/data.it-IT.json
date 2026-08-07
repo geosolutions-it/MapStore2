@@ -162,9 +162,7 @@
           "sourceUnavailable": "Per eseguire la richiesta di esempio sono necessari un URL WFS sorgente e un nome layer",
           "sampleNotFound": "Il layer sorgente non ha restituito una feature di esempio",
           "testRequestFailed": "La richiesta di test dei dati esterni non è riuscita",
-          "generatedCql": "CQL generato",
-          "requestUrl": "Richiesta WFS esterna",
-          "response": "Risposta"
+          "generatedCql": "CQL generato"
         },
         "noSourceFeatures": "Nessuna feature identificata è disponibile per questa vista dati esterni",
         "notConfigured": "Questa vista di Identify non è configurata correttamente. Contatta chi ha creato la mappa.",

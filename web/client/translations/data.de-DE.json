@@ -162,9 +162,7 @@
           "sourceUnavailable": "Zum Ausführen der Beispielanfrage sind eine WFS-Quell-URL und ein Layername erforderlich",
           "sampleNotFound": "Der Quelllayer hat kein Beispielfeature zurückgegeben",
           "testRequestFailed": "Die Testanfrage für externe Daten ist fehlgeschlagen",
-          "generatedCql": "Generiertes CQL",
-          "requestUrl": "Externe WFS-Anfrage",
-          "response": "Antwort"
+          "generatedCql": "Generiertes CQL"
         },
         "noSourceFeatures": "Für diese externe Datenansicht sind keine identifizierten Features verfügbar",
         "notConfigured": "Diese Identify-Ansicht ist nicht korrekt konfiguriert. Wenden Sie sich an die Person, die die Karte erstellt hat.",

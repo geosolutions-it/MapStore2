@@ -162,9 +162,7 @@
           "sourceUnavailable": "A WFS source URL and layer name are required to run the sample request",
           "sampleNotFound": "The source layer did not return a sample feature",
           "testRequestFailed": "The external data test request failed",
-          "generatedCql": "Generated CQL",
-          "requestUrl": "External WFS request",
-          "response": "Response"
+          "generatedCql": "Generated CQL"
         },
         "noSourceFeatures": "No identified features are available for this external data view",
         "notConfigured": "This Identify view is not configured correctly. Contact whoever created the map.",

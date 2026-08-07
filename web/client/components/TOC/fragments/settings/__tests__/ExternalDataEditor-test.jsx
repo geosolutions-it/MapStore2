@@ -370,11 +370,12 @@ describe('ExternalDataEditor', () => {
         );
         setTimeout(() => {
             try {
-                expect(document.querySelector('.ms-external-data-validation .alert-success')).toExist();
-                const result = document.querySelector('.ms-external-data-validation-result');
-                expect(result.querySelector('pre').textContent).toBe("source_id = 'A''1'");
-                expect(result.textContent).toContain('External label');
-                expect(result.textContent).toContain('Validated result');
+                const validation = document.querySelector('.ms-external-data-validation');
+                expect(validation.querySelector('.alert-success')).toExist();
+                // the generated filter is the whole feedback, the response is not rendered
+                expect(validation.querySelector('.ms-external-data-generated-cql pre').textContent)
+                    .toBe("source_id = 'A''1'");
+                expect(validation.textContent).toNotContain('Validated result');
                 done();
             } catch (error) {
                 done(error);

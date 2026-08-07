@@ -161,9 +161,7 @@
           "sourceUnavailable": "Se necesitan una URL WFS de origen y un nombre de capa para ejecutar la solicitud de ejemplo",
           "sampleNotFound": "La capa de origen no devolvió una entidad de ejemplo",
           "testRequestFailed": "La solicitud de prueba de datos externos falló",
-          "generatedCql": "CQL generado",
-          "requestUrl": "Solicitud WFS externa",
-          "response": "Respuesta"
+          "generatedCql": "CQL generado"
         },
         "noSourceFeatures": "No hay entidades identificadas disponibles para esta vista de datos externos",
         "notConfigured": "Esta vista de Identify no está configurada correctamente. Póngase en contacto con quien creó el mapa.",
