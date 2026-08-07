@@ -25,6 +25,12 @@ import { MAP_CONFIG_LOADED } from '../../actions/config';
 import { VisualizationModes } from '../../utils/MapTypeUtils';
 
 describe('Test the mapInfo reducer', () => {
+    const createViewResponses = (response) => ({
+        "default": {
+            response,
+            queryParams: {info_format: 'text/plain'}
+        }
+    });
     const appState = {
         configuration: {
             infoFormat: 'text/plain'
@@ -534,15 +540,14 @@ describe('Test the mapInfo reducer', () => {
                 { reqId: 11, request: 'test1' }
             ],
             responses: [
-                { response: 'data0', queryParams: 'params0', layerMetadata: 'meta0', layer: { type: 'wms' } },
-                { response: 'data1', queryParams: 'params1', layerMetadata: 'meta1', layer: { type: 'wms' } }
+                { viewResponses: createViewResponses('data0'), layerMetadata: 'meta0', layer: { type: 'wms' } },
+                { viewResponses: createViewResponses('data1'), layerMetadata: 'meta1', layer: { type: 'wms' } }
             ]
         };
         // Action simulating a successful feature info load for reqId 11
         const action = {
             type: 'LOAD_FEATURE_INFO',
-            data: 'data1',
-            requestParams: 'params1',
+            viewResponses: createViewResponses('data1'),
             layerMetadata: 'meta1',
             layer: { type: 'wms' },
             reqId: 11
@@ -567,15 +572,14 @@ describe('Test the mapInfo reducer', () => {
                 { reqId: 11, request: 'test1' }
             ],
             responses: [
-                { response: 'data0', queryParams: 'params0', layerMetadata: 'meta0', layer: { type: 'wms' } },
-                { response: 'data1', queryParams: 'params1', layerMetadata: 'meta1', layer: { type: 'wms' } }
+                { viewResponses: createViewResponses('data0'), layerMetadata: 'meta0', layer: { type: 'wms' } },
+                { viewResponses: createViewResponses('data1'), layerMetadata: 'meta1', layer: { type: 'wms' } }
             ]
         };
         // Action simulating a successful feature info load for reqId 11
         const action = {
             type: 'LOAD_FEATURE_INFO',
-            data: null,
-            requestParams: 'params0',
+            viewResponses: createViewResponses(null),
             layerMetadata: 'meta0',
             layer: { type: 'wms' },
             reqId: 10
@@ -599,13 +603,13 @@ describe('Test the mapInfo reducer', () => {
                 { reqId: 12, request: 'test2' }
             ],
             responses: [
-                { response: null, layerMetadata: {title: 'empty'} },
-                { response: 'data1', layerMetadata: {title: 'valid1'} }
+                { viewResponses: createViewResponses(null), layerMetadata: {title: 'empty'} },
+                { viewResponses: createViewResponses('data1'), layerMetadata: {title: 'valid1'} }
             ]
         };
         const action = {
             type: 'LOAD_FEATURE_INFO',
-            data: 'data2',
+            viewResponses: createViewResponses('data2'),
             layerMetadata: {title: 'valid2'},
             reqId: 12
         };
@@ -628,7 +632,7 @@ describe('Test the mapInfo reducer', () => {
         };
         const lastRequestAction = {
             type: 'LOAD_FEATURE_INFO',
-            data: 'data2',
+            viewResponses: createViewResponses('data2'),
             layerMetadata: {title: 'valid2'},
             reqId: 12
         };
@@ -641,7 +645,7 @@ describe('Test the mapInfo reducer', () => {
 
         const retainedResponseAction = {
             type: 'LOAD_FEATURE_INFO',
-            data: null,
+            viewResponses: createViewResponses(null),
             layerMetadata: {title: 'empty0'},
             reqId: 10
         };
@@ -659,12 +663,12 @@ describe('Test the mapInfo reducer', () => {
                 { reqId: 11, request: 'test1' }
             ],
             responses: [
-                { response: 'data0', layerMetadata: {title: 'valid0'} }
+                { viewResponses: createViewResponses('data0'), layerMetadata: {title: 'valid0'} }
             ]
         };
         const action = {
             type: 'LOAD_FEATURE_INFO',
-            data: 'data1',
+            viewResponses: createViewResponses('data1'),
             layerMetadata: {title: 'valid1'},
             reqId: 11
         };
@@ -685,7 +689,7 @@ describe('Test the mapInfo reducer', () => {
         };
         const action = {
             type: 'LOAD_FEATURE_INFO',
-            data: 'data0',
+            viewResponses: createViewResponses('data0'),
             layerMetadata: {title: 'valid0'},
             reqId: 10
         };
@@ -705,12 +709,12 @@ describe('Test the mapInfo reducer', () => {
                 { reqId: 11, request: 'test1' }
             ],
             responses: [
-                { response: null, layerMetadata: {title: 'empty0'} }
+                { viewResponses: createViewResponses(null), layerMetadata: {title: 'empty0'} }
             ]
         };
         const action = {
             type: 'LOAD_FEATURE_INFO',
-            data: null,
+            viewResponses: createViewResponses(null),
             layerMetadata: {title: 'empty1'},
             reqId: 11
         };
