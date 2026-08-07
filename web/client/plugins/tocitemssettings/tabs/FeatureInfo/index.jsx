@@ -21,6 +21,12 @@ const formatCards = {
     TEMPLATE: {
         titleId: titleIds.TEMPLATE,
         glyph: 'ext-empty'
+    },
+    // Metadata shown for the External Data option in the view-type selector.
+    EXTERNAL_DATA: {
+        titleId: 'layerProperties.externalData.title',
+        descId: 'layerProperties.externalData.description',
+        glyph: 'ext-json'
     }
 };
 const FeatureInfo = defaultProps({

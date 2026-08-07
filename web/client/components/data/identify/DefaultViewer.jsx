@@ -15,8 +15,10 @@ import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
 import ScrollableTabs from '../../misc/ScrollableTabs';
 import ViewerPage from './viewers/ViewerPage';
+import ExternalDataViewer from './viewers/ExternalDataViewer';
 import { isEmpty, reverse, startsWith } from 'lodash';
 import { getFormatForResponse } from '../../../utils/IdentifyUtils';
+import { clearExternalDataCacheForIdentifyRequests } from '../../../utils/mapinfo/ExternalDataCache';
 
 class DefaultViewer extends React.Component {
     static propTypes = {
@@ -73,6 +75,24 @@ class DefaultViewer extends React.Component {
     state = {
         activeViewIds: {}
     };
+
+    componentDidUpdate(previousProps) {
+        // Drop external requests that belong to identify results no longer displayed.
+        const currentRequestIds = new Set(
+            this.props.responses.map(({ reqId } = {}) => reqId).filter(Boolean)
+        );
+        const removedRequestIds = previousProps.responses
+            .map(({ reqId } = {}) => reqId)
+            .filter((reqId) => reqId && !currentRequestIds.has(reqId));
+        clearExternalDataCacheForIdentifyRequests(removedRequestIds);
+    }
+
+    componentWillUnmount() {
+        // The module-level cache must not outlive the identify viewer.
+        clearExternalDataCacheForIdentifyRequests(
+            this.props.responses.map(({ reqId } = {}) => reqId)
+        );
+    }
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.responses !== this.props.responses
@@ -248,12 +268,19 @@ class DefaultViewer extends React.Component {
             };
             const views = getLayerFeatureInfoViews(layerWithMetadata, { defaultType });
             const activeView = this.getActiveView(views, res);
+            const layerMetadataForView = this.getLayerMetadataForView(layerWithMetadata, activeView);
             return {
                 res,
                 views,
                 activeView,
                 layerMetadata,
-                layerMetadataForView: this.getLayerMetadataForView(layerWithMetadata, activeView),
+                layerMetadataForView: {
+                    ...layerMetadataForView,
+                    featureInfo: {
+                        ...layerMetadataForView?.featureInfo,
+                        identifyRequestId: res.reqId
+                    }
+                },
                 viewResponse: this.getResponseForView(res, activeView)
             };
         });
@@ -270,9 +297,11 @@ class DefaultViewer extends React.Component {
                 ...res,
                 queryParams: viewResponse.queryParams
             }, this.props);
-            const customViewer = layerMetadataForView?.viewer?.type
-                ? getViewer(layerMetadataForView.viewer.type)
-                : undefined;
+            const customViewer = activeView?.type === getInfoViewModes().EXTERNAL_DATA
+                ? ExternalDataViewer
+                : layerMetadataForView?.viewer?.type
+                    ? getViewer(layerMetadataForView.viewer.type)
+                    : undefined;
             return (<Panel
                 eventKey={i}
                 key={i}

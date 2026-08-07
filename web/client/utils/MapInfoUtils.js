@@ -24,6 +24,7 @@ import model from './mapinfo/model';
 import arcgis from './mapinfo/arcgis';
 import cog from './mapinfo/cog';
 import flatgeobuf from './mapinfo/flatgeobuf';
+import { EXTERNAL_DATA } from './mapinfo/ExternalDataUtils';
 // TODO import only index in ./mapinfo
 
 let MapInfoUtils;
@@ -37,14 +38,16 @@ const INFO_VIEW_MODES = {
     TEXT: "TEXT",
     PROPERTIES: "PROPERTIES",
     HTML: "HTML",
-    TEMPLATE: "TEMPLATE"
+    TEMPLATE: "TEMPLATE",
+    EXTERNAL_DATA
 };
 
 const INFO_VIEW_MODE_TITLE_IDS = {
     [INFO_VIEW_MODES.TEXT]: 'layerProperties.textFormatTitle',
     [INFO_VIEW_MODES.PROPERTIES]: 'layerProperties.propertiesFormatTitle',
     [INFO_VIEW_MODES.HTML]: 'layerProperties.htmlFormatTitle',
-    [INFO_VIEW_MODES.TEMPLATE]: 'layerProperties.templateFormatTitle'
+    [INFO_VIEW_MODES.TEMPLATE]: 'layerProperties.templateFormatTitle',
+    [INFO_VIEW_MODES.EXTERNAL_DATA]: 'layerProperties.externalData.title'
 };
 
 /**
@@ -105,6 +108,7 @@ export const getInfoFormatByInfoView = (infoView, layerInfoFormatCfg) => {
         break;
     case INFO_VIEW_MODES.PROPERTIES:
     case INFO_VIEW_MODES.TEMPLATE:
+    case INFO_VIEW_MODES.EXTERNAL_DATA:
         infoFormat = layerInfoFormatCfg?.includes(GEOJSON_MIME_TYPE) ? INFO_FORMATS.GEOJSON : INFO_FORMATS.JSON;
         break;
     default:
@@ -204,11 +208,12 @@ export const getLayerFeatureInfoViews = (layer, { defaultType, includeDisabled =
         return [];
     }
     if (Array.isArray(featureInfo.views) && featureInfo.views.length) {
-        return featureInfo.views.map((view, idx) => ({
-            ...view,
-            id: view.id || `view-${idx}`,
-            type: view.type || view.format || INFO_VIEW_MODES.PROPERTIES
-        }));
+        return featureInfo.views
+            .map((view, idx) => ({
+                ...view,
+                id: view.id || `view-${idx}`,
+                type: view.type || view.format || INFO_VIEW_MODES.PROPERTIES
+            }));
     }
     if (featureInfo.format && featureInfo.format !== 'HIDDEN') {
         const { format, ...config } = featureInfo;

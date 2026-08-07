@@ -11,6 +11,11 @@ import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 import DefaultViewer from '../DefaultViewer.jsx';
 import SwipeHeader from '../SwipeHeader';
+import {
+    createExternalDataCacheKey,
+    getExternalDataCacheEntry,
+    setExternalDataCacheEntry
+} from '../../../../utils/mapinfo/ExternalDataCache';
 
 import expect from 'expect';
 
@@ -183,6 +188,97 @@ describe('DefaultViewer', () => {
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(0);
+    });
+
+    it('renders an EXTERNAL_DATA view with ExternalDataViewer', () => {
+        const validator = () => ({
+            getValidResponses: (responses) => responses,
+            getNoValidResponses: () => []
+        });
+        ReactDOM.render(
+            <DefaultViewer
+                validator={validator}
+                requests={[{reqId: 'external-request'}]}
+                responses={[{
+                    reqId: 'external-request',
+                    response: {features: [{id: 'source.1', properties: {}}]},
+                    queryParams: {info_format: 'application/json'},
+                    layerMetadata: {
+                        featureInfo: {
+                            views: [{
+                                id: 'external',
+                                type: 'EXTERNAL_DATA',
+                                featuresService: {
+                                    url: '/external/wfs',
+                                    typeName: 'workspace:external',
+                                    cqlFilter: "source_id = '${properties.sourceId}'"
+                                }
+                            }]
+                        }
+                    }
+                }]}/>,
+            document.getElementById("container")
+        );
+
+        expect(document.querySelector('.ms-external-data-viewer')).toExist();
+        expect(document.querySelector('.mapstore-json-viewer')).toNotExist();
+    });
+
+
+    it('clears external data cache entries when identify responses are removed', () => {
+        const key = createExternalDataCacheKey({
+            identifyRequestId: 'identify-cache',
+            sourceFeatureId: 'feature-1',
+            sourceFeatureIndex: 0,
+            url: '/external/wfs',
+            typeName: 'workspace:external',
+            cqlFilter: "source_id = '1'"
+        });
+        setExternalDataCacheEntry(key, Promise.resolve({}), 'identify-cache');
+
+        ReactDOM.render(
+            <DefaultViewer
+                responses={[{
+                    reqId: 'identify-cache',
+                    response: 'A',
+                    layerMetadata: { title: 'Layer' }
+                }]}
+                requests={[{ reqId: 'identify-cache' }]}/>,
+            document.getElementById("container")
+        );
+        ReactDOM.render(
+            <DefaultViewer responses={[]}/>,
+            document.getElementById("container")
+        );
+
+        expect(getExternalDataCacheEntry(key)).toNotExist();
+    });
+
+    it('clears external data cache entries when the viewer unmounts', () => {
+        const key = createExternalDataCacheKey({
+            identifyRequestId: 'identify-unmount',
+            sourceFeatureId: 'feature-1',
+            sourceFeatureIndex: 0,
+            url: '/external/wfs',
+            typeName: 'workspace:external',
+            cqlFilter: "source_id = '1'"
+        });
+        setExternalDataCacheEntry(key, Promise.resolve({}), 'identify-unmount');
+        const container = document.getElementById('container');
+
+        ReactDOM.render(
+            <DefaultViewer
+                responses={[{
+                    reqId: 'identify-unmount',
+                    response: 'A',
+                    layerMetadata: { title: 'Layer' }
+                }]}
+                requests={[{ reqId: 'identify-unmount' }]}/>,
+            container
+        );
+        ReactDOM.unmountComponentAtNode(container);
+
+        expect(getExternalDataCacheEntry(key)).toNotExist();
     });
 
     it('renders compact shared tabs for multiple identify views', () => {

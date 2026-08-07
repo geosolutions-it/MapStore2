@@ -65,6 +65,8 @@ const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureGridOpen(state) && (gridEditingSelector(state) || gridGeometryQuickFilter(state));
 
 import {getFeatureInfoForViews} from '../api/identify';
+import { LOGOUT } from '../actions/security';
+import { clearExternalDataCache } from '../utils/mapinfo/ExternalDataCache';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
@@ -481,6 +483,15 @@ export const handleGetFeatureInfoForTimeParamsChange = (action$, {getState}) =>
             ...lastAction
         }));
 
+/**
+ * Drops the external data responses cached outside the store when the session ends.
+ */
+export const clearExternalDataCacheOnLogout = (action$) =>
+    action$
+        .ofType(LOGOUT)
+        .do(() => clearExternalDataCache())
+        .ignoreElements();
+
 export default {
     getFeatureInfoOnFeatureInfoClick,
     handleMapInfoMarker,
@@ -504,5 +515,6 @@ export default {
     removePopupOnLocationChangeEpic,
     removeMapInfoMarkerOnRemoveMapPopupEpic,
     setMapTriggerEpic,
-    handleGetFeatureInfoForTimeParamsChange
+    handleGetFeatureInfoForTimeParamsChange,
+    clearExternalDataCacheOnLogout
 };

@@ -20,6 +20,9 @@
     .legend-preview {
         .background-color-var(@theme-vars[main-bg]);
     }
+    .ms-feature-info-view.has-error {
+        .border-color-var(@theme-vars[danger]);
+    }
 }
 
 // **************
@@ -166,6 +169,19 @@
         .layer-fields-toolbar {
             text-align: center;
             margin: 15px;
+
+            .layer-fields-title {
+                font-weight: bold;
+            }
+
+            &:has(.layer-fields-title) {
+                align-items: center;
+                display: flex;
+                gap: 8px;
+                justify-content: space-between;
+                margin: 5px;
+                text-align: left;
+            }
         }
         .layer-fields-row-header {
             height: 25px;
@@ -180,6 +196,17 @@
         gap: 5px;
         .layer-field-alias {
             flex: 1;
+        }
+        .layer-field-visibility {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+            width: 28px;
+
+            .checkbox {
+                margin: 0;
+            }
         }
         .layer-field-name {
             width: 150px;
@@ -226,6 +253,9 @@
 
     .ms-feature-info-views {
         padding: 0 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
     .ms-feature-info-views-empty {
@@ -238,7 +268,6 @@
         border: 1px solid var(--ms-main-border-color, @ms-main-border-color);
         display: flex;
         gap: 8px;
-        margin-bottom: 8px;
         padding: 6px 10px;
 
         &.disabled {

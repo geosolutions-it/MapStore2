@@ -44,6 +44,10 @@ const formatCards = {
     TEMPLATE: {
         titleId: 'layerProperties.templateFormatTitle',
         glyph: 'ext-empty'
+    },
+    EXTERNAL_DATA: {
+        titleId: 'layerProperties.externalData.title',
+        glyph: 'ext-json'
     }
 };
 
@@ -177,22 +181,42 @@ describe("test FeatureInfo", () => {
     });
     it('test rendering supported infoFormats for wfs layer', () => {
         const component = getFeatureInfoInstance({element: {type: "wfs"}, formatCards, defaultInfoFormat});
-        expect(component.getTypeOptions()).toEqual(['PROPERTIES', 'TEMPLATE']);
+        expect(component.getTypeOptions()).toEqual(['PROPERTIES', 'TEMPLATE', 'EXTERNAL_DATA']);
     });
 
     it('test rendering supported infoFormats for wfs layer with only application/json', () => {
         const component = getFeatureInfoInstance({element: {type: "wfs", infoFormats: ["application/json"]}, formatCards, defaultInfoFormat});
-        expect(component.getTypeOptions()).toEqual(['PROPERTIES', 'TEMPLATE']);
+        expect(component.getTypeOptions()).toEqual(['PROPERTIES', 'TEMPLATE', 'EXTERNAL_DATA']);
     });
 
     it('test rendering supported infoFormats for wfs layer with application/json and text/html', () => {
         const component = getFeatureInfoInstance({element: {type: "wfs", infoFormats: ["application/json", "text/html"]}, formatCards, defaultInfoFormat});
-        expect(component.getTypeOptions()).toEqual(['HTML', 'PROPERTIES', 'TEMPLATE']);
+        expect(component.getTypeOptions()).toEqual(['HTML', 'PROPERTIES', 'TEMPLATE', 'EXTERNAL_DATA']);
     });
 
     it('test rendering supported infoFormats for wms layer', () => {
         const component = getFeatureInfoInstance({element: {type: "wms"}, formatCards, defaultInfoFormat});
-        expect(component.getTypeOptions()).toEqual(['TEXT', 'HTML', 'PROPERTIES', 'TEMPLATE']);
+        expect(component.getTypeOptions()).toEqual(['TEXT', 'HTML', 'PROPERTIES', 'TEMPLATE', 'EXTERNAL_DATA']);
+    });
+
+    it('marks invalid EXTERNAL_DATA and toggles its inline editor', () => {
+        ReactDOM.render(<DndFeatureInfo
+            element={{
+                type: 'wfs',
+                featureInfo: {
+                    views: [{ id: 'external', title: 'External', type: 'EXTERNAL_DATA' }]
+                }
+            }}
+            formatCards={formatCards}
+            defaultInfoFormat={defaultInfoFormat}/>, document.getElementById('container'));
+
+        const view = document.querySelector('[data-id="feature-info-view-external"]');
+        expect(view.classList.contains('has-error')).toBe(true);
+        const editButton = view.querySelector('.ms-feature-info-view-edit');
+        TestUtils.Simulate.click(editButton);
+        expect(document.querySelector('.ms-external-data-editor')).toExist();
+        TestUtils.Simulate.click(editButton);
+        expect(document.querySelector('.ms-external-data-editor')).toNotExist();
     });
 
     it('test WMS feature info request options preserve existing feature info configuration', done => {
