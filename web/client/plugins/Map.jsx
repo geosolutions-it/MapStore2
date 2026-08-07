@@ -218,7 +218,8 @@ class MapPlugin extends React.Component {
         pluginsCreator: PropTypes.func,
         mapTitle: PropTypes.string,
         coalesceWMSLayers: PropTypes.bool,
-        coalesceWMSLayersMaxGroupSize: PropTypes.number
+        coalesceWMSLayersMaxGroupSize: PropTypes.number,
+        coalesceExcludeIds: PropTypes.array
     };
 
     static defaultProps = {
@@ -370,10 +371,13 @@ class MapPlugin extends React.Component {
         if (!this.isCoalesceEnabled()) {
             return layers.map((layer) => ({ key: layer.id || layer.name, options: layer }));
         }
-        const deps = [this.props.layers, this.props.additionalLayers, this.props.elevationEnabled, this.props.mapType, this.props.coalesceWMSLayersMaxGroupSize, this.props.map?.mapOptions?.coalesceWMSLayers];
+        const deps = [this.props.layers, this.props.additionalLayers, this.props.elevationEnabled, this.props.mapType, this.props.coalesceWMSLayersMaxGroupSize, this.props.map?.mapOptions?.coalesceWMSLayers, this.props.coalesceExcludeIds];
         if (!this._coalesceDeps || deps.some((dep, idx) => dep !== this._coalesceDeps[idx])) {
             this._coalesceDeps = deps;
-            this._coalesceUnits = groupWMSLayers(layers, { maxGroupSize: this.props.coalesceWMSLayersMaxGroupSize });
+            this._coalesceUnits = groupWMSLayers(layers, {
+                maxGroupSize: this.props.coalesceWMSLayersMaxGroupSize,
+                excludeIds: this.props.coalesceExcludeIds
+            });
         }
         return this._coalesceUnits;
     };

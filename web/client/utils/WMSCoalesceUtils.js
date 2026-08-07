@@ -122,7 +122,14 @@ export const chunkWhile = (items = [], predicate) => {
 
 export const defaultGroupKeyGen = (members) => `wmsgroup:${members.map((m) => m.id).join(',')}`;
 
-export const defaultGroupCondition = (prev, item, chunk, maxGroupSize = DEFAULT_MAX_GROUP_SIZE, maxURLLength = getMaxURLLength()) => {
+export const defaultGroupCondition = (prev, item, chunk, {
+    maxGroupSize = DEFAULT_MAX_GROUP_SIZE,
+    maxURLLength = getMaxURLLength(),
+    excludeIds
+} = {}) => {
+    if (excludeIds?.includes(prev.id) || excludeIds?.includes(item.id)) {
+        return false;
+    }
     if (chunk.length >= maxGroupSize || !mergeable(prev, item)) {
         return false;
     }
@@ -155,10 +162,11 @@ export const toGroupUnit = (members, groupKey) => {
  * @param {Object} options - Options for grouping.
  * @param {function} options.groupCondition - The condition function to determine if layers should be grouped together.
  * @param {function} options.groupKeyGen - The function to generate a unique key for the grouped layers.
+ * @param {Array} options.excludeIds - Ids of layers that must never be coalesced, e.g. the layer currently used by Swipe.
  * @returns {Array} An array of grouped WMS layers.
  */
-export const groupWMSLayers = (layers = [], {maxGroupSize, groupCondition, groupKeyGen = defaultGroupKeyGen} = {}) =>
-    chunkWhile(layers, groupCondition || ((prev, item, chunk) => defaultGroupCondition(prev, item, chunk, maxGroupSize)))
+export const groupWMSLayers = (layers = [], {maxGroupSize, groupCondition, groupKeyGen = defaultGroupKeyGen, excludeIds} = {}) =>
+    chunkWhile(layers, groupCondition || ((prev, item, chunk) => defaultGroupCondition(prev, item, chunk, { maxGroupSize, excludeIds })))
         .map((run) => run.length === 1
             ? { key: run[0].id || run[0].name, options: run[0] }
             : toGroupUnit(run, groupKeyGen)
