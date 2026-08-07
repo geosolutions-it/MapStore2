@@ -220,6 +220,97 @@ describe('ExternalDataViewer', () => {
         });
     });
 
+    it('does not reload when the layer object changes but the configuration does not', (done) => {
+        let requestCount = 0;
+        mockAxios.onGet().reply(() => {
+            requestCount += 1;
+            return [200, { type: 'FeatureCollection', features: [] }];
+        });
+        const container = document.getElementById('container');
+
+        ReactDOM.render(<ExternalDataViewer layer={layer} response={response}/>, container);
+        setTimeout(() => {
+            expect(requestCount).toBe(1);
+            // clearing the cache isolates "the effect refired" from "the request was cached"
+            clearExternalDataCacheForIdentifyRequests(['identify-external']);
+            ReactDOM.render(
+                <ExternalDataViewer
+                    layer={{ featureInfo: { ...layer.featureInfo, featuresService: { ...layer.featureInfo.featuresService } } }}
+                    response={response}/>,
+                container
+            );
+            setTimeout(() => {
+                try {
+                    expect(requestCount).toBe(1);
+                    done();
+                } catch (error) {
+                    done(error);
+                }
+            });
+        });
+    });
+
+    it('reloads when the configured filter changes', (done) => {
+        const filters = [];
+        mockAxios.onGet().reply(({ url }) => {
+            filters.push(decodeURIComponent(url).match(/CQL_FILTER=([^&]*)/)[1]);
+            return [200, { type: 'FeatureCollection', features: [] }];
+        });
+        const container = document.getElementById('container');
+
+        ReactDOM.render(<ExternalDataViewer layer={layer} response={response}/>, container);
+        setTimeout(() => {
+            ReactDOM.render(
+                <ExternalDataViewer
+                    layer={{
+                        featureInfo: {
+                            ...layer.featureInfo,
+                            featuresService: {
+                                ...layer.featureInfo.featuresService,
+                                cqlFilter: "other_id = '${properties.sourceId}'"
+                            }
+                        }
+                    }}
+                    response={response}/>,
+                container
+            );
+            setTimeout(() => {
+                try {
+                    expect(filters.length).toBe(2);
+                    expect(filters[0]).toContain('source_id');
+                    expect(filters[1]).toContain('other_id');
+                    done();
+                } catch (error) {
+                    done(error);
+                }
+            });
+        });
+    });
+
+    it('does not request anything when the service configuration is incomplete', (done) => {
+        ReactDOM.render(
+            <ExternalDataViewer
+                layer={{
+                    featureInfo: {
+                        identifyRequestId: 'identify-external',
+                        featuresService: { url: '/external/wfs' }
+                    }
+                }}
+                response={response}/>,
+            document.getElementById('container')
+        );
+
+        setTimeout(() => {
+            try {
+                expect(mockAxios.history.get.length).toBe(0);
+                expect(document.querySelector('.alert-warning')).toExist();
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+    });
+
     it('shares a cached request across views with different presentation settings', (done) => {
         let requestCount = 0;
         mockAxios.onGet().reply(() => {

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Button, Glyphicon } from 'react-bootstrap';
 
@@ -14,6 +14,7 @@ import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import { getFeature } from '../../../../api/WFS';
 import { interpolateExternalDataCQL, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
+import useIsMounted from '../../../../hooks/useIsMounted';
 import RowViewer from './row/RowViewer';
 import { getVisibleFeatureRow } from '../../../../utils/IdentifyUtils';
 import {
@@ -85,53 +86,37 @@ const getErrorPresentation = (error) => {
  */
 const ExternalDataViewer = ({ response, layer }) => {
     const [results, setResults] = useState([]);
-    const mounted = useRef(false);
+    const isMounted = useIsMounted();
     const loadGeneration = useRef(0);
-    const propsRef = useRef({ response, layer });
-    const loadRef = useRef();
-    propsRef.current = { response, layer };
 
-    const getSourceFeatures = () =>
-        parseResponse(propsRef.current.response)?.features || [];
+    const { identifyRequestId, featuresService = {} } = layer?.featureInfo || {};
+    const { url, typeName, cqlFilter, attributes = [] } = featuresService;
+    const configurationError = validateExternalDataConfiguration(featuresService);
 
-    const getConfiguration = () =>
-        propsRef.current.layer?.featureInfo?.featuresService || {};
+    const sourceFeatures = useMemo(
+        () => parseResponse(response)?.features || [],
+        [response]
+    );
 
-    const getCacheKey = (sourceFeature, index, cqlFilter) => {
-        const featureInfo = propsRef.current.layer?.featureInfo || {};
-        const configuration = getConfiguration();
-        return createExternalDataCacheKey({
-            identifyRequestId: featureInfo.identifyRequestId,
-            sourceFeatureId: sourceFeature?.id,
-            sourceFeatureIndex: index,
-            url: configuration.url,
-            typeName: configuration.typeName,
-            cqlFilter
-        });
-    };
-
-    const updateResult = (index, result, generation = loadGeneration.current) => {
-        // Ignore responses from an unmounted viewer or an older load cycle.
-        if (!mounted.current || generation !== loadGeneration.current) {
+    const updateResult = useCallback((index, result, generation) => {
+        if (generation !== loadGeneration.current) {
             return;
         }
-        setResults((currentResults) =>
+        isMounted(() => setResults((currentResults) =>
             currentResults.map((currentResult, resultIndex) =>
                 resultIndex === index ? result : currentResult)
-        );
-    };
+        ));
+    }, []);
 
-    const loadSourceFeature = (
+    const loadSourceFeature = useCallback((
         sourceFeature,
         index,
         { force = false, generation = loadGeneration.current } = {}
     ) => {
-        const configuration = getConfiguration();
-        const identifyRequestId = propsRef.current.layer?.featureInfo?.identifyRequestId;
         updateResult(index, { status: 'loading' }, generation);
-        let cqlFilter;
+        let interpolatedCql;
         try {
-            cqlFilter = interpolateExternalDataCQL(configuration.cqlFilter, sourceFeature);
+            interpolatedCql = interpolateExternalDataCQL(cqlFilter, sourceFeature);
         } catch (error) {
             updateResult(index, {
                 status: 'error',
@@ -139,15 +124,22 @@ const ExternalDataViewer = ({ response, layer }) => {
             }, generation);
             return;
         }
-        const cacheKey = getCacheKey(sourceFeature, index, cqlFilter);
+        const cacheKey = createExternalDataCacheKey({
+            identifyRequestId,
+            sourceFeatureId: sourceFeature?.id,
+            sourceFeatureIndex: index,
+            url,
+            typeName,
+            cqlFilter: interpolatedCql
+        });
         if (force) {
             deleteExternalDataCacheEntry(cacheKey);
         }
         const cachedRequest = getExternalDataCacheEntry(cacheKey);
         // Reuse both completed and still-running requests when the view rerenders.
         const request = cachedRequest || setExternalDataCacheEntry(cacheKey,
-            getFeature(configuration.url, configuration.typeName, {
-                CQL_FILTER: cqlFilter,
+            getFeature(url, typeName, {
+                CQL_FILTER: interpolatedCql,
                 maxFeatures: EXTERNAL_RESPONSE_LIMIT,
                 outputFormat: 'application/json'
             }).then(({ data }) => normalizeExternalResponse(data)),
@@ -165,54 +157,38 @@ const ExternalDataViewer = ({ response, layer }) => {
                     ...getErrorPresentation(error)
                 }, generation);
             });
-    };
+    }, [url, typeName, cqlFilter, identifyRequestId, updateResult]);
 
-    const load = (generation) => {
-        const sourceFeatures = getSourceFeatures();
+    const load = useCallback((generation) => {
         setResults(sourceFeatures.map(() => ({ status: 'loading' })));
         sourceFeatures.forEach((sourceFeature, index) =>
             loadSourceFeature(sourceFeature, index, { generation }));
-    };
-    loadRef.current = load;
+    }, [sourceFeatures, loadSourceFeature]);
 
-    const featureInfo = layer?.featureInfo || {};
-    const configuration = featureInfo.featuresService || {};
-    const configurationError = validateExternalDataConfiguration(configuration);
     useEffect(() => {
         if (configurationError) {
             console.error(`External data view is not configured: ${configurationError}`);
             return () => {};
         }
-        mounted.current = true;
         loadGeneration.current += 1;
-        loadRef.current(loadGeneration.current);
+        load(loadGeneration.current);
         return () => {
-            mounted.current = false;
             loadGeneration.current += 1;
         };
-    }, [
-        response,
-        configurationError,
-        featureInfo.identifyRequestId,
-        featureInfo.id,
-        configuration.url,
-        configuration.typeName,
-        configuration.cqlFilter
-    ]);
+    }, [load, configurationError]);
 
-    const retry = (index) => {
-        const sourceFeature = getSourceFeatures()[index];
+    const retry = useCallback((index) => {
+        const sourceFeature = sourceFeatures[index];
         if (sourceFeature) {
             loadSourceFeature(sourceFeature, index, {
                 force: true,
                 generation: loadGeneration.current
             });
         }
-    };
+    }, [sourceFeatures, loadSourceFeature]);
 
     const renderResult = (result, index) => {
-        const { attributes = [] } = getConfiguration();
-        const sourceFeatureId = getSourceFeatures()[index]?.id;
+        const sourceFeatureId = sourceFeatures[index]?.id;
         return (
             <section className="ms-external-data-result" key={index}>
                 {sourceFeatureId !== undefined && sourceFeatureId !== null
@@ -263,7 +239,6 @@ const ExternalDataViewer = ({ response, layer }) => {
             </Alert>
         );
     }
-    const sourceFeatures = getSourceFeatures();
     if (!sourceFeatures.length) {
         return (
             <Alert bsStyle="info">

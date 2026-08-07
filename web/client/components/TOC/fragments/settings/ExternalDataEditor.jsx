@@ -98,8 +98,10 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
     const describeRequestId = useRef(0);
     const validationRequestId = useRef(0);
     const valueRef = useRef(value);
-    // Async callbacks read the latest controlled value instead of stale closures.
-    valueRef.current = value;
+    // Async callbacks read the latest committed value instead of stale closures.
+    useEffect(() => {
+        valueRef.current = value;
+    });
 
     const updateState = (changes) => {
         setState((previousState) => ({ ...previousState, ...changes }));
