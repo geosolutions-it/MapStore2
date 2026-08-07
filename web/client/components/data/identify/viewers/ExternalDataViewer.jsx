@@ -192,7 +192,7 @@ const ExternalDataViewer = ({ response, layer }) => {
         return (
             <section className="ms-external-data-result" key={index}>
                 {sourceFeatureId !== undefined && sourceFeatureId !== null
-                    ? <h4>{sourceFeatureId}</h4>
+                    ? <div className="ms-external-data-result-title">{sourceFeatureId}</div>
                     : null}
                 {result.status === 'loading' ? (
                     <div className="ms-external-data-runtime-loading">
