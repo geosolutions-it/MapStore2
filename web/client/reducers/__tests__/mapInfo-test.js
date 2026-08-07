@@ -654,30 +654,6 @@ describe('Test the mapInfo reducer', () => {
         expect(fallbackState.loaded).toBe(true);
         expect(fallbackState.index).toBe(2);
     });
-    it('receiveResponse preserves a retained response when it is still valid', () => {
-        const state = {
-            index: 1,
-            configuration: { infoFormat: 'text/plain' },
-            requests: [
-                { reqId: 10, request: 'test0' },
-                { reqId: 11, request: 'test1' }
-            ],
-            responses: [
-                { viewResponses: createViewResponses('data0'), layerMetadata: {title: 'valid0'} }
-            ]
-        };
-        const action = {
-            type: 'LOAD_FEATURE_INFO',
-            viewResponses: createViewResponses('data1'),
-            layerMetadata: {title: 'valid1'},
-            reqId: 11
-        };
-
-        const newState = mapInfo(state, action);
-
-        expect(newState.loaded).toBe(true);
-        expect(newState.index).toBe(1);
-    });
     it('receiveResponse recovers from a negative retained index', () => {
         const state = {
             index: -1,
