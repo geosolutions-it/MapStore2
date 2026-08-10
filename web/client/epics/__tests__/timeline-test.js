@@ -861,10 +861,29 @@ describe('timeline Epics', () => {
         testEpic(updateTimelineDataOnMapLoad, 3, configureMap(config), ([action1, action2, action3]) => {
             expect(action1.type).toBe(INIT_SELECT_LAYER);
             expect(action1.layerId).toBe("TEST_LAYER");
+            // a current time is restored from config, so the guide layer must not snap over it
+            expect(action1.snap).toBe(false);
             expect(action2.type).toBe(SET_END_VALUES_SUPPORT);
             expect(action2.endValuesSupport).toBe(true);
             expect(action3.type).toBe(SET_SNAP_RADIO_BUTTON_ENABLED);
             expect(action3.snapRadioButtonEnabled).toBe(false);
+            done();
+        }, {});
+    });
+    it("updateTimelineDataOnMapLoad snaps the guide layer when no current time is restored", (done) =>{
+        const config = {
+            timelineData: {
+                selectedLayer: "TEST_LAYER",
+                endValuesSupport: true,
+                snapRadioButtonEnabled: false
+            },
+            dimensionData: {}
+        };
+        testEpic(updateTimelineDataOnMapLoad, 4, configureMap(config), ([action1, , , action4]) => {
+            expect(action1.type).toBe(INIT_SELECT_LAYER);
+            expect(action1.layerId).toBe("TEST_LAYER");
+            expect(action1.snap).toBe(true);
+            expect(action4.type).toBe(AUTOSELECT);
             done();
         }, {});
     });
@@ -972,6 +991,29 @@ describe('timeline Epics', () => {
             }, {...STATE_TIMELINE, layers: { ...STATE_TIMELINE.layers,
                 flat: [{...STATE_TIMELINE.layers.flat[0], visibility: true}]
             }});
+        });
+        it('syncTimelineGuideLayer snaps when no current time is set', done => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [autoselect()], ([action]) => {
+                expect(action.type).toBe(SELECT_LAYER);
+                expect(action.layerId).toBe('TEST_LAYER');
+                expect(action.snap).toBe(true);
+                done();
+            }, {...STATE_TIMELINE, layers: { ...STATE_TIMELINE.layers,
+                flat: [{...STATE_TIMELINE.layers.flat[0], visibility: true}]
+            }});
+        });
+        it('syncTimelineGuideLayer does not snap when a current time is already set', done => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [autoselect()], ([action]) => {
+                expect(action.type).toBe(SELECT_LAYER);
+                expect(action.layerId).toBe('TEST_LAYER');
+                expect(action.snap).toBe(false);
+                done();
+            }, {...STATE_TIMELINE,
+                layers: { ...STATE_TIMELINE.layers,
+                    flat: [{...STATE_TIMELINE.layers.flat[0], visibility: true}]
+                },
+                dimension: { currentTime: '2005-03-04T00:00:00.000Z' }
+            });
         });
         it('syncTimelineGuideLayer on showHiddenLayers', done => {
             testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER1', 'layers') ], (actions) => {
