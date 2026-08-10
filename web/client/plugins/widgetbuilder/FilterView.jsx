@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import isNil from 'lodash/isNil';
 import { Button, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
@@ -25,10 +26,12 @@ import FilterDropdownList from '../../components/widgets/builder/wizard/filter/F
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
 import FilterSlider from '../../components/widgets/builder/wizard/filter/FilterSlider';
 import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
-import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
-import { cleanPaths, getWidgetByDependencyPath } from '../../utils/WidgetsUtils';
-import { isMapTimeTarget, TARGET_TYPES } from '../../utils/InteractionUtils';
+import { getWidgetByDependencyPath } from '../../utils/WidgetsUtils';
+import { isMapTimeTarget, TARGET_TYPES, getConnectedActiveTargets } from '../../utils/InteractionUtils';
+import Text from '../../components/layout/Text';
+import FlexBox from '../../components/layout/FlexBox';
+import { isFilterSelectionValid } from './utils/filterBuilder';
 
 const toIsoTime = (value) => {
     if (value === undefined || value === null || value === '') {
@@ -39,17 +42,13 @@ const toIsoTime = (value) => {
 };
 
 const NoTargetInfo = ({ interactions = [], inactiveInteractionIds = [], activeTargets = {} }) => {
-    const connectedActiveTargets = useMemo(() => {
-        const interactionTargetPaths = interactions
-            .filter(({plugged, id}) => plugged && !inactiveInteractionIds.includes(id)) // get only plugged active interactions
-            .map(interaction => cleanPaths(interaction.target.nodePath)); // get target paths;
-        return interactionTargetPaths
-            .filter(path =>
-                Object.entries(activeTargets).some(([activePath, visibility]) => {
-                    return (visibility && path === cleanPaths(activePath)) || isMapTimeTarget(path);
-                })
-            );
-    }, [activeTargets, inactiveInteractionIds, interactions]);
+    const connectedActiveTargets = useMemo(() =>
+        getConnectedActiveTargets({
+            interactions,
+            activeTargets,
+            inactiveInteractionIds
+        }),
+    [activeTargets, inactiveInteractionIds, interactions]);
 
     // display the list of layers/widgets affected by the filter when there are active interactions
     const hasActiveInteractions = connectedActiveTargets.length > 0;
@@ -74,18 +73,14 @@ const NoTargetInfo = ({ interactions = [], inactiveInteractionIds = [], activeTa
 };
 
 const DisabledFilterInfo = ({ interactions = [], activeTargets = {}, targetsWithDisabledFilter = {} }) => {
-    const connectedActiveTargetsWithDisabledFilter = useMemo(() => {
-        const interactionTargetPaths = interactions
-            .filter(({ plugged }) => plugged)
-            .map(interaction => cleanPaths(interaction.target.nodePath));
-        return interactionTargetPaths.filter(path => {
-            const isActive = Object.entries(activeTargets).some(([activePath, visibility]) =>
-                visibility && path === cleanPaths(activePath)
-            );
-            const isFilterDisabled = targetsWithDisabledFilter[path] === true;
-            return isActive && isFilterDisabled;
-        });
-    }, [activeTargets, interactions, targetsWithDisabledFilter]);
+    const connectedActiveTargetsWithDisabledFilter = useMemo(() =>
+        getConnectedActiveTargets({
+            interactions,
+            activeTargets,
+            targetsWithDisabledFilter,
+            withDisabledFilter: true
+        }),
+    [activeTargets, interactions, targetsWithDisabledFilter]);
 
     if (connectedActiveTargetsWithDisabledFilter.length === 0) {
         return null;
@@ -132,6 +127,34 @@ const MapTimeRangeDisabledInfo = () => (
         </div>
     </div>
 );
+
+const ConnectedLayerTitles = ({
+    filterData,
+    interactions,
+    activeTargets,
+    inactiveInteractionIds,
+    locale
+}) => {
+    let activeLayers = useMemo(() =>
+        getConnectedActiveTargets({
+            interactions,
+            activeTargets,
+            inactiveInteractionIds,
+            locale,
+            asLayerTitles: true
+        }),
+    [activeTargets, inactiveInteractionIds, interactions, locale]);
+    activeLayers = [...new Set(activeLayers)];
+
+    if (activeLayers.length === 0) return null;
+
+    return (
+        <FlexBox gap="xs" centerChildrenVertically className="ms-filter-layers">
+            <Glyphicon glyph="1-layer" className="ms-filter-layers-icon" />
+            <Text fontSize="sm" key={filterData.id + '-title'}>{activeLayers.join(', ')}</Text>
+        </FlexBox>
+    );
+};
 
 const ApplyInteractionOutOfSyncInfo = connect()(
     ({ outOfSync = {}, messageId, buttonId, dispatch }) => {
@@ -226,6 +249,7 @@ const FilterView = ({
     fetchError = false,
     showItemToolbar = false,
     onToggleDisabled,
+    locale,
     onZoomToFilterExtent,
     widgets = []
 }) => {
@@ -428,6 +452,7 @@ const FilterView = ({
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
     // No title means no row for the arrow, so force the filter open.
     const effectiveCollapsed = showTitle ? isCollapsed : false;
+    const showConnectedLayers = (isNil(layout.showConnectedLayers) || layout.showConnectedLayers) && !effectiveCollapsed;
 
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
@@ -552,6 +577,17 @@ const FilterView = ({
                         toolProps={{zoomToMapNames}}/>
                 </div>
             </div>
+            {
+                showConnectedLayers ?
+                    <ConnectedLayerTitles
+                        activeTargets={activeTargets}
+                        filterData={filterData}
+                        inactiveInteractionIds={inactiveInteractionIds}
+                        interactions={interactions}
+                        locale={locale}
+                    />
+                    : null
+            }
             {disableMapTimeSelection ? (
                 <MapTimeRangeDisabledInfo />
             ) : showUnsupportedVariantWarning ? (
@@ -629,6 +665,7 @@ FilterView.propTypes = {
     currentTime: PropTypes.string,
     showItemToolbar: PropTypes.bool,
     onToggleDisabled: PropTypes.func,
+    locale: PropTypes.string,
     onZoomToFilterExtent: PropTypes.func,
     widgets: PropTypes.array
 };

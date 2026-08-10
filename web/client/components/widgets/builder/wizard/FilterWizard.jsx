@@ -71,6 +71,7 @@ const FilterWizard = ({
     filters = [],
     selections = {},
     selectedFilterId = null,
+    locale,
     onFilterSelect = () => {},
     onAddFilter = () => {},
     onDeleteFilter = () => {},
@@ -108,6 +109,7 @@ const FilterWizard = ({
                     showNoTargetsInfo={false/* preview mode */}
                     filters={filters}
                     selections={selections}
+                    locale={locale}
                     getSelectionHandler={onSelectionChange}
                     selectedFilterId={selectedFilterId}
                     onSelectableItemsChange={onSelectableItemsChange}

@@ -69,5 +69,38 @@ describe('WidgetsBar component', () => {
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonClick).toHaveBeenCalled();
     });
+    it('Test WidgetsBar rendering with active filter style', () => {
+        const widget = {
+            widgetType: "filter",
+            filters: [{ id: 'f1', disabled: false }],
+            selections: { f1: ['value1'] }
+        };
+        ReactDOM.render(<WidgetsBar widgets={[widget]} />, document.getElementById("container"));
+        const el = document.getElementById('container').querySelector('.btn-group button');
+        expect(el.className).toInclude('ms-notification-circle');
+        expect(el.className).toInclude('success');
+    });
+    it('Test WidgetsBar rendering without active filter style if filter is disabled', () => {
+        const widgetDisabled = {
+            widgetType: "filter",
+            filters: [{ id: 'f1', disabled: true }],
+            selections: { f1: ['value1'] }
+        };
+        ReactDOM.render(<WidgetsBar widgets={[widgetDisabled]} />, document.getElementById("container"));
+        const el = document.getElementById('container').querySelector('.btn-group button');
+        expect(el.className).toNotInclude('ms-notification-circle');
+        expect(el.className).toNotInclude('success');
+    });
 
+    it('Test WidgetsBar rendering without active filter style if no selections', () => {
+        const widgetNoSelection = {
+            widgetType: "filter",
+            filters: [{ id: 'f1', disabled: false }],
+            selections: { f1: [] }
+        };
+        ReactDOM.render(<WidgetsBar widgets={[widgetNoSelection]} />, document.getElementById("container"));
+        const el = document.getElementById('container').querySelector('.btn-group button');
+        expect(el.className).toNotInclude('ms-notification-circle');
+        expect(el.className).toNotInclude('success');
+    });
 });
