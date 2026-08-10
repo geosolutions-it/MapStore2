@@ -7,6 +7,8 @@
  */
 import expect from 'expect';
 import * as Cesium from 'cesium';
+import proj4 from 'proj4';
+import { register } from 'ol/proj/proj4';
 
 import { keys, sortBy } from 'lodash';
 
@@ -44,6 +46,8 @@ import {
     reprojectZoom,
     getRandomPointInCRS,
     convertResolution,
+    convertResolutionByUnits,
+    METERS_PER_UNIT,
     getExactZoomFromResolution,
     recursiveIsChangedWithRules,
     filterFieldByRules,
@@ -2435,7 +2439,50 @@ describe('Test the MapUtils', () => {
         expect(getRandomPointInCRS('EPSG:4326').length).toBe(2);
     });
     it('convertResolution', () => {
-        expect(convertResolution('EPSG:3857', 'EPSG:4326', 2000).transformedResolution).toBe(0.017986440587896155);
+        expect(convertResolution('EPSG:3857', 'EPSG:4326', 2000).transformedResolution).toBe(0.01798640727449076);
+    });
+    it('convertResolution keeps the same size on the ground when converting to a Mercator CRS', () => {
+        proj4.defs('TEST:UTM30N', '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs');
+        register(proj4);
+        const lat = 45;
+        const utmPoint = proj4('EPSG:4326', 'TEST:UTM30N', [-1.13, lat]);
+        const mercatorPoint = proj4('EPSG:4326', 'EPSG:3857', [-1.13, lat]);
+        // one UTM metre is a real metre, one EPSG:3857 metre is cos(lat) real metres,
+        // so the same pixel size on the ground needs a 1 / cos(lat) larger resolution in EPSG:3857
+        const expected = 2000 / Math.cos(lat * Math.PI / 180);
+
+        const mercatorResolution = convertResolution('TEST:UTM30N', 'EPSG:3857', 2000, utmPoint).transformedResolution;
+        expect(Math.abs(mercatorResolution / expected - 1)).toBeLessThan(0.01);
+
+        const back = convertResolution('EPSG:3857', 'TEST:UTM30N', mercatorResolution, mercatorPoint).transformedResolution;
+        expect(Math.abs(back / 2000 - 1)).toBeLessThan(0.01);
+    });
+    it('convertResolution returns degrees when the target CRS is geographic', () => {
+        proj4.defs('TEST:UTM30N', '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs');
+        register(proj4);
+        const utmPoint = proj4('EPSG:4326', 'TEST:UTM30N', [-1.13, 45]);
+        // 2000 metres is roughly 0.02 degrees at this latitude
+        const result = convertResolution('TEST:UTM30N', 'EPSG:4326', 2000, utmPoint).transformedResolution;
+        expect(result).toBeGreaterThan(0.01);
+        expect(result).toBeLessThan(0.03);
+    });
+    it('convertResolutionByUnits converts through the meters-per-unit ratio of the units', () => {
+        proj4.defs('TEST:UTM30N', '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs');
+        register(proj4);
+        expect(convertResolutionByUnits('TEST:UTM30N', 'EPSG:4326', 2000)).toBe(2000 / METERS_PER_UNIT.degrees);
+        expect(convertResolutionByUnits('EPSG:4326', 'TEST:UTM30N', 1)).toBe(METERS_PER_UNIT.degrees);
+        // both CRS in metres: nothing to convert
+        expect(convertResolutionByUnits('TEST:UTM30N', 'EPSG:3857', 2000)).toBe(2000);
+    });
+    it('convertResolution does not fail when the target CRS relies on an unavailable datum grid', () => {
+        // simulates a datum grid (e.g. NTv2/gsb) that can't be resolved for the given point
+        proj4.defs('TEST:6265-GRID-CRS', '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +nadgrids=unavailable-grid-6265');
+        register(proj4);
+
+        const result = convertResolution('EPSG:3857', 'TEST:6265-GRID-CRS', 2000);
+        expect(result).toExist();
+        expect(isNaN(result.transformedResolution)).toBe(false);
+        expect(isFinite(result.transformedResolution)).toBe(true);
     });
     it('test get exact zoom level from resolution using getExactZoomFromResolution', () => {
         const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
