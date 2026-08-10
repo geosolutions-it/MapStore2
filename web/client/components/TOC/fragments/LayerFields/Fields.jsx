@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ControlLabel, FormControl, FormGroup, Alert, Glyphicon, Button } from 'react-bootstrap';
+import { ControlLabel, FormControl, FormGroup, Alert, Glyphicon, Button, Checkbox } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import LocalizedInput from '../../../misc/LocalizedInput';
@@ -11,6 +11,7 @@ import withTooltip from '../../../data/featuregrid/enhancers/withTooltip';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 
 const ConfirmButton = localizedProps("tooltip")(withTooltip(withConfirm(Button)));
+const CheckboxWithTooltip = localizedProps("tooltip")(withTooltip(Checkbox));
 
 const isGeometryType = (type) =>
     ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'Geometry'].includes(type);
@@ -29,17 +30,32 @@ const isGeometryType = (type) =>
  * - type: the type of the field
  * @prop {function} onLoadFields callback to reload the fields of the layer (for instance in case of WFS it will perform a new DescribeFeatureType request to reload the fields)
  * @prop {function} onChange callback to be called when the alias of a field is changed. The arguments are the `name` of the field, the property changed and the new value. For instance `onChange("NAME", "alias", "new alias")`
+ * @prop {function} onChangeAll callback to be called when the same property is set on every field. For instance `onChangeAll("visible", false)`
  * @prop {function} onClear callback to be called when the customization of the fields is cleared
  * @prop {boolean} loading true if the fields are loading
  * @prop {boolean} error true if there is an error loading the fields
  * @prop {string} currentLocale the current locale (for instance "en-US") used to show the localized alias
  * @name Fields
  */
-const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onClear = () => {}, loading, error, currentLocale }) => {
+const Fields = ({
+    fields = [],
+    onLoadFields = () => {},
+    onChange = () => {},
+    onChangeAll = () => {},
+    onClear = () => {},
+    loading,
+    error,
+    currentLocale,
+    title,
+    showVisibility = false
+}) => {
+    const displayedFields = fields.filter(({type}) => !isGeometryType(type));
+    const visibleCount = displayedFields.filter(({visible = true}) => visible).length;
     return (<BorderLayout
         className="layer-fields"
         header={<div key="row-header" className="layer-fields-header">
             <div key="row-toolbar" className="layer-fields-toolbar">
+                {title ? <div className="layer-fields-title">{title}</div> : null}
                 <Toolbar key="toolbar" btnDefaultProps={{ className: 'square-button', bsStyle: 'primary', disabled: loading }}
                     buttons={[{
                         glyph: 'refresh',
@@ -64,6 +80,19 @@ const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onCl
                 />
             </div>
             <div key="row-labels" className="layer-fields-row-header">
+                {showVisibility ? <FormGroup className="layer-field-visibility">
+                    <CheckboxWithTooltip
+                        tooltip="layerProperties.fields.showAll"
+                        checked={!!visibleCount && visibleCount === displayedFields.length}
+                        disabled={loading || !displayedFields.length}
+                        // react does not map an indeterminate prop onto the input
+                        inputRef={(input) => {
+                            if (input) {
+                                input.indeterminate = visibleCount > 0 && visibleCount < displayedFields.length;
+                            }
+                        }}
+                        onChange={(event) => onChangeAll("visible", event.target.checked)}/>
+                </FormGroup> : null}
                 <FormGroup className="layer-field-name">
                     <ControlLabel><Message msgId="layerProperties.fields.name"/></ControlLabel>
                 </FormGroup>
@@ -80,10 +109,15 @@ const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onCl
             {error && <Alert bsStyle="danger" className="layer-fields-error"><Message msgId="layerProperties.fields.error"/></Alert>}
         </div>}
     >
-        {fields
-            .filter(({type}) => !isGeometryType(type)) // exclude geometry fields
-            .map(({name, alias, type}) => {
+        {displayedFields
+            .map(({name, alias, type, visible}) => {
                 return (<div key={`field-${name}`} className="layer-fields-row">
+                    {showVisibility ? <FormGroup className="layer-field-visibility">
+                        <Checkbox
+                            checked={visible !== false}
+                            disabled={loading}
+                            onChange={(event) => onChange(name, "visible", event.target.checked)}/>
+                    </FormGroup> : null}
                     <FormGroup className="layer-field-name">
                         <FormControl disabled value={name} />
                     </FormGroup>
@@ -103,9 +137,13 @@ Fields.propTypes = {
     fields: PropTypes.array,
     onLoadFields: PropTypes.func,
     onChange: PropTypes.func,
+    onChangeAll: PropTypes.func,
     onClear: PropTypes.func,
     loading: PropTypes.bool,
-    error: PropTypes.bool
+    error: PropTypes.bool,
+    currentLocale: PropTypes.string,
+    title: PropTypes.node,
+    showVisibility: PropTypes.bool
 };
 
 export default Fields;

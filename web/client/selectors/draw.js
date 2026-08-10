@@ -19,6 +19,8 @@ export const drawSupportActiveSelector = (state) => {
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
 
+export const snappingLayerIdSelector = state => state?.draw?.snappingLayer;
+
 export const snappingLayerSelector = state => state?.draw?.snappingLayer ? getLayerFromId(state, state.draw.snappingLayer) ?? getAdditionalLayerFromId(state, state.draw.snappingLayer) : false;
 
 export const isSnappingActive = state => get(state, 'draw.snapping', false);

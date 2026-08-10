@@ -31,6 +31,9 @@ import {
     convertFiltersToOGC,
     convertFiltersToCQL,
     isFilterEmpty,
+    isFilterGlobal,
+    getFilterWidgetIds,
+    isFilterFromWidgetOnly,
     updateLayerLegendFilter,
     resetLayerLegendFilter,
     updateLayerWFSVectorLegendFilter,
@@ -2469,7 +2472,7 @@ describe('FilterUtils', () => {
             crossLayerFilter: {},
             filters: []
         })).toBe(false);
-
+        expect(isFilterEmpty({ spatialField: { geometry: {} } })).toBe(false);
     });
     // for wms
     it('test updateLayerLegendFilter for wms, simple filter', () => {
@@ -2870,6 +2873,94 @@ describe('FilterUtils', () => {
             };
             const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
             expect(result).toBe("NOT (\"STATE\"='IT')");
+        });
+    });
+    it('isFilterGlobal', () => {
+        expect(isFilterGlobal({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: []
+        })).toBe(false);
+        expect(isFilterGlobal({
+            filterFields: [{value: 1}],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: []
+        })).toBe(true);
+        expect(isFilterGlobal({
+            filterFields: [],
+            spatialField: {geometry: {type: 'Point', coordinates: [1, 2]}},
+            crossLayerFilter: {},
+            filters: []
+        })).toBe(true);
+        expect(isFilterGlobal({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {attribute: 'attr', operation: 'op'},
+            filters: []
+        })).toBe(true);
+        // only a filter applied from a widget, no global filter
+        expect(isFilterGlobal({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: [{id: 'f1', appliedFromWidget: 'widget1'}]
+        })).toBe(false);
+        // a non widget filter in the filters array (e.g. interactive legend) counts as global
+        expect(isFilterGlobal({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: [{id: 'interactiveLegend'}]
+        })).toBe(true);
+    });
+    describe('isFilterGlobal', () => {
+        it('should return false for empty filter object', () => {
+            expect(isFilterGlobal()).toBe(false);
+            expect(isFilterGlobal({})).toBe(false);
+        });
+        it('should return true if filterFields are not empty', () => {
+            expect(isFilterGlobal({ filterFields: [{ value: 'test' }] })).toBe(true);
+            expect(isFilterGlobal({ filterFields: [{ value: 0 }] })).toBe(true);
+            expect(isFilterGlobal({ filterFields: [{ operator: 'isNull' }] })).toBe(true);
+        });
+        it('should return true if spatialField has geometry', () => {
+            expect(isFilterGlobal({ spatialField: { geometry: {} } })).toBe(true);
+        });
+        it('should return true if crossLayerFilter has attribute and operation', () => {
+            expect(isFilterGlobal({ crossLayerFilter: { attribute: 'test', operation: 'test' } })).toBe(true);
+        });
+        it('should return true if filters contain a global filter (not appliedFromWidget)', () => {
+            expect(isFilterGlobal({ filters: [{}] })).toBe(true);
+            expect(isFilterGlobal({ filters: [{ appliedFromWidget: 'w1' }, {}] })).toBe(true);
+        });
+        it('should return false if filters contain only widget filters', () => {
+            expect(isFilterGlobal({ filters: [{ appliedFromWidget: 'w1' }] })).toBe(false);
+        });
+    });
+
+    describe('getFilterWidgetIds', () => {
+        it('should return empty array for empty filter object', () => {
+            expect(getFilterWidgetIds()).toEqual([]);
+            expect(getFilterWidgetIds({})).toEqual([]);
+        });
+        it('should return unique widget ids', () => {
+            expect(getFilterWidgetIds({ filters: [{ appliedFromWidget: 'w1' }, { appliedFromWidget: 'w2' }, { appliedFromWidget: 'w1' }, {}] })).toEqual(['w1', 'w2']);
+        });
+    });
+
+    describe('isFilterFromWidgetOnly', () => {
+        it('should return false for empty filter object', () => {
+            expect(isFilterFromWidgetOnly()).toBe(false);
+            expect(isFilterFromWidgetOnly({})).toBe(false);
+        });
+        it('should return false if there is a global filter', () => {
+            expect(isFilterFromWidgetOnly({ filterFields: [{ value: 'test' }], filters: [{ appliedFromWidget: 'w1' }] })).toBe(false);
+        });
+        it('should return true if there are only widget filters', () => {
+            expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }] })).toBe(true);
+            expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }, { appliedFromWidget: 'w2' }] })).toBe(true);
         });
     });
 });

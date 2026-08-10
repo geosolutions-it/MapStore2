@@ -35,7 +35,7 @@ const getWidgetIcon = ({widgetType, charts = []} = {}) => {
     case "legend":
         return "list";
     case "filter":
-        return "filter";
+        return "filter-widget";
     default:
         if (widgetType === "chart") {
             return "chart";

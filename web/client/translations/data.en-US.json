@@ -98,6 +98,10 @@
         "label": "Crop to projection extent",
         "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
       },
+      "coalesceExclude": {
+        "label": "Exclude from combined requests",
+        "tooltip": "Keeps this layer out of combined WMS requests, so it is always requested on its own. It has no effect while combined requests are disabled for the map."
+      },
       "cached": "Use cache options",
       "styleCustom": "Use style named \"{value}\"",
       "styleListLoadError": "There was an error loading the styles list",
@@ -138,6 +142,43 @@
       "styleWarning": "Layer style editor for geometry type '{geometryType}' is not supported.",
       "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
       "templateError": "There was an error applying the template to the information returned by the server, please check the template",
+      "propertiesView": {
+        "attributes": "Attributes",
+        "noAttributes": "The layer schema contains no displayable attributes."
+      },
+      "externalData": {
+        "title": "EXTERNAL DATA",
+        "description": "Query attributes from an external WFS source",
+        "wfsUrl": "WFS URL",
+        "invalidWfsUrl": "The URL does not expose a valid WFS service",
+        "layerName": "Layer name",
+        "cqlFilter": "CQL filter template",
+        "cqlFilterHelp": "Use single quotes around string placeholders; leave numeric and boolean placeholders unquoted.",
+        "attributes": "Attributes",
+        "validate": "Validate",
+        "validation": {
+          "missingFields": "WFS URL, layer name and CQL filter template are required",
+          "invalidPlaceholder": "The CQL filter template must contain at least one valid field reference",
+          "invalidDoubleQuotedPlaceholder": "Double quotes identify field names in CQL. Use single quotes around string placeholders.",
+          "invalidCql": "The CQL filter template is not valid",
+          "unquotedPlaceholder": "In the filter, the reference to “{property}” is not wrapped in single quotes, so it only accepts numbers. Add the quotes to use text values.",
+          "valid": "The external data configuration is valid",
+          "sourceUnavailable": "A WFS source URL and layer name are required to run the sample request",
+          "sampleNotFound": "The source layer did not return a sample feature",
+          "testRequestFailed": "The external data test request failed",
+          "generatedCql": "Generated CQL"
+        },
+        "noSourceFeatures": "No identified features are available for this external data view",
+        "invalidConfiguration": "Invalid configuration",
+        "notConfigured": "This Identify view is not configured correctly.",
+        "noResults": "No external data found",
+        "requestError": "Unable to load external data",
+        "missingProperty": "The source feature does not contain the property “{property}”",
+        "unsafeSourceValue": "The external data cannot be loaded because “{property}” contains text where a number is expected.",
+        "invalidInterpolatedCql": "The CQL filter built from the source feature is not valid",
+        "invalidResponse": "The external WFS did not return valid GeoJSON",
+        "retry": "Retry"
+      },
       "heightOffset": "Height offset (m)",
       "wmsLayerTileSize": "Tile size (WMS)",
       "maxFeaturesInView": "Max features in view",
@@ -264,6 +305,7 @@
       "forceProxy": "Force proxy",
       "fields": {
         "refresh": "Reload fields from the data source",
+        "showAll": "Show or hide all attributes",
         "title": "Fields",
         "tooltip": "Fields",
         "name": "Name",
@@ -585,7 +627,9 @@
           "dateTimePlaceholder": "Select the dateTime"
         },
         "collisionDetection": "Enable terrain collision detection",
-        "imageryLayersOverlay": "Enable imagery layers overlay"
+        "imageryLayersOverlay": "Enable imagery layers overlay",
+        "coalesceWMSLayers": "Combine WMS requests (coalesce)",
+        "coalesceWMSLayersTooltip": "Sets the default behavior for layers of this map: when enabled, adjacent WMS layers coming from the same source are combined into a single GetMap request, reducing the number of requests sent to the server. Background layers are excluded."
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
@@ -699,6 +743,10 @@
       "radius": "Radius",
       "filterIconEnabled": "Disable layer filter",
       "filterIconDisabled": "Enable layer filter",
+      "filterWidgetIconEnabled": "Disable connected widget filter",
+      "filterWidgetIconDisabled": "Enable connected widget filter",
+      "filterAndWidgetIconEnabled": "Disable global and connected widget filters",
+      "filterAndWidgetIconDisabled": "Enable global and connected widget filters",
       "notVisibleZoomIn": "The layer is not visible because it is outside the resolution limits. Zoom in to show the layer",
       "notVisibleZoomOut": "The layer is not visible because it is outside the resolution limits. Zoom out to show the layer",
       "notVisibleSwitchTo3D": "Switch to 3D map mode in order to see this layer",
