@@ -269,9 +269,7 @@ const FilterView = ({
     const currentSelection = Array.isArray(selections) ? selections : [];
     const filterDisabled = showItemToolbar && !!filterData?.disabled;
 
-    const [isCollapsed, setIsCollapsed] = useState(
-        () => (showItemToolbar && filterData?.layout?.defaultExpanded === false)
-    );
+    const [isCollapsed, setIsCollapsed] = useState();
     const handleToggleCollapse = useCallback(() => setIsCollapsed(prev => !prev), []);
 
     const zoomToInteractions = useMemo(() => (interactions || [])
@@ -292,6 +290,10 @@ const FilterView = ({
             onSelectableItemsChange(selectableItems);
         }
     }, [onSelectableItemsChange, selectableItems]);
+
+    useEffect(() => {
+        setIsCollapsed(showItemToolbar && filterData?.layout?.defaultExpanded === false);
+    }, [showItemToolbar, filterData?.layout?.defaultExpanded]);
 
     // Reverse sync: when the map timeline changes, drive the filter widget selection from `currentTime`. For now only on APPLY_DIMENSION's targetPath map.time
     useEffect(() => {

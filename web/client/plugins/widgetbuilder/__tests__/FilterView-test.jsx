@@ -508,6 +508,42 @@ describe('FilterView component', () => {
         expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
     });
 
+    it('updates isCollapsed state when showItemToolbar or layout.defaultExpanded props change', () => {
+        const container = document.getElementById("container");
+        const filterDataExpanded = createMockFilterData('checkbox', 'multiple', { defaultExpanded: true });
+        const filterDataCollapsed = createMockFilterData('checkbox', 'multiple', { defaultExpanded: false });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterDataExpanded}
+                selectableItems={mockSelectableItems}
+                showItemToolbar
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterDataCollapsed}
+                selectableItems={mockSelectableItems}
+                showItemToolbar
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toNotExist();
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterDataCollapsed}
+                selectableItems={mockSelectableItems}
+                showItemToolbar={false}
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+    });
+
     it('passes showZoomButton correctly to FilterItemToolbar based on interactions', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox', 'multiple');
