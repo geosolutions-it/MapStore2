@@ -91,7 +91,7 @@ class General extends React.Component {
                             value={this.props.element.title}
                             onChange={this.updateTitle} />
                     </FormGroup>
-                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
+                    {this.props.nodeType === 'layers' && includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
@@ -181,7 +181,7 @@ class General extends React.Component {
         );
     }
 
-    supportedNameEditLayerTypes = ['wms'];
+    supportedNameEditLayerTypes = ['wms', 'wfs', 'arcgis', 'arcgis-feature'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
     updateTitle = (title) => this.props.onChange("title", title);

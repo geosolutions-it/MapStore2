@@ -25,47 +25,58 @@ describe('test  Layer Properties General module component', () => {
         setTimeout(done);
     });
 
-    it('tests General component show LayerNameEditField = FALSE', () => {
-        const l = {
-            name: 'layer00',
-            title: 'Layer',
-            visibility: true,
-            storeIndex: 9,
-            type: 'shapefile',
-            url: 'fakeurl'
-        };
-        const settings = {
-            options: {opacity: 1}
-        };
+    ['wmts', 'vector', 'shapefile'].forEach((type) => {
+        it(`does not show LayerNameEditField for ${type}`, () => {
+            const l = {
+                name: 'layer00',
+                title: 'Layer',
+                visibility: true,
+                storeIndex: 9,
+                type,
+                url: 'fakeurl'
+            };
+            const settings = {
+                options: {opacity: 1}
+            };
 
-        // wrap in a stateful component, stateless components render return null
-        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
-        expect(comp).toExist();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(4);
+            const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+            expect(comp).toExist();
+            const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "input");
+            expect(inputs).toExist();
+            expect(inputs.length).toBe(4);
+        });
     });
-    it('tests General component show LayerNameEditField = TRUE', () => {
-        const l = {
-            name: 'layer00',
-            title: 'Layer',
-            visibility: true,
-            storeIndex: 9,
-            type: 'wms',
-            url: 'fakeurl'
-        };
-        const settings = {
-            options: {opacity: 1}
-        };
+    ['wms', 'wfs', 'arcgis', 'arcgis-feature'].forEach((type) => {
+        it(`tests General component show LayerNameEditField for ${type}`, () => {
+            const l = {
+                name: 'layer00',
+                title: 'Layer',
+                visibility: true,
+                storeIndex: 9,
+                type,
+                url: 'fakeurl'
+            };
+            const settings = {
+                options: {opacity: 1}
+            };
 
-        // wrap in a stateful component, stateless components render return null
-        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+            const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+            expect(comp).toExist();
+            const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "input");
+            expect(inputs).toExist();
+            expect(inputs.length).toBe(5);
+        });
+    });
+    it('does not show LayerNameEditField for groups', () => {
+        const element = {
+            name: 'group00',
+            title: 'Group',
+            type: 'wms'
+        };
+        const comp = ReactDOM.render(<General element={element} nodeType="groups" />, document.getElementById("container"));
         expect(comp).toExist();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(5);
+        const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass(comp, "control-label");
+        expect(labels.map(({innerText}) => innerText)).toNotContain('layerProperties.name');
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
