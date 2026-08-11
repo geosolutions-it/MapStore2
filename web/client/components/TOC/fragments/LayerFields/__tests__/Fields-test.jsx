@@ -139,4 +139,53 @@ describe('TOC Settings - Fields component', () => {
         const rows = container.querySelectorAll('.ms2-border-layout-body .layer-fields-row');
         expect(rows.length).toBe(2);
     });
+    it('optionally renders visibility controls', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spy = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(
+            <Fields
+                fields={[...TEST_FIELDS, {name: 'hidden', type: 'string', visible: false}]}
+                onChange={actions.onChange}
+                showVisibility/>,
+            document.getElementById('container')
+        );
+        const container = document.getElementById('container');
+        expect(container.querySelector('.layer-fields-toolbar')).toExist();
+        const visibilityInputs = container.querySelectorAll('.layer-fields-row .layer-field-visibility input');
+        expect(visibilityInputs.length).toBe(3);
+        expect(visibilityInputs[0].checked).toBe(true);
+        expect(visibilityInputs[2].checked).toBe(false);
+
+        Simulate.change(visibilityInputs[2], {target: {checked: true}});
+        expect(spy).toHaveBeenCalledWith('hidden', 'visible', true);
+    });
+    it('toggles every attribute with the header checkbox', () => {
+        const actions = {
+            onChangeAll: () => {}
+        };
+        const spy = expect.spyOn(actions, 'onChangeAll');
+        const container = document.getElementById('container');
+        const render = (fields) => ReactDOM.render(
+            <Fields fields={fields} onChangeAll={actions.onChangeAll} showVisibility/>,
+            container
+        );
+        const headerCheckbox = () => container.querySelector('.layer-fields-row-header .layer-field-visibility input');
+
+        render([{name: 'a', type: 'string', visible: true}, {name: 'b', type: 'string', visible: true}]);
+        expect(headerCheckbox().checked).toBe(true);
+        expect(headerCheckbox().indeterminate).toBe(false);
+
+        render([{name: 'a', type: 'string', visible: true}, {name: 'b', type: 'string', visible: false}]);
+        expect(headerCheckbox().checked).toBe(false);
+        expect(headerCheckbox().indeterminate).toBe(true);
+
+        render([{name: 'a', type: 'string', visible: false}, {name: 'b', type: 'string', visible: false}]);
+        expect(headerCheckbox().checked).toBe(false);
+        expect(headerCheckbox().indeterminate).toBe(false);
+
+        Simulate.change(headerCheckbox(), {target: {checked: true}});
+        expect(spy).toHaveBeenCalledWith('visible', true);
+    });
 });

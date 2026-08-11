@@ -299,6 +299,11 @@ export default class extends React.Component {
                                     />
                                 </>
                             ))}
+                            <Checkbox key="coalesce" value="coalesce"
+                                checked={this.props.element?.coalesce === false}
+                                onChange={(e) => this.props.onChange("coalesce", e.target.checked ? false : undefined)}>
+                                <Message msgId="layerProperties.coalesceExclude.label" />{' '}<InfoPopover text={<Message msgId="layerProperties.coalesceExclude.tooltip" />} />
+                            </Checkbox>
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>
