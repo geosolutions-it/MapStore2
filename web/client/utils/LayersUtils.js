@@ -424,7 +424,7 @@ export const getLayerId = (layerObj) => {
 export const createFeatureId = (feature = {}) => {
     return {
         ...feature,
-        id: feature.id || feature.properties?.id || uuidv1()
+        id: !isNil(feature.id) ? feature.id : (feature.properties?.id ?? uuidv1())
     };
 };
 /**
@@ -661,7 +661,7 @@ export const geoJSONToLayer = (geoJSON, id) => {
     let features = [];
     if (geoJSON.type === "FeatureCollection") {
         features = geoJSON.features.map((feature, idx) => {
-            if (!feature.id) {
+            if (isNil(feature.id)) { // TODO check if feature.id is a number, it should be converted to string, otherwise for 0 it will be converted to false and a new id will be generated
                 feature.id = idx;
             }
             if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
