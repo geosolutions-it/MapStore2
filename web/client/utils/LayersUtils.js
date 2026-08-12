@@ -437,9 +437,15 @@ export const normalizeLayer = (layer) => {
     // con uuid
     let _layer = layer;
     if (layer.type === "vector") {
+        const seen = new Set(); // must be unique id for features, so we need to check if there are duplicates
         _layer = _layer?.features?.length ? {
             ..._layer,
-            features: _layer?.features?.map(createFeatureId)
+            features: _layer?.features?.map((f) => {
+                const feature = createFeatureId(f);
+                const id = seen.has(feature.id) ? uuidv1() : feature.id;
+                seen.add(id);
+                return { ...feature, id };
+            })
         } : layer;
     }
     // regenerate geodesic lines as property since that info has not been saved
