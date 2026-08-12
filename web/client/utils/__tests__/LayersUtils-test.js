@@ -126,6 +126,26 @@ describe('LayersUtils', () => {
         });
         expect(layer.features[0].id.length).toEqual(36);
     });
+    it('test normalizeLayer deduplicates vector feature ids', () => {
+        const geometry = {
+            "type": "LineString",
+            "coordinates": [[0, 39], [28, 48]]
+        };
+        const layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [
+                { type: "Feature", geometry, id: 2 },
+                { type: "Feature", geometry, id: 1 },
+                { type: "Feature", geometry, id: 2 },
+                { type: "Feature", geometry, id: 3 }
+            ]
+        });
+        expect(layer.features[0].id).toEqual(2);
+        expect(layer.features[1].id).toEqual(1);
+        expect(layer.features[2].id.length).toEqual(36);
+        expect(layer.features[3].id).toEqual(3);
+        expect([...new Set(layer.features.map(f => f.id))].length).toEqual(4);
+    });
     it('test createFeatureId', () => {
         let feature = LayersUtils.createFeatureId({});
         expect(feature.id.length).toEqual(uuidv1().length);
@@ -133,6 +153,10 @@ describe('LayersUtils', () => {
         expect(feature.id).toEqual("test");
         feature = LayersUtils.createFeatureId({properties: {id: "test"}});
         expect(feature.id).toEqual("test");
+        feature = LayersUtils.createFeatureId({id: 0, properties: {id: "test"}});
+        expect(feature.id).toEqual(0);
+        feature = LayersUtils.createFeatureId({properties: {id: 0}});
+        expect(feature.id).toEqual(0);
     });
     it('getLayerUrl supports single and multiple url layers', () => {
         expect(['a', 'b']).toContain(LayersUtils.getLayerUrl({url: ['a', 'b']}));
