@@ -15,7 +15,7 @@ import TileLayer from 'ol/layer/WebGLTile.js';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { getCredentials } from '../../../../utils/SecurityUtils';
 
-function create(options) {
+function getSource(options) {
     let sourceOptions;
     if (options.security) {
         const storedProtectedService = getCredentials(options.security?.sourceId) || {};
@@ -23,26 +23,44 @@ function create(options) {
             "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
         };
     }
-    return new TileLayer({
+    return new GeoTIFF({
+        convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
+        sources: options.sources,
+        wrapX: true,
+        sourceOptions
+    });
+}
+
+function create(options) {
+    // GeoTIFF sources fetch eagerly on creation (unlike WMS, which loads on demand),
+    // so `visible: false` won't prevent requests. Skip creating hidden layers;
+    // `update` recreates them when they become visible.
+    if (options.visibility === false) {
+        return null;
+    }
+    const layerOl = new TileLayer({
         msId: options.id,
         style: get(options, 'style.body'),
         opacity: options.opacity !== undefined ? options.opacity : 1,
-        visible: options.visibility,
-        source: new GeoTIFF({
-            convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
-            sources: options.sources,
-            wrapX: true,
-            sourceOptions
-        }),
+        visible: true,
+        source: getSource(options),
         zIndex: options.zIndex,
         minResolution: options.minResolution,
         maxResolution: options.maxResolution
     });
+
+    return layerOl;
 }
 
 Layers.registerType('cog', {
     create,
     update(layer, newOptions, oldOptions, map) {
+        if (!layer && newOptions.visibility !== false) {
+            return create(newOptions, map);
+        }
+        if (!layer) {
+            return null;
+        }
         if (newOptions.srs !== oldOptions.srs
             || !isEqual(newOptions.style, oldOptions.style)
             || !isEqual(newOptions.security, oldOptions.security)
