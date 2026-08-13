@@ -101,6 +101,20 @@ const getCesiumPath = ({ prod, paths }) => {
         : path.join(paths.base, 'node_modules', 'cesium', 'Build', 'CesiumUnminified');
 };
 
+const getPostCssLoader = cssPrefix => ({
+    loader: 'postcss-loader',
+    options: {
+        postcssOptions: {
+            plugins: {
+                "postcss-prefix-selector": {
+                    prefix: cssPrefix || '.ms2',
+                    exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                }
+            }
+        }
+    }
+});
+
 module.exports = (...args) => mapArgumentsToObject(args, ({
     bundles,
     themeEntries,
@@ -207,19 +221,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                     loader: 'style-loader'
                 }, {
                     loader: 'css-loader'
-                }, {
-                    loader: 'postcss-loader',
-                    options: {
-                        postcssOptions: {
-                            plugins: {
-                                "postcss-prefix-selector": {
-                                    prefix: cssPrefix || '.ms2',
-                                    exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
-                                }
-                            }
-                        }
-                    }
-                }]
+                }, getPostCssLoader(cssPrefix)]
             },
             {
                 test: /\.less$/,
@@ -228,7 +230,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                     loader: 'style-loader'
                 }, {
                     loader: 'css-loader'
-                }, {
+                }, getPostCssLoader(cssPrefix), {
                     loader: 'less-loader'
                 }]
             },
@@ -237,19 +239,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            postcssOptions: {
-                                plugins: {
-                                    "postcss-prefix-selector": {
-                                        prefix: cssPrefix || '.ms2',
-                                        exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
-                                    }
-                                }
-                            }
-                        }
-                    },
+                    getPostCssLoader(cssPrefix),
                     'less-loader'
                 ]
             },
@@ -312,4 +302,3 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     devtool: !prod ? 'eval' : devtool || undefined
 })
 );
-

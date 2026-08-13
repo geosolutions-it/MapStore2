@@ -2,9 +2,6 @@
 // Layout
 // **************
 
-// Add .ms2 to prevent common styles loaded later from overriding Catalog styles.
-.ms2 {
-
 .ms-catalog-wrapper {
     position: absolute;
     z-index: 1025;
@@ -168,13 +165,13 @@
 }
 
 @container catalog (max-width: 1200px) {
-    .ms2 .ms-catalog.grid {
+    .ms-catalog.grid {
         .ms-catalog-card {
             width: calc(33.333% - 0.67rem);
         }
     }
 
-    .ms2 .ms-catalog {
+    .ms-catalog {
         .ms-filters-form {
             width: 280px;
         }
@@ -182,7 +179,7 @@
 }
 
 @container catalog (max-width: 960px) {
-    .ms2 .ms-catalog.grid {
+    .ms-catalog.grid {
         .ms-catalog-card {
             width: calc(50% - 0.5rem);
         }
@@ -258,7 +255,7 @@
         }
     }
 
-    .ms2 .ms-catalog {
+    .ms-catalog {
         .ms-filters-form {
             width: 240px;
         }
@@ -267,7 +264,7 @@
 }
 
 @container catalog (max-width: 760px) {
-    .ms2 .ms-catalog.grid {
+    .ms-catalog.grid {
         .ms-catalog-card {
             width: 100%;
         }
@@ -278,7 +275,7 @@
         }
     }
 
-    .ms2 .ms-catalog {
+    .ms-catalog {
         .ms-filters-form {
             width: 220px;
         }
@@ -305,6 +302,7 @@
         }
     }
 }
+
 
 
 .ms-catalog-card {
@@ -450,6 +448,4 @@
         z-index: 10;
         background-color: var(--ms-selected-bg);
     }
-}
-
 }
