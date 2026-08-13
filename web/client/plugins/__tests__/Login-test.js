@@ -67,6 +67,28 @@ describe('Login Plugin', () => {
             // permission table present by default
             expect(document.querySelector('.modal-dialog')).toBeTruthy();
         });
+        it('hides user groups when configured through toolsCfg', () => {
+            const storeState = stateMocker(loginSuccess({
+                User: {
+                    name: "Test",
+                    role: "USER",
+                    groups: {
+                        group: [
+                            { groupName: "test-group" },
+                            { groupName: "another-group" }
+                        ]
+                    }
+                }
+            }), setControlProperty('AccountInfo', 'enabled', true));
+            const { Plugin } = getPluginForTest(Login, storeState);
+            ReactDOM.render(
+                <Plugin toolsCfg={[{ hideGroupUserInfo: true }]} />,
+                document.getElementById("container")
+            );
+
+            expect(document.querySelector('.ms-resizable-modal')).toExist();
+            expect(document.querySelector('.user-group-info')).toNotExist();
+        });
 
         it('render in OmniBar', () => {
             const storeState = stateMocker();

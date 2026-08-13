@@ -106,7 +106,8 @@ function LoginPlugin({
     displayName,
     showAccountInfo,
     bsStyle,
-    className
+    className,
+    toolsCfg
 }, context) {
 
     const { loadedPlugins } = context;
@@ -152,6 +153,7 @@ function LoginPlugin({
                 showPasswordChange={showPasswordChange}
                 showAccountInfo={showAccountInfo}
                 isUsingLDAP={isUsingLDAP}
+                hideGroupUserInfo={toolsCfg?.[0]?.hideGroupUserInfo}
             />
             <Login/>
         </>
@@ -186,7 +188,8 @@ LoginPlugin.propTypes = {
     isAdmin: PropTypes.bool,
     isUsingLDAP: PropTypes.bool,
     displayName: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    toolsCfg: PropTypes.array
 };
 
 LoginPlugin.defaultProps = {
