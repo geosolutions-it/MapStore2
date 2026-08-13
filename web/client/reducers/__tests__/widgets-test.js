@@ -195,6 +195,75 @@ describe('Test the widgets reducer', () => {
         const newState = widgets(state, deleteWidget({id: "1"}));
         expect(newState.containers[DEFAULT_TARGET].widgets.length).toBe(0);
     });
+    it('deleteWidget restores state before deleting a maximized widget', () => {
+        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
+        const widgetToDelete = initialState.containers[DEFAULT_TARGET].widgets[0];
+        let newState = widgets(initialState, toggleMaximize(widgetToDelete));
+
+        newState = widgets(newState, deleteWidget(
+            newState.containers[DEFAULT_TARGET].widgets.find(({id}) => id === widgetToDelete.id)
+        ));
+
+        const floating = newState.containers[DEFAULT_TARGET];
+        expect(floating.widgets.find(({id}) => id === widgetToDelete.id)).toNotExist();
+        expect(floating.maximized).toEqual({});
+        expect(floating.layout).toEqual(initialState.containers[DEFAULT_TARGET].layout);
+        expect(floating.layouts).toEqual(initialState.containers[DEFAULT_TARGET].layouts);
+
+        newState = widgets(newState, insertWidget({id: 'replacement-widget'}));
+        expect(getVisibleFloatingWidgets({widgets: newState})
+            .find(({id}) => id === 'replacement-widget')).toExist();
+    });
+    it('deleteWidget restores only the deleted widget view when multiple views are maximized', () => {
+        const firstWidget = {
+            id: 'widget-1',
+            layoutId: 'view-1',
+            dataGrid: {x: 0, y: 0, w: 1, h: 1}
+        };
+        const secondWidget = {
+            id: 'widget-2',
+            layoutId: 'view-2',
+            dataGrid: {x: 0, y: 0, w: 1, h: 1}
+        };
+        const firstLayout = {i: firstWidget.id, x: 0, y: 0, w: 1, h: 1};
+        const secondLayout = {i: secondWidget.id, x: 0, y: 0, w: 1, h: 1};
+        const initialState = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [firstWidget, secondWidget],
+                    layout: [firstLayout],
+                    layouts: [
+                        {id: firstWidget.layoutId, md: [firstLayout], xxs: [{...firstLayout}]},
+                        {id: secondWidget.layoutId, md: [secondLayout], xxs: [{...secondLayout}]}
+                    ],
+                    selectedLayoutId: firstWidget.layoutId
+                }
+            }
+        };
+        let newState = widgets(initialState, toggleMaximize(firstWidget));
+        newState = {
+            ...newState,
+            containers: {
+                ...newState.containers,
+                [DEFAULT_TARGET]: {
+                    ...newState.containers[DEFAULT_TARGET],
+                    layout: [secondLayout],
+                    selectedLayoutId: secondWidget.layoutId
+                }
+            }
+        };
+        newState = widgets(newState, toggleMaximize(secondWidget));
+        newState = widgets(newState, deleteWidget(
+            newState.containers[DEFAULT_TARGET].widgets.find(({id}) => id === secondWidget.id)
+        ));
+
+        const floating = newState.containers[DEFAULT_TARGET];
+        expect(floating.widgets.map(({id}) => id)).toEqual([firstWidget.id]);
+        expect(floating.maximized.widget).toEqual([firstWidget]);
+        expect(floating.layout).toEqual([secondLayout]);
+        expect(floating.layouts.find(({id}) => id === secondWidget.layoutId))
+            .toEqual(initialState.containers[DEFAULT_TARGET].layouts[1]);
+    });
     it('deleteWidget remove dependenciesMap', () => {
         const state = {
             containers: {

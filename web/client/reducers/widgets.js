@@ -29,6 +29,7 @@ import {
     TOGGLE_COLLAPSE_ALL,
     TOGGLE_TRAY,
     toggleCollapse,
+    toggleMaximize,
     REPLACE,
     WIDGETS_REGEX,
     REPLACE_LAYOUT_VIEW,
@@ -181,11 +182,16 @@ function widgetsReducer(state = emptyState, action) {
         }
         return state;
     }
-    case DELETE:
-        const path = `containers[${DEFAULT_TARGET}].widgets`;
-        const updatedState = arrayDelete(`containers[${action.target}].widgets`, {
+    case DELETE: {
+        const path = `containers[${action.target}].widgets`;
+        const maximizedWidget = castArray(state?.containers?.[action.target]?.maximized?.widget || [])
+            .find(widget => widget?.id === action.widget.id);
+        const restoredState = maximizedWidget
+            ? widgetsReducer(state, toggleMaximize(maximizedWidget, action.target))
+            : state;
+        const updatedState = arrayDelete(path, {
             id: action.widget.id
-        }, state);
+        }, restoredState);
         const allWidgets = get(updatedState, path, []);
         return set(path, allWidgets.map(m => {
             if (m.dependenciesMap) {
@@ -197,7 +203,8 @@ function widgetsReducer(state = emptyState, action) {
                 }
             }
             return m;
-        }), state);
+        }), updatedState);
+    }
     case DASHBOARD_LOADED:
         const { data } = action;
         return set(`containers[${DEFAULT_TARGET}]`, {
