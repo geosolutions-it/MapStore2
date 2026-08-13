@@ -1329,6 +1329,19 @@ describe('LayersUtils', () => {
             }).catch(done);
         }).catch(done);
     });
+    it('normalizeLayer keeps imported shapefile features coherent', (done) => {
+        axios.get("base/web/client/test-resources/TestShape.zip", { responseType: "blob" }).then(({data}) => {
+            readZip(data).then((buffer) => {
+                const geoJson = shpToGeoJSON(buffer)[0];
+                const layer = LayersUtils.geoJSONToLayer(geoJson, "TestShape__0");
+                const normalized = LayersUtils.normalizeLayer(layer);
+                expect(normalized.features.length).toEqual(layer.features.length);
+                expect(normalized.features.map(f => f.id)).toEqual(layer.features.map(f => f.id));
+                expect(new Set(normalized.features.map(f => f.id)).size).toEqual(normalized.features.length);
+                done();
+            }).catch(done);
+        }).catch(done);
+    });
     it('saveLayer', () => {
         const layers = [
             // no params if not present
