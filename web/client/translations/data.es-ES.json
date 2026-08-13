@@ -154,6 +154,20 @@
         "cqlFilter": "Plantilla de filtro CQL",
         "cqlFilterHelp": "Use comillas simples alrededor de los marcadores de texto; deje sin comillas los marcadores numéricos y booleanos.",
         "attributes": "Atributos",
+        "featureInfoDisplayType": "Tipo de visualización de información",
+        "configureDisplayType": "Configurar el tipo de visualización",
+        "mediaTypeAttribute": "Atributo del tipo de medio",
+        "displayTypes": {
+          "string": "Texto",
+          "image": "Imagen",
+          "video": "Vídeo",
+          "audio": "Audio",
+          "panorama": "Imagen panorámica",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Medio"
+        },
         "validate": "Validar",
         "validation": {
           "missingFields": "La URL WFS, el nombre de capa y la plantilla de filtro CQL son obligatorios",

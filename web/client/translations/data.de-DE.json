@@ -155,6 +155,20 @@
         "cqlFilter": "CQL-Filtervorlage",
         "cqlFilterHelp": "Setzen Sie Platzhalter für Zeichenfolgen in einfache Anführungszeichen; lassen Sie Platzhalter für Zahlen und boolesche Werte ohne Anführungszeichen.",
         "attributes": "Attribute",
+        "featureInfoDisplayType": "Anzeigetyp der Feature-Informationen",
+        "configureDisplayType": "Anzeigetyp konfigurieren",
+        "mediaTypeAttribute": "Medientyp-Attribut",
+        "displayTypes": {
+          "string": "Text",
+          "image": "Bild",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Panoramabild",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Medien"
+        },
         "validate": "Validieren",
         "validation": {
           "missingFields": "WFS-URL, Layername und CQL-Filtervorlage sind erforderlich",

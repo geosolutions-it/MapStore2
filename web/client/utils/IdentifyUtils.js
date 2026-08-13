@@ -31,14 +31,25 @@ export const responseValidForEdit = (res) => !!get(res, 'layer.search.url');
 export const getVisibleFeatureRow = (feature = {}, fields = []) => {
     const hasVisibilityConfiguration = fields.some((field) =>
         Object.prototype.hasOwnProperty.call(field, 'visible'));
+    const visibleFields = hasVisibilityConfiguration
+        ? fields.filter(({ visible = true }) => visible)
+        : fields;
+    const mediaTypeValues = Object.fromEntries(
+        visibleFields
+            .filter(({ displayType, mediaTypeAttribute }) => displayType === 'media' && mediaTypeAttribute)
+            .map(({ name, mediaTypeAttribute }) => [name, feature.properties?.[mediaTypeAttribute]])
+    );
     if (!hasVisibilityConfiguration) {
-        return { feature, fields };
+        return {
+            feature: { ...feature, mediaTypeValues },
+            fields
+        };
     }
-    const visibleFields = fields.filter(({ visible = true }) => visible);
     const visibleNames = new Set(visibleFields.map(({ name }) => name));
     return {
         feature: {
             ...feature,
+            mediaTypeValues,
             properties: Object.fromEntries(
                 Object.entries(feature.properties || {})
                     .filter(([name]) => visibleNames.has(name))

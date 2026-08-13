@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ControlLabel, FormControl, FormGroup, Alert, Glyphicon, Button, Checkbox } from 'react-bootstrap';
+import Select from 'react-select';
 import Message from '../../../I18N/Message';
 import LoadingSpinner from '../../../misc/LoadingSpinner';
 import LocalizedInput from '../../../misc/LocalizedInput';
@@ -9,9 +10,12 @@ import BorderLayout from '../../../layout/BorderLayout';
 import withConfirm from '../../../misc/withConfirm';
 import withTooltip from '../../../data/featuregrid/enhancers/withTooltip';
 import localizedProps from '../../../misc/enhancers/localizedProps';
+import { extractLocalizedString } from '../../../I18N/LocalizedString';
+import { DISPLAY_TYPES } from '../../../../utils/FeatureInfoAttributeUtils';
 
 const ConfirmButton = localizedProps("tooltip")(withTooltip(withConfirm(Button)));
 const CheckboxWithTooltip = localizedProps("tooltip")(withTooltip(Checkbox));
+const SettingsButton = localizedProps("title")(Button);
 
 const isGeometryType = (type) =>
     ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'Geometry'].includes(type);
@@ -47,12 +51,14 @@ const Fields = ({
     error,
     currentLocale,
     title,
-    showVisibility = false
+    showVisibility = false,
+    showFieldSettings = false
 }) => {
     const displayedFields = fields.filter(({type}) => !isGeometryType(type));
     const visibleCount = displayedFields.filter(({visible = true}) => visible).length;
+    const [configuredField, setConfiguredField] = useState(null);
     return (<BorderLayout
-        className="layer-fields"
+        className={`layer-fields${showFieldSettings ? ' layer-fields-with-settings' : ''}`}
         header={<div key="row-header" className="layer-fields-header">
             <div key="row-toolbar" className="layer-fields-toolbar">
                 {title ? <div className="layer-fields-title">{title}</div> : null}
@@ -102,6 +108,7 @@ const Fields = ({
                 <FormGroup className="layer-field-type">
                     <ControlLabel><Message msgId="layerProperties.fields.type"/></ControlLabel>
                 </FormGroup>
+                {showFieldSettings ? <FormGroup className="layer-field-settings-action" /> : null}
             </div>
         </div>}
         footer={<div key="row-footer" className="layer-fields-footer">
@@ -110,23 +117,63 @@ const Fields = ({
         </div>}
     >
         {displayedFields
-            .map(({name, alias, type, visible}) => {
-                return (<div key={`field-${name}`} className="layer-fields-row">
-                    {showVisibility ? <FormGroup className="layer-field-visibility">
-                        <Checkbox
-                            checked={visible !== false}
-                            disabled={loading}
-                            onChange={(event) => onChange(name, "visible", event.target.checked)}/>
-                    </FormGroup> : null}
-                    <FormGroup className="layer-field-name">
-                        <FormControl disabled value={name} />
-                    </FormGroup>
-                    <FormGroup className="layer-field-alias">
-                        <LocalizedInput disabled={loading} onChange={(value) => onChange(name, "alias", value)} value={alias} currentLocale={currentLocale} />
-                    </FormGroup>
-                    <FormGroup className="layer-field-type">
-                        <FormControl disabled value={type}/>
-                    </FormGroup>
+            .map((field) => {
+                const { name, alias, type, visible, displayType, mediaTypeAttribute } = field;
+                const isConfigured = configuredField === name;
+                return (<div key={`field-${name}`} className="layer-fields-field-container">
+                    <div className="layer-fields-row">
+                        {showVisibility ? <FormGroup className="layer-field-visibility">
+                            <Checkbox
+                                checked={visible !== false}
+                                disabled={loading}
+                                onChange={(event) => onChange(name, "visible", event.target.checked)}/>
+                        </FormGroup> : null}
+                        <FormGroup className="layer-field-name">
+                            <FormControl disabled value={name} />
+                        </FormGroup>
+                        <FormGroup className="layer-field-alias">
+                            <LocalizedInput disabled={loading} onChange={(value) => onChange(name, "alias", value)} value={alias} currentLocale={currentLocale} />
+                        </FormGroup>
+                        <FormGroup className="layer-field-type">
+                            <FormControl disabled value={type}/>
+                        </FormGroup>
+                        {showFieldSettings ? <FormGroup className="layer-field-settings-action">
+                            <SettingsButton
+                                className="square-button layer-field-settings-button"
+                                bsStyle={isConfigured ? 'success' : 'default'}
+                                title="layerProperties.externalData.configureDisplayType"
+                                onClick={() => setConfiguredField(isConfigured ? null : name)}>
+                                <Glyphicon glyph="cog" />
+                            </SettingsButton>
+                        </FormGroup> : null}
+                    </div>
+                    {showFieldSettings && isConfigured ? <div className="layer-field-settings-panel">
+                        <div className="layer-field-settings-row">
+                            <ControlLabel><Message msgId="layerProperties.externalData.featureInfoDisplayType" /></ControlLabel>
+                            <Select
+                                clearable
+                                className="layer-field-settings-select"
+                                placeholder={<Message msgId="layerProperties.externalData.displayTypes.string" />}
+                                value={displayType}
+                                options={DISPLAY_TYPES.map((value) => ({
+                                    value,
+                                    label: <Message msgId={`layerProperties.externalData.displayTypes.${value}`} />
+                                }))}
+                                onChange={(selected) => onChange(name, 'displayType', selected?.value)}/>
+                        </div>
+                        {displayType === 'media' ? <div className="layer-field-settings-row">
+                            <ControlLabel><Message msgId="layerProperties.externalData.mediaTypeAttribute" /></ControlLabel>
+                            <Select
+                                clearable
+                                className="layer-field-settings-select"
+                                value={mediaTypeAttribute}
+                                options={fields.filter(({ name: optionName }) => optionName !== name).map(({ name: optionName, alias: optionAlias }) => ({
+                                    value: optionName,
+                                    label: extractLocalizedString(optionAlias, currentLocale) || optionName
+                                }))}
+                                onChange={(selected) => onChange(name, 'mediaTypeAttribute', selected?.value)}/>
+                        </div> : null}
+                    </div> : null}
                 </div>);
             })}
     </BorderLayout>
@@ -143,7 +190,8 @@ Fields.propTypes = {
     error: PropTypes.bool,
     currentLocale: PropTypes.string,
     title: PropTypes.node,
-    showVisibility: PropTypes.bool
+    showVisibility: PropTypes.bool,
+    showFieldSettings: PropTypes.bool
 };
 
 export default Fields;

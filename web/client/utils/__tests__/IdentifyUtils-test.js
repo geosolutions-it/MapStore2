@@ -17,19 +17,22 @@ describe('IdentifyUtils', () => {
     it('getFormatForResponse WFS response', () => {
         expect(getFormatForResponse({ queryParams: { outputFormat: INFO_FORMATS.JSON } })).toBe(INFO_FORMATS.JSON);
     });
-    it('getVisibleFeatureRow passes through when no field declares a visibility', () => {
+    it('getVisibleFeatureRow keeps properties and fields when no field declares a visibility', () => {
         const feature = { properties: { a: 1, b: 2 } };
         const objectFields = [{ name: 'a' }, { name: 'b', alias: 'B' }];
         const objectRow = getVisibleFeatureRow(feature, objectFields);
-        expect(objectRow.feature).toBe(feature);
+        expect(objectRow.feature.properties).toBe(feature.properties);
+        expect(objectRow.feature.mediaTypeValues).toEqual({});
         expect(objectRow.fields).toBe(objectFields);
 
         // vector, model, cog and flatgeobuf layers expose fields as plain names
         const nameFields = ['a', 'b'];
         const nameRow = getVisibleFeatureRow(feature, nameFields);
-        expect(nameRow.feature).toBe(feature);
+        expect(nameRow.feature.properties).toBe(feature.properties);
+        expect(nameRow.feature.mediaTypeValues).toEqual({});
         expect(nameRow.fields).toBe(nameFields);
     });
+
     it('getVisibleFeatureRow keeps only the visible properties when visibility is configured', () => {
         const row = getVisibleFeatureRow(
             { properties: { a: 1, b: 2, unknown: 3 } },
@@ -42,6 +45,18 @@ describe('IdentifyUtils', () => {
         // a property without a matching field is dropped, a field without the flag stays visible
         expect(row.feature.properties).toEqual({ a: 1 });
         expect(row.fields.map(({ name }) => name)).toEqual(['a', 'c']);
+    });
+    it('getVisibleFeatureRow keeps only configured media type values', () => {
+        const row = getVisibleFeatureRow(
+            { properties: { resource: 'file.jpg', mimeType: 'image/jpeg', secret: 'hidden' } },
+            [
+                { name: 'resource', visible: true, displayType: 'media', mediaTypeAttribute: 'mimeType' },
+                { name: 'mimeType', visible: false },
+                { name: 'secret', visible: false }
+            ]
+        );
+        expect(row.feature.mediaTypeValues).toEqual({ resource: 'image/jpeg' });
+        expect(row.feature.mediaTypeValues.secret).toNotExist();
     });
     it('getVisibleFeatureRow does not alter the source feature', () => {
         const feature = {

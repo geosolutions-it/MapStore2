@@ -14,6 +14,7 @@ import { containsHTML } from '../../../../../utils/StringUtils';
 import SafeHtml from '../../../../misc/SafeHtml';
 import Message from '../../../../I18N/Message';
 import LocalizedString, {applyDefaultToLocalizedString} from '../../../../I18N/LocalizedString';
+import AttributeValue from './AttributeValue';
 class PropertiesViewer extends React.Component {
     static displayName = 'PropertiesViewer';
 
@@ -41,14 +42,17 @@ class PropertiesViewer extends React.Component {
         return Object.keys(this.props?.feature?.properties || {})
             .filter(this.props?.include?.length > 0 ? this.toInclude : this.toExclude)
             .map((key) => {
-                const val = this.renderProperty(this.props.feature.properties[key]);
-                const label = applyDefaultToLocalizedString(this.props.fields?.find(field => field.name === key)?.alias, (this.props.labelIds[key] ? <Message msgId={this.props.labelIds[key]}/> : key));
+                const attribute = this.props.fields?.find(field => field.name === key) || { name: key };
+                const value = this.props.feature.properties[key];
+                const mediaTypeValue = this.props.feature.mediaTypeValues?.[key];
+                const val = this.renderProperty(value);
+                const label = applyDefaultToLocalizedString(attribute.alias, (this.props.labelIds[key] ? <Message msgId={this.props.labelIds[key]}/> : key));
                 return (
                     <li
                         key={key}
                         style={this.props.listStyle}>
                         <div className="ms-properties-viewer-key"><LocalizedString value={label} /></div>
-                        {containsHTML(val) ? <SafeHtml className="ms-properties-viewer-value" html={val} /> : <div className="ms-properties-viewer-value">{val}</div>}
+                        {containsHTML(val) ? <SafeHtml className="ms-properties-viewer-value" html={val} /> : <div className="ms-properties-viewer-value"><AttributeValue value={value} attribute={attribute} mediaTypeValue={mediaTypeValue}/></div>}
                     </li>);
             });
     };

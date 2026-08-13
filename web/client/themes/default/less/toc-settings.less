@@ -215,6 +215,61 @@
             width: 120px;
         }
     }
+    &.layer-fields-with-settings {
+        .layer-fields-row, .layer-fields-row-header {
+            .layer-field-alias {
+                flex: 0 1 98px;
+                min-width: 0;
+            }
+            .layer-field-visibility {
+                flex: 0 0 48px;
+            }
+            .layer-field-name,
+            .layer-field-type {
+                flex: 1 1 0;
+                min-width: 0;
+                width: auto;
+            }
+            .layer-field-settings-action {
+                display: flex;
+                flex: 0 0 42px;
+                justify-content: flex-end;
+                margin-bottom: 0;
+                width: 42px;
+            }
+        }
+        .layer-fields-row .layer-field-alias {
+            overflow: hidden;
+        }
+    }
+    .layer-field-settings-panel {
+        border: 1px solid @ms-main-border-color;
+        margin: 0 5px 8px 58px;
+        padding: 10px 12px;
+    }
+    .layer-field-settings-row {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        margin-top: 0;
+        & + .layer-field-settings-row {
+            margin-top: 2px;
+        }
+        .control-label {
+            flex: 1 1 auto;
+            margin: 0;
+            min-width: 0;
+            white-space: nowrap;
+        }
+        > .Select.layer-field-settings-select {
+            display: flex;
+            flex: 0 0 50% !important;
+            justify-content: flex-end;
+            min-width: 0;
+            max-width: 50% !important;
+            width: 50% !important;
+        }
+    }
     .layer-fields-footer {
         min-height: 30px;
         border-top: 1px solid var(--ms-main-border-color, @ms-main-border-color);

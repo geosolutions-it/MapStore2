@@ -52,6 +52,7 @@ class Image extends Component {
             enableFullscreen = true,
             fullscreen,
             onClick,
+            altText,
             description,
             showCaption,
             caption = description,
@@ -69,6 +70,7 @@ class Image extends Component {
                 {src && this.props.status !== 'error' && <img
                     ref={node => { this._node = node; }}
                     src={src}
+                    alt={altText}
                     onLoad={() => this.props.onChangeStatus('loaded')}
                     onError={() => this.props.onChangeStatus('error')}
                     onClick={enableFullscreen ? () => onClick(true) : undefined}

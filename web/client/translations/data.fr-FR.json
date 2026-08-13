@@ -155,6 +155,20 @@
         "cqlFilter": "Modèle de filtre CQL",
         "cqlFilterHelp": "Utilisez des apostrophes autour des espaces réservés de texte ; laissez les espaces réservés numériques et booléens sans guillemets.",
         "attributes": "Attributs",
+        "featureInfoDisplayType": "Type d'affichage des informations",
+        "configureDisplayType": "Configurer le type d'affichage",
+        "mediaTypeAttribute": "Attribut du type de média",
+        "displayTypes": {
+          "string": "Texte",
+          "image": "Image",
+          "video": "Vidéo",
+          "audio": "Audio",
+          "panorama": "Image panoramique",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Média"
+        },
         "validate": "Valider",
         "validation": {
           "missingFields": "L'URL WFS, le nom de la couche et le modèle de filtre CQL sont obligatoires",

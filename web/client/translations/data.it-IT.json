@@ -155,6 +155,20 @@
         "cqlFilter": "Template filtro CQL",
         "cqlFilterHelp": "Usa gli apici singoli per i segnaposto di testo; lascia senza apici i segnaposto numerici e booleani.",
         "attributes": "Attributi",
+        "featureInfoDisplayType": "Tipo di visualizzazione delle informazioni",
+        "configureDisplayType": "Configura il tipo di visualizzazione",
+        "mediaTypeAttribute": "Attributo del tipo di media",
+        "displayTypes": {
+          "string": "Testo",
+          "image": "Immagine",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Immagine panoramica",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Media"
+        },
         "validate": "Valida",
         "validation": {
           "missingFields": "URL WFS, nome layer e template del filtro CQL sono obbligatori",
