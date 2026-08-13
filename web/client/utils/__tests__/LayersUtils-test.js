@@ -1342,6 +1342,25 @@ describe('LayersUtils', () => {
             }).catch(done);
         }).catch(done);
     });
+    it('import with dbf id column does not produce duplicated ids', () => {
+        const geometry = {
+            "type": "Point",
+            "coordinates": [0, 0]
+        };
+        const ftColl = {
+            type: "FeatureCollection",
+            fileName: "Poly_3943",
+            features: [
+                { type: "Feature", geometry, properties: { id: 2 } },
+                { type: "Feature", geometry, properties: { id: 3 } },
+                { type: "Feature", geometry, properties: { id: 1 } }
+            ]
+        };
+        const layer = LayersUtils.geoJSONToLayer(ftColl, "layer-id");
+        expect(layer.features.map(f => f.id)).toEqual([0, 1, 2]);
+        const normalized = LayersUtils.normalizeLayer(layer);
+        expect(normalized.features.map(f => f.id)).toEqual([0, 1, 2]);
+    });
     it('saveLayer', () => {
         const layers = [
             // no params if not present
