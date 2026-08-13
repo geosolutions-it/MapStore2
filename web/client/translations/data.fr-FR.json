@@ -99,6 +99,10 @@
         "tooltip": "La couche est recadrée à l'étendue de la projection lorsqu'elle est ajoutée à la carte avec cette option activée"
       },
       "cached": "Utiliser les options de cache",
+      "coalesceExclude": {
+        "label": "Exclure des requêtes combinées",
+        "tooltip": "Conserve cette couche en dehors des requêtes WMS combinées, afin qu'elle soit toujours demandée séparément. Sans effet lorsque les requêtes combinées sont désactivées pour la carte."
+      },
       "styleCustom": "Utiliser un style nommé \"{value} \"",
       "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",
       "stylesRefreshList": "Actualiser la liste des styles",
@@ -138,6 +142,43 @@
       "styleWarning": "L'éditeur de style de calque pour le type de géométrie '{geometryType}' n'est pas pris en charge.",
       "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
       "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
+      "propertiesView": {
+        "attributes": "Attributs",
+        "noAttributes": "Le schéma de la couche ne contient aucun attribut affichable."
+      },
+      "externalData": {
+        "title": "DONNÉES EXTERNES",
+        "description": "Interroger les attributs d'une source WFS externe",
+        "wfsUrl": "URL WFS",
+        "invalidWfsUrl": "L'URL n'expose pas un service WFS valide",
+        "layerName": "Nom de la couche",
+        "cqlFilter": "Modèle de filtre CQL",
+        "cqlFilterHelp": "Utilisez des apostrophes autour des espaces réservés de texte ; laissez les espaces réservés numériques et booléens sans guillemets.",
+        "attributes": "Attributs",
+        "validate": "Valider",
+        "validation": {
+          "missingFields": "L'URL WFS, le nom de la couche et le modèle de filtre CQL sont obligatoires",
+          "invalidPlaceholder": "Le modèle de filtre CQL doit contenir au moins une référence de champ valide",
+          "invalidDoubleQuotedPlaceholder": "Les guillemets doubles identifient les noms de champs en CQL. Utilisez des apostrophes autour des espaces réservés de texte.",
+          "invalidCql": "Le modèle de filtre CQL n'est pas valide",
+          "unquotedPlaceholder": "Dans le filtre, la référence au champ « {property} » n’est pas entourée de guillemets simples, elle n’accepte donc que des nombres. Ajoutez les guillemets pour utiliser des valeurs textuelles.",
+          "valid": "La configuration des données externes est valide",
+          "sourceUnavailable": "Une URL WFS source et un nom de couche sont nécessaires pour exécuter la requête d'exemple",
+          "sampleNotFound": "La couche source n'a renvoyé aucune entité d'exemple",
+          "testRequestFailed": "La requête de test des données externes a échoué",
+          "generatedCql": "CQL généré"
+        },
+        "noSourceFeatures": "Aucune entité identifiée n'est disponible pour cette vue de données externes",
+        "invalidConfiguration": "Configuration non valide",
+        "notConfigured": "Cette vue Identify n’est pas configurée correctement.",
+        "noResults": "Aucune donnée externe trouvée",
+        "requestError": "Impossible de charger les données externes",
+        "missingProperty": "L'entité source ne contient pas la propriété « {property} »",
+        "unsafeSourceValue": "Les données externes ne peuvent pas être chargées car « {property} » contient du texte alors qu’un nombre est attendu.",
+        "invalidInterpolatedCql": "Le filtre CQL construit à partir de l’entité source n’est pas valide",
+        "invalidResponse": "Le WFS externe n'a pas renvoyé de GeoJSON valide",
+        "retry": "Réessayer"
+      },
       "heightOffset": "Décalage en hauteur (m)",
       "wmsLayerTileSize": "Taille de la tuile (WMS)",
       "maxFeaturesInView": "Nombre maximal d'entités dans la vue",
@@ -264,6 +305,7 @@
       "forceProxy": "Forcer le proxy",
       "fields": {
         "refresh": "Récupérer les formats pris en charge",
+        "showAll": "Afficher ou masquer tous les attributs",
         "title": "Champs",
         "tooltip": "Champs",
         "name": "Nom",
@@ -585,7 +627,9 @@
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
         },
         "collisionDetection": "Activer la détection de collisions",
-        "imageryLayersOverlay": "Activer la superposition des couches d’images"
+        "imageryLayersOverlay": "Activer la superposition des couches d’images",
+        "coalesceWMSLayers": "Combiner les requêtes WMS (coalesce)",
+        "coalesceWMSLayersTooltip": "Définit le comportement par défaut pour les couches de cette carte : lorsqu'il est activé, les couches WMS adjacentes provenant de la même source sont combinées en une seule requête GetMap, réduisant ainsi le nombre de requêtes envoyées au serveur. Les couches de fond sont exclues."
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",
@@ -699,6 +743,10 @@
       "radius": "Rayon",
       "filterIconEnabled": "Désactiver le filtre de couche",
       "filterIconDisabled": "Activer le filtre de couche",
+      "filterWidgetIconEnabled": "Désactiver le filtre du widget connecté",
+      "filterWidgetIconDisabled": "Activer le filtre du widget connecté",
+      "filterAndWidgetIconEnabled": "Désactiver les filtres globaux et des widgets connectés",
+      "filterAndWidgetIconDisabled": "Activer les filtres globaux et des widgets connectés",
       "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
       "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
       "notVisibleSwitchTo3D": "Passer en mode carte 3D pour voir cette couche",

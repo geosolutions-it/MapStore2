@@ -78,6 +78,8 @@ This is the main structure:
   "miscSettings": {
       // Use POST requests for each WMS length URL highter than this value.
       "maxURLLength": 5000,
+      // Combine adjacent compatible WMS layers into a single GetMap request
+      "coalesceWMSLayers": false,
       // Custom path to home page
       "homePath": '/home'
   },

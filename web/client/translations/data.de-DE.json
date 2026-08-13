@@ -99,6 +99,10 @@
         "tooltip": "Die Ebene wird auf die Projektionserweiterung zugeschnitten, wenn sie mit aktivierter Option zur Karte hinzugefügt wird."
       },
       "cached": "Verwenden Sie Cache-Optionen",
+      "coalesceExclude": {
+        "label": "Von kombinierten Anfragen ausschließen",
+        "tooltip": "Hält diese Ebene aus kombinierten WMS-Anfragen heraus, sodass sie immer einzeln angefordert wird. Ohne Wirkung, solange kombinierte Anfragen für die Karte deaktiviert sind."
+      },
       "styleCustom": "Stil \"{value}\" nutzen",
       "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
       "stylesRefreshList": "Aktualisiere die Liste von Stilen",
@@ -138,6 +142,43 @@
       "styleWarning": "Ebenenstil-Editor für Geometrietyp '{geometryType}' wird nicht unterstützt.",
       "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
       "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
+      "propertiesView": {
+        "attributes": "Attribute",
+        "noAttributes": "Das Layerschema enthält keine darstellbaren Attribute."
+      },
+      "externalData": {
+        "title": "EXTERNE DATEN",
+        "description": "Attribute aus einer externen WFS-Quelle abfragen",
+        "wfsUrl": "WFS-URL",
+        "invalidWfsUrl": "Die URL stellt keinen gültigen WFS-Dienst bereit",
+        "layerName": "Layername",
+        "cqlFilter": "CQL-Filtervorlage",
+        "cqlFilterHelp": "Setzen Sie Platzhalter für Zeichenfolgen in einfache Anführungszeichen; lassen Sie Platzhalter für Zahlen und boolesche Werte ohne Anführungszeichen.",
+        "attributes": "Attribute",
+        "validate": "Validieren",
+        "validation": {
+          "missingFields": "WFS-URL, Layername und CQL-Filtervorlage sind erforderlich",
+          "invalidPlaceholder": "Die CQL-Filtervorlage muss mindestens einen gültigen Feldverweis enthalten",
+          "invalidDoubleQuotedPlaceholder": "Doppelte Anführungszeichen kennzeichnen Feldnamen in CQL. Verwenden Sie einfache Anführungszeichen für Zeichenfolgen-Platzhalter.",
+          "invalidCql": "Die CQL-Filtervorlage ist ungültig",
+          "unquotedPlaceholder": "Im Filter ist der Verweis auf das Feld „{property}“ nicht in einfache Anführungszeichen gesetzt und akzeptiert daher nur Zahlen. Fügen Sie die Anführungszeichen hinzu, um Textwerte zu verwenden.",
+          "valid": "Die Konfiguration der externen Daten ist gültig",
+          "sourceUnavailable": "Zum Ausführen der Beispielanfrage sind eine WFS-Quell-URL und ein Layername erforderlich",
+          "sampleNotFound": "Der Quelllayer hat kein Beispielfeature zurückgegeben",
+          "testRequestFailed": "Die Testanfrage für externe Daten ist fehlgeschlagen",
+          "generatedCql": "Generiertes CQL"
+        },
+        "noSourceFeatures": "Für diese externe Datenansicht sind keine identifizierten Features verfügbar",
+        "invalidConfiguration": "Ungültige Konfiguration",
+        "notConfigured": "Diese Identify-Ansicht ist nicht korrekt konfiguriert.",
+        "noResults": "Keine externen Daten gefunden",
+        "requestError": "Externe Daten konnten nicht geladen werden",
+        "missingProperty": "Das Quellfeature enthält die Eigenschaft „{property}“ nicht",
+        "unsafeSourceValue": "Die externen Daten können nicht geladen werden, da „{property}“ Text enthält, wo eine Zahl erwartet wird.",
+        "invalidInterpolatedCql": "Der aus dem Quellfeature erstellte CQL-Filter ist nicht gültig",
+        "invalidResponse": "Der externe WFS hat kein gültiges GeoJSON zurückgegeben",
+        "retry": "Erneut versuchen"
+      },
       "heightOffset": "Höhenversatz (m)",
       "wmsLayerTileSize": "Kachelgröße (WMS)",
       "maxFeaturesInView": "Maximale Anzahl von Features in der Ansicht",
@@ -264,6 +305,7 @@
       "forceProxy": "Proxy erzwingen",
       "fields": {
         "refresh": "Felder aus der Datenquelle neu laden",
+        "showAll": "Alle Attribute ein- oder ausblenden",
         "title": "Felder",
         "tooltip": "Felder",
         "name": "Name",
@@ -623,7 +665,9 @@
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
         },
         "collisionDetection": "Geländekollisionserkennung aktivieren",
-        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren"
+        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren",
+        "coalesceWMSLayers": "WMS-Anfragen zusammenfassen (coalesce)",
+        "coalesceWMSLayersTooltip": "Legt das Standardverhalten für die Ebenen dieser Karte fest: Wenn aktiviert, werden benachbarte WMS-Ebenen aus derselben Quelle zu einer einzigen GetMap-Anfrage zusammengefasst, wodurch die Anzahl der an den Server gesendeten Anfragen reduziert wird. Hintergrundebenen sind ausgeschlossen."
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
@@ -738,6 +782,10 @@
       "radius": "Radius",
       "filterIconEnabled": "Ebenenfilter deaktivieren",
       "filterIconDisabled": "Ebenenfilter aktivieren",
+      "filterWidgetIconEnabled": "Filter des verbundenen Widgets deaktivieren",
+      "filterWidgetIconDisabled": "Filter des verbundenen Widgets aktivieren",
+      "filterAndWidgetIconEnabled": "Globale und verbundene Widget-Filter deaktivieren",
+      "filterAndWidgetIconDisabled": "Globale und verbundene Widget-Filter aktivieren",
       "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
       "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
       "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",

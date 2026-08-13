@@ -29,49 +29,77 @@ describe('FilterItemToolbar component', () => {
         setTimeout(done);
     });
 
-    it('renders the toggle switch and collapse chevron when handlers are provided', () => {
+    it('renders the toggle switch for Disable component', () => {
         const container = document.getElementById('container');
         ReactDOM.render(
             <FilterItemToolbar
+                showDisableToggle
                 filterData={filterDataFeatures}
-                onToggleCollapse={() => {}}
                 onToggleDisabled={() => {}}
             />,
             container
         );
-        const toolbar = container.querySelector('.ms-filter-card-toolbar');
-        expect(toolbar).toExist();
-        const buttons = toolbar.querySelectorAll('button');
-        // only the collapse chevron is a ToolButton
-        expect(buttons.length).toBe(1);
-        const toggle = toolbar.querySelector('.mapstore-switch-btn-xs input[type="checkbox"]');
+        const toggle = container.querySelector('.mapstore-switch-btn-xs input[type="checkbox"]');
         expect(toggle).toExist();
     });
 
-    it('invokes onToggleCollapse when the collapse chevron is clicked', () => {
+    it('invokes onToggleDisabled when the toggle switch is clicked', () => {
         const container = document.getElementById('container');
         let clicked = false;
         ReactDOM.render(
             <FilterItemToolbar
+                showDisableToggle
                 filterData={filterDataFeatures}
+                onToggleDisabled={(disabled) => { clicked = disabled; }}
+            />,
+            container
+        );
+        const toggle = container.querySelector('.mapstore-switch-btn-xs input[type="checkbox"]');
+        Simulate.change(toggle);
+        expect(clicked).toBe(true);
+    });
+
+    it('renders the collapse toggle for Collapse component', () => {
+        const container = document.getElementById('container');
+        ReactDOM.render(
+            <FilterItemToolbar
+                showCollapseToggle
+                filterData={filterDataFeatures}
+                collapsed={false}
+                onToggleCollapse={() => {}}
+            />,
+            container
+        );
+        const collapseBtn = container.querySelector('.ms-filter-collapse-toggle');
+        expect(collapseBtn).toExist();
+    });
+
+    it('invokes onToggleCollapse when the collapse button is clicked', () => {
+        const container = document.getElementById('container');
+        let clicked = false;
+        ReactDOM.render(
+            <FilterItemToolbar
+                showCollapseToggle
+                filterData={filterDataFeatures}
+                collapsed={false}
                 onToggleCollapse={() => { clicked = true; }}
             />,
             container
         );
-        const buttons = container.querySelectorAll('.ms-filter-card-toolbar button');
-        // only the chevron is rendered
-        expect(buttons.length).toBe(1);
-        Simulate.click(buttons[0]);
+        const collapseBtn = container.querySelector('.ms-filter-collapse-toggle');
+        Simulate.click(collapseBtn);
         expect(clicked).toBe(true);
     });
 
-    it('renders zoom button when there are zoomTo interactions in manual mode', () => {
+    it('renders zoom button when showZoomButton is true', () => {
         const container = document.getElementById('container');
         let zoomed = false;
         ReactDOM.render(
             <FilterItemToolbar
                 filterData={filterDataFeatures}
-                interactions={[{ plugged: true, targetType: 'applyZoomTo', configuration: { autoZoom: false } }]}
+                showZoomButton
+                showDisableToggle
+                onToggleDisabled={() => {}}
                 onZoomToFilterExtent={() => { zoomed = true; }}
             />,
             container
@@ -88,7 +116,9 @@ describe('FilterItemToolbar component', () => {
         ReactDOM.render(
             <FilterItemToolbar
                 filterData={{...filterDataFeatures, disabled: true}}
-                interactions={[{ plugged: true, targetType: 'applyZoomTo', configuration: { autoZoom: false } }]}
+                showZoomButton
+                showDisableToggle
+                onToggleDisabled={() => {}}
                 onZoomToFilterExtent={() => {}}
             />,
             container

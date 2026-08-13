@@ -14,6 +14,7 @@ import { createSelector } from 'reselect';
 import Message from '../../../components/I18N/Message';
 import { updateMapOptions } from '../../../actions/map';
 import ConfigUtils from '../../../utils/ConfigUtils';
+import InfoPopover from '../../../components/widgets/widget/InfoPopover';
 
 import { mapSelector } from '../../../selectors/map';
 import { mapTypeSelector, isCesium as isCesiumSelector } from '../../../selectors/maptype';
@@ -59,7 +60,7 @@ const Component = ({
         updateConfigAction({[key]: !options[key]});
     };
 
-    return isCesium ? (
+    return <>
         <form>
             <FormGroup>
                 <ControlLabel>
@@ -67,79 +68,89 @@ const Component = ({
                 </ControlLabel>
             </FormGroup>
             <Checkbox
-                checked={mapOptions.showSkyAtmosphere}
-                onChange={() => handleConfigUpdate(mapOptions, 'showSkyAtmosphere')}
+                checked={!!mapOptions.coalesceWMSLayers}
+                onChange={() => handleConfigUpdate(mapOptions, 'coalesceWMSLayers')}
             >
-                <Message msgId="map.settings.skyAtmosphere" />
+                <Message msgId="map.settings.coalesceWMSLayers" />&nbsp;<InfoPopover text={<Message msgId="map.settings.coalesceWMSLayersTooltip" />} />
             </Checkbox>
-            <Checkbox
-                checked={mapOptions.showGroundAtmosphere}
-                onChange={() => handleConfigUpdate(mapOptions, 'showGroundAtmosphere')}
-            >
-                <Message msgId="map.settings.groundAtmosphere" />
-            </Checkbox>
-            <Checkbox
-                checked={mapOptions.enableFog}
-                onChange={() => handleConfigUpdate(mapOptions, 'enableFog')}
-            >
-                <Message msgId="map.settings.fog" />
-            </Checkbox>
-            <Checkbox
-                checked={mapOptions.depthTestAgainstTerrain}
-                onChange={() => handleConfigUpdate(mapOptions, 'depthTestAgainstTerrain')}
-            >
-                <Message msgId="map.settings.depthTest" />
-            </Checkbox>
-            <Checkbox
-                checked={mapOptions.enableCollisionDetection !== undefined ? mapOptions.enableCollisionDetection : true}
-                onChange={() => handleConfigUpdate(mapOptions, 'enableCollisionDetection')}
-            >
-                <Message msgId="map.settings.collisionDetection" />
-            </Checkbox>
-            <Checkbox
-                checked={mapOptions.enableImageryLayersOverlay !== undefined ? mapOptions.enableImageryLayersOverlay : true}
-                onChange={() => handleConfigUpdate(mapOptions, 'enableImageryLayersOverlay')}
-            >
-                <Message msgId="map.settings.imageryLayersOverlay" />
-            </Checkbox>
-            <FormGroup>
-                <ControlLabel><Message msgId="map.settings.lightings.title"/></ControlLabel>
-                <SelectLocalized
-                    options={[
-                        {label: "map.settings.lightings.sunlightOption", value: "sunlight"},
-                        {label: "map.settings.lightings.flashlightOption", value: "flashlight"},
-                        {label: "map.settings.lightings.dateTimeOption", value: "dateTime"}
-                    ]}
-                    wrapperStyle = {{ marginTop: "10px"}}
-                    value={mapOptions && mapOptions.lighting?.value || "sunlight"}
-                    clearable={false}
-                    onChange={(val) => {
-                        if (val !== 'dateTime') {
-                            updateConfigAction({"lighting": {value: val.value}});
-                        } else {
-                            updateConfigAction({"lighting": {value: val.value, dateTime: new Date().toISOString()}});
-                        }
-                    }}
-                    placeholder="map.settings.lightings.placeholder"
-                />
-                {mapOptions?.lighting?.value === 'dateTime' ?
-                    <div className="lighting-dateTime-picker">
-                        <UTCDateTimePicker
-                            value={mapOptions.lighting?.dateTime ? new Date(mapOptions.lighting?.dateTime) : new Date()}
-                            hideOperator
-                            time
-                            popupPosition={"top"}
-                            calendar
-                            type={'date-time'}
-                            onChange={(date) => {
-                                updateConfigAction({"lighting": {...mapOptions.lighting, dateTime: date}});
-                            }}
-                            placeholder={getMessageById(messages, "map.settings.lightings.dateTimePlaceholder")} />
-                    </div> :
-                    null}
-            </FormGroup>
         </form>
-    ) : null;
+        {isCesium && (
+            <form>
+                <Checkbox
+                    checked={mapOptions.showSkyAtmosphere}
+                    onChange={() => handleConfigUpdate(mapOptions, 'showSkyAtmosphere')}
+                >
+                    <Message msgId="map.settings.skyAtmosphere" />
+                </Checkbox>
+                <Checkbox
+                    checked={mapOptions.showGroundAtmosphere}
+                    onChange={() => handleConfigUpdate(mapOptions, 'showGroundAtmosphere')}
+                >
+                    <Message msgId="map.settings.groundAtmosphere" />
+                </Checkbox>
+                <Checkbox
+                    checked={mapOptions.enableFog}
+                    onChange={() => handleConfigUpdate(mapOptions, 'enableFog')}
+                >
+                    <Message msgId="map.settings.fog" />
+                </Checkbox>
+                <Checkbox
+                    checked={mapOptions.depthTestAgainstTerrain}
+                    onChange={() => handleConfigUpdate(mapOptions, 'depthTestAgainstTerrain')}
+                >
+                    <Message msgId="map.settings.depthTest" />
+                </Checkbox>
+                <Checkbox
+                    checked={mapOptions.enableCollisionDetection !== undefined ? mapOptions.enableCollisionDetection : true}
+                    onChange={() => handleConfigUpdate(mapOptions, 'enableCollisionDetection')}
+                >
+                    <Message msgId="map.settings.collisionDetection" />
+                </Checkbox>
+                <Checkbox
+                    checked={mapOptions.enableImageryLayersOverlay !== undefined ? mapOptions.enableImageryLayersOverlay : true}
+                    onChange={() => handleConfigUpdate(mapOptions, 'enableImageryLayersOverlay')}
+                >
+                    <Message msgId="map.settings.imageryLayersOverlay" />
+                </Checkbox>
+                <FormGroup>
+                    <ControlLabel><Message msgId="map.settings.lightings.title"/></ControlLabel>
+                    <SelectLocalized
+                        options={[
+                            {label: "map.settings.lightings.sunlightOption", value: "sunlight"},
+                            {label: "map.settings.lightings.flashlightOption", value: "flashlight"},
+                            {label: "map.settings.lightings.dateTimeOption", value: "dateTime"}
+                        ]}
+                        wrapperStyle = {{ marginTop: "10px"}}
+                        value={mapOptions && mapOptions.lighting?.value || "sunlight"}
+                        clearable={false}
+                        onChange={(val) => {
+                            if (val !== 'dateTime') {
+                                updateConfigAction({"lighting": {value: val.value}});
+                            } else {
+                                updateConfigAction({"lighting": {value: val.value, dateTime: new Date().toISOString()}});
+                            }
+                        }}
+                        placeholder="map.settings.lightings.placeholder"
+                    />
+                    {mapOptions?.lighting?.value === 'dateTime' ?
+                        <div className="lighting-dateTime-picker">
+                            <UTCDateTimePicker
+                                value={mapOptions.lighting?.dateTime ? new Date(mapOptions.lighting?.dateTime) : new Date()}
+                                hideOperator
+                                time
+                                popupPosition={"top"}
+                                calendar
+                                type={'date-time'}
+                                onChange={(date) => {
+                                    updateConfigAction({"lighting": {...mapOptions.lighting, dateTime: date}});
+                                }}
+                                placeholder={getMessageById(messages, "map.settings.lightings.dateTimePlaceholder")} />
+                        </div> :
+                        null}
+                </FormGroup>
+            </form>
+        )}
+    </>;
 };
 Component.contextTypes = {
     messages: PropTypes.object

@@ -113,7 +113,6 @@
       "templateFormatInfoAlert2": "Brug ${ attribut } til at omslutte de egenskaber, du vil vise",
       "templateFormatInfoAlertExample": "Objektets id er <span style='white-space:nowrap'>${ properties.id }</span> eller <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
       "templateError": "Der opstod en fejl ved brug af skabelonen på den information, der blev returneret af serveren. Kontroller venligst skabelonen",
-      "templatePreview": "Skabelon forhåndsvisning",
       "heightOffset": "Højdeoffset (m)",
       "wmsLayerTileSize": "Tile størrelse (WMS)",
       "maxFeaturesInView": "Maksimale antal features i udsnit",
