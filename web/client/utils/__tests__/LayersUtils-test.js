@@ -8,6 +8,8 @@
 import expect from 'expect';
 import { v1 as uuidv1 } from 'uuid';
 import * as LayersUtils from '../LayersUtils';
+import { readZip, shpToGeoJSON } from '../FileUtils';
+import axios from '../../libs/ajax';
 
 const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
@@ -1311,6 +1313,21 @@ describe('LayersUtils', () => {
             "id": "feature-id",
             "type": "Feature"
         }]);
+    });
+    it('geoJSONToLayer from imported shapefile (TestShape.zip)', (done) => {
+        axios.get("base/web/client/test-resources/TestShape.zip", { responseType: "blob" }).then(({data}) => {
+            readZip(data).then((buffer) => {
+                const collections = shpToGeoJSON(buffer);
+                expect(collections.length).toEqual(1);
+                const geoJson = collections[0];
+                const layer = LayersUtils.geoJSONToLayer(geoJson, "TestShape__0");
+                expect(layer.features.length).toEqual(geoJson.features.length);
+                layer.features.forEach((f) => expect(f.id).toNotBe(undefined));
+                expect(new Set(layer.features.map(f => f.id)).size).toEqual(layer.features.length);
+                expect(layer.features[0].id).toEqual(0);
+                done();
+            }).catch(done);
+        }).catch(done);
     });
     it('saveLayer', () => {
         const layers = [
