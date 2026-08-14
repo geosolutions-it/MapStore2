@@ -4757,6 +4757,7 @@
         "errorDefault": "Errore di rete"
       },
       "myResources": "Le mie risorse",
+      "select": "Seleziona",
       "creationFilter": {
         "from": "Dalla data di creazione",
         "to": "Alla data di creazione"
