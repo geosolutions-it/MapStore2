@@ -14,6 +14,7 @@ import { Modes } from '../../../../../utils/GeoStoryUtils';
 import PdfViewer from './PdfViewer';
 import { resolveAttributeDisplayType } from '../../../../../utils/FeatureInfoAttributeUtils';
 import { isValidURL } from '../../../../../utils/URLUtils';
+import { IFRAME_SANDBOX, IFRAME_REFERRER_POLICY } from '../../../../../utils/HtmlSanitizer';
 
 const PanoramaViewer = lazy(() => import('./PanoramaViewer'));
 
@@ -56,7 +57,8 @@ const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
                 className="ms-feature-info-attribute-media ms-feature-info-attribute-iframe"
                 src={value}
                 title={label}
-                sandbox="allow-scripts allow-same-origin"/>
+                sandbox={IFRAME_SANDBOX}
+                referrerPolicy={IFRAME_REFERRER_POLICY}/>
             : formatAttributeValue(value);
     }
     if (displayType === 'url') {

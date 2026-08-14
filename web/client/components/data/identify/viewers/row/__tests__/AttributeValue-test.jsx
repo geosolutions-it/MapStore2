@@ -79,7 +79,8 @@ describe('AttributeValue', () => {
         const iframe = container.querySelector('iframe');
         expect(iframe.getAttribute('src')).toBe('https://example.com/page');
         expect(iframe.getAttribute('title')).toBe('page');
-        expect(iframe.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin');
+        expect(iframe.getAttribute('sandbox')).toBe('allow-scripts allow-presentation');
+        expect(iframe.getAttribute('referrerpolicy')).toBe('no-referrer');
 
         render({ value: 'https://example.com/page', attribute: { name: 'page', displayType: 'url' } });
         const link = container.querySelector('a');
