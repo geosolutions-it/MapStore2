@@ -55,7 +55,7 @@ describe('PdfViewer', () => {
         mockAxios.onGet(SRC).reply(200, 'pdf-content');
         render();
         return waitFor(() => {
-            const iframe = document.querySelector('iframe.ms-feature-info-attribute-pdf');
+            const iframe = document.querySelector('.ms-pdf .ms-pdf-frame');
             expect(iframe).toExist();
             expect(iframe.getAttribute('src')).toBe(OBJECT_URL);
             expect(iframe.getAttribute('title')).toBe('Document');

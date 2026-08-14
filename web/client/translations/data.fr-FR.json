@@ -315,7 +315,7 @@
         "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
         "error": "Échec de la récupération des champs",
         "featureInfoDisplayType": "Type d'affichage des informations",
-        "configureDisplayType": "Configurer le type d'affichage",
+        "configureField": "Configurer le champ",
         "mediaTypeAttribute": "Attribut du type de média",
         "displayTypes": {
           "string": "Texte",
@@ -930,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "Plus d'informations",
     "identifyRevGeocodeCloseText": "Fermer",
     "identifyRevGeocodeError": "Géocodage impossible",
+    "identifyShowFullscreen": "Afficher en plein écran",
     "identifyEdit": "Éditer",
     "identifyLayerSelectNoResult": "Aucun calque trouvé",
     "getFeatureInfoError": {

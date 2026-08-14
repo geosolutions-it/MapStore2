@@ -42,50 +42,46 @@
 
 // Media attributes shared by Properties and External Data Identify views.
 .ms-feature-info-attribute-media {
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--ms-main-border-color);
+    background-color: var(--ms-main-variant-bg);
     display: block;
-    max-width: 100%;
-}
-.ms-feature-info-attribute-image img,
-.ms-feature-info-attribute-video video {
-    max-height: 320px;
-    object-fit: contain;
     width: 100%;
-}
-.ms-feature-info-attribute-video {
-    height: 200px;
-    width: 100%;
-    .ms-media-video,
-    .ms-video {
+    .ms-media,
+    img,
+    video {
         height: 100%;
         width: 100%;
+    }
+    img,
+    video {
+        object-fit: contain;
     }
 }
 audio.ms-feature-info-attribute-media {
-    width: 100%;
+    aspect-ratio: auto;
 }
-iframe.ms-feature-info-attribute-media {
-    border: 0;
-    min-height: 320px;
-    width: 100%;
-}
-.ms-feature-info-attribute-panorama {
-    background-color: #1b1b1b;
-    height: 320px;
+.ms-panorama,
+.ms-pdf {
     overflow: hidden;
     position: relative;
-    width: 100%;
-    img {
+    .ms-feature-info-attribute-panorama-viewer,
+    .ms-pdf-frame {
+        border: 0;
         height: 100%;
-        object-fit: contain;
         width: 100%;
     }
 }
-.ms-feature-info-attribute-panorama-viewer {
-    height: 100%;
-    width: 100%;
+.ms-pdf-fullscreen {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    z-index: 2;
 }
 .ms-feature-info-attribute-panorama-loading,
-.ms-feature-info-attribute-panorama-error {
+.ms-feature-info-attribute-panorama-error,
+.ms-pdf-loading,
+.ms-pdf-error {
     align-items: center;
     display: flex;
     height: 100%;

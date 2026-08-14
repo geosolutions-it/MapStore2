@@ -33,26 +33,28 @@ const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
     if (typeof value !== 'string' || displayType === 'string' || !isValidURL(value)) {
         return formatAttributeValue(value);
     }
+    const className = 'ms-feature-info-attribute-media';
     if (displayType === 'image') {
-        return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-image"><Image src={value} altText={attribute.name} referrerPolicy="no-referrer" enableFullscreen fit="contain"/></div>;
+        return <div className={className}><Image src={value} altText={attribute.name} referrerPolicy="no-referrer" enableFullscreen fit="contain"/></div>;
     }
     if (displayType === 'video') {
-        return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-video"><Video src={value} mode={Modes.VIEW} inView fit="contain"/></div>;
+        return <div className={className}><Video src={value} mode={Modes.VIEW} inView fit="contain"/></div>;
     }
     if (displayType === 'audio') {
-        return <audio className="ms-feature-info-attribute-media" src={value} referrerPolicy="no-referrer" controls><a href={value}>{value}</a></audio>;
+        return <audio className={className} src={value} referrerPolicy="no-referrer" controls><a href={value}>{value}</a></audio>;
     }
     if (displayType === 'panorama') {
-        return <Suspense fallback={null}><PanoramaViewer value={value} alt={attribute.name}/></Suspense>;
+        return <Suspense fallback={null}><PanoramaViewer className={className} value={value} alt={attribute.name}/></Suspense>;
     }
     if (displayType === 'pdf') {
-        return <PdfViewer src={value} title={attribute.name}/>;
+        return <PdfViewer className={className} src={value} title={attribute.name}/>;
     }
     if (displayType === 'iframe') {
         return (<iframe
-            className="ms-feature-info-attribute-media ms-feature-info-attribute-iframe"
+            className={className}
             src={value}
             title={attribute.name}
+            allow="fullscreen"
             sandbox={IFRAME_SANDBOX}
             referrerPolicy={IFRAME_REFERRER_POLICY}/>);
     }

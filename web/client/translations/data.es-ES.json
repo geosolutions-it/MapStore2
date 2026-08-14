@@ -315,7 +315,7 @@
         "clearCustomizationConfirm": "¿Está seguro de que desea borrar la personalización de los campos?",
         "error": "Error al recuperar los campos",
         "featureInfoDisplayType": "Tipo de visualización de información",
-        "configureDisplayType": "Configurar el tipo de visualización",
+        "configureField": "Configurar campo",
         "mediaTypeAttribute": "Atributo del tipo de medio",
         "displayTypes": {
           "string": "Texto",
@@ -930,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "Más información",
     "identifyRevGeocodeCloseText": "Cerrar",
     "identifyRevGeocodeError": "Geocodificación imposible",
+    "identifyShowFullscreen": "Mostrar en pantalla completa",
     "identifyEdit": "Editar",
     "identifyLayerSelectNoResult": "No se encontraron capas",
     "getFeatureInfoError": {

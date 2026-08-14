@@ -13,7 +13,7 @@ import 'pannellum/build/pannellum.js';
 import 'pannellum/build/pannellum.css';
 import Spinner from '../../../../layout/Spinner';
 
-const PanoramaViewer = ({ value, alt = 'Panorama Image' }) => {
+const PanoramaViewer = ({ value, className, alt = 'Panorama Image' }) => {
     const containerRef = useRef(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -26,8 +26,7 @@ const PanoramaViewer = ({ value, alt = 'Panorama Image' }) => {
             viewer = window.pannellum.viewer(containerRef.current, {
                 type: 'equirectangular',
                 panorama: value,
-                autoLoad: true,
-                showFullscreenCtrl: false
+                autoLoad: true
             });
             viewer.on('load', () => setLoading(false));
             viewer.on('error', (reason) => {
@@ -42,7 +41,7 @@ const PanoramaViewer = ({ value, alt = 'Panorama Image' }) => {
     }, [value]);
 
     return (
-        <div className="ms-feature-info-attribute-panorama">
+        <div className={`ms-panorama${className ? ` ${className}` : ''}`}>
             {error ? <><img src={value} alt={alt}/><div className="ms-feature-info-attribute-panorama-error"><Alert bsStyle="danger"><Glyphicon glyph="exclamation-sign"/> {error}</Alert></div></> : null}
             {loading && !error ? <div className="ms-feature-info-attribute-panorama-loading"><Spinner /></div> : null}
             <div ref={containerRef} aria-label={alt} className="ms-feature-info-attribute-panorama-viewer"/>
@@ -50,5 +49,5 @@ const PanoramaViewer = ({ value, alt = 'Panorama Image' }) => {
     );
 };
 
-PanoramaViewer.propTypes = { value: PropTypes.string.isRequired, alt: PropTypes.string };
+PanoramaViewer.propTypes = { value: PropTypes.string.isRequired, className: PropTypes.string, alt: PropTypes.string };
 export default PanoramaViewer;

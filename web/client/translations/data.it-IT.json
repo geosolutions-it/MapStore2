@@ -315,7 +315,7 @@
         "clearCustomizationConfirm": "Sei sicuro di voler rimuovere tutte le modifiche effettuate ai campi?",
         "error": "Non è stato possibile recuperare i campi dalla sorgente dati",
         "featureInfoDisplayType": "Tipo di visualizzazione delle informazioni",
-        "configureDisplayType": "Configura il tipo di visualizzazione",
+        "configureField": "Configura campo",
         "mediaTypeAttribute": "Attributo del tipo di media",
         "displayTypes": {
           "string": "Testo",
@@ -930,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "Più informazioni",
     "identifyRevGeocodeCloseText": "Chiudi",
     "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
+    "identifyShowFullscreen": "Mostra a schermo intero",
     "identifyEdit": "Modifica",
     "identifyLayerSelectNoResult": "Nessun livello trovato",
     "getFeatureInfoError": {

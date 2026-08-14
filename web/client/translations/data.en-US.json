@@ -315,7 +315,7 @@
         "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
         "error": "It was not possible to automatically load the fields",
         "featureInfoDisplayType": "Feature info display type",
-        "configureDisplayType": "Configure display type",
+        "configureField": "Configure field",
         "mediaTypeAttribute": "Media type attribute",
         "displayTypes": {
           "string": "Text",
@@ -930,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "More info",
     "identifyRevGeocodeCloseText": "Close",
     "identifyRevGeocodeError": "Unable to geocode",
+    "identifyShowFullscreen": "Show fullscreen",
     "identifyEdit": "Edit",
     "identifyLayerSelectNoResult": "No layers found",
     "getFeatureInfoError": {

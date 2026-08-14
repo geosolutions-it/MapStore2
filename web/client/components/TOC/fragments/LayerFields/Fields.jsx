@@ -10,12 +10,13 @@ import BorderLayout from '../../../layout/BorderLayout';
 import withConfirm from '../../../misc/withConfirm';
 import withTooltip from '../../../data/featuregrid/enhancers/withTooltip';
 import localizedProps from '../../../misc/enhancers/localizedProps';
+import tooltip from '../../../misc/enhancers/tooltip';
 import { extractLocalizedString } from '../../../I18N/LocalizedString';
 import { DISPLAY_TYPES } from '../../../../utils/FeatureInfoAttributeUtils';
 
 const ConfirmButton = localizedProps("tooltip")(withTooltip(withConfirm(Button)));
 const CheckboxWithTooltip = localizedProps("tooltip")(withTooltip(Checkbox));
-const SettingsButton = localizedProps("title")(Button);
+const SettingsButton = tooltip(Button);
 
 const isGeometryType = (type) =>
     ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'Geometry'].includes(type);
@@ -56,7 +57,10 @@ const Fields = ({
 }) => {
     const displayedFields = fields.filter(({type}) => !isGeometryType(type));
     const visibleCount = displayedFields.filter(({visible = true}) => visible).length;
-    const [configuredField, setConfiguredField] = useState(null);
+    const [configuredFields, setConfiguredFields] = useState([]);
+    const toggleFieldSettings = (name) => setConfiguredFields(configuredFields.includes(name)
+        ? configuredFields.filter((fieldName) => fieldName !== name)
+        : [...configuredFields, name]);
     return (<BorderLayout
         className={`layer-fields${showFieldSettings ? ' layer-fields-with-settings' : ''}`}
         header={<div key="row-header" className="layer-fields-header">
@@ -102,9 +106,9 @@ const Fields = ({
                 <FormGroup className="layer-field-name">
                     <ControlLabel><Message msgId="layerProperties.fields.name"/></ControlLabel>
                 </FormGroup>
-                <FormGroup className="layer-field-alias">
+                {showFieldSettings ? null : <FormGroup className="layer-field-alias">
                     <ControlLabel><Message msgId="layerProperties.fields.alias"/></ControlLabel>
-                </FormGroup>
+                </FormGroup>}
                 <FormGroup className="layer-field-type">
                     <ControlLabel><Message msgId="layerProperties.fields.type"/></ControlLabel>
                 </FormGroup>
@@ -119,7 +123,7 @@ const Fields = ({
         {displayedFields
             .map((field) => {
                 const { name, alias, type, visible, displayType, mediaTypeAttribute } = field;
-                const isConfigured = configuredField === name;
+                const isConfigured = configuredFields.includes(name);
                 return (<div key={`field-${name}`} className="layer-fields-field-container">
                     <div className="layer-fields-row">
                         {showVisibility ? <FormGroup className="layer-field-visibility">
@@ -131,28 +135,31 @@ const Fields = ({
                         <FormGroup className="layer-field-name">
                             <FormControl disabled value={name} />
                         </FormGroup>
-                        <FormGroup className="layer-field-alias">
+                        {showFieldSettings ? null : <FormGroup className="layer-field-alias">
                             <LocalizedInput disabled={loading} onChange={(value) => onChange(name, "alias", value)} value={alias} currentLocale={currentLocale} />
-                        </FormGroup>
+                        </FormGroup>}
                         <FormGroup className="layer-field-type">
                             <FormControl disabled value={type}/>
                         </FormGroup>
                         {showFieldSettings ? <FormGroup className="layer-field-settings-action">
                             <SettingsButton
-                                className="square-button layer-field-settings-button"
-                                bsStyle={isConfigured ? 'success' : 'default'}
-                                title="layerProperties.fields.configureDisplayType"
-                                onClick={() => setConfiguredField(isConfigured ? null : name)}>
+                                className={`square-button layer-field-settings-button${!isConfigured && displayType ? ' ms-notification-circle success' : ''}`}
+                                tooltipId="layerProperties.fields.configureField"
+                                active={configuredFields.includes(name)}
+                                onClick={() => toggleFieldSettings(name)}>
                                 <Glyphicon glyph="cog" />
                             </SettingsButton>
                         </FormGroup> : null}
                     </div>
                     {showFieldSettings && isConfigured ? <div className="layer-field-settings-panel">
                         <div className="layer-field-settings-row">
+                            <ControlLabel><Message msgId="layerProperties.fields.alias" /></ControlLabel>
+                            <LocalizedInput disabled={loading} onChange={(value) => onChange(name, "alias", value)} value={alias} currentLocale={currentLocale} />
+                        </div>
+                        <div className="layer-field-settings-row">
                             <ControlLabel><Message msgId="layerProperties.fields.featureInfoDisplayType" /></ControlLabel>
                             <Select
                                 clearable
-                                className="layer-field-settings-select"
                                 placeholder={<Message msgId="layerProperties.fields.displayTypes.string" />}
                                 value={displayType}
                                 options={DISPLAY_TYPES.map((value) => ({
@@ -165,7 +172,6 @@ const Fields = ({
                             <ControlLabel><Message msgId="layerProperties.fields.mediaTypeAttribute" /></ControlLabel>
                             <Select
                                 clearable
-                                className="layer-field-settings-select"
                                 value={mediaTypeAttribute}
                                 options={fields.filter(({ name: optionName }) => optionName !== name).map(({ name: optionName, alias: optionAlias }) => ({
                                     value: optionName,

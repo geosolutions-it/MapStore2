@@ -57,10 +57,10 @@ describe('AttributeValue', () => {
         const container = document.getElementById('container');
 
         render({ value: 'https://example.com/image.jpg', attribute: { name: 'image', displayType: 'image' } });
-        expect(container.querySelector('.ms-feature-info-attribute-image img').getAttribute('src')).toBe('https://example.com/image.jpg');
+        expect(container.querySelector('.ms-feature-info-attribute-media img').getAttribute('src')).toBe('https://example.com/image.jpg');
 
         render({ value: 'https://example.com/video.mp4', attribute: { name: 'video', displayType: 'video' } });
-        expect(container.querySelector('.ms-feature-info-attribute-video')).toExist();
+        expect(container.querySelector('.ms-feature-info-attribute-media')).toExist();
 
         render({ value: 'https://example.com/audio.mp3', attribute: { name: 'audio', displayType: 'audio' } });
         expect(container.querySelector('audio.ms-feature-info-attribute-media').getAttribute('src')).toBe('https://example.com/audio.mp3');
@@ -69,7 +69,7 @@ describe('AttributeValue', () => {
     it('renders a configured panorama value once the lazy chunk resolves', () => {
         const container = document.getElementById('container');
         render({ value: 'https://example.com/panorama.jpg', attribute: { name: 'panorama', displayType: 'panorama' } });
-        return waitFor(() => expect(container.querySelector('.ms-feature-info-attribute-panorama')).toExist());
+        return waitFor(() => expect(container.querySelector('.ms-panorama')).toExist());
     });
 
     it('renders configured iframe and URL values', () => {
