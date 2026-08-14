@@ -200,6 +200,7 @@ class OlLocate extends BaseObject {
             }
             const speed = this.geolocate.getSpeed(); // unit is m/s
             div.textContent = `Position: ${p[0]}, ${p[1]}, Heading: ${heading} speed: ${speed}`;
+            div.style.whiteSpace = 'pre-wrap';
         }
     };
 

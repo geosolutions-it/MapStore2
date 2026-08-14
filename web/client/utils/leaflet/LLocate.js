@@ -90,6 +90,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
                 document.body.appendChild(div);
             }
             div.textContent = `Position: ${latlng}, Heading: ${heading} speed: ${speed}`;
+            div.style.whiteSpace = 'pre-wrap';
         }
     },
     _setClasses: function(state) {
