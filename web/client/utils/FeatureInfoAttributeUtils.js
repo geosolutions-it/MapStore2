@@ -10,25 +10,6 @@ export const DISPLAY_TYPES = [
     'image', 'video', 'audio', 'panorama', 'pdf', 'url', 'iframe', 'media'
 ];
 
-/**
- * Checks URLs rendered as navigable feature-info content.
- * Allows same-origin resources and cross-origin HTTPS resources.
- */
-export const isSafeFeatureInfoURL = (value) => {
-    if (typeof value !== 'string' || !value.trim()) {
-        return false;
-    }
-    try {
-        const baseURL = typeof window !== 'undefined' && window.location?.origin
-            ? window.location.origin
-            : 'http://localhost';
-        const url = new URL(value.trim(), baseURL);
-        return url.origin === baseURL || url.protocol === 'https:';
-    } catch (error) {
-        return false;
-    }
-};
-
 const EXTENSION_TYPES = {
     image: ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'tif', 'tiff', 'webp'],
     video: ['avi', 'm4v', 'mkv', 'mov', 'mp4', 'ogv', 'webm'],

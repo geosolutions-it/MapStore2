@@ -12,10 +12,8 @@ import Image from '../../../../geostory/media/Image';
 import Video from '../../../../geostory/media/Video';
 import { Modes } from '../../../../../utils/GeoStoryUtils';
 import PdfViewer from './PdfViewer';
-import {
-    isSafeFeatureInfoURL,
-    resolveAttributeDisplayType
-} from '../../../../../utils/FeatureInfoAttributeUtils';
+import { resolveAttributeDisplayType } from '../../../../../utils/FeatureInfoAttributeUtils';
+import { isValidURL } from '../../../../../utils/URLUtils';
 
 const PanoramaViewer = lazy(() => import('./PanoramaViewer'));
 
@@ -50,10 +48,10 @@ const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
         return <Suspense fallback={null}><PanoramaViewer value={value} alt={label}/></Suspense>;
     }
     if (displayType === 'pdf') {
-        return isSafeFeatureInfoURL(value) ? <PdfViewer src={value} title={label}/> : formatAttributeValue(value);
+        return isValidURL(value) ? <PdfViewer src={value} title={label}/> : formatAttributeValue(value);
     }
     if (displayType === 'iframe') {
-        return isSafeFeatureInfoURL(value)
+        return isValidURL(value)
             ? <iframe
                 className="ms-feature-info-attribute-media ms-feature-info-attribute-iframe"
                 src={value}
@@ -62,7 +60,7 @@ const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
             : formatAttributeValue(value);
     }
     if (displayType === 'url') {
-        return isSafeFeatureInfoURL(value)
+        return isValidURL(value)
             ? <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
             : formatAttributeValue(value);
     }

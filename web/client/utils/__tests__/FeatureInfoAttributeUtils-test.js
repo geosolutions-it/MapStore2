@@ -2,7 +2,6 @@ import expect from 'expect';
 import {
     getDisplayTypeFromExtension,
     getDisplayTypeFromMediaType,
-    isSafeFeatureInfoURL,
     resolveAttributeDisplayType
 } from '../FeatureInfoAttributeUtils';
 
@@ -25,15 +24,5 @@ describe('FeatureInfoAttributeUtils', () => {
             attribute: { displayType: 'media', mediaTypeAttribute: 'mimeType' },
             mediaTypeValue: 'audio/mpeg'
         })).toBe('audio');
-    });
-
-    it('accepts same-origin and HTTPS URLs while rejecting insecure cross-origin URLs and unsafe protocols', () => {
-        expect(isSafeFeatureInfoURL('https://example.com/page')).toBe(true);
-        expect(isSafeFeatureInfoURL('/relative/page')).toBe(true);
-        expect(isSafeFeatureInfoURL(`${window.location.origin}/same-origin/page`)).toBe(true);
-        expect(isSafeFeatureInfoURL('http://example.com/page')).toBe(false);
-        expect(isSafeFeatureInfoURL(['java', 'script:alert(1)'].join(''))).toBe(false);
-        expect(isSafeFeatureInfoURL('data:text/html,<script>alert(1)</script>')).toBe(false);
-        expect(isSafeFeatureInfoURL('')).toBe(false);
     });
 });
