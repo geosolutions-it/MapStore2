@@ -33,11 +33,8 @@ const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
     if (typeof value !== 'string' || displayType === 'string' || !isValidURL(value)) {
         return formatAttributeValue(value);
     }
-    const label = typeof attribute.alias === 'string'
-        ? attribute.alias
-        : attribute.name || value;
     if (displayType === 'image') {
-        return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-image"><Image src={value} altText={label} referrerPolicy="no-referrer" enableFullscreen fit="contain"/></div>;
+        return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-image"><Image src={value} altText={attribute.name} referrerPolicy="no-referrer" enableFullscreen fit="contain"/></div>;
     }
     if (displayType === 'video') {
         return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-video"><Video src={value} mode={Modes.VIEW} inView fit="contain"/></div>;
@@ -46,16 +43,16 @@ const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
         return <audio className="ms-feature-info-attribute-media" src={value} referrerPolicy="no-referrer" controls><a href={value}>{value}</a></audio>;
     }
     if (displayType === 'panorama') {
-        return <Suspense fallback={null}><PanoramaViewer value={value} alt={label}/></Suspense>;
+        return <Suspense fallback={null}><PanoramaViewer value={value} alt={attribute.name}/></Suspense>;
     }
     if (displayType === 'pdf') {
-        return <PdfViewer src={value} title={label}/>;
+        return <PdfViewer src={value} title={attribute.name}/>;
     }
     if (displayType === 'iframe') {
         return (<iframe
             className="ms-feature-info-attribute-media ms-feature-info-attribute-iframe"
             src={value}
-            title={label}
+            title={attribute.name}
             sandbox={IFRAME_SANDBOX}
             referrerPolicy={IFRAME_REFERRER_POLICY}/>);
     }
