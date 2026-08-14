@@ -4515,6 +4515,7 @@
         "errorDefault": "Network error"
       },
       "myResources": "My resources",
+      "select": "Select",
       "creationFilter": {
         "from": "Creation date from",
         "to": "Creation date to"

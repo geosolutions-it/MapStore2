@@ -4544,6 +4544,7 @@
         "errorDefault": "Netzwerkfehler"
       },
       "myResources": "Meine Ressourcen",
+      "select": "Auswählen",
       "creationFilter": {
         "from": "Erstellungsdatum von",
         "to": "Erstellungsdatum bis"
