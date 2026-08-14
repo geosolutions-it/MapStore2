@@ -442,8 +442,8 @@ export const normalizeLayer = (layer) => {
             ..._layer,
             features: _layer?.features?.map((f) => {
                 const feature = createFeatureId(f);
-                const id = seen.has(feature.id) ? uuidv1() : feature.id;
-                seen.add(id);
+                const id = seen.has(`${feature.id}`) ? uuidv1() : feature.id;
+                seen.add(`${id}`);
                 return { ...feature, id };
             })
         } : layer;
@@ -661,7 +661,7 @@ export const geoJSONToLayer = (geoJSON, id) => {
     let features = [];
     if (geoJSON.type === "FeatureCollection") {
         features = geoJSON.features.map((feature, idx) => {
-            if (isNil(feature.id)) { // TODO check if feature.id is a number, it should be converted to string, otherwise for 0 it will be converted to false and a new id will be generated
+            if (isNil(feature.id)) {
                 feature.id = idx;
             }
             if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
