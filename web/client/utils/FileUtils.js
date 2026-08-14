@@ -50,7 +50,6 @@ export const download = function(blob, name, mimetype) {
     // a.href = URL.createObjectURL(file);
     FileSaver.saveAs(file, name);
 };
-
 export const downloadCanvasDataURL = function(dataURL, name = "snapshot.png", mimetype) {
     download(toBlob(dataURL), name, mimetype);
 };
