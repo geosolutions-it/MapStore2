@@ -26,25 +26,23 @@ const EXTENSION_TO_TYPE = Object.keys(EXTENSION_TYPES).reduce((result, type) => 
     }), {})
 }), {});
 
+const MEDIA_TYPE_PREFIXES = ['image', 'video', 'audio'];
+
+const MEDIA_TYPES = {
+    'application/pdf': 'pdf',
+    'text/html': 'iframe'
+};
+
 export const getDisplayTypeFromMediaType = (mediaType) => {
     if (typeof mediaType !== 'string') {
         return null;
     }
     const normalizedMediaType = mediaType.toLowerCase().trim();
-    const normalizedType = normalizedMediaType.includes('/')
-        ? normalizedMediaType.split('/')[0] === 'image'
-            ? 'image'
-            : normalizedMediaType.split('/')[0] === 'video'
-                ? 'video'
-                : normalizedMediaType.split('/')[0] === 'audio'
-                    ? 'audio'
-                    : normalizedMediaType === 'application/pdf'
-                        ? 'pdf'
-                        : normalizedMediaType === 'text/html'
-                            ? 'iframe'
-                            : normalizedMediaType.split('/').pop()
-        : normalizedMediaType;
-    return DISPLAY_TYPES.includes(normalizedType) ? normalizedType : null;
+    if (!normalizedMediaType.includes('/')) {
+        return DISPLAY_TYPES.includes(normalizedMediaType) ? normalizedMediaType : null;
+    }
+    const [prefix] = normalizedMediaType.split('/');
+    return MEDIA_TYPE_PREFIXES.includes(prefix) ? prefix : MEDIA_TYPES[normalizedMediaType] || null;
 };
 
 export const getDisplayTypeFromExtension = (value) => {
