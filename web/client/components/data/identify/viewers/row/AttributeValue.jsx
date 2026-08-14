@@ -30,41 +30,37 @@ export const formatAttributeValue = (value) => {
 
 const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
     const displayType = resolveAttributeDisplayType({ value, attribute, mediaTypeValue });
-    if (typeof value !== 'string' || displayType === 'string') {
+    if (typeof value !== 'string' || displayType === 'string' || !isValidURL(value)) {
         return formatAttributeValue(value);
     }
     const label = typeof attribute.alias === 'string'
         ? attribute.alias
         : attribute.name || value;
     if (displayType === 'image') {
-        return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-image"><Image src={value} altText={label} enableFullscreen fit="contain"/></div>;
+        return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-image"><Image src={value} altText={label} referrerPolicy="no-referrer" enableFullscreen fit="contain"/></div>;
     }
     if (displayType === 'video') {
         return <div className="ms-feature-info-attribute-media ms-feature-info-attribute-video"><Video src={value} mode={Modes.VIEW} inView fit="contain"/></div>;
     }
     if (displayType === 'audio') {
-        return <audio className="ms-feature-info-attribute-media" src={value} controls><a href={value}>{value}</a></audio>;
+        return <audio className="ms-feature-info-attribute-media" src={value} referrerPolicy="no-referrer" controls><a href={value}>{value}</a></audio>;
     }
     if (displayType === 'panorama') {
         return <Suspense fallback={null}><PanoramaViewer value={value} alt={label}/></Suspense>;
     }
     if (displayType === 'pdf') {
-        return isValidURL(value) ? <PdfViewer src={value} title={label}/> : formatAttributeValue(value);
+        return <PdfViewer src={value} title={label}/>;
     }
     if (displayType === 'iframe') {
-        return isValidURL(value)
-            ? <iframe
-                className="ms-feature-info-attribute-media ms-feature-info-attribute-iframe"
-                src={value}
-                title={label}
-                sandbox={IFRAME_SANDBOX}
-                referrerPolicy={IFRAME_REFERRER_POLICY}/>
-            : formatAttributeValue(value);
+        return (<iframe
+            className="ms-feature-info-attribute-media ms-feature-info-attribute-iframe"
+            src={value}
+            title={label}
+            sandbox={IFRAME_SANDBOX}
+            referrerPolicy={IFRAME_REFERRER_POLICY}/>);
     }
     if (displayType === 'url') {
-        return isValidURL(value)
-            ? <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
-            : formatAttributeValue(value);
+        return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
     }
     return formatAttributeValue(value);
 };

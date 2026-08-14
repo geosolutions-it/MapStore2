@@ -33,6 +33,7 @@ class Image extends Component {
         showCaption: PropTypes.bool,
         credits: PropTypes.string,
         altText: PropTypes.string,
+        referrerPolicy: PropTypes.string,
         enableFullscreen: PropTypes.bool,
         fullscreen: PropTypes.bool,
         onClick: PropTypes.func,
@@ -53,6 +54,7 @@ class Image extends Component {
             fullscreen,
             onClick,
             altText,
+            referrerPolicy,
             description,
             showCaption,
             caption = description,
@@ -71,6 +73,7 @@ class Image extends Component {
                     ref={node => { this._node = node; }}
                     src={src}
                     alt={altText}
+                    referrerPolicy={referrerPolicy}
                     onLoad={() => this.props.onChangeStatus('loaded')}
                     onError={() => this.props.onChangeStatus('error')}
                     onClick={enableFullscreen ? () => onClick(true) : undefined}
