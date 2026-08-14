@@ -10,22 +10,29 @@ import expect from 'expect';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { waitFor } from '@testing-library/react';
 
 import AttributeValue, { formatAttributeValue } from '../AttributeValue';
+// preloads the lazy chunk, so the pannellum stub below survives the dynamic import
+import '../PanoramaViewer';
 import axios from '../../../../../../libs/ajax';
 
 describe('AttributeValue', () => {
     let mockAxios;
+    let originalPannellum;
 
     beforeEach(() => {
         document.body.innerHTML = '<div id="container"></div>';
         mockAxios = new MockAdapter(axios);
+        originalPannellum = window.pannellum;
+        window.pannellum = { viewer: () => ({ on: () => {}, destroy: () => {} }) };
     });
 
     afterEach(() => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
         mockAxios.restore();
+        window.pannellum = originalPannellum;
     });
 
     const render = (props) => ReactDOM.render(
@@ -59,11 +66,14 @@ describe('AttributeValue', () => {
         expect(container.querySelector('audio.ms-feature-info-attribute-media').getAttribute('src')).toBe('https://example.com/audio.mp3');
     });
 
-    it('renders configured panorama, iframe and URL values', () => {
+    it('renders a configured panorama value once the lazy chunk resolves', () => {
         const container = document.getElementById('container');
-
         render({ value: 'https://example.com/panorama.jpg', attribute: { name: 'panorama', displayType: 'panorama' } });
-        expect(container.querySelector('.ms-feature-info-attribute-panorama')).toExist();
+        return waitFor(() => expect(container.querySelector('.ms-feature-info-attribute-panorama')).toExist());
+    });
+
+    it('renders configured iframe and URL values', () => {
+        const container = document.getElementById('container');
 
         render({ value: 'https://example.com/page', attribute: { name: 'page', alias: {'default': 'Page'}, displayType: 'iframe' } });
         const iframe = container.querySelector('iframe');

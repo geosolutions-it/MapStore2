@@ -1,14 +1,23 @@
-import React from 'react';
+/*
+ * Copyright 2026, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import Image from '../../../../geostory/media/Image';
 import Video from '../../../../geostory/media/Video';
 import { Modes } from '../../../../../utils/GeoStoryUtils';
-import PanoramaViewer from './PanoramaViewer';
 import PdfViewer from './PdfViewer';
 import {
     isSafeFeatureInfoURL,
     resolveAttributeDisplayType
 } from '../../../../../utils/FeatureInfoAttributeUtils';
+
+const PanoramaViewer = lazy(() => import('./PanoramaViewer'));
 
 export const formatAttributeValue = (value) => {
     if (typeof value === 'string') {
@@ -38,7 +47,7 @@ const AttributeValue = ({ value, attribute = {}, mediaTypeValue }) => {
         return <audio className="ms-feature-info-attribute-media" src={value} controls><a href={value}>{value}</a></audio>;
     }
     if (displayType === 'panorama') {
-        return <PanoramaViewer value={value} alt={label}/>;
+        return <Suspense fallback={null}><PanoramaViewer value={value} alt={label}/></Suspense>;
     }
     if (displayType === 'pdf') {
         return isSafeFeatureInfoURL(value) ? <PdfViewer src={value} title={label}/> : formatAttributeValue(value);
