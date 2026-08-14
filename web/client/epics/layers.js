@@ -61,7 +61,9 @@ export const refresh = action$ =>
                                 if (result && result.name === layer.name && result.owsType === 'WFS') {
                                     return {
                                         url: result.owsURL,
-                                        type: 'wfs'
+                                        type: 'wfs',
+                                        ...(result.query?.[0]?.typeName && {typeName: result.query[0].typeName}),
+                                        ...(layer.search || {})
                                     };
                                 }
                                 return null;

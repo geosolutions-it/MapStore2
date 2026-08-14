@@ -28,6 +28,7 @@ import { featureTypeSelected, toggleLayerFilter, initQueryPanel } from '../actio
 import { getSelectedLayer } from '../selectors/layers';
 import { changeDrawingStatus } from '../actions/draw';
 import {setupCrossLayerFilterDefaults} from '../utils/FilterUtils';
+import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
 
 const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields, filters } = {}) => {
     return !!(filterFields && head(filterFields)
@@ -58,10 +59,9 @@ const addFilterToLayer = (layer, filter) => {
 export const handleLayerFilterPanel = (action$, {getState}) =>
     action$.ofType(OPEN_QUERY_BUILDER).switchMap(() => {
         const layer = getSelectedLayer(getState());
-        const {url, name, layerFilter, fields} = layer || {};
-        const searchUrl = layer && layer.search && layer.search.url;
+        const {layerFilter, fields} = layer || {};
         return Rx.Observable.of(
-            featureTypeSelected(searchUrl || url, name, fields),
+            featureTypeSelected(getSearchUrl(layer), getWFSLayerName(layer), fields),
             // Load the filter from the layer if it exist
             loadFilter(layerFilter),
             initLayerFilter(layerFilter),

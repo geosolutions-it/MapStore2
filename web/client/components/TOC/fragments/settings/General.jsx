@@ -16,6 +16,8 @@ import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
 import Message from '../../../I18N/Message';
+import SwitchPanel from '../../../misc/switch/SwitchPanel';
+import EditableTextField from './EditableTextField';
 import LayerNameEditField from './LayerNameEditField';
 import { getMessageById } from '../../../../utils/LocaleUtils';
 import {
@@ -24,6 +26,12 @@ import {
 } from '../../../../plugins/TOC/utils/TOCUtils';
 import { supportsFeatureEditing } from "../../../../utils/FeatureGridUtils";
 import { DEFAULT_GROUP_ID, flattenGroups, getTitle as _getTitle } from '../../../../utils/LayersUtils';
+
+const formatURL = (url) => Array.isArray(url) ? url.join(', ') : url || '';
+const parseURL = (url) => {
+    const urls = url.split(',').map((value) => value.trim());
+    return urls.length > 1 ? urls : urls[0];
+};
 /**
  * General Settings form for layer
  */
@@ -96,6 +104,14 @@ class General extends React.Component {
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
                         onUpdateEntry={this.updateEntry.bind(null)}/>}
+                    {includes(this.supportedURLEditLayerTypes, this.props.element.type) &&
+                    <EditableTextField
+                        dataQa="layer-properties-url"
+                        labelId="layerProperties.url"
+                        value={this.props.element.url}
+                        formatValue={formatURL}
+                        parseValue={parseURL}
+                        onChange={(url) => this.props.onChange('url', url)} />}
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :
@@ -175,6 +191,31 @@ class General extends React.Component {
                             <Message msgId="layerProperties.disableFeaturesEditing"/>
                         </Checkbox>
                     </FormGroup>}
+                    {this.props.element.type === 'wms' && <SwitchPanel
+                        expanded={!!this.props.element.search}
+                        title={<Message msgId="layerProperties.wfsLinkedService" />}
+                        onSwitch={(enabled) => this.props.onChange('search', enabled ? {
+                            type: 'wfs',
+                            url: '',
+                            typeName: this.props.element.name
+                        } : undefined)}>
+                        <EditableTextField
+                            dataQa="layer-properties-search-url"
+                            labelId="layerProperties.url"
+                            value={this.props.element.search?.url}
+                            onChange={(url) => this.props.onChange('search', {
+                                ...this.props.element.search,
+                                url
+                            })} />
+                        <EditableTextField
+                            dataQa="layer-properties-search-type-name"
+                            labelId="layerProperties.typeName"
+                            value={this.props.element.search?.typeName || this.props.element.name}
+                            onChange={(typeName) => this.props.onChange('search', {
+                                ...this.props.element.search,
+                                typeName
+                            })} />
+                    </SwitchPanel>}
 
                 </form>
             </Grid>
@@ -182,6 +223,7 @@ class General extends React.Component {
     }
 
     supportedNameEditLayerTypes = ['wms'];
+    supportedURLEditLayerTypes = ['wms', 'wfs'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
     updateTitle = (title) => this.props.onChange("title", title);

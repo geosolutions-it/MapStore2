@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Fields from './Fields';
 import { describeFeatureType } from '../../../../observables/wfs';
+import { getWFSLayerName } from '../../../../utils/LayersUtils';
 
 /**
  * Utility function to check if the node allows to show fields tab
@@ -20,11 +21,14 @@ export const hasFields = ({type, search = {}} = {}) =>
  */
 export const loadFields = (layer, merge = true) => {
     const {fields = [], type, search = {}} = layer;
-    const {typeName} = search;
+    const typeName = getWFSLayerName(layer);
     if (type === 'wfs' || (type === 'wms' && search.type === 'wfs')) {
         return describeFeatureType({ layer }).toPromise().then((response) => {
             const { featureTypes } = response?.data ?? {};
-            const featureType = featureTypes.find(({name}) => name === typeName);
+            const featureType = featureTypes.find(({name, typeName: responseTypeName}) => typeName && (
+                name === typeName
+                || responseTypeName === typeName
+                || typeName.endsWith(`:${responseTypeName}`))) || featureTypes[0];
             const {properties} = featureType;
             return properties.map(({name, localType}) => {
                 const field = merge && fields.find((ff) => ff.name === name) || {};

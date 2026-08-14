@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import { head } from 'lodash';
+import { castArray, head } from 'lodash';
 import Proj4js from 'proj4';
 import { Observable } from 'rxjs';
 
@@ -23,7 +23,7 @@ import { getDefaultUrl } from '../utils/URLUtils';
 const proj4 = Proj4js;
 
 export const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
-    const parsed = urlUtil.parse(getDefaultUrl(search.url || url), true);
+    const parsed = urlUtil.parse(getDefaultUrl(url || search.url), true);
     return urlUtil.format(
         {
             ...parsed,
@@ -51,12 +51,14 @@ export const getLayerCapabilities = l => {
 export const addSearch = l =>
     describeLayer(l)
         .map( ({data = {}}) => data && data.layerDescriptions[0])
-        .map(({owsURL} = {}) => ({
+        .map(({owsURL, query} = {}) => ({
             ...l,
             params: {}, // TODO: if needed, clean them up
             search: owsURL ? {
                 type: "wfs",
-                url: cleanAuthParamsFromURL(owsURL)
+                url: cleanAuthParamsFromURL(owsURL),
+                ...(head(castArray(query))?.typeName && { typeName: head(castArray(query)).typeName }),
+                ...(l.search || {})
             } : undefined
         }));
 export const getNativeCrs = (layer) => Observable.of(layer).filter(({nativeCrs}) => !nativeCrs)

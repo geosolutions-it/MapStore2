@@ -214,7 +214,10 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                     group: get(msTagExtractor(layerExtensions, 'group'), 'charContent'),
                     search: searchTag && {
                         url: xlinkExtractor(searchTag, 'href'),
-                        type: attrExtractor(searchTag, 'type')
+                        type: attrExtractor(searchTag, 'type'),
+                        ...(attrExtractor(searchTag, 'typeName') && {
+                            typeName: attrExtractor(searchTag, 'typeName')
+                        })
                     },
                     dimensions: dimensions.map(dim => ({
                         name: attrExtractor(dim, 'name'),
@@ -515,7 +518,10 @@ export const toWMC = (
                 attributes: [{
                     name: 'type',
                     value: layer.search.type
-                }, ...makeSimpleXlink(layer.search.url)]
+                }, ...(layer.search.typeName ? [{
+                    name: 'typeName',
+                    value: layer.search.typeName
+                }] : []), ...makeSimpleXlink(layer.search.url)]
             }, layer.layerFilter && {
                 name: 'filter',
                 textContent: JSON.stringify(layer.layerFilter)

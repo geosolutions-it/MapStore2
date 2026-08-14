@@ -90,6 +90,7 @@ import {
     warning as showWarningNotification
 } from '../actions/notifications';
 import { getLayerJSONFeature } from '../observables/wfs';
+import { getWFSLayerName } from '../utils/LayersUtils';
 import bufferXML from '../observables/wps/buffer';
 import collectGeometriesXML from '../observables/wps/collectGeometries';
 import { describeProcess } from '../observables/wps/describe';
@@ -327,14 +328,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
         };
         const geometryProperty = findGeometryProperty(layer.describeFeatureType);
         return Rx.Observable.merge(
-            getLayerJSONFeature({
-                ...layer,
-                name: layer?.name,
-                search: {
-                    ...(layer?.search ?? {}),
-                    url: layer.url
-                }
-            }, filterObj, options)
+            getLayerJSONFeature(layer, filterObj, options)
                 .map(data => setFeatures(layerId, source, data, page, geometryProperty))
                 .catch(e => {
                     logError(e);
@@ -373,7 +367,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
                 return Rx.Observable.of(layer);
             }
             return getFeatureSimple(layer.search.url, {
-                typeName: layer.name,
+                typeName: getWFSLayerName(layer),
                 featureID: featureId,
                 outputFormat: "application/json",
                 srsName: "EPSG:4326"
@@ -428,7 +422,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
                 return Rx.Observable.of(layer);
             }
             return getFeatureSimple(layer.search.url, {
-                typeName: layer.name,
+                typeName: getWFSLayerName(layer),
                 featureID: featureId,
                 outputFormat: "application/json",
                 srsName: "EPSG:4326"
@@ -601,7 +595,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
             // then run the collect geometries which and then run the buffer
             const executeCollectProcess$ = executeProcess(
                 layerUrl,
-                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
+                collectGeometriesXML({ name: getWFSLayerName(layer), featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -709,7 +703,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         if (isEmpty(sourceFeature)) {
             sourceFC$ = executeProcess(
                 layerUrl,
-                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
+                collectGeometriesXML({ name: getWFSLayerName(layer), featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -725,7 +719,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         if (isEmpty(intersectionFeature)) {
             intersectionFC$ = executeProcess(
                 intersectionLayerUrl,
-                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features) : null }),
+                collectGeometriesXML({ name: getWFSLayerName(intersectionLayer), featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}

@@ -30,6 +30,28 @@ const noVendorWmsLayer = {
     type: 'wms',
     serverType: 'no-vendor'
 };
+
+describe('getWFSLayerName', () => {
+    it('uses a linked WFS type name only for WMS layers', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:wms-name',
+            search: {typeName: 'workspace:wfs-name'}
+        })).toBe('workspace:wfs-name');
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wfs',
+            name: 'workspace:native-name',
+            search: {typeName: 'workspace:ignored'}
+        })).toBe('workspace:native-name');
+    });
+    it('falls back to layer.name for legacy WMS configurations', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:legacy-name',
+            search: {url: 'wfs-url'}
+        })).toBe('workspace:legacy-name');
+    });
+});
 const groupsExample = [{
     "id": "first",
     "title": "first",

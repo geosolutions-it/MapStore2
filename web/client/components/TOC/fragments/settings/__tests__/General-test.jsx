@@ -65,7 +65,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(5);
+        expect(inputs.length).toBe(9);
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
@@ -89,7 +89,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(5);
+        expect(inputs.length).toBe(9);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
         expect(spy.calls.length).toBe(1);
@@ -118,7 +118,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const forms = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "form-group" );
         expect(forms).toExist();
-        expect(forms.length).toBe(4);
+        expect(forms.length).toBe(7);
     });
 
     it('TEST showTooltipOptions = true', () => {
@@ -136,10 +136,10 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(6);
-        expect(labels[3].innerText).toBe("layerProperties.group");
-        expect(labels[4].innerText).toBe("layerProperties.tooltip.label");
-        expect(labels[5].innerText).toBe("layerProperties.tooltip.labelPlacement");
+        expect(labels.length).toBe(9);
+        expect(labels[4].innerText).toBe("layerProperties.group");
+        expect(labels[5].innerText).toBe("layerProperties.tooltip.label");
+        expect(labels[6].innerText).toBe("layerProperties.tooltip.labelPlacement");
     });
 
     it('TEST showTooltipOptions = false', () => {
@@ -157,8 +157,8 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(4);
-        expect(labels[3].innerText).toBe("layerProperties.group");
+        expect(labels.length).toBe(7);
+        expect(labels[4].innerText).toBe("layerProperties.group");
     });
     it('TEST layer group dropdown', () => {
         const layer = {
@@ -202,8 +202,8 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} groups={groups} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(4);
-        expect(labels[3].innerText).toBe("layerProperties.group");
+        expect(labels.length).toBe(7);
+        expect(labels[4].innerText).toBe("layerProperties.group");
         const cmp = document.getElementById('container');
         let selectValue = cmp.querySelector('.Select-value-label');
         let input = cmp.querySelector('.Select-input > input');
@@ -268,5 +268,82 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toBeTruthy();
         const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
         expect(disableFeaturesEditing).toBeFalsy();
+    });
+    it('edits WMS multi URLs using the catalog comma convention', () => {
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{name: 'layer00', title: 'Layer', type: 'wms', url: ['url-1', 'url-2']}}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById("container"));
+        const input = document.querySelector('[data-qa="layer-properties-url"]');
+        const edit = document.querySelector('[data-qa="layer-properties-url-edit"]');
+        expect(input.value).toBe('url-1, url-2');
+        ReactTestUtils.Simulate.click(edit);
+        ReactTestUtils.Simulate.change(input, {target: {value: 'url-3, url-4'}});
+        ReactTestUtils.Simulate.click(edit);
+        expect(onChange).toHaveBeenCalledWith('url', ['url-3', 'url-4']);
+    });
+    it('edits native WFS URL without adding a TypeName editor', () => {
+        ReactDOM.render(<General
+            element={{name: 'workspace:features', title: 'Layer', type: 'wfs', url: 'wfs-url'}}
+            settings={{options: {opacity: 1}}}/>, document.getElementById("container"));
+        expect(document.querySelector('[data-qa="layer-properties-url"]')).toExist();
+        expect(document.querySelector('[data-qa="layer-properties-search-type-name"]')).toNotExist();
+    });
+    it('adds and removes a linked WFS service', () => {
+        const onAdd = expect.createSpy();
+        ReactDOM.render(<General
+            element={{name: 'workspace:layer', title: 'Layer', type: 'wms', url: 'wms-url'}}
+            settings={{options: {opacity: 1}}}
+            onChange={onAdd}/>, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector('.mapstore-switch-panel .m-slider'));
+        expect(onAdd).toHaveBeenCalledWith('search', {
+            type: 'wfs',
+            url: '',
+            typeName: 'workspace:layer'
+        });
+
+        const onRemove = expect.createSpy();
+        ReactDOM.render(<General
+            element={{name: 'workspace:layer', title: 'Layer', type: 'wms', url: 'wms-url', search: {type: 'wfs', url: 'wfs-url'}}}
+            settings={{options: {opacity: 1}}}
+            onChange={onRemove}/>, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector('.mapstore-switch-panel .m-slider'));
+        expect(onRemove).toHaveBeenCalledWith('search', undefined);
+    });
+    it('uses the legacy TypeName fallback and preserves linked service properties', () => {
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{
+                name: 'workspace:layer',
+                title: 'Layer',
+                type: 'wms',
+                url: 'wms-url',
+                search: {type: 'wfs', url: 'old-wfs-url', custom: 'value'}
+            }}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById("container"));
+        expect(document.querySelector('[data-qa="layer-properties-search-type-name"]').value).toBe('workspace:layer');
+        const input = document.querySelector('[data-qa="layer-properties-search-url"]');
+        const edit = document.querySelector('[data-qa="layer-properties-search-url-edit"]');
+        ReactTestUtils.Simulate.click(edit);
+        ReactTestUtils.Simulate.change(input, {target: {value: 'new-wfs-url'}});
+        ReactTestUtils.Simulate.click(edit);
+        expect(onChange).toHaveBeenCalledWith('search', {
+            type: 'wfs',
+            url: 'new-wfs-url',
+            custom: 'value'
+        });
+        const typeNameInput = document.querySelector('[data-qa="layer-properties-search-type-name"]');
+        const typeNameEdit = document.querySelector('[data-qa="layer-properties-search-type-name-edit"]');
+        ReactTestUtils.Simulate.click(typeNameEdit);
+        ReactTestUtils.Simulate.change(typeNameInput, {target: {value: 'workspace:linked'}});
+        ReactTestUtils.Simulate.click(typeNameEdit);
+        expect(onChange).toHaveBeenCalledWith('search', {
+            type: 'wfs',
+            url: 'old-wfs-url',
+            typeName: 'workspace:linked',
+            custom: 'value'
+        });
     });
 });

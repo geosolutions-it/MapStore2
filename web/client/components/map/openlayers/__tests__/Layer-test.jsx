@@ -1846,6 +1846,23 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
 
+    it('recreates a wms layer when its URL changes', () => {
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            format: 'image/png',
+            url: 'http://sample.server/geoserver/old-wms'
+        };
+        let component = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map}/>, document.getElementById("container"));
+        const oldLayer = component.layer;
+        component = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{...options, url: 'http://sample.server/geoserver/new-wms'}} map={map}/>, document.getElementById("container"));
+        expect(component.layer).toNotBe(oldLayer);
+        expect(component.layer.getSource().getUrls()[0]).toBe('http://sample.server/geoserver/new-wms');
+    });
+
     it('respects layer ordering', () => {
         var options = {
             "type": "wms",
@@ -2957,6 +2974,32 @@ describe('Openlayers layer', () => {
             }}
             map={map} />, document.getElementById("container"));
         expect(layer.layer.getSource()).toBeTruthy();
+    });
+    it('reloads a wfs layer when its URL changes', (done) => {
+        mockAxios.onGet().reply(200, { ...SAMPLE_FEATURE_COLLECTION, features: [] });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'OLD_SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={options}
+            map={map} />, document.getElementById("container"));
+        waitFor(() => expect(mockAxios.history.get.some(({ url }) => url.includes('OLD_SAMPLE_URL'))).toBeTruthy())
+            .then(() => {
+                layer = ReactDOM.render(<OpenlayersLayer
+                    type="wfs"
+                    options={{ ...options, url: 'NEW_SAMPLE_URL' }}
+                    map={map} />, document.getElementById("container"));
+                return waitFor(() => expect(mockAxios.history.get.some(({ url }) => url.includes('NEW_SAMPLE_URL'))).toBeTruthy());
+            })
+            .then(() => {
+                expect(layer.layer.getSource()).toBeTruthy();
+                done();
+            })
+            .catch(done);
     });
     it('render wfs layer with legacy style', (done) => {
         mockAxios.onGet().reply(r => {

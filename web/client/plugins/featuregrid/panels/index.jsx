@@ -60,6 +60,7 @@ import {
     resultsSelector
 } from '../../../selectors/query';
 import { getFeatureTypeProperties, isGeometryType } from '../../../utils/ogc/WFS/base';
+import { getSearchUrl } from '../../../utils/LayersUtils';
 import { pageEvents, toolbarEvents } from '../index';
 import settings from './AttributeSelector';
 import {
@@ -86,7 +87,8 @@ const Toolbar = connect(
         isDrawing: isDrawingSelector,
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
-        disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar || !isDescribeLoaded(state, selectedLayerNameSelector(state)),
+        disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar
+            || !isDescribeLoaded(state, selectedLayerNameSelector(state), getSearchUrl(selectedLayerSelector(state))),
         results: resultsSelector,
         isSyncActive: isSyncWmsActive,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,

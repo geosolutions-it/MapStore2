@@ -208,6 +208,7 @@ const createLayer = (options, map, mapId) => {
 
 const mustCreateNewLayer = (oldOptions, newOptions) => {
     return (oldOptions.singleTile !== newOptions.singleTile
+        || !isEqual(oldOptions.url, newOptions.url)
         || oldOptions.cropToProjectionExtent !== newOptions.cropToProjectionExtent
         || oldOptions.securityToken !== newOptions.securityToken
         || oldOptions.ratio !== newOptions.ratio

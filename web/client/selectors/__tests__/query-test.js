@@ -361,6 +361,21 @@ describe('Test query selectors', () => {
         const isLoaded = isDescribeLoaded(initialState, "editing:polygons.layer");
         expect(isLoaded).toBe(true);
     });
+    it('test isDescribeLoaded includes the WFS URL when provided', () => {
+        const featureType = initialState.query.featureTypes["editing:polygons.layer"];
+        const state = {
+            ...initialState,
+            query: {
+                ...initialState.query,
+                featureTypes: {
+                    ...initialState.query.featureTypes,
+                    "editing:polygons.layer": {...featureType, url: 'wfs-url'}
+                }
+            }
+        };
+        expect(isDescribeLoaded(state, "editing:polygons.layer", 'wfs-url')).toBe(true);
+        expect(isDescribeLoaded(state, "editing:polygons.layer", 'other-wfs-url')).toBe(false);
+    });
     it('test isDescribeLoaded with missing describe', () => {
         const isLoaded = isDescribeLoaded(initialState, "editing:polygosns");
         expect(isLoaded).toBe(false);

@@ -19,4 +19,11 @@ describe("WMS Observables", () => {
 
         expect(toDescribeLayerURL({ name: 'testName', search: { url: _url }}).split('?')[0]).toBe(_url[0]);
     });
+    it('uses the primary URL for WMS DescribeLayer', () => {
+        expect(toDescribeLayerURL({
+            name: 'testName',
+            url: 'wms-url',
+            search: {url: 'linked-wfs-url'}
+        }).split('?')[0]).toBe('wms-url');
+    });
 });

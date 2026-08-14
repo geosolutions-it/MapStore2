@@ -753,6 +753,10 @@ describe('catalog Epics', () => {
             title: 'workspace:vector_layer',
             bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}},
             links: [],
+            search: {
+                typeName: 'workspace:configured_type',
+                custom: true
+            },
             params: {
                 CQL_FILTER: 'NAME=\'Test\''
             },
@@ -779,6 +783,8 @@ describe('catalog Epics', () => {
                         expect(action.newProperties.search).toExist();
                         expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
                         expect(action.newProperties.search.type).toBe("wfs");
+                        expect(action.newProperties.search.typeName).toBe("workspace:configured_type");
+                        expect(action.newProperties.search.custom).toBe(true);
                         break;
                     case TEST_TIMEOUT:
                         break;
@@ -838,6 +844,7 @@ describe('catalog Epics', () => {
                         expect(action.newProperties.search).toExist();
                         expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
                         expect(action.newProperties.search.type).toBe("wfs");
+                        expect(action.newProperties.search.typeName).toBe("workspace:vector_layer");
                         expect(action.newProperties.tileGridStrategy).toEqual('custom');
                         expect(action.newProperties.tileGrids).toExist();
                         break;

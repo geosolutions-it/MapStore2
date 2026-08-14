@@ -244,7 +244,7 @@ Details:
 - `format`: the format of the WMS requests to use
 - `params`: an object with additional parameters to add to the WMS request
 - `layerFilter`: an object to filter the layer. See [LayerFilter](LayerFilter.md) for details.
-- `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs'}`.
+- `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs', typeName: 'workspace:featureType'}`. The optional `typeName` identifies the linked WFS feature type; when omitted, MapStore uses the WMS layer `name` for backward compatibility.
 - `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.). See [Fields](#fields) for details.
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
 - `singleTile`: By default, WMS is invoked using tiled requests. If you want to use a single tile request, you can set this property to `true`.
