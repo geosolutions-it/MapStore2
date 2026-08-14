@@ -152,7 +152,7 @@ const Fields = ({
                         </FormGroup> : null}
                     </div>
                     {showFieldSettings && isConfigured ? <div className="layer-field-settings-panel">
-                        <div className="layer-field-settings-row">
+                        <div className="layer-field-settings-row layer-field-alias">
                             <ControlLabel><Message msgId="layerProperties.fields.alias" /></ControlLabel>
                             <LocalizedInput disabled={loading} onChange={(value) => onChange(name, "alias", value)} value={alias} currentLocale={currentLocale} />
                         </div>

@@ -55,8 +55,7 @@ describe('PanoramaViewer', () => {
         expect(viewerSpy.calls[0].arguments[1]).toEqual({
             type: 'equirectangular',
             panorama: VALUE,
-            autoLoad: true,
-            showFullscreenCtrl: false
+            autoLoad: true
         });
     });
 
