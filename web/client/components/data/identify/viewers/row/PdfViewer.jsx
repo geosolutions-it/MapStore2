@@ -16,10 +16,12 @@ const PdfViewer = ({ src, title }) => {
         setError(false);
         getFileFromDownload(src)
             .then((url) => {
-                objectURL = url;
-                if (mounted) {
-                    setFilePath(url);
+                if (!mounted) {
+                    URL.revokeObjectURL(url);
+                    return;
                 }
+                objectURL = url;
+                setFilePath(url);
             })
             .catch(() => mounted && setError(true))
             .finally(() => mounted && setLoading(false));
