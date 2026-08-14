@@ -4756,10 +4756,11 @@
         "error500": "Erreur interne du serveur",
         "errorDefault": "Erreur réseau"
       },
-      "myResources": "My resources",
+      "myResources": "Mes ressources",
+      "select": "Sélectionner",
       "creationFilter": {
-        "from": "Creation date from",
-        "to": "Creation date to"
+        "from": "Date de création à partir du",
+        "to": "Date de création au"
       },
       "deleteTagTitle": "Êtes-vous sûr de vouloir supprimer cette balise ?",
       "deleteTagDescription": "Cette balise sera supprimée, y compris l'association avec les ressources existantes",
