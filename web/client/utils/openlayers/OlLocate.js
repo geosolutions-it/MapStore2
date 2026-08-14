@@ -199,11 +199,8 @@ class OlLocate extends BaseObject {
                 document.body.appendChild(div);
             }
             const speed = this.geolocate.getSpeed(); // unit is m/s
-            div.innerHTML = `<pre>
-                Position: ${p[0]}, ${p[1]},
-                Heading: ${heading}
-                speed: ${speed}
-            </pre>`;
+            div.textContent = `Position: ${p[0]}, ${p[1]}, Heading: ${heading} speed: ${speed}`;
+            div.style.whiteSpace = 'pre-wrap';
         }
     };
 
@@ -225,8 +222,8 @@ class OlLocate extends BaseObject {
             distance = Math.round(this.geolocate.getAccuracy() * 3.2808399);
             unit = this.options.strings.feetUnit;
         }
-        let cnt = this.options.strings.popup.replace("{distance}", distance);
-        this.popCnt.innerHTML = cnt.replace("{unit}", unit);
+        const cnt = this.options.strings.popup.replace("{distance}", distance);
+        this.popCnt.textContent = cnt.replace("{unit}", unit);
         this.overlay.setPosition(this.posFt.getGeometry().getGeometries()[0].getCoordinates());
         this.popup.hidden = false;
     };

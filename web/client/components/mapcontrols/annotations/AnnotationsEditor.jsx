@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+import DOMPurify from 'dompurify';
 import { head, isEmpty, isFunction, isUndefined } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
@@ -444,7 +445,7 @@ class AnnotationsEditor extends React.Component {
         }
         switch (field.type) {
         case 'html':
-            return <span dangerouslySetInnerHTML={{ __html: fieldValue }} />;
+            return <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(fieldValue) }} />;
         case 'component':
             const Component = fieldValue;
             return <Component annotation={this.props.feature} />;

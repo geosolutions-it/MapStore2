@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import DOMPurify from 'dompurify';
 import React from 'react';
 import Spinner from 'react-spinkit';
 import { isNil } from 'lodash';
@@ -22,7 +23,7 @@ export default ({
             <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> :
             isNil(detailsText) ?
                 <div className={textContainerClassName}><Message msgId="maps.feedback.noDetailsAvailable" /></div> :
-                <div className={textContainerClassName} dangerouslySetInnerHTML={{ __html: detailsText || '' }} />
+                <div className={textContainerClassName} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(detailsText || '') }} />
         }
     </div>
 );

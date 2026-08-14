@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 
 /**
@@ -31,7 +32,7 @@ class HtmlRenderer extends React.Component {
 
     getSourceCode = () => {
         return {
-            __html: this.props.html
+            __html: DOMPurify.sanitize(this.props.html)
         };
     };
 

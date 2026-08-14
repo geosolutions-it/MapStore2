@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import DOMPurify from 'dompurify';
 import React from 'react';
 import { branch, compose, withHandlers, withPropsOnChange } from 'recompose';
 
@@ -19,7 +20,7 @@ const Text = ({ placeholder, placeholderTag = 'p', id, toggleEditing = () => {},
                 html !== EMPTY_CONTENT && <div
                     id={id}
                     onClick={() => toggleEditing(true, html)}
-                    dangerouslySetInnerHTML={{ __html: html }} />}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} />}
             {   // no content => render a placeholder
                 (!html || html === EMPTY_CONTENT) && mode === Modes.EDIT &&
             <div
@@ -27,7 +28,7 @@ const Text = ({ placeholder, placeholderTag = 'p', id, toggleEditing = () => {},
                 id={"placeholder" + id}
                 // when opening an empty content by clicking the placeholder, then the "html" should be empty
                 onClick={() => toggleEditing(true, html === EMPTY_CONTENT ? "" : html)}
-                dangerouslySetInnerHTML={{ __html: `<${placeholderTag}>${placeholder}</${placeholderTag}>` }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(`<${placeholderTag}>${placeholder}</${placeholderTag}>`) }}
             />
             }
         </div>

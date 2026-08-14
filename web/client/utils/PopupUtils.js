@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import DOMPurify from "dompurify";
 import uuid from "uuid";
 export const createContainer = ( id = uuid(), className = "ms-map-popup") => {
     const c = document.createElement('div');
@@ -24,7 +25,7 @@ export const append = (container, content) => {
         docFrag.appendChild(content);
         container.appendChild(docFrag);
     } else if (isHTML(content)) {
-        container.innerHTML = content;
+        container.innerHTML = DOMPurify.sanitize(content);
     } else {
         container.append(document.createTextNode(String(content)));
     }
