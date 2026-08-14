@@ -9,6 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 
 /**
   * More Details cookie page. Page with complete description about cookies used in the application.
@@ -24,7 +25,7 @@ class MoreDetails extends React.Component {
     static defaultProps = {};
 
     render() {
-        return <div className="cookie-seeMore" dangerouslySetInnerHTML={{__html: this.props.html} } />;
+        return <div className="cookie-seeMore" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.props.html)}} />;
     }
 }
 export default MoreDetails;

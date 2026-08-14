@@ -7,8 +7,14 @@
  */
 
 const axios = require('axios');
-const combineURLs = require('axios/lib/helpers/combineURLs');
 const url = require('url');
+
+// axios 1.x removed the internal combineURLs helper — inline the equivalent
+function combineURLs(baseURL, relativeURL) {
+    return relativeURL
+        ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+        : baseURL;
+}
 const ConfigUtils = require('../utils/ConfigUtils').default;
 const {isAuthenticationActivated, getAuthenticationRule, getToken,
     getBasicAuthHeader} = require('../utils/SecurityUtils');
