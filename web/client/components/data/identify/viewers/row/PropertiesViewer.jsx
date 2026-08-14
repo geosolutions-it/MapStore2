@@ -53,7 +53,7 @@ class PropertiesViewer extends React.Component {
                         key={key}
                         style={this.props.listStyle}>
                         <div className="ms-properties-viewer-key"><LocalizedString value={label} /></div>
-                        {containsHTML(val) ? <SafeHtml className="ms-properties-viewer-value" html={val} /> : <div className="ms-properties-viewer-value"><AttributeValue value={value} attribute={attribute} mediaTypeValue={mediaTypeValue}/></div>}
+                        {!attribute.displayType && containsHTML(val) ? <SafeHtml className="ms-properties-viewer-value" html={val} /> : <div className="ms-properties-viewer-value"><AttributeValue value={value} attribute={attribute} mediaTypeValue={mediaTypeValue}/></div>}
                     </li>);
             });
     };
