@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate, getDefaultUrl, updateUrlParams } from '../URLUtils';
+import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate, getDefaultUrl, updateUrlParams, isSafeRelativePath } from '../URLUtils';
 
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
@@ -201,6 +201,36 @@ describe('URLUtils', () => {
         const updatedUrl = updateUrlParams(url, {});
         expect(updatedUrl).toBe('https://my-site.com/some/path/to/resouce');
     });
+    it('accepts legitimate relative paths', () => {
+        expect(isSafeRelativePath('/viewer/42')).toBe(true);
+        expect(isSafeRelativePath('/context/foo?category=PERMALINK')).toBe(true);
+        expect(isSafeRelativePath('/dashboard/12')).toBe(true);
+    });
+    it('rejects non-strings and empty', () => {
+        expect(isSafeRelativePath(null)).toBe(false);
+        expect(isSafeRelativePath(undefined)).toBe(false);
+        expect(isSafeRelativePath('')).toBe(false);
+        expect(isSafeRelativePath(42)).toBe(false);
+    });
+    it('rejects protocol-relative / backslash variants', () => {
+        expect(isSafeRelativePath('//evil.com/x')).toBe(false);
+        expect(isSafeRelativePath('/\\evil.com/x')).toBe(false);
+    });
+    it('rejects absolute URLs', () => {
+        expect(isSafeRelativePath('http://evil.com/x')).toBe(false);
+        expect(isSafeRelativePath('https://evil.com/x')).toBe(false);
+        // eslint-disable-next-line no-script-url
+        expect(isSafeRelativePath('javascript:alert(1)')).toBe(false);
+    });
+    it('rejects embedded protocol after leading slash', () => {
+        expect(isSafeRelativePath('/javascript:alert(1)')).toBe(false);
+        expect(isSafeRelativePath('/http://x.com')).toBe(false);
+    });
+    it('rejects whitespace and control characters', () => {
+        expect(isSafeRelativePath('/viewer /42')).toBe(false);
+        expect(isSafeRelativePath('/viewer\t42')).toBe(false);
+        expect(isSafeRelativePath('/viewer\n42')).toBe(false);
+        expect(isSafeRelativePath('/viewer\u200042')).toBe(false);
+    });
 });
-
 

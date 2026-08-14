@@ -529,4 +529,191 @@ describe('Permalink Epics', () => {
                 }
             });
     });
+
+    // ── Security regression: pathTemplate must not enable RCE or Open Redirect (F-12 / SM-23) ──
+    // See MapStore2/web/client/epics/permalink.js loadPermalinkEpic — pathTemplate is a
+    // user-persisted GeoStore attribute compiled at load time. It MUST be substituted
+    // through generateTemplateString (regex, not Function()) and gated by isSafeRelativePath
+    // before being handed to react-router push().
+
+    it("loadPermalinkEpic — rejects protocol-relative pathTemplate (open redirect)", (done) => {
+        const getResource = () => Rx.Observable.of({
+            name: "evil",
+            attributes: { type: "map", pathTemplate: "//evil.example/${id}" }
+        });
+        setApiGetResource(api, { getResource });
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action) => {
+                    const invalidTarget = "permalink.errors.loading.invalidTarget";
+                    switch (action.type) {
+                    case LOAD_PERMALINK_ERROR:
+                        expect(action.error).toBeTruthy();
+                        expect(action.error.messageId).toBe(invalidTarget);
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.title).toBe("permalink.errors.loading.title");
+                        expect(action.message).toBe(invalidTarget);
+                        break;
+                    case "@@router/CALL_HISTORY_METHOD":
+                        // must NOT emit — router push on a cross-origin path is the bug
+                        expect(true).toBe(false);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, state);
+    });
+
+    it("loadPermalinkEpic — rejects absolute-URL pathTemplate (open redirect)", (done) => {
+        const getResource = () => Rx.Observable.of({
+            name: "evil",
+            attributes: { type: "map", pathTemplate: "http://evil.example/steal?t=${id}" }
+        });
+        setApiGetResource(api, { getResource });
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action) => {
+                    const invalidTarget = "permalink.errors.loading.invalidTarget";
+                    switch (action.type) {
+                    case LOAD_PERMALINK_ERROR:
+                        expect(action.error.messageId).toBe(invalidTarget);
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.message).toBe(invalidTarget);
+                        break;
+                    case "@@router/CALL_HISTORY_METHOD":
+                        expect(true).toBe(false);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, state);
+    });
+
+    it("loadPermalinkEpic — rejects embedded-protocol pathTemplate (javascript: URI)", (done) => {
+        const getResource = () => Rx.Observable.of({
+            name: "evil",
+            attributes: { type: "map", pathTemplate: "/javascript:alert(1)?a=${id}" }
+        });
+        setApiGetResource(api, { getResource });
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action) => {
+                    const invalidTarget = "permalink.errors.loading.invalidTarget";
+                    switch (action.type) {
+                    case LOAD_PERMALINK_ERROR:
+                        expect(action.error.messageId).toBe(invalidTarget);
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.message).toBe(invalidTarget);
+                        break;
+                    case "@@router/CALL_HISTORY_METHOD":
+                        expect(true).toBe(false);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, state);
+    });
+
+    it("loadPermalinkEpic — RCE payload with whitespace is rejected by safety guard", (done) => {
+        // This attack payload contains spaces (inside "throw new Error"). Two independent
+        // layers of the fix defeat it:
+        //   1. generateTemplateString's regex /\$\{([\s]*[^;\s\{]+[\s]*)\}/g refuses to
+        //      match ${...} blocks whose body contains interior whitespace, so no
+        //      substitution occurs — Function() is never called.
+        //   2. isSafeRelativePath then rejects the still-whitespace-carrying template
+        //      before push() would be invoked (\s in the guard's character class).
+        // Expected outcome: LOAD_PERMALINK_ERROR + SHOW_NOTIFICATION with the
+        // "permalink.errors.loading.invalidTarget" message id; NO router push() action.
+        const rcePayload = '/viewer/${constructor.constructor("throw new Error(\'RCE\')")()}';
+        const getResource = () => Rx.Observable.of({
+            name: "evil",
+            attributes: { type: "map", pathTemplate: rcePayload }
+        });
+        setApiGetResource(api, { getResource });
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action) => {
+                    const invalidTarget = "permalink.errors.loading.invalidTarget";
+                    switch (action.type) {
+                    case LOAD_PERMALINK_ERROR:
+                        expect(action.error).toBeTruthy();
+                        expect(action.error.messageId).toBe(invalidTarget);
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.title).toBe("permalink.errors.loading.title");
+                        expect(action.message).toBe(invalidTarget);
+                        break;
+                    case "@@router/CALL_HISTORY_METHOD":
+                        // The malicious path must NOT reach the router.
+                        expect(true).toBe(false);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, state);
+    });
+
+    it("loadPermalinkEpic — encodeURIComponent applied to substituted values (defense-in-depth)", (done) => {
+        // Even when the value contains slashes, they get URL-encoded so they cannot alter
+        // the path structure. Simulates an attacker-controlled id containing path traversal.
+        const getResource = () => Rx.Observable.of({
+            name: "test/../admin",
+            attributes: { type: "context", pathTemplate: "/context/${name}?category=PERMALINK" }
+        });
+        setApiGetResource(api, { getResource });
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action) => {
+                    switch (action.type) {
+                    case "@@router/CALL_HISTORY_METHOD":
+                        // "/context/test%2F..%2Fadmin?category=PERMALINK" — slashes encoded
+                        expect(action.payload.args[0].startsWith("/context/")).toBe(true);
+                        expect(action.payload.args[0].indexOf("/admin")).toBe(-1);
+                        expect(action.payload.args[0].indexOf("%2F")).toBeGreaterThan(-1);
+                        break;
+                    case PERMALINK_LOADED:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, state);
+    });
 });

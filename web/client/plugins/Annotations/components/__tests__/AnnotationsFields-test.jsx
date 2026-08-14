@@ -82,4 +82,32 @@ describe('AnnotationsFields component', () => {
         expect(fieldsNode.querySelector('.help-block').innerText).toBe('annotations.error.fake');
         Simulate.change(input[0], { target: { value: 'Ok' } });
     });
+
+    // ── Security regression: DOMPurify.sanitize on annotation description HTML (SM-13 / X-08) ──
+    it('sanitizes <script> in annotation description (preview mode)', () => {
+        window.__xss_annot1 = undefined;
+        ReactDOM.render(
+            <AnnotationsFields
+                preview
+                properties={{ description: '<p>ok</p><script>window.__xss_annot1=true</script>' }}
+                fields={[{ name: 'description', type: 'html', showLabel: false }]}
+            />,
+            document.getElementById('container')
+        );
+        expect(window.__xss_annot1).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
+
+    it('sanitizes <script> in annotation description (read-only edit mode)', () => {
+        window.__xss_annot2 = undefined;
+        ReactDOM.render(
+            <AnnotationsFields
+                properties={{ description: '<p>ok</p><script>window.__xss_annot2=true</script>' }}
+                fields={[{ name: 'description', type: 'html', showLabel: false, editable: false }]}
+            />,
+            document.getElementById('container')
+        );
+        expect(window.__xss_annot2).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
 });

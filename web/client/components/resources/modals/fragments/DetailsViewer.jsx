@@ -8,6 +8,7 @@
 import React from 'react';
 import Spinner from 'react-spinkit';
 import { isNil } from 'lodash';
+import DOMPurify from 'dompurify';
 
 import Message from '../../../I18N/Message';
 /**
@@ -24,7 +25,7 @@ export default ({
             <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> :
             isNil(detailsText) ?
                 <div className={textContainerClassName}><Message msgId="maps.feedback.noDetailsAvailable" /></div> :
-                <div className={textContainerClassName} dangerouslySetInnerHTML={{ __html: detailsText || '' }} />
+                <div className={textContainerClassName} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(detailsText || '') }} />
         }
     </div>
 );

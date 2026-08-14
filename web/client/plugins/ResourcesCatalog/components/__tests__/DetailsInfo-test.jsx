@@ -179,5 +179,30 @@ describe('DetailsInfo component', () => {
         const tabLink = document.querySelector('.ms-details-info li a');
         Simulate.click(tabLink);
     });
+
+    // ── Security regression: HTML sinks sanitized + hrefs guarded (SM-10 / SM-19) ──
+    it('sanitizes script tags in HTML field value (SM-10)', () => {
+        window.__xss_detailsinfo = undefined;
+        ReactDOM.render(<DetailsInfo
+            tabs={[{ type: 'tab', id: 'info', labelId: 'Info', items: [
+                { type: 'html', value: '<p>hi</p><script>window.__xss_detailsinfo=true</script>' }
+            ] }]}
+            selectedTab="info"
+        />, document.getElementById('container'));
+        expect(window.__xss_detailsinfo).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
+
+    it('strips javascript: hrefs on link-type field (SM-19)', () => {
+        ReactDOM.render(<DetailsInfo
+            tabs={[{ type: 'tab', id: 'info', labelId: 'Info', items: [
+                // eslint-disable-next-line no-script-url
+                { type: 'link', label: 'Evil', href: 'javascript:alert(1)', value: 'click' }
+            ] }]}
+            selectedTab="info"
+        />, document.getElementById('container'));
+        const anchors = document.querySelectorAll('a[href^="javascript:"]');
+        expect(anchors.length).toBe(0);
+    });
 });
 

@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {isString, has, trim, template} from 'lodash';
+import {isString, has, trim} from 'lodash';
+import DOMPurify from 'dompurify';
 
 /**
  * check if a string attribute is inside of a given object
@@ -42,16 +43,6 @@ export const getCleanTemplate = (chosenTemplate, feature, regex, start = 0, end 
     return replacedTag && replacedTag.reduce((temp, variable) => temp.replace(variable.previous, variable.next), chosenTemplate) || chosenTemplate || '';
 };
 
-/**
- * parses a template with attributes defined in ${ ... } and applied to the metadata object
- * @param metadataTemplate {string} text with attribute to validate
- * @param getDefaultMissingProperty {function} if defined it returns a default value for undefined attributes
- * @param metadata {object} metadata object to match attributes
- * @return {string} template without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id } and a default value for undefined attributes
- */
-export const parseCustomTemplate = (metadataTemplate = "", metadata = {}, getDefaultMissingProperty = (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} Not Available`) => {
-    return template(getCleanTemplate(metadataTemplate || '', metadata, /\$\{.*?\}/g, 2, 1, getDefaultMissingProperty))(metadata);
-};
 
 export const generateTemplateString = (function() {
     var cache = {};
@@ -84,6 +75,23 @@ export const generateTemplateString = (function() {
     return generateTemplate;
 })();
 
+
+/**
+ * parses a template with attributes defined in ${ ... } and applied to the metadata object
+ * @param metadataTemplate {string} text with attribute to validate
+ * @param getDefaultMissingProperty {function} if defined it returns a default value for undefined attributes
+ * @param metadata {object} metadata object to match attributes
+ * @return {string} template without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id } and a default value for undefined attributes
+ */
+export const parseCustomTemplate = (metadataTemplate = "", metadata = {}, getDefaultMissingProperty = (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} Not Available`) => {
+    // Use generateTemplateString (regex substitution) instead of lodash.template (Function() compile)
+    // to avoid RCE via ${constructor.constructor("...")()} in user-persisted metadata templates (SM-18 / F-08).
+    // Substituted values are DOMPurify-sanitized because the output is rendered as HTML downstream.
+    return generateTemplateString(
+        getCleanTemplate(metadataTemplate || '', metadata, /\$\{.*?\}/g, 2, 1, getDefaultMissingProperty),
+        (v) => DOMPurify.sanitize(String(v ?? ''))
+    )(metadata);
+};
 
 const TemplateUtils = {
     /**

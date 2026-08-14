@@ -37,4 +37,13 @@ describe('DetailsRow component', () => {
         const btnGroup = details.getElementsByTagName('button');
         expect(btnGroup.length).toBe(0);
     });
+
+    // ── Security regression: DOMPurify.sanitize on details preview (SM-14 / X-09) ──
+    it('sanitizes <script> in detailsText preview', () => {
+        window.__xss_dr = undefined;
+        const evil = '<p>ok</p><script>window.__xss_dr=true</script>';
+        ReactDOM.render(<DetailsRow detailsText={evil} showPreview />, document.getElementById('container'));
+        expect(window.__xss_dr).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
 });

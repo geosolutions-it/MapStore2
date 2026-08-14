@@ -149,5 +149,19 @@ describe('Openlayers PopupSupport', () => {
         expect(document.querySelector('#test-component-map-popup')).toExist();
     });
 
+    // ── Security regression: DOMPurify.sanitize on WMS GetFeatureInfo HTML (SM-11 / X-06) ──
+    it('sanitizes malicious script in HTML popup content', () => {
+        window.__xss_popup = undefined;
+        const popups = [{
+            id: 'evil',
+            content: '<div id="innerHtml">ok</div><script>window.__xss_popup=true</script>',
+            position: { coordinates: [0, 0] },
+            autoPan: false
+        }];
+        renderPopups({ popups });
+        expect(window.__xss_popup).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
+
 });
 

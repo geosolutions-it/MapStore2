@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import DOMPurify from 'dompurify';
 
 /**
  * Render the given html code into a <div>
@@ -31,7 +32,7 @@ class HtmlRenderer extends React.Component {
 
     getSourceCode = () => {
         return {
-            __html: this.props.html
+            __html: DOMPurify.sanitize(this.props.html || '')
         };
     };
 

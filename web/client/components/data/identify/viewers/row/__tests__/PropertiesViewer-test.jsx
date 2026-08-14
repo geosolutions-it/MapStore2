@@ -118,4 +118,30 @@ describe('PropertiesViewer', () => {
             expect(value).toBe(testVal);
         });
     });
+
+    // ── Security regression: DOMPurify.sanitize on HTML-containing values (SM-08 / X-03) ──
+    it('sanitizes malicious <script> in feature property HTML value', () => {
+        window.__xss_props = undefined;
+        const feature = {
+            id: 'f1',
+            properties: {
+                info: '<p>hi</p><script>window.__xss_props=true</script>'
+            }
+        };
+        ReactDOM.render(
+            <PropertiesViewer feature={feature} />,
+            document.getElementById('container')
+        );
+        expect(window.__xss_props).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
+
+    it('preserves safe formatting HTML from OGC service', () => {
+        const feature = { id: 'f1', properties: { info: '<p><b>bold</b></p>' } };
+        ReactDOM.render(
+            <PropertiesViewer feature={feature} />,
+            document.getElementById('container')
+        );
+        expect(document.querySelector('.ms-properties-viewer-value b')).toBeTruthy();
+    });
 });

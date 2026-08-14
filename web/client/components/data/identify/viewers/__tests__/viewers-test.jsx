@@ -1,22 +1,22 @@
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from "react-redux";
+import configureStore from 'redux-mock-store';
+import thunkMiddleware from 'redux-thunk';
 
 import HTMLViewer from '../HTMLViewer';
 import JSONViewer from '../JSONViewer';
+import TemplateViewer from '../TemplateViewer';
 import TextViewer from '../TextViewer';
 
-import configureStore from 'redux-mock-store';
-import thunkMiddleware from 'redux-thunk';
-import {Provider} from "react-redux";
 const mockStore = configureStore([thunkMiddleware]);
 const store = mockStore({});
 
@@ -298,6 +298,42 @@ describe('Identity Viewers', () => {
 
         propertiesViewer = document.getElementsByClassName('mapstore-json-viewer');
         expect(propertiesViewer.length).toBe(1);
+    });
+
+    // ── Security regression: TemplateViewer defuses RCE in featureInfo.template (SM-17 / F-07) ──
+    it('TemplateViewer does not execute RCE payload in featureInfo.template', () => {
+        window.__xss_tv = undefined;
+        const layer = {
+            featureInfo: {
+                format: 'TEMPLATE',
+                template: '<b>${constructor.constructor("window.__xss_tv=true")()}</b>'
+            }
+        };
+        const response = { features: [{ id: 1, properties: { name: 'X' } }] };
+        ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById('container'));
+        expect(window.__xss_tv).toBe(undefined);
+        // regex substitution resolves the malicious expression to empty string
+        expect(document.querySelector('.ms-template-viewer').innerHTML.indexOf('constructor')).toBe(-1);
+    });
+
+    it('TemplateViewer sanitizes HTML values substituted from feature properties', () => {
+        window.__xss_tv2 = undefined;
+        const layer = {
+            featureInfo: { format: 'TEMPLATE', template: '<div>${properties.desc}</div>' }
+        };
+        const response = { features: [{ id: 1, properties: { desc: '<script>window.__xss_tv2=true</script>hi' } }] };
+        ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById('container'));
+        expect(window.__xss_tv2).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
+
+    it('TemplateViewer preserves legitimate template markup', () => {
+        const layer = {
+            featureInfo: { format: 'TEMPLATE', template: '<b>Name: ${properties.name}</b>' }
+        };
+        const response = { features: [{ id: 1, properties: { name: 'Rome' } }] };
+        ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById('container'));
+        expect(document.body.innerHTML.indexOf('<b>Name: Rome</b>')).toBeGreaterThan(-1);
     });
 
 });

@@ -1554,7 +1554,8 @@
           "title": "Erreur lors du chargement du lien permanent",
           "pleaseLogin": "Ce permalien n'est pas public. Veuillez essayer de vous connecter",
           "notFound": "Permalien introuvable",
-          "notAccessible": "Permalien inaccessible"
+          "notAccessible": "Permalien inaccessible",
+          "invalidTarget": "La cible de ce permalien est invalide ou non sécurisée et ne peut pas être ouverte"
         },
         "save": {
           "title": "La génération du permalien a échoué",

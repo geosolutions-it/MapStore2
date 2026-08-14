@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import DOMPurify from 'dompurify';
 
 import WidgetContainer from './WidgetContainer';
 import emptyTextState from '../enhancers/emptyTextState';
-const TextView = emptyTextState(({ text } = {}) => <div className="mapstore-widget-default-content ql-editor" dangerouslySetInnerHTML={{__html: text}}></div>);
+const TextView = emptyTextState(({ text } = {}) => <div className="mapstore-widget-default-content ql-editor" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text || '')}}></div>);
 
 export default ({
     toggleDeleteConfirm = () => {},

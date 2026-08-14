@@ -195,4 +195,23 @@ describe('MapViewsSupport component', () => {
             })
             .catch(done);
     });
+
+    // ── Security regression: DOMPurify.sanitize on map view description (SM-15 / X-10) ──
+    it('sanitizes <script> in selected view description', () => {
+        window.__xss_mvs = undefined;
+        const evilDescription = '<p>ok</p><script>window.__xss_mvs=true</script>';
+        // Render a MapViewsSupport with a selected view carrying a malicious description
+        ReactDOM.render(
+            <MapViewsSupport
+                mapType="cesium"
+                showDescription
+                map={{ camera: { position: {}, setView: () => {}, cancelFlight: () => {} } }}
+                views={[{ id: 'v1', title: 't', description: evilDescription }]}
+                selectedId="v1"
+            />,
+            document.getElementById('container')
+        );
+        expect(window.__xss_mvs).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
 });

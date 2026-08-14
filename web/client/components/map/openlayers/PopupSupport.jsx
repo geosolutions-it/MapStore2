@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay } from 'ol';
 import isString from 'lodash/isString';
+import DOMPurify from 'dompurify';
 import * as Utils from '../../../utils/PopupUtils';
 
 import popupsComponents from '../popups';
@@ -66,7 +67,7 @@ export default class PopupSupport extends React.Component {
             if (!!PopupContent) {
                 El = React.isValidElement(PopupContent) && PopupContent || <PopupContent {...props}/>;
             } else if (content) {
-                El = Utils.isHTML(content) ? <div dangerouslySetInnerHTML={{__html: content}}/> : content;
+                El = Utils.isHTML(content) ? <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(content || '')}}/> : content;
             }
             return context && ReactDOM.createPortal(
                 <div className="map-popup-ol" key={id} onMouseUp={this.convertToClick}>

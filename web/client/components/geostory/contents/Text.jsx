@@ -7,6 +7,7 @@
  */
 import React from 'react';
 import { branch, compose, withHandlers, withPropsOnChange } from 'recompose';
+import DOMPurify from 'dompurify';
 
 import { EMPTY_CONTENT, Modes, SectionTypes } from '../../../utils/GeoStoryUtils';
 import localizedProps from '../../misc/enhancers/localizedProps';
@@ -19,7 +20,7 @@ const Text = ({ placeholder, placeholderTag = 'p', id, toggleEditing = () => {},
                 html !== EMPTY_CONTENT && <div
                     id={id}
                     onClick={() => toggleEditing(true, html)}
-                    dangerouslySetInnerHTML={{ __html: html }} />}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html || '') }} />}
             {   // no content => render a placeholder
                 (!html || html === EMPTY_CONTENT) && mode === Modes.EDIT &&
             <div

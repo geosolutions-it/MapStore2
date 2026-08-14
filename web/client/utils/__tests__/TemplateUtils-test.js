@@ -108,4 +108,21 @@ describe('TemplateUtils', () => {
         const retVal = parseCustomTemplate("${<p>desc </p>}, ${desc2}", {desc: "desc value"});
         expect(retVal).toEqual("desc value, desc2 Not Available");
     });
+
+    // ── Security regression: parseCustomTemplate defuses RCE (SM-18 / F-08) ──
+    it('parseCustomTemplate defuses RCE property-chain payload (no Function() compile)', () => {
+        window.__xss_pct = undefined;
+        const rcePayload = '${constructor.constructor("window.__xss_pct=true")()}';
+        const result = parseCustomTemplate(rcePayload, { safe: 'x' }, () => '');
+        expect(window.__xss_pct).toBe(undefined);
+        expect(result.indexOf('constructor')).toBe(-1);
+    });
+
+    it('parseCustomTemplate sanitizes HTML values substituted from metadata', () => {
+        const evilMetadata = { name: '<script>window.__xss_pct2=true</script>bad' };
+        window.__xss_pct2 = undefined;
+        const result = parseCustomTemplate('Name: ${name}', evilMetadata, () => '');
+        expect(window.__xss_pct2).toBe(undefined);
+        expect(result.indexOf('<script')).toBe(-1);
+    });
 });

@@ -17,6 +17,7 @@ import uuid from 'uuid';
 import max from 'lodash/max';
 import undoable from 'redux-undo';
 import identity from 'lodash/identity';
+import DOMPurify from 'dompurify';
 
 import MapViewsList from './MapViewsList';
 import MapViewsProgressBar from './MapViewsProgressBar';
@@ -613,7 +614,7 @@ function MapViewsSupport({
                         </div>
                         {(!expanded && showDescription && selected?.description) && <div
                             className="ms-map-views-description">
-                            <div dangerouslySetInnerHTML={{ __html: selected.description }} />
+                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selected.description || '') }} />
                         </div>
                         }
                     </div>

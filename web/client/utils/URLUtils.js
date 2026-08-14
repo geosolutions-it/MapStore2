@@ -168,3 +168,22 @@ export function updateUrlParams(url, params) {
     const query = queryString.stringify(updatedQuery);
     return query ? `${parsedUrl?.url}?${query}` : parsedUrl?.url;
 }
+/**
+ * Validates that a value is a safe same-origin relative path suitable for
+ * React Router push()/replace() targets. Rejects protocol schemes,
+ * protocol-relative paths ("//host"), backslash variants, absolute URLs,
+ * and whitespace/control characters that browsers may strip.
+ *
+ * Use for security-sensitive routing where the target originates from
+ * user-persisted content (e.g. Permalink pathTemplate).
+ *
+ * @param {string} p candidate relative path
+ * @returns {boolean} true if p is a safe same-origin relative path
+ */
+export const isSafeRelativePath = (p) => {
+    if (typeof p !== 'string' || !p.startsWith('/')) return false;
+    if (/^\/[/\\]/.test(p)) return false;                // "//host" or "/\host"
+    if (/[\u0000-\u001F\u007F-\u009F\s]/.test(p)) return false;
+    if (/^\/[a-z][a-z0-9+.-]*:/i.test(p)) return false;  // "/http:..."
+    return true;
+};

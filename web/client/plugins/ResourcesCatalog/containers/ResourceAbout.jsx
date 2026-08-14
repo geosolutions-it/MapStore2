@@ -10,6 +10,7 @@ import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Glyphicon } from 'react-bootstrap';
+import DOMPurify from 'dompurify';
 
 import axios from '../../../libs/ajax';
 import Message from '../../../components/I18N/Message';
@@ -84,7 +85,7 @@ function ResourceAbout({
                         onChange={onChange}
                     />
                 </Suspense>
-                : <div dangerouslySetInnerHTML={{ __html: about || '' }} />}
+                : <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(about || '') }} />}
         </div>
     );
 }

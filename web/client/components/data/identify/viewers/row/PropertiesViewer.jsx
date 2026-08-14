@@ -10,6 +10,7 @@ import { isString } from 'lodash';
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import DOMPurify from 'dompurify';
 import { containsHTML } from '../../../../../utils/StringUtils';
 import Message from '../../../../I18N/Message';
 import LocalizedString, {applyDefaultToLocalizedString} from '../../../../I18N/LocalizedString';
@@ -47,7 +48,7 @@ class PropertiesViewer extends React.Component {
                         key={key}
                         style={this.props.listStyle}>
                         <div className="ms-properties-viewer-key"><LocalizedString value={label} /></div>
-                        {containsHTML(val) ? <div className="ms-properties-viewer-value" dangerouslySetInnerHTML={{__html: val}}/> : <div className="ms-properties-viewer-value">{val}</div>}
+                        {containsHTML(val) ? <div className="ms-properties-viewer-value" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(val || '')}}/> : <div className="ms-properties-viewer-value">{val}</div>}
                     </li>);
             });
     };

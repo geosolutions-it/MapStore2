@@ -66,4 +66,36 @@ describe("This test for HtmlRenderer component", () => {
         expect(node.id).toBeFalsy();
         expect(node.style.color).toBe('rgb(255, 255, 255)');
     });
+
+    // ── Security regression: DOMPurify.sanitize on html prop (SM-16 / X-11) ──
+    it('sanitizes <script> tags injected via html prop', () => {
+        window.__xss_htmlrenderer = undefined;
+        const evilHtml = '<p>hello</p><script>window.__xss_htmlrenderer=true</script>';
+        ReactDOM.render(<HtmlRenderer html={evilHtml}/>, document.getElementById("container"));
+        expect(window.__xss_htmlrenderer).toBe(undefined);
+        expect(document.getElementById("container").innerHTML.indexOf('<script')).toBe(-1);
+    });
+
+    it('sanitizes inline event handlers like onerror', () => {
+        window.__xss_onerror = undefined;
+        const evilHtml = '<img src="x" onerror="window.__xss_onerror=true">';
+        ReactDOM.render(<HtmlRenderer html={evilHtml}/>, document.getElementById("container"));
+        // give onerror a chance to fire if not stripped
+        expect(window.__xss_onerror).toBe(undefined);
+        const node = ReactDOM.findDOMNode(document.getElementById("container").firstChild);
+        expect(node.innerHTML.toLowerCase().indexOf('onerror')).toBe(-1);
+    });
+
+    it('preserves legitimate formatting HTML', () => {
+        const safeHtml = '<p><b>bold</b> and <i>italic</i></p>';
+        ReactDOM.render(<HtmlRenderer html={safeHtml}/>, document.getElementById("container"));
+        const inner = document.getElementById("container").innerHTML;
+        expect(inner.indexOf('<b>bold</b>')).toBeGreaterThan(-1);
+        expect(inner.indexOf('<i>italic</i>')).toBeGreaterThan(-1);
+    });
+
+    it('handles null/undefined html without throwing', () => {
+        expect(() => ReactDOM.render(<HtmlRenderer html={null}/>, document.getElementById("container"))).toNotThrow();
+        expect(() => ReactDOM.render(<HtmlRenderer html={undefined}/>, document.getElementById("container"))).toNotThrow();
+    });
 });

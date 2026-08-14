@@ -61,4 +61,13 @@ describe('TextWidget component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('#TEST_TEXT')).toExist();
     });
+
+    // ── Security regression: DOMPurify.sanitize on Quill widget text (SM-12 / X-07) ──
+    it('sanitizes <script> injected in dashboard text widget', () => {
+        window.__xss_tw = undefined;
+        const evil = '<p>ok</p><script>window.__xss_tw=true</script>';
+        ReactDOM.render(<TextWidget text={evil} />, document.getElementById("container"));
+        expect(window.__xss_tw).toBe(undefined);
+        expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+    });
 });
