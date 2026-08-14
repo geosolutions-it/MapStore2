@@ -9,7 +9,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Loader from '../../../../misc/Loader';
-import { getFileFromDownload } from '../../../../../utils/FileUtils';
+import axios from '../../../../../libs/ajax';
+
+const getFileFromDownload = (downloadURL, type) => axios
+    .get(downloadURL, { responseType: 'blob' })
+    .then(({ data }) => URL.createObjectURL(new Blob([data], { type })));
 
 const PdfViewer = ({ src, title }) => {
     const [filePath, setFilePath] = useState(null);
@@ -22,7 +26,9 @@ const PdfViewer = ({ src, title }) => {
         setFilePath(null);
         setLoading(true);
         setError(false);
-        getFileFromDownload(src)
+        // blob type is pinned to application/pdf
+        // so a response carrying HTML cannot be rendered
+        getFileFromDownload(src, 'application/pdf')
             .then((url) => {
                 if (!mounted) {
                     URL.revokeObjectURL(url);

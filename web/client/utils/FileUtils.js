@@ -7,7 +7,6 @@
  */
 
 import FileSaver from 'file-saver';
-import axios from '../libs/ajax';
 
 import { DxfParser } from 'dxf-parser';
 import toBlob from 'canvas-to-blob';
@@ -52,11 +51,6 @@ export const download = function(blob, name, mimetype) {
     FileSaver.saveAs(file, name);
 };
 
-export const getFileFromDownload = (downloadURL, type = 'application/pdf') => {
-    const toObjectURL = (data) => URL.createObjectURL(new Blob([data], { type }));
-    return axios.get(downloadURL, { responseType: 'blob' })
-        .then(({ data }) => toObjectURL(data));
-};
 export const downloadCanvasDataURL = function(dataURL, name = "snapshot.png", mimetype) {
     download(toBlob(dataURL), name, mimetype);
 };
