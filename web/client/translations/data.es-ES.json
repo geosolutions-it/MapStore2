@@ -4824,6 +4824,7 @@
         "errorDefault": "Error de red"
       },
       "myResources": "Mis recursos",
+      "select": "Seleccionar",
       "creationFilter": {
         "from": "Fecha de creación desde",
         "to": "Fecha de creación hasta"
