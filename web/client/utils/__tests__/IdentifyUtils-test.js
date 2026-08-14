@@ -22,14 +22,14 @@ describe('IdentifyUtils', () => {
         const objectFields = [{ name: 'a' }, { name: 'b', alias: 'B' }];
         const objectRow = getVisibleFeatureRow(feature, objectFields);
         expect(objectRow.feature.properties).toBe(feature.properties);
-        expect(objectRow.feature.mediaTypeValues).toEqual({});
+        expect(objectRow.mediaTypeValues).toEqual({});
         expect(objectRow.fields).toBe(objectFields);
 
         // vector, model, cog and flatgeobuf layers expose fields as plain names
         const nameFields = ['a', 'b'];
         const nameRow = getVisibleFeatureRow(feature, nameFields);
         expect(nameRow.feature.properties).toBe(feature.properties);
-        expect(nameRow.feature.mediaTypeValues).toEqual({});
+        expect(nameRow.mediaTypeValues).toEqual({});
         expect(nameRow.fields).toBe(nameFields);
     });
 
@@ -55,8 +55,8 @@ describe('IdentifyUtils', () => {
                 { name: 'secret', visible: false }
             ]
         );
-        expect(row.feature.mediaTypeValues).toEqual({ resource: 'image/jpeg' });
-        expect(row.feature.mediaTypeValues.secret).toNotExist();
+        expect(row.mediaTypeValues).toEqual({ resource: 'image/jpeg' });
+        expect(row.mediaTypeValues.secret).toNotExist();
     });
     it('getVisibleFeatureRow does not alter the source feature', () => {
         const feature = {

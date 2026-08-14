@@ -26,7 +26,8 @@ class PropertiesViewer extends React.Component {
         componentStyle: PropTypes.object,
         feature: PropTypes.object,
         labelIds: PropTypes.object,
-        fields: PropTypes.array
+        fields: PropTypes.array,
+        mediaTypeValues: PropTypes.object
     };
 
     static defaultProps = {
@@ -44,7 +45,7 @@ class PropertiesViewer extends React.Component {
             .map((key) => {
                 const attribute = this.props.fields?.find(field => field.name === key) || { name: key };
                 const value = this.props.feature.properties[key];
-                const mediaTypeValue = this.props.feature.mediaTypeValues?.[key];
+                const mediaTypeValue = this.props.mediaTypeValues?.[key];
                 const val = this.renderProperty(value);
                 const label = applyDefaultToLocalizedString(attribute.alias, (this.props.labelIds[key] ? <Message msgId={this.props.labelIds[key]}/> : key));
                 return (

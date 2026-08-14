@@ -40,22 +40,19 @@ export const getVisibleFeatureRow = (feature = {}, fields = []) => {
             .map(({ name, mediaTypeAttribute }) => [name, feature.properties?.[mediaTypeAttribute]])
     );
     if (!hasVisibilityConfiguration) {
-        return {
-            feature: { ...feature, mediaTypeValues },
-            fields
-        };
+        return { feature, fields, mediaTypeValues };
     }
     const visibleNames = new Set(visibleFields.map(({ name }) => name));
     return {
         feature: {
             ...feature,
-            mediaTypeValues,
             properties: Object.fromEntries(
                 Object.entries(feature.properties || {})
                     .filter(([name]) => visibleNames.has(name))
             )
         },
-        fields: visibleFields
+        fields: visibleFields,
+        mediaTypeValues
     };
 };
 
