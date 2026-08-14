@@ -141,7 +141,7 @@ const Fields = ({
                             <SettingsButton
                                 className="square-button layer-field-settings-button"
                                 bsStyle={isConfigured ? 'success' : 'default'}
-                                title="layerProperties.externalData.configureDisplayType"
+                                title="layerProperties.fields.configureDisplayType"
                                 onClick={() => setConfiguredField(isConfigured ? null : name)}>
                                 <Glyphicon glyph="cog" />
                             </SettingsButton>
@@ -149,20 +149,20 @@ const Fields = ({
                     </div>
                     {showFieldSettings && isConfigured ? <div className="layer-field-settings-panel">
                         <div className="layer-field-settings-row">
-                            <ControlLabel><Message msgId="layerProperties.externalData.featureInfoDisplayType" /></ControlLabel>
+                            <ControlLabel><Message msgId="layerProperties.fields.featureInfoDisplayType" /></ControlLabel>
                             <Select
                                 clearable
                                 className="layer-field-settings-select"
-                                placeholder={<Message msgId="layerProperties.externalData.displayTypes.string" />}
+                                placeholder={<Message msgId="layerProperties.fields.displayTypes.string" />}
                                 value={displayType}
                                 options={DISPLAY_TYPES.map((value) => ({
                                     value,
-                                    label: <Message msgId={`layerProperties.externalData.displayTypes.${value}`} />
+                                    label: <Message msgId={`layerProperties.fields.displayTypes.${value}`} />
                                 }))}
                                 onChange={(selected) => onChange(name, 'displayType', selected?.value)}/>
                         </div>
                         {displayType === 'media' ? <div className="layer-field-settings-row">
-                            <ControlLabel><Message msgId="layerProperties.externalData.mediaTypeAttribute" /></ControlLabel>
+                            <ControlLabel><Message msgId="layerProperties.fields.mediaTypeAttribute" /></ControlLabel>
                             <Select
                                 clearable
                                 className="layer-field-settings-select"

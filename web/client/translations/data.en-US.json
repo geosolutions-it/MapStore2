@@ -155,20 +155,6 @@
         "cqlFilter": "CQL filter template",
         "cqlFilterHelp": "Use single quotes around string placeholders; leave numeric and boolean placeholders unquoted.",
         "attributes": "Attributes",
-        "featureInfoDisplayType": "Feature info display type",
-        "configureDisplayType": "Configure display type",
-        "mediaTypeAttribute": "Media type attribute",
-        "displayTypes": {
-          "string": "String",
-          "image": "Image",
-          "video": "Video",
-          "audio": "Audio",
-          "panorama": "Panorama image",
-          "pdf": "PDF",
-          "url": "URL",
-          "iframe": "Iframe",
-          "media": "Media"
-        },
         "validate": "Validate",
         "validation": {
           "missingFields": "WFS URL, layer name and CQL filter template are required",
@@ -327,7 +313,21 @@
         "type": "Type",
         "clearCustomization": "Clear customization",
         "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
-        "error": "It was not possible to automatically load the fields"
+        "error": "It was not possible to automatically load the fields",
+        "featureInfoDisplayType": "Feature info display type",
+        "configureDisplayType": "Configure display type",
+        "mediaTypeAttribute": "Media type attribute",
+        "displayTypes": {
+          "string": "Text",
+          "image": "Image",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Panorama image",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Media"
+        }
       },
       "disableFeaturesEditing": "Disable editing on Attribute table",
       "interactiveLegend": {
