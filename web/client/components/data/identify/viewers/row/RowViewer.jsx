@@ -30,7 +30,8 @@ const defaultRowViewerOptions = {
 function RowViewer({
     layer,
     component,
-    feature
+    feature,
+    mediaTypeValues
 }) {
     // the name of the registered viewer could be associate by a string in the rowViewer or id
     const layerRowViewerProperty = layer?.rowViewer || layer?.layerId;
@@ -45,6 +46,7 @@ function RowViewer({
             {...omit(feature.properties, ['ref'])}
             fields={layer?.fields}
             feature={feature}
+            mediaTypeValues={mediaTypeValues}
             labelIds={labelIds}
             exclude={excludeProperties}
             include={includeProperties}
@@ -55,7 +57,8 @@ function RowViewer({
 RowViewer.propTypes = {
     layer: PropTypes.string,
     component: PropTypes.array,
-    feature: PropTypes.array
+    feature: PropTypes.array,
+    mediaTypeValues: PropTypes.object
 };
 
 RowViewer.defaultProps = {

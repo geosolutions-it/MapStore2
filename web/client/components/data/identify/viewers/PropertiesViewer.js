@@ -23,6 +23,7 @@ export default ({response, layer, rowViewer}) => {
                     <RowViewer
                         key={i}
                         feature={row.feature}
+                        mediaTypeValues={row.mediaTypeValues}
                         layer={{...(layer || {}), fields: row.fields}}
                         component={rowViewer}/>
                 );

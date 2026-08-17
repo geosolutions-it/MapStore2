@@ -42,17 +42,21 @@ DOMPurify.addHook('uponSanitizeElement', (node, data) => {
     }
 });
 
+/**
+ * Sandbox the iframe without allow-same-origin (prevents access to parent
+ * cookies/localStorage) and without allow-popups (prevents popup-based
+ * phishing). allow-presentation is sufficient for YouTube/Vimeo fullscreen.
+ * Shared with the components that render untrusted URLs in an iframe directly.
+ */
+export const IFRAME_SANDBOX = 'allow-scripts allow-presentation';
+export const IFRAME_REFERRER_POLICY = 'no-referrer';
+
 // Harden iframe elements that survive sanitization
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
     if (node.tagName === 'IFRAME') {
-        /**
-         * Sandbox the iframe without allow-same-origin (prevents access to parent
-         * cookies/localStorage) and without allow-popups (prevents popup-based
-         * phishing). allow-presentation is sufficient for YouTube/Vimeo fullscreen.
-         */
-        node.setAttribute('sandbox', 'allow-scripts allow-presentation');
+        node.setAttribute('sandbox', IFRAME_SANDBOX);
         node.removeAttribute('allow-top-navigation');
-        node.setAttribute('referrerpolicy', 'no-referrer');
+        node.setAttribute('referrerpolicy', IFRAME_REFERRER_POLICY);
         const src = node.getAttribute('src');
         if (src && src.startsWith('http:') && !src.includes('localhost')) {
             node.setAttribute('src', src.replace('http:', 'https:'));
