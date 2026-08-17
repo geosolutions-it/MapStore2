@@ -442,8 +442,8 @@ export const normalizeLayer = (layer) => {
             ..._layer,
             features: _layer?.features?.map((f) => {
                 const feature = createFeatureId(f);
-                const id = seen.has(`${feature.id}`) ? uuidv1() : feature.id;
-                seen.add(`${id}`);
+                const id = seen.has(String(feature.id)) ? uuidv1() : feature.id;
+                seen.add(String(id));
                 return { ...feature, id };
             })
         } : layer;

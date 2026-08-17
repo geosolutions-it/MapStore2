@@ -148,6 +148,22 @@ describe('LayersUtils', () => {
         expect(layer.features[3].id).toEqual(3);
         expect([...new Set(layer.features.map(f => f.id))].length).toEqual(4);
     });
+    it('test normalizeLayer deduplicates vector feature ids with mixed types', () => {
+        const geometry = {
+            "type": "LineString",
+            "coordinates": [[0, 39], [28, 48]]
+        };
+        const layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [
+                { type: "Feature", geometry, id: 2 },
+                { type: "Feature", geometry, id: "2" }
+            ]
+        });
+        expect(layer.features[0].id).toEqual(2);
+        expect(layer.features[1].id.length).toEqual(36);
+        expect(layer.features.map(f => String(f.id)).filter(id => id === "2").length).toEqual(1);
+    });
     it('test createFeatureId', () => {
         let feature = LayersUtils.createFeatureId({});
         expect(feature.id.length).toEqual(uuidv1().length);
