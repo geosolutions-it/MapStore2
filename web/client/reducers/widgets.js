@@ -29,7 +29,6 @@ import {
     TOGGLE_COLLAPSE_ALL,
     TOGGLE_TRAY,
     toggleCollapse,
-    toggleMaximize,
     REPLACE,
     WIDGETS_REGEX,
     REPLACE_LAYOUT_VIEW,
@@ -44,6 +43,7 @@ import { get, find, omit, mapValues, castArray, isEmpty } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
 import {
     convertDependenciesMappingForCompatibility as convertToCompatibleWidgets,
+    cleanMaximizedState,
     editorChange
 } from "../utils/WidgetsUtils";
 
@@ -184,10 +184,13 @@ function widgetsReducer(state = emptyState, action) {
     }
     case DELETE: {
         const path = `containers[${action.target}].widgets`;
-        const maximizedWidget = castArray(state?.containers?.[action.target]?.maximized?.widget || [])
-            .find(widget => widget?.id === action.widget.id);
-        const restoredState = maximizedWidget
-            ? widgetsReducer(state, toggleMaximize(maximizedWidget, action.target))
+        const maximized = state?.containers?.[action.target]?.maximized;
+        const remainingMaximized = castArray(maximized?.widget || [])
+            .filter(widget => widget?.id !== action.widget.id);
+        const restoredState = maximized?.widget
+            ? set(`containers[${action.target}].maximized`, remainingMaximized.length
+                ? { widget: Array.isArray(maximized.widget) ? remainingMaximized : remainingMaximized[0] }
+                : {}, state)
             : state;
         const updatedState = arrayDelete(path, {
             id: action.widget.id
@@ -208,7 +211,7 @@ function widgetsReducer(state = emptyState, action) {
     case DASHBOARD_LOADED:
         const { data } = action;
         return set(`containers[${DEFAULT_TARGET}]`, {
-            ...data
+            ...cleanMaximizedState(data)
         }, state);
     case REFRESH_SECURITY_LAYERS: {
         let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
@@ -276,7 +279,7 @@ function widgetsReducer(state = emptyState, action) {
     case MAP_CONFIG_LOADED:
         let { widgetsConfig } = (action.config || {});
         if (!isEmpty(widgetsConfig)) {
-            widgetsConfig = convertToCompatibleWidgets(widgetsConfig);
+            widgetsConfig = cleanMaximizedState(convertToCompatibleWidgets(widgetsConfig));
             return set(`containers[${DEFAULT_TARGET}]`, {
                 ...widgetsConfig
             }, state);
@@ -375,106 +378,22 @@ function widgetsReducer(state = emptyState, action) {
     }
     case TOGGLE_MAXIMIZE: {
         const widget = action.widget;
-        const maximized = state?.containers?.[action.target]?.maximized;
+        const container = state?.containers?.[action.target];
 
-        if (!widget || widget.dataGrid?.static) {
+        if (!widget || widget.dataGrid?.static || container?.collapsed?.[widget.id]) {
             return state;
         }
 
-        const layouts = state?.containers?.[action.target]?.layouts;
-        const selectedLayoutId = state?.containers?.[action.target]?.selectedLayoutId || layouts?.[0]?.id;
-        const isLayoutArray = Array.isArray(layouts);
+        const isLayoutArray = Array.isArray(container?.layouts);
+        const maximizedWidgets = castArray(container?.maximized?.widget || []);
+        const isIncluded = maximizedWidgets.some(w => w?.id === widget.id);
+        const nextWidgets = isIncluded
+            ? maximizedWidgets.filter(w => w.id !== widget.id)
+            : [...maximizedWidgets, widget];
 
-        const isWidgetArray = maximized?.widget ? Array.isArray(maximized.widget) : false;
-        const maximizedWidget = isWidgetArray
-            ? maximized.widget.find(w => w.id === widget.id)
-            : maximized?.widget;
-        const isIncluded = maximizedWidget?.id === widget.id;
-
-        if (isIncluded && maximized?.widget && maximized?.widget?.length > 1) {
-            const maximizedState = { ...maximized, widget: maximized.widget.filter(w => w.id !== widget.id) };
-            const updatedLayouts = layouts.map(l => l.id === widget.layoutId
-                ? { ...maximized.layouts.find(ml => ml.id === widget.layoutId) }
-                : { ...l }
-            );
-            return compose(
-                set(`containers[${action.target}].maximized`, maximizedState),
-                set(`containers[${action.target}].layout`, updatedLayouts.find(l => l.id === widget.layoutId)?.md),
-                set(`containers[${action.target}].layouts`, updatedLayouts),
-                set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === widget.id ?
-                    {
-                        ...w,
-                        dataGrid: {
-                            ...w.dataGrid,
-                            isDraggable: true,
-                            isResizable: true
-                        }
-                    } : w)
-                )
-            )(state);
-        } else if (isIncluded && maximized?.widget) {
-            return compose(
-                set(`containers[${action.target}].layout`, maximized.layout),
-                set(`containers[${action.target}].layouts`, maximized.layouts),
-                set(`containers[${action.target}].maximized`, {}),
-                set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === maximizedWidget.id ?
-                    {
-                        ...w,
-                        dataGrid: {
-                            ...w.dataGrid,
-                            isDraggable: true,
-                            isResizable: true
-                        }
-                    } : w)
-                )
-            )(state);
-        }
-
-        if (state?.containers?.[action.target]?.collapsed?.[widget.id]) {
-            return state;
-        }
-
-        // we assume that react-grid-layout has just one cell with one xxs breakpoint at 0, that is covering
-        // the area that is supposed to be taken by maximized widget, when maximized state is present
-        const newLayoutValues = {
-            x: 0,
-            y: 0,
-            w: 1,
-            h: 1
-        };
-        const oldLayoutValue = find(state?.containers?.[action.target]?.layout, {i: widget.id});
-        const newLayoutValue = {
-            ...oldLayoutValue,
-            ...newLayoutValues
-        };
-
-        const updatedLayout = isLayoutArray
-            ? layouts.map(l =>
-                l.id === selectedLayoutId
-                    ? { ...l, xxs: [newLayoutValue], md: [] }
-                    : { ...l }
-            )
-            : { xxs: [newLayoutValue] };
-
-        return compose(
-            set(`containers[${action.target}].maximized`, {
-                widget: isLayoutArray ? [...(maximized?.widget || []), widget] : widget,
-                layout: maximized?.layout || state?.containers?.[action.target]?.layout,
-                layouts: maximized?.layouts || state?.containers?.[action.target]?.layouts
-            }),
-            set(`containers[${action.target}].layout`, [newLayoutValue]),
-            set(`containers[${action.target}].layouts`, updatedLayout),
-            set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === widget.id ?
-                {
-                    ...w,
-                    dataGrid: {
-                        ...w.dataGrid,
-                        isDraggable: false,
-                        isResizable: false
-                    }
-                } : w)
-            )
-        )(state);
+        return set(`containers[${action.target}].maximized`, nextWidgets.length
+            ? { widget: isLayoutArray ? nextWidgets : nextWidgets[0] }
+            : {}, state);
     }
     case TOGGLE_COLLAPSE_ALL: {
         // get widgets excluding static widgets

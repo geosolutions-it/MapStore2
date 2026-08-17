@@ -39,8 +39,6 @@ import {
     getApplyDimensionOutOfSyncForFilterWidget,
     inactiveInteractionIdsForWidgetSelector,
     isTimelineEnabledForInteractions,
-    getWidgetsForSave,
-    getLayoutsForSave,
     widgetsConfig
 } from '../widgets';
 
@@ -70,96 +68,53 @@ describe('widgets selectors', () => {
         expect(getDashboardWidgetsLayout(state)[0]).toExist();
         expect(getDashboardWidgetsLayout(state)[0].title).toBe("TEST");
     });
-    it('widgetsConfig restores the pre-maximize widget dataGrid and layouts', () => {
-        const widgetId = 'widget-1';
-        const layoutId = 'view-1';
-        const originalDataGrid = {
-            x: 1,
-            y: 2,
-            w: 3,
-            h: 4,
-            isDraggable: true,
-            isResizable: true
+    it('widgetsConfig uses canonical state while maximized and filters linked views', () => {
+        const widget = {
+            id: 'widget-1',
+            layoutId: 'view-1',
+            dataGrid: { x: 1, y: 2, w: 3, h: 4 }
         };
-        const originalLayouts = [{
-            id: layoutId,
+        const linkedWidget = {
+            id: 'widget-2',
+            layoutId: 'view-2',
+            dataGrid: { x: 0, y: 0, w: 1, h: 1 }
+        };
+        const layouts = [{
+            id: 'view-1',
             name: 'Main view',
-            md: [{ i: widgetId, x: 1, y: 2, w: 3, h: 4 }],
-            xxs: [{ i: widgetId, x: 0, y: 0, w: 1, h: 4 }]
+            md: [{ i: widget.id, x: 1, y: 2, w: 3, h: 4 }],
+            xxs: [{ i: widget.id, x: 0, y: 0, w: 1, h: 4 }]
+        }, {
+            id: 'view-2',
+            name: 'Linked view',
+            dashboard: { id: 10 },
+            md: [{ i: linkedWidget.id, x: 0, y: 0, w: 1, h: 1 }],
+            xxs: [{ i: linkedWidget.id, x: 0, y: 0, w: 1, h: 1 }]
         }];
         const state = {
             widgets: {
                 containers: {
                     [DEFAULT_TARGET]: {
-                        widgets: [{
-                            id: widgetId,
-                            layoutId,
-                            title: 'Updated while maximized',
-                            dataGrid: {
-                                ...originalDataGrid,
-                                isDraggable: false,
-                                isResizable: false
-                            }
-                        }],
-                        layouts: [{
-                            id: layoutId,
-                            name: 'Main view',
-                            md: [],
-                            xxs: [{ i: widgetId, x: 0, y: 0, w: 1, h: 1 }]
-                        }],
+                        widgets: [widget, linkedWidget],
+                        layouts,
                         maximized: {
-                            widget: [{
-                                id: widgetId,
-                                layoutId,
-                                title: 'Original title',
-                                dataGrid: originalDataGrid
-                            }],
-                            layouts: originalLayouts
+                            widget: [widget]
                         }
                     }
                 }
             }
         };
 
-        expect(getWidgetsForSave(state)[0].title).toBe('Updated while maximized');
-        expect(getWidgetsForSave(state)[0].dataGrid).toEqual(originalDataGrid);
-        expect(getLayoutsForSave(state)).toBe(originalLayouts);
-        expect(widgetsConfig(state).widgets[0].dataGrid).toEqual(originalDataGrid);
-        expect(widgetsConfig(state).layouts).toEqual(originalLayouts);
-    });
-    it('widgetsConfig preserves explicit dataGrid settings while maximized', () => {
-        const widgetId = 'widget-1';
-        const originalDataGrid = {
-            x: 0,
-            y: 0,
-            w: 2,
-            h: 2,
-            isDraggable: false,
-            isResizable: true
-        };
-        const state = {
-            widgets: {
-                containers: {
-                    [DEFAULT_TARGET]: {
-                        widgets: [{
-                            id: widgetId,
-                            dataGrid: {
-                                ...originalDataGrid,
-                                isResizable: false
-                            }
-                        }],
-                        layouts: { xxs: [{ i: widgetId, x: 0, y: 0, w: 1, h: 1 }] },
-                        maximized: {
-                            widget: { id: widgetId, dataGrid: originalDataGrid },
-                            layouts: { xxs: [{ i: widgetId, x: 0, y: 0, w: 2, h: 2 }] }
-                        }
-                    }
-                }
-            }
-        };
-
-        expect(widgetsConfig(state).widgets[0].dataGrid).toEqual(originalDataGrid);
-        expect(widgetsConfig(state).layouts.xxs[0]).toEqual({ i: widgetId, x: 0, y: 0, w: 2, h: 2 });
+        const config = widgetsConfig(state);
+        expect(config.widgets).toEqual([widget]);
+        expect(config.layouts[0]).toEqual(layouts[0]);
+        expect(config.layouts[1]).toEqual({
+            ...layouts[1],
+            color: undefined,
+            linkExistingDashboard: undefined,
+            md: [],
+            xxs: []
+        });
     });
     it('getEditingWidget', () => {
         const state = set(`widgets.builder.editor`, { title: "TEST" }, {});
