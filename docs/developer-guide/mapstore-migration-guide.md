@@ -179,6 +179,24 @@ Copy the `logging.properties` file from the MapStore repository (`product/cargo/
 
 **CI/CD**: update your build infrastructure to use JDK 17 as the build JDK.
 
+## Migration from 2026.02.00 to 2026.02.01
+
+### Login `hideGroupUserInfo` configuration
+
+The `hideGroupUserInfo` option is now a direct configuration property of the `Login` plugin. Update all `Login` plugin configurations in `localConfig.json` as follows:
+
+```diff
+{
+    "name": "Login",
+    "cfg": {
+-        "toolsCfg": [{"hideGroupUserInfo": true}]
++        "hideGroupUserInfo": true
+    }
+}
+```
+
+The previous `toolsCfg` configuration is still supported as a fallback for backward compatibility, but the direct `hideGroupUserInfo` property should be used for all new configurations.
+
 ## Migration from 2026.01.02 to 2026.02.00
 
 ### Dev server static configuration moved to the webpack configuration files
@@ -503,22 +521,6 @@ Several monitored state entries have been added to the default configuration of 
 The entries you have configured will still work by overriding the default ones, anyway, in order to reduce the configuration, you should remove the entries if they are already available by default.
 
 The entries that you can remove because are available by default are documented in the [State Access and monitorState](./expressions.md#state-access-and-monitorstate) guide.
-
-### Login `hideGroupUserInfo` configuration
-
-The `hideGroupUserInfo` option is now a direct configuration property of the `Login` plugin. Update all `Login` plugin configurations in `localConfig.json` as follows:
-
-```diff
-{
-    "name": "Login",
-    "cfg": {
--        "toolsCfg": [{"hideGroupUserInfo": true}]
-+        "hideGroupUserInfo": true
-    }
-}
-```
-
-The previous `toolsCfg` configuration is still supported as a fallback for backward compatibility, but the direct `hideGroupUserInfo` property should be used for all new configurations.
 
 ## Migration from 2025.02.02 to 2026.01.00
 
