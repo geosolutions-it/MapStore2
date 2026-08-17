@@ -224,6 +224,7 @@ const ExternalDataViewer = ({ response, layer }) => {
                             <RowViewer
                                 key={feature.id ?? featureIndex}
                                 feature={row.feature}
+                                mediaTypeValues={row.mediaTypeValues}
                                 layer={{ fields: row.fields }}/>
                         );
                     })
