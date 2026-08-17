@@ -19,6 +19,7 @@ describe('TOC Settings - Fields component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.layer-fields');
         expect(el).toBeTruthy();
+        expect(el.classList.contains('layer-fields-with-settings')).toBe(false);
     });
     it('rendering fields', () => {
         const actions = {
@@ -187,5 +188,49 @@ describe('TOC Settings - Fields component', () => {
 
         Simulate.change(headerCheckbox(), {target: {checked: true}});
         expect(spy).toHaveBeenCalledWith('visible', true);
+    });
+    it('shows display settings only after clicking the field settings button', () => {
+        ReactDOM.render(
+            <Fields
+                fields={[{name: 'image', type: 'string'}, {name: 'mimeType', type: 'string'}]}
+                showFieldSettings/>,
+            document.getElementById('container')
+        );
+        const container = document.getElementById('container');
+        expect(container.querySelector('.layer-field-settings-panel')).toNotExist();
+        const settingsButtons = container.querySelectorAll('.layer-field-settings-button');
+        expect(settingsButtons.length).toBe(2);
+        Simulate.click(settingsButtons[0]);
+        expect(container.querySelector('.layer-field-settings-panel')).toExist();
+        Simulate.click(settingsButtons[0]);
+        expect(container.querySelector('.layer-field-settings-panel')).toNotExist();
+    });
+    it('allows selecting the feature attribute containing the media type', () => {
+        const actions = { onChange: () => {} };
+        const spy = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(
+            <Fields
+                fields={[
+                    {name: 'media', type: 'string', displayType: 'media'},
+                    {name: 'mimeType', alias: {'default': 'MIME type', 'it-IT': 'Tipo MIME'}, type: 'string'},
+                    {name: 'title', type: 'string'}
+                ]}
+                currentLocale="it-IT"
+                onChange={actions.onChange}
+                showFieldSettings/>,
+            document.getElementById('container')
+        );
+        const settingsButton = document.querySelector('.layer-field-settings-button');
+        expect(document.querySelector('.layer-fields').classList.contains('layer-fields-with-settings')).toBe(true);
+        Simulate.click(settingsButton);
+        const mediaTypeSelect = document.querySelectorAll('.layer-field-settings-panel .Select-control')[1];
+        expect(mediaTypeSelect).toBeTruthy();
+        Simulate.keyDown(mediaTypeSelect, { key: 'ArrowDown', keyCode: 40 });
+        const options = document.querySelectorAll('.Select-option');
+        expect(options.length).toBe(2);
+        expect(options[0].textContent).toBe('Tipo MIME');
+        Simulate.mouseDown(options[0]);
+        expect(spy.calls[0].arguments).toEqual(['media', 'mediaTypeAttribute', 'mimeType']);
+        spy.restore();
     });
 });

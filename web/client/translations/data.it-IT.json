@@ -313,7 +313,21 @@
         "type": "Tipo",
         "clearCustomization": "Rimuovi modifiche",
         "clearCustomizationConfirm": "Sei sicuro di voler rimuovere tutte le modifiche effettuate ai campi?",
-        "error": "Non è stato possibile recuperare i campi dalla sorgente dati"
+        "error": "Non è stato possibile recuperare i campi dalla sorgente dati",
+        "featureInfoDisplayType": "Tipo di visualizzazione delle informazioni",
+        "configureField": "Configura campo",
+        "mediaTypeAttribute": "Attributo del tipo di media",
+        "displayTypes": {
+          "string": "Testo",
+          "image": "Immagine",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Immagine panoramica",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Media"
+        }
       },
       "disableFeaturesEditing": "Disabilita la modifica sulla tabella degli attributi",
       "interactiveLegend": {
@@ -916,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "Più informazioni",
     "identifyRevGeocodeCloseText": "Chiudi",
     "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
+    "identifyShowFullscreen": "Mostra a schermo intero",
     "identifyEdit": "Modifica",
     "identifyLayerSelectNoResult": "Nessun livello trovato",
     "getFeatureInfoError": {
@@ -4926,6 +4941,7 @@
         "errorDefault": "Errore di rete"
       },
       "myResources": "Le mie risorse",
+      "select": "Seleziona",
       "creationFilter": {
         "from": "Dalla data di creazione",
         "to": "Alla data di creazione"

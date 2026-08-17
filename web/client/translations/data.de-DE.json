@@ -313,7 +313,21 @@
         "type": "Typ",
         "clearCustomization": "Alle Anpassungen entfernen",
         "clearCustomizationConfirm": "Möchten Sie wirklich alle Anpassungen entfernen?",
-        "error": "Die Felder konnten nicht automatisch geladen werden"
+        "error": "Die Felder konnten nicht automatisch geladen werden",
+        "featureInfoDisplayType": "Anzeigetyp der Feature-Informationen",
+        "configureField": "Feld konfigurieren",
+        "mediaTypeAttribute": "Medientyp-Attribut",
+        "displayTypes": {
+          "string": "Text",
+          "image": "Bild",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Panoramabild",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Medien"
+        }
       },
       "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle",
       "interactiveLegend": {
@@ -955,6 +969,7 @@
     "identifyRevGeocodeSubmitText": "Mehr Informationen",
     "identifyRevGeocodeCloseText": "Schliessen",
     "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
+    "identifyShowFullscreen": "Vollbild anzeigen",
     "identifyEdit": "Bearbeiten",
     "identifyLayerSelectNoResult": "Keine Ebenen gefunden",
     "getFeatureInfoError": {
@@ -4965,6 +4980,7 @@
         "errorDefault": "Netzwerkfehler"
       },
       "myResources": "Meine Ressourcen",
+      "select": "Auswählen",
       "creationFilter": {
         "from": "Erstellungsdatum von",
         "to": "Erstellungsdatum bis"

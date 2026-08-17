@@ -313,7 +313,21 @@
         "type": "Type",
         "clearCustomization": "Supprimer les personnalisations",
         "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
-        "error": "Échec de la récupération des champs"
+        "error": "Échec de la récupération des champs",
+        "featureInfoDisplayType": "Type d'affichage des informations",
+        "configureField": "Configurer le champ",
+        "mediaTypeAttribute": "Attribut du type de média",
+        "displayTypes": {
+          "string": "Texte",
+          "image": "Image",
+          "video": "Vidéo",
+          "audio": "Audio",
+          "panorama": "Image panoramique",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Média"
+        }
       },
       "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
       "interactiveLegend": {
@@ -916,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "Plus d'informations",
     "identifyRevGeocodeCloseText": "Fermer",
     "identifyRevGeocodeError": "Géocodage impossible",
+    "identifyShowFullscreen": "Afficher en plein écran",
     "identifyEdit": "Éditer",
     "identifyLayerSelectNoResult": "Aucun calque trouvé",
     "getFeatureInfoError": {
@@ -4925,10 +4940,11 @@
         "error500": "Erreur interne du serveur",
         "errorDefault": "Erreur réseau"
       },
-      "myResources": "My resources",
+      "myResources": "Mes ressources",
+      "select": "Sélectionner",
       "creationFilter": {
-        "from": "Creation date from",
-        "to": "Creation date to"
+        "from": "Date de création à partir du",
+        "to": "Date de création au"
       },
       "deleteTagTitle": "Êtes-vous sûr de vouloir supprimer cette balise ?",
       "deleteTagDescription": "Cette balise sera supprimée, y compris l'association avec les ressources existantes",
