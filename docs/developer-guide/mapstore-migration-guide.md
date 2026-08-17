@@ -20,6 +20,24 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.02.00 to 2026.02.01
+
+### Login `hideGroupUserInfo` configuration
+
+The `hideGroupUserInfo` option is now a direct configuration property of the `Login` plugin. Update all `Login` plugin configurations in `localConfig.json` as follows:
+
+```diff
+{
+    "name": "Login",
+    "cfg": {
+-        "toolsCfg": [{"hideGroupUserInfo": true}]
++        "hideGroupUserInfo": true
+    }
+}
+```
+
+The previous `toolsCfg` configuration is still supported as a fallback for backward compatibility, but the direct `hideGroupUserInfo` property should be used for all new configurations.
+
 ## Migration from 2026.01.02 to 2026.02.00
 
 ### Dev server static configuration moved to the webpack configuration files
