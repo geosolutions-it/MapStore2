@@ -67,7 +67,7 @@ describe('Login Plugin', () => {
             // permission table present by default
             expect(document.querySelector('.modal-dialog')).toBeTruthy();
         });
-        it('hides user groups when configured through toolsCfg', () => {
+        it('hides user groups when configured through hideGroupUserInfo', () => {
             const storeState = stateMocker(loginSuccess({
                 User: {
                     name: "Test",
@@ -82,7 +82,7 @@ describe('Login Plugin', () => {
             }), setControlProperty('AccountInfo', 'enabled', true));
             const { Plugin } = getPluginForTest(Login, storeState);
             ReactDOM.render(
-                <Plugin toolsCfg={[{ hideGroupUserInfo: true }]} />,
+                <Plugin hideGroupUserInfo />,
                 document.getElementById("container")
             );
 

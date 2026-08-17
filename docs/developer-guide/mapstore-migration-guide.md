@@ -504,6 +504,22 @@ The entries you have configured will still work by overriding the default ones, 
 
 The entries that you can remove because are available by default are documented in the [State Access and monitorState](./expressions.md#state-access-and-monitorstate) guide.
 
+### Login `hideGroupUserInfo` configuration
+
+The `hideGroupUserInfo` option is now a direct configuration property of the `Login` plugin. Update all `Login` plugin configurations in `localConfig.json` as follows:
+
+```diff
+{
+    "name": "Login",
+    "cfg": {
+-        "toolsCfg": [{"hideGroupUserInfo": true}]
++        "hideGroupUserInfo": true
+    }
+}
+```
+
+The previous `toolsCfg` configuration is still supported as a fallback for backward compatibility, but the direct `hideGroupUserInfo` property should be used for all new configurations.
+
 ## Migration from 2025.02.02 to 2026.01.00
 
 ### Database update
