@@ -9,7 +9,14 @@
 import expect from 'expect';
 
 import {
+<<<<<<< HEAD
     convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
+=======
+    FILTER_PROPS,
+    CHART_PROPS,
+    isWidgetLayerSupported,
+    cleanMaximizedState, convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
+>>>>>>> 85f34a022 (#11772 Save dashboard with maximized widget cause problem with resize/move (#12719))
     getConnectionList, getDependantWidget,
     getChartAxisDependencyPath, getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
@@ -212,6 +219,88 @@ describe('Test WidgetsUtils', () => {
         const maps = [_widgets[0]];
         const modified = getWidgetDependency('widgets[w_2]', _widgets, maps);
         expect(modified).toEqual(_widgets[1]);
+    });
+    it('cleanMaximizedState cleans map widget and layout flags without changing the source', () => {
+        const config = {
+            widgets: [{
+                id: 'widget-1',
+                dataGrid: {
+                    x: 2,
+                    y: 3,
+                    w: 4,
+                    h: 5,
+                    "static": true,
+                    isDraggable: false,
+                    isResizable: false
+                }
+            }],
+            layout: [{
+                i: 'widget-1',
+                x: 2,
+                y: 3,
+                w: 4,
+                h: 5,
+                "static": true,
+                isDraggable: false,
+                isResizable: false
+            }],
+            layouts: {
+                md: [{
+                    i: 'widget-1',
+                    x: 2,
+                    y: 3,
+                    w: 4,
+                    h: 5,
+                    "static": true,
+                    isDraggable: false,
+                    isResizable: false
+                }]
+            }
+        };
+
+        const cleaned = cleanMaximizedState(config);
+        expect(cleaned.widgets[0].dataGrid).toEqual({
+            x: 2,
+            y: 3,
+            w: 4,
+            h: 5,
+            "static": true
+        });
+        expect(cleaned.layout[0]).toEqual({
+            i: 'widget-1',
+            x: 2,
+            y: 3,
+            w: 4,
+            h: 5,
+            "static": true
+        });
+        expect(cleaned.layouts.md[0]).toEqual(cleaned.layout[0]);
+        expect(config.widgets[0].dataGrid.isDraggable).toBe(false);
+        expect(config.layouts.md[0].isResizable).toBe(false);
+    });
+    it('cleanMaximizedState cleans dashboard breakpoints and preserves view metadata', () => {
+        const config = {
+            widgets: [{ id: 'widget-1', dataGrid: { x: 1, custom: 'value', isResizable: false } }],
+            layouts: [{
+                id: 'view-1',
+                name: 'Main view',
+                color: '#fff',
+                dashboard: { id: 10 },
+                md: [{ i: 'widget-1', x: 1, isDraggable: false }],
+                xxs: [{ i: 'widget-1', x: 0, isResizable: false }]
+            }]
+        };
+
+        const cleaned = cleanMaximizedState(config);
+        expect(cleaned.widgets[0].dataGrid).toEqual({ x: 1, custom: 'value' });
+        expect(cleaned.layouts[0]).toEqual({
+            id: 'view-1',
+            name: 'Main view',
+            color: '#fff',
+            dashboard: { id: 10 },
+            md: [{ i: 'widget-1', x: 1 }],
+            xxs: [{ i: 'widget-1', x: 0 }]
+        });
     });
     it('convertDependenciesMappingForCompatibility', () => {
         const data = {widgets: [{id: 'w_1', map: {center: {x: 0, y: 0, crs: "EPSG:4326"}, mapInfoControl: true, layers: [{id: 'layer1'}], size: {width: 400, height: 400}, zoom: 3 }, widgetType: 'map', mapSync: true},
