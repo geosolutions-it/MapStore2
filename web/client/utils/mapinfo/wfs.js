@@ -9,7 +9,7 @@
 import {Observable} from 'rxjs';
 
 import {normalizeSRS} from '../CoordinatesUtils';
-import { getCapabilitiesUrl, getLayerUrl } from '../LayersUtils';
+import { getLayerUrl } from '../LayersUtils';
 import { isObject } from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { describeFeatureType, getFeature, getSupportedFormat } from '../../api/WFS';
@@ -110,11 +110,7 @@ export default {
         if (infoFormat !== INFO_FORMATS.HTML || layer.infoFormats?.length || !layer.url) {
             return Promise.resolve(layer);
         }
-        // layer specific capabilities is a smaller document
-        const capabilitiesUrl = layer.name
-            ? getCapabilitiesUrl({ url: layer.url, name: layer.name })
-            : getLayerUrl(layer);
-        return getSupportedFormat(capabilitiesUrl)
+        return getSupportedFormat(layer)
             .then(({ infoFormats }) => ({ ...layer, infoFormats }))
             .catch(() => layer);
     },

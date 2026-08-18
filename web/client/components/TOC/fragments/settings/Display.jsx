@@ -119,9 +119,9 @@ export default class extends React.Component {
         });
     };
 
-    onFormatOptionsFetch = (url) => {
+    onFormatOptionsFetch = (layer) => {
         this.setState({formatLoading: true});
-        getSupportedFormat(url).then((imageFormats)=>{
+        getSupportedFormat(layer).then((imageFormats)=>{
             this.props.onChange("imageFormats", imageFormats);
             this.setState({formatLoading: false});
         });
@@ -173,7 +173,7 @@ export default class extends React.Component {
                                     onOpen={() => {
                                         if (!this.props.element?.imageFormats
                                         || this.props.element?.imageFormats?.length === 0) {
-                                            this.onFormatOptionsFetch(this.props.element?.url);
+                                            this.onFormatOptionsFetch(this.props.element);
                                         }
                                     }}
                                     onChange={({ value }) => {
@@ -183,7 +183,7 @@ export default class extends React.Component {
                                     disabled={!!this.state.formatLoading}
                                     tooltipId="layerProperties.format.refresh"
                                     className="square-button no-border format-refresh"
-                                    onClick={() => {this.onFormatOptionsFetch(this.props.element?.url);}}
+                                    onClick={() => {this.onFormatOptionsFetch(this.props.element);}}
                                     key="format-refresh">
                                     <Glyphicon glyph="refresh" />
                                 </Button>

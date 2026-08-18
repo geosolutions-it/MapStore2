@@ -14,6 +14,7 @@ import {toOGCFilterParts} from '../utils/FilterUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
 import { castArray } from 'lodash';
 import { isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+import { getCapabilitiesUrl } from '../utils/LayersUtils';
 
 const capabilitiesCache = {};
 
@@ -159,11 +160,11 @@ export const describeFeatureType = function(url, typeName) {
 
 /**
  * Fetch the supported formats of the WFS service
- * @param url
- * @return {Promise} resolves with { infoFormats }
+ * @param {Object} layer selected layer
+ * @returns {Promise} resolves with { infoFormats }
  */
-export const getSupportedFormat = (url) => {
-    return getCapabilities(url)
+export const getSupportedFormat = (layer) => {
+    return getCapabilities(getCapabilitiesUrl(layer))
         .then((response) => {
             const operations = castArray(response?.['wfs:WFS_Capabilities']?.['ows:OperationsMetadata']?.['ows:Operation'] || []);
             const getFeatureOperation = operations.find(operation => operation?.$?.name === 'GetFeature');

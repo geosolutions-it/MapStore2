@@ -824,8 +824,8 @@ export const getCapabilitiesUrl = (layer) => {
     if (!!matchedGeoServerName) {
         let urlParts = reqUrl.split(matchedGeoServerName);
         if (urlParts.length === 2) {
-            let layerParts = layer.name.split(":");
-            if (layerParts.length === 2) {
+            let layerParts = layer?.name?.split(":");
+            if (layerParts?.length === 2) {
                 const [workspace, layerName] = layerParts;
                 const rawTail = urlParts[1] || '';
                 const urlTail = rawTail.replace(/^\/+/, '');

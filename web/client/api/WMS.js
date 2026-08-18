@@ -13,6 +13,7 @@ import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+import { getCapabilitiesUrl } from '../utils/LayersUtils';
 const capabilitiesCache = {};
 
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
@@ -310,12 +311,12 @@ export const reset = () => {
 
 /**
  * Fetch the supported formats of the WMS service
- * @param url
- * @param includeGFIFormats
- * @return {object|string} formats
+ * @param {Object} layer selected layer
+ * @param {boolean} includeGFIFormats include GFI formats
+ * @returns {object|string} formats
  */
-export const getSupportedFormat = (url, includeGFIFormats = false) => {
-    return getCapabilities(url)
+export const getSupportedFormat = (layer, includeGFIFormats = false) => {
+    return getCapabilities(getCapabilitiesUrl(layer))
         .then((response) => {
             const { imageFormats, infoFormats } = getFormats(response);
             if (includeGFIFormats) {
