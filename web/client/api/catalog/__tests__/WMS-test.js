@@ -91,13 +91,17 @@ describe('Test correctness of the WMS APIs', () => {
             url: 'http://sample',
             layerOptions: {
                 tileSize: 512,
-                serverType: "no-vendor"
+                serverType: "no-vendor",
+                msRateLimitBucket: "wmsLayer",
+                msRateLimitKey: "catalog-service-bucket"
             }
         });
         expect(records.length).toBe(1);
         const layer = getLayerFromRecord(records[0]);
         expect(layer.tileSize).toBe(512);
         expect(layer.serverType).toBe("no-vendor");
+        expect(layer.msRateLimitBucket).toBe("wmsLayer");
+        expect(layer.msRateLimitKey).toBe("catalog-service-bucket");
     });
 
     it('wms feature info layer options preserve catalog info format', () => {

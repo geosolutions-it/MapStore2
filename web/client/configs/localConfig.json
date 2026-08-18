@@ -66,6 +66,15 @@
       }
     }
   ],
+  "rateLimit": {
+    "enabled": true,
+    "baseDelay": 1000,
+    "maxDelay": 60000,
+    "maxRetries": 3,
+    "maxTileWait": 2000,
+    "defaultBucket": "wmsLayer",
+    "bucketRules": []
+  },
   "monitorState": [],
   "userSessions": {
     "enabled": true
