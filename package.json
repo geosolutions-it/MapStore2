@@ -196,7 +196,7 @@
     "plotly.js-cartesian-dist": "2.35.2",
     "proj4": "2.19.10",
     "prop-types": "15.7.2",
-    "qrcode.react": "0.9.3",
+    "qrcode.react": "4.2.0",
     "query-string": "6.9.0",
     "react": "16.14.0",
     "react-bootstrap": "0.31.0",

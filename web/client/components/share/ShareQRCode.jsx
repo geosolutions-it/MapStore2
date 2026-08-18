@@ -12,7 +12,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import QRCode from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 import Message from '../../components/I18N/Message';
 
 class ShareQRCode extends React.Component {
@@ -26,7 +26,7 @@ class ShareQRCode extends React.Component {
                 <h4>
                     <Message msgId="share.QRCodeLinkTitle" />
                 </h4>
-                <QRCode value={this.props.shareUrl} />
+                <QRCodeCanvas value={this.props.shareUrl} />
             </div>
         );
     }
