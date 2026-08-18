@@ -9,14 +9,10 @@
 import expect from 'expect';
 
 import {
-<<<<<<< HEAD
-    convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
-=======
     FILTER_PROPS,
     CHART_PROPS,
     isWidgetLayerSupported,
     cleanMaximizedState, convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
->>>>>>> 85f34a022 (#11772 Save dashboard with maximized widget cause problem with resize/move (#12719))
     getConnectionList, getDependantWidget,
     getChartAxisDependencyPath, getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
