@@ -117,6 +117,7 @@ const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, c
                 loading={loading}
                 error={error}
                 showVisibility
+                showFieldSettings
                 onChange={updateAttribute}
                 onChangeAll={updateAllAttributes}
                 onLoadFields={() => loadAttributes(true)}

@@ -66,6 +66,7 @@ export const getExternalAttributes = (description = {}, previousAttributes = [])
         .map((attribute) => {
             const previous = previousAttributes.find(({ name }) => name === attribute.name) || {};
             return {
+                ...previous,
                 name: attribute.name,
                 type: attribute.localType || attribute.type,
                 alias: previous.alias || '',
@@ -415,6 +416,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
                         loading={attributesStatus === 'loading'}
                         error={attributesStatus === 'error'}
                         showVisibility
+                        showFieldSettings
                         onChange={(name, property, nextValue) => updateAttribute(name, {
                             [property]: nextValue
                         })}

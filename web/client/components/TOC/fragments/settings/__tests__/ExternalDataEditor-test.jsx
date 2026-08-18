@@ -11,6 +11,7 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+import { waitFor } from '@testing-library/react';
 
 import axios from '../../../../../libs/ajax';
 import ExternalDataEditor, {
@@ -113,8 +114,10 @@ describe('ExternalDataEditor', () => {
             <ExternalDataEditor value={value} onChange={onChange}/>,
             document.getElementById('container')
         );
-        const attributeRow = document.querySelector('.ms-external-data-attributes .layer-fields-row');
-        TestUtils.Simulate.change(attributeRow.querySelector('.layer-field-alias input'), { target: { value: 'Display name' } });
+        const attributeContainer = document.querySelector('.ms-external-data-attributes .layer-fields-field-container');
+        const attributeRow = attributeContainer.querySelector('.layer-fields-row');
+        TestUtils.Simulate.click(attributeRow.querySelector('.layer-field-settings-button'));
+        TestUtils.Simulate.change(attributeContainer.querySelector('.layer-field-settings-panel .layer-field-alias input'), { target: { value: 'Display name' } });
         expect(value.attributes[0].alias).toBe('Display name');
 
         TestUtils.Simulate.change(attributeRow.querySelector('.layer-field-visibility input'), {
@@ -123,7 +126,7 @@ describe('ExternalDataEditor', () => {
         expect(value.attributes[0].visible).toBe(false);
     });
 
-    it('loads feature types for an initial WFS URL', (done) => {
+    it('loads feature types for an initial WFS URL', () => {
         mockAxios.onGet().reply(({ url }) => {
             expect(url).toContain('/external-data-test/wfs');
             expect(url).toContain('request=GetCapabilities');
@@ -140,17 +143,14 @@ describe('ExternalDataEditor', () => {
             document.getElementById('container')
         );
 
-        setTimeout(() => {
-            try {
-                const select = document.querySelector('.ms-external-data-layer-select');
-                expect(select.classList.contains('is-disabled')).toBe(false);
-                TestUtils.Simulate.mouseDown(select.querySelector('.Select-arrow'), { button: 0 });
-                expect(document.body.textContent).toContain('Table (workspace:table)');
-                done();
-            } catch (error) {
-                done(error);
-            }
-        }, 50);
+        return waitFor(() => {
+            const select = document.querySelector('.ms-external-data-layer-select');
+            expect(select.classList.contains('is-disabled')).toBe(false);
+        }).then(() => {
+            const select = document.querySelector('.ms-external-data-layer-select');
+            TestUtils.Simulate.mouseDown(select.querySelector('.Select-arrow'), { button: 0 });
+            expect(document.body.textContent).toContain('Table (workspace:table)');
+        });
     });
 
     it('ignores a capabilities response superseded by a newer URL', (done) => {

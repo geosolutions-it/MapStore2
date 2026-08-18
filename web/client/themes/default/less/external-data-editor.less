@@ -40,6 +40,59 @@
     }
 }
 
+// Media attributes shared by Properties and External Data Identify views.
+.ms-feature-info-attribute-media {
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--ms-main-border-color);
+    background-color: var(--ms-main-variant-bg);
+    display: block;
+    width: 100%;
+    .ms-media,
+    img,
+    video {
+        height: 100%;
+        width: 100%;
+    }
+    img,
+    video {
+        object-fit: contain;
+    }
+}
+audio.ms-feature-info-attribute-media {
+    aspect-ratio: auto;
+}
+.ms-panorama,
+.ms-pdf {
+    overflow: hidden;
+    position: relative;
+    .ms-feature-info-attribute-panorama-viewer,
+    .ms-pdf-frame {
+        border: 0;
+        height: 100%;
+        width: 100%;
+    }
+}
+.ms-pdf-fullscreen {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    z-index: 2;
+}
+.ms-feature-info-attribute-panorama-loading,
+.ms-feature-info-attribute-panorama-error,
+.ms-pdf-loading,
+.ms-pdf-error {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
 // Related WFS results shown in the Identify viewer.
 .ms-external-data-viewer {
     .ms-external-data-result {
