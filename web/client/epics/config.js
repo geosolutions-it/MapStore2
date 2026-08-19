@@ -308,11 +308,11 @@ export const backgroundsListInitEpic = (action$) =>
 export const getSupportedFormatsEpic = (action$, {getState = ()=> {}} = {}) =>
     action$.ofType(FORMAT_OPTIONS_FETCH)
         .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
-        .switchMap((action = {})=> {
-            return Observable.defer(() => getSupportedFormat(getCapabilitiesUrl(action), true))
+        .switchMap(({url = ''} = {})=> {
+            return Observable.defer(() => getSupportedFormat(url, true))
                 .switchMap((supportedFormats) => {
                     return Observable.of(
-                        setSupportedFormats(supportedFormats, action.url),
+                        setSupportedFormats(supportedFormats, url),
                         showFormatError(supportedFormats.imageFormats.length === 0 && supportedFormats.infoFormats.length === 0)
                     );
                 })
