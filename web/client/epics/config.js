@@ -51,7 +51,6 @@ import { error } from '../actions/notifications';
 import { applyOverrides } from '../utils/ConfigUtils';
 
 import ProjectionRegistry from '../utils/ProjectionRegistry';
-import { getCapabilitiesUrl } from '../utils/LayersUtils';
 
 
 const prepareMapConfiguration = (data, override, state) => {
