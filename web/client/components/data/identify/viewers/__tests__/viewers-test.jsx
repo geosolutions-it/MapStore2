@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 
 import HTMLViewer from '../HTMLViewer';
 import JSONViewer from '../JSONViewer';
+import TemplateViewer from '../TemplateViewer';
 import TextViewer from '../TextViewer';
 
 import configureStore from 'redux-mock-store';
@@ -300,4 +301,37 @@ describe('Identity Viewers', () => {
         expect(propertiesViewer.length).toBe(1);
     });
 
+
+    describe('TemplateViewer', () => {
+        it('TemplateViewer does not evaluate the content of the placeholders', () => {
+            window.__viewerEvaluated = undefined;
+            const layer = {
+                featureInfo: {
+                    format: 'TEMPLATE',
+                    template: '<b>${(window.__viewerEvaluated = true)}</b>'
+                }
+            };
+            const response = { features: [{ id: 1, properties: { name: 'name' } }] };
+            ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById("container"));
+            expect(window.__viewerEvaluated).toBe(undefined);
+        });
+        it('TemplateViewer escapes the html of the feature values', () => {
+            const layer = {
+                featureInfo: { format: 'TEMPLATE', template: '<div>${properties.description}</div>' }
+            };
+            const response = { features: [{ id: 1, properties: { description: '<script>window.__viewerScript = true</script>' } }] };
+            window.__viewerScript = undefined;
+            ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById("container"));
+            expect(window.__viewerScript).toBe(undefined);
+            expect(document.getElementById("container").innerHTML.indexOf('<script')).toBe(-1);
+        });
+        it('TemplateViewer keeps the markup of the template', () => {
+            const layer = {
+                featureInfo: { format: 'TEMPLATE', template: '<b>Name: ${properties.name}</b>' }
+            };
+            const response = { features: [{ id: 1, properties: { name: 'Rome' } }] };
+            ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById("container"));
+            expect(document.getElementById("container").innerHTML.indexOf('<b>Name: Rome</b>')).toBeGreaterThan(-1);
+        });
+    });
 });

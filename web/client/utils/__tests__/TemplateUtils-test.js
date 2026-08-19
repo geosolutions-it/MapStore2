@@ -108,4 +108,31 @@ describe('TemplateUtils', () => {
         const retVal = parseCustomTemplate("${<p>desc </p>}, ${desc2}", {desc: "desc value"});
         expect(retVal).toEqual("desc value, desc2 Not Available");
     });
+
+    it('generateTemplateString keeps defined falsy values', () => {
+        const feature = { properties: { count: 0, flag: false, empty: '', name: 'Rome' } };
+        expect(generateTemplateString('${properties.count}')(feature)).toBe('0');
+        expect(generateTemplateString('${properties.flag}')(feature)).toBe('false');
+        expect(generateTemplateString('${properties.name}')(feature)).toBe('Rome');
+        expect(generateTemplateString('${properties.empty}')(feature)).toBe('');
+        expect(generateTemplateString('${properties.missing}')(feature)).toBe('');
+        expect(generateTemplateString('${properties.missing.nested}')(feature)).toBe('');
+    });
+    it('parseCustomTemplate keeps defined falsy values', () => {
+        expect(parseCustomTemplate('${count}', { count: 0 }, () => '')).toBe('0');
+        expect(parseCustomTemplate('${flag}', { flag: false }, () => '')).toBe('false');
+    });
+    it('parseCustomTemplate does not evaluate the content of the placeholders', () => {
+        window.__templateEvaluated = undefined;
+        parseCustomTemplate('${(window.__templateEvaluated = true)}', {}, () => '');
+        expect(window.__templateEvaluated).toBe(undefined);
+    });
+    it('parseCustomTemplate does not evaluate expressions', () => {
+        const retVal = parseCustomTemplate('${1 + 1}', {}, () => '');
+        expect(retVal.indexOf('2')).toBe(-1);
+    });
+    it('parseCustomTemplate escapes the html of the resolved values', () => {
+        const retVal = parseCustomTemplate('${desc}', { desc: '<b>value</b>' }, () => '');
+        expect(retVal).toBe('&lt;b&gt;value&lt;/b&gt;');
+    });
 });
