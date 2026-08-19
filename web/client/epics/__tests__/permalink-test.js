@@ -529,4 +529,24 @@ describe('Permalink Epics', () => {
                 }
             });
     });
+
+    it('test loadPermalinkEpic resolves pathTemplate placeholders without compiling them', (done) => {
+        window.__permalinkResolved = undefined;
+        setApiGetResource(api, {
+            getResource: () => Rx.Observable.of({
+                name: "test",
+                attributes: { type: "map", pathTemplate: "/viewer/${(window.__permalinkResolved = true)}" }
+            })
+        });
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                expect(window.__permalinkResolved).toBe(undefined);
+                done();
+            }, state);
+    });
 });
