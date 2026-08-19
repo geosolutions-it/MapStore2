@@ -1554,7 +1554,8 @@
           "title": "Error loading peramlink",
           "pleaseLogin": "This permalink is not public. Please try to login",
           "notFound": "Permalink not found",
-          "notAccessible": "Permalink not accessible"
+          "notAccessible": "Permalink not accessible",
+          "invalidTarget": "The permalink target is not valid and can not be opened"
         },
         "save": {
           "title": "Permalink generation failed",
