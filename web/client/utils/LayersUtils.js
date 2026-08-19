@@ -424,7 +424,7 @@ export const getLayerId = (layerObj) => {
 export const createFeatureId = (feature = {}) => {
     return {
         ...feature,
-        id: feature.id || feature.properties?.id || uuidv1()
+        id: !isNil(feature.id) ? feature.id : (feature.properties?.id ?? uuidv1())
     };
 };
 /**
@@ -437,9 +437,15 @@ export const normalizeLayer = (layer) => {
     // con uuid
     let _layer = layer;
     if (layer.type === "vector") {
+        const seen = new Set(); // must be unique id for features, so we need to check if there are duplicates
         _layer = _layer?.features?.length ? {
             ..._layer,
-            features: _layer?.features?.map(createFeatureId)
+            features: _layer?.features?.map((f) => {
+                const feature = createFeatureId(f);
+                const id = seen.has(String(feature.id)) ? uuidv1() : feature.id;
+                seen.add(String(id));
+                return { ...feature, id };
+            })
         } : layer;
     }
     // regenerate geodesic lines as property since that info has not been saved
@@ -655,7 +661,7 @@ export const geoJSONToLayer = (geoJSON, id) => {
     let features = [];
     if (geoJSON.type === "FeatureCollection") {
         features = geoJSON.features.map((feature, idx) => {
-            if (!feature.id) {
+            if (isNil(feature.id)) {
                 feature.id = idx;
             }
             if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
