@@ -90,10 +90,10 @@ function receiveResponse(state, action, type) {
 
         if (!isVector) {
             const updateResponse = {
-                response: action[type],
-                queryParams: action.requestParams,
                 layerMetadata: action.layerMetadata,
-                layer: action.layer
+                viewResponses: action.viewResponses,
+                layer: action.layer,
+                reqId: action.reqId
             };
             if (isHover) {
                 // Add response upon it is received
@@ -104,6 +104,8 @@ function receiveResponse(state, action, type) {
             }
         }
 
+        const allResponsesReceived = requests.length === responses
+            .filter(response => !isUndefined(response)).length;
         let indexObj;
         if (isHover || state.showAllResponses) {
             indexObj = {loaded: true, index: state.index || 0};
@@ -113,20 +115,48 @@ function receiveResponse(state, action, type) {
             } else {
                 indexObj = {loaded: true, index: requestIndex};
             }
-        } else if (responses.length === requests.length && !indexObj?.loaded) {
+        } else if (allResponsesReceived && !indexObj?.loaded) {
             // if all responses are empty hence valid but with no valid index
             // then set loaded to true
             indexObj = {loaded: true};
         }
 
-        if (state.loaded) {
-            if (state.index !== null) {
-                const validator = getValidator(config.infoFormat);
-                const checkIfStateIndexValid = validator?.getValidResponses([responses[state.index]]);
-                if (!checkIfStateIndexValid || checkIfStateIndexValid?.length === 0) {
-                    // If state.index is not valid, find the first valid response
-                    indexObj = {...indexObj, index: findIndex((responses || []), res => validator?.getValidResponses([res]).length > 0)};
-                }
+        if (!isHover && !state.showAllResponses) {
+            const validator = getValidator(config.infoFormat);
+            const firstValidResponseIndex = findIndex(
+                responses,
+                response => validator?.getValidResponses([response]).length > 0
+            );
+            const candidateIndex = !isUndefined(indexObj?.index)
+                ? indexObj.index
+                : state.index;
+            const hasCandidateValue = !isUndefined(candidateIndex) && candidateIndex !== null;
+            const hasCandidateIndex = Number.isInteger(candidateIndex) && candidateIndex >= 0;
+            const candidateResponse = hasCandidateIndex
+                ? responses[candidateIndex]
+                : undefined;
+            const candidateResponseIsValid = !isUndefined(candidateResponse)
+                && validator?.getValidResponses([candidateResponse]).length > 0;
+
+            if (candidateResponseIsValid) {
+                indexObj = {...indexObj, loaded: true, index: candidateIndex};
+            } else if (
+                firstValidResponseIndex >= 0
+                && (
+                    (hasCandidateValue && !hasCandidateIndex)
+                    || (hasCandidateIndex && (
+                        !isUndefined(candidateResponse)
+                        || allResponsesReceived
+                    ))
+                )
+            ) {
+                // The selected response is invalid or cannot arrive for the
+                // current request set. Select the first valid response.
+                indexObj = {...indexObj, loaded: true, index: firstValidResponseIndex};
+            } else if (allResponsesReceived && firstValidResponseIndex < 0) {
+                // All responses are empty. Clear a retained or provisional
+                // index instead of exposing an invalid or negative selection.
+                indexObj = {...indexObj, loaded: true, index: undefined};
             }
         }
 
@@ -160,56 +190,35 @@ const initState = {
  * ```
  * @prop {object} configuration contains the configuration for getFeatureInfo tool.
  * @prop {boolean} showInMapPopup if true, the results are always shown in a popup (if configuration.hover = true, they are by default)
- * @prop {array} requests the requests performed. Here a sample:
+ * @prop {array} requests the requests performed, one entry for every queried layer. Here a sample:
  * ```javascript
  * {
- *     request: {
- *         service: 'WMS',
- *         version: '1.1.1',
- *         request: 'GetFeatureInfo',
- *         exceptions: 'application/json',
- *         id: 'tiger:poi__7',
- *         layers: 'tiger:poi',
- *         query_layers: 'tiger:poi',
- *         x: 51,
- *         y: 51,
- *         height: 101,
- *         width: 101,
- *         srs: 'EPSG:3857',
- *         bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
- *         feature_count: 10,
- *         info_format: 'text/plain',
- *         ENV: 'locale:it'
- *     },
  *     reqId: '4e030000-514a-11e9-90f1-3db233bf30bf'
  * }
  * ```
- * @prop {array} responses the responses to the requests performed. This is a sample response
+ * @prop {array} responses the responses to the requests performed, with the response of every
+ * configured feature info view keyed by view id. This is a sample response
  * ```javascript
  * {
- *     response: 'Results for FeatureType', // text
- *     queryParams: {
- *         service: 'WMS',
- *         version: '1.1.1',
- *         request: 'GetFeatureInfo',
- *         exceptions: 'application/json',
- *         id: 'tiger:poi__7',
- *         layers: 'tiger:poi',
- *         query_layers: 'tiger:poi',
- *         x: 51,
- *         y: 51,
- *         height: 101,
- *         width: 101,
- *         srs: 'EPSG:3857',
- *         bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
- *         feature_count: 10,
- *         info_format: 'text/plain',
- *         ENV: 'locale:it'
+ *     reqId: '4e030000-514a-11e9-90f1-3db233bf30bf',
+ *     viewResponses: {
+ *         properties: {
+ *             response: { features: [] },
+ *             queryParams: {
+ *                 service: 'WMS',
+ *                 version: '1.1.1',
+ *                 request: 'GetFeatureInfo',
+ *                 query_layers: 'tiger:poi',
+ *                 info_format: 'application/json',
+ *                 ENV: 'locale:it'
+ *             }
+ *         }
  *     },
+ *     layer: {},
  *     layerMetadata: {
  *         title: 'Manhattan (NY) points of interest',
  *         viewer: {},
- *         featureInfo: {}
+ *         featureInfo: { views: [] }
  *     }
  * }
  * ```
@@ -285,10 +294,10 @@ function mapInfo(state = initState, action) {
         });
     }
     case NEW_MAPINFO_REQUEST: {
-        const {reqId, request} = action;
+        const {reqId} = action;
         const requests = state.requests || [];
         return Object.assign({}, state, {
-            requests: [...requests, {request, reqId}]
+            requests: [...requests, {reqId}]
         });
     }
     case PURGE_MAPINFO_RESULTS:

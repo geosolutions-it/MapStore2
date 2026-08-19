@@ -565,6 +565,33 @@ export const documentsToLayerConfig = (documents = [], locales) => {
 };
 
 /**
+ * Required from geonode-mapstore-client, but not used in MapStore 2.0. Kept for compatibility with downstream projects.
+ * @param {*} resource
+ * @returns {array} array of MapStore layer configs
+ */
+export const resourceToLayers = (resource) => {
+    if (resource?.resource_type === ResourceTypes.DATASET) {
+        return [{...resourceToLayerConfig(resource), isDataset: true}];
+    }
+    if (resource.maplayers && resource?.resource_type === ResourceTypes.MAP) {
+        return resource.maplayers
+            .map(maplayer => {
+                maplayer.dataset ? resourceToLayerConfig(maplayer.dataset) : null;
+                if (maplayer.dataset) {
+                    const layer = resourceToLayerConfig(maplayer.dataset);
+                    return {
+                        ...layer,
+                        style: maplayer.current_style
+                    };
+                }
+                return null;
+            })
+            .filter(value => value);
+    }
+    return [];
+};
+
+/**
 * Convert a GeoNode map resource into structure `{ layers, groups }` ready for the catalog container:
 * all the map layers exclude backgrounds, nested under a new parent group titled how the map name.
 * @param {object} - GeoNode map resource

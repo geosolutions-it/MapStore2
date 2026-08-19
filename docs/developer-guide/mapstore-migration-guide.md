@@ -20,7 +20,33 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2026.02.00 to 2026.03.00
+## Migration from 2026.02.02 to 2026.03.00
+
+### Identify supports multiple views per layer
+
+The `featureInfo` of a layer describes a list of views instead of a single format. The identify panel renders one tab per view.
+
+```json
+{
+  "featureInfo": {
+    "disabled": false,
+    "views": [
+      { "id": "properties", "type": "PROPERTIES" },
+      { "id": "report", "title": "Report", "type": "TEMPLATE", "template": "<p>${properties.NAME}</p>" }
+    ]
+  }
+}
+```
+
+The previous configuration is still read, so existing maps keep working. `format: "HIDDEN"` is equivalent to `disabled: true`.
+
+```json
+{ "featureInfo": { "format": "TEMPLATE", "template": "<p>${properties.NAME}</p>" } }
+```
+
+Saving the Feature Info settings replaces `format`, `template` and `viewer` with `disabled` and `views`, and previous versions do not read that shape: they fall back to the identify format of the map settings and they query again a layer with identify disabled.
+
+Custom code reading the identify results from the state finds the response of every view in `viewResponses`, keyed by view id, instead of a single `response` and `queryParams`.
 
 ### Spring 7 / Jakarta EE 10 upgrade
 
@@ -152,6 +178,24 @@ Copy the `logging.properties` file from the MapStore repository (`product/cargo/
 **Custom Java code**: any custom backend code must be migrated from the `javax.*` to the `jakarta.*` namespace (e.g. `javax.servlet.http.HttpServletRequest` → `jakarta.servlet.http.HttpServletRequest`) and compiled with source/target 17.
 
 **CI/CD**: update your build infrastructure to use JDK 17 as the build JDK.
+
+## Migration from 2026.02.00 to 2026.02.01
+
+### Login `hideGroupUserInfo` configuration
+
+The `hideGroupUserInfo` option is now a direct configuration property of the `Login` plugin. Update all `Login` plugin configurations in `localConfig.json` as follows:
+
+```diff
+{
+    "name": "Login",
+    "cfg": {
+-        "toolsCfg": [{"hideGroupUserInfo": true}]
++        "hideGroupUserInfo": true
+    }
+}
+```
+
+The previous `toolsCfg` configuration is still supported as a fallback for backward compatibility, but the direct `hideGroupUserInfo` property should be used for all new configurations.
 
 ## Migration from 2026.01.02 to 2026.02.00
 

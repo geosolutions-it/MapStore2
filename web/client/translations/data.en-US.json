@@ -27,6 +27,10 @@
     "showMore": "Show more...",
     "collapse": "Collapse",
     "expand": "Expand",
+    "scrollableTabs": {
+      "scrollLeft": "Scroll tabs left",
+      "scrollRight": "Scroll tabs right"
+    },
     "Links": "Links",
     "Forbidden": "Forbidden",
     "height": "Height",
@@ -94,6 +98,10 @@
         "label": "Crop to projection extent",
         "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
       },
+      "coalesceExclude": {
+        "label": "Exclude from combined requests",
+        "tooltip": "Keeps this layer out of combined WMS requests, so it is always requested on its own. It has no effect while combined requests are disabled for the map."
+      },
       "cached": "Use cache options",
       "styleCustom": "Use style named \"{value}\"",
       "styleListLoadError": "There was an error loading the styles list",
@@ -109,6 +117,9 @@
       "elevation": "Elevation",
       "groupProperties": "Group properties",
       "featureInfo": "Feature Info",
+      "noIdentifyView": "No identify view is configured, the format from Map Settings is used.",
+      "disableIdentify": "Disable Identify",
+      "addIdentifyView": "Add new identify view",
       "featureInfoFormatLbl": "Identify response format",
       "featureInfoRequestOptions": {
         "title": "Request options",
@@ -122,25 +133,52 @@
       "imageNotFound": "This image may need a feature info request to be rendered correctly",
       "legenderror": "Legend is not available",
       "editCustomFormat": "Edit custom format",
-      "exampleOfResponse": "Example",
       "changedSettings": "Changed Settings",
       "changedSettingsAlert": "You are closing the settings panel without save your changes",
       "textFormatTitle": "TEXT",
-      "textFormatDescription": "Shows feature info results as plain text",
       "htmlFormatTitle": "HTML",
-      "htmlFormatDescription": "Shows feature info results as html",
       "propertiesFormatTitle": "PROPERTIES",
-      "propertiesFormatDescription": "Shows feature info results as properties list",
       "templateFormatTitle": "TEMPLATE",
-      "templateFormatDescription": "Customize feature info results format",
-      "hideFormatTitle": "DISABLE IDENTIFY",
-      "hideFormatDescription": "Disable the feature info for this layer",
       "styleWarning": "Layer style editor for geometry type '{geometryType}' is not supported.",
-      "templateFormatInfoAlert1": "Click on edit button to add a new template.",
       "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
-      "templateFormatInfoAlertExample": "The id of the feature is <span style='white-space:nowrap'>${ properties.id }</span> or <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
       "templateError": "There was an error applying the template to the information returned by the server, please check the template",
-      "templatePreview": "Template preview",
+      "propertiesView": {
+        "attributes": "Attributes",
+        "noAttributes": "The layer schema contains no displayable attributes."
+      },
+      "externalData": {
+        "title": "EXTERNAL DATA",
+        "description": "Query attributes from an external WFS source",
+        "wfsUrl": "WFS URL",
+        "invalidWfsUrl": "The URL does not expose a valid WFS service",
+        "layerName": "Layer name",
+        "cqlFilter": "CQL filter template",
+        "cqlFilterHelp": "Use single quotes around string placeholders; leave numeric and boolean placeholders unquoted.",
+        "attributes": "Attributes",
+        "validate": "Validate",
+        "validation": {
+          "missingFields": "WFS URL, layer name and CQL filter template are required",
+          "invalidPlaceholder": "The CQL filter template must contain at least one valid field reference",
+          "invalidDoubleQuotedPlaceholder": "Double quotes identify field names in CQL. Use single quotes around string placeholders.",
+          "invalidCql": "The CQL filter template is not valid",
+          "unquotedPlaceholder": "In the filter, the reference to “{property}” is not wrapped in single quotes, so it only accepts numbers. Add the quotes to use text values.",
+          "valid": "The external data configuration is valid",
+          "sourceUnavailable": "A WFS source URL and layer name are required to run the sample request",
+          "sampleNotFound": "The source layer did not return a sample feature",
+          "testRequestFailed": "The external data test request failed",
+          "generatedCql": "Generated CQL"
+        },
+        "noSourceFeatures": "No identified features are available for this external data view",
+        "invalidConfiguration": "Invalid configuration",
+        "notConfigured": "This Identify view is not configured correctly.",
+        "noResults": "No external data found",
+        "requestError": "Unable to load external data",
+        "missingProperty": "The source feature does not contain the property “{property}”",
+        "unsafeSourceValue": "The external data cannot be loaded because “{property}” contains text where a number is expected.",
+        "invalidInterpolatedCql": "The CQL filter built from the source feature is not valid",
+        "invalidResponse": "The external WFS did not return valid GeoJSON",
+        "retry": "Retry"
+      },
       "heightOffset": "Height offset (m)",
       "wmsLayerTileSize": "Tile size (WMS)",
       "maxFeaturesInView": "Max features in view",
@@ -267,6 +305,7 @@
       "forceProxy": "Force proxy",
       "fields": {
         "refresh": "Reload fields from the data source",
+        "showAll": "Show or hide all attributes",
         "title": "Fields",
         "tooltip": "Fields",
         "name": "Name",
@@ -274,7 +313,21 @@
         "type": "Type",
         "clearCustomization": "Clear customization",
         "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
-        "error": "It was not possible to automatically load the fields"
+        "error": "It was not possible to automatically load the fields",
+        "featureInfoDisplayType": "Feature info display type",
+        "configureField": "Configure field",
+        "mediaTypeAttribute": "Media type attribute",
+        "displayTypes": {
+          "string": "Text",
+          "image": "Image",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Panorama image",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Media"
+        }
       },
       "disableFeaturesEditing": "Disable editing on Attribute table",
       "interactiveLegend": {
@@ -588,7 +641,9 @@
           "dateTimePlaceholder": "Select the dateTime"
         },
         "collisionDetection": "Enable terrain collision detection",
-        "imageryLayersOverlay": "Enable imagery layers overlay"
+        "imageryLayersOverlay": "Enable imagery layers overlay",
+        "coalesceWMSLayers": "Combine WMS requests (coalesce)",
+        "coalesceWMSLayersTooltip": "Sets the default behavior for layers of this map: when enabled, adjacent WMS layers coming from the same source are combined into a single GetMap request, reducing the number of requests sent to the server. Background layers are excluded."
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
@@ -702,6 +757,10 @@
       "radius": "Radius",
       "filterIconEnabled": "Disable layer filter",
       "filterIconDisabled": "Enable layer filter",
+      "filterWidgetIconEnabled": "Disable connected widget filter",
+      "filterWidgetIconDisabled": "Enable connected widget filter",
+      "filterAndWidgetIconEnabled": "Disable global and connected widget filters",
+      "filterAndWidgetIconDisabled": "Enable global and connected widget filters",
       "notVisibleZoomIn": "The layer is not visible because it is outside the resolution limits. Zoom in to show the layer",
       "notVisibleZoomOut": "The layer is not visible because it is outside the resolution limits. Zoom out to show the layer",
       "notVisibleSwitchTo3D": "Switch to 3D map mode in order to see this layer",
@@ -871,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "More info",
     "identifyRevGeocodeCloseText": "Close",
     "identifyRevGeocodeError": "Unable to geocode",
+    "identifyShowFullscreen": "Show fullscreen",
     "identifyEdit": "Edit",
     "identifyLayerSelectNoResult": "No layers found",
     "getFeatureInfoError": {
@@ -2662,6 +2722,8 @@
         "applyStyleFromWidgetButton": "Apply style to all connected layers from this widget",
         "dimensionChangedByWidgetInfo": "One or more connected nodes use a different dimension value than the one selected here. Click the button below to apply the selected value to all connected nodes.",
         "applyDimensionFromWidgetButton": "Apply value from this filter to all connected nodes",
+        "showConnectedLayers": "Show connected layers",
+        "showConnectedLayersTooltip": "Show target connected layers on the widget",
 
         "defaultFilter": "Default Filter",
         "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
@@ -4887,6 +4949,7 @@
         "errorDefault": "Network error"
       },
       "myResources": "My resources",
+      "select": "Select",
       "creationFilter": {
         "from": "Creation date from",
         "to": "Creation date to"

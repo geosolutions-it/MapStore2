@@ -31,7 +31,6 @@ import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
 import MultiBandEditor from '../styleeditor/MultiBandEditor';
 import { mapSelector } from '../../selectors/map';
 
-
 import { StyleSelector } from '../styleeditor/index';
 
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
@@ -180,15 +179,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             tooltipId: 'layerProperties.featureInfo',
             glyph: 'map-marker',
             visible: showFeatureInfoTab && isLayerNode(props) && (isWMS(props) || isWFS(props)) && !(props.element.featureInfo && props.element.featureInfo.viewer),
-            Component: FeatureInfo,
-            toolbar: [
-                {
-                    glyph: 'pencil',
-                    tooltipId: 'layerProperties.editCustomFormat',
-                    visible: !props.showEditor && props.element && props.element.featureInfo && props.element.featureInfo.format === 'TEMPLATE' || false,
-                    onClick: () => props.onShowEditor && props.onShowEditor(!props.showEditor)
-                }
-            ]
+            Component: FeatureInfo
         },
         {
             id: 'elevation',

@@ -7,18 +7,7 @@
  */
 
 import { isArray, isFunction, isNil } from 'lodash';
-import { compose, lifecycle, withHandlers, withState } from 'recompose';
-
-/**
- * Enhancer for settings state needed in TOCItemsSettings plugin
- * - onShowAlertModal, alert modal appears on close in case of changes in TOCItemsSettings
- * - onShowEditor, edit modal appears on format info in TOCItemsSettings
- * @memberof enhancers.settingsState
- * @class
- */
-export const settingsState = compose(
-    withState('showEditor', 'onShowEditor', false)
-);
+import { compose, lifecycle, withHandlers } from 'recompose';
 
 /**
  * Basic toc settings lificycle used in TOCItemsSettings plugin with TOCItemsSettings component
@@ -76,12 +65,10 @@ export const settingsLifecycle = compose(
 );
 
 export const updateSettingsLifecycle = compose(
-    settingsState,
     settingsLifecycle
 );
 
 export default {
-    settingsState,
     settingsLifecycle,
     /**
      * Enhancer for compose together settings lifecycle and state

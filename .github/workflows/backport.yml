@@ -24,6 +24,12 @@ jobs:
         with:
             # Token for git actions, e.g. git push see https://github.com/korthout/backport-action/issues/379
             token: ${{ secrets.BACKPORT_ACTION_PAT }}
+            # backport-action runs several `git fetch --depth=N` on its own. On a shallow clone these
+            # rewrite .git/shallow and make the last fetch fail with
+            # "fatal: shallow file has changed since we read it", which the action reports as a
+            # missing target branch. Fetch the full history (blobs on demand) to avoid the shallow file.
+            fetch-depth: 0
+            filter: blob:none
       - name: Get issues
         id: get-issues
         uses: mondeja/pr-linked-issues-action@v2

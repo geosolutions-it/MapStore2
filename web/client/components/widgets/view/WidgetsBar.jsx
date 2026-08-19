@@ -35,7 +35,7 @@ const getWidgetIcon = ({widgetType, charts = []} = {}) => {
     case "legend":
         return "list";
     case "filter":
-        return "filter";
+        return "filter-widget";
     default:
         if (widgetType === "chart") {
             return "chart";
@@ -44,6 +44,10 @@ const getWidgetIcon = ({widgetType, charts = []} = {}) => {
     }
 };
 
+const isFilterActive = (widget) =>
+    widget.filters?.some(
+        ({ id, disabled }) => !disabled && widget.selections?.[id]?.length > 0
+    ) ?? false;
 /**
  * Bar that can be used to display the list of widgets
  */
@@ -61,7 +65,7 @@ export default compose(
             buttons: widgets.map(w => ({
                 glyph: getWidgetIcon(w),
                 tooltip: w.title,
-                className: `square-button ${w.collapsed ? "btn-tray" : "btn-tray active"}`,
+                className: `square-button ${w.collapsed ? "btn-tray" : `btn-tray active ${isFilterActive(w) ? "ms-notification-circle success" : ""}`}`,
                 onClick: () => onClick(w)
             }))
         })
