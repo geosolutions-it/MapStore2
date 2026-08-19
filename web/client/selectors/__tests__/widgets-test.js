@@ -38,7 +38,8 @@ import {
     getApplyStyleOutOfSyncForFilterWidget,
     getApplyDimensionOutOfSyncForFilterWidget,
     inactiveInteractionIdsForWidgetSelector,
-    isTimelineEnabledForInteractions
+    isTimelineEnabledForInteractions,
+    widgetsConfig
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -66,6 +67,54 @@ describe('widgets selectors', () => {
         expect(getDashboardWidgetsLayout(state)).toExist();
         expect(getDashboardWidgetsLayout(state)[0]).toExist();
         expect(getDashboardWidgetsLayout(state)[0].title).toBe("TEST");
+    });
+    it('widgetsConfig uses canonical state while maximized and filters linked views', () => {
+        const widget = {
+            id: 'widget-1',
+            layoutId: 'view-1',
+            dataGrid: { x: 1, y: 2, w: 3, h: 4 }
+        };
+        const linkedWidget = {
+            id: 'widget-2',
+            layoutId: 'view-2',
+            dataGrid: { x: 0, y: 0, w: 1, h: 1 }
+        };
+        const layouts = [{
+            id: 'view-1',
+            name: 'Main view',
+            md: [{ i: widget.id, x: 1, y: 2, w: 3, h: 4 }],
+            xxs: [{ i: widget.id, x: 0, y: 0, w: 1, h: 4 }]
+        }, {
+            id: 'view-2',
+            name: 'Linked view',
+            dashboard: { id: 10 },
+            md: [{ i: linkedWidget.id, x: 0, y: 0, w: 1, h: 1 }],
+            xxs: [{ i: linkedWidget.id, x: 0, y: 0, w: 1, h: 1 }]
+        }];
+        const state = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [widget, linkedWidget],
+                        layouts,
+                        maximized: {
+                            widget: [widget]
+                        }
+                    }
+                }
+            }
+        };
+
+        const config = widgetsConfig(state);
+        expect(config.widgets).toEqual([widget]);
+        expect(config.layouts[0]).toEqual(layouts[0]);
+        expect(config.layouts[1]).toEqual({
+            ...layouts[1],
+            color: undefined,
+            linkExistingDashboard: undefined,
+            md: [],
+            xxs: []
+        });
     });
     it('getEditingWidget', () => {
         const state = set(`widgets.builder.editor`, { title: "TEST" }, {});
