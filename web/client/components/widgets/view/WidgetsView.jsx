@@ -8,7 +8,7 @@
 import React from 'react';
 
 import { pure, branch } from 'recompose';
-import { find, mapValues } from 'lodash';
+import { castArray, find, mapValues } from 'lodash';
 import { Responsive, WidthProvider as widthProvider } from 'react-grid-layout';
 const ResponsiveReactGridLayout =
     branch(
@@ -33,6 +33,7 @@ export default pure(({
     customWidgets = [],
     widgets = [],
     layouts,
+    maximized,
     dependencies,
     compactType = null,
     compactMode,
@@ -57,6 +58,14 @@ export default pure(({
 } = {}) => {
     // checking if this widget appears among other dependenciesMap of other widgets (i.e. it is a parent table)
     const allDependenciesMap = widgets.filter(({mapSync, dependenciesMap}) => mapSync && dependenciesMap).map(({dependenciesMap}) => dependenciesMap);
+    const maximizedIds = castArray(maximized?.widget || [])
+        .map(widget => widget?.id)
+        .filter(maximizedId => maximizedId && widgets.some(widget => widget.id === maximizedId));
+    const isMaximized = maximizedIds.length > 0;
+    const maximizedLayouts = {
+        xxs: maximizedIds.map(i => ({ i, x: 0, y: 0, w: 1, h: 1 }))
+    };
+    const effectiveLayouts = isMaximized ? maximizedLayouts : layouts;
     const getEnableColumnFilters = w => w.widgetType  === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(w.id) !== -1).length > 0 ).length > 0;
 
     return (<ResponsiveReactGridLayout
@@ -67,7 +76,7 @@ export default pure(({
         isResizable={canEdit}
         isDraggable={canEdit}
         draggableHandle={".draggableHandle"}
-        onLayoutChange={onLayoutChange}
+        onLayoutChange={isMaximized ? () => {} : onLayoutChange}
         preventCollision
         style={style}
         className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
@@ -80,7 +89,7 @@ export default pure(({
         compactMode={compactMode}
         breakpoints={breakpoints}
         cols={cols}
-        layouts={layouts ?
+        layouts={effectiveLayouts ?
             // This conversion creates a new object.
             // It prevents immutability issues (ResponsiveReactGridLayout modifies directly the layout nested object)
             JSON.parse(JSON.stringify(
@@ -91,14 +100,15 @@ export default pure(({
                  * Note: the layouts state will be automatically updated by ResponsiveReactGridLayout triggering onLayoutChange
                  * (this is triggered by the lib itself).
                  */
-                mapValues(layouts, v =>
+                mapValues(effectiveLayouts, v =>
                     v.map(l => {
                         const w = find(widgets, { id: l.i });
                         if (w) {
+                            const maximizedItem = maximizedIds.includes(l.i);
                             return {
                                 ...l,
-                                "isResizable": w.dataGrid && w.dataGrid.isResizable,
-                                "isDraggable": w.dataGrid && w.dataGrid.isDraggable,
+                                "isResizable": maximizedItem ? false : w.dataGrid && w.dataGrid.isResizable,
+                                "isDraggable": maximizedItem ? false : w.dataGrid && w.dataGrid.isDraggable,
                                 "static": w.dataGrid && w.dataGrid.static
                             };
                         }
@@ -111,6 +121,7 @@ export default pure(({
             widgets.map(w => (<div key={w.id} data-grid={w.dataGrid} onClick={() => onWidgetClick(w)} className={getWidgetClass(w)}><DefaultWidget
                 data-grid={w.dataGrid}
                 customWidgets={customWidgets}
+                maximized={maximized}
                 {...actions}
                 {...w}
                 widgets={widgets}
