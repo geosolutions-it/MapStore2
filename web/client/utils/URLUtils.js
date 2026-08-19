@@ -90,17 +90,27 @@ export const getQueryParams = (url) => {
  * @param {string[]} [options.allowedProtocols] by default only http and https are allowed
  * @param {string[]} [options.forbiddenMimes] if `data` is one of the protcol allowed, here a list of forbidden mime types that can be risky.
  * by default `'text/html'`, `'text/javascript'`, `'application/javascript'`, `'image/svg+xml'` are forbidden.
+ * @param {boolean} [options.allowProtocolRelative=false] when true, relative urls starting with `//` or `/\` are accepted, even if they are resolved on another host.
  */
 export const isValidURL = (url, regexp,
     {
         allowedProtocols = ['http', 'https'],
-        forbiddenMimes = ['text/html', 'text/javascript', 'application/javascript', 'image/svg+xml']
+        forbiddenMimes = ['text/html', 'text/javascript', 'application/javascript', 'image/svg+xml'],
+        allowProtocolRelative = false
     } = {}) => {
     if (regexp) {
         const regex = new RegExp(regexp);
         return regex.test(url);
     }
-    const base = url.indexOf('/') === 0 ? window?.location?.origin : undefined;
+    if (!isString(url)) {
+        return false;
+    }
+    const isRelative = url.indexOf('/') === 0;
+    // "//host" and "/\host" are resolved by the browser on another host
+    if (isRelative && !allowProtocolRelative && /^\/[/\\]/.test(url)) {
+        return false;
+    }
+    const base = isRelative ? window?.location?.origin : undefined;
     if (!URL.canParse(url, base)) {
         return false;
     }
@@ -168,3 +178,32 @@ export function updateUrlParams(url, params) {
     const query = queryString.stringify(updatedQuery);
     return query ? `${parsedUrl?.url}?${query}` : parsedUrl?.url;
 }
+
+// "//host" and "/\host" look relative, the browser resolves them on another host
+const otherHostReference = /^[/\\]{2}/;
+// the browser strips control characters, so "java\nscript:" becomes a protocol
+const controlCharacters = /[\u0000-\u001F\u007F-\u009F]/;
+const protocolPrefix = /^[a-z][a-z0-9+.-]*:/i;
+
+/**
+ * Returns the given href when the application can link to it, an empty string otherwise.
+ * References without protocol (`#...`, `?...`, `/path`, `path`) stay inside the application,
+ * urls with a protocol are accepted only for the allowed protocols.
+ * @param {string} href - href to check
+ * @param {object} [options] optional configurations
+ * @param {string[]} [options.allowedProtocols] protocols allowed for urls with a protocol
+ * @return {string} the href, or an empty string when it can not be used as a link target
+ */
+export const getSafeHref = (href, { allowedProtocols = ['http', 'https', 'mailto', 'tel'] } = {}) => {
+    if (!isString(href) || !href.trim()) {
+        return '';
+    }
+    const value = href.trim();
+    if (controlCharacters.test(value)) {
+        return '';
+    }
+    if (!protocolPrefix.test(value)) {
+        return otherHostReference.test(value) ? '' : value;
+    }
+    return isValidURL(value, undefined, { allowedProtocols }) ? value : '';
+};
