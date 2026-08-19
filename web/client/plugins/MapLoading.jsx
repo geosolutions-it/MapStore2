@@ -11,9 +11,9 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
-import { layersSelector } from '../selectors/layers';
+import { layersWithTransientPropsSelector } from '../selectors/layers';
 
-const selector = createSelector([layersSelector], (layers) => ({
+const selector = createSelector([layersWithTransientPropsSelector], (layers) => ({
     loading: layers && layers.some((layer) => layer.loading)
 }));
 

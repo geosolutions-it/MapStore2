@@ -36,6 +36,7 @@ export default class GrabLMap extends React.Component {
 
     static defaultProps = {
         config: null,
+        layerTransientProps: {},
         layers: [],
         snapstate: {state: "DISABLED"},
         active: false,
@@ -125,7 +126,7 @@ export default class GrabLMap extends React.Component {
     };
 
     mapIsLoading = (layers) => {
-        return layers.some((layer) => { return layer.visibility && layer.loading; });
+        return layers.some((layer) => { return layer.visibility && this.props.layerTransientProps?.[layer.id]?.loading; });
     };
 
     triggerShooting = (delay) => {

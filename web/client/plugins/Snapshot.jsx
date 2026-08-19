@@ -17,7 +17,7 @@ import {changeSnapshotState, onCreateSnapshot, onRemoveSnapshot, onSnapshotError
 import SnapshotPanelComp from "../components/mapcontrols/Snapshot/SnapshotPanel";
 import SnapshotQueueComp from "../components/mapcontrols/Snapshot/SnapshotQueue";
 import snapshotReducers from '../reducers/snapshot';
-import {layersSelector} from '../selectors/layers';
+import {layersSelector, layerTransientPropsSelector} from '../selectors/layers';
 import {mapSelector} from '../selectors/map';
 import {mapTypeSelector} from '../selectors/maptype';
 import Message from './locale/Message';
@@ -26,13 +26,15 @@ const snapshotSelector = createSelector([
     mapSelector,
     mapTypeSelector,
     layersSelector,
+    layerTransientPropsSelector,
     (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === "snapshot" || state.controls.snapshot && state.controls.snapshot.enabled,
     (state) => state.browser,
     (state) => state.snapshot || {queue: []}
-], (map, mapType, layers, active, browser, snapshot) => ({
+], (map, mapType, layers, layerTransientProps, active, browser, snapshot) => ({
     map,
     mapType,
     layers,
+    layerTransientProps,
     active,
     browser,
     snapshot

@@ -38,6 +38,24 @@ import { mapPopupsSelector } from '../../selectors/mapPopups';
 
 const Empty = () => { return <span/>; };
 
+let pendingLoadingIds = new Set();
+let pendingLoadingTimer = null;
+
+export const batchedLayerLoading = (layerId) => (dispatch) => {
+    pendingLoadingIds.add(layerId);
+
+    if (pendingLoadingTimer === null) {
+        pendingLoadingTimer = setTimeout(() => {
+            const layerIds = [...pendingLoadingIds];
+
+            pendingLoadingIds.clear();
+            pendingLoadingTimer = null;
+
+            dispatch(layerLoading(layerIds));
+        }, 0);
+    }
+};
+
 const pluginsCreator = (mapType, actions) => {
 
     return Promise.all([
@@ -54,7 +72,7 @@ const pluginsCreator = (mapType, actions) => {
             onMapViewChanges: changeMapView,
             onClick: clickOnMap,
             onMouseMove: mouseMove,
-            onLayerLoading: layerLoading,
+            onLayerLoading: batchedLayerLoading,
             onLayerLoad: layerLoad,
             onLayerError: layerError,
             onWarning: warning,
