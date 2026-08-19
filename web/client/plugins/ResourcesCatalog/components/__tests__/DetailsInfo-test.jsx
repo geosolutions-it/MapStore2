@@ -190,5 +190,18 @@ describe('DetailsInfo component', () => {
         />, document.getElementById('container'));
         expect(document.querySelectorAll('a[href^="javascript:"]').length).toBe(0);
     });
+    describe('security checks', () => {
+        it('removes script tags from an html field value', () => {
+            window.__detailsInfoScript = undefined;
+            ReactDOM.render(<DetailsInfo
+                tabs={[{ type: 'tab', id: 'info', labelId: 'Info', items: [
+                    { type: 'html', value: '<p>content</p><script>window.__detailsInfoScript = true</script>' }
+                ] }]}
+                selectedTab="info"
+            />, document.getElementById('container'));
+            expect(window.__detailsInfoScript).toBe(undefined);
+            expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+        });
+    });
 });
 

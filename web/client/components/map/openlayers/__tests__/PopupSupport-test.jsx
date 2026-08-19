@@ -149,5 +149,20 @@ describe('Openlayers PopupSupport', () => {
         expect(document.querySelector('#test-component-map-popup')).toExist();
     });
 
+
+    describe('security checks', () => {
+        it('removes script tags from the popup content', () => {
+            window.__popupScript = undefined;
+            const popups = [{
+                id: 'popup',
+                content: '<div id="innerHtml">content</div><script>window.__popupScript = true</script>',
+                position: { coordinates: [0, 0] },
+                autoPan: false
+            }];
+            renderPopups({ popups });
+            expect(window.__popupScript).toBe(undefined);
+            expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+        });
+    });
 });
 

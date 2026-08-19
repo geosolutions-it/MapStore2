@@ -62,4 +62,29 @@ describe("This test for HtmlRenderer component", () => {
         expect(node.id).toBeFalsy();
         expect(node.style.color).toBe('rgb(255, 255, 255)');
     });
+
+    describe('security checks', () => {
+        it('removes script tags from the html prop', () => {
+            window.__htmlRendererScript = undefined;
+            ReactDOM.render(<HtmlRenderer html={'<p>content</p><script>window.__htmlRendererScript = true</script>'} />, document.getElementById("container"));
+            expect(window.__htmlRendererScript).toBe(undefined);
+            expect(document.getElementById("container").innerHTML.indexOf('<script')).toBe(-1);
+        });
+        it('removes inline event handlers from the html prop', () => {
+            window.__htmlRendererHandler = undefined;
+            ReactDOM.render(<HtmlRenderer html={'<img src="missing-image" onerror="window.__htmlRendererHandler = true">'} />, document.getElementById("container"));
+            expect(window.__htmlRendererHandler).toBe(undefined);
+            expect(document.getElementById("container").innerHTML.toLowerCase().indexOf('onerror')).toBe(-1);
+        });
+        it('keeps the formatting tags of the html prop', () => {
+            ReactDOM.render(<HtmlRenderer html={'<p><b>bold</b> and <i>italic</i></p>'} />, document.getElementById("container"));
+            const inner = document.getElementById("container").innerHTML;
+            expect(inner.indexOf('<b>bold</b>')).toBeGreaterThan(-1);
+            expect(inner.indexOf('<i>italic</i>')).toBeGreaterThan(-1);
+        });
+        it('renders an empty html prop without throwing', () => {
+            expect(() => ReactDOM.render(<HtmlRenderer html={null} />, document.getElementById("container"))).toNotThrow();
+            expect(() => ReactDOM.render(<HtmlRenderer html={undefined} />, document.getElementById("container"))).toNotThrow();
+        });
+    });
 });
