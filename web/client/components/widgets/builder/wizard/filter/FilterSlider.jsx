@@ -37,6 +37,15 @@ const getTickAngle = (value) => {
     return Math.max(-90, Math.min(90, angle));
 };
 
+export const getTickIndexFromPosition = (position, itemCount) => {
+    const percentage = Number.parseFloat(position);
+    if (!Number.isFinite(percentage) || itemCount < 2) {
+        return -1;
+    }
+    const boundedPercentage = Math.max(0, Math.min(100, percentage));
+    return Math.round((boundedPercentage / 100) * (itemCount - 1));
+};
+
 const FilterSlider = ({
     items = [],
     selectedValues = [],
@@ -130,6 +139,23 @@ const FilterSlider = ({
         maxHeight: layoutMaxHeight,
         overflowY: 'hidden'
     } : undefined;
+    const handleTickClick = (event) => {
+        const tickElement = event.target.closest?.('.noUi-marker, .noUi-value');
+        const pipsElement = event.target.closest?.('.noUi-pips');
+        if (!pipsElement || !event.currentTarget.contains(pipsElement)) {
+            return;
+        }
+        const sliderBase = event.currentTarget.querySelector('.noUi-base');
+        const sliderBounds = sliderBase?.getBoundingClientRect();
+        const position = tickElement?.style.left || (sliderBounds?.width
+            ? `${((event.clientX - sliderBounds.left) / sliderBounds.width) * 100}%`
+            : undefined);
+        const index = getTickIndexFromPosition(position, normalizedItems.length);
+        const nextItem = normalizedItems[index];
+        if (nextItem) {
+            onSelectionChange([nextItem.id]);
+        }
+    };
 
     return (
         <FormGroup className={`ms-filter-slider${noSelectionClass}${showTicksClass}`}>
@@ -141,7 +167,11 @@ const FilterSlider = ({
                             : <Message msgId="widgets.filterWidget.sliderNotSelected" />}
                     </div>
                 )}
-                <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle}>
+                <div
+                    className="mapstore-slider ms-filter-slider-control"
+                    style={sliderStyle}
+                    onClick={handleTickClick}
+                >
                     <Slider
                         key={sliderKey}
                         start={[sliderStartIndex]}
