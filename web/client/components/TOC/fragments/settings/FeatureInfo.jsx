@@ -24,6 +24,7 @@ import {
     isLayerFeatureInfoDisabled
 } from '../../../../utils/MapInfoUtils';
 import Message from '../../../I18N/Message';
+import { getCapabilitiesUrl } from '../../../../utils/LayersUtils';
 import FeatureInfoEditor from './FeatureInfoEditor';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import FeatureInfoRequestOptions from '../../../misc/FeatureInfoRequestOptions';
@@ -196,7 +197,7 @@ export default class extends React.Component {
         // we dont know supported infoFormats yet
         if (getSupportedFormat && this.props.element.url && !this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
             this.setState({ loading: true }); // eslint-disable-line -- TODO: need to be fixed
-            getSupportedFormat(this.props.element, true)
+            getSupportedFormat(getCapabilitiesUrl(this.props.element), true)
                 .then(({ infoFormats }) => {
                     this.props.onChange("infoFormats", infoFormats);
                     this.setState({ loading: false }); // eslint-disable-line -- TODO: need to be fixed

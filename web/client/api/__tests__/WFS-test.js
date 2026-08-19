@@ -154,7 +154,7 @@ describe('Test WFS ogc API functions', () => {
             </ows:OperationsMetadata>
             </wfs:WFS_Capabilities>
             `);
-        getSupportedFormat({ url: '/geoserver-without-text-html/wfs' }).then((data) => {
+        getSupportedFormat('/geoserver-without-text-html/wfs').then((data) => {
             expect(data).toEqual({ infoFormats: ['application/json'] });
             done();
         }).catch(done);
@@ -191,7 +191,7 @@ describe('Test WFS ogc API functions', () => {
             </ows:OperationsMetadata>
             </wfs:WFS_Capabilities>
             `);
-        getSupportedFormat({ url: '/geoserver-with-text-html/wfs' }).then((data) => {
+        getSupportedFormat('/geoserver-with-text-html/wfs').then((data) => {
             expect(data).toEqual({ infoFormats: ['application/json', 'text/html'] });
             done();
         }).catch(done);
@@ -217,7 +217,7 @@ describe('Test WFS ogc API functions', () => {
             </wfs:WFS_Capabilities>
             `];
         });
-        getSupportedFormat({ url: '/geoserver/wfs', name: 'workspace:layer_name' }).then((data) => {
+        getSupportedFormat('/geoserver/workspace/layer_name/wfs').then((data) => {
             expect(data).toEqual({ infoFormats: ['application/json', 'text/html'] });
             done();
         }).catch(done);

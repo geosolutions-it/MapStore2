@@ -51,6 +51,7 @@ import { error } from '../actions/notifications';
 import { applyOverrides } from '../utils/ConfigUtils';
 
 import ProjectionRegistry from '../utils/ProjectionRegistry';
+import { getCapabilitiesUrl } from '../utils/LayersUtils';
 
 
 const prepareMapConfiguration = (data, override, state) => {
@@ -307,11 +308,11 @@ export const backgroundsListInitEpic = (action$) =>
 export const getSupportedFormatsEpic = (action$, {getState = ()=> {}} = {}) =>
     action$.ofType(FORMAT_OPTIONS_FETCH)
         .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
-        .switchMap((layer = {})=> {
-            return Observable.defer(() => getSupportedFormat(layer, true))
+        .switchMap((action = {})=> {
+            return Observable.defer(() => getSupportedFormat(getCapabilitiesUrl(action), true))
                 .switchMap((supportedFormats) => {
                     return Observable.of(
-                        setSupportedFormats(supportedFormats, layer.url),
+                        setSupportedFormats(supportedFormats, action.url),
                         showFormatError(supportedFormats.imageFormats.length === 0 && supportedFormats.infoFormats.length === 0)
                     );
                 })

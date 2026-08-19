@@ -456,7 +456,7 @@ describe('Test getSupportedFormat WMS API (mock axios)', () => {
             `];
         });
 
-        API.getSupportedFormat({ url: 'http://localhost:8080/geoserver/wms', name: 'workspace:layer_name' }, true)
+        API.getSupportedFormat('http://localhost:8080/geoserver/workspace/layer_name/wms', true)
             .then((formats) => {
                 try {
                     expect(formats.imageFormats).toEqual(['image/png', 'image/jpeg']);
@@ -481,7 +481,7 @@ describe('Test getSupportedFormat WMS API (mock axios)', () => {
         </WMS_Capabilities>
         `);
 
-        API.getSupportedFormat({ url: 'http://localhost:8080/geoserver/wms', name: 'workspace:layer_name' })
+        API.getSupportedFormat('http://localhost:8080/geoserver/wms')
             .then((imageFormats) => {
                 try {
                     expect(imageFormats).toEqual(['image/png']);
