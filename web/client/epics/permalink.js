@@ -34,6 +34,10 @@ import { pathnameSelector } from "../selectors/router";
 import { wrapStartStop } from "../observables/epics";
 import SecurityUtils from "../utils/SecurityUtils";
 import { generateTemplateString } from "../utils/TemplateUtils";
+import { isValidURL } from "../utils/URLUtils";
+
+// the router only handles paths of the application
+const isApplicationPath = (path) => path.indexOf("/") === 0 && isValidURL(path);
 
 const PERMALINK = "PERMALINK";
 const PERMALINK_RESOURCES = {
@@ -206,6 +210,15 @@ export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
                             pathTemplate || '',
                             (value) => encodeURIComponent(String(value ?? ''))
                         )(type === "context" ? { name } : { id });
+                        if (!isApplicationPath(pathTemplate)) {
+                            return Observable.of(
+                                error({
+                                    title: "permalink.errors.loading.title",
+                                    message: "permalink.errors.loading.invalidTarget"
+                                }),
+                                loadPermalinkError({ messageId: "permalink.errors.loading.invalidTarget" })
+                            );
+                        }
                         return Observable.of(push(pathTemplate), permalinkLoaded());
                     })
                 ).catch((e) => {
