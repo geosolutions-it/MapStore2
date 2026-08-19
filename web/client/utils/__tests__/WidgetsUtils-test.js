@@ -9,9 +9,6 @@
 import expect from 'expect';
 
 import {
-    FILTER_PROPS,
-    CHART_PROPS,
-    isWidgetLayerSupported,
     cleanMaximizedState, convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
     getConnectionList, getDependantWidget,
     getChartAxisDependencyPath, getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
