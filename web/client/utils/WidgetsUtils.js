@@ -473,6 +473,41 @@ export const legacyChartToChartWithTraces = ({
     };
 };
 
+const MAXIMIZE_TRANSIENT_PROPS = ['isDraggable', 'isResizable'];
+
+const cleanLayoutItems = (items) => Array.isArray(items)
+    ? items.map(item => omit(item, MAXIMIZE_TRANSIENT_PROPS))
+    : items;
+
+const cleanLayouts = (layouts) => {
+    if (Array.isArray(layouts)) {
+        return layouts.map(view => Object.keys(view || {})
+            .reduce((acc, key) => ({ ...acc, [key]: cleanLayoutItems(view[key]) }), {}));
+    }
+    if (layouts && typeof layouts === 'object') {
+        return Object.keys(layouts)
+            .reduce((acc, key) => ({ ...acc, [key]: cleanLayoutItems(layouts[key]) }), {});
+    }
+    return layouts;
+};
+
+/**
+ * Remove transient maximization properties from a stored widgets configuration.
+ * The static property is a persistent user setting and is intentionally preserved.
+ * @param {object} config stored widgets configuration
+ * @returns {object} cleaned widgets configuration
+ */
+export const cleanMaximizedState = (config = {}) => ({
+    ...config,
+    ...(config.widgets ? {
+        widgets: config.widgets.map(widget => widget.dataGrid
+            ? { ...widget, dataGrid: omit(widget.dataGrid, MAXIMIZE_TRANSIENT_PROPS) }
+            : widget)
+    } : {}),
+    ...(config.layouts ? { layouts: cleanLayouts(config.layouts) } : {}),
+    ...(config.layout ? { layout: cleanLayoutItems(config.layout) } : {})
+});
+
 /**
  * Convert the dependenciesMapping to support maplist
  * widget for compatibility
