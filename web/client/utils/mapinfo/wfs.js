@@ -9,7 +9,11 @@
 import {Observable} from 'rxjs';
 
 import {normalizeSRS} from '../CoordinatesUtils';
+<<<<<<< HEAD
 import { getLayerUrl } from '../LayersUtils';
+=======
+import { getLayerUrl, getCapabilitiesUrl } from '../LayersUtils';
+>>>>>>> 58535023d (#12813: Layer settings - Trigger layer-specific capabilities request (#12816))
 import { isObject } from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { describeFeatureType, getFeature } from '../../api/WFS';
@@ -98,6 +102,23 @@ const getIdentifyGeometry = point => {
 
 export default {
     buildRequest,
+<<<<<<< HEAD
+=======
+    /**
+     * Detects the supported info formats, text/html is the only one a WFS service could be missing.
+     * @param {object} layer
+     * @param {string} infoFormat the info format needed by the identify request
+     * @return {Promise} resolves with the layer, with `infoFormats` when they could be detected
+     */
+    resolveLayer: (layer, infoFormat) => {
+        if (infoFormat !== INFO_FORMATS.HTML || layer.infoFormats?.length || !layer.url) {
+            return Promise.resolve(layer);
+        }
+        return getSupportedFormat(getCapabilitiesUrl(layer))
+            .then(({ infoFormats }) => ({ ...layer, infoFormats }))
+            .catch(() => layer);
+    },
+>>>>>>> 58535023d (#12813: Layer settings - Trigger layer-specific capabilities request (#12816))
     getIdentifyFlow: (layer = {}, baseURL, defaultParams) => {
         const { point, features, ...baseParams } = defaultParams || {};
         if (features) {
