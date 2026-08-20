@@ -37,4 +37,13 @@ describe('DetailsRow component', () => {
         const btnGroup = details.getElementsByTagName('button');
         expect(btnGroup.length).toBe(0);
     });
+
+    describe('sanitization', () => {
+        it('removes script tags from the details preview', () => {
+            window.__detailsRowScript = undefined;
+            ReactDOM.render(<DetailsRow detailsText={'<p>content</p><script>window.__detailsRowScript = true</script>'} showPreview />, document.getElementById('container'));
+            expect(window.__detailsRowScript).toBe(undefined);
+            expect(document.getElementById('container').innerHTML.indexOf('<script')).toBe(-1);
+        });
+    });
 });
