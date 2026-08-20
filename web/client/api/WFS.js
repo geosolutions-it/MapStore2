@@ -159,8 +159,13 @@ export const describeFeatureType = function(url, typeName) {
 
 /**
  * Fetch the supported formats of the WFS service
+<<<<<<< HEAD
  * @param url
  * @return {object} { infoFormats }
+=======
+ * @param {string} url WFS endpoint
+ * @returns {Promise} resolves with { infoFormats }
+>>>>>>> 58535023d (#12813: Layer settings - Trigger layer-specific capabilities request (#12816))
  */
 export const getSupportedFormat = (url) => {
     return getCapabilities(url)
