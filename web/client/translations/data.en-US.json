@@ -313,7 +313,21 @@
         "type": "Type",
         "clearCustomization": "Clear customization",
         "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
-        "error": "It was not possible to automatically load the fields"
+        "error": "It was not possible to automatically load the fields",
+        "featureInfoDisplayType": "Feature info display type",
+        "configureField": "Configure field",
+        "mediaTypeAttribute": "Media type attribute",
+        "displayTypes": {
+          "string": "Text",
+          "image": "Image",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Panorama image",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Media"
+        }
       },
       "disableFeaturesEditing": "Disable editing on Attribute table",
       "interactiveLegend": {
@@ -916,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "More info",
     "identifyRevGeocodeCloseText": "Close",
     "identifyRevGeocodeError": "Unable to geocode",
+    "identifyShowFullscreen": "Show fullscreen",
     "identifyEdit": "Edit",
     "identifyLayerSelectNoResult": "No layers found",
     "getFeatureInfoError": {
@@ -4934,6 +4949,7 @@
         "errorDefault": "Network error"
       },
       "myResources": "My resources",
+      "select": "Select",
       "creationFilter": {
         "from": "Creation date from",
         "to": "Creation date to"

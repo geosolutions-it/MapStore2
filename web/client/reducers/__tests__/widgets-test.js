@@ -195,6 +195,63 @@ describe('Test the widgets reducer', () => {
         const newState = widgets(state, deleteWidget({id: "1"}));
         expect(newState.containers[DEFAULT_TARGET].widgets.length).toBe(0);
     });
+    it('deleteWidget clears maximized state without changing canonical layouts', () => {
+        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
+        const widgetToDelete = initialState.containers[DEFAULT_TARGET].widgets[0];
+        let newState = widgets(initialState, toggleMaximize(widgetToDelete));
+
+        newState = widgets(newState, deleteWidget(
+            newState.containers[DEFAULT_TARGET].widgets.find(({id}) => id === widgetToDelete.id)
+        ));
+
+        const floating = newState.containers[DEFAULT_TARGET];
+        expect(floating.widgets.find(({id}) => id === widgetToDelete.id)).toNotExist();
+        expect(floating.maximized).toEqual({});
+        expect(floating.layout).toBe(initialState.containers[DEFAULT_TARGET].layout);
+        expect(floating.layouts).toBe(initialState.containers[DEFAULT_TARGET].layouts);
+
+        newState = widgets(newState, insertWidget({id: 'replacement-widget'}));
+        expect(getVisibleFloatingWidgets({widgets: newState})
+            .find(({id}) => id === 'replacement-widget')).toExist();
+    });
+    it('deleteWidget removes only the deleted widget from multi-view maximized state', () => {
+        const firstWidget = {
+            id: 'widget-1',
+            layoutId: 'view-1',
+            dataGrid: {x: 0, y: 0, w: 1, h: 1}
+        };
+        const secondWidget = {
+            id: 'widget-2',
+            layoutId: 'view-2',
+            dataGrid: {x: 0, y: 0, w: 1, h: 1}
+        };
+        const firstLayout = {i: firstWidget.id, x: 0, y: 0, w: 1, h: 1};
+        const secondLayout = {i: secondWidget.id, x: 0, y: 0, w: 1, h: 1};
+        const initialState = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [firstWidget, secondWidget],
+                    layout: [firstLayout],
+                    layouts: [
+                        {id: firstWidget.layoutId, md: [firstLayout], xxs: [{...firstLayout}]},
+                        {id: secondWidget.layoutId, md: [secondLayout], xxs: [{...secondLayout}]}
+                    ],
+                    selectedLayoutId: firstWidget.layoutId
+                }
+            }
+        };
+        let newState = widgets(initialState, toggleMaximize(firstWidget));
+        newState = widgets(newState, toggleMaximize(secondWidget));
+        newState = widgets(newState, deleteWidget(
+            newState.containers[DEFAULT_TARGET].widgets.find(({id}) => id === secondWidget.id)
+        ));
+
+        const floating = newState.containers[DEFAULT_TARGET];
+        expect(floating.widgets.map(({id}) => id)).toEqual([firstWidget.id]);
+        expect(floating.maximized.widget).toEqual([firstWidget]);
+        expect(floating.layout).toBe(initialState.containers[DEFAULT_TARGET].layout);
+        expect(floating.layouts).toBe(initialState.containers[DEFAULT_TARGET].layouts);
+    });
     it('deleteWidget remove dependenciesMap', () => {
         const state = {
             containers: {
@@ -300,6 +357,25 @@ describe('Test the widgets reducer', () => {
         expect(state.containers[DEFAULT_TARGET].layout).toEqual(widgetsConfig.layout);
         expect(state.containers[DEFAULT_TARGET].layouts).toEqual(widgetsConfig.layouts);
     });
+    it('configureMap cleans stale maximized properties from saved map widgets', () => {
+        const state = widgets(undefined, configureMap({
+            widgetsConfig: {
+                widgets: [{
+                    id: 'widget-1',
+                    dataGrid: { x: 2, "static": true, isDraggable: false, isResizable: false }
+                }],
+                layout: [{ i: 'widget-1', x: 2, isDraggable: false }],
+                layouts: {
+                    md: [{ i: 'widget-1', x: 2, isResizable: false }]
+                }
+            }
+        }));
+        const floating = state.containers[DEFAULT_TARGET];
+
+        expect(floating.widgets[0].dataGrid).toEqual({ x: 2, "static": true });
+        expect(floating.layout[0]).toEqual({ i: 'widget-1', x: 2 });
+        expect(floating.layouts.md[0]).toEqual({ i: 'widget-1', x: 2 });
+    });
     it('changeLayout', () => {
         const L = {lg: []};
         const AL = {md: []};
@@ -354,6 +430,27 @@ describe('Test the widgets reducer', () => {
         expect(state).toExist();
         expect(state.containers[DEFAULT_TARGET].widgets).toExist();
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
+    });
+    it('widgets dashboardLoaded cleans stale maximized properties from saved dashboard widgets', () => {
+        const data = {
+            widgets: [{ id: 'widget-1', dataGrid: { y: 3, custom: true, isResizable: false } }],
+            layouts: [{
+                id: 'view-1',
+                name: 'Main view',
+                md: [{ i: 'widget-1', y: 3, isDraggable: false }],
+                xxs: [{ i: 'widget-1', y: 0, isResizable: false }]
+            }]
+        };
+        const state = widgets(undefined, dashboardLoaded('RESOURCE', data));
+        const floating = state.containers[DEFAULT_TARGET];
+
+        expect(floating.widgets[0].dataGrid).toEqual({ y: 3, custom: true });
+        expect(floating.layouts).toEqual([{
+            id: 'view-1',
+            name: 'Main view',
+            md: [{ i: 'widget-1', y: 3 }],
+            xxs: [{ i: 'widget-1', y: 0 }]
+        }]);
     });
     it('widgets toggleCollapse and toggleCollapseAll', () => {
         const {initialState, changeLayoutAction} = require('../../test-resources/widgets/layout-state-collapse.js');
@@ -464,56 +561,80 @@ describe('Test the widgets reducer', () => {
         expect(widget.map.layers.length).toBe(1);
         expect(widget.map.layers[0].params.CQL_FILTER).toBe("some cql");
     });
-    it('widgets toggleMaximize', () => {
+    it('widgets toggleMaximize changes only transient maximized state', () => {
         const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
         const id = 'a7122cc0-f7a9-11e8-8602-03b7e0c9537b';
         const widgetToMaximize = initialState.containers.floating.widgets.filter(w => w.id === id)[0];
 
-        // first toggle
-        let resultState = widgets({
-            ...initialState
-        }, toggleMaximize(widgetToMaximize));
+        let resultState = widgets(initialState, toggleMaximize(widgetToMaximize));
 
         expect(resultState).toExist();
         let floating = resultState.containers.floating;
-        expect(floating).toExist();
-        expect(floating.layout).toExist();
-        expect(floating.layout.length).toBe(1);
-        expect(floating.layout[0].i).toBe(id);
-        expect(floating.layout[0].x).toBe(0);
-        expect(floating.layout[0].y).toBe(0);
-        expect(floating.layout[0].w).toBe(1);
-        expect(floating.layout[0].h).toBe(1);
-        expect(floating.layouts).toExist();
-        expect(floating.layouts.xxs).toExist();
-        expect(floating.layouts.xxs.length).toBe(1);
-        expect(floating.layouts.xxs[0].i).toBe(id);
-        expect(floating.layouts.xxs[0].x).toBe(0);
-        expect(floating.layouts.xxs[0].y).toBe(0);
-        expect(floating.layouts.xxs[0].w).toBe(1);
-        expect(floating.layouts.xxs[0].h).toBe(1);
-        expect(floating.maximized).toExist();
-        expect(floating.maximized.layout).toEqual(initialState.containers.floating.layout);
-        expect(floating.maximized.layouts).toEqual(initialState.containers.floating.layouts);
-        expect(floating.maximized.widget).toEqual(widgetToMaximize);
-        expect(floating.widgets).toExist();
-        const newWidget = floating.widgets.filter(w => w.id === id)[0];
-        expect(newWidget).toExist();
-        expect(newWidget.dataGrid).toExist();
-        expect(newWidget.dataGrid.isDraggable).toBe(false);
-        expect(newWidget.dataGrid.isResizable).toBe(false);
+        expect(floating.layout).toBe(initialState.containers.floating.layout);
+        expect(floating.layouts).toBe(initialState.containers.floating.layouts);
+        expect(floating.widgets).toBe(initialState.containers.floating.widgets);
+        expect(floating.maximized).toEqual({ widget: widgetToMaximize });
 
-        // second toggle
-        resultState = widgets({
-            ...resultState
-        }, toggleMaximize(widgetToMaximize));
+        resultState = widgets(resultState, toggleMaximize(widgetToMaximize));
 
-        expect(resultState).toExist();
         floating = resultState.containers.floating;
-        expect(floating).toExist();
-        expect(floating.layout).toEqual(initialState.containers.floating.layout);
-        expect(floating.layouts).toEqual(initialState.containers.floating.layouts);
+        expect(floating.layout).toBe(initialState.containers.floating.layout);
+        expect(floating.layouts).toBe(initialState.containers.floating.layouts);
+        expect(floating.widgets).toBe(initialState.containers.floating.widgets);
         expect(floating.maximized).toEqual({});
+    });
+    it('widgets toggleMaximize manages widgets independently across dashboard views', () => {
+        const firstWidget = {
+            id: 'widget-1',
+            layoutId: 'view-1',
+            widgetType: 'text',
+            dataGrid: { x: 0, y: 0, w: 1, h: 1 }
+        };
+        const secondWidget = {
+            id: 'widget-2',
+            layoutId: 'view-2',
+            widgetType: 'text',
+            dataGrid: { x: 1, y: 1, w: 2, h: 2 }
+        };
+        const firstLayout = { i: firstWidget.id, x: 0, y: 0, w: 1, h: 1 };
+        const secondLayout = { i: secondWidget.id, x: 1, y: 1, w: 2, h: 2 };
+        const initialState = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [firstWidget, secondWidget],
+                    layouts: [{
+                        id: firstWidget.layoutId,
+                        md: [firstLayout],
+                        xxs: [{ ...firstLayout }]
+                    }, {
+                        id: secondWidget.layoutId,
+                        md: [secondLayout],
+                        xxs: [{ ...secondLayout }]
+                    }],
+                    layout: [firstLayout],
+                    selectedLayoutId: firstWidget.layoutId
+                }
+            }
+        };
+
+        let resultState = widgets(initialState, toggleMaximize(firstWidget));
+        let floating = resultState.containers[DEFAULT_TARGET];
+        expect(floating.maximized.widget).toEqual([firstWidget]);
+
+        resultState = widgets(resultState, toggleMaximize(secondWidget));
+        floating = resultState.containers[DEFAULT_TARGET];
+        expect(floating.maximized.widget).toEqual([firstWidget, secondWidget]);
+
+        resultState = widgets(resultState, toggleMaximize(firstWidget));
+        floating = resultState.containers[DEFAULT_TARGET];
+        expect(floating.maximized.widget).toEqual([secondWidget]);
+
+        resultState = widgets(resultState, toggleMaximize(secondWidget));
+        floating = resultState.containers[DEFAULT_TARGET];
+        expect(floating.maximized).toEqual({});
+        expect(floating.widgets).toBe(initialState.containers[DEFAULT_TARGET].widgets);
+        expect(floating.layout).toBe(initialState.containers[DEFAULT_TARGET].layout);
+        expect(floating.layouts).toBe(initialState.containers[DEFAULT_TARGET].layouts);
     });
     it('widgets toggleMaximize on static widget', () => {
         const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
@@ -525,6 +646,24 @@ describe('Test the widgets reducer', () => {
         }, toggleMaximize(widgetToMaximize));
 
         expect(resultState).toEqual(initialState);
+    });
+    it('widgets toggleMaximize on collapsed widget', () => {
+        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
+        const widgetToMaximize = initialState.containers.floating.widgets[0];
+        const collapsedState = {
+            ...initialState,
+            containers: {
+                ...initialState.containers,
+                floating: {
+                    ...initialState.containers.floating,
+                    collapsed: {
+                        [widgetToMaximize.id]: {}
+                    }
+                }
+            }
+        };
+
+        expect(widgets(collapsedState, toggleMaximize(widgetToMaximize))).toBe(collapsedState);
     });
     it('widgets refreshSecurityLayers', () => {
 

@@ -313,7 +313,21 @@
         "type": "Tipo",
         "clearCustomization": "Borrar personalización",
         "clearCustomizationConfirm": "¿Está seguro de que desea borrar la personalización de los campos?",
-        "error": "Error al recuperar los campos"
+        "error": "Error al recuperar los campos",
+        "featureInfoDisplayType": "Tipo de visualización de información",
+        "configureField": "Configurar campo",
+        "mediaTypeAttribute": "Atributo del tipo de medio",
+        "displayTypes": {
+          "string": "Texto",
+          "image": "Imagen",
+          "video": "Vídeo",
+          "audio": "Audio",
+          "panorama": "Imagen panorámica",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Medio"
+        }
       },
       "disableFeaturesEditing": "Deshabilitar la edición en la tabla de atributos",
       "interactiveLegend": {
@@ -916,6 +930,7 @@
     "identifyRevGeocodeSubmitText": "Más información",
     "identifyRevGeocodeCloseText": "Cerrar",
     "identifyRevGeocodeError": "Geocodificación imposible",
+    "identifyShowFullscreen": "Mostrar en pantalla completa",
     "identifyEdit": "Editar",
     "identifyLayerSelectNoResult": "No se encontraron capas",
     "getFeatureInfoError": {
@@ -4922,6 +4937,7 @@
         "errorDefault": "Error de red"
       },
       "myResources": "Mis recursos",
+      "select": "Seleccionar",
       "creationFilter": {
         "from": "Fecha de creación desde",
         "to": "Fecha de creación hasta"

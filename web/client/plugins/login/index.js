@@ -74,10 +74,10 @@ export const UserDetails = connect((state) => ({
     onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false, false)
 })(UserDetailsModalComp);
 
-export const  UserDetailsMenuItem = userMenuConnect(({itemComponent, showAccountInfo = true, onShowAccountInfo}) => {
+export const  UserDetailsMenuItem = userMenuConnect(({itemComponent, showAccountInfo = true, onShowAccountInfo, hideGroupUserInfo}) => {
     const Menuitem = itemComponent;
     if (Menuitem && showAccountInfo) {
-        return (<><Menuitem glyph="user" msgId= "user.info" onClick={onShowAccountInfo}/><UserDetails/></>);
+        return (<><Menuitem glyph="user" msgId= "user.info" onClick={onShowAccountInfo}/><UserDetails hideGroupUserInfo={hideGroupUserInfo}/></>);
     }
     return null;
 });
