@@ -259,6 +259,9 @@ export const getFeatureLayerSchema = (url, name, opts = {}) => {
         params: { f: 'json' },
         _msAuthSourceId: opts.authSourceId
     }).then(({ data }) => {
+        if (data?.error) {
+            throw new Error(data.error.message || 'Invalid ArcGIS FeatureServer layer');
+        }
         const fields = Array.isArray(data?.fields) ? data.fields : [];
         // Sample primitive value so getVectorLayerAttributes' isNumber/isString filter accepts it.
         const properties = fields.reduce((acc, f) => {
