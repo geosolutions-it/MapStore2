@@ -820,6 +820,23 @@ describe('Leaflet layer', () => {
         expect(layer.layer.options.opacity).toBe(0.5);
     });
 
+    it('recreates a wms layer when its URL changes', () => {
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            format: 'image/png',
+            url: 'http://sample.server/geoserver/old-wms'
+        };
+        let component = ReactDOM.render(
+            <LeafLetLayer type="wms" options={options} map={map}/>, document.getElementById("container"));
+        const oldLayer = component.layer;
+        component = ReactDOM.render(
+            <LeafLetLayer type="wms" options={{...options, url: 'http://sample.server/geoserver/new-wms'}} map={map}/>, document.getElementById("container"));
+        expect(component.layer).toNotBe(oldLayer);
+        expect(component.layer._urls[0]).toBe('http://sample.server/geoserver/new-wms');
+    });
+
     it('respects layer ordering', () => {
         var options = {
             "type": "wms",
@@ -1675,6 +1692,33 @@ describe('Leaflet layer', () => {
             expect(f.getLatLng().lat).toEqual(40.70758763);
             expect(f.getLatLng().lng).toEqual(-74.0104611);
             done();
+        });
+    });
+    it('reloads a wfs layer when its URL changes', (done) => {
+        mockAxios.onGet().reply(200, { ...SAMPLE_FEATURE_COLLECTION, features: [] });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'OLD_SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        let firstLoad = true;
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wfs"
+            options={options}
+            map={map} />, document.getElementById("container"));
+        layer.layer.on('load', () => {
+            if (firstLoad) {
+                firstLoad = false;
+                layer = ReactDOM.render(<LeafLetLayer
+                    type="wfs"
+                    options={{ ...options, url: 'NEW_SAMPLE_URL' }}
+                    map={map} />, document.getElementById("container"));
+            } else {
+                expect(mockAxios.history.get.some(({ url }) => url.includes('OLD_SAMPLE_URL'))).toBeTruthy();
+                expect(mockAxios.history.get.some(({ url }) => url.includes('NEW_SAMPLE_URL'))).toBeTruthy();
+                done();
+            }
         });
     });
     it('test second render wfs layer', (done) => {

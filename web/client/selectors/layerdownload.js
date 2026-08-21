@@ -14,6 +14,7 @@ import { wfsFilter } from './query';
 import { composeFilterObject } from '../components/widgets/enhancers/utils';
 
 import { getTableWidgets } from './widgets';
+import { getWFSLayerName } from '../utils/LayersUtils';
 
 export const layerDownloadControlEnabledSelector = state => state?.controls?.layerdownload?.enabled;
 export const downloadOptionsSelector = state => state?.layerdownload?.downloadOptions;
@@ -46,8 +47,9 @@ export const wfsFilterSelector = createSelector(
         if (widget?.filter && widget?.quickFilters) {
             updatedFilter = composeFilterObject(widget.filter, widget.quickFilters, options);
         }
-        return featureGridOpen ? wfsFilterObj || updatedFilter : selectedLayer?.name ? updatedFilter || {
-            featureTypeName: selectedLayer.name,
+        const typeName = getWFSLayerName(selectedLayer);
+        return featureGridOpen ? wfsFilterObj || updatedFilter : typeName ? updatedFilter || {
+            featureTypeName: typeName,
             filterType: 'OGC',
             ogcVersion: '1.1.0'
         } : null;

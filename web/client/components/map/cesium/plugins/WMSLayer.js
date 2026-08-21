@@ -48,6 +48,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
             return !isEqual(oldOption, newOption);
         });
     if (newParameters.length > 0 ||
+        !isEqual(newOptions.url, oldOptions.url) ||
         newOptions.securityToken !== oldOptions.securityToken ||
         !isEqual(oldOptions.security, newOptions.security) ||
         !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash) ||

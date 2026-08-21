@@ -102,5 +102,30 @@ describe('widgets dependenciesToExtent enhancer', () => {
 
     });
 
+    it('uses the linked WFS type name to fetch filtered bounds', (done) => {
+        const Sink = dependenciesToExtent(createSink(() => {}));
+        mockAxios.onPost().reply(({data}) => {
+            expect(data).toContain('workspace:linked');
+            done();
+            return [200, '<?xml version="1.0" encoding="UTF-8"?><ows:BoundingBox xmlns:ows="http://www.opengis.net/ows/1.1" crs="EPSG:4326"><ows:LowerCorner>0 0</ows:LowerCorner><ows:UpperCorner>1 1</ows:UpperCorner></ows:BoundingBox>'];
+        });
+        ReactDOM.render(<Sink
+            id="id"
+            mapSync
+            dependencies={{
+                ...inputDependenciesQuickFiltersAndFilter,
+                layer: {
+                    type: 'wms',
+                    name: 'workspace:rendered',
+                    search: {
+                        type: 'wfs',
+                        url: '/testWPSUrl',
+                        typeName: 'workspace:linked'
+                    }
+                }
+            }}
+        />, document.getElementById("container"));
+    });
+
 
 });

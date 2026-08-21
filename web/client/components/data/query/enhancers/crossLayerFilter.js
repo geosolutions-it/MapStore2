@@ -5,6 +5,7 @@ import { findGeometryProperty } from '../../../../utils/ogc/WFS/base';
 import { describeFeatureTypeToAttributes } from '../../../../utils/FeatureTypeUtils';
 import { compose, withProps, withPropsOnChange, withHandlers, defaultProps } from 'recompose';
 import propsStreamFactory from '../../../misc/enhancers/propsStreamFactory';
+import { getSearchUrl, getWFSLayerName } from '../../../../utils/LayersUtils';
 const hasCrossLayerFunctionalities = (data) => {
     const functions = get(data, "WFS_Capabilities.Filter_Capabilities.Scalar_Capabilities.ArithmeticOperators.Functions.FunctionNames.FunctionName");
     return !!find(functions, ({_} = {}) => _ === "queryCollection");
@@ -48,7 +49,9 @@ const createCrossLayerFunctionalitiesInspectionStream = ($props) => $props
 
 const retrieveCrossLayerAttributes = ($props, setQueryCollectionParameter) => $props
 // retrieve layer's attributes on layer selection change
-    .distinctUntilChanged(({layer = {}} = {}, {layer: newLayer } = {}) => newLayer && layer.name === (newLayer && newLayer.name))
+    .distinctUntilChanged(({layer = {}} = {}, {layer: newLayer } = {}) => newLayer
+        && getWFSLayerName(layer) === getWFSLayerName(newLayer)
+        && getSearchUrl(layer) === getSearchUrl(newLayer))
     .filter(({layer} = {}) => !!layer)
     .switchMap(({layer} = {}) =>
         Observable.defer( () => describeFeatureType({layer}))
@@ -90,7 +93,7 @@ export default compose(
             enabledAreaOfInterest: get(crossLayerFilter, 'enabledAreaOfInterest')
         })),
     withProps(({layers = [], queryCollection = {}} = {}) => ({
-        layer: find(layers, ({name} = {}) => name === queryCollection.typeName)
+        layer: find(layers, (layer = {}) => getWFSLayerName(layer) === queryCollection.typeName)
     })),
     withHandlers({
         setQueryCollectionParameter: ({setCrossLayerFilterParameter = () => {}}) => (k, v) => {

@@ -26,17 +26,33 @@ const LayerNameEditField = ({
     setLayerName = () => {},
     setWaitingForLayerLoading = () => {},
     setEditingLayerName = () => {},
+    setLayerError = () => {},
+    onValidate,
     onUpdateEntry = () => {}
 }) => {
     const editButton = (
         <InputGroup.Addon className="btn" onClick={() => {
             if (editingLayerName) {
                 if (layerName !== element.name) {
-                    onUpdateEntry('name', {target: {value: layerName}});
                     if (enableLayerNameEditFeedback) {
                         setWaitingForLayerLoading(true);
+                    }
+                    const updateLayerName = (validationResult) => {
+                        onUpdateEntry('name', {target: {value: layerName}}, validationResult);
+                        if (!enableLayerNameEditFeedback) {
+                            setEditingLayerName(false);
+                        }
+                    };
+                    if (onValidate) {
+                        Promise.resolve()
+                            .then(() => onValidate(layerName))
+                            .then(updateLayerName)
+                            .catch(() => {
+                                setWaitingForLayerLoading(false);
+                                setLayerError(true);
+                            });
                     } else {
-                        setEditingLayerName(false);
+                        updateLayerName();
                     }
                 } else {
                     setEditingLayerName(false);

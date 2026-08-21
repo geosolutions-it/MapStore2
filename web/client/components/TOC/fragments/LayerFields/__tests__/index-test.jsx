@@ -66,6 +66,33 @@ describe('TOC Settings - LayerFields component', () => {
                 done(e);
             });
         });
+        it('loads the configured linked WFS feature type fields', (done) => {
+            mockAxios.onGet().reply(({url}) => {
+                expect(url).toContain('typeName=topp%3Alinked');
+                return [200, {
+                    featureTypes: [{
+                        typeName: 'topp:rendered',
+                        properties: [{name: 'rendered', localType: 'string'}]
+                    }, {
+                        typeName: 'topp:linked',
+                        properties: [{name: 'linked', localType: 'string'}]
+                    }]
+                }];
+            });
+            loadFields({
+                name: 'topp:rendered',
+                type: 'wms',
+                url: 'wms-url',
+                search: {
+                    type: 'wfs',
+                    url: 'wfs-url',
+                    typeName: 'topp:linked'
+                }
+            }).then((fields) => {
+                expect(fields).toEqual([{name: 'linked', type: 'string'}]);
+                done();
+            }).catch(done);
+        });
         it('check merge applies alias from old fields', (done) => {
             mockAxios.onGet().reply(200, {
                 featureTypes: [{
