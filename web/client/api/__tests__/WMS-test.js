@@ -420,3 +420,77 @@ describe('Test get json wms graphic legend (mock axios)', () => {
         });
     });
 });
+
+describe('Test getSupportedFormat WMS API (mock axios)', () => {
+    beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
+    it('getSupportedFormat returns imageFormats and infoFormats for layer-specific request', (done) => {
+        mockAxios.onGet().reply((config) => {
+            try {
+                expect(config.url).toBe('http://localhost:8080/geoserver/workspace/layer_name/wms?service=WMS&version=1.3.0&request=GetCapabilities');
+            } catch (e) {
+                done(e);
+            }
+            return [200, `
+            <WMS_Capabilities version="1.3.0">
+                <Capability>
+                    <Request>
+                        <GetMap>
+                            <Format>image/png</Format>
+                            <Format>image/jpeg</Format>
+                        </GetMap>
+                        <GetFeatureInfo>
+                            <Format>text/html</Format>
+                            <Format>application/json</Format>
+                        </GetFeatureInfo>
+                    </Request>
+                </Capability>
+            </WMS_Capabilities>
+            `];
+        });
+
+        API.getSupportedFormat('http://localhost:8080/geoserver/workspace/layer_name/wms', true)
+            .then((formats) => {
+                try {
+                    expect(formats.imageFormats).toEqual(['image/png', 'image/jpeg']);
+                    expect(formats.infoFormats).toEqual(['text/html', 'application/json']);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }).catch(done);
+    });
+
+    it('getSupportedFormat returns only imageFormats when includeGFIFormats is false', (done) => {
+        mockAxios.onGet().reply(200, `
+        <WMS_Capabilities version="1.3.0">
+            <Capability>
+                <Request>
+                    <GetMap>
+                        <Format>image/png</Format>
+                    </GetMap>
+                </Request>
+            </Capability>
+        </WMS_Capabilities>
+        `);
+
+        API.getSupportedFormat('http://localhost:8080/geoserver/wms')
+            .then((imageFormats) => {
+                try {
+                    expect(imageFormats).toEqual(['image/png']);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }).catch(done);
+    });
+});
+

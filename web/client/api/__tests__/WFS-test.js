@@ -218,6 +218,32 @@ describe('Test WFS ogc API functions', () => {
         }).catch(done);
     });
 
+    it('getSupportedFormat with layer-specific URL', (done) => {
+        mockAxios.onGet().reply((config) => {
+            try {
+                expect(config.url).toBe('/geoserver/workspace/layer_name/wfs?version=1.1.0&service=WFS&request=GetCapabilities');
+            } catch (e) {
+                done(e);
+            }
+            return [200, `
+            <wfs:WFS_Capabilities>
+            <ows:OperationsMetadata>
+            <ows:Operation name="GetFeature">
+                <ows:Parameter name="outputFormat">
+                    <ows:Value>application/json</ows:Value>
+                    <ows:Value>text/html</ows:Value>
+                </ows:Parameter>
+            </ows:Operation>
+            </ows:OperationsMetadata>
+            </wfs:WFS_Capabilities>
+            `];
+        });
+        getSupportedFormat('/geoserver/workspace/layer_name/wfs').then((data) => {
+            expect(data).toEqual({ infoFormats: ['application/json', 'text/html'] });
+            done();
+        }).catch(done);
+    });
+
     it('toDescribeURL with URL array', () => {
         const _url = [
             'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
