@@ -53,6 +53,19 @@ describe('getWFSLayerName', () => {
             search: {url: 'wfs-url'}
         })).toBe('workspace:legacy-name');
     });
+    it('does not replace an explicitly empty linked WFS type name', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:wms-name',
+            search: {typeName: ''}
+        })).toBe('');
+    });
+});
+describe('getSearchUrl', () => {
+    it('falls back only when the linked WFS URL is missing', () => {
+        expect(LayersUtils.getSearchUrl({url: 'wms-url', search: {type: 'wfs'}})).toBe('wms-url');
+        expect(LayersUtils.getSearchUrl({url: 'wms-url', search: {type: 'wfs', url: ''}})).toBe('');
+    });
 });
 const groupsExample = [{
     "id": "first",

@@ -864,7 +864,7 @@ export const getCapabilitiesUrl = (layer) => {
  * @param {Object} layer
  * @returns {string} layer url
  */
-export const getSearchUrl = (l = {}) => l.search && l.search.url || l.url;
+export const getSearchUrl = (l = {}) => l.search?.url ?? l.url;
 /**
  * Returns the feature type used by the WFS service associated with a layer.
  * WMS layers can configure a distinct linked WFS type name; native WFS layers
@@ -874,7 +874,11 @@ export const getSearchUrl = (l = {}) => l.search && l.search.url || l.url;
  * @returns {string} WFS feature type name
  */
 export const getWFSLayerName = (layer = {}) =>
-    (layer.type === 'wms' && layer.search?.typeName) || layer.name;
+    (layer.type === 'wms'
+        && layer.search?.typeName !== undefined
+        && layer.search.typeName !== null)
+        ? layer.search.typeName
+        : layer.name;
 export const invalidateUnsupportedLayer = (layer, maptype) => {
     return isSupportedLayerFunc(layer, maptype) ? checkInvalidParam(layer) : Object.assign({}, layer, {invalid: true});
 };

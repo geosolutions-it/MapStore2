@@ -9,6 +9,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { ControlLabel, FormControl, FormGroup, Glyphicon, InputGroup } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
 
 import Message from '../../../I18N/Message';
 
@@ -20,12 +21,16 @@ const EditableTextField = ({
     labelId,
     value = '',
     onChange = () => {},
+    onValidate,
+    required = false,
     formatValue = (currentValue) => currentValue ?? '',
     parseValue = (currentValue) => currentValue
 }) => {
     const formattedValue = formatValue(value);
     const [editing, setEditing] = useState(false);
     const [currentValue, setCurrentValue] = useState(formattedValue);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         if (!editing) {
@@ -34,27 +39,57 @@ const EditableTextField = ({
     }, [formattedValue, editing]);
 
     const confirm = () => {
-        if (currentValue !== formattedValue) {
-            onChange(parseValue(currentValue));
+        const parsedValue = parseValue(currentValue);
+        const isEmpty = Array.isArray(parsedValue)
+            ? !parsedValue.length || parsedValue.some((entry) => !entry?.trim())
+            : !parsedValue?.trim?.();
+        if (required && isEmpty) {
+            setError(true);
+            return;
         }
-        setEditing(false);
+        if (currentValue === formattedValue) {
+            setEditing(false);
+            setError(false);
+            return;
+        }
+        setLoading(true);
+        setError(false);
+        Promise.resolve()
+            .then(() => onValidate?.(parsedValue))
+            .then((validationResult) => {
+                onChange(parsedValue, validationResult);
+                setEditing(false);
+            })
+            .catch(() => setError(true))
+            .then(() => setLoading(false));
     };
 
     return (
-        <FormGroup>
+        <FormGroup validationState={error ? 'error' : null}>
             <ControlLabel><Message msgId={labelId} /></ControlLabel>
             <InputGroup>
                 <FormControl
                     data-qa={dataQa}
                     value={currentValue}
                     type="text"
-                    disabled={!editing}
+                    disabled={!editing || loading}
                     onChange={(event) => setCurrentValue(event.target.value)} />
                 <InputGroup.Addon
                     className="btn"
                     data-qa={`${dataQa}-edit`}
-                    onClick={() => editing ? confirm() : setEditing(true)}>
-                    <Glyphicon glyph={editing ? 'ok' : 'pencil'} />
+                    onClick={() => {
+                        if (!loading) {
+                            if (editing) {
+                                confirm();
+                            } else {
+                                setError(false);
+                                setEditing(true);
+                            }
+                        }
+                    }}>
+                    {loading
+                        ? <Spinner noFadeIn style={{width: '18px', height: '18px'}} spinnerName="circle"/>
+                        : <Glyphicon glyph={editing ? 'ok' : 'pencil'} />}
                 </InputGroup.Addon>
             </InputGroup>
         </FormGroup>
@@ -66,6 +101,8 @@ EditableTextField.propTypes = {
     labelId: PropTypes.string.isRequired,
     value: PropTypes.any,
     onChange: PropTypes.func,
+    onValidate: PropTypes.func,
+    required: PropTypes.bool,
     formatValue: PropTypes.func,
     parseValue: PropTypes.func
 };

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { find, includes, isObject, uniqBy } from 'lodash';
+import { castArray, find, includes, isObject, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Checkbox, Col, ControlLabel, FormControl, FormGroup, Grid } from 'react-bootstrap';
@@ -26,6 +26,8 @@ import {
 } from '../../../../plugins/TOC/utils/TOCUtils';
 import { supportsFeatureEditing } from "../../../../utils/FeatureGridUtils";
 import { DEFAULT_GROUP_ID, flattenGroups, getTitle as _getTitle } from '../../../../utils/LayersUtils';
+import { loadFields } from '../LayerFields';
+import { addSearch, getLayerCapabilities as getWMSLayerCapabilities } from '../../../../observables/wms';
 
 const formatURL = (url) => Array.isArray(url) ? url.join(', ') : url || '';
 const parseURL = (url) => {
@@ -67,6 +69,62 @@ class General extends React.Component {
     getTitle = (label) => _getTitle(label, this.props.currentLocale);
     getLabelName = (label, groups) => _getLabelName(this.getTitle(label), groups);
 
+    validateLayerURL = (url) => {
+        const nextLayer = { ...this.props.element, url };
+        if (nextLayer.type === 'wfs') {
+            return loadFields(nextLayer, true);
+        }
+        return Promise.all(castArray(url).map((currentUrl) =>
+            getWMSLayerCapabilities({ ...nextLayer, url: currentUrl })
+                .toPromise()
+                .then((layerCapability) => {
+                    if (!layerCapability) {
+                        throw new Error('Layer not found in WMS capabilities');
+                    }
+                    return layerCapability;
+                })
+        ));
+    };
+
+    validateLinkedWFS = (search) => {
+        const typeName = search.typeName ?? this.props.element.name;
+        if (!search.url?.trim() || !typeName?.trim()) {
+            return Promise.reject(new Error('WFS URL and typeName are required'));
+        }
+        return loadFields({
+            ...this.props.element,
+            search: {
+                ...search,
+                typeName
+            }
+        }, true);
+    };
+
+    updateWFSPanel = (enabled) => {
+        if (!enabled) {
+            this.props.onChange('search', undefined);
+            return;
+        }
+        const emptySearch = { type: 'wfs', url: '', typeName: '' };
+        addSearch(this.props.element, { detectedSearchOverrides: true })
+            .toPromise()
+            .then(({ search }) => {
+                const detectedSearch = {
+                    type: 'wfs',
+                    url: search?.url || '',
+                    typeName: search?.typeName || ''
+                };
+                if (!detectedSearch.url || !detectedSearch.typeName) {
+                    this.props.onChange('search', detectedSearch);
+                    return;
+                }
+                this.validateLinkedWFS(detectedSearch)
+                    .then((fields) => this.props.onChange({ search: detectedSearch, fields }))
+                    .catch(() => this.props.onChange('search', detectedSearch));
+            })
+            .catch(() => this.props.onChange('search', emptySearch));
+    };
+
     render() {
         const { hideTitleTranslations = false } = this.props.pluginCfg;
 
@@ -103,7 +161,18 @@ class General extends React.Component {
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
-                        onUpdateEntry={this.updateEntry.bind(null)}/>}
+                        onValidate={this.props.element.search?.type === 'wfs'
+                            && (this.props.element.search.typeName === undefined
+                                || this.props.element.search.typeName === null)
+                            ? (name) => this.validateLinkedWFS({
+                                ...this.props.element.search,
+                                typeName: name
+                            })
+                            : undefined}
+                        onUpdateEntry={(key, event, fields) => this.props.onChange({
+                            [key]: event.target.value,
+                            ...(fields && { fields })
+                        })}/>}
                     {includes(this.supportedURLEditLayerTypes, this.props.element.type) &&
                     <EditableTextField
                         dataQa="layer-properties-url"
@@ -111,7 +180,12 @@ class General extends React.Component {
                         value={this.props.element.url}
                         formatValue={formatURL}
                         parseValue={parseURL}
-                        onChange={(url) => this.props.onChange('url', url)} />}
+                        required
+                        onValidate={this.validateLayerURL}
+                        onChange={(url, fields) => this.props.onChange({
+                            url,
+                            ...(this.props.element.type === 'wfs' && { fields })
+                        })} />}
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :
@@ -194,26 +268,38 @@ class General extends React.Component {
                     {this.props.element.type === 'wms' && <SwitchPanel
                         expanded={!!this.props.element.search}
                         title={<Message msgId="layerProperties.wfsLinkedService" />}
-                        onSwitch={(enabled) => this.props.onChange('search', enabled ? {
-                            type: 'wfs',
-                            url: '',
-                            typeName: this.props.element.name
-                        } : undefined)}>
+                        onSwitch={this.updateWFSPanel}>
                         <EditableTextField
                             dataQa="layer-properties-search-url"
                             labelId="layerProperties.url"
                             value={this.props.element.search?.url}
-                            onChange={(url) => this.props.onChange('search', {
+                            required
+                            onValidate={(url) => this.validateLinkedWFS({
                                 ...this.props.element.search,
                                 url
+                            })}
+                            onChange={(url, fields) => this.props.onChange({
+                                search: {
+                                    ...this.props.element.search,
+                                    url
+                                },
+                                fields
                             })} />
                         <EditableTextField
                             dataQa="layer-properties-search-type-name"
                             labelId="layerProperties.typeName"
-                            value={this.props.element.search?.typeName || this.props.element.name}
-                            onChange={(typeName) => this.props.onChange('search', {
+                            value={this.props.element.search?.typeName ?? this.props.element.name}
+                            required
+                            onValidate={(typeName) => this.validateLinkedWFS({
                                 ...this.props.element.search,
                                 typeName
+                            })}
+                            onChange={(typeName, fields) => this.props.onChange({
+                                search: {
+                                    ...this.props.element.search,
+                                    typeName
+                                },
+                                fields
                             })} />
                     </SwitchPanel>}
 

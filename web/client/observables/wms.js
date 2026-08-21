@@ -48,19 +48,25 @@ export const getLayerCapabilities = l => {
         .map(c => WMS.parseLayerCapabilities(c, l));
 };
 
-export const addSearch = l =>
+export const addSearch = (l, { detectedSearchOverrides = false } = {}) =>
     describeLayer(l)
         .map( ({data = {}}) => data && data.layerDescriptions[0])
-        .map(({owsURL, query} = {}) => ({
-            ...l,
-            params: {}, // TODO: if needed, clean them up
-            search: owsURL ? {
+        .map(({owsURL, typeName, query} = {}) => {
+            const detectedTypeName = typeName || head(castArray(query))?.typeName;
+            const detectedSearch = owsURL ? {
                 type: "wfs",
                 url: cleanAuthParamsFromURL(owsURL),
-                ...(head(castArray(query))?.typeName && { typeName: head(castArray(query)).typeName }),
-                ...(l.search || {})
-            } : undefined
-        }));
+                ...(detectedTypeName && { typeName: detectedTypeName })
+            } : undefined;
+            return {
+                ...l,
+                params: {}, // TODO: if needed, clean them up
+                search: detectedSearch ? {
+                    ...(detectedSearchOverrides ? l.search : detectedSearch),
+                    ...(detectedSearchOverrides ? detectedSearch : l.search)
+                } : undefined
+            };
+        });
 export const getNativeCrs = (layer) => Observable.of(layer).filter(({nativeCrs}) => !nativeCrs)
     .switchMap((l) => {
         return getLayerCapabilities(l)
