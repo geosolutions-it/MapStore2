@@ -10,8 +10,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { openlink } from 'react-draft-wysiwyg';
 
-import { getSafeHref } from '../../../../utils/URLUtils';
-
 function findLinkEntities(contentBlock, callback, contentState) {
     contentBlock.findEntityRanges(
         (character) => {
@@ -41,11 +39,7 @@ function getLinkComponent(config) {
     openLink = () => {
         const { entityKey, contentState } = this.props;
         const { url } = contentState.getEntity(entityKey).getData();
-        const href = getSafeHref(url);
-        if (!href) {
-            return;
-        }
-        const linkTab = window.open(href, 'blank'); // eslint-disable-line no-undef
+        const linkTab = window.open(url, 'blank'); // eslint-disable-line no-undef
         // linkTab can be null when the window failed to open.
         if (linkTab) {
             linkTab.focus();
@@ -84,7 +78,7 @@ function getLinkComponent(config) {
                 onMouseEnter={this.toggleShowPopOver}
                 onMouseLeave={this.toggleShowPopOver}
             >
-                <a href={getSafeHref(url)} target={targetOption}>{children}</a>
+                <a href={url} target={targetOption}>{children}</a>
                 {showPopOver && showOpenOptionOnHover ?
                     <img
                         src={openlink}

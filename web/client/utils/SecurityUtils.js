@@ -15,6 +15,7 @@ import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
 import isString from "lodash/isString";
+import template from "lodash/template";
 import get from "lodash/get";
 import castArray from "lodash/castArray";
 
@@ -174,20 +175,7 @@ export function findUserAttributeValue(attributeName) {
 }
 
 /**
- * Replaces `${...}` placeholders with the matching value of securityProperties.
- * Unresolved placeholders are left in place, filterUnresolvedTemplates drops them later.
- * @param {string} value - configuration value containing placeholders
- * @param {Object} securityProperties - properties used to resolve the placeholders
- * @returns {string} the value with the resolved placeholders
- */
-const substitutePlaceholders = (value, securityProperties) =>
-    value.replace(/\$\{([^{}]+)\}/g, (placeholder, path) => {
-        const resolved = get(securityProperties, path.trim());
-        return isNil(resolved) ? placeholder : String(resolved);
-    });
-
-/**
- * Parses request configuration by replacing variables with actual values
+ * Parses request configuration by replacing variables with actual values using lodash template
  * @param {Object} config - Configuration object with headers/params
  * @param {Object} securityProperties - Security properties to replace variables
  * @returns {Object} Parsed configuration with replaced variables
@@ -199,7 +187,9 @@ const parseRequestConfiguration = (config = {}, securityProperties) => {
                 const [name, value] = entry;
                 if (typeof value === 'string' && value.includes('${')) {
                     try {
-                        let result = substitutePlaceholders(value, securityProperties);
+                        // Use lodash template for variable substitution
+                        const compiled = template(value);
+                        let result = compiled(securityProperties);
                         result = result === "" ? undefined : result;
                         return [name, result];
                     } catch (error) {

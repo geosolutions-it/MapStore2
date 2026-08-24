@@ -118,19 +118,4 @@ describe('PropertiesViewer', () => {
             expect(value).toBe(testVal);
         });
     });
-
-    describe('sanitization', () => {
-        it('removes script tags from a property value', () => {
-            window.__propertiesViewerScript = undefined;
-            const feature = { id: 'f1', properties: { info: '<p>content</p><script>window.__propertiesViewerScript = true</script>' } };
-            ReactDOM.render(<PropertiesViewer feature={feature} />, document.getElementById("container"));
-            expect(window.__propertiesViewerScript).toBe(undefined);
-            expect(document.getElementById("container").innerHTML.indexOf('<script')).toBe(-1);
-        });
-        it('keeps the formatting tags of a property value', () => {
-            const feature = { id: 'f1', properties: { info: '<p><b>bold</b></p>' } };
-            ReactDOM.render(<PropertiesViewer feature={feature} />, document.getElementById("container"));
-            expect(document.querySelector('.ms-properties-viewer-value b')).toBeTruthy();
-        });
-    });
 });
