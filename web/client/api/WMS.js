@@ -310,9 +310,9 @@ export const reset = () => {
 
 /**
  * Fetch the supported formats of the WMS service
- * @param url
- * @param includeGFIFormats
- * @return {object|string} formats
+ * @param {string} url WMS endpoint
+ * @param {boolean} includeGFIFormats include GFI formats
+ * @returns {object|string} formats
  */
 export const getSupportedFormat = (url, includeGFIFormats = false) => {
     return getCapabilities(url)
