@@ -83,6 +83,16 @@
             }
         }
     }
+
+    .ms-filter-slider .noUi-pips {
+        .noUi-value {
+            .color-var(@theme-vars[main-color]);
+        }
+
+        .noUi-marker {
+            .background-color-var(@theme-vars[main-color]);
+        }
+    }
 }
 
 // **************
@@ -291,18 +301,18 @@
 }
 
 .ms-filter-slider .mapstore-slider .noUi-target.noUi-horizontal .noUi-pips.noUi-pips-horizontal {
-    cursor: default;
+    cursor: pointer;
     padding: 5px 0px;
 
     .noUi-marker {
-        cursor: default;
+        cursor: pointer;
         height: 8px;
     }
 
     .noUi-value {
         width: fit-content;
         font-size: 10px;
-        cursor: default;
+        cursor: pointer;
         white-space: nowrap;
         -webkit-transform-origin: var(--ms-filter-slider-tick-origin, center center);
         transform-origin: var(--ms-filter-slider-tick-origin, center center);
