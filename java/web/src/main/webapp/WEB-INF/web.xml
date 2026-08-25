@@ -95,18 +95,7 @@
     </filter>
     <filter-mapping>
         <filter-name>viewFramingFilter</filter-name>
-        <!-- FORWARD is required: / is resolved to index.html through an internal forward -->
-        <url-pattern>/</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>viewFramingFilter</filter-name>
         <url-pattern>/index.html</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>viewFramingFilter</filter-name>
-        <url-pattern>/configs/*</url-pattern>
     </filter-mapping>
 
     <!--  Backend Spring MVC controllers -->
