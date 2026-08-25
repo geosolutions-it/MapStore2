@@ -209,6 +209,24 @@ const FilterSlider = ({
         maxHeight: layoutMaxHeight,
         overflowY: 'hidden'
     } : undefined;
+    const handleTickClick = (event) => {
+        const pipsElement = event.target.closest?.('.noUi-pips');
+        if (!pipsElement || !event.currentTarget.contains(pipsElement)) {
+            return;
+        }
+        const markers = Array.from(event.currentTarget.querySelectorAll('.noUi-marker'));
+        const nearestMarker = markers.reduce((nearest, marker, index) => {
+            const { left, width } = marker.getBoundingClientRect();
+            const distance = Math.abs(event.clientX - (left + width / 2));
+            return !nearest || distance < nearest.distance
+                ? { index, distance }
+                : nearest;
+        }, null);
+        const nextItem = normalizedItems[nearestMarker?.index];
+        if (nextItem) {
+            onSelectionChange([nextItem.id]);
+        }
+    };
 
     return (
         <FormGroup className={`ms-filter-slider${noSelectionClass}${showTicksClass}`}>
@@ -220,7 +238,7 @@ const FilterSlider = ({
                             : <Message msgId="widgets.filterWidget.sliderNotSelected" />}
                     </div>
                 )}
-                <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle} ref={sliderRef}>
+                <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle} ref={sliderRef} onClick={handleTickClick}>
                     <Slider
                         key={sliderKey}
                         start={[sliderStartIndex]}
