@@ -23,7 +23,7 @@ const NOUISLIDER_LAYOUT_RULES = `
 `;
 
 const renderSlider = (props = {}) => {
-    const container = document.getElementById("container");
+    const container = document.getElementById('container');
     ReactDOM.render(
         <FilterSlider items={ITEMS} onSelectionChange={() => {}} {...props} />,
         container
@@ -31,17 +31,80 @@ const renderSlider = (props = {}) => {
     return container;
 };
 
+const setMarkerPositions = (container, positions) => {
+    const markers = Array.from(container.querySelectorAll('.noUi-marker'));
+    markers.forEach((marker, index) => {
+        marker.getBoundingClientRect = () => ({ left: positions[index] - 1, width: 2 });
+    });
+    return markers;
+};
+
 describe('FilterSlider', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<style id="rules"></style><div id="container"></div>';
-        document.getElementById("rules").textContent = NOUISLIDER_LAYOUT_RULES;
+        document.getElementById('rules').textContent = NOUISLIDER_LAYOUT_RULES;
         setTimeout(done);
     });
 
     afterEach((done) => {
-        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
         setTimeout(done);
+    });
+
+    it('should select the item associated with a clicked tick label', () => {
+        const container = document.getElementById('container');
+        const items = [
+            { id: 'first', label: 'First' },
+            { id: 'second', label: 'Second' },
+            { id: 'third', label: 'Third' }
+        ];
+        let selectedValues;
+
+        ReactDOM.render(
+            <FilterSlider
+                items={items}
+                selectedValues={['first']}
+                showTicks
+                onSelectionChange={(values) => {
+                    selectedValues = values;
+                }}
+            />,
+            container
+        );
+
+        setMarkerPositions(container, [100, 200, 300]);
+        const labels = container.querySelectorAll('.noUi-value');
+        expect(labels.length).toBe(3);
+        labels[1].dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 200 }));
+        expect(selectedValues).toEqual(['second']);
+    });
+
+    it('should select the nearest item when a tick label is clicked', () => {
+        const container = document.getElementById('container');
+        const items = [
+            { id: 'first', label: 'First' },
+            { id: 'second', label: 'Second' },
+            { id: 'third', label: 'Third' }
+        ];
+        let selectedValues;
+
+        ReactDOM.render(
+            <FilterSlider
+                items={items}
+                selectedValues={['first']}
+                showTicks
+                onSelectionChange={(values) => {
+                    selectedValues = values;
+                }}
+            />,
+            container
+        );
+
+        setMarkerPositions(container, [100, 200, 300]);
+        const labels = container.querySelectorAll('.noUi-value');
+        labels[1].dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 240 }));
+        expect(selectedValues).toEqual(['second']);
     });
 
     it('should render one tick marker for every item', () => {
