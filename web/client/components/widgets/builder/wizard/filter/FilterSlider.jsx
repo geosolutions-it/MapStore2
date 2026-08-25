@@ -37,15 +37,6 @@ const getTickAngle = (value) => {
     return Math.max(-90, Math.min(90, angle));
 };
 
-export const getTickIndexFromPosition = (position, itemCount) => {
-    const percentage = Number.parseFloat(position);
-    if (!Number.isFinite(percentage) || itemCount < 2) {
-        return -1;
-    }
-    const boundedPercentage = Math.max(0, Math.min(100, percentage));
-    return Math.round((boundedPercentage / 100) * (itemCount - 1));
-};
-
 const ORIGINAL_LEFT_KEY = 'msOriginalLeft';
 const ORIGINAL_WIDTH_KEY = 'msOriginalWidth';
 
@@ -219,18 +210,19 @@ const FilterSlider = ({
         overflowY: 'hidden'
     } : undefined;
     const handleTickClick = (event) => {
-        const tickElement = event.target.closest?.('.noUi-marker, .noUi-value');
         const pipsElement = event.target.closest?.('.noUi-pips');
         if (!pipsElement || !event.currentTarget.contains(pipsElement)) {
             return;
         }
-        const sliderBase = event.currentTarget.querySelector('.noUi-base');
-        const sliderBounds = sliderBase?.getBoundingClientRect();
-        const position = tickElement?.style.left || (sliderBounds?.width
-            ? `${((event.clientX - sliderBounds.left) / sliderBounds.width) * 100}%`
-            : undefined);
-        const index = getTickIndexFromPosition(position, normalizedItems.length);
-        const nextItem = normalizedItems[index];
+        const markers = Array.from(event.currentTarget.querySelectorAll('.noUi-marker'));
+        const nearestMarker = markers.reduce((nearest, marker, index) => {
+            const { left, width } = marker.getBoundingClientRect();
+            const distance = Math.abs(event.clientX - (left + width / 2));
+            return !nearest || distance < nearest.distance
+                ? { index, distance }
+                : nearest;
+        }, null);
+        const nextItem = normalizedItems[nearestMarker?.index];
         if (nextItem) {
             onSelectionChange([nextItem.id]);
         }

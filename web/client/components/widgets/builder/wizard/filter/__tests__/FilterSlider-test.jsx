@@ -8,7 +8,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FilterSlider, { getTickIndexFromPosition } from '../FilterSlider';
+import FilterSlider from '../FilterSlider';
 
 const ITEMS = Array.from({ length: 12 }, (unused, index) => ({
     id: `${index}`,
@@ -31,6 +31,14 @@ const renderSlider = (props = {}) => {
     return container;
 };
 
+const setMarkerPositions = (container, positions) => {
+    const markers = Array.from(container.querySelectorAll('.noUi-marker'));
+    markers.forEach((marker, index) => {
+        marker.getBoundingClientRect = () => ({ left: positions[index] - 1, width: 2 });
+    });
+    return markers;
+};
+
 describe('FilterSlider', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<style id="rules"></style><div id="container"></div>';
@@ -42,13 +50,6 @@ describe('FilterSlider', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
         setTimeout(done);
-    });
-
-    it('should convert a pip position to the nearest item index', () => {
-        expect(getTickIndexFromPosition('0%', 5)).toBe(0);
-        expect(getTickIndexFromPosition('49%', 5)).toBe(2);
-        expect(getTickIndexFromPosition('100%', 5)).toBe(4);
-        expect(getTickIndexFromPosition('', 5)).toBe(-1);
     });
 
     it('should select the item associated with a clicked tick label', () => {
@@ -72,13 +73,14 @@ describe('FilterSlider', () => {
             container
         );
 
+        setMarkerPositions(container, [100, 200, 300]);
         const labels = container.querySelectorAll('.noUi-value');
         expect(labels.length).toBe(3);
-        labels[1].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        labels[1].dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 200 }));
         expect(selectedValues).toEqual(['second']);
     });
 
-    it('should select the nearest item when a tick marker is clicked', () => {
+    it('should select the nearest item when a tick label is clicked', () => {
         const container = document.getElementById('container');
         const items = [
             { id: 'first', label: 'First' },
@@ -99,38 +101,9 @@ describe('FilterSlider', () => {
             container
         );
 
-        const marker = Array.from(container.querySelectorAll('.noUi-marker'))
-            .find((element) => element.style.left === '50%');
-        expect(marker).toExist();
-        marker.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-        expect(selectedValues).toEqual(['second']);
-    });
-
-    it('should select the nearest item when the surrounding pips area is clicked', () => {
-        const container = document.getElementById('container');
-        const items = [
-            { id: 'first', label: 'First' },
-            { id: 'second', label: 'Second' },
-            { id: 'third', label: 'Third' }
-        ];
-        let selectedValues;
-
-        ReactDOM.render(
-            <FilterSlider
-                items={items}
-                selectedValues={['first']}
-                showTicks
-                onSelectionChange={(values) => {
-                    selectedValues = values;
-                }}
-            />,
-            container
-        );
-
-        const sliderBase = container.querySelector('.noUi-base');
-        sliderBase.getBoundingClientRect = () => ({ left: 100, width: 200 });
-        const pips = container.querySelector('.noUi-pips');
-        pips.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 245 }));
+        setMarkerPositions(container, [100, 200, 300]);
+        const labels = container.querySelectorAll('.noUi-value');
+        labels[1].dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 240 }));
         expect(selectedValues).toEqual(['second']);
     });
 
@@ -193,4 +166,3 @@ describe('FilterSlider', () => {
         });
     });
 });
-
