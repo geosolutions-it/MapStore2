@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 import { push } from "connected-react-router";
 import pick from "lodash/pick";
 import get from "lodash/get";
+import template from "lodash/template";
 
 import API from "../api/GeoStoreDAO";
 import { error, show } from "../actions/notifications";
@@ -33,11 +34,6 @@ import { widgetsConfig } from "../selectors/widgets";
 import { pathnameSelector } from "../selectors/router";
 import { wrapStartStop } from "../observables/epics";
 import SecurityUtils from "../utils/SecurityUtils";
-import { generateTemplateString } from "../utils/TemplateUtils";
-import { isValidURL } from "../utils/URLUtils";
-
-// the router only handles paths of the application
-const isApplicationPath = (path) => path.indexOf("/") === 0 && isValidURL(path);
 
 const PERMALINK = "PERMALINK";
 const PERMALINK_RESOURCES = {
@@ -205,20 +201,7 @@ export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
                     getResource(id).switchMap((resource) => {
                         const { name, attributes } = resource ?? {};
                         let { type, pathTemplate } = attributes ?? {};
-                        // the value ends up in the path, so it is URI-encoded
-                        pathTemplate = generateTemplateString(
-                            pathTemplate || '',
-                            (value) => encodeURIComponent(String(value ?? ''))
-                        )(type === "context" ? { name } : { id });
-                        if (!isApplicationPath(pathTemplate)) {
-                            return Observable.of(
-                                error({
-                                    title: "permalink.errors.loading.title",
-                                    message: "permalink.errors.loading.invalidTarget"
-                                }),
-                                loadPermalinkError({ messageId: "permalink.errors.loading.invalidTarget" })
-                            );
-                        }
+                        pathTemplate = template(pathTemplate)(type === "context" ? {name} : { id });
                         return Observable.of(push(pathTemplate), permalinkLoaded());
                     })
                 ).catch((e) => {

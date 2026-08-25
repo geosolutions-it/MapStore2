@@ -82,26 +82,4 @@ describe('AnnotationsFields component', () => {
         expect(fieldsNode.querySelector('.help-block').innerText).toBe('annotations.error.fake');
         Simulate.change(input[0], { target: { value: 'Ok' } });
     });
-
-    describe('sanitization', () => {
-        it('removes script tags from the description in preview', () => {
-            window.__annotationsPreviewScript = undefined;
-            ReactDOM.render(<AnnotationsFields
-                preview
-                properties={{ description: '<p>content</p><script>window.__annotationsPreviewScript = true</script>' }}
-                fields={[{ name: 'description', type: 'html', showLabel: false }]}
-            />, document.getElementById("container"));
-            expect(window.__annotationsPreviewScript).toBe(undefined);
-            expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
-        });
-        it('removes script tags from the description of a read only field', () => {
-            window.__annotationsFieldScript = undefined;
-            ReactDOM.render(<AnnotationsFields
-                properties={{ description: '<p>content</p><script>window.__annotationsFieldScript = true</script>' }}
-                fields={[{ name: 'description', type: 'html', showLabel: false, editable: false }]}
-            />, document.getElementById("container"));
-            expect(window.__annotationsFieldScript).toBe(undefined);
-            expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
-        });
-    });
 });

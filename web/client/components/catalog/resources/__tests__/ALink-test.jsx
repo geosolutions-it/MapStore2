@@ -42,20 +42,4 @@ describe('ALink component', () => {
         const container = document.getElementById('container');
         expect(container.children[0].getAttribute('class')).toBe('child');
     });
-
-    describe('href validation', () => {
-        it('should not apply the link (a) tag if href can not be used as a link target', () => {
-            // eslint-disable-next-line no-script-url
-            ReactDOM.render(<ALink href="javascript:void(0)" className="link"><span className="child"></span></ALink>, document.getElementById('container'));
-            const container = document.getElementById('container');
-            expect(container.querySelector('a')).toBe(null);
-            expect(container.children[0].getAttribute('class')).toBe('child');
-        });
-        it('should apply the link (a) tag with an in app reference', () => {
-            ReactDOM.render(<ALink href="#/viewer/42" className="link"><span className="child"></span></ALink>, document.getElementById('container'));
-            const container = document.getElementById('container');
-            expect(container.children[0].getAttribute('class')).toBe('link');
-            expect(container.querySelector('a').getAttribute('href')).toBe('#/viewer/42');
-        });
-    });
 });

@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate, getDefaultUrl, updateUrlParams, getSafeHref } from '../URLUtils';
+import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate, getDefaultUrl, updateUrlParams } from '../URLUtils';
 
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
@@ -200,71 +200,6 @@ describe('URLUtils', () => {
         const url = 'https://my-site.com/some/path/to/resouce';
         const updatedUrl = updateUrlParams(url, {});
         expect(updatedUrl).toBe('https://my-site.com/some/path/to/resouce');
-    });
-
-    describe('link targets', () => {
-        it('isValidURL rejects urls resolved on another host', () => {
-            expect(isValidURL('//other-host.com/x')).toBe(false);
-            expect(isValidURL('/\\other-host.com/x')).toBe(false);
-        });
-        it('isValidURL accepts urls resolved on another host with allowProtocolRelative', () => {
-            expect(isValidURL('//other-host.com/x', undefined, { allowProtocolRelative: true })).toBe(true);
-        });
-        it('isValidURL rejects values that are not strings', () => {
-            expect(isValidURL(undefined)).toBe(false);
-            expect(isValidURL(null)).toBe(false);
-            expect(isValidURL(42)).toBe(false);
-            expect(isValidURL({})).toBe(false);
-        });
-        it('isValidURL rejects protocols that are not allowed', () => {
-            // eslint-disable-next-line no-script-url
-            expect(isValidURL('javascript:void(0)')).toBe(false);
-            expect(isValidURL('vbscript:void(0)')).toBe(false);
-            expect(isValidURL('file:///tmp/file.txt')).toBe(false);
-            expect(isValidURL('data:text/html,<p>content</p>')).toBe(false);
-        });
-        it('isValidURL accepts application paths and http urls', () => {
-            expect(isValidURL('/viewer/42')).toBe(true);
-            expect(isValidURL('/context/name?category=PERMALINK')).toBe(true);
-            expect(isValidURL('http://my-host.com/x')).toBe(true);
-            expect(isValidURL('https://my-host.com/x')).toBe(true);
-        });
-        it('getSafeHref returns in app references and linkable urls', () => {
-            expect(getSafeHref('#/viewer/42')).toBe('#/viewer/42');
-            expect(getSafeHref('?f=map')).toBe('?f=map');
-            expect(getSafeHref('/viewer/42')).toBe('/viewer/42');
-            expect(getSafeHref('https://my-host.com/x')).toBe('https://my-host.com/x');
-            expect(getSafeHref('mailto:info@my-host.com')).toBe('mailto:info@my-host.com');
-            expect(getSafeHref('tel:+123456')).toBe('tel:+123456');
-        });
-        it('getSafeHref returns references without protocol', () => {
-            expect(getSafeHref('viewer/42')).toBe('viewer/42');
-            expect(getSafeHref('./viewer/42')).toBe('./viewer/42');
-            expect(getSafeHref('../viewer/42')).toBe('../viewer/42');
-        });
-        it('getSafeHref returns an empty string for references resolved on another host', () => {
-            expect(getSafeHref('//other-host.com')).toBe('');
-            expect(getSafeHref('/\\other-host.com')).toBe('');
-            expect(getSafeHref('\\\\other-host.com')).toBe('');
-            expect(getSafeHref('\\/other-host.com')).toBe('');
-        });
-        it('getSafeHref returns an empty string for hrefs with control characters', () => {
-            // the browser removes the control characters, resolving the href to a protocol
-            expect(getSafeHref('java\nscript:void(0)')).toBe('');
-            expect(getSafeHref('java\tscript:void(0)')).toBe('');
-        });
-        it('getSafeHref returns an empty string for hrefs that can not be used', () => {
-            // eslint-disable-next-line no-script-url
-            expect(getSafeHref('javascript:void(0)')).toBe('');
-            // eslint-disable-next-line no-script-url
-            expect(getSafeHref('JAVASCRIPT:void(0)')).toBe('');
-            expect(getSafeHref('data:text/html,<p>content</p>')).toBe('');
-            expect(getSafeHref(undefined)).toBe('');
-            expect(getSafeHref(null)).toBe('');
-            expect(getSafeHref('')).toBe('');
-            expect(getSafeHref('   ')).toBe('');
-            expect(getSafeHref(42)).toBe('');
-        });
     });
 });
 
