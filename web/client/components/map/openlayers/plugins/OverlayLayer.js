@@ -7,7 +7,6 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
-import eventListener from 'eventlistener';
 import Overlay from 'ol/Overlay';
 
 const removeIds = (items) => {
@@ -30,16 +29,16 @@ const cloneOriginalOverlay = (original, options) => {
     // handle optional close button on overlay
     const closeClassName = options.closeClass || 'close';
     if (options.onClose && cloned.getElementsByClassName(closeClassName).length === 1) {
-        const close = cloned.getElementsByClassName(closeClassName)[0];
+        const closeElement = cloned.getElementsByClassName(closeClassName)[0];
         const onClose = (e) => {
             options.onClose(e.target.getAttribute('data-overlayid'));
         };
-        eventListener.add(close, 'click', onClose);
+        closeElement?.addEventListener('click', onClose);
     }
     if (options.onLink) {
         let links = cloned.getElementsByTagName('a');
         for (let i = 0; i < links.length; i++) {
-            eventListener.add(links[i], 'click', options.onLink);
+            links[i].addEventListener('click', options.onLink);
         }
     }
     return cloned;

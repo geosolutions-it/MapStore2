@@ -179,6 +179,53 @@ Copy the `logging.properties` file from the MapStore repository (`product/cargo/
 
 **CI/CD**: update your build infrastructure to use JDK 17 as the build JDK.
 
+## Migration from 2026.02.00 to 2026.02.01
+
+### Login `hideGroupUserInfo` configuration
+
+The `hideGroupUserInfo` option is now a direct configuration property of the `Login` plugin. Update all `Login` plugin configurations in `localConfig.json` as follows:
+
+```diff
+{
+    "name": "Login",
+    "cfg": {
+-        "toolsCfg": [{"hideGroupUserInfo": true}]
++        "hideGroupUserInfo": true
+    }
+}
+```
+
+The previous `toolsCfg` configuration is still supported as a fallback for backward compatibility, but the direct `hideGroupUserInfo` property should be used for all new configurations.
+
+### Database update
+
+This version of MapStore ships with **GeoStore 2.6.1**, which fixes an N+1 query issue when loading resources ([#577](https://github.com/geosolutions-it/geostore/pull/577)) by inverting the foreign key relationship between `gs_resource` and `gs_stored_data`. Unlike other GeoStore upgrades, this change **cannot be handled automatically** by `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` and **requires applying the manual migration script** described below, because it backfills existing data before dropping the old column.
+
+!!! warning
+    **Backup your database** before applying any of these changes. Data integrity is your responsibility.
+
+Apply the following script to move the foreign key ownership from `gs_stored_data.resource_id` to a new `gs_resource.stored_data_id` column (GeoStore [`postgresql-migration-from-v.2.4.1-to-v2.6.1.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.4.1-to-v2.6.1.sql)).
+
+Please verify that your schema is `geostore` (as in the default installation) or adjust the script accordingly:
+
+```sql
+ALTER TABLE geostore.gs_resource ADD COLUMN stored_data_id int8;
+
+UPDATE geostore.gs_resource r SET stored_data_id = sd.id
+    FROM geostore.gs_stored_data sd WHERE sd.resource_id = r.id;
+
+ALTER TABLE geostore.gs_resource
+    ADD CONSTRAINT gs_resource_stored_data_id_key UNIQUE (stored_data_id);
+
+ALTER TABLE geostore.gs_resource
+    ADD CONSTRAINT fk_resource_stored_data
+        FOREIGN KEY (stored_data_id) REFERENCES geostore.gs_stored_data (id);
+
+ALTER TABLE geostore.gs_stored_data DROP CONSTRAINT fk_data_resource;
+
+ALTER TABLE geostore.gs_stored_data DROP COLUMN resource_id;
+```
+
 ## Migration from 2026.01.02 to 2026.02.00
 
 ### Dev server static configuration moved to the webpack configuration files

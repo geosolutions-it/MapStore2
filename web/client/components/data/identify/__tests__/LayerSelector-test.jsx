@@ -37,11 +37,13 @@ describe("LayerSelector component", () => {
     });
     it('test LayerSelector display only valid responses', () => {
         const responses = [{layerMetadata: {title: "Test1"}, response: "no features were found"}, {layerMetadata: {title: "Test2"}, response: "GetFeatureInfo results"}];
-        ReactDOM.render(<LayerSelector loaded responses={responses} validator={getValidator} format={"text/plain"}/>, document.getElementById("container"));
+        ReactDOM.render(<LayerSelector loaded index={1} responses={responses} validator={getValidator} format={"text/plain"}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toExist();
         const select = container.querySelector("#identify-layer-select");
         expect(select).toExist();
+        const labelValue = container.querySelector(".Select-value-label");
+        expect(labelValue.innerText).toBe("Test2");
         const input = container.querySelector('input');
         expect(input).toBeTruthy();
 
@@ -50,11 +52,8 @@ describe("LayerSelector component", () => {
             TestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
         });
         const options = select.querySelectorAll(".Select-option");
-        // Invalid response - first option is hidden
-        expect(options[0].style.display).toBe('none');
-
-        // Valid response - second option is displayed
-        expect(options[1].style.display).toBe('block');
+        expect(options.length).toBe(1);
+        expect(options[0].innerText).toBe("Test2");
     });
     it('test LayerSelector with value and setIndex', (done) => {
 

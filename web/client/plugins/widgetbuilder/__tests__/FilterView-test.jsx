@@ -452,6 +452,7 @@ describe('FilterView component', () => {
         expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 
+    // it('renders the per-item disable toggle and collapse toggle when showItemToolbar is set', () => {
     it('renders the per-item toolbar when showItemToolbar is set', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox', 'multiple');
@@ -466,6 +467,10 @@ describe('FilterView component', () => {
             container
         );
 
+        // check for the Disable toggle
+        expect(container.querySelector('.mapstore-switch-btn-xs')).toExist();
+        // check for the Collapse toggle
+        expect(container.querySelector('.ms-filter-collapse-toggle')).toExist();
         expect(container.querySelector('.ms-filter-card-toolbar')).toExist();
     });
 
@@ -503,6 +508,42 @@ describe('FilterView component', () => {
         expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
     });
 
+    it('updates isCollapsed state when showItemToolbar or layout.defaultExpanded props change', () => {
+        const container = document.getElementById("container");
+        const filterDataExpanded = createMockFilterData('checkbox', 'multiple', { defaultExpanded: true });
+        const filterDataCollapsed = createMockFilterData('checkbox', 'multiple', { defaultExpanded: false });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterDataExpanded}
+                selectableItems={mockSelectableItems}
+                showItemToolbar
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterDataCollapsed}
+                selectableItems={mockSelectableItems}
+                showItemToolbar
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toNotExist();
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterDataCollapsed}
+                selectableItems={mockSelectableItems}
+                showItemToolbar={false}
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+    });
+
     it('passes showZoomButton correctly to FilterItemToolbar based on interactions', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox', 'multiple');
@@ -525,6 +566,20 @@ describe('FilterView component', () => {
         );
         const zoomBtn = container.querySelector('.ms-filter-card-toolbar .glyphicon-zoom-to');
         expect(zoomBtn).toExist();
+    });
+    it('hide expand/collapse in Filter wizard', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('checkbox', 'multiple', { defaultExpanded: false });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+        expect(container.querySelector('.ms-filter-collapse-toggle')).toNotExist();
     });
 
     it('renders the description info popover when layout.description is set', () => {
@@ -559,6 +614,7 @@ describe('FilterView component', () => {
         const dimmed = container.querySelector('div[style*="pointer-events: none"]');
         expect(dimmed).toExist();
         expect(container.querySelector('.ms-filter-checkbox-list')).toExist();
+        expect(container.querySelector('.ms-filter-disable-toggle')).toExist();
         expect(container.textContent).toNotContain('widgets.filterWidget.selectAll');
     });
 

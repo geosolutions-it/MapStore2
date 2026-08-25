@@ -40,6 +40,12 @@ const renderOL = (mapOptions = {}) => {
     );
 };
 
+// The coalesce checkbox form is always rendered first (regardless of map type),
+// the Cesium-specific form (with its 6 checkboxes) is appended only when isCesium is true.
+// Scope queries to the Cesium form specifically, so these tests stay independent from
+// the unrelated coalesce checkbox that now always precedes it.
+const getCesiumCheckboxes = () => document.querySelectorAll('form')[1].querySelectorAll('input[type="checkbox"]');
+
 describe('MapSettings component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -52,12 +58,14 @@ describe('MapSettings component', () => {
         setTimeout(done);
     });
 
-    it('renders nothing when isCesium is false (OL map)', () => {
+    it('renders only the coalesce checkbox when isCesium is false (OL map)', () => {
         renderOL();
-        const container = document.getElementById('container');
-        expect(container.innerHTML).toBeFalsy();
-        const form = document.querySelector('form');
-        expect(form).toBeFalsy();
+        const forms = document.querySelectorAll('form');
+        expect(forms.length).toBe(1);
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        expect(checkboxes.length).toBe(1);
+        const selects = document.querySelectorAll('.Select');
+        expect(selects.length).toBe(0);
     });
 
     it('renders a form when isCesium is true', () => {
@@ -68,7 +76,7 @@ describe('MapSettings component', () => {
 
     it('renders all 6 Cesium checkboxes', () => {
         renderCesium();
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes.length).toBe(6);
     });
 
@@ -80,55 +88,55 @@ describe('MapSettings component', () => {
 
     it('showSkyAtmosphere checkbox reflects mapOptions value when true', () => {
         renderCesium({ showSkyAtmosphere: true });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[0].checked).toBe(true);
     });
 
     it('showSkyAtmosphere checkbox reflects mapOptions value when false', () => {
         renderCesium({ showSkyAtmosphere: false });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[0].checked).toBe(false);
     });
 
     it('showGroundAtmosphere checkbox reflects mapOptions value', () => {
         renderCesium({ showGroundAtmosphere: true });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[1].checked).toBe(true);
     });
 
     it('enableFog checkbox reflects mapOptions value', () => {
         renderCesium({ enableFog: true });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[2].checked).toBe(true);
     });
 
     it('depthTestAgainstTerrain checkbox reflects mapOptions value', () => {
         renderCesium({ depthTestAgainstTerrain: true });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[3].checked).toBe(true);
     });
 
     it('enableCollisionDetection defaults to true when not set in mapOptions', () => {
         renderCesium();
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[4].checked).toBe(true);
     });
 
     it('enableCollisionDetection reflects mapOptions value when explicitly set to false', () => {
         renderCesium({ enableCollisionDetection: false });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[4].checked).toBe(false);
     });
 
     it('enableImageryLayersOverlay defaults to true when not set in mapOptions', () => {
         renderCesium();
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[5].checked).toBe(true);
     });
 
     it('enableImageryLayersOverlay reflects mapOptions value when explicitly set to false', () => {
         renderCesium({ enableImageryLayersOverlay: false });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[5].checked).toBe(false);
     });
 
@@ -152,7 +160,7 @@ describe('MapSettings component', () => {
 
     it('uses defaultMapOptions prop when map.mapOptions is empty', () => {
         renderCesium({}, { mapOptions: { cesium: { showSkyAtmosphere: true, enableFog: true } } });
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[0].checked).toBe(true);
         expect(checkboxes[2].checked).toBe(true);
     });
@@ -162,7 +170,7 @@ describe('MapSettings component', () => {
             { showSkyAtmosphere: false },
             { mapOptions: { cesium: { showSkyAtmosphere: true } } }
         );
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = getCesiumCheckboxes();
         expect(checkboxes[0].checked).toBe(false);
     });
 });

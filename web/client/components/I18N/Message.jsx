@@ -23,12 +23,13 @@ class Message extends React.Component {
     };
 
     renderFormattedMsg = ({msgId, msgParams, children}) => {
+        const values = msgParams || undefined;
         if (children && typeof children === 'function') {
-            return (<FormattedMessage id={msgId} values={msgParams}>{msg => {
+            return (<FormattedMessage id={msgId} values={values}>{msg => {
                 return children(msg);
             }}</FormattedMessage>);
         }
-        return (<FormattedMessage id={msgId} values={msgParams} />);
+        return (<FormattedMessage id={msgId} values={values} />);
     }
 
     renderMsg = ({msgId, children}) => {

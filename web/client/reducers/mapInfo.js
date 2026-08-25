@@ -104,6 +104,8 @@ function receiveResponse(state, action, type) {
             }
         }
 
+        const allResponsesReceived = requests.length === responses
+            .filter(response => !isUndefined(response)).length;
         let indexObj;
         if (isHover || state.showAllResponses) {
             indexObj = {loaded: true, index: state.index || 0};
@@ -113,20 +115,48 @@ function receiveResponse(state, action, type) {
             } else {
                 indexObj = {loaded: true, index: requestIndex};
             }
-        } else if (responses.length === requests.length && !indexObj?.loaded) {
+        } else if (allResponsesReceived && !indexObj?.loaded) {
             // if all responses are empty hence valid but with no valid index
             // then set loaded to true
             indexObj = {loaded: true};
         }
 
-        if (state.loaded) {
-            if (state.index !== null) {
-                const validator = getValidator(config.infoFormat);
-                const checkIfStateIndexValid = validator?.getValidResponses([responses[state.index]]);
-                if (!checkIfStateIndexValid || checkIfStateIndexValid?.length === 0) {
-                    // If state.index is not valid, find the first valid response
-                    indexObj = {...indexObj, index: findIndex((responses || []), res => validator?.getValidResponses([res]).length > 0)};
-                }
+        if (!isHover && !state.showAllResponses) {
+            const validator = getValidator(config.infoFormat);
+            const firstValidResponseIndex = findIndex(
+                responses,
+                response => validator?.getValidResponses([response]).length > 0
+            );
+            const candidateIndex = !isUndefined(indexObj?.index)
+                ? indexObj.index
+                : state.index;
+            const hasCandidateValue = !isUndefined(candidateIndex) && candidateIndex !== null;
+            const hasCandidateIndex = Number.isInteger(candidateIndex) && candidateIndex >= 0;
+            const candidateResponse = hasCandidateIndex
+                ? responses[candidateIndex]
+                : undefined;
+            const candidateResponseIsValid = !isUndefined(candidateResponse)
+                && validator?.getValidResponses([candidateResponse]).length > 0;
+
+            if (candidateResponseIsValid) {
+                indexObj = {...indexObj, loaded: true, index: candidateIndex};
+            } else if (
+                firstValidResponseIndex >= 0
+                && (
+                    (hasCandidateValue && !hasCandidateIndex)
+                    || (hasCandidateIndex && (
+                        !isUndefined(candidateResponse)
+                        || allResponsesReceived
+                    ))
+                )
+            ) {
+                // The selected response is invalid or cannot arrive for the
+                // current request set. Select the first valid response.
+                indexObj = {...indexObj, loaded: true, index: firstValidResponseIndex};
+            } else if (allResponsesReceived && firstValidResponseIndex < 0) {
+                // All responses are empty. Clear a retained or provisional
+                // index instead of exposing an invalid or negative selection.
+                indexObj = {...indexObj, loaded: true, index: undefined};
             }
         }
 

@@ -8,6 +8,8 @@
 import expect from 'expect';
 import { v1 as uuidv1 } from 'uuid';
 import * as LayersUtils from '../LayersUtils';
+import { readZip, shpToGeoJSON } from '../FileUtils';
+import axios from '../../libs/ajax';
 
 const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
@@ -126,6 +128,42 @@ describe('LayersUtils', () => {
         });
         expect(layer.features[0].id.length).toEqual(36);
     });
+    it('test normalizeLayer deduplicates vector feature ids', () => {
+        const geometry = {
+            "type": "LineString",
+            "coordinates": [[0, 39], [28, 48]]
+        };
+        const layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [
+                { type: "Feature", geometry, id: 2 },
+                { type: "Feature", geometry, id: 1 },
+                { type: "Feature", geometry, id: 2 },
+                { type: "Feature", geometry, id: 3 }
+            ]
+        });
+        expect(layer.features[0].id).toEqual(2);
+        expect(layer.features[1].id).toEqual(1);
+        expect(layer.features[2].id.length).toEqual(36);
+        expect(layer.features[3].id).toEqual(3);
+        expect([...new Set(layer.features.map(f => f.id))].length).toEqual(4);
+    });
+    it('test normalizeLayer deduplicates vector feature ids with mixed types', () => {
+        const geometry = {
+            "type": "LineString",
+            "coordinates": [[0, 39], [28, 48]]
+        };
+        const layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [
+                { type: "Feature", geometry, id: 2 },
+                { type: "Feature", geometry, id: "2" }
+            ]
+        });
+        expect(layer.features[0].id).toEqual(2);
+        expect(layer.features[1].id.length).toEqual(36);
+        expect(layer.features.map(f => String(f.id)).filter(id => id === "2").length).toEqual(1);
+    });
     it('test createFeatureId', () => {
         let feature = LayersUtils.createFeatureId({});
         expect(feature.id.length).toEqual(uuidv1().length);
@@ -133,6 +171,10 @@ describe('LayersUtils', () => {
         expect(feature.id).toEqual("test");
         feature = LayersUtils.createFeatureId({properties: {id: "test"}});
         expect(feature.id).toEqual("test");
+        feature = LayersUtils.createFeatureId({id: 0, properties: {id: "test"}});
+        expect(feature.id).toEqual(0);
+        feature = LayersUtils.createFeatureId({properties: {id: 0}});
+        expect(feature.id).toEqual(0);
     });
     it('getLayerUrl supports single and multiple url layers', () => {
         expect(['a', 'b']).toContain(LayersUtils.getLayerUrl({url: ['a', 'b']}));
@@ -1288,6 +1330,53 @@ describe('LayersUtils', () => {
             "type": "Feature"
         }]);
     });
+    it('geoJSONToLayer from imported shapefile (TestShape.zip)', (done) => {
+        axios.get("base/web/client/test-resources/TestShape.zip", { responseType: "blob" }).then(({data}) => {
+            readZip(data).then((buffer) => {
+                const collections = shpToGeoJSON(buffer);
+                expect(collections.length).toEqual(1);
+                const geoJson = collections[0];
+                const layer = LayersUtils.geoJSONToLayer(geoJson, "TestShape__0");
+                expect(layer.features.length).toEqual(geoJson.features.length);
+                layer.features.forEach((f) => expect(f.id).toNotBe(undefined));
+                expect(new Set(layer.features.map(f => f.id)).size).toEqual(layer.features.length);
+                expect(layer.features[0].id).toEqual(0);
+                done();
+            }).catch(done);
+        }).catch(done);
+    });
+    it('normalizeLayer keeps imported shapefile features coherent', (done) => {
+        axios.get("base/web/client/test-resources/TestShape.zip", { responseType: "blob" }).then(({data}) => {
+            readZip(data).then((buffer) => {
+                const geoJson = shpToGeoJSON(buffer)[0];
+                const layer = LayersUtils.geoJSONToLayer(geoJson, "TestShape__0");
+                const normalized = LayersUtils.normalizeLayer(layer);
+                expect(normalized.features.length).toEqual(layer.features.length);
+                expect(normalized.features.map(f => f.id)).toEqual(layer.features.map(f => f.id));
+                expect(new Set(normalized.features.map(f => f.id)).size).toEqual(normalized.features.length);
+                done();
+            }).catch(done);
+        }).catch(done);
+    });
+    it('import with dbf id column does not produce duplicated ids', () => {
+        const geometry = {
+            "type": "Point",
+            "coordinates": [0, 0]
+        };
+        const ftColl = {
+            type: "FeatureCollection",
+            fileName: "Poly_3943",
+            features: [
+                { type: "Feature", geometry, properties: { id: 2 } },
+                { type: "Feature", geometry, properties: { id: 3 } },
+                { type: "Feature", geometry, properties: { id: 1 } }
+            ]
+        };
+        const layer = LayersUtils.geoJSONToLayer(ftColl, "layer-id");
+        expect(layer.features.map(f => f.id)).toEqual([0, 1, 2]);
+        const normalized = LayersUtils.normalizeLayer(layer);
+        expect(normalized.features.map(f => f.id)).toEqual([0, 1, 2]);
+    });
     it('saveLayer', () => {
         const layers = [
             // no params if not present
@@ -1637,6 +1726,17 @@ describe('LayersUtils', () => {
             params: { token: 'value' }
         };
         expect(LayersUtils.getCapabilitiesUrl(layer)).toEqual('localhost:8080/geoserver/world/layer1/ows?token=value');
+    });
+
+    it('test getCapabilitiesUrl with layer without name', () => {
+        const layer = {
+            url: 'localhost:8080/geoserver/wms',
+            params: {
+                token: 'value'
+            }
+        };
+        expect(LayersUtils.getCapabilitiesUrl(layer))
+            .toEqual('localhost:8080/geoserver/wms?token=value');
     });
 
     it('test getNestedGroupTitle', () => {

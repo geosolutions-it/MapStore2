@@ -10,6 +10,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
+import { Responsive } from 'react-grid-layout';
 
 import WidgetsView from '../WidgetsView';
 
@@ -149,5 +150,61 @@ describe('WidgetsView component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.react-grid-item.static');
         expect(el).toExist();
+    });
+    it('derives a scoped locked layout while maximized without changing canonical props', () => {
+        const widget = {
+            ...dummyWidget,
+            layoutId: 'view-1',
+            dataGrid: {
+                x: 2,
+                y: 3,
+                w: 2,
+                h: 2,
+                isDraggable: true,
+                isResizable: true
+            }
+        };
+        const layouts = {
+            md: [{ i: widget.id, x: 2, y: 3, w: 2, h: 2 }],
+            xxs: [{ i: widget.id, x: 0, y: 1, w: 1, h: 2 }]
+        };
+        const originalWidget = JSON.parse(JSON.stringify(widget));
+        const originalLayouts = JSON.parse(JSON.stringify(layouts));
+        const onLayoutChange = expect.createSpy();
+        const render = maximized => ReactDOM.render(
+            <WidgetsView
+                width={600}
+                useDefaultWidthProvider={false}
+                widgets={[widget]}
+                layouts={layouts}
+                maximized={maximized}
+                onLayoutChange={onLayoutChange}
+            />,
+            document.getElementById("container")
+        );
+
+        let component = render({
+            widget: [widget, { id: 'other-view-widget', layoutId: 'view-2' }]
+        });
+        let grid = ReactTestUtils.findRenderedComponentWithType(component, Responsive);
+        expect(grid.props.layouts.xxs.length).toBe(1);
+        expect(grid.props.layouts.xxs[0]).toEqual({
+            i: widget.id,
+            x: 0,
+            y: 0,
+            w: 1,
+            h: 1,
+            isResizable: false,
+            isDraggable: false
+        });
+        expect(grid.props.onLayoutChange).toNotBe(onLayoutChange);
+        expect(widget).toEqual(originalWidget);
+        expect(layouts).toEqual(originalLayouts);
+
+        component = render({});
+        grid = ReactTestUtils.findRenderedComponentWithType(component, Responsive);
+        expect(grid.props.onLayoutChange).toBe(onLayoutChange);
+        expect(grid.props.layouts.md[0].x).toBe(2);
+        expect(grid.props.layouts.md[0].y).toBe(3);
     });
 });
