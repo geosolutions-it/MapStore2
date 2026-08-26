@@ -179,6 +179,33 @@ Copy the `logging.properties` file from the MapStore repository (`product/cargo/
 
 **CI/CD**: update your build infrastructure to use JDK 17 as the build JDK.
 
+### New `viewFramingFilter` in `web.xml`
+
+Add the following filter to your project's `web/src/main/webapp/WEB-INF/web.xml`, mapped on `/index.html` (see the updated [project template](https://github.com/geosolutions-it/MapStore2/blob/master/project/standard/templates/web/src/main/webapp/WEB-INF/web.xml) for reference). It relies on `org.apache.catalina.filters.HttpHeaderSecurityFilter`, already available with the Tomcat 10.1 dependency required by the upgrade above:
+
+```xml
+<filter>
+    <filter-name>viewFramingFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
+    <init-param>
+        <param-name>antiClickJackingOption</param-name>
+        <param-value>SAMEORIGIN</param-value>
+    </init-param>
+    <init-param>
+        <param-name>hstsEnabled</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>blockContentTypeSniffingEnabled</param-name>
+        <param-value>false</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>viewFramingFilter</filter-name>
+    <url-pattern>/index.html</url-pattern>
+</filter-mapping>
+```
+
 ## Migration from 2026.02.00 to 2026.02.01
 
 ### Login `hideGroupUserInfo` configuration
