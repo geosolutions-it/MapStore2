@@ -15,7 +15,7 @@ import { getCredentials } from './SecurityUtils';
 export const needsReload = (oldOptions, newOptions) => {
     const oldParams = { ...(optionsToVendorParams(oldOptions) || {}), _v_: oldOptions._v_ };
     const newParams = { ...(optionsToVendorParams(newOptions) || {}), _v_: newOptions._v_ };
-    return ["_v_", "CQL_FILTER", "VIEWPARAMS"].reduce((found, param) => {
+    return oldOptions.name !== newOptions.name || ["_v_", "CQL_FILTER", "VIEWPARAMS"].reduce((found, param) => {
         if (oldParams[param] !== newParams[param]) {
             return true;
         }
