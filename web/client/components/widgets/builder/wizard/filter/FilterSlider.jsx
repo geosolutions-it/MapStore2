@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup } from 'react-bootstrap';
 import Slider from '../../../../misc/Slider';
@@ -35,6 +35,68 @@ const getTickAngle = (value) => {
         return -90;
     }
     return Math.max(-90, Math.min(90, angle));
+};
+
+const ORIGINAL_LEFT_KEY = 'msOriginalLeft';
+const ORIGINAL_WIDTH_KEY = 'msOriginalWidth';
+
+/**
+ * Align noUiSlider tick markers to the physical pixel grid so fractional display
+ * scaling does not make individual dashes render with different widths.
+ */
+const snapMarkersToPixelGrid = (container) => {
+    const pips = container.querySelector('.noUi-pips');
+    if (!pips) {
+        return;
+    }
+    const scale = pips.getBoundingClientRect().width / pips.offsetWidth;
+    if (!(scale > 0)) {
+        return;
+    }
+    const pixelRatio = window.devicePixelRatio || 1;
+    const deviceScale = scale * pixelRatio;
+    const markers = Array.from(container.querySelectorAll('.noUi-marker'));
+    markers.forEach((marker) => {
+        if (marker.dataset[ORIGINAL_LEFT_KEY] === undefined) {
+            marker.dataset[ORIGINAL_LEFT_KEY] = marker.style.left;
+        }
+        if (marker.dataset[ORIGINAL_WIDTH_KEY] === undefined) {
+            marker.dataset[ORIGINAL_WIDTH_KEY] = marker.style.width;
+        }
+        marker.style.left = marker.dataset[ORIGINAL_LEFT_KEY];
+        marker.style.width = marker.dataset[ORIGINAL_WIDTH_KEY];
+    });
+    const resolved = markers.map((marker) => {
+        const style = window.getComputedStyle(marker);
+        return { left: parseFloat(style.left), width: parseFloat(style.width) };
+    });
+    markers.forEach((marker, index) => {
+        const { left, width } = resolved[index];
+        if (Number.isFinite(left)) {
+            marker.style.left = `${left}px`;
+        }
+        if (Number.isFinite(width) && width > 0) {
+            marker.style.width = `${Math.max(1, Math.round(width * deviceScale)) / deviceScale}px`;
+        }
+    });
+    for (let pass = 0; pass < 3; pass++) {
+        const errors = markers.map((marker) => {
+            const { left } = marker.getBoundingClientRect();
+            return Math.round(left * pixelRatio) / pixelRatio - left;
+        });
+        let corrected = false;
+        markers.forEach((marker, index) => {
+            const current = parseFloat(marker.style.left);
+            if (!Number.isFinite(current) || Math.abs(errors[index]) <= 0.01) {
+                return;
+            }
+            marker.style.left = `${current + errors[index] / scale}px`;
+            corrected = true;
+        });
+        if (!corrected) {
+            break;
+        }
+    }
 };
 
 const FilterSlider = ({
@@ -98,6 +160,23 @@ const FilterSlider = ({
         showTicks
     }), [normalizedItems, requestedTickValues, tickLabels, showTicks]);
 
+    const sliderRef = useRef();
+
+    useEffect(() => {
+        const container = sliderRef.current;
+        if (!showTicks || !container) {
+            return () => {};
+        }
+        const snap = () => snapMarkersToPixelGrid(container);
+        snap();
+        if (typeof ResizeObserver === 'undefined') {
+            return () => {};
+        }
+        const observer = new ResizeObserver(snap);
+        observer.observe(container);
+        return () => observer.disconnect();
+    }, [showTicks, sliderKey]);
+
     if (normalizedItems.length === 0) {
         return null;
     }
@@ -130,6 +209,24 @@ const FilterSlider = ({
         maxHeight: layoutMaxHeight,
         overflowY: 'hidden'
     } : undefined;
+    const handleTickClick = (event) => {
+        const pipsElement = event.target.closest?.('.noUi-pips');
+        if (!pipsElement || !event.currentTarget.contains(pipsElement)) {
+            return;
+        }
+        const markers = Array.from(event.currentTarget.querySelectorAll('.noUi-marker'));
+        const nearestMarker = markers.reduce((nearest, marker, index) => {
+            const { left, width } = marker.getBoundingClientRect();
+            const distance = Math.abs(event.clientX - (left + width / 2));
+            return !nearest || distance < nearest.distance
+                ? { index, distance }
+                : nearest;
+        }, null);
+        const nextItem = normalizedItems[nearestMarker?.index];
+        if (nextItem) {
+            onSelectionChange([nextItem.id]);
+        }
+    };
 
     return (
         <FormGroup className={`ms-filter-slider${noSelectionClass}${showTicksClass}`}>
@@ -141,7 +238,7 @@ const FilterSlider = ({
                             : <Message msgId="widgets.filterWidget.sliderNotSelected" />}
                     </div>
                 )}
-                <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle}>
+                <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle} ref={sliderRef} onClick={handleTickClick}>
                     <Slider
                         key={sliderKey}
                         start={[sliderStartIndex]}

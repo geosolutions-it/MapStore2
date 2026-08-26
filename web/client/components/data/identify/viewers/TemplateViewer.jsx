@@ -7,10 +7,10 @@
  */
 
 import React from 'react';
-import { template } from 'lodash';
+import escape from 'lodash/escape';
 import PropTypes from 'prop-types';
 
-import { getCleanTemplate } from '../../../../utils/TemplateUtils';
+import { getCleanTemplate, generateTemplateString } from '../../../../utils/TemplateUtils';
 import HtmlRenderer from '../../../misc/HtmlRenderer';
 import Message from '../../../I18N/Message';
 
@@ -21,7 +21,11 @@ const TemplateViewer = ({layer = {}, response}) => (
             const cleanTemplate = getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1);
             let html = "";
             try {
-                html = template(cleanTemplate)(feature);
+                // values are escaped, the markup of the template is kept
+                html = generateTemplateString(
+                    cleanTemplate,
+                    (value) => escape(String(value ?? ''))
+                )(feature);
             } catch (e) {
                 console.error(e);
                 return (<div key={i}>

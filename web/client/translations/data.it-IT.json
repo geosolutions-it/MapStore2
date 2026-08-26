@@ -1636,7 +1636,8 @@
           "title": "Errore durante il caricamento di peramlink",
           "pleaseLogin": "Questo permalink non è pubblico. Si prega di provare ad accedere",
           "notFound": "Permalink non trovato",
-          "notAccessible": "Permalink non accessibile"
+          "notAccessible": "Permalink non accessibile",
+          "invalidTarget": "La destinazione del permalink non è valida e non può essere aperta"
         },
         "save": {
           "title": "Generazione del permalink non riuscita",
