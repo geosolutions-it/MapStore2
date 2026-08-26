@@ -1639,7 +1639,8 @@
           "title": "Error al cargar el enlace permanente",
           "pleaseLogin": "Este enlace permanente no es público. Intente iniciar sesión",
           "notFound": "Enlace permanente no encontrado",
-          "notAccessible": "Enlace permanente no accesible"
+          "notAccessible": "Enlace permanente no accesible",
+          "invalidTarget": "El destino del enlace permanente no es válido y no se puede abrir"
         },
         "save": {
           "title": "La generación del enlace permanente falló",

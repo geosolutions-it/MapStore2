@@ -911,4 +911,38 @@ describe('Test security utils methods', () => {
             });
         });
     });
+
+    describe('request configuration placeholders', () => {
+        it('substitutes request configuration placeholders without compiling them', () => {
+            window.__ruleEvaluated = undefined;
+            const rules = [
+                {
+                    urlPattern: '.*api.*',
+                    headers: { 'Authorization': 'Bearer ${(window.__ruleEvaluated = true)}' }
+                }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            ConfigUtils.setConfigProp('useAuthenticationRules', true);
+            setSecurityInfo(securityInfoToken);
+
+            const { headers } = SecurityUtils.getRequestConfigurationByUrl('https://api.example.com');
+            expect(window.__ruleEvaluated).toBe(undefined);
+            // the placeholder can not be resolved, so it is kept as it is
+            expect(headers.Authorization).toBe('Bearer ${(window.__ruleEvaluated = true)}');
+        });
+        it('should keep the placeholders that can not be resolved', () => {
+            const rules = [
+                {
+                    urlPattern: '.*api.*',
+                    headers: { 'Authorization': 'Bearer ${notAvailableProperty}' }
+                }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            ConfigUtils.setConfigProp('useAuthenticationRules', true);
+            setSecurityInfo(securityInfoToken);
+
+            const { headers } = SecurityUtils.getRequestConfigurationByUrl('https://api.example.com');
+            expect(headers.Authorization).toBe('Bearer ${notAvailableProperty}');
+        });
+    });
 });
