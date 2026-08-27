@@ -221,7 +221,7 @@ import { DEFAULT_METADATA } from './constants';
  *                      {
  *                          "type": "link",
  *                          "path": "username",
- *                          "hrefPath": "userHref"
+ *                          "hrefPath": "userHref" // path of the href in the resource
  *                      },
  *                      {
  *                          "type": "link",
