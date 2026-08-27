@@ -479,7 +479,12 @@ describe('test  Layer Properties General module component', () => {
         expect(document.querySelector('[data-qa="layer-properties-search-type-name"]')).toNotExist();
     });
     it('validates a native WFS URL and refreshes its fields', (done) => {
-        mockAxios.onGet().reply(200, WFS_DESCRIBE);
+        mockAxios.onGet().reply((config) => {
+            expect(config.url).toContain('new-wfs-url');
+            expect(config.url).toNotContain('old-describe-url');
+            expect(config.url).toNotContain('old-search-url');
+            return [200, WFS_DESCRIBE];
+        });
         const onChange = expect.createSpy();
         ReactDOM.render(<General
             element={{
@@ -487,6 +492,8 @@ describe('test  Layer Properties General module component', () => {
                 title: 'Layer',
                 type: 'wfs',
                 url: 'old-wfs-url',
+                describeFeatureTypeURL: 'old-describe-url',
+                search: {url: 'old-search-url'},
                 fields: [{name: 'shared', type: 'string', alias: 'Customized'}]
             }}
             settings={{options: {opacity: 1}}}
@@ -546,7 +553,11 @@ describe('test  Layer Properties General module component', () => {
         });
     });
     it('validates linked WFS edits, refreshes fields, and preserves service properties', (done) => {
-        mockAxios.onGet().reply(200, WFS_DESCRIBE);
+        const requestedURLs = [];
+        mockAxios.onGet().reply((config) => {
+            requestedURLs.push(config.url);
+            return [200, WFS_DESCRIBE];
+        });
         const onChange = expect.createSpy();
         ReactDOM.render(<General
             element={{
@@ -554,6 +565,7 @@ describe('test  Layer Properties General module component', () => {
                 title: 'Layer',
                 type: 'wms',
                 url: 'wms-url',
+                describeFeatureTypeURL: 'old-describe-url',
                 search: {type: 'wfs', url: 'old-wfs-url', custom: 'value'},
                 fields: [
                     {name: 'shared', type: 'string', alias: 'Customized'},
@@ -569,6 +581,8 @@ describe('test  Layer Properties General module component', () => {
         ReactTestUtils.Simulate.change(input, {target: {value: 'new-wfs-url'}});
         ReactTestUtils.Simulate.click(edit);
         setTimeout(() => {
+            expect(requestedURLs[0]).toContain('new-wfs-url');
+            expect(requestedURLs[0]).toNotContain('old-describe-url');
             expect(onChange).toHaveBeenCalledWith({
                 search: {
                     type: 'wfs',
@@ -586,6 +600,8 @@ describe('test  Layer Properties General module component', () => {
             ReactTestUtils.Simulate.change(typeNameInput, {target: {value: 'workspace:linked'}});
             ReactTestUtils.Simulate.click(typeNameEdit);
             setTimeout(() => {
+                expect(requestedURLs[1]).toContain('old-wfs-url');
+                expect(requestedURLs[1]).toNotContain('old-describe-url');
                 expect(onChange).toHaveBeenCalledWith({
                     search: {
                         type: 'wfs',

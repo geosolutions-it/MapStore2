@@ -119,7 +119,14 @@ class General extends React.Component {
     validateLayerURL = (url) => {
         const nextLayer = { ...this.props.element, url };
         if (nextLayer.type === 'wfs') {
-            return loadFields(nextLayer, true);
+            return loadFields({
+                ...nextLayer,
+                describeFeatureTypeURL: undefined,
+                search: nextLayer.search && {
+                    ...nextLayer.search,
+                    url: undefined
+                }
+            }, true);
         }
         return Promise.all(castArray(url).map((currentUrl) =>
             getWMSLayerCapabilities({ ...nextLayer, url: currentUrl })
@@ -140,6 +147,7 @@ class General extends React.Component {
         }
         return loadFields({
             ...this.props.element,
+            describeFeatureTypeURL: undefined,
             search: {
                 ...search,
                 typeName
