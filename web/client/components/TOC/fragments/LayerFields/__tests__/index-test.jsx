@@ -66,32 +66,75 @@ describe('TOC Settings - LayerFields component', () => {
                 done(e);
             });
         });
-        it('loads the configured linked WFS feature type fields', (done) => {
-            mockAxios.onGet().reply(({url}) => {
-                expect(url).toContain('typeName=topp%3Alinked');
+        it('loads the feature type matching the effective layer name', (done) => {
+            mockAxios.onGet().reply((config) => {
+                expect(decodeURIComponent(config.url)).toContain('typeName=topp:selected');
                 return [200, {
                     featureTypes: [{
-                        typeName: 'topp:rendered',
-                        properties: [{name: 'rendered', localType: 'string'}]
+                        typeName: 'topp:other',
+                        properties: [{name: 'other', localType: 'string'}]
                     }, {
-                        typeName: 'topp:linked',
-                        properties: [{name: 'linked', localType: 'string'}]
+                        typeName: 'selected',
+                        properties: [{name: 'selected', localType: 'number'}]
                     }]
                 }];
             });
             loadFields({
-                name: 'topp:rendered',
-                type: 'wms',
-                url: 'wms-url',
-                search: {
-                    type: 'wfs',
-                    url: 'wfs-url',
-                    typeName: 'topp:linked'
-                }
+                name: 'topp:selected',
+                url: 'test',
+                type: 'wfs'
             }).then((fields) => {
-                expect(fields).toEqual([{name: 'linked', type: 'string'}]);
+                expect(fields).toEqual([{
+                    name: 'selected',
+                    type: 'number'
+                }]);
                 done();
             }).catch(done);
+        });
+        it('uses an explicit linked WFS type name instead of the WMS layer name', (done) => {
+            mockAxios.onGet().reply((config) => {
+                expect(decodeURIComponent(config.url)).toContain('typeName=topp:search');
+                return [200, {
+                    featureTypes: [{
+                        typeName: 'topp:search',
+                        properties: [{name: 'searchField', localType: 'string'}]
+                    }]
+                }];
+            });
+            loadFields({
+                name: 'topp:wms',
+                url: '/geoserver/wms',
+                type: 'wms',
+                search: {
+                    type: 'wfs',
+                    url: '/geoserver/wfs',
+                    typeName: 'topp:search'
+                }
+            }).then((fields) => {
+                expect(fields).toEqual([{
+                    name: 'searchField',
+                    type: 'string'
+                }]);
+                done();
+            }).catch(done);
+        });
+        it('rejects a schema that does not match the requested feature type', (done) => {
+            mockAxios.onGet().reply(200, {
+                featureTypes: [{
+                    typeName: 'topp:other',
+                    properties: [{name: 'other', localType: 'string'}]
+                }]
+            });
+            loadFields({
+                name: 'topp:selected',
+                url: 'test',
+                type: 'wfs'
+            }).then(() => {
+                done(new Error('Expected schema validation to fail'));
+            }).catch((error) => {
+                expect(error.message).toBe('Missing feature type in DescribeFeatureType response');
+                done();
+            });
         });
         it('check merge applies alias from old fields', (done) => {
             mockAxios.onGet().reply(200, {

@@ -30,4 +30,8 @@ describe("WFSLayerUtils", () => {
         expect(needsReload({url: 'old-url'}, {url: 'new-url'})).toBe(true);
         expect(needsReload({url: ['old-url']}, {url: ['old-url']})).toBe(false);
     });
+    it('reloads native WFS data when its service layer name changes', () => {
+        expect(needsReload({name: 'old-name'}, {name: 'new-name'})).toBe(true);
+        expect(needsReload({name: 'same-name'}, {name: 'same-name', title: 'New title'})).toBe(false);
+    });
 });

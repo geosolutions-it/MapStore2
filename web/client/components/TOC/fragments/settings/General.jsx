@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { castArray, find, includes, isObject, uniqBy } from 'lodash';
+import { castArray, find, includes, isNil, isObject, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Checkbox, Col, ControlLabel, FormControl, FormGroup, Grid } from 'react-bootstrap';
@@ -26,6 +26,7 @@ import {
 } from '../../../../plugins/TOC/utils/TOCUtils';
 import { supportsFeatureEditing } from "../../../../utils/FeatureGridUtils";
 import { DEFAULT_GROUP_ID, flattenGroups, getTitle as _getTitle } from '../../../../utils/LayersUtils';
+import { getFeatureLayerSchema } from '../../../../api/ArcGIS';
 import { loadFields } from '../LayerFields';
 import { addSearch, getLayerCapabilities as getWMSLayerCapabilities } from '../../../../observables/wms';
 
@@ -34,6 +35,14 @@ const parseURL = (url) => {
     const urls = url.split(',').map((value) => value.trim());
     return urls.length > 1 ? urls : urls[0];
 };
+const mergeArcGISFields = (fields = [], previousFields = []) => fields.map((field) => {
+    const previousField = previousFields.find(({name}) => name === field.name);
+    return {
+        ...field,
+        ...(previousField && Object.prototype.hasOwnProperty.call(previousField, 'alias') && {alias: previousField.alias}),
+        ...(previousField && Object.prototype.hasOwnProperty.call(previousField, 'visible') && {visible: previousField.visible})
+    };
+});
 /**
  * General Settings form for layer
  */
@@ -68,6 +77,43 @@ class General extends React.Component {
 
     getTitle = (label) => _getTitle(label, this.props.currentLocale);
     getLabelName = (label, groups) => _getLabelName(this.getTitle(label), groups);
+
+    canEditLayerName = () => {
+        const {element = {}, nodeType} = this.props;
+        if (nodeType !== 'layers' || !includes(this.supportedNameEditLayerTypes, element.type)) {
+            return false;
+        }
+        return element.type !== 'arcgis' || !isNil(element.name) && `${element.name}`.trim() !== '';
+    };
+
+    getLayerNameValidator = () => {
+        const {element = {}} = this.props;
+        const usesLayerNameForWFS = element.type === 'wfs'
+            || element.type === 'wms'
+                && element.search?.type === 'wfs'
+                && isNil(element.search.typeName);
+        return usesLayerNameForWFS || element.type === 'arcgis-feature'
+            ? this.validateLayerName
+            : undefined;
+    };
+
+    validateLayerName = (name) => {
+        const {element = {}} = this.props;
+        if (element.type === 'wfs' || element.type === 'wms') {
+            return loadFields({...element, name}, true)
+                .then((fields) => ({fields}));
+        }
+        if (element.type === 'arcgis-feature') {
+            return getFeatureLayerSchema(element.url, name, {
+                authSourceId: element.security?.sourceId
+            }).then(({fields, properties, geometryType}) => ({
+                fields: mergeArcGISFields(fields, element.fields),
+                properties,
+                geometryType
+            }));
+        }
+        return Promise.resolve();
+    };
 
     validateLayerURL = (url) => {
         const nextLayer = { ...this.props.element, url };
@@ -110,6 +156,7 @@ class General extends React.Component {
             .toPromise()
             .then(({ search }) => {
                 const detectedSearch = {
+                    ...search,
                     type: 'wfs',
                     url: search?.url || '',
                     typeName: search?.typeName || ''
@@ -157,22 +204,12 @@ class General extends React.Component {
                             value={this.props.element.title}
                             onChange={this.updateTitle} />
                     </FormGroup>
-                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
+                    {this.canEditLayerName() &&
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
-                        onValidate={this.props.element.search?.type === 'wfs'
-                            && (this.props.element.search.typeName === undefined
-                                || this.props.element.search.typeName === null)
-                            ? (name) => this.validateLinkedWFS({
-                                ...this.props.element.search,
-                                typeName: name
-                            })
-                            : undefined}
-                        onUpdateEntry={(key, event, fields) => this.props.onChange({
-                            [key]: event.target.value,
-                            ...(fields && { fields })
-                        })}/>}
+                        onValidate={this.getLayerNameValidator()}
+                        onUpdateEntry={this.updateLayerName}/>}
                     {includes(this.supportedURLEditLayerTypes, this.props.element.type) &&
                     <EditableTextField
                         dataQa="layer-properties-url"
@@ -308,10 +345,14 @@ class General extends React.Component {
         );
     }
 
-    supportedNameEditLayerTypes = ['wms'];
+    supportedNameEditLayerTypes = ['wms', 'wfs', 'arcgis', 'arcgis-feature'];
     supportedURLEditLayerTypes = ['wms', 'wfs'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
+    updateLayerName = (key, event, properties) => this.props.onChange({
+        [key]: event.target.value,
+        ...(properties || {})
+    });
     updateTitle = (title) => this.props.onChange("title", title);
 
     findGroupLabel = () => {

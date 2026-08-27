@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { waitFor } from '@testing-library/react';
 
 import LeafLetLayer from '../Layer.jsx';
 import Feature from '../Feature.jsx';
@@ -1763,6 +1764,59 @@ describe('Leaflet layer', () => {
             }}
             map={map} />, document.getElementById("container"));
     });
+    it('reloads a wfs layer with the new service name', (done) => {
+        mockAxios.onGet().reply(() => [200, SAMPLE_FEATURE_COLLECTION]);
+        const options = {
+            id: 'wfs-name-change',
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:old_name'
+        };
+        ReactDOM.render(<LeafLetLayer
+            type="wfs"
+            options={options}
+            map={map}/>, document.getElementById("container"));
+
+        waitFor(() => expect(mockAxios.history.get.some(({url}) =>
+            decodeURIComponent(url).includes('typeName=osm:old_name'))).toBe(true))
+            .then(() => {
+                ReactDOM.render(<LeafLetLayer
+                    type="wfs"
+                    options={{...options, name: 'osm:new_name'}}
+                    map={map}/>, document.getElementById("container"));
+                return waitFor(() => expect(mockAxios.history.get.some(({url}) =>
+                    decodeURIComponent(url).includes('typeName=osm:new_name'))).toBe(true));
+            })
+            .then(() => done())
+            .catch(done);
+    });
+    it('emits loaderror when a renamed wfs layer fails to load', (done) => {
+        mockAxios.onGet().replyOnce(200, SAMPLE_FEATURE_COLLECTION);
+        mockAxios.onGet().replyOnce(500);
+        const options = {
+            id: 'wfs-name-change-error',
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:old_name'
+        };
+        const component = ReactDOM.render(<LeafLetLayer
+            type="wfs"
+            options={options}
+            map={map}/>, document.getElementById("container"));
+
+        waitFor(() => expect(mockAxios.history.get.length).toBe(1))
+            .then(() => new Promise((resolve) => {
+                component.layer.once('loaderror', resolve);
+                ReactDOM.render(<LeafLetLayer
+                    type="wfs"
+                    options={{...options, name: 'osm:missing_name'}}
+                    map={map}/>, document.getElementById("container"));
+            }))
+            .then(() => done())
+            .catch(done);
+    });
     it('render wfs layer with FilterObj', (done) => {
         mockAxios.onGet().reply(r => {
             expect(r.url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
@@ -1962,6 +2016,26 @@ describe('Leaflet layer', () => {
         expect(cmp.layer.options.url).toBe('http://arcgis/MapServer/');
         expect(cmp.layer.options.layers[0]).toBe('1');
         expect(cmp.layer.getBandIds).toBeFalsy();
+    });
+    it('updates an arcgis MapServer layer with the new service name', () => {
+        const options = {
+            id: 'arcgis-name-change',
+            type: 'arcgis',
+            url: 'http://arcgis/MapServer/',
+            name: '1',
+            visibility: true,
+            opacity: 0.7
+        };
+        const component = ReactDOM.render(
+            <LeafLetLayer type={options.type}
+                options={options} map={map}/>, document.getElementById("container"));
+        const originalLayer = component.layer;
+        ReactDOM.render(
+            <LeafLetLayer type={options.type}
+                options={{...options, name: '2'}} map={map}/>, document.getElementById("container"));
+        expect(component.layer).toBe(originalLayer);
+        expect(component.layer.options.layers).toEqual(['2']);
+        expect(component.layer.options.opacity).toBe(0.7);
     });
     it('creates a arcgis layer (ImageServer)', () => {
         const options = {

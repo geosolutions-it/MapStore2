@@ -32,14 +32,19 @@ const LayerNameEditField = ({
 }) => {
     const editButton = (
         <InputGroup.Addon className="btn" onClick={() => {
+            if (waitingForLayerLoading || waitingForLayerLoad) {
+                return;
+            }
             if (editingLayerName) {
                 if (layerName !== element.name) {
-                    if (enableLayerNameEditFeedback) {
+                    setLayerError();
+                    if (enableLayerNameEditFeedback || onValidate) {
                         setWaitingForLayerLoading(true);
                     }
                     const updateLayerName = (validationResult) => {
                         onUpdateEntry('name', {target: {value: layerName}}, validationResult);
                         if (!enableLayerNameEditFeedback) {
+                            setWaitingForLayerLoading(false);
                             setEditingLayerName(false);
                         }
                     };
@@ -50,14 +55,17 @@ const LayerNameEditField = ({
                             .catch(() => {
                                 setWaitingForLayerLoading(false);
                                 setLayerError(true);
+                                setEditingLayerName(true);
                             });
                     } else {
                         updateLayerName();
                     }
                 } else {
+                    setLayerError();
                     setEditingLayerName(false);
                 }
             } else {
+                setLayerError();
                 setEditingLayerName(true);
             }
         }}>
@@ -81,6 +89,7 @@ const LayerNameEditField = ({
             <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
             <InputGroup>
                 <FormControl
+                    data-qa="layer-properties-name"
                     value={layerName}
                     key="name"
                     type="text"

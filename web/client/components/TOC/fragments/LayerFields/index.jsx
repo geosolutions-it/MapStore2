@@ -24,17 +24,22 @@ export const loadFields = (layer, merge = true) => {
     const typeName = getWFSLayerName(layer);
     if (type === 'wfs' || (type === 'wms' && search.type === 'wfs')) {
         return describeFeatureType({ layer }).toPromise().then((response) => {
-            const { featureTypes } = response?.data ?? {};
-            const featureType = featureTypes.find(({name, typeName: responseTypeName}) => typeName && (
-                name === typeName
-                || responseTypeName === typeName
-                || typeName.endsWith(`:${responseTypeName}`))) || featureTypes[0];
+            const { featureTypes = [] } = response?.data ?? {};
+            const localTypeName = `${typeName || ''}`.split(':').pop();
+            const featureType = typeName
+                ? featureTypes.find(({name: featureTypeName, typeName: responseTypeName}) =>
+                    [featureTypeName, responseTypeName].some((candidate) => candidate
+                        && (candidate === typeName || `${candidate}`.split(':').pop() === localTypeName)))
+                : featureTypes[0];
+            if (!featureType) {
+                throw new Error('Missing feature type in DescribeFeatureType response');
+            }
             const {properties} = featureType;
-            return properties.map(({name, localType}) => {
-                const field = merge && fields.find((ff) => ff.name === name) || {};
+            return properties.map(({name: propertyName, localType}) => {
+                const field = merge && fields.find((ff) => ff.name === propertyName) || {};
                 return {
                     ...field,
-                    name,
+                    name: propertyName,
                     type: localType
                 };
             });

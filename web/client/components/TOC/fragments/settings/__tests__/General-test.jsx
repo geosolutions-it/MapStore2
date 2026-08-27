@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import AxiosMockAdapter from 'axios-mock-adapter';
+import { waitFor } from '@testing-library/react';
 
 import General from '../General';
 import axios from '../../../../../libs/ajax';
@@ -23,14 +24,27 @@ const WMS_CAPABILITIES = `<?xml version="1.0" encoding="UTF-8"?>
     </Capability>
 </WMS_Capabilities>`;
 
+const WFS_PROPERTIES = [
+    {name: 'shared', localType: 'string'},
+    {name: 'new-field', localType: 'number'}
+];
 const WFS_DESCRIBE = {
-    featureTypes: [{
-        typeName: 'workspace:linked',
-        properties: [
-            {name: 'shared', localType: 'string'},
-            {name: 'new-field', localType: 'number'}
-        ]
-    }]
+    featureTypes: ['workspace:linked', 'workspace:layer', 'workspace:renamed']
+        .map((typeName) => ({typeName, properties: WFS_PROPERTIES}))
+};
+
+const editLayerName = (name) => {
+    const getInput = () => document.querySelector('[data-qa="layer-properties-name"]');
+    const getEditButton = () => getInput().parentElement.querySelector('.input-group-addon');
+    ReactTestUtils.act(() => {
+        ReactTestUtils.Simulate.click(getEditButton());
+    });
+    ReactTestUtils.act(() => {
+        ReactTestUtils.Simulate.change(getInput(), {target: {value: name}});
+    });
+    ReactTestUtils.act(() => {
+        ReactTestUtils.Simulate.click(getEditButton());
+    });
 };
 
 let mockAxios;
@@ -49,47 +63,195 @@ describe('test  Layer Properties General module component', () => {
         setTimeout(done);
     });
 
-    it('tests General component show LayerNameEditField = FALSE', () => {
-        const l = {
-            name: 'layer00',
-            title: 'Layer',
-            visibility: true,
-            storeIndex: 9,
-            type: 'shapefile',
-            url: 'fakeurl'
-        };
-        const settings = {
-            options: {opacity: 1}
-        };
+    ['wmts', 'vector', 'shapefile'].forEach((type) => {
+        it(`does not show LayerNameEditField for ${type}`, () => {
+            const l = {
+                name: 'layer00',
+                title: 'Layer',
+                visibility: true,
+                storeIndex: 9,
+                type,
+                url: 'fakeurl'
+            };
+            const settings = {
+                options: {opacity: 1}
+            };
 
-        // wrap in a stateful component, stateless components render return null
-        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
-        expect(comp).toExist();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(4);
+            const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+            expect(comp).toExist();
+            expect(document.querySelector('[data-qa="layer-properties-name"]')).toBeFalsy();
+        });
     });
-    it('tests General component show LayerNameEditField = TRUE', () => {
-        const l = {
-            name: 'layer00',
-            title: 'Layer',
-            visibility: true,
-            storeIndex: 9,
-            type: 'wms',
-            url: 'fakeurl'
-        };
-        const settings = {
-            options: {opacity: 1}
-        };
+    ['wms', 'wfs', 'arcgis', 'arcgis-feature'].forEach((type) => {
+        it(`tests General component show LayerNameEditField for ${type}`, () => {
+            const l = {
+                name: 'layer00',
+                title: 'Layer',
+                visibility: true,
+                storeIndex: 9,
+                type,
+                url: 'fakeurl'
+            };
+            const settings = {
+                options: {opacity: 1}
+            };
 
-        // wrap in a stateful component, stateless components render return null
-        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+            const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+            expect(comp).toExist();
+            expect(document.querySelector('[data-qa="layer-properties-name"]')).toBeTruthy();
+        });
+    });
+    [undefined, null, ''].forEach((name) => {
+        it(`does not show LayerNameEditField for a service-level arcgis layer with name ${name}`, () => {
+            const element = {
+                name,
+                title: 'ArcGIS service',
+                type: 'arcgis',
+                url: 'https://example.com/arcgis/rest/services/Test/MapServer'
+            };
+            const comp = ReactDOM.render(<General element={element}/>, document.getElementById("container"));
+            expect(comp).toExist();
+            expect(document.querySelector('[data-qa="layer-properties-name"]')).toBeFalsy();
+        });
+    });
+    it('does not show LayerNameEditField for groups', () => {
+        const element = {
+            name: 'group00',
+            title: 'Group',
+            type: 'wms'
+        };
+        const comp = ReactDOM.render(<General element={element} nodeType="groups" />, document.getElementById("container"));
         expect(comp).toExist();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(9);
+        expect(document.querySelector('[data-qa="layer-properties-name"]')).toBeFalsy();
+    });
+    it('refreshes and merges fields when changing a WFS layer name', (done) => {
+        mockAxios.onGet().reply((config) => {
+            expect(decodeURIComponent(config.url)).toContain('typeName=topp:new');
+            return [200, {
+                featureTypes: [{
+                    typeName: 'topp:new',
+                    properties: [{name: 'kept', localType: 'string'}, {name: 'added', localType: 'number'}]
+                }]
+            }];
+        });
+        const handlers = {onChange: () => {}};
+        const spy = expect.spyOn(handlers, 'onChange');
+        const element = {
+            type: 'wfs',
+            name: 'topp:old',
+            url: '/geoserver/wfs',
+            fields: [
+                {name: 'kept', type: 'string', alias: 'Custom alias'},
+                {name: 'removed', type: 'string', alias: 'Removed'}
+            ]
+        };
+        ReactDOM.render(<General element={element} onChange={handlers.onChange}/>, document.getElementById("container"));
+
+        editLayerName('topp:new');
+
+        waitFor(() => expect(spy).toHaveBeenCalled())
+            .then(() => {
+                expect(spy.calls[0].arguments).toEqual([{
+                    name: 'topp:new',
+                    fields: [
+                        {name: 'kept', type: 'string', alias: 'Custom alias'},
+                        {name: 'added', type: 'number'}
+                    ]
+                }]);
+                done();
+            })
+            .catch((error) => {
+                done(error);
+            });
+    });
+    it('refreshes linked WFS fields when its type name follows the WMS layer name', (done) => {
+        mockAxios.onGet().reply((config) => {
+            expect(decodeURIComponent(config.url)).toContain('typeName=topp:new');
+            return [200, {
+                featureTypes: [{
+                    typeName: 'topp:new',
+                    properties: [{name: 'newField', localType: 'string'}]
+                }]
+            }];
+        });
+        const handlers = {onChange: () => {}};
+        const spy = expect.spyOn(handlers, 'onChange');
+        const element = {
+            type: 'wms',
+            name: 'topp:old',
+            url: '/geoserver/wms',
+            search: {type: 'wfs', url: '/geoserver/wfs'}
+        };
+        ReactDOM.render(<General element={element} onChange={handlers.onChange}/>, document.getElementById("container"));
+
+        editLayerName('topp:new');
+
+        waitFor(() => expect(spy).toHaveBeenCalled())
+            .then(() => {
+                expect(spy.calls[0].arguments).toEqual([{
+                    name: 'topp:new',
+                    fields: [{name: 'newField', type: 'string'}]
+                }]);
+                done();
+            })
+            .catch((error) => {
+                done(error);
+            });
+    });
+    it('does not refresh linked WFS fields when it has an explicit type name', () => {
+        const handlers = {onChange: () => {}};
+        const spy = expect.spyOn(handlers, 'onChange');
+        const element = {
+            type: 'wms',
+            name: 'topp:old',
+            url: '/geoserver/wms',
+            search: {type: 'wfs', url: '/geoserver/wfs', typeName: 'topp:search'}
+        };
+        ReactDOM.render(<General element={element} onChange={handlers.onChange}/>, document.getElementById("container"));
+
+        editLayerName('topp:new');
+
+        expect(spy.calls[0].arguments).toEqual([{name: 'topp:new'}]);
+    });
+    it('refreshes ArcGIS FeatureServer schema when changing the layer name', (done) => {
+        mockAxios.onGet('/arcgis/rest/services/SchemaRefresh/FeatureServer/1').reply(200, {
+            geometryType: 'esriGeometryPoint',
+            fields: [
+                {name: 'kept', alias: 'Server alias', type: 'esriFieldTypeString', nullable: false},
+                {name: 'added', alias: 'Added', type: 'esriFieldTypeInteger'}
+            ]
+        });
+        const handlers = {onChange: () => {}};
+        const spy = expect.spyOn(handlers, 'onChange');
+        const element = {
+            type: 'arcgis-feature',
+            name: '0',
+            url: '/arcgis/rest/services/SchemaRefresh/FeatureServer',
+            fields: [
+                {name: 'kept', alias: 'Custom alias', type: 'esriFieldTypeString', nullable: true},
+                {name: 'removed', alias: 'Removed', type: 'esriFieldTypeString'}
+            ]
+        };
+        ReactDOM.render(<General element={element} onChange={handlers.onChange}/>, document.getElementById("container"));
+
+        editLayerName('1');
+
+        waitFor(() => expect(spy).toHaveBeenCalled())
+            .then(() => {
+                expect(spy.calls[0].arguments).toEqual([{
+                    name: '1',
+                    fields: [
+                        {name: 'kept', alias: 'Custom alias', type: 'esriFieldTypeString', nullable: false},
+                        {name: 'added', alias: 'Added', type: 'esriFieldTypeInteger'}
+                    ],
+                    properties: {kept: '', added: 0},
+                    geometryType: 'Point'
+                }]);
+                done();
+            })
+            .catch((error) => {
+                done(error);
+            });
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
@@ -111,12 +273,9 @@ describe('test  Layer Properties General module component', () => {
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<General element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toExist();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(9);
-        ReactTestUtils.Simulate.change(inputs[0]);
-        ReactTestUtils.Simulate.blur(inputs[1]);
+        ReactTestUtils.Simulate.blur(document.querySelector('textarea'), {target: {value: 'Updated description'}});
         expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments).toEqual(['description', 'Updated description']);
     });
     it('tests hidden title translations', () => {
         const l = {
@@ -140,9 +299,7 @@ describe('test  Layer Properties General module component', () => {
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<General pluginCfg={pluginCfg} element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toExist();
-        const forms = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "form-group" );
-        expect(forms).toExist();
-        expect(forms.length).toBe(7);
+        expect(document.querySelector('.glyphicon-flag')).toBeFalsy();
     });
 
     it('TEST showTooltipOptions = true', () => {
@@ -160,10 +317,10 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(9);
-        expect(labels[4].innerText).toBe("layerProperties.group");
-        expect(labels[5].innerText).toBe("layerProperties.tooltip.label");
-        expect(labels[6].innerText).toBe("layerProperties.tooltip.labelPlacement");
+        const labelIds = labels.map(({innerText}) => innerText);
+        expect(labelIds).toContain("layerProperties.group");
+        expect(labelIds).toContain("layerProperties.tooltip.label");
+        expect(labelIds).toContain("layerProperties.tooltip.labelPlacement");
     });
 
     it('TEST showTooltipOptions = false', () => {
@@ -181,8 +338,10 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(7);
-        expect(labels[4].innerText).toBe("layerProperties.group");
+        const labelIds = labels.map(({innerText}) => innerText);
+        expect(labelIds).toContain("layerProperties.group");
+        expect(labelIds).toNotContain("layerProperties.tooltip.label");
+        expect(labelIds).toNotContain("layerProperties.tooltip.labelPlacement");
     });
     it('TEST layer group dropdown', () => {
         const layer = {
@@ -226,8 +385,7 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} groups={groups} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(7);
-        expect(labels[4].innerText).toBe("layerProperties.group");
+        expect(labels.map(({innerText}) => innerText)).toContain("layerProperties.group");
         const cmp = document.getElementById('container');
         let selectValue = cmp.querySelector('.Select-value-label');
         let input = cmp.querySelector('.Select-input > input');
@@ -312,10 +470,11 @@ describe('test  Layer Properties General module component', () => {
             done();
         });
     });
-    it('edits native WFS URL without adding a TypeName editor', () => {
+    it('edits native WFS name and URL without adding a linked TypeName editor', () => {
         ReactDOM.render(<General
             element={{name: 'workspace:features', title: 'Layer', type: 'wfs', url: 'wfs-url'}}
             settings={{options: {opacity: 1}}}/>, document.getElementById("container"));
+        expect(document.querySelector('[data-qa="layer-properties-name"]')).toExist();
         expect(document.querySelector('[data-qa="layer-properties-url"]')).toExist();
         expect(document.querySelector('[data-qa="layer-properties-search-type-name"]')).toNotExist();
     });

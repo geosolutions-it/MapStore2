@@ -49,6 +49,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
         });
     if (newParameters.length > 0 ||
         !isEqual(newOptions.url, oldOptions.url) ||
+        newOptions.name !== oldOptions.name ||
         newOptions.securityToken !== oldOptions.securityToken ||
         !isEqual(oldOptions.security, newOptions.security) ||
         !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash) ||
