@@ -3264,6 +3264,7 @@
       "disableRange": "Disable time range",
       "enablePlayBack": "Enable playback controls",
       "disablePlayBack": "Disable playback controls",
+      "hiddenGuideLayerWarning": "The guide layer is hidden in the TOC and on the map, but continues to control timeline snapping.",
       "expand": "Expand time slider",
       "collapse": "Collapse time slider",
       "reset": {

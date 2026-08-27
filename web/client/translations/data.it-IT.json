@@ -3256,6 +3256,7 @@
       "disableRange": "Disabilita intervallo",
       "enablePlayBack": "Abilita i controlli di riproduzione",
       "disablePlayBack": "Disabilita i controlli di riproduzione",
+      "hiddenGuideLayerWarning": "Il layer guida è nascosto nel TOC e sulla mappa, ma continua a controllare l'aggancio della timeline.",
       "expand": "Espandi",
       "collapse": "Riduci",
       "reset": {

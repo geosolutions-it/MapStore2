@@ -3252,6 +3252,7 @@
       "disableRange": "Desactivar intervalo de tiempo",
       "enablePlayBack": "Habilitar controles de reproducción",
       "disablePlayBack": "Deshabilitar los controles de reproducción",
+      "hiddenGuideLayerWarning": "La capa guía está oculta en la TOC y en el mapa, pero sigue controlando el ajuste de la línea de tiempo.",
       "expand": "Expandir el control deslizante de tiempo",
       "collapse": "Minimizar el control deslizante de tiempo",
       "reset": {
