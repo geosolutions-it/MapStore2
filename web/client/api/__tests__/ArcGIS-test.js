@@ -345,6 +345,22 @@ describe('Test ArcGIS API', () => {
                 })
                 .catch(done);
         });
+        it('should reject and not cache an ArcGIS error response', (done) => {
+            mockAxios.onGet().replyOnce(() => [200, {
+                error: {code: 400, message: 'Invalid layer'}
+            }]);
+            mockAxios.onGet().replyOnce(() => [200, {
+                fields: [{name: 'ok', type: 'esriFieldTypeInteger'}]
+            }]);
+            getFeatureLayerSchema('/arcgis/rest/services/SchemaError/FeatureServer', 99)
+                .then(() => done(new Error('expected rejection')))
+                .catch(() => getFeatureLayerSchema('/arcgis/rest/services/SchemaError/FeatureServer', 99))
+                .then((schema) => {
+                    expect(schema.fields[0].name).toBe('ok');
+                    done();
+                })
+                .catch(done);
+        });
         it('should default name to 0 when undefined', (done) => {
             let requestUrl;
             mockAxios.onGet().reply((config) => {

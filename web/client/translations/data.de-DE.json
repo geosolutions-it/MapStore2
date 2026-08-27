@@ -1675,7 +1675,8 @@
           "title": "Fehler beim Laden des Peramlinks",
           "pleaseLogin": "Dieser Permalink ist nicht öffentlich. Bitte versuchen Sie sich anzumelden",
           "notFound": "Permalink nicht gefunden",
-          "notAccessible": "Permalink nicht zugänglich"
+          "notAccessible": "Permalink nicht zugänglich",
+          "invalidTarget": "Das Ziel des Permalinks ist ungültig und kann nicht geöffnet werden"
         },
         "save": {
           "title": "Die Permalink-Generierung ist fehlgeschlagen",
