@@ -28,6 +28,7 @@ const LayerNameEditField = ({
     setEditingLayerName = () => {},
     setLayerError = () => {},
     onValidate,
+    onValidationError = () => {},
     onUpdateEntry = () => {}
 }) => {
     const editButton = (
@@ -52,10 +53,11 @@ const LayerNameEditField = ({
                         Promise.resolve()
                             .then(() => onValidate(layerName))
                             .then(updateLayerName)
-                            .catch(() => {
+                            .catch((error) => {
                                 setWaitingForLayerLoading(false);
                                 setLayerError(true);
                                 setEditingLayerName(true);
+                                onValidationError(error);
                             });
                     } else {
                         updateLayerName();

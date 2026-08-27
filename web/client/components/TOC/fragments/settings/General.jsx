@@ -57,6 +57,7 @@ class General extends React.Component {
         showTooltipOptions: PropTypes.bool,
         allowNew: PropTypes.bool,
         enableLayerNameEditFeedback: PropTypes.bool,
+        onLayerNameValidationError: PropTypes.func,
         currentLocale: PropTypes.string,
         showFeatureEditOption: PropTypes.bool
     };
@@ -209,6 +210,7 @@ class General extends React.Component {
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
                         onValidate={this.getLayerNameValidator()}
+                        onValidationError={this.props.onLayerNameValidationError}
                         onUpdateEntry={this.updateLayerName}/>}
                     {includes(this.supportedURLEditLayerTypes, this.props.element.type) &&
                     <EditableTextField
