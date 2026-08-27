@@ -7,6 +7,7 @@
  */
 
 import React, { useEffect, useRef } from 'react';
+import isArray from 'lodash/isArray';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -37,6 +38,7 @@ import {
 } from './selectors/resources';
 
 import resourcesEpics from './epics/resources';
+import { DEFAULT_METADATA } from './constants';
 /**
  * This plugins allows to render a resources grid, it could be configured multiple times in the localConfig with different id
  * @memberof plugins
@@ -45,7 +47,9 @@ import resourcesEpics from './epics/resources';
  * @prop {string} cfg.id (required) identifier of the resources grid
  * @prop {string} cfg.titleId title of the resources grid
  * @prop {number} cfg.pageSize page size of the resources grid
- * @prop {string} cfg.cardLayoutStyle one of `list` or `grid`, if undefined will render a button to select the style from UI
+ * @prop {string} cfg.cardLayoutStyle one of `grid`, `list` or `table`, if undefined will render a button to select the style from UI
+ * @prop {string[]} cfg.cardLayoutStyles array of card layout styles to support/show (e.g. `['grid', 'table']`)
+ * @prop {bool|object} cfg.hideThumbnail if true or `{ grid: false, list: true }` hides the thumbnail on the card for all or specific layout styles
  * @prop {bool} cfg.hideWithNoResults if true hides the resources grid when there aren't results
  * @prop {object} cfg.defaultQuery a default query always included in the request
  * @prop {boolean} cfg.queryPage if true the page params will be managed in the url query
@@ -203,6 +207,47 @@ import resourcesEpics from './epics/resources';
  *          "list": [
  *              {
  *                  "path": "name",
+ *                  "target": "header"
+ *              },
+ *              {
+ *                  "path": "users",
+ *                  "type": "array",
+ *                  "separator": "; ",
+ *                  "items": [
+ *                      {
+ *                          "type": "link",
+ *                          "path": "username",
+ *                          "hrefPath": "userHref"
+ *                      },
+ *                      {
+ *                          "type": "link",
+ *                          "hrefPath": "iconHref",
+ *                          "icon": {
+ *                              "glyph": "user"
+ *                          }
+ *                      }
+ *                  ]
+ *              },
+ *              {
+ *                  "path": "description"
+ *              },
+ *              {
+ *                  "items": [
+ *                      {
+ *                          "type": "text",
+ *                          "labelId": "resourcesCatalog.columnCreated"
+ *                      },
+ *                      {
+ *                          "path": "creation",
+ *                          "type": "date",
+ *                          "format": "MMMM D, YYYY"
+ *                      }
+ *                  ]
+ *              }
+ *          ],
+ *          "table": [
+ *              {
+ *                  "path": "name",
  *                  "target": "header",
  *                  "width": 20,
  *                  "labelId": "resourcesCatalog.columnName"
@@ -349,73 +394,7 @@ function ResourcesGrid({
             }
         ]
     },
-    metadata = {
-        list: [
-            {
-                path: 'name',
-                target: 'header',
-                width: 20,
-                labelId: 'resourcesCatalog.columnName'
-            },
-            {
-                path: 'description',
-                width: 20,
-                labelId: 'resourcesCatalog.columnDescription'
-            },
-            {
-                path: 'tags',
-                filter: 'filter{tag.in}',
-                itemValue: 'name',
-                itemColor: 'color',
-                width: 30,
-                type: 'tag',
-                noDataLabelId: 'resourcesCatalog.emptyNA',
-                labelId: 'resourcesCatalog.columnTags'
-            },
-            {
-                path: 'lastUpdate',
-                type: 'date',
-                format: 'MMM Do YY, h:mm:ss a',
-                width: 20,
-                icon: { glyph: 'time' },
-                labelId: 'resourcesCatalog.columnLastModified',
-                noDataLabelId: 'resourcesCatalog.emptyNA'
-            },
-            {
-                path: 'creator',
-                target: 'footer',
-                filter: 'filter{creator.in}',
-                icon: { glyph: 'user' },
-                width: 10,
-                labelId: 'resourcesCatalog.columnCreatedBy',
-                noDataLabelId: 'resourcesCatalog.emptyUnknown',
-                disableIf: '{!state("userrole")}'
-            }
-        ],
-        grid: [
-            {
-                path: 'name',
-                target: 'header'
-            },
-            {
-                path: 'tags',
-                filter: 'filter{tag.in}',
-                itemValue: 'name',
-                itemColor: 'color',
-                type: 'tag',
-                showFullContent: true
-            },
-            {
-                path: 'creator',
-                target: 'footer',
-                filter: 'filter{creator.in}',
-                icon: { glyph: 'user' },
-                noDataLabelId: 'resourcesCatalog.emptyUnknown',
-                disableIf: '{!state("userrole")}',
-                tooltipId: 'resourcesCatalog.columnCreatedBy'
-            }
-        ]
-    },
+    metadata = DEFAULT_METADATA,
     resourceTypes = ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
     onSetResourceTypes,
     ...props
@@ -444,13 +423,15 @@ function ResourcesGrid({
         });
     }
 
+    const mergedMetadata = isArray(metadata) ? metadata : { ...DEFAULT_METADATA, ...metadata };
+
     return (
         <ConnectedResourcesGrid
             {...props}
             order={order}
             requestResources={(...args) => getCatalogResources(...args, resourceTypes).toPromise()}
             configuredItems={configuredItems}
-            metadata={metadata}
+            metadata={mergedMetadata}
             formatHref={handleFormatHref}
             availableResourceTypes={resourceTypes}
         />

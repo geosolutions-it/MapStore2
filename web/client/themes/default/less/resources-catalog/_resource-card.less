@@ -90,7 +90,8 @@
     }
 }
 
-.ms-resource-card-type-grid {
+.ms-resource-card-type-grid,
+.ms-resource-card-type-list {
     &:hover {
         .ms-resource-card-action-buttons {
             .dropdown:not(.open) {
@@ -109,6 +110,23 @@
                 opacity: 1;
             }
         }
+    }
+}
+
+.ms-resource-card-type-list {
+    .ms-resource-card-img {
+        width: 220px;
+        min-width: 220px;
+        align-self: center;
+        border-radius: 0;
+    }
+    .ms-resource-card-description {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        white-space: normal;
     }
 }
 
