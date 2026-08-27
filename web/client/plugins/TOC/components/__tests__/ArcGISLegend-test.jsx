@@ -35,6 +35,18 @@ describe('ArcGISLegend', () => {
         });
         expect(document.querySelector('.ms-arcgis-legend')).toBeTruthy();
     });
+    it('should not crash with an empty service-level layer name', () => {
+        expect(() => {
+            act(() => {
+                ReactDOM.render(<ArcGISLegend node={{
+                    name: '',
+                    url: '/rest/MapServer',
+                    options: {layers: [{id: 0, subLayerIds: null}]}
+                }}/>, document.getElementById("container"));
+            });
+        }).toNotThrow();
+        expect(document.querySelector('.ms-arcgis-legend')).toBeTruthy();
+    });
     it('should show the legend container when the legend request succeed', (done) => {
         mockAxios.onGet().reply(200, { layers: [{ layerId: 1, legend: [{ contentType: 'image/png', imageData: 'imageData', label: 'Label', width: 30, height: 20 }] }] });
         act(() => {

@@ -7,6 +7,7 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import L from 'leaflet';
 import LeafletMap from '../Map.jsx';
 import LeafLetLayer from '../Layer.jsx';
 import LeafLetFeature from '../Feature.jsx';
@@ -789,6 +790,28 @@ describe('LeafletMap', () => {
         event.layer.layerErrorStream$.next({ target: { layerId: 2 }});
         event.layer.layerLoadStream$.next();
         expect(spyLayerError).toHaveBeenCalled();
+    });
+    it('completes layer loading when a WFS loaderror event is emitted', () => {
+        const actions = {
+            onLayerLoad: () => {},
+            onLayerError: () => {}
+        };
+        const spyLayerLoad = expect.spyOn(actions, 'onLayerLoad');
+        const spyLayerError = expect.spyOn(actions, 'onLayerError');
+        const component = ReactDOM.render(
+            <LeafletMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                onLayerLoad={actions.onLayerLoad}
+                onLayerError={actions.onLayerError}/>,
+            document.getElementById("container")
+        );
+        const layer = L.layerGroup();
+        layer.layerId = 'wfs-layer';
+        component.map.addLayer(layer);
+        layer.fire('loaderror');
+        expect(spyLayerLoad).toHaveBeenCalledWith('wfs-layer', {error: true});
+        expect(spyLayerError).toHaveBeenCalledWith('wfs-layer');
     });
     describe("hookRegister", () => {
         it("default", () => {

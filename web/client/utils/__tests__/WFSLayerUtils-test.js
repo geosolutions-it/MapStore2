@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { extractGeometryAttributeName, extractGeometryType, toDescribeURL } from '../WFSLayerUtils';
+import { extractGeometryAttributeName, extractGeometryType, needsReload, toDescribeURL } from '../WFSLayerUtils';
 import describePois from '../../test-resources/wfs/describe-pois.json';
 import expect from 'expect';
 
@@ -25,5 +25,9 @@ describe("WFSLayerUtils", () => {
         ];
 
         expect(toDescribeURL({ name: 'testName', search: { url: _url }}).split('?')[0]).toBe(_url[0]);
+    });
+    it('requires a reload only when the service layer name changes', () => {
+        expect(needsReload({name: 'old-name'}, {name: 'new-name'})).toBe(true);
+        expect(needsReload({name: 'same-name'}, {name: 'same-name', title: 'New title'})).toBe(false);
     });
 });
