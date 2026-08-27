@@ -3255,7 +3255,7 @@
       "disableRange": "Désactiver la plage de temps",
       "enablePlayBack": "Activer les contrôles de lecture",
       "disablePlayBack": "Désactiver les contrôles de lecture",
-      "hiddenGuideLayerWarning": "Cette couche de référence est masquée dans la TOC et sur la carte, mais continue de contrôler l'accrochage de la chronologie.",
+      "hiddenGuideLayerWarning": "Le couche de référence est masquée dans la TOC et sur la carte, mais continue de contrôler l'accrochage de la chronologie.",
       "expand": "Développer le curseur temporel",
       "collapse": "Réduire le curseur temporel",
       "reset": {

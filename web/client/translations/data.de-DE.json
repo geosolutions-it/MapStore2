@@ -3294,7 +3294,7 @@
       "disableRange": "Zeitbereich deaktivieren",
       "enablePlayBack": "Aktivieren Sie die Wiedergabesteuerung",
       "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
-      "hiddenGuideLayerWarning": "Dieser Führungslayer ist im Inhaltsverzeichnis und auf der Karte ausgeblendet, steuert aber weiterhin das Einrasten der Zeitleiste.",
+      "hiddenGuideLayerWarning": "Die Führungslayer ist im Inhaltsverzeichnis und auf der Karte ausgeblendet, steuert aber weiterhin das Einrasten der Zeitleiste.",
       "expand": "Erweitern Sie den Zeitschieberegler",
       "collapse": "Schieberegler für die Zeitspanne reduzieren",
       "reset": {
