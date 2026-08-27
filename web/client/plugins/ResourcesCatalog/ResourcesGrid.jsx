@@ -48,7 +48,7 @@ import { DEFAULT_METADATA } from './constants';
  * @prop {string} cfg.titleId title of the resources grid
  * @prop {number} cfg.pageSize page size of the resources grid
  * @prop {string} cfg.cardLayoutStyle one of `grid`, `list` or `table`, if undefined will render a button to select the style from UI
- * @prop {string[]} cfg.cardLayoutStyles array of card layout styles to support/show (e.g. `['grid', 'table']`)
+ * @prop {string[]} cfg.cardLayoutStyles array of card layout styles to support/show. Default is `['grid', 'table']`
  * @prop {bool|object} cfg.hideThumbnail if true or `{ grid: false, list: true }` hides the thumbnail on the card for all or specific layout styles
  * @prop {bool} cfg.hideWithNoResults if true hides the resources grid when there aren't results
  * @prop {object} cfg.defaultQuery a default query always included in the request
@@ -210,10 +210,14 @@ import { DEFAULT_METADATA } from './constants';
  *                  "target": "header"
  *              },
  *              {
+ *                  "path": "authors",
+ *                  "type": "array" // when `items` is not present, array elements are treated as primitive values (string, number, etc.) based on their data type
+ *              },
+ *              {
  *                  "path": "users",
- *                  "type": "array",
- *                  "separator": "; ",
- *                  "items": [
+ *                  "type": "array", // when `items` is present, each array element is treated as an object and rendered using the provided template
+ *                  "separator": "; ", // separator to use when rendering array elements
+ *                  "items": [ // when `path` is present, `items` is treated as the template structure for each object in the array
  *                      {
  *                          "type": "link",
  *                          "path": "username",
@@ -232,7 +236,7 @@ import { DEFAULT_METADATA } from './constants';
  *                  "path": "description"
  *              },
  *              {
- *                  "items": [
+ *                  "items": [ // when the root element has no `path`, items is treated as a list of elements to render
  *                      {
  *                          "type": "text",
  *                          "labelId": "resourcesCatalog.columnCreated"
