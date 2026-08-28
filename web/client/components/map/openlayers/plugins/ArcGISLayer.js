@@ -65,6 +65,16 @@ registerType('arcgis', {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     },
+    refresh: (layer) => {
+        const source = layer.getSource();
+        if (source) {
+            source.updateParams(
+                Object.assign({}, source.getParams(), {
+                    _refreshCounter: Date.now()
+                })
+            );
+        }
+    },
     render: () => {
         return null;
     }
