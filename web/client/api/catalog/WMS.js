@@ -87,8 +87,8 @@ const recordToLayer = (record, {
     const format = supportedGetMapFormats?.find((value) => value === defaultFormat)
         || supportedGetMapFormats[0]
         || defaultFormat;
-    const { featureInfo: serviceFeatureInfo, ...serviceLayerOptions } = layerOptions || {};
-    const { featureInfo: recordFeatureInfo, ...recordLayerOptions } = record.layerOptions || {};
+    const { featureInfo: serviceFeatureInfo, search: serviceSearch, ...serviceLayerOptions } = layerOptions || {};
+    const { featureInfo: recordFeatureInfo, search: recordSearch, ...recordLayerOptions } = record.layerOptions || {};
     const computedFeatureInfo = infoFormat && INFO_FORMATS_BY_MIME_TYPE[infoFormat]
         ? { format: INFO_FORMATS_BY_MIME_TYPE[infoFormat] }
         : {};
@@ -96,6 +96,11 @@ const recordToLayer = (record, {
         ...computedFeatureInfo,
         ...(serviceFeatureInfo || {}),
         ...(recordFeatureInfo || {})
+    };
+    const search = {
+        ...(layerBaseConfig?.search || {}),
+        ...(serviceSearch || {}),
+        ...(recordSearch || {})
     };
     let security;
     if (service?.protectedId) {
@@ -133,6 +138,7 @@ const recordToLayer = (record, {
         ...layerBaseConfig,
         ...serviceLayerOptions,
         ...recordLayerOptions,
+        ...(!isEmpty(search) && { search }),
         localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
         imageFormats: supportedGetMapFormats,
         infoFormats: supportedGetFeatureInfoFormats,

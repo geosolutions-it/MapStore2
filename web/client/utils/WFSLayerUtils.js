@@ -8,14 +8,18 @@
 
 import { optionsToVendorParams } from './VendorParamsUtils';
 import urlUtil from 'url';
-import {get, head} from 'lodash';
+import {get, head, isEqual} from 'lodash';
 import { getDefaultUrl } from './URLUtils';
 import { getCredentials } from './SecurityUtils';
+import { getWFSLayerName } from './LayersUtils';
 
 export const needsReload = (oldOptions, newOptions) => {
     const oldParams = { ...(optionsToVendorParams(oldOptions) || {}), _v_: oldOptions._v_ };
     const newParams = { ...(optionsToVendorParams(newOptions) || {}), _v_: newOptions._v_ };
-    return oldOptions.name !== newOptions.name || ["_v_", "CQL_FILTER", "VIEWPARAMS"].reduce((found, param) => {
+    if (!isEqual(oldOptions.url, newOptions.url) || oldOptions.name !== newOptions.name) {
+        return true;
+    }
+    return ["_v_", "CQL_FILTER", "VIEWPARAMS"].reduce((found, param) => {
         if (oldParams[param] !== newParams[param]) {
             return true;
         }
@@ -23,7 +27,7 @@ export const needsReload = (oldOptions, newOptions) => {
     }, false);
 };
 
-export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL } = {}) => {
+export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL, type } = {}) => {
     const parsed = urlUtil.parse(getDefaultUrl(describeFeatureTypeURL || search.url || url), true);
     return urlUtil.format(
         {
@@ -34,7 +38,7 @@ export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL }
 
                 service: "WFS",
                 version: "1.1.0",
-                typeName: name,
+                typeName: getWFSLayerName({name, search, type}),
                 outputFormat: 'application/json',
                 request: "DescribeFeatureType"
             }
