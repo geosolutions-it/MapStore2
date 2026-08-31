@@ -39,7 +39,9 @@ export const getDisplayTypeFromMediaType = (mediaType) => {
     }
     const normalizedMediaType = mediaType.toLowerCase().trim();
     if (!normalizedMediaType.includes('/')) {
-        return DISPLAY_TYPES.includes(normalizedMediaType) ? normalizedMediaType : null;
+        return DISPLAY_TYPES.includes(normalizedMediaType)
+            ? normalizedMediaType
+            : EXTENSION_TO_TYPE[normalizedMediaType] || null;
     }
     const [prefix] = normalizedMediaType.split('/');
     return MEDIA_TYPE_PREFIXES.includes(prefix) ? prefix : MEDIA_TYPES[normalizedMediaType] || null;
@@ -60,5 +62,16 @@ export const resolveAttributeDisplayType = ({ value, attribute = {}, mediaTypeVa
     const configuredType = attribute.displayType === 'media'
         ? getDisplayTypeFromMediaType(mediaTypeValue)
         : getDisplayTypeFromMediaType(attribute.displayType);
-    return configuredType || getDisplayTypeFromExtension(value) || 'string';
+    return configuredType || getDisplayTypeFromExtension(value) || (attribute.displayType === 'media' ? 'url' : 'string');
+};
+
+export const DEFAULT_DOCUMENTS_FEATURE_INFO = {
+    views: [{
+        id: 'documents',
+        type: 'PROPERTIES',
+        attributes: [
+            { name: 'title', visible: true },
+            { name: 'href', visible: true, displayType: 'media', mediaTypeAttribute: 'extension' }
+        ]
+    }]
 };

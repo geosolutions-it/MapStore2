@@ -10,8 +10,9 @@ import { v1 as uuidv1 } from 'uuid';
 import * as LayersUtils from '../LayersUtils';
 import { readZip, shpToGeoJSON } from '../FileUtils';
 import axios from '../../libs/ajax';
+import { DEFAULT_DOCUMENTS_FEATURE_INFO } from '../FeatureInfoAttributeUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection, normalizeLayer } = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -1983,5 +1984,22 @@ describe('LayersUtils', () => {
         const background = {type: "wmts", allowedSRS: ["EPSG:4326"]};
         const projection = "EPSG:4326";
         expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
+    });
+    describe('normalizeLayer with GEONODE_DOCUMENTS_ROW_VIEWER', () => {
+        it('removes rowViewer and adds default featureInfo if missing', () => {
+            const layer = { id: 'doc-1', rowViewer: 'GEONODE_DOCUMENTS_ROW_VIEWER', name: 'documents' };
+            const normalized = normalizeLayer(layer);
+            expect(normalized.rowViewer).toBe(undefined);
+            expect(normalized.featureInfo).toEqual(DEFAULT_DOCUMENTS_FEATURE_INFO);
+            expect(normalized.id).toBe('doc-1');
+        });
+        it('removes rowViewer and keeps existing featureInfo', () => {
+            const customFeatureInfo = { views: [{ id: 'custom' }] };
+            const layer = { id: 'doc-2', rowViewer: 'GEONODE_DOCUMENTS_ROW_VIEWER', featureInfo: customFeatureInfo };
+            const normalized = normalizeLayer(layer);
+            expect(normalized.rowViewer).toBe(undefined);
+            expect(normalized.featureInfo).toEqual(customFeatureInfo);
+            expect(normalized.id).toBe('doc-2');
+        });
     });
 });

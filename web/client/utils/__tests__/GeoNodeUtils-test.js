@@ -10,6 +10,7 @@ import expect from 'expect';
 
 import { setSupportedLocales, getSupportedLocales } from '../LocaleUtils';
 import { resourceToLayerConfig, getDimensions, resolveApiPresetParams, mergePresetParams, documentsToLayerConfig } from '../GeoNodeUtils';
+import { DEFAULT_DOCUMENTS_FEATURE_INFO } from '../FeatureInfoAttributeUtils';
 
 describe('GeoNodeUtils', () => {
     describe('resourceToLayerConfig', () => {
@@ -287,7 +288,8 @@ describe('GeoNodeUtils', () => {
             ]);
             expect(layer.type).toBe('vector');
             expect(layer.name).toBe('Documents');
-            expect(layer.rowViewer).toBe('GEONODE_DOCUMENTS_ROW_VIEWER');
+            expect(layer.rowViewer).toNotExist();
+            expect(layer.featureInfo).toEqual(DEFAULT_DOCUMENTS_FEATURE_INFO);
             // doc 11 has no extent -> skipped
             expect(layer.features.length).toBe(1);
             expect(layer.features[0].id).toBe(10);
