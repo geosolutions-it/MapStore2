@@ -135,6 +135,46 @@
         "type": "empty",
         "visibility": false
       }
-    ]
+    ],
+    "text_search_config": {
+            "services": [
+                {
+                    "type": "wfs",
+                    "name": "sss",
+                    "displayName": "{bla}",
+                    "subTitle": "",
+                    "priority": 1,
+                    "options": {
+                        "url": "/geoservers/wfs",
+                        "typeName": "bla",
+                        "queriableAttributes": [
+                            "name"
+                        ],
+                        "sortBy": "",
+                        "maxFeatures": 5,
+                        "srsName": "EPSG:4326"
+                    }
+                },
+                {
+                    "type": "wfs",
+                    "name": "BROKEN",
+                    "displayName": "broken",
+                    "subTitle": "broken wfs",
+                    "priority": 1,
+                    "options": {
+                        "url": "/geoservers/broken",
+                        "typeName": "bla",
+                        "queriableAttributes": [
+                            "broken"
+                        ],
+                        "sortBy": "",
+                        "maxFeatures": 5,
+                        "srsName": "EPSG:4326"
+                    }
+                }
+            ],
+            "override": false
+        },
+        "bookmark_search_config": {}
   }
 }
