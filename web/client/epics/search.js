@@ -71,29 +71,37 @@ const getInfoFormat = (layerObj, state) => getDefaultInfoFormatValueFromLayer(la
 export const searchEpic = action$ =>
     action$.ofType(TEXT_SEARCH_STARTED)
         .debounceTime(250)
-        .switchMap( action =>
-        // create a stream of streams from array
-            Rx.Observable.from(
-                (action.services || [ {type: "nominatim", priority: 5} ])
+        .switchMap( action => {
+            const services = action.services || [ {type: "nominatim", priority: 5} ];
+            const serviceErrors = [];
+            // create a stream of streams from array
+            return Rx.Observable.from(
+                services
                 // Create an stream for each Service
                     .map((service) => {
                         const serviceInstance = API.Utils.getService(service.type);
+                        let stream$;
                         if (!serviceInstance) {
                             const err = new Error("Service Missing");
                             err.msgId = "search.service_missing";
                             err.serviceType = service.type;
-                            return Rx.Observable.of(err).do((e) => {throw e; });
+                            stream$ = Rx.Observable.of(err).do((e) => {throw e; });
+                        } else {
+                            stream$ = Rx.Observable.defer(() =>
+                                serviceInstance(action.searchText, service.options)
+                                    .then( (response = []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
+                                    ))
+                                .retryWhen(errors => errors.delay(200).scan((count, err) => {
+                                    if ( count >= 2) {
+                                        throw err;
+                                    }
+                                    return count + 1;
+                                }, 0));
                         }
-                        return Rx.Observable.defer(() =>
-                            serviceInstance(action.searchText, service.options)
-                                .then( (response = []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
-                                ))
-                            .retryWhen(errors => errors.delay(200).scan((count, err) => {
-                                if ( count >= 2) {
-                                    throw err;
-                                }
-                                return count + 1;
-                            }, 0));
+                        return stream$.catch(e => {
+                            serviceErrors.push(e);
+                            return Rx.Observable.empty();
+                        });
                     }) // map
             )// from
             // merge all results from the streams
@@ -101,14 +109,21 @@ export const searchEpic = action$ =>
                 .scan((oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
             // limit the number of results returned from all services to maxResults
                 .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
+                .concat(Rx.Observable.defer(() => {
+                    if (serviceErrors.length > 0) {
+                        const e = serviceErrors[0];
+                        return Rx.Observable.of(searchResultError({msgId: "search.generic_error", ...e, message: e.message, stack: e.stack}));
+                    }
+                    return Rx.Observable.empty();
+                }))
                 .startWith(searchTextLoading(true))
                 .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
                 .concat([searchTextLoading(false)])
                 .catch(e => {
                     const err = {msgId: "search.generic_error", ...e, message: e.message, stack: e.stack};
                     return Rx.Observable.from([searchResultError(err), searchTextLoading(false)]);
-                })
-        );
+                });
+        });
 
 /**
  * Gets every `TEXT_SEARCH_ITEM_SELECTED` event.
