@@ -4772,6 +4772,7 @@
         "errorDefault": "Netværksfejl"
       },
       "myResources": "Mine ressourcer",
+      "select": "Vælg",
       "creationFilter": {
         "from": "Oprettelsesdato fra",
         "to": "Oprettelsesdato til"
