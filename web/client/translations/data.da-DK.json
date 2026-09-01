@@ -117,7 +117,7 @@
       "heightOffset": "Højdeoffset (m)",
       "wmsLayerTileSize": "Tile størrelse (WMS)",
       "maxFeaturesInView": "Maksimale antal features i udsnit",
-      "maxFeaturesInViewPlaceholder": "Når værdien ikke er udfyldt virker funktionaliteten som hidtil (dvs. henter alle features)",
+      "maxFeaturesInViewTooltip": "Når værdien ikke er udfyldt virker funktionaliteten som hidtil (dvs. henter alle features)",
       "serverType": "Servertype",
       "serverTypeOption": {
         "noVendor": "Ingen leverandør",
@@ -3691,8 +3691,8 @@
         "title": "Login"
       },
       "LongitudinalProfileTool": {
-        "description": "Tillader brugeren at generere en længdeprofil ud fra en linje og et lag med højdeattribut. Kræver konfiguration",
-        "title": "Længdeprofilværktøj"
+        "description": "Tillader brugeren at generere en højdeprofil ud fra en linje og et lag med højdeattribut. Kræver konfiguration",
+        "title": "Højdeprofilværktøj"
       },
       "MapCatalog": {
         "description": "Tillader gennemse, redigere, slette og indlæse kort, der er tilgængelige på serveren",
@@ -4485,6 +4485,10 @@
       "loadingAPI": "Indlæser API...",
       "cyclomedia": {
         "initializing": "Initialiserer Street Smart API...",
+        "logout": "Street Smart Logud",
+        "tryForceLogout": "Tving Street Smart Logud",
+        "confirmLogout": "Er du sikker på at du vil logge ud fra Street Smart?",
+        "loggingOut": "Logger ud fra Street Smart...",
         "loadingAPI": "Indlæser Street Smart API...",
         "changeCredentials": "Skift Street Smart-legitimationsoplysninger",
         "insertCredentials": "Indtast dine Street Smart-legitimationsoplysninger",
@@ -4495,8 +4499,10 @@
         "zoomIn": "Zoom ind på kortet for at se gadevisningsdækning",
         "errorOccurred": "Der opstod en fejl: ",
         "errors": {
+          "notLoggedIn": "Du er ikke logget ind",
           "invalidCredentials": "Ugyldige legitimationsoplysninger",
-          "projectionNotAvailable": "Projektionen {srs} er ikke tilgængelig. Kontakt administratoren."
+          "projectionNotAvailable": "Projektionen {srs} er ikke tilgængelig. Kontakt administratoren.",
+          "apiLoadFailed": "Load af Street Smart API mislykkedes. Venligst kontroller netværksforbindelse eller kontakt administratoren."
         },
         "reloadAPI": "Genindlæs API"
       },
@@ -4508,9 +4514,9 @@
       "showMoreItems": "Vis flere elementer"
     },
     "longitudinalProfile": {
-      "open": "Åbn Længdeprofil",
-      "close": "Luk Længdeprofil",
-      "title": "Længdeprofil",
+      "open": "Åbn Højdeprofil",
+      "close": "Luk Højdeprofil",
+      "title": "Højdeprofil",
       "draw": "Tegn linje",
       "import": "Indlæs fil",
       "select": "Vælg til profil",
@@ -4553,8 +4559,8 @@
       },
       "errors": {
         "outsideCoverage": "Den angivne linje er uden for profilens dækning",
-        "loadingError": "Fejl ved indlæsning af data til længdeprofil",
-        "unableToSetupPlugin": "Kunne ikke konfigurere længdeprofiludvidelsen",
+        "loadingError": "Fejl ved indlæsning af data til højdeprofil",
+        "unableToSetupPlugin": "Kunne ikke konfigurere højdeprofiludvidelsen",
         "defaultReferentialNotFound": "Standardreferencen er konfigureret, men kan ikke findes i reference listen. Opdater venligst konfigurationen for udvidelsen.",
         "projectionNotSupported": "Referentiel med kort understøttet af kortet kan ikke findes. Opdater venligst konfigurationen for udvidelsen eller tilføj den ønskede projektion til app-konfigurationen.",
         "cannotDownloadPDF": "Det er ikke muligt at udskrive det aktuelle kort, da det indeholder henvisninger til eksternt domæne. Fjern dem, gem kortet, genindlæs siden og prøv igen.",
@@ -4764,6 +4770,7 @@
         "errorDefault": "Netværksfejl"
       },
       "myResources": "Mine ressourcer",
+      "select": "Vælg",
       "creationFilter": {
         "from": "Oprettelsesdato fra",
         "to": "Oprettelsesdato til"
