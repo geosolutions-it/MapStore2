@@ -520,6 +520,41 @@ describe('search Epics', () => {
 
         });
     });
+    it('returns the results of the services that succeed and the error when one service fails', (done) => {
+        let action = {
+            ...textSearch("TEST"),
+            services: [{
+                type: 'wfs',
+                options: {
+                    url: 'base/web/client/test-resources/wfs/Wyoming.json',
+                    typeName: 'topp:states',
+                    queriableAttributes: [STATE_NAME],
+                    returnFullData: false
+                }
+            }, {
+                type: 'wfs',
+                options: {
+                    url: 'base/web/client/test-resources/wfs/notExisting.json',
+                    typeName: 'topp:states',
+                    queriableAttributes: [STATE_NAME],
+                    returnFullData: false
+                }
+            }]
+        };
+        testEpic(searchEpic, 4, action, (actions) => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(TEXT_SEARCH_LOADING);
+            expect(actions[0].loading).toBe(true);
+            expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
+            expect(actions[1].results.length).toBe(1);
+            expect(actions[2].type).toBe(TEXT_SEARCH_ERROR);
+            expect(actions[2].error).toExist();
+            expect(actions[2].error.msgId).toBe('search.services_error');
+            expect(actions[3].type).toBe(TEXT_SEARCH_LOADING);
+            expect(actions[3].loading).toBe(false);
+            done();
+        });
+    });
     it('check the search result resorting is conservative and the number of results limited to maxResults', (done) => {
         const maxResults = 5;
         let action = {

@@ -104,17 +104,15 @@ export const searchEpic = action$ =>
                         });
                     }) // map
             )// from
-            // merge all results from the streams
                 .mergeAll()
                 .scan((oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
-            // limit the number of results returned from all services to maxResults
                 .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
                 .concat(Rx.Observable.defer(() => {
                     if (serviceErrors.length > 0) {
                         const e = serviceErrors[0].error;
                         const failedServices = serviceErrors.map(({service}) => service.name || service.type).join(', ');
                         return Rx.Observable.of(searchResultError({
-                            msgId: "search.generic_error",
+                            msgId: "search.services_error",
                             message: failedServices,
                             stack: e.stack
                         }));
@@ -125,7 +123,7 @@ export const searchEpic = action$ =>
                 .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
                 .concat([searchTextLoading(false)])
                 .catch(e => {
-                    const err = {msgId: "search.generic_error", ...e, message: e.message, stack: e.stack};
+                    const err = {msgId: "search.services_error", ...e, message: e.message, stack: e.stack};
                     return Rx.Observable.from([searchResultError(err), searchTextLoading(false)]);
                 });
         });
