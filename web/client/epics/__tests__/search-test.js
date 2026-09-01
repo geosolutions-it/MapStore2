@@ -548,7 +548,7 @@ describe('search Epics', () => {
             expect(actions.length).toBe(4);
             expect(actions[0].type).toBe(TEXT_SEARCH_LOADING);
             expect(actions[0].loading).toBe(true);
-            expect(actions[1].type).toBe('wfs');
+            expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
             expect(actions[1].results.length).toBe(1);
             expect(actions[2].type).toBe(TEXT_SEARCH_ERROR);
             expect(actions[2].error).toExist();
