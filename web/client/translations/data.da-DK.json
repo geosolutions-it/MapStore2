@@ -4487,6 +4487,10 @@
       "loadingAPI": "Indlæser API...",
       "cyclomedia": {
         "initializing": "Initialiserer Street Smart API...",
+        "logout": "Street Smart Logud",
+        "tryForceLogout": "Tving Street Smart Logud",
+        "confirmLogout": "Er du sikker på at du vil logge ud fra Street Smart?",
+        "loggingOut": "Logger ud fra Street Smart...",
         "loadingAPI": "Indlæser Street Smart API...",
         "changeCredentials": "Skift Street Smart-legitimationsoplysninger",
         "insertCredentials": "Indtast dine Street Smart-legitimationsoplysninger",
@@ -4497,8 +4501,10 @@
         "zoomIn": "Zoom ind på kortet for at se gadevisningsdækning",
         "errorOccurred": "Der opstod en fejl: ",
         "errors": {
+          "notLoggedIn": "Du er ikke logget ind",
           "invalidCredentials": "Ugyldige legitimationsoplysninger",
-          "projectionNotAvailable": "Projektionen {srs} er ikke tilgængelig. Kontakt administratoren."
+          "projectionNotAvailable": "Projektionen {srs} er ikke tilgængelig. Kontakt administratoren.",
+          "apiLoadFailed": "Load af Street Smart API mislykkedes. Venligst kontroller netværksforbindelse eller kontakt administratoren."
         },
         "reloadAPI": "Genindlæs API"
       },
