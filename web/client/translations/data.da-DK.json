@@ -116,7 +116,7 @@
       "heightOffset": "Højdeoffset (m)",
       "wmsLayerTileSize": "Tile størrelse (WMS)",
       "maxFeaturesInView": "Maksimale antal features i udsnit",
-      "maxFeaturesInViewPlaceholder": "Når værdien ikke er udfyldt virker funktionaliteten som hidtil (dvs. henter alle features)",
+      "maxFeaturesInViewTooltip": "Når værdien ikke er udfyldt virker funktionaliteten som hidtil (dvs. henter alle features)",
       "serverType": "Servertype",
       "serverTypeOption": {
         "noVendor": "Ingen leverandør",
