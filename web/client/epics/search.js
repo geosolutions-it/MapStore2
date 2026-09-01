@@ -99,7 +99,7 @@ export const searchEpic = action$ =>
                                 }, 0));
                         }
                         return stream$.catch(e => {
-                            serviceErrors.push(e);
+                            serviceErrors.push({service, error: e});
                             return Rx.Observable.empty();
                         });
                     }) // map
@@ -111,8 +111,13 @@ export const searchEpic = action$ =>
                 .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
                 .concat(Rx.Observable.defer(() => {
                     if (serviceErrors.length > 0) {
-                        const e = serviceErrors[0];
-                        return Rx.Observable.of(searchResultError({msgId: "search.generic_error", ...e, message: e.message, stack: e.stack}));
+                        const e = serviceErrors[0].error;
+                        const failedServices = serviceErrors.map(({service}) => service.name || service.type).join(', ');
+                        return Rx.Observable.of(searchResultError({
+                            msgId: "search.generic_error",
+                            message: failedServices,
+                            stack: e.stack
+                        }));
                     }
                     return Rx.Observable.empty();
                 }))
