@@ -60,8 +60,11 @@ import {
     showLayerMetadata,
     hideLayerMetadata,
     updateSettingsParams,
+    layerNameChangeError,
     addGroup
 } from '../layers';
+
+import { SHOW_NOTIFICATION } from '../notifications';
 
 import { getLayerCapabilities } from '../layerCapabilities';
 
@@ -328,6 +331,16 @@ describe('Test correctness of the layers actions', () => {
         expect(action.type).toBe(UPDATE_SETTINGS_PARAMS);
         expect(action.newParams).toBe(newParams);
         expect(action.update).toBe(update);
+    });
+
+    it('creates the layer name change error notification', () => {
+        const action = layerNameChangeError();
+        expect(action.type).toBe(SHOW_NOTIFICATION);
+        expect(action.level).toBe('error');
+        expect(action.title).toBe('layerNameChangeError.title');
+        expect(action.message).toBe('layerNameChangeError.message');
+        expect(action.autoDismiss).toBe(5);
+        expect(action.position).toBe('tc');
     });
 
     it('add root group', () => {

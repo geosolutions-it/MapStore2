@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 
 import { describeFeatureType } from '../../../../observables/wfs';
-import { getSearchUrl } from '../../../../utils/LayersUtils';
+import { getSearchUrl, getWFSLayerName } from '../../../../utils/LayersUtils';
 
 /**
  * Retrieves feature types for the layer provided in props. When the layer changes url,
@@ -19,6 +19,7 @@ export default props$ =>
     props$
         .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) =>
             getSearchUrl(layer1) === getSearchUrl(layer2)
+            && getWFSLayerName(layer1) === getWFSLayerName(layer2)
             && layer1.loadingError === layer2.loadingError) // this check is not too precise,it may need a refinement
         .switchMap(({ layer } = {}) => describeFeatureType({ layer })
             .map(r => ({ describeFeatureType: r.data, loading: false, error: undefined }))

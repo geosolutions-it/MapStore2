@@ -13,7 +13,7 @@ import { isEmpty, isEqual } from 'lodash';
 import { composeFilterObject } from './utils';
 import wpsBounds from '../../../observables/wps/bounds';
 import { composeAttributeFilters, toOGCFilter } from '../../../utils/FilterUtils';
-import { getWpsUrl } from '../../../utils/LayersUtils';
+import { getWFSLayerName, getWpsUrl } from '../../../utils/LayersUtils';
 import { set } from '../../../utils/ImmutableUtils';
 import { createRegisterHooks, ZOOM_TO_EXTENT_HOOK } from '../../../utils/MapUtils';
 
@@ -86,7 +86,7 @@ export default compose(
                         if (dependencies.filter) {
                             filterObjCollection = {...filterObjCollection, ...composeAttributeFilters([filterObjCollection, dependencies.filter])};
                         }
-                        const featureTypeName = dependencies && dependencies.layer && dependencies.layer.name;
+                        const featureTypeName = getWFSLayerName(dependencies.layer);
                         if (!isEmpty(filterObjCollection)) {
                             // remove xsi:schemaLocation for performance improvements.
                             filterObjCollection = {
