@@ -217,6 +217,7 @@ class RecordItem extends React.Component {
                 disabled: this.state.loading,
                 loading: this.state.loading,
                 glyph: 'plus',
+                'data-ms-id': 'catalog-add-first-result',
                 onClick: () => this.onAddToMap(record)
             }]),
             ...(links.length > 0

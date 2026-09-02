@@ -38,6 +38,7 @@ function TextOptions({ data = {}, onChange = () => {} }) {
                                 style={{ marginBottom: 10 }}
                                 placeholder="widgets.builder.wizard.titlePlaceholder"
                                 value={data.title}
+                                data-ms-id="add-widget-text-title"
                                 type="text"
                                 onChange={(e) =>
                                     onChange("title", e.target.value)
