@@ -38,7 +38,7 @@ const ResourceStatus = ({ statusItems = [] }) => {
                 }
                 if (item.type === 'icon') {
                     return (
-                        <Text key={idx} fontSize="sm" className={item.variant ? `ms-${item.variant}-text` : ''} >
+                        <Text key={idx} fontSize="sm" className={`${item.variant ? `ms-${item.variant}-text` : ''} ${item.className || ''}`} {...(item['data-ms-id'] ? {'data-ms-id': item['data-ms-id']} : {})}>
                             <IconWithTooltip
                                 glyph={item.glyph}
                                 tooltip={item.tooltip}

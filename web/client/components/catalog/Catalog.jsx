@@ -304,7 +304,7 @@ class Catalog extends React.Component {
                         this.search({ services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText });
                     }
                 }}
-                className={this.props.buttonClassName} key="catalog_search_button" disabled={this.props.loading || !this.isValidServiceSelected()}>
+                className={this.props.buttonClassName} key="catalog_search_button" data-ms-id="catalog-search-button" disabled={this.props.loading || !this.isValidServiceSelected()}>
                 <Message msgId="catalog.search" />
             </Button>);
         }
@@ -321,6 +321,7 @@ class Catalog extends React.Component {
         const textSearch = (<FormControl
             ref="searchText"
             type="text"
+            data-ms-id="catalog-search"
             style={{
                 textOverflow: "ellipsis"
             }}
@@ -356,7 +357,7 @@ class Catalog extends React.Component {
                                 onClick={() => this.props.onChangeCatalogMode("edit", false)}>
                                 <Glyphicon glyph="pencil" />
                             </InputGroup.Addon>) : null}
-                            {this.props.canEdit && <InputGroup.Addon className="btn" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
+                            {this.props.canEdit && <InputGroup.Addon className="btn" data-ms-id="catalog-add-service" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
                                 <Glyphicon glyph="plus" />
                             </InputGroup.Addon>}
                         </InputGroup>
