@@ -1067,6 +1067,7 @@
       "serviceslistempty": "No se ha definido ningún servicio personalizado",
       "service_missing": "el servicio {serviceType} no está configurado",
       "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
+      "services_error": "Se han producido algunos errores durante la búsqueda en los servicios: {message}",
       "showGFI": "Mostrar GFI",
       "errors": {
         "nonQueriableLayers": "La capa proporcionada en la url no es intercambiable o no es visible en el mapa",

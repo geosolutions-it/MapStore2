@@ -1067,6 +1067,7 @@
       "serviceslistempty": "No custom services defined",
       "service_missing": "{serviceType} service is not configured",
       "generic_error": "An error occurred during search. Error details: {message}",
+      "services_error": "Some errors occurred during search in services: {message}",
       "showGFI": "Show GFI",
       "errors": {
         "nonQueriableLayers": "The layer provided in the URL is not queriable or not visible in map.",
