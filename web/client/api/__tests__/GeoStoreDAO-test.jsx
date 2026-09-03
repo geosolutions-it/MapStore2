@@ -428,7 +428,7 @@ describe('Test correctness of the GeoStore APIs', () => {
             try {
                 expect(data.baseURL).toBe('/rest/geostore/');
                 expect(data.url).toBe('/resources/tag');
-                expect(data.params).toEqual({ nameLike: '%Search%' });
+                expect({...data.params}).toEqual({ nameLike: '%Search%' });
             } catch (e) {
                 done(e);
             }

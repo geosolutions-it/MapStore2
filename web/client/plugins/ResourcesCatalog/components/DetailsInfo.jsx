@@ -11,6 +11,7 @@ import castArray from 'lodash/castArray';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { Checkbox } from 'react-bootstrap';
+import SafeHtml from '../../../components/misc/SafeHtml';
 
 import Button from '../../../components/layout/Button';
 import Tabs from '../../../components/catalog/resources/Tabs';
@@ -21,6 +22,7 @@ import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import InputControl from '../../../components/catalog/resources/InputControl';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
+import { getSafeHref } from '../../../utils/URLUtils';
 
 const replaceTemplateString = (properties, str) => {
     return Object.keys(properties).reduce((updatedStr, key) => {
@@ -49,8 +51,9 @@ const isFieldLabelOnly = ({style, value}) => isEmptyValue(value) && isStyleLabel
 
 const DetailInfoFieldLabel = ({ field }) => {
     const label = field.labelId ? <Message msgId={field.labelId} /> : field.label;
-    return isStyleLabel(field.style) && field.href
-        ? (<a href={field.href} target={field.target}>{label}</a>)
+    const href = getSafeHref(field.href);
+    return isStyleLabel(field.style) && href
+        ? (<a href={href} target={field.target}>{label}</a>)
         : label;
 };
 
@@ -74,7 +77,7 @@ function DetailsHTML({ value, placeholder }) {
         return (
             <Component display={expand ? undefined : 'flex'} className="_relative" >
                 {expand
-                    ? <div dangerouslySetInnerHTML={{ __html: value }} />
+                    ? <SafeHtml html={value} />
                     : <FlexBox.Fill flexBox centerChildrenVertically ><Text ellipsis >{placeholder}</Text></FlexBox.Fill>}
                 <Button size="sm" onClick={() => setExpand(!expand)}>
                     <Message msgId={expand ? 'resourcesCatalog.readLess' : 'resourcesCatalog.readMore'} />
@@ -82,7 +85,7 @@ function DetailsHTML({ value, placeholder }) {
             </Component>);
     }
     return (
-        <div dangerouslySetInnerHTML={{ __html: value }} />
+        <SafeHtml html={value} />
     );
 }
 
@@ -181,8 +184,8 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
                     <DetailsInfoField key={filedIndex} field={field}>
                         {(values) => values.map((value, idx) => {
                             return field.href
-                                ? <a key={idx} href={field.href}>{value}</a>
-                                : <a key={idx} href={value.href}>{value.value}</a>;
+                                ? <a key={idx} href={getSafeHref(field.href)}>{value}</a>
+                                : <a key={idx} href={getSafeHref(value?.href)}>{value?.value}</a>;
                         })}
                     </DetailsInfoField>
                 );

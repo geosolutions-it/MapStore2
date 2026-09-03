@@ -1,6 +1,6 @@
 import React from 'react';
 import ViewSwitcher from './ViewSwitcher';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { getNextAvailableName } from '../../utils/WidgetsUtils';
 import ConfigureView from './ConfigureView';
 import FlexBox from '../layout/FlexBox';

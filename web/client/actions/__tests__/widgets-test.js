@@ -105,6 +105,26 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval.deletedInteractions).toBe(deletedInteractions);
         expect(retval.widget.deletedInteractions).toBeFalsy();
     });
+    it('insertWidget preserves the persisted widget payload (no transient flag stripping)', () => {
+        const widget = {
+            widgetType: 'filter',
+            title: 'My Filter'
+        };
+        const retval = insertWidget(widget);
+        expect(retval).toExist();
+        expect(retval.type).toBe(INSERT);
+        expect(retval.widget.title).toBe('My Filter');
+        expect(retval.widget.widgetType).toBe('filter');
+    });
+    it('insertWidget persists the globalWidgetMode flag so it survives edit mode', () => {
+        const widget = {
+            widgetType: 'filter',
+            globalWidgetMode: true,
+            title: 'TOC Filter'
+        };
+        const retval = insertWidget(widget);
+        expect(retval.widget.globalWidgetMode).toBe(true);
+    });
     it('updateWidget', () => {
         const widget = {};
         const retval = updateWidget(widget);

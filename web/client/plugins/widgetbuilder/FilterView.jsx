@@ -10,12 +10,14 @@ import PropTypes from 'prop-types';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import isNil from 'lodash/isNil';
 import { Button, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
 import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
+import FilterItemToolbar from '../../components/widgets/widget/FilterItemToolbar';
 import Message from '../../components/I18N/Message';
 import HTML from '../../components/I18N/HTML';
 import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
@@ -24,10 +26,12 @@ import FilterDropdownList from '../../components/widgets/builder/wizard/filter/F
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
 import FilterSlider from '../../components/widgets/builder/wizard/filter/FilterSlider';
 import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
-import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
-import { cleanPaths } from '../../utils/WidgetsUtils';
-import { isMapTimeTarget } from '../../utils/InteractionUtils';
+import { getWidgetByDependencyPath } from '../../utils/WidgetsUtils';
+import { isMapTimeTarget, TARGET_TYPES, getConnectedActiveTargets } from '../../utils/InteractionUtils';
+import Text from '../../components/layout/Text';
+import FlexBox from '../../components/layout/FlexBox';
+import { isFilterSelectionValid } from './utils/filterBuilder';
 
 const toIsoTime = (value) => {
     if (value === undefined || value === null || value === '') {
@@ -38,17 +42,13 @@ const toIsoTime = (value) => {
 };
 
 const NoTargetInfo = ({ interactions = [], inactiveInteractionIds = [], activeTargets = {} }) => {
-    const connectedActiveTargets = useMemo(() => {
-        const interactionTargetPaths = interactions
-            .filter(({plugged, id}) => plugged && !inactiveInteractionIds.includes(id)) // get only plugged active interactions
-            .map(interaction => cleanPaths(interaction.target.nodePath)); // get target paths;
-        return interactionTargetPaths
-            .filter(path =>
-                Object.entries(activeTargets).some(([activePath, visibility]) => {
-                    return (visibility && path === cleanPaths(activePath)) || isMapTimeTarget(path);
-                })
-            );
-    }, [activeTargets, inactiveInteractionIds, interactions]);
+    const connectedActiveTargets = useMemo(() =>
+        getConnectedActiveTargets({
+            interactions,
+            activeTargets,
+            inactiveInteractionIds
+        }),
+    [activeTargets, inactiveInteractionIds, interactions]);
 
     // display the list of layers/widgets affected by the filter when there are active interactions
     const hasActiveInteractions = connectedActiveTargets.length > 0;
@@ -73,18 +73,14 @@ const NoTargetInfo = ({ interactions = [], inactiveInteractionIds = [], activeTa
 };
 
 const DisabledFilterInfo = ({ interactions = [], activeTargets = {}, targetsWithDisabledFilter = {} }) => {
-    const connectedActiveTargetsWithDisabledFilter = useMemo(() => {
-        const interactionTargetPaths = interactions
-            .filter(({ plugged }) => plugged)
-            .map(interaction => cleanPaths(interaction.target.nodePath));
-        return interactionTargetPaths.filter(path => {
-            const isActive = Object.entries(activeTargets).some(([activePath, visibility]) =>
-                visibility && path === cleanPaths(activePath)
-            );
-            const isFilterDisabled = targetsWithDisabledFilter[path] === true;
-            return isActive && isFilterDisabled;
-        });
-    }, [activeTargets, interactions, targetsWithDisabledFilter]);
+    const connectedActiveTargetsWithDisabledFilter = useMemo(() =>
+        getConnectedActiveTargets({
+            interactions,
+            activeTargets,
+            targetsWithDisabledFilter,
+            withDisabledFilter: true
+        }),
+    [activeTargets, interactions, targetsWithDisabledFilter]);
 
     if (connectedActiveTargetsWithDisabledFilter.length === 0) {
         return null;
@@ -131,6 +127,34 @@ const MapTimeRangeDisabledInfo = () => (
         </div>
     </div>
 );
+
+const ConnectedLayerTitles = ({
+    filterData,
+    interactions,
+    activeTargets,
+    inactiveInteractionIds,
+    locale
+}) => {
+    let activeLayers = useMemo(() =>
+        getConnectedActiveTargets({
+            interactions,
+            activeTargets,
+            inactiveInteractionIds,
+            locale,
+            asLayerTitles: true
+        }),
+    [activeTargets, inactiveInteractionIds, interactions, locale]);
+    activeLayers = [...new Set(activeLayers)];
+
+    if (activeLayers.length === 0) return null;
+
+    return (
+        <FlexBox gap="xs" centerChildrenVertically className="ms-filter-layers">
+            <Glyphicon glyph="1-layer" className="ms-filter-layers-icon" />
+            <Text fontSize="sm" key={filterData.id + '-title'}>{activeLayers.join(', ')}</Text>
+        </FlexBox>
+    );
+};
 
 const ApplyInteractionOutOfSyncInfo = connect()(
     ({ outOfSync = {}, messageId, buttonId, dispatch }) => {
@@ -222,7 +246,12 @@ const FilterView = ({
     missingParameters = false,
     selectableItems = [],
     onSelectableItemsChange = () => {},
-    fetchError = false
+    fetchError = false,
+    showItemToolbar = false,
+    onToggleDisabled,
+    locale,
+    onZoomToFilterExtent,
+    widgets = []
 }) => {
     const layout = filterData?.layout ?? {};
     const Component = componentMap[layout.variant ?? 'checkbox'];
@@ -238,12 +267,33 @@ const FilterView = ({
     const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
     const selectionSyncTimeoutRef = useRef(null);
     const currentSelection = Array.isArray(selections) ? selections : [];
+    const filterDisabled = showItemToolbar && !!filterData?.disabled;
+
+    const [isCollapsed, setIsCollapsed] = useState();
+    const handleToggleCollapse = useCallback(() => setIsCollapsed(prev => !prev), []);
+
+    const zoomToInteractions = useMemo(() => (interactions || [])
+        .filter(interaction =>
+            interaction?.plugged === true
+                && interaction?.targetType === TARGET_TYPES.APPLY_ZOOM_TO
+                && interaction?.configuration?.autoZoom !== true
+        ),
+    [interactions]);
+    const zoomToMapNames = useMemo(() => zoomToInteractions
+        .map(i => getWidgetByDependencyPath(i?.target?.nodePath, widgets)?.title)
+        .filter(Boolean),
+    [zoomToInteractions, widgets]);
+    const showZoomButton = zoomToInteractions.length > 0;
 
     useEffect(() => {
         if (typeof onSelectableItemsChange === 'function') {
             onSelectableItemsChange(selectableItems);
         }
     }, [onSelectableItemsChange, selectableItems]);
+
+    useEffect(() => {
+        setIsCollapsed(showItemToolbar && filterData?.layout?.defaultExpanded === false);
+    }, [showItemToolbar, filterData?.layout?.defaultExpanded]);
 
     // Reverse sync: when the map timeline changes, drive the filter widget selection from `currentTime`. For now only on APPLY_DIMENSION's targetPath map.time
     useEffect(() => {
@@ -402,6 +452,10 @@ const FilterView = ({
     };
 
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
+    // No title means no row for the arrow, so force the filter open.
+    const effectiveCollapsed = showTitle ? isCollapsed : false;
+    const showConnectedLayers = (isNil(layout.showConnectedLayers) || layout.showConnectedLayers) && !effectiveCollapsed;
+
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
@@ -421,15 +475,29 @@ const FilterView = ({
                 </div>
             )}
             <div className="ms-filter-selector-header">
-
+                <FilterItemToolbar collapsed={effectiveCollapsed} filterData={filterData} onToggleCollapse={handleToggleCollapse} showCollapseToggle={showItemToolbar && showTitle}/>
                 {showTitle
-                    ? <FilterTitle
-                        key={filterData.id + '-title'}
-                        filterLabel={layout.label}
-                        filterIcon={layout.icon}
-                        filterNameStyle={titleStyle}
-                        className="ms-filter-title"
-                    />
+                    ? (
+                        <span
+                            key={filterData.id + '-title'}
+                            className="ms-filter-title-wrap"
+                        >
+                            <FilterTitle
+                                filterLabel={layout.label}
+                                filterIcon={layout.icon}
+                                filterNameStyle={titleStyle}
+                                className="ms-filter-title"
+                            />
+                            {layout.description ? (
+                                <InfoPopover
+                                    glyph="info-sign"
+                                    placement="top"
+                                    popoverStyle={{ maxWidth: 450 }}
+                                    text={layout.description}
+                                />
+                            ) : null}
+                        </span>
+                    )
                     : <span
                         className="ms-filter-title"
                         key={filterData.id + '-title'}
@@ -491,16 +559,37 @@ const FilterView = ({
                         : null
                 }
 
-                {showSelectAll && !showUnsupportedVariantWarning && !disableMapTimeSelection && (<FilterSelectAllOptions
-                    key={filterData.id + '-select-all'}
-                    items={selectableItems}
-                    selectedValues={selections || []}
-                    onSelectionChange={onSelectionChange}
-                    selectionMode={layout.selectionMode}
-                    allowEmptySelection={!forceSelection}
-                />)
-                }
+                <div className="ms-filter-actions-wrap">
+                    {showSelectAll && !showUnsupportedVariantWarning && !disableMapTimeSelection && !effectiveCollapsed && !filterDisabled && (
+                        <FilterSelectAllOptions
+                            key={filterData.id + '-select-all'}
+                            items={selectableItems}
+                            selectedValues={selections || []}
+                            onSelectionChange={onSelectionChange}
+                            selectionMode={layout.selectionMode}
+                            allowEmptySelection={!forceSelection}
+                        />
+                    )}
+                    <FilterItemToolbar
+                        filterData={filterData}
+                        onToggleDisabled={onToggleDisabled}
+                        onZoomToFilterExtent={onZoomToFilterExtent}
+                        showDisableToggle={showItemToolbar}
+                        showZoomButton={showZoomButton}
+                        toolProps={{zoomToMapNames}}/>
+                </div>
             </div>
+            {
+                showConnectedLayers ?
+                    <ConnectedLayerTitles
+                        activeTargets={activeTargets}
+                        filterData={filterData}
+                        inactiveInteractionIds={inactiveInteractionIds}
+                        interactions={interactions}
+                        locale={locale}
+                    />
+                    : null
+            }
             {disableMapTimeSelection ? (
                 <MapTimeRangeDisabledInfo />
             ) : showUnsupportedVariantWarning ? (
@@ -513,18 +602,19 @@ const FilterView = ({
                             <Message msgId="widgets.filterWidget.sliderSingleItemError" />
                         </div>
                     </div>
-                ) : (
-                    <Component
-                        key={filterData.id}
-                        items={selectableItems}
-                        selectionMode={layout.selectionMode}
-                        selectedValues={selections || []}
-                        onSelectionChange={onChangeSelections}
-                        {...getLayoutProps()}
-                    />
-                )
+                ) : !effectiveCollapsed && (
+                    <div style={filterDisabled ? { opacity: 0.5, pointerEvents: 'none' } : undefined}>
+                        <Component
+                            key={filterData.id}
+                            items={selectableItems}
+                            selectionMode={layout.selectionMode}
+                            selectedValues={selections || []}
+                            onSelectionChange={onChangeSelections}
+                            {...getLayoutProps()}
+                        />
+                    </div>)
             ) : (
-                !loading ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
+                !loading && !effectiveCollapsed ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
             )}
         </div>
     );
@@ -555,13 +645,15 @@ FilterView.propTypes = {
     filterData: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
+        disabled: PropTypes.bool,
         layout: PropTypes.shape({
             variant: PropTypes.string.isRequired,
             icon: PropTypes.string,
             selectionMode: PropTypes.string,
             direction: PropTypes.oneOf(['horizontal', 'vertical']),
             maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-        })
+        }),
+        data: PropTypes.object
     }),
     selections: PropTypes.array,
     onSelectionChange: PropTypes.func,
@@ -572,7 +664,12 @@ FilterView.propTypes = {
     fetchError: PropTypes.bool,
     syncCurrentTime: PropTypes.bool,
     timelineRangeEnabled: PropTypes.bool,
-    currentTime: PropTypes.string
+    currentTime: PropTypes.string,
+    showItemToolbar: PropTypes.bool,
+    onToggleDisabled: PropTypes.func,
+    locale: PropTypes.string,
+    onZoomToFilterExtent: PropTypes.func,
+    widgets: PropTypes.array
 };
 FilterView.defaultProps = {};
 

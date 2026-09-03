@@ -14,7 +14,7 @@ import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 
 import Rx from 'rxjs';
-import uuidV1 from 'uuid/v1';
+import { v1 as uuidV1 } from 'uuid';
 import {parseString} from 'xml2js';
 import {stripPrefix} from 'xml2js/lib/processors';
 
@@ -90,6 +90,7 @@ import {
     warning as showWarningNotification
 } from '../actions/notifications';
 import { getLayerJSONFeature } from '../observables/wfs';
+import { getWFSLayerName } from '../utils/LayersUtils';
 import bufferXML from '../observables/wps/buffer';
 import collectGeometriesXML from '../observables/wps/collectGeometries';
 import { describeProcess } from '../observables/wps/describe';
@@ -145,7 +146,7 @@ import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
 import {findNonGeometryProperty, findGeometryProperty} from '../utils/ogc/WFS/base';
 import toWKT from '../utils/ogc/WKT/toWKT';
-import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../utils/LayoutUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 const DEACTIVATE_ACTIONS = [
@@ -327,14 +328,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
         };
         const geometryProperty = findGeometryProperty(layer.describeFeatureType);
         return Rx.Observable.merge(
-            getLayerJSONFeature({
-                ...layer,
-                name: layer?.name,
-                search: {
-                    ...(layer?.search ?? {}),
-                    url: layer.url
-                }
-            }, filterObj, options)
+            getLayerJSONFeature(layer, filterObj, options)
                 .map(data => setFeatures(layerId, source, data, page, geometryProperty))
                 .catch(e => {
                     logError(e);
@@ -373,7 +367,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
                 return Rx.Observable.of(layer);
             }
             return getFeatureSimple(layer.search.url, {
-                typeName: layer.name,
+                typeName: getWFSLayerName(layer),
                 featureID: featureId,
                 outputFormat: "application/json",
                 srsName: "EPSG:4326"
@@ -428,7 +422,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
                 return Rx.Observable.of(layer);
             }
             return getFeatureSimple(layer.search.url, {
-                typeName: layer.name,
+                typeName: getWFSLayerName(layer),
                 featureID: featureId,
                 outputFormat: "application/json",
                 srsName: "EPSG:4326"
@@ -601,7 +595,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
             // then run the collect geometries which and then run the buffer
             const executeCollectProcess$ = executeProcess(
                 layerUrl,
-                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
+                collectGeometriesXML({ name: getWFSLayerName(layer), featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -709,7 +703,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         if (isEmpty(sourceFeature)) {
             sourceFC$ = executeProcess(
                 layerUrl,
-                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
+                collectGeometriesXML({ name: getWFSLayerName(layer), featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -725,7 +719,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         if (isEmpty(intersectionFeature)) {
             intersectionFC$ = executeProcess(
                 intersectionLayerUrl,
-                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features) : null }),
+                collectGeometriesXML({ name: getWFSLayerName(intersectionLayer), featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -1059,13 +1053,15 @@ export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => isGeoProcessingEnabledSelector(store.getState()) && source !== GPT_CONTROL_NAME)
         .map(({layout}) => {
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             });
             return { ...action, source: GPT_CONTROL_NAME }; // add an argument to avoid infinite loop.

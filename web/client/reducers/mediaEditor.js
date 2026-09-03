@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { get, findIndex, find, merge } from 'lodash';
 import { MediaTypes } from '../utils/GeoStoryUtils';
 import { SourceTypes } from '../utils/MediaEditorUtils';

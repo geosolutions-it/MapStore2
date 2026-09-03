@@ -1,15 +1,15 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2026, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 import axios from '../libs/ajax';
-
 import urlUtil from 'url';
 const DEFAULT_URL = 'nominatim.openstreetmap.org';
 const DEFAULT_REVERSE_URL = 'nominatim.openstreetmap.org/reverse';
+const DEFAULT_PROTOCOL = 'https';
 const defaultOptions = {
     format: 'json',
     bounded: 0,
@@ -21,23 +21,24 @@ const defaultOptions = {
  */
 const Api = {
     geocode: function(text, options) {
-        var params = Object.assign({q: text}, defaultOptions, options || {});
-        var url = urlUtil.format({
-            protocol: "https",
-            host: DEFAULT_URL,
+        const {host, protocol, ...queryOptions} = options || {};
+        const params = Object.assign({q: text}, defaultOptions, queryOptions);
+        const url = urlUtil.format({
+            protocol: protocol || DEFAULT_PROTOCOL,
+            host: host || DEFAULT_URL,
             query: params
         });
-        return axios.get(url); // TODO the jsonp method returns .promise and .cancel method,the last can be called when user cancel the query
+        return axios.get(url);
     },
     reverseGeocode: function(coords, options) {
-        const params = Object.assign({lat: coords.lat, lon: coords.lng}, options || {}, defaultOptions);
+        const {host, protocol, ...queryOptions} = options || {};
+        const params = Object.assign({lat: coords.lat, lon: coords.lng}, defaultOptions, queryOptions);
         const url = urlUtil.format({
-            protocol: "https",
-            host: DEFAULT_REVERSE_URL,
+            protocol: protocol || DEFAULT_PROTOCOL,
+            host: host ? host + '/reverse' : DEFAULT_REVERSE_URL,
             query: params
         });
         return axios.get(url);
     }
 };
-
 export default Api;

@@ -20,11 +20,15 @@ import { getConfigProp } from '../utils/ConfigUtils';
 import { resolveApiPresetParams, paramsSerializer, mergePresetParams } from '../utils/GeoNodeUtils';
 
 export const GEONODE_RESOURCE_TYPE_FILTER = 'filter{resource_type.in}';
+// default sort applied to the catalog resources request when the caller does not provide one
+// (matches the "Most recent" default shown in the catalog toolbar)
+export const GEONODE_DEFAULT_SORT = '-date';
 
 
 export const RESOURCES = 'resources';
 export const DATASETS = 'datasets';
 export const DOCUMENTS = 'documents';
+export const MAPS = 'maps';
 export const FACETS = 'facets';
 
 let endpoints = {
@@ -157,6 +161,14 @@ export const getDocumentByPk = (baseUrl, pk) => {
         .then(({ data }) => data.document);
 };
 
+export const getMapByPk = (baseUrl, pk) => {
+    return axios.get(getEndpointUrl(baseUrl, MAPS, pk), {
+        params: mergePresetParams('VIEWER_COMMON', 'MAP'),
+        ...paramsSerializer()
+    })
+        .then(({ data }) => data.map);
+};
+
 export const getResources = ({
     q,
     pageSize = 10,
@@ -211,7 +223,7 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
         baseUrl: url,
         ...(resourceTypes.length && { [GEONODE_RESOURCE_TYPE_FILTER]: resourceTypes }),
         ...options?.options?.filters,
-        sort: options?.options?.sort,
+        sort: options?.options?.sort ?? service?.defaultSort ?? GEONODE_DEFAULT_SORT,
         ...(service?.apiPresetKey && { apiPresetKey: service.apiPresetKey })
     });
 };

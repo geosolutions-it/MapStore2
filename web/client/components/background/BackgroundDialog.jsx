@@ -16,7 +16,7 @@ import htmlToDraft from 'html-to-draftjs';
 import localizedProps from '../misc/enhancers/localizedProps';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import {pick, omit, get, keys, isNumber, isBoolean} from 'lodash';
 import Message from '../I18N/Message';
 import ResizableModal from '../misc/ResizableModal';

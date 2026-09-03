@@ -87,9 +87,21 @@ const recordToLayer = (record, {
     const format = supportedGetMapFormats?.find((value) => value === defaultFormat)
         || supportedGetMapFormats[0]
         || defaultFormat;
-    const featureInfo = infoFormat && INFO_FORMATS_BY_MIME_TYPE[infoFormat]
+    const { featureInfo: serviceFeatureInfo, search: serviceSearch, ...serviceLayerOptions } = layerOptions || {};
+    const { featureInfo: recordFeatureInfo, search: recordSearch, ...recordLayerOptions } = record.layerOptions || {};
+    const computedFeatureInfo = infoFormat && INFO_FORMATS_BY_MIME_TYPE[infoFormat]
         ? { format: INFO_FORMATS_BY_MIME_TYPE[infoFormat] }
-        : null;
+        : {};
+    const featureInfo = {
+        ...computedFeatureInfo,
+        ...(serviceFeatureInfo || {}),
+        ...(recordFeatureInfo || {})
+    };
+    const search = {
+        ...(layerBaseConfig?.search || {}),
+        ...(serviceSearch || {}),
+        ...(recordSearch || {})
+    };
     let security;
     if (service?.protectedId) {
         security = {sourceId: service?.protectedId, type: "basic"};
@@ -99,7 +111,7 @@ const recordToLayer = (record, {
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
         style: record.style,
         format,
-        featureInfo: featureInfo,
+        featureInfo: isEmpty(featureInfo) ? null : featureInfo,
         url: layerURL,
         capabilitiesURL: record.capabilitiesURL,
         queryable: record.queryable,
@@ -124,8 +136,9 @@ const recordToLayer = (record, {
         allowedSRS: allowedSRS,
         catalogURL,
         ...layerBaseConfig,
-        ...layerOptions,
-        ...record.layerOptions,
+        ...serviceLayerOptions,
+        ...recordLayerOptions,
+        ...(!isEmpty(search) && { search }),
         localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
         imageFormats: supportedGetMapFormats,
         infoFormats: supportedGetFeatureInfoFormats,

@@ -16,7 +16,7 @@ import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 import { updateUrlParams } from '../../../../utils/URLUtils';
 
-function create(options) {
+function getSource(options) {
     let sources = [];
     let sourceOptions = {};
     if (options.sources && options.sources.length > 0) {
@@ -32,17 +32,27 @@ function create(options) {
             };
         });
     }
+    return new GeoTIFF({
+        convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
+        sourceOptions,
+        sources,
+        wrapX: true
+    });
+}
+
+function create(options) {
+    // GeoTIFF sources fetch eagerly on creation (unlike WMS, which loads on demand),
+    // so `visible: false` won't prevent requests. Skip creating hidden layers;
+    // `update` recreates them when they become visible.
+    if (options.visibility === false) {
+        return null;
+    }
     const layerOl = new TileLayer({
         msId: options.id,
         style: get(options, 'style.body'),
         opacity: options.opacity !== undefined ? options.opacity : 1,
-        visible: options.visibility,
-        source: new GeoTIFF({
-            convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
-            sourceOptions,
-            sources,
-            wrapX: true
-        }),
+        visible: true,
+        source: getSource(options),
         enablePickFeatures: true,
         zIndex: options.zIndex,
         minResolution: options.minResolution,
@@ -55,6 +65,12 @@ function create(options) {
 Layers.registerType('cog', {
     create,
     update(layer, newOptions, oldOptions, map) {
+        if (!layer && newOptions.visibility !== false) {
+            return create(newOptions, map);
+        }
+        if (!layer) {
+            return null;
+        }
         if (newOptions.srs !== oldOptions.srs
             || !isEqual(newOptions.style, oldOptions.style)
             || !isEqual(newOptions.security, oldOptions.security)

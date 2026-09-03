@@ -292,4 +292,114 @@ describe("test the BackgroundSelector", () => {
         // Even though terrain appears first in the list and is visible
         expect(thumbnailImg.alt).toBe('Another Background');
     });
+
+    it('does not add Ellipsoid terrain when terrain list is disabled', (done) => {
+        const addLayer = expect.createSpy();
+        const onPropertiesChange = expect.createSpy();
+        const layers = [
+            {
+                id: 'regular_background',
+                title: 'Regular Background',
+                type: 'wms',
+                visibility: true,
+                group: 'background'
+            }
+        ];
+
+        ReactDOM.render(
+            <BackgroundSelector
+                alwaysVisible
+                enabled
+                backgrounds={layers}
+                addLayer={addLayer}
+                onPropertiesChange={onPropertiesChange}
+            />,
+            document.getElementById("container")
+        );
+
+        setTimeout(() => {
+            expect(addLayer).toNotHaveBeenCalled();
+            expect(onPropertiesChange).toNotHaveBeenCalled();
+            done();
+        });
+    });
+
+    it('adds Ellipsoid terrain when terrain list is enabled', (done) => {
+        const addLayer = expect.createSpy();
+        const onPropertiesChange = expect.createSpy();
+        const layers = [
+            {
+                id: 'regular_background',
+                title: 'Regular Background',
+                type: 'wms',
+                visibility: true,
+                group: 'background'
+            }
+        ];
+
+        ReactDOM.render(
+            <BackgroundSelector
+                alwaysVisible
+                enabled
+                enableTerrainList
+                backgrounds={layers}
+                addLayer={addLayer}
+                onPropertiesChange={onPropertiesChange}
+            />,
+            document.getElementById("container")
+        );
+
+        setTimeout(() => {
+            expect(addLayer).toHaveBeenCalled();
+            const ellipsoidLayer = addLayer.calls[0].arguments[0];
+            expect(ellipsoidLayer.id).toBe('ellipsoid');
+            expect(ellipsoidLayer.provider).toBe('ellipsoid');
+            expect(ellipsoidLayer.visibility).toBe(true);
+            expect(onPropertiesChange).toHaveBeenCalledWith('ellipsoid', {visibility: true});
+            done();
+        });
+    });
+
+    it('does not auto-select Ellipsoid terrain when another terrain is already active', (done) => {
+        const addLayer = expect.createSpy();
+        const onPropertiesChange = expect.createSpy();
+        const layers = [
+            {
+                id: 'regular_background',
+                title: 'Regular Background',
+                type: 'wms',
+                visibility: true,
+                group: 'background'
+            },
+            {
+                id: 'terrain_layer',
+                title: 'Terrain Layer',
+                type: 'terrain',
+                visibility: true,
+                group: 'background',
+                provider: 'cesium'
+            }
+        ];
+
+        ReactDOM.render(
+            <BackgroundSelector
+                alwaysVisible
+                enabled
+                enableTerrainList
+                backgrounds={layers}
+                addLayer={addLayer}
+                onPropertiesChange={onPropertiesChange}
+            />,
+            document.getElementById("container")
+        );
+
+        setTimeout(() => {
+            expect(addLayer).toHaveBeenCalled();
+            const ellipsoidLayer = addLayer.calls[0].arguments[0];
+            expect(ellipsoidLayer.id).toBe('ellipsoid');
+            expect(ellipsoidLayer.visibility).toBe(false);
+            expect(onPropertiesChange).toNotHaveBeenCalled();
+            done();
+        });
+    });
 });

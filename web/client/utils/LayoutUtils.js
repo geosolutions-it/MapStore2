@@ -13,8 +13,14 @@ import {
 } from 'lodash';
 
 export const DEFAULT_PANEL_WIDTH = 420;
+export const DEFAULT_BOUNDING_SIDEBAR_RIGHT = 40;
 
 export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: { md: DEFAULT_PANEL_WIDTH }, bottom: {sm: 0}};
+
+export const getBoundingSidebarRect = (layout) => ({
+    ...(layout?.boundingSidebarRect || {}),
+    right: layout?.boundingSidebarRect?.right ?? DEFAULT_BOUNDING_SIDEBAR_RIGHT
+});
 
 /**
  * Return parsed number from layout value

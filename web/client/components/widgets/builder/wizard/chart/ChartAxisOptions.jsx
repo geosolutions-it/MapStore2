@@ -7,7 +7,7 @@
  */
 import React, { useState } from 'react';
 import { isNil, castArray } from 'lodash';
-import uuidv1 from "uuid/v1";
+import { v1 as uuidv1 } from "uuid";
 import Select from 'react-select';
 import { FormGroup, Radio, ControlLabel, InputGroup, Checkbox, Button as ButtonRB, Glyphicon, FormControl } from 'react-bootstrap';
 

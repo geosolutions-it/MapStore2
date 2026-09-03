@@ -8,7 +8,7 @@
 import React, { useState } from "react";
 import { ControlLabel, FormControl, FormGroup, Glyphicon } from "react-bootstrap";
 import Select from 'react-select';
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import PropTypes from "prop-types";
 import Modal from "../misc/Modal";
 import FlexBox from "../layout/FlexBox";

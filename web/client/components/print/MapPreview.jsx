@@ -149,7 +149,8 @@ class MapPreview extends React.Component {
         let mapOptions = !isEmpty(resolutions) || !isNil(this.props.rotation) ? {
             view: {
                 ...(!isEmpty(resolutions) && {resolutions}),
-                rotation: !isNil(this.props.rotation) ? Number(this.props.rotation) : 0
+                rotation: !isNil(this.props.rotation) ? Number(this.props.rotation) : 0,
+                projection
             }
         } : {};
 

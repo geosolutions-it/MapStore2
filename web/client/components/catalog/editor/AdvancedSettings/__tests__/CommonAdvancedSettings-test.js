@@ -105,6 +105,34 @@ describe('Test common advanced settings', () => {
         expect(interactiveLegendLabel).toBeTruthy();
         expect(interactiveLegendLabel.innerHTML).toEqual('layerProperties.enableInteractiveLegendInfo.label');
     });
+    it('test FlatGeobuf max features in view input', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+        ReactDOM.render(<CommonAdvancedSettings
+            onChangeServiceProperty={action.onChangeServiceProperty}
+            service={{type: "flatgeobuf", layerOptions: { maxFeaturesInView: 7 }}}
+        />, document.getElementById("container"));
+        const maxFeaturesInView = document.querySelector("[data-qa='catalog-max-features-in-view']");
+        expect(maxFeaturesInView).toBeTruthy();
+        expect(maxFeaturesInView.value).toBe('7');
+        expect(document.querySelector('.mapstore-info-popover')).toBeTruthy();
+        TestUtils.Simulate.change(maxFeaturesInView, { "target": { "value": '15' }});
+        expect(spyOn.calls[0].arguments).toEqual([
+            'layerOptions',
+            {
+                maxFeaturesInView: 15
+            }
+        ]);
+        TestUtils.Simulate.change(maxFeaturesInView, { "target": { "value": '' }});
+        expect(spyOn.calls[1].arguments).toEqual([
+            'layerOptions',
+            {
+                maxFeaturesInView: undefined
+            }
+        ]);
+    });
 
     it('test if thumbnail checkbox is checked when globalHideThumbnail is true', () => {
         ReactDOM.render(

@@ -12,7 +12,7 @@ import WMS from '../api/WMS';
 import { getLayerOptions } from '../utils/WMSUtils';
 import * as WFS from '../api/WFS';
 import WCS from '../api/WCS';
-import {getCapabilitiesUrl} from '../utils/LayersUtils';
+import {getCapabilitiesUrl, getSearchUrl, getWFSLayerName} from '../utils/LayersUtils';
 import { get } from 'lodash';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 
@@ -20,7 +20,16 @@ export function getDescribeLayer(url, layer, options) {
     return (dispatch /* , getState */) => {
         return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
             if (describeLayer && describeLayer.owsType === "WFS") {
-                return WFS.describeFeatureType(url, describeLayer.name)
+                const wfsLayer = {
+                    ...layer,
+                    search: {
+                        type: 'wfs',
+                        url: describeLayer.owsURL || url,
+                        ...(describeLayer.query?.[0]?.typeName && {typeName: describeLayer.query[0].typeName}),
+                        ...(layer.search || {})
+                    }
+                };
+                return WFS.describeFeatureType(getSearchUrl(wfsLayer), getWFSLayerName(wfsLayer))
                     .then( (describeFeatureType) => {
                         describeLayer.geometryType = extractGeometryType(describeFeatureType);
                         return dispatch(updateNode(layer.id, "id", { describeLayer, describeFeatureType }));

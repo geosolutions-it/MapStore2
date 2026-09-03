@@ -12,7 +12,7 @@ import {Glyphicon} from 'react-bootstrap';
 import { connect } from "react-redux";
 import {compose, withProps} from 'recompose';
 import { createSelector } from 'reselect';
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { resourcesSelector } from '../../../selectors/geostory';
 import SideCard from '../../misc/cardgrids/SideCard';

@@ -154,6 +154,7 @@ Read more on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/
 ## Professional Support
 
 MapStore is being developed by <a href="http://www.geosolutionsgroup.com/" target="_blank">GeoSolutions</a> hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it (see section below).
+If you have expertise with MapStore and if you want to be included in the list of commercial providers, please write to <info@geosolutionsgroup.com>.
 
 ## Communication
 
@@ -176,33 +177,4 @@ For more information check [this](https://github.com/geosolutions-it/MapStore2/w
 
 ## Who uses MapStore
 
-Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add ( or remove 😟 ) your organization from this list, please, contact [simone.giannecchini@geosolutionsgroup.com](mailto:simone.giannecchini@geosolutionsgroup.com) .
-
-- [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
-- [City of Bozen - Italy](https://sit.comune.bolzano.it/mapstore2/#/)
-- City of Florence - Italy
-- City of Munich - Germany
-- Rennes Metropole - France
-- [CRAIG - France](https://ids.craig.fr/mapstore/#/)
-- Compagnie Nationale du Rhone - France
-- [Urban Brussles (BruGIS) - Belgium](https://gis.urban.brussels/brugis/#/)
-- [Ruhr Regional Association](https://mapstore.geoportal.ruhr/#/)
-- [Atlas Horizon 2020](http://www.atlas-horizon2020.eu/), this is based on GeoNode
-- [Whanganui District Council - New Zealand](https://data.whanganui.govt.nz/mapstore2-whanganuidc/#/)
-- [Otorohanga District Council - New Zealand](https://maps.otodc.govt.nz)
-- [Wairoa District Council - New Zealand](https://maps.wairoadc.govt.nz/#/)
-- [Cleveland Metroparks - USA](https://mapstore.cmparks.net/)
-- [Moldova National GeoPortal](http://www.moldova-map.md/)
-- [Region of Tuscany, Hydrologic Service - Italy](https://webgis.sir.toscana.it/mapstore/#/)
-- Neftex Halliburton - UK
-- Dhiantus - Sweden
-- [LaMMa Consortium - Italy](https://geoportale.lamma.rete.toscana.it/difesa_suolo/#/)
-- [Arno River Authority - Italy](https://geodata.appenninosettentrionale.it/mapstore/)
-- [Austro Control - Austria](https://maps.austrocontrol.at/mapstore/)
-- Earth-i - UK
-- MapStand - UK
-- [Transportes Metropolitanos de Lisboa - Portugal](https://geoportal.tmlmobilidade.pt/#/)
-- [Nordeste Municipality - Portugal](https://sigweb.cmnordeste.pt/mapstore/#/)
-- [Corvo Muncipality - Portugal](https://geocorvo.pt/mapstore/#/)
-- [Lajes das Flores Municipality - Portal](https://sigweb.cmlajesdasflores.pt/#/)
-- [City of Rome (Italy) Geoportal](https://geoportale.comune.roma.it/georoma/#/)
+See list of organizations using Mapstore [here](https://mapstore.io/gallery.html).

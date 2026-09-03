@@ -27,6 +27,10 @@
     "showMore": "Montrer plus...",
     "collapse": "réduire",
     "expand": "étendre",
+    "scrollableTabs": {
+      "scrollLeft": "Faire défiler les onglets vers la gauche",
+      "scrollRight": "Faire défiler les onglets vers la droite"
+    },
     "Links": "Liens",
     "Forbidden": "Interdit",
     "height": "Hauteur",
@@ -83,6 +87,9 @@
       "windowTitle": "Propriétés de la couche",
       "title": "Titre",
       "name": "Nom",
+      "url": "URL",
+      "typeName": "TypeName",
+      "wfsLinkedService": "Service WFS lié",
       "group": "Groupe",
       "description": "Description",
       "general": "Général",
@@ -95,6 +102,10 @@
         "tooltip": "La couche est recadrée à l'étendue de la projection lorsqu'elle est ajoutée à la carte avec cette option activée"
       },
       "cached": "Utiliser les options de cache",
+      "coalesceExclude": {
+        "label": "Exclure des requêtes combinées",
+        "tooltip": "Conserve cette couche en dehors des requêtes WMS combinées, afin qu'elle soit toujours demandée séparément. Sans effet lorsque les requêtes combinées sont désactivées pour la carte."
+      },
       "styleCustom": "Utiliser un style nommé \"{value} \"",
       "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",
       "stylesRefreshList": "Actualiser la liste des styles",
@@ -109,32 +120,72 @@
       "elevation": "Élévation",
       "groupProperties": "Propriétés du groupe",
       "featureInfo": "Informations attributaires de l'objet",
+      "noIdentifyView": "Aucune vue d'identification n'est configurée, le format des Paramètres de la carte est utilisé.",
+      "disableIdentify": "Désactiver l'identification",
+      "addIdentifyView": "Ajouter une nouvelle vue d'identification",
       "featureInfoFormatLbl": "Information, format de la réponse",
+      "featureInfoRequestOptions": {
+        "title": "Options de requête",
+        "description": "Configurer les limites de la requête d'identification WMS",
+        "maxItems": "Nombre d'entités",
+        "maxItemsTooltip": "Nombre maximum d'entités renvoyées par une requête d'identification. La valeur par défaut est 10.",
+        "buffer": "Tampon (px)",
+        "bufferTooltip": "Paramètre fournisseur GeoServer qui étend le rayon de recherche d'identification autour du point cliqué, mesuré en pixels d'écran."
+      },
       "guideText": "Dans l'URL de l'image, vous pouvez utiliser des espaces réservés comme $\\{properties.YOUR_ATTRIBUTE\\} pour rendre l'URL paramétrique, en fonction des attributs de la fonctionnalité. Il prend en charge à la fois les URL ou les « Data URI » codés en base64.",
       "imageNotFound": "Cette image peut nécessiter une demande d\\'informations sur les fonctionnalités pour être rendue correctement",
       "legenderror": "La légende n'est pas disponible",
       "editCustomFormat": "Modifier le format personnalisé",
-      "exampleOfResponse": "Exemple",
       "changedSettings": "Paramètres modifiés",
       "changedSettingsAlert": "Vous fermez le panneau des paramètres sans enregistrer vos modifications",
       "textFormatTitle": "TEXT",
-      "textFormatDescription": "Affiche les attributs de l'objet en texte brut",
       "htmlFormatTitle": "HTML",
-      "htmlFormatDescription": "Affiche les attributs de l'objet au format html",
       "propertiesFormatTitle": "PROPRIÉTÉS",
-      "propertiesFormatDescription": "Affiche les attributs de l'objet sous forme de liste de propriétés",
       "templateFormatTitle": "TEMPLATE",
-      "templateFormatDescription": "Personnaliser le format des résultats d'interrogation des attributs",
-      "hideFormatTitle": "DÉSACTIVER L'IDENTIFICATION",
-      "hideFormatDescription": "Désactiver les informations sur les caractéristiques de cette couche",
       "styleWarning": "L'éditeur de style de calque pour le type de géométrie '{geometryType}' n'est pas pris en charge.",
-      "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
       "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
-      "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est <span style='white-space:nowrap'>${ properties.ID }</span> ou <span style='white-space:nowrap'>${ properties['données-valeur'] }</span>",
       "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
-      "templatePreview": "Aperçu du modèle",
+      "propertiesView": {
+        "attributes": "Attributs",
+        "noAttributes": "Le schéma de la couche ne contient aucun attribut affichable."
+      },
+      "externalData": {
+        "title": "DONNÉES EXTERNES",
+        "description": "Interroger les attributs d'une source WFS externe",
+        "wfsUrl": "URL WFS",
+        "invalidWfsUrl": "L'URL n'expose pas un service WFS valide",
+        "layerName": "Nom de la couche",
+        "cqlFilter": "Modèle de filtre CQL",
+        "cqlFilterHelp": "Utilisez des apostrophes autour des espaces réservés de texte ; laissez les espaces réservés numériques et booléens sans guillemets.",
+        "attributes": "Attributs",
+        "validate": "Valider",
+        "validation": {
+          "missingFields": "L'URL WFS, le nom de la couche et le modèle de filtre CQL sont obligatoires",
+          "invalidPlaceholder": "Le modèle de filtre CQL doit contenir au moins une référence de champ valide",
+          "invalidDoubleQuotedPlaceholder": "Les guillemets doubles identifient les noms de champs en CQL. Utilisez des apostrophes autour des espaces réservés de texte.",
+          "invalidCql": "Le modèle de filtre CQL n'est pas valide",
+          "unquotedPlaceholder": "Dans le filtre, la référence au champ « {property} » n’est pas entourée de guillemets simples, elle n’accepte donc que des nombres. Ajoutez les guillemets pour utiliser des valeurs textuelles.",
+          "valid": "La configuration des données externes est valide",
+          "sourceUnavailable": "Une URL WFS source et un nom de couche sont nécessaires pour exécuter la requête d'exemple",
+          "sampleNotFound": "La couche source n'a renvoyé aucune entité d'exemple",
+          "testRequestFailed": "La requête de test des données externes a échoué",
+          "generatedCql": "CQL généré"
+        },
+        "noSourceFeatures": "Aucune entité identifiée n'est disponible pour cette vue de données externes",
+        "invalidConfiguration": "Configuration non valide",
+        "notConfigured": "Cette vue Identify n’est pas configurée correctement.",
+        "noResults": "Aucune donnée externe trouvée",
+        "requestError": "Impossible de charger les données externes",
+        "missingProperty": "L'entité source ne contient pas la propriété « {property} »",
+        "unsafeSourceValue": "Les données externes ne peuvent pas être chargées car « {property} » contient du texte alors qu’un nombre est attendu.",
+        "invalidInterpolatedCql": "Le filtre CQL construit à partir de l’entité source n’est pas valide",
+        "invalidResponse": "Le WFS externe n'a pas renvoyé de GeoJSON valide",
+        "retry": "Réessayer"
+      },
       "heightOffset": "Décalage en hauteur (m)",
       "wmsLayerTileSize": "Taille de la tuile (WMS)",
+      "maxFeaturesInView": "Nombre maximal d'entités dans la vue",
+      "maxFeaturesInViewTooltip": "Lorsque la valeur est indéfinie, la fonctionnalité actuelle fonctionne comme d'habitude (c'est-à-dire charger toutes les entités)",
       "serverType": "Type de serveur",
       "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",
       "serverTypeOption": {
@@ -257,6 +308,7 @@
       "forceProxy": "Forcer le proxy",
       "fields": {
         "refresh": "Récupérer les formats pris en charge",
+        "showAll": "Afficher ou masquer tous les attributs",
         "title": "Champs",
         "tooltip": "Champs",
         "name": "Nom",
@@ -264,7 +316,21 @@
         "type": "Type",
         "clearCustomization": "Supprimer les personnalisations",
         "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
-        "error": "Échec de la récupération des champs"
+        "error": "Échec de la récupération des champs",
+        "featureInfoDisplayType": "Type d'affichage des informations",
+        "configureField": "Configurer le champ",
+        "mediaTypeAttribute": "Attribut du type de média",
+        "displayTypes": {
+          "string": "Texte",
+          "image": "Image",
+          "video": "Vidéo",
+          "audio": "Audio",
+          "panorama": "Image panoramique",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Média"
+        }
       },
       "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
       "interactiveLegend": {
@@ -578,7 +644,9 @@
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
         },
         "collisionDetection": "Activer la détection de collisions",
-        "imageryLayersOverlay": "Activer la superposition des couches d’images"
+        "imageryLayersOverlay": "Activer la superposition des couches d’images",
+        "coalesceWMSLayers": "Combiner les requêtes WMS (coalesce)",
+        "coalesceWMSLayersTooltip": "Définit le comportement par défaut pour les couches de cette carte : lorsqu'il est activé, les couches WMS adjacentes provenant de la même source sont combinées en une seule requête GetMap, réduisant ainsi le nombre de requêtes envoyées au serveur. Les couches de fond sont exclues."
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",
@@ -669,6 +737,7 @@
       "toggleLayerVisibilityWarning": "Inverser la visibilité de la couche. Attention : la couche ne s'est pas chargée correctement",
       "createWidget": "Créer un widget pour la couche sélectionnée",
       "editLayerProperties": "Modifier les propriétés de la couche",
+      "createWidgetForMap": "Créer un widget pour la carte",
       "browseData": "Ouvrir la table d'attribut",
       "removeLayer": "Supprimer la couche",
       "loadingerror": "La couche n'a pas été chargée correctement ou n'est pas disponible.",
@@ -691,6 +760,10 @@
       "radius": "Rayon",
       "filterIconEnabled": "Désactiver le filtre de couche",
       "filterIconDisabled": "Activer le filtre de couche",
+      "filterWidgetIconEnabled": "Désactiver le filtre du widget connecté",
+      "filterWidgetIconDisabled": "Activer le filtre du widget connecté",
+      "filterAndWidgetIconEnabled": "Désactiver les filtres globaux et des widgets connectés",
+      "filterAndWidgetIconDisabled": "Activer les filtres globaux et des widgets connectés",
       "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
       "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
       "notVisibleSwitchTo3D": "Passer en mode carte 3D pour voir cette couche",
@@ -860,6 +933,7 @@
     "identifyRevGeocodeSubmitText": "Plus d'informations",
     "identifyRevGeocodeCloseText": "Fermer",
     "identifyRevGeocodeError": "Géocodage impossible",
+    "identifyShowFullscreen": "Afficher en plein écran",
     "identifyEdit": "Éditer",
     "identifyLayerSelectNoResult": "Aucun calque trouvé",
     "getFeatureInfoError": {
@@ -1565,7 +1639,8 @@
           "title": "Erreur lors du chargement du lien permanent",
           "pleaseLogin": "Ce permalien n'est pas public. Veuillez essayer de vous connecter",
           "notFound": "Permalien introuvable",
-          "notAccessible": "Permalien inaccessible"
+          "notAccessible": "Permalien inaccessible",
+          "invalidTarget": "La destination du permalien n'est pas valide et ne peut pas être ouverte"
         },
         "save": {
           "title": "La génération du permalien a échoué",
@@ -1695,6 +1770,33 @@
       "fetchMetadata": {
         "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
         "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
+      },
+      "resourceTypes": {
+        "label": "Types de ressource",
+        "dataset": "Jeux de données",
+        "document": "Documents",
+        "map": "Cartes"
+      },
+      "subtypes": {
+        "label": "Type de contenu",
+        "vector": "Vecteur",
+        "raster": "Raster",
+        "vector_time": "Série temporelle",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabulaire",
+        "image": "Image",
+        "video": "Vidéo",
+        "audio": "Audio",
+        "text": "Texte",
+        "archive": "Archive",
+        "presentation": "Présentation",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Catégorie",
+        "keyword": "Mot-clé",
+        "region": "Région",
+        "extent": "Filtre d'étendue"
       },
       "tagFilterType": {
         "label": "Type de filtre de tag",
@@ -2225,6 +2327,8 @@
           "selectALayer": "Sélectionner une couche",
           "selectLayers": "Sélectionnez un ou plusieurs calques",
           "selectAMap": "Sélectionnez une ou plusieurs cartes",
+          "selectMapLayers": "Sélectionner une couche de la carte",
+          "noFilterableMapLayers": "Aucune couche de la carte ne peut être filtrée. Ajoutez d'abord une couche WMS ou WFS.",
           "configureChartOptions": "Configurer les options de graphique",
           "configureWidgetOptions": "Configurer les options du widget",
           "errorChart": "Un ou plusieurs graphiques ne sont pas valides",
@@ -2545,6 +2649,8 @@
         "actions": "Actions",
 
         "layoutTabLabel": "Mise en page",
+        "description": "Description",
+        "descriptionPlaceholder": "Entrer la description...",
         "title": "Titre",
         "label": "Libellé",
         "icon": "Icône",
@@ -2567,6 +2673,11 @@
         "onSelectionChange": "Lors du changement de sélection",
         "applyFilter": "Appliquer le filtre",
         "applyDimension": "Appliquer la dimension",
+        "zoomTo": "Zoomer sur",
+        "zoomToRequiresApplyFilterTooltip": "Connectez une cible Appliquer le filtre à une couche de cette carte avant d'activer Zoomer sur",
+        "zoomToFilterExtent": "Zoomer sur l'étendue filtrée {names}",
+        "autoZoomLabel": "Zoom automatique",
+        "autoZoomInfo": "Zoom automatique sur l'étendue filtrée lors des modifications de sélection. Désactiver pour utiliser le zoom manuel.",
         "noConnectableNodesAvailable": "Aucun nœud connectable disponible",
 
         "selectAll": "Tout sélectionner",
@@ -2600,6 +2711,12 @@
         "forceSelection": "Forcer la sélection",
         "forceSelectionTooltip": "Si activé, un élément du filtre doit être sélectionné",
         "forceSelectionEnabledTooltip": "Lorsque la sélection forcée est activée, au moins un élément doit être sélectionné",
+        "defaultExpanded": "Expandi par défaut",
+        "defaultExpandedTooltip": "Si coché, le filtre est affiché expandi par défaut; sinon, le cartel de filtre commence colapsé",
+        "disableFilter": "Désactiver ce filtre",
+        "enableFilter": "Activer ce filtre",
+        "collapseFilter": "Coller le filtre",
+        "expandFilter": "Expandir le filtre",
         "showNoTargetsInfoLabel": "Message d'absence de cible",
         "showNoTargetsInfoDescription": "Lorsqu'aucune cible n'est connectée au filtre, ou que les calques/widgets connectés ne sont pas visibles, un message s'affiche pour informer l'utilisateur que le filtre sera sans effet.",
         "noInteractionsInfo": "Aucune cible connectée. Utilisez le panneau Connexions pour connecter le filtre aux calques ou widgets.",
@@ -2611,6 +2728,8 @@
         "applyStyleFromWidgetButton": "Appliquer le style à toutes les couches connectées depuis ce widget",
         "dimensionChangedByWidgetInfo": "Un ou plusieurs nœuds connectés utilisent une valeur de dimension différente de celle sélectionnée ici. Cliquez sur le bouton ci-dessous pour appliquer la valeur sélectionnée à tous les nœuds connectés.",
         "applyDimensionFromWidgetButton": "Appliquer la valeur de ce filtre à tous les nœuds connectés",
+        "showConnectedLayers": "Afficher les couches connectées",
+        "showConnectedLayersTooltip": "Afficher les couches connectées à la cible dans le widget",
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",
         "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",
@@ -3140,6 +3259,7 @@
       "disableRange": "Désactiver la plage de temps",
       "enablePlayBack": "Activer les contrôles de lecture",
       "disablePlayBack": "Désactiver les contrôles de lecture",
+      "hiddenGuideLayerWarning": "Le couche de référence est masquée dans la TOC et sur la carte, mais continue de contrôler l'accrochage de la chronologie.",
       "expand": "Développer le curseur temporel",
       "collapse": "Réduire le curseur temporel",
       "reset": {
@@ -4529,6 +4649,10 @@
       "loadingAPI": "Chargement de l'API...",
       "cyclomedia": {
         "initializing": "Initialisation de l'API Street Smart...",
+        "logout": "Déconnexion Street Smart",
+        "tryForceLogout": "Forcer la déconnexion Street Smart",
+        "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter de Street Smart ?",
+        "loggingOut": "Déconnexion de Street Smart en cours...",
         "loadingAPI": "Chargement de l'API Street Smart...",
         "changeCredentials": "Modifier les identifiants Street Smart",
         "insertCredentials": "Insérer vos identifiants Street Smart",
@@ -4539,8 +4663,10 @@
         "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
         "errorOccurred": "Une erreur s'est produite : ",
         "errors": {
+          "notLoggedIn": "Vous n'êtes pas connecté",
           "invalidCredentials": "Identifiants invalides",
-          "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur."
+          "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur.",
+          "apiLoadFailed": "Impossible de charger l'API Street Smart. Vérifiez votre connexion réseau ou contactez l'administrateur."
         },
         "reloadAPI": "Recharger l'API"
       },
@@ -4819,10 +4945,11 @@
         "error500": "Erreur interne du serveur",
         "errorDefault": "Erreur réseau"
       },
-      "myResources": "My resources",
+      "myResources": "Mes ressources",
+      "select": "Sélectionner",
       "creationFilter": {
-        "from": "Creation date from",
-        "to": "Creation date to"
+        "from": "Date de création à partir du",
+        "to": "Date de création au"
       },
       "deleteTagTitle": "Êtes-vous sûr de vouloir supprimer cette balise ?",
       "deleteTagDescription": "Cette balise sera supprimée, y compris l'association avec les ressources existantes",

@@ -45,15 +45,21 @@ describe('mapinfo arcgis utils', () => {
             "intersectedFeatures": []
         };
         const request = arcgis.buildRequest(layer, { point, map, currentLocale: 'en-US' });
-        expect(request).toEqual({
+        // bounds are compared with a tolerance because floating point results
+        // of transcendental functions can differ across browser versions
+        const expectedBounds = [
+            -76.69000174947232,
+            34.669673599384076,
+            -76.33843924947232,
+            34.95830926327919
+        ];
+        request.request.bounds.forEach((value, idx) => {
+            expect(value.toFixed(8)).toBe(expectedBounds[idx].toFixed(8));
+        });
+        expect({ ...request, request: { ...request.request, bounds: undefined } }).toEqual({
             request: {
                 outputFormat: 'application/json',
-                bounds: [
-                    -76.69000174947232,
-                    34.669673599384076,
-                    -76.33843924947232,
-                    34.95830926327919
-                ]
+                bounds: undefined
             },
             metadata: {
                 title: 'Title'

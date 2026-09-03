@@ -225,6 +225,7 @@ export const facets = [
         id: 'context',
         type: 'select',
         labelId: 'resourcesCatalog.filterMapsByContext',
+        placeholderId: 'resourcesCatalog.select',
         key: 'filter{ctx.in}',
         getLabelValue: (item) => {
             const { label } = splitFilterValue(item.value);
@@ -279,6 +280,7 @@ export const facets = [
         id: 'group',
         type: 'select',
         labelId: 'resourcesCatalog.groups',
+        placeholderId: 'resourcesCatalog.select',
         key: 'filter{group.in}',
         getLabelValue: (item) => {
             return item.value;
@@ -317,6 +319,7 @@ export const facets = [
         id: 'tag',
         type: 'select',
         labelId: 'resourcesCatalog.tags',
+        placeholderId: 'resourcesCatalog.select',
         key: 'filter{tag.in}',
         update: ({ facet, query }) => {
             const filters = castArray(query['filter{tag.in}'] || []).filter(filter => !getFilterByField({ key: 'filter{tag.in}' }, filter));

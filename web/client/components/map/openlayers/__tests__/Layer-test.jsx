@@ -23,7 +23,13 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
-import '../plugins/FlatGeobufLayer';
+import '../plugins/ArcGISFeatureLayer';
+import '../plugins/COGLayer';
+import {
+    invalidateCappedLoadExtents,
+    isMeaningfulCappedExtentRefinement,
+    registerCappedLoadExtent
+} from '../plugins/FlatGeobufLayer';
 
 import {
     setStore,
@@ -31,9 +37,13 @@ import {
 } from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import { ServerTypes } from '../../../../utils/LayersUtils';
+import { addElevationTile, getElevationKey } from '../../../../utils/ElevationUtils';
 
 
 import { Map, View } from 'ol';
+import ImageState from 'ol/ImageState';
+import TileState from 'ol/TileState';
+import VectorSource from 'ol/source/Vector';
 import { defaults as defaultControls } from 'ol/control';
 
 import axios from "../../../../libs/ajax";
@@ -348,6 +358,111 @@ describe('Openlayers layer', () => {
                 expect(e).toBeTruthy();
                 done();
             }, 200);
+        });
+    });
+    it('render wms singleTile layer with error does not request a spurious "null" url', (done) => {
+        ConfigUtils.setConfigProp('requestsConfigurationRules', [{
+            urlPattern: '.*\\/geoserver.*',
+            headers: {
+                Authorization: 'Bearer ${securityToken}'
+            }
+        }]);
+        setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let request;
+        mockAxios.onGet().reply((r) => {
+            request = r;
+            return [200, new Blob(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<ows:ExceptionReport xmlns:ows=\"http://www.opengis.net/ows\">\n" +
+            "  <ows:Exception exceptionCode=\"InvalidParameterValue\" locator=\"srsname\">\n" +
+            "    <ows:ExceptionText>WMS server error. Invalid GetMap Request</ows:ExceptionText>\n" +
+            "  </ows:Exception>\n" +
+            "</ows:ExceptionReport>"], {type: 'text/xml'})];
+        });
+        const options = {
+            type: 'wms',
+            visibility: true,
+            singleTile: true,
+            url: '/geoserver/wms',
+            name: 'ws:layer'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options
+            }}
+            map={map}
+            securityToken="########-####-####-####-###########" />, document.getElementById("container"));
+        ConfigUtils.setConfigProp('requestsConfigurationRules', undefined);
+        expect(layer.layer.getSource()).toBeTruthy();
+        layer.layer.getSource().once('imageloaderror', (e) => {
+            // the custom load function must have been used, so the exception comes from the OGC response
+            expect(request).toBeTruthy();
+            expect(request.headers.Authorization).toBe('Bearer ########-####-####-####-###########');
+            // ol/Image has no setState, the error state must be notified anyway
+            expect(e.image.getState()).toBe(ImageState.ERROR);
+            // the error handler must not set img.src = null, which the DOM coerces
+            // to the literal string "null" and resolves into a spurious request
+            const img = e.image.getImage();
+            expect(img.getAttribute('src') === 'null' || (img.src || '').endsWith('/null')).toBe(false);
+            done();
+        });
+    });
+    it('render wms tiled layer with error does not request a spurious "null" url', (done) => {
+        ConfigUtils.setConfigProp('requestsConfigurationRules', [{
+            urlPattern: '.*\\/geoserver.*',
+            headers: {
+                Authorization: 'Bearer ${securityToken}'
+            }
+        }]);
+        setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let request;
+        mockAxios.onGet().reply((r) => {
+            request = r;
+            return [200, new Blob(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<ows:ExceptionReport xmlns:ows=\"http://www.opengis.net/ows\">\n" +
+            "  <ows:Exception exceptionCode=\"InvalidParameterValue\" locator=\"srsname\">\n" +
+            "    <ows:ExceptionText>WMS server error. Invalid GetMap Request</ows:ExceptionText>\n" +
+            "  </ows:Exception>\n" +
+            "</ows:ExceptionReport>"], {type: 'text/xml'})];
+        });
+        const options = {
+            type: 'wms',
+            visibility: true,
+            singleTile: false,
+            url: '/geoserver/wms',
+            name: 'ws:tiled_layer'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options
+            }}
+            map={map}
+            securityToken="########-####-####-####-###########" />, document.getElementById("container"));
+        ConfigUtils.setConfigProp('requestsConfigurationRules', undefined);
+        expect(layer.layer.getSource()).toBeTruthy();
+        layer.layer.getSource().once('tileloaderror', (e) => {
+            // the custom load function must have been used, so the exception comes from the OGC response
+            expect(request).toBeTruthy();
+            expect(request.headers.Authorization).toBe('Bearer ########-####-####-####-###########');
+            expect(e.tile.getState()).toBe(TileState.ERROR);
+            // the error handler must not set img.src = null, which the DOM coerces
+            // to the literal string "null" and resolves into a spurious request
+            const img = e.tile.getImage();
+            expect(img.getAttribute('src') === 'null' || (img.src || '').endsWith('/null')).toBe(false);
+            done();
         });
     });
     it('creates a tiled wms layer for openlayers map with long url', (done) => {
@@ -1732,6 +1847,23 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
 
+    it('recreates a wms layer when its URL changes', () => {
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            format: 'image/png',
+            url: 'http://sample.server/geoserver/old-wms'
+        };
+        let component = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map}/>, document.getElementById("container"));
+        const oldLayer = component.layer;
+        component = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{...options, url: 'http://sample.server/geoserver/new-wms'}} map={map}/>, document.getElementById("container"));
+        expect(component.layer).toNotBe(oldLayer);
+        expect(component.layer.getSource().getUrls()[0]).toBe('http://sample.server/geoserver/new-wms');
+    });
+
     it('respects layer ordering', () => {
         var options = {
             "type": "wms",
@@ -2844,6 +2976,32 @@ describe('Openlayers layer', () => {
             map={map} />, document.getElementById("container"));
         expect(layer.layer.getSource()).toBeTruthy();
     });
+    it('reloads a wfs layer when its URL changes', (done) => {
+        mockAxios.onGet().reply(200, { ...SAMPLE_FEATURE_COLLECTION, features: [] });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'OLD_SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={options}
+            map={map} />, document.getElementById("container"));
+        waitFor(() => expect(mockAxios.history.get.some(({ url }) => url.includes('OLD_SAMPLE_URL'))).toBeTruthy())
+            .then(() => {
+                layer = ReactDOM.render(<OpenlayersLayer
+                    type="wfs"
+                    options={{ ...options, url: 'NEW_SAMPLE_URL' }}
+                    map={map} />, document.getElementById("container"));
+                return waitFor(() => expect(mockAxios.history.get.some(({ url }) => url.includes('NEW_SAMPLE_URL'))).toBeTruthy());
+            })
+            .then(() => {
+                expect(layer.layer.getSource()).toBeTruthy();
+                done();
+            })
+            .catch(done);
+    });
     it('render wfs layer with legacy style', (done) => {
         mockAxios.onGet().reply(r => {
             expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
@@ -2953,6 +3111,33 @@ describe('Openlayers layer', () => {
                 params: { "CQL_FILTER": "INCLUDE" }
             }}
             map={map} />, document.getElementById("container"));
+    });
+    it('reloads a wfs layer with the new service name', (done) => {
+        mockAxios.onGet().reply(() => [200, SAMPLE_FEATURE_COLLECTION]);
+        const options = {
+            id: 'wfs-name-change',
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:old_name'
+        };
+        ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={options}
+            map={map}/>, document.getElementById("container"));
+
+        waitFor(() => expect(mockAxios.history.get.some(({url}) =>
+            decodeURIComponent(url).includes('typeName=osm:old_name'))).toBe(true))
+            .then(() => {
+                ReactDOM.render(<OpenlayersLayer
+                    type="wfs"
+                    options={{...options, title: 'Unchanged reload behavior', name: 'osm:new_name'}}
+                    map={map}/>, document.getElementById("container"));
+                return waitFor(() => expect(mockAxios.history.get.some(({url}) =>
+                    decodeURIComponent(url).includes('typeName=osm:new_name'))).toBe(true));
+            })
+            .then(() => done())
+            .catch(done);
     });
     it('render wfs layer with FilterObj', (done) => {
         mockAxios.onGet().reply(r => {
@@ -3166,6 +3351,34 @@ describe('Openlayers layer', () => {
                     name: 'osm:vector_tile',
                     serverType: ServerTypes.NO_VENDOR
                 }, done);
+            });
+            it('reloads a no-vendor layer with the new typeName', (done) => {
+                mockAxios.onPost().reply(200, SAMPLE_FEATURE_COLLECTION);
+                const options = {
+                    id: 'wfs-no-vendor-name-change',
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:old_name',
+                    serverType: ServerTypes.NO_VENDOR
+                };
+                ReactDOM.render(<OpenlayersLayer
+                    type="wfs"
+                    options={options}
+                    map={map}/>, document.getElementById("container"));
+
+                waitFor(() => expect(mockAxios.history.post.some(({data}) =>
+                    data.includes('typeName="osm:old_name"'))).toBe(true))
+                    .then(() => {
+                        ReactDOM.render(<OpenlayersLayer
+                            type="wfs"
+                            options={{...options, name: 'osm:new_name'}}
+                            map={map}/>, document.getElementById("container"));
+                        return waitFor(() => expect(mockAxios.history.post.some(({data}) =>
+                            data.includes('typeName="osm:new_name"'))).toBe(true));
+                    })
+                    .then(() => done())
+                    .catch(done);
             });
             it('test layerFilter', (done) => {
                 mockAxios.onPost().reply(({
@@ -3450,6 +3663,38 @@ describe('Openlayers layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
     });
+    it('should return the elevation value at a map coordinate from the loaded tiles of the elevation layer', () => {
+        const options = {
+            id: 'elevation-layer',
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <OpenlayersLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        const layer = cmp.layer;
+        const tileGrid = layer.getSource().getTileGrid();
+        // the lookup coordinate is expressed in the map projection (EPSG:3857)
+        const coordinate = [1252344, 5430086];
+        const z = 12;
+        const [, x, y] = tileGrid.getTileCoordForCoordAndZ(coordinate, z);
+        // simulate a tile stored by the tileLoadFunction with a constant height of 1500 meters
+        const tileSize = 256;
+        const buffer = new ArrayBuffer(tileSize * tileSize * 2);
+        const dataView = new DataView(buffer);
+        for (let i = 0; i < tileSize * tileSize; i++) {
+            dataView.setInt16(i * 2, 1500, false);
+        }
+        addElevationTile(buffer, [z, x, y], getElevationKey(x, y, z, options.id));
+        layer.get('requestedZoomLevels').push(z);
+        expect(layer.get('getElevation')(coordinate)).toBe(1500);
+    });
     it('wms layer should refresh source when loadingError changes to Error', () => {
         var refreshCalled = false;
         const options = {
@@ -3569,6 +3814,47 @@ describe('Openlayers layer', () => {
         // restore original method
         wmsSource.refresh = originalRefresh;
     });
+    it('wms layer should stop auto-refreshing after repeated loadingError within the cooldown window', () => {
+        var refreshCallCount = 0;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "id": "wms-loading-error-refresh-cap-test"
+        };
+
+        // create layer
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+        wmsSource.refresh = function() {
+            refreshCallCount++;
+            originalRefresh.call(this);
+        };
+
+        // simulate the error state oscillating (fail, recover, fail, recover, ...) 5 times in a row,
+        // as happens when the underlying tile failure is intermittent rather than a one-off config mistake
+        for (let i = 0; i < 5; i++) {
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+            ReactDOM.render(
+                <OpenlayersLayer type="wms"
+                    options={{...options, loadingError: false}} map={map} />, document.getElementById("container"));
+        }
+
+        // refresh should be capped (MAX_LOADING_ERROR_REFRESH_ATTEMPTS = 3), not called once per oscillation (5)
+        expect(refreshCallCount).toBe(3);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
     it('creates a arcgis layer (MapServer)', () => {
         const options = {
             type: 'arcgis',
@@ -3584,6 +3870,66 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().item(0).getSource().params_).toEqual({
             LAYERS: 'show:1'
         });
+    });
+    it('updates an arcgis MapServer layer with the new service name', () => {
+        const options = {
+            id: 'arcgis-name-change',
+            type: 'arcgis',
+            url: 'http://arcgis/MapServer/',
+            name: '1',
+            visibility: true,
+            opacity: 0.7
+        };
+        const component = ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options} map={map}/>, document.getElementById("container"));
+        const originalLayer = component.layer;
+        ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={{...options, name: '2'}} map={map}/>, document.getElementById("container"));
+        expect(component.layer).toBe(originalLayer);
+        expect(component.layer.getSource().getParams().LAYERS).toBe('show:2');
+        expect(component.layer.getOpacity()).toBe(0.7);
+    });
+    it('reloads an arcgis feature layer with the new service name', (done) => {
+        mockAxios.onGet().reply(({url}) => {
+            const featureId = url.includes('/1/query') ? 2 : 1;
+            return [200, {
+                type: 'FeatureCollection',
+                features: [{
+                    type: 'Feature',
+                    id: featureId,
+                    geometry: {type: 'Point', coordinates: [featureId, featureId]},
+                    properties: {OBJECTID: featureId}
+                }]
+            }];
+        });
+        const options = {
+            id: 'arcgis-feature-name-change',
+            type: 'arcgis-feature',
+            url: '/arcgis/FeatureServer',
+            name: '0',
+            strategy: 'all',
+            visibility: true,
+            opacity: 0.6
+        };
+        const component = ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options} map={map}/>, document.getElementById("container"));
+
+        waitFor(() => expect(component.layer.getSource().getFeatures()[0].getId()).toBe(1))
+            .then(() => {
+                ReactDOM.render(
+                    <OpenlayersLayer type={options.type}
+                        options={{...options, name: '1'}} map={map}/>, document.getElementById("container"));
+                return waitFor(() => expect(component.layer.getSource().getFeatures()[0].getId()).toBe(2));
+            })
+            .then(() => {
+                expect(mockAxios.history.get.some(({url}) => url.includes('/1/query'))).toBe(true);
+                expect(component.layer.getOpacity()).toBe(0.6);
+                done();
+            })
+            .catch(done);
     });
     it('should call onLayerLoading and onLayerLoad on featuresloadstart/end events', () => {
         const options = {
@@ -3631,6 +3977,56 @@ describe('Openlayers layer', () => {
         expect(loadCount).toBe(1);
     });
 
+    describe('COG', () => {
+        const cogOptions = {
+            id: 'cog-layer',
+            type: 'cog',
+            title: 'COG layer',
+            visibility: false,
+            sources: [{
+                url: 'data:image/tiff;base64,'
+            }],
+            sourceMetadata: {
+                crs: 'EPSG:3857'
+            }
+        };
+
+        it('does not create an OpenLayers layer while initially hidden', () => {
+            const layer = ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={cogOptions}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            expect(layer.layer).toBe(null);
+            expect(map.getLayers().getLength()).toBe(0);
+        });
+
+        it('creates the OpenLayers layer when visibility changes from hidden to visible', () => {
+            const layer = ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={cogOptions}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            ReactDOM.render(
+                <OpenlayersLayer
+                    type="cog"
+                    options={{...cogOptions, visibility: true}}
+                    map={map}/>,
+                document.getElementById("container")
+            );
+
+            expect(layer.layer).toBeTruthy();
+            expect(layer.layer.getSource()).toBeTruthy();
+            expect(map.getLayers().getLength()).toBe(1);
+        });
+    });
+
     describe('FlatGeobuf', () => {
         // The fixture's FGB header reports geometryType=3 (Polygon) and
         // covers central US (-106.2..-95.9, 34.6..42.0). The shared
@@ -3654,6 +4050,42 @@ describe('Openlayers layer', () => {
         afterEach(() => {
             fgbMap.setTarget(null);
             document.body.innerHTML = '';
+        });
+
+        it('invalidates capped extents only on meaningful view refinement', () => {
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [0, 0, 100, 100], 10)).toBe(false);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [1, 1, 99, 99], 10)).toBe(false);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [25, 25, 75, 75], 10)).toBe(true);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [25, 25, 75, 75], 4)).toBe(true);
+            expect(isMeaningfulCappedExtentRefinement({
+                extent: [0, 0, 100, 100],
+                resolution: 10
+            }, [50, 50, 150, 150], 4)).toBe(false);
+        });
+
+        it('keeps capped extents cached until the view is refined', () => {
+            const source = new VectorSource();
+            const removeLoadedExtent = expect.spyOn(source, 'removeLoadedExtent').andCallThrough();
+            registerCappedLoadExtent(source, [0, 0, 100, 100], 10);
+
+            expect(invalidateCappedLoadExtents(source, [0, 0, 100, 100], 10)).toBe(false);
+            expect(removeLoadedExtent).toNotHaveBeenCalled();
+
+            expect(invalidateCappedLoadExtents(source, [25, 25, 75, 75], 4)).toBe(true);
+            expect(removeLoadedExtent).toHaveBeenCalled();
+            expect(removeLoadedExtent.calls[0].arguments[0]).toEqual([0, 0, 100, 100]);
         });
 
         it('loads features from a real FGB and stores them in the source', (done) => {
@@ -3682,6 +4114,35 @@ describe('Openlayers layer', () => {
                 map={fgbMap}/>, document.getElementById("container"));
             expect(layer.layer.getSource()).toBeTruthy();
             layer.layer.getSource().on('addfeature', onAddFeature);
+        }).timeout(15000);
+
+        it('limits features loaded from a real FGB when maxFeaturesInView is configured', (done) => {
+            const options = {
+                type: 'flatgeobuf',
+                visibility: true,
+                url: FGB_URL,
+                name: 'us-counties',
+                metadata: { geometryType: 3 },
+                maxFeaturesInView: 1
+            };
+            const layer = ReactDOM.render(<OpenlayersLayer
+                type="flatgeobuf"
+                options={options}
+                map={fgbMap}/>, document.getElementById("container"));
+            const source = layer.layer.getSource();
+            const onLoadEnd = () => {
+                source.un('featuresloadend', onLoadEnd);
+                setTimeout(() => {
+                    try {
+                        expect(source.getFeatures().length).toBe(1);
+                    } catch (err) {
+                        done(err);
+                        return;
+                    }
+                    done();
+                }, 250);
+            };
+            source.on('featuresloadend', onLoadEnd);
         }).timeout(15000);
 
         it('clears the source on CRS change instead of in-place transform', () => {

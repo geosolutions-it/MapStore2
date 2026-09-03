@@ -1049,13 +1049,20 @@ describe('geoProcessing epics', () => {
     });
     it('LPlongitudinalMapLayoutGPTEpic', (done) => {
         const NUM_ACTIONS = 1;
-        const startActions = [updateMapLayout("test")];
+        const startActions = [updateMapLayout({
+            right: 300,
+            boundingSidebarRect: { right: 50 },
+            boundingMapRect: { right: 300 }
+        })];
         testEpic(LPlongitudinalMapLayoutGPTEpic, NUM_ACTIONS, startActions, actions => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const [
                 action1
             ] = actions;
             expect(action1.type).toEqual(updateMapLayout().type);
+            expect(action1.layout.right).toBe(470);
+            expect(action1.layout.boundingMapRect.right).toBe(470);
+            expect(action1.layout.boundingSidebarRect.right).toBe(50);
             done();
         }, {
             controls: {

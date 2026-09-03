@@ -6,6 +6,7 @@ import CRSSelectorPlugin from '../index';
 import { getPluginForTest } from '../../__tests__/pluginsTestUtils';
 import security from '../../../reducers/security';
 import ReactTestUtils from 'react-dom/test-utils';
+import { SET_PROJECTIONS_CONFIG } from '../actions/crsselector';
 
 const defaultAvailableProjections = [
     { value: "EPSG:4326", label: "EPSG:4326" },
@@ -489,5 +490,66 @@ describe('CRSSelector Plugin', () => {
                 done();
             }
         }, 100);
+    });
+
+    it('bridges pluginCfg.customResolutions into state.crsselector.config on mount', (done) => {
+        const customResolutions = {
+            'EPSG:4326': [1, 0.5, 0.25, 0.125]
+        };
+        const { Plugin, store } = getPluginForTest(CRSPluginCustomized, {
+            map: { projection: 'EPSG:4326' },
+            localConfig: { projectionDefs: [] },
+            security: { user: { role: 'USER' } }
+        });
+
+        ReactDOM.render(<Plugin
+            pluginCfg={{
+                availableProjections: defaultAvailableProjections,
+                customResolutions,
+                allowedRoles: ['ALL']
+            }}
+        />, document.getElementById('container'));
+
+        // The useEffect runs after the first paint, so wait a tick.
+        setTimeout(() => {
+            const config = store.getState().crsselector?.config;
+            expect(config).toExist();
+            expect(config.customResolutions).toEqual(customResolutions);
+            done();
+        }, 0);
+    });
+
+    it('does NOT bridge pluginCfg.customResolutions when state already has them (saved-map wins)', (done) => {
+        const savedCustomResolutions = { 'EPSG:4326': [9, 8, 7] };
+        const pluginCfgCustomResolutions = { 'EPSG:4326': [1, 0.5, 0.25] };
+        const { Plugin, store, actions } = getPluginForTest(CRSPluginCustomized, {
+            map: { projection: 'EPSG:4326' },
+            localConfig: { projectionDefs: [] },
+            security: { user: { role: 'USER' } },
+            crsselector: {
+                config: { customResolutions: savedCustomResolutions }
+            }
+        });
+
+        ReactDOM.render(<Plugin
+            pluginCfg={{
+                availableProjections: defaultAvailableProjections,
+                customResolutions: pluginCfgCustomResolutions,
+                allowedRoles: ['ALL']
+            }}
+        />, document.getElementById('container'));
+
+        setTimeout(() => {
+            const config = store.getState().crsselector?.config;
+            expect(config.customResolutions).toEqual(savedCustomResolutions);
+            // The bridge should not have emitted a SET_PROJECTIONS_CONFIG to
+            // overwrite the saved-map customResolutions with the pluginCfg ones.
+            const bridgeWrites = actions.filter(a =>
+                a?.type === SET_PROJECTIONS_CONFIG
+                && a?.config?.customResolutions === pluginCfgCustomResolutions
+            );
+            expect(bridgeWrites.length).toBe(0);
+            done();
+        }, 0);
     });
 });

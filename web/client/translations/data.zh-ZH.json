@@ -94,7 +94,6 @@
       "templateFormatInfoAlert1": "Click on edit button to add a new template.",
       "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
       "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
-      "templatePreview": "Template preview",
       "heightOffset": "Height offset (m)",
       "tooltip": {
         "label": "Tooltip",
@@ -370,7 +369,6 @@
       },
       "errors": {
         "loading": {
-          "title": "Error loading map",
           "notFound": "Map not found",
           "notAccessible": "Map not accessible",
           "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul><p>",
@@ -1104,6 +1102,9 @@
       "title": "Export Map"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Tag filter type",
         "category": "Category",

@@ -39,7 +39,7 @@ public class SetParamsControllerTest {
         response.getContentType().equals("text/html");
         assertTrue(resp.contains("sessionStorage.setItem(\"queryParams-"+ uuid+"\",params"));
         assertTrue(resp.contains("l\\\'object"));
-        assertTrue(resp.contains("location.href=\"../../..?queryParamsID="+uuid+"\";"));
+        assertTrue(resp.contains("location.href=\"..\\/..\\/..?queryParamsID="+uuid+"\";"));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class SetParamsControllerTest {
         String result=response.getContentAsString();
         response.getContentType().equals("text/html");
         assertTrue(result.contains("sessionStorage.setItem(\"queryParams-"+ uuid+"\",params"));
-        assertTrue(result.contains("location.href=\"#/viewer/openlayers/config?queryParamsID="+uuid+"\";"));
+        assertTrue(result.contains("location.href=\"#\\/viewer\\/openlayers\\/config?queryParamsID="+uuid+"\";"));
         // extract the JSON
         String json=result.substring(result.indexOf("'")+1,result.lastIndexOf("}")+1);;
         //check it is valid

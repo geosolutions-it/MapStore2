@@ -20,7 +20,7 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.viewParams === o2.viewParams;
-import { getWpsUrl } from '../../../utils/LayersUtils';
+import { getWFSLayerName, getWpsUrl } from '../../../utils/LayersUtils';
 import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
 
 /**
@@ -47,12 +47,11 @@ const dataStreamFactory = ($props) =>
             return isValid;
         })
         .distinctUntilChanged(
-            ({layer = {}, options = {}, filter }, newProps) => {
-                if (newProps.shouldAutorefresh) {
-                    return false;
-                }
-
-                return (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
+            ({layer = {}, options = {}, filter}, newProps) =>
+                (newProps.layer
+                && getWpsUrl(layer) === getWpsUrl(newProps.layer)
+                && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
+                && layer.loadingError === newProps.layer.loadingError)
                 && sameOptions(options, newProps.options)
                 && sameFilter(filter, newProps.filter);
             }
@@ -61,7 +60,7 @@ const dataStreamFactory = ($props) =>
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(
                     getWpsUrl(layer),
-                    {featureType: layer.name, ...options, filter},
+                    {featureType: getWFSLayerName(layer), ...options, filter},
                     {timeout: 15000},
                     layer
                 ).map((data) => ({

@@ -26,7 +26,7 @@ import set from "lodash/fp/set";
 import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX, LAYERS_REGEX } from '../actions/widgets';
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
-import uuidv1 from "uuid/v1";
+import { v1 as uuidv1 } from "uuid";
 import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
 import moment from 'moment';
@@ -258,8 +258,15 @@ export const getDefaultAggregationOperations = () => {
     ];
 };
 
-export const CHART_PROPS = ["selectedChartId", "selectedTraceId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description"];
-export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description", "interactions"];
+export const CHART_PROPS = ["selectedChartId", "selectedTraceId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description", "globalWidgetMode"];
+export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description", "interactions", "globalWidgetMode"];
+
+/**
+ * Check if layer can support a widget
+ * @param {object} layer the map layer
+ * @return {boolean} true if the layer can support a widget
+ */
+export const isWidgetLayerSupported = (layer) => !!layer?.search && layer.search !== 'vector';
 
 const legacyColorsMap = {
     'global.colors.blue': '#0888A1',
@@ -472,6 +479,41 @@ export const legacyChartToChartWithTraces = ({
         }]
     };
 };
+
+const MAXIMIZE_TRANSIENT_PROPS = ['isDraggable', 'isResizable'];
+
+const cleanLayoutItems = (items) => Array.isArray(items)
+    ? items.map(item => omit(item, MAXIMIZE_TRANSIENT_PROPS))
+    : items;
+
+const cleanLayouts = (layouts) => {
+    if (Array.isArray(layouts)) {
+        return layouts.map(view => Object.keys(view || {})
+            .reduce((acc, key) => ({ ...acc, [key]: cleanLayoutItems(view[key]) }), {}));
+    }
+    if (layouts && typeof layouts === 'object') {
+        return Object.keys(layouts)
+            .reduce((acc, key) => ({ ...acc, [key]: cleanLayoutItems(layouts[key]) }), {});
+    }
+    return layouts;
+};
+
+/**
+ * Remove transient maximization properties from a stored widgets configuration.
+ * The static property is a persistent user setting and is intentionally preserved.
+ * @param {object} config stored widgets configuration
+ * @returns {object} cleaned widgets configuration
+ */
+export const cleanMaximizedState = (config = {}) => ({
+    ...config,
+    ...(config.widgets ? {
+        widgets: config.widgets.map(widget => widget.dataGrid
+            ? { ...widget, dataGrid: omit(widget.dataGrid, MAXIMIZE_TRANSIENT_PROPS) }
+            : widget)
+    } : {}),
+    ...(config.layouts ? { layouts: cleanLayouts(config.layouts) } : {}),
+    ...(config.layout ? { layout: cleanLayoutItems(config.layout) } : {})
+});
 
 /**
  * Convert the dependenciesMapping to support maplist

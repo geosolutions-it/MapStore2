@@ -93,7 +93,6 @@
       "templateFormatInfoAlert1": "Napsauta Muokkaa-painiketta lisätäksesi uuden mallin.",
       "templateFormatInfoAlert2": "Käytä ${ attribute } kääriäksesi näytettävät ominaisuudet",
       "templateFormatInfoAlertExample": "Kohteen ID on ${ properties }",
-      "templatePreview": "Mallin esikatselu",
       "heightOffset": "Height offset (m)",
       "tooltip": {
         "label": "Työkaluvinkkejä",
@@ -1189,6 +1188,9 @@
       "wmcNoLayersError": "Vähintään yksi WMS-taso tarvitaan, jotta kartta voitaisiin viedä WMC-formaatissa"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Tunnisteen suodattimen tyyppi",
         "category": "Kategoria",

@@ -7,13 +7,14 @@
  */
 
 import React, { useRef, Suspense, lazy, useState, useCallback, useEffect, useReducer } from 'react';
+import SafeHtml from '../misc/SafeHtml';
 import {
     ButtonGroup,
     Glyphicon,
     Checkbox,
     ButtonToolbar
 } from 'react-bootstrap';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import max from 'lodash/max';
 import undoable from 'redux-undo';
 import identity from 'lodash/identity';
@@ -613,7 +614,7 @@ function MapViewsSupport({
                         </div>
                         {(!expanded && showDescription && selected?.description) && <div
                             className="ms-map-views-description">
-                            <div dangerouslySetInnerHTML={{ __html: selected.description }} />
+                            <SafeHtml html={selected.description} />
                         </div>
                         }
                     </div>

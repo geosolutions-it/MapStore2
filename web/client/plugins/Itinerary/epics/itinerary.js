@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import sortBy from 'lodash/sortBy';
@@ -32,7 +32,7 @@ import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
 import { changeMousePointer, CLICK_ON_MAP, zoomToExtent } from '../../../actions/map';
 import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ITINERARY_ROUTE_LAYER } from '../constants';
 import { enabledSelector, itinerarySearchConfigSelector, locationsSelector } from '../selectors/itinerary';
-import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../../../utils/LayoutUtils';
 import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInfo';
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
@@ -43,6 +43,10 @@ import { info, error as errorNotification } from '../../../actions/notifications
 import { createMarkerSvgDataUrl } from '../../../utils/StyleUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
+const isCancelLocationSelectionAction = ({type, control, value}) =>
+    type === RESET_ITINERARY
+    || (type === SET_CONTROL_PROPERTY && control === CONTROL_NAME && !value)
+    || (type === TOGGLE_CONTROL && control === CONTROL_NAME);
 
 /**
  * Handles itinerary map layout updates
@@ -54,13 +58,15 @@ export const itineraryMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             });
             return { ...action, source: CONTROL_NAME };
@@ -186,10 +192,26 @@ export const onOpenItineraryEpic = (action$, {getState}) =>
  */
 export const itinerarySelectLocationFromMapEpic = (action$, { getState }) =>
     action$.ofType(SELECT_LOCATION_FROM_MAP)
-        .switchMap(({ index }) =>
-            action$.ofType(CLICK_ON_MAP)
+        .switchMap(({ index }) => {
+            if (isNil(index) || index === '') {
+                return Observable.of(changeMousePointer('auto'));
+            }
+            const cancelSelection$ = action$
+                .ofType(RESET_ITINERARY, SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+                .filter(isCancelLocationSelectionAction)
+                .take(1)
+                .map(() => ({ cancel: true }));
+            return Observable.merge(
+                action$.ofType(CLICK_ON_MAP)
+                    .take(1)
+                    .map(({ point }) => ({ point })),
+                cancelSelection$
+            )
                 .take(1)
                 .switchMap(({ point }) => {
+                    if (!point?.latlng) {
+                        return Observable.of(changeMousePointer('auto'));
+                    }
                     const { latlng } = point;
                     const state = getState();
                     const locations = locationsSelector(state);
@@ -200,8 +222,8 @@ export const itinerarySelectLocationFromMapEpic = (action$, { getState }) =>
                         updateLocations(newLocations),
                         addMarkerFeature(latlng, index)
                     );
-                }).startWith(changeMousePointer('pointer'))
-        );
+                }).startWith(changeMousePointer('pointer'));
+        });
 
 /**
  * Handles itinerary run

@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import toBbox from 'turf-bbox';
 import pointOnSurface from '@turf/point-on-surface';
 import {isNil, sortBy} from 'lodash';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import bboxTurf from '@turf/bbox';
 
 import {centerToMarkerSelector, getLayerFromName, layersSelector} from '../selectors/layers';

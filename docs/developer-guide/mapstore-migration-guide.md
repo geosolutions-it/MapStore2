@@ -20,7 +20,389 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.02.02 to 2026.03.00
+
+### Identify supports multiple views per layer
+
+The `featureInfo` of a layer describes a list of views instead of a single format. The identify panel renders one tab per view.
+
+```json
+{
+  "featureInfo": {
+    "disabled": false,
+    "views": [
+      { "id": "properties", "type": "PROPERTIES" },
+      { "id": "report", "title": "Report", "type": "TEMPLATE", "template": "<p>${properties.NAME}</p>" }
+    ]
+  }
+}
+```
+
+The previous configuration is still read, so existing maps keep working. `format: "HIDDEN"` is equivalent to `disabled: true`.
+
+```json
+{ "featureInfo": { "format": "TEMPLATE", "template": "<p>${properties.NAME}</p>" } }
+```
+
+Saving the Feature Info settings replaces `format`, `template` and `viewer` with `disabled` and `views`, and previous versions do not read that shape: they fall back to the identify format of the map settings and they query again a layer with identify disabled.
+
+Custom code reading the identify results from the state finds the response of every view in `viewResponses`, keyed by view id, instead of a single `response` and `queryParams`.
+
+### Spring 7 / Jakarta EE 10 upgrade
+
+MapStore has been upgraded to Spring Framework 7 and Spring Security 7, moving from the Java EE (`javax.*`) to the Jakarta EE 10 (`jakarta.*`) platform. This is a **breaking change** for the deployment environment and for MapStore projects.
+
+#### New deployment requirements
+
+- **Java 17** is now the minimum supported version (Java 8/11 are no longer supported). The CI still tests on Java 17 and 21.
+- **Tomcat 10.1** (Jakarta Servlet API 6.0) is the new reference servlet container. The binary distribution ships Tomcat 11. **Tomcat 9 or older cannot run this version of MapStore**, since they are based on the `javax.*` servlet API.
+
+#### Updating a MapStore project
+
+The following changes must be applied to your project (see the updated [project templates](https://github.com/geosolutions-it/MapStore2/tree/master/project/standard/templates) for reference):
+
+**`pom.xml` properties**: update the dependency versions:
+
+```diff
+-        <tomcat.version>9.0.116</tomcat.version>
+-        <jackson.version>2.16.1</jackson.version>
++        <tomcat.version>10.1.55</tomcat.version>
++        <jackson.version>2.19.4</jackson.version>
+         <!-- Spring Framework & Security (aligned) -->
+-        <spring.version>5.3.39</spring.version>
+-        <spring.security.version>5.7.13</spring.security.version>
++        <spring.version>7.0.8</spring.version>
++        <spring.security.version>7.1.0</spring.security.version>
+-        <commons-pool.version>1.5.4</commons-pool.version>
+-        <ehcache-web.version>2.0.4</ehcache-web.version>
+-        <httpclient.version>4.5.13</httpclient.version>
+-        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+-        <jaxws-api.version>2.3.1</jaxws-api.version>
++        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
++        <jaxws-api.version>4.0.3</jaxws-api.version>
+-        <cargo.version>1.10.2</cargo.version>
++        <cargo.version>1.10.27</cargo.version>
+         <!-- MapStore‑specific -->
+-        <mapstore-services.version>1.10-SNAPSHOT</mapstore-services.version>
+-        <geostore-webapp.version>2.6-SNAPSHOT</geostore-webapp.version>
+-        <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
+-        <print-lib.version>2.3.5</print-lib.version>
++        <mapstore-services.version>1.12-SNAPSHOT</mapstore-services.version>
++        <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
++        <http_proxy.version>1.7-SNAPSHOT</http_proxy.version>
++        <print-lib.version>2.5-SNAPSHOT</print-lib.version>
+```
+
+**`web/pom.xml` dependencies**: replace the `javax` artifacts with their `jakarta` equivalents and remove the dependencies that are not used anymore (`net.sf.ehcache:ehcache-web`, `commons-pool:commons-pool`):
+
+```diff
+     <dependency>
+-        <groupId>javax.servlet</groupId>
+-        <artifactId>javax.servlet-api</artifactId>
+-        <version>${javax.servlet-api.version}</version>
++        <groupId>jakarta.servlet</groupId>
++        <artifactId>jakarta.servlet-api</artifactId>
++        <version>${jakarta.servlet-api.version}</version>
+     </dependency>
+-    <!-- gzip compression filter -->
+-    <dependency>
+-        <groupId>net.sf.ehcache</groupId>
+-        <artifactId>ehcache-web</artifactId>
+-        <version>${ehcache-web.version}</version>
+-    </dependency>
+-    <dependency>
+-        <groupId>commons-pool</groupId>
+-        <artifactId>commons-pool</artifactId>
+-    </dependency>
+     <dependency>
+-        <groupId>javax.xml.ws</groupId>
+-        <artifactId>jaxws-api</artifactId>
++        <groupId>jakarta.xml.ws</groupId>
++        <artifactId>jakarta.xml.ws-api</artifactId>
+         <version>${jaxws-api.version}</version>
+     </dependency>
+```
+
+**`web/pom.xml` `printing` profile**: if your project defines the `printing` profile, the same `javax` artifacts appear again in its `<dependencyManagement>` section. Replace them with the `jakarta` equivalents as above, and remove the `httpclient`, `ehcache-web` and `commons-pool` entries: their version properties no longer exist in the root `pom.xml`, so a build with `-Pprinting` would fail on the unresolved placeholders.
+
+**`web/src/main/webapp/WEB-INF/web.xml`**: update the schema declaration to Jakarta EE 10 and remove the GZip `CompressionFilter`, together with its three `filter-mapping` entries (the filter class comes from the removed `ehcache-web` library, which is not available for the `jakarta.*` namespace):
+
+```diff
+-<web-app id="WebApp_ID" version="2.4"
++<web-app id="WebApp_ID" version="6.0"
+     xmlns:javaee="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
++    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+```
+
+!!! note
+    The removed `CompressionFilter` used to gzip `*.js`, `*.css` and `*.html` responses out of the box. Compression has to be configured in the deployment environment instead:
+
+    - **Tomcat exposed directly**: enable compression on the connector in `conf/server.xml`:
+
+        ```xml
+        <Connector port="8080" ... compression="on"
+            compressibleMimeType="text/html,text/css,text/plain,application/javascript,application/json,application/xml,image/svg+xml"/>
+        ```
+
+    - **Behind a reverse proxy (recommended)**: enable gzip (or brotli) in the proxy; e.g. for nginx:
+
+        ```nginx
+        gzip on;
+        gzip_vary on;
+        gzip_types text/css text/plain application/javascript application/json application/xml image/svg+xml;
+        ```
+
+    - **Docker composition**: nothing to do, compression is already enabled in the bundled nginx configuration (`docker/mapstore.conf`).
+
+    Without it MapStore still works, but the JavaScript bundles are quite big and the first load becomes noticeably slower.
+
+**`WEB-INF/*-servlet.xml`** (`configs-servlet.xml`, `extensions-servlet.xml`, `loadAssets-servlet.xml`): Spring Security 7 replaced the `global-method-security` element:
+
+```diff
+-    <security:global-method-security secured-annotations="enabled" />
++    <security:method-security secured-enabled="true"/>
+```
+
+**Security configuration overrides**: if your project overrides `geostore-spring-security.xml` (e.g. for [LDAP](integrations/users/ldap.md) or database authentication), the file must be aligned with the new Spring Security 7 syntax. Copy the updated reference files from the MapStore repository (`web/src/config/db/geostore-spring-security-db.xml`, `web/src/config/ldap/geostore-spring-security-ldap.xml`) and re-apply your customizations on top of them.
+
+**Cargo (local test container)**: update the container id and add the logging configuration file:
+
+```diff
+-                    <containerId>tomcat9x</containerId>
++                    <containerId>tomcat10x</containerId>
+```
+
+Copy the `logging.properties` file from the MapStore repository (`product/cargo/logging.properties`) into the `web/cargo/` folder of your project and reference it in `cargo.jvmargs` with `-Djava.util.logging.config.file=${project.basedir}/cargo/logging.properties`. Note that `${project.basedir}` points to the `web` module, where the Cargo plugin runs. New projects created from the templates already include this file.
+
+**Custom Java code**: any custom backend code must be migrated from the `javax.*` to the `jakarta.*` namespace (e.g. `javax.servlet.http.HttpServletRequest` → `jakarta.servlet.http.HttpServletRequest`) and compiled with source/target 17.
+
+**CI/CD**: update your build infrastructure to use JDK 17 as the build JDK.
+
+### New `viewFramingFilter` in `web.xml`
+
+Add the following filter to your project's `web/src/main/webapp/WEB-INF/web.xml`, mapped on `/index.html` (see the updated [project template](https://github.com/geosolutions-it/MapStore2/blob/master/project/standard/templates/web/src/main/webapp/WEB-INF/web.xml) for reference). It relies on `org.apache.catalina.filters.HttpHeaderSecurityFilter`, already available with the Tomcat 10.1 dependency required by the upgrade above:
+
+```xml
+<filter>
+    <filter-name>viewFramingFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
+    <init-param>
+        <param-name>antiClickJackingOption</param-name>
+        <param-value>SAMEORIGIN</param-value>
+    </init-param>
+    <init-param>
+        <param-name>hstsEnabled</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>blockContentTypeSniffingEnabled</param-name>
+        <param-value>false</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>viewFramingFilter</filter-name>
+    <url-pattern>/index.html</url-pattern>
+</filter-mapping>
+```
+
+## Migration from 2026.02.00 to 2026.02.01
+
+### Login `hideGroupUserInfo` configuration
+
+The `hideGroupUserInfo` option is now a direct configuration property of the `Login` plugin. Update all `Login` plugin configurations in `localConfig.json` as follows:
+
+```diff
+{
+    "name": "Login",
+    "cfg": {
+-        "toolsCfg": [{"hideGroupUserInfo": true}]
++        "hideGroupUserInfo": true
+    }
+}
+```
+
+The previous `toolsCfg` configuration is still supported as a fallback for backward compatibility, but the direct `hideGroupUserInfo` property should be used for all new configurations.
+
+### Database update
+
+This version of MapStore ships with **GeoStore 2.6.1**, which fixes an N+1 query issue when loading resources ([#577](https://github.com/geosolutions-it/geostore/pull/577)) by inverting the foreign key relationship between `gs_resource` and `gs_stored_data`. Unlike other GeoStore upgrades, this change **cannot be handled automatically** by `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` and **requires applying the manual migration script** described below, because it backfills existing data before dropping the old column.
+
+!!! warning
+    **Backup your database** before applying any of these changes. Data integrity is your responsibility.
+
+Apply the following script to move the foreign key ownership from `gs_stored_data.resource_id` to a new `gs_resource.stored_data_id` column (GeoStore [`postgresql-migration-from-v.2.4.1-to-v2.6.1.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.4.1-to-v2.6.1.sql)).
+
+Please verify that your schema is `geostore` (as in the default installation) or adjust the script accordingly:
+
+```sql
+ALTER TABLE geostore.gs_resource ADD COLUMN stored_data_id int8;
+
+UPDATE geostore.gs_resource r SET stored_data_id = sd.id
+    FROM geostore.gs_stored_data sd WHERE sd.resource_id = r.id;
+
+ALTER TABLE geostore.gs_resource
+    ADD CONSTRAINT gs_resource_stored_data_id_key UNIQUE (stored_data_id);
+
+ALTER TABLE geostore.gs_resource
+    ADD CONSTRAINT fk_resource_stored_data
+        FOREIGN KEY (stored_data_id) REFERENCES geostore.gs_stored_data (id);
+
+ALTER TABLE geostore.gs_stored_data DROP CONSTRAINT fk_data_resource;
+
+ALTER TABLE geostore.gs_stored_data DROP COLUMN resource_id;
+```
+
 ## Migration from 2026.01.02 to 2026.02.00
+
+### Dev server static configuration moved to the webpack configuration files
+
+webpack-dev-server 5 (introduced with this release) watches the static directories by default and triggers a full page reload on every file change. Projects used to pass `--static .` on the command line, so the whole project root was watched: the logs and temporary files written by the local backend (`web/target`, `mapstore.log`) continuously triggered reloads, making the dev environment unusable (see [#12665](https://github.com/geosolutions-it/MapStore2/issues/12665)).
+
+In your project:
+
+- remove `--static .` from the `fe:start` and `fe:start-prod` scripts in `package.json` (make also sure `fe:start-prod` points to `prod-webpack.config.js`)
+- add the `devServer` configuration to your `webpack.config.js` and `prod-webpack.config.js`, as in the current project templates:
+
+```javascript
+const { devServer } = require('./MapStore2/build/devServer');
+
+module.exports = require('./MapStore2/build/buildConfig')({
+    // ...existing configuration...
+    devServer: {
+        devMiddleware: { publicPath: '/dist/' },
+        ...devServer,
+        static: [{
+            directory: __dirname,
+            watch: {
+                ignored: [
+                    '**/web/target/**',
+                    '**/logs/**',
+                    '**/*.log',
+                    '**/node_modules/**',
+                    '**/.git/**'
+                ]
+            }
+        }]
+    }
+});
+```
+
+### Custom map resolutions moved from `new.json` to the `CRSSelector` plugin
+
+Custom map resolutions used to be declared in the default map configuration (`new.json`, or the project-level equivalent) under `mapOptions.view.resolutions`. That location was tied to a single projection and was not kept in sync when the CRS was changed at runtime, which could leave saved maps with a projection that did not match the persisted resolutions.
+
+Custom resolutions are declared **per CRS** in the `CRSSelector` plugin configuration in `localConfig.json`, keyed by SRS code:
+
+```json
+{
+  "name": "CRSSelector",
+  "cfg": {
+    "customResolutions": {
+      "EPSG:3003": [2366, 1183, 591, 295, 147, 73, 36, 18, 9, 4, 2, 1, 0.5, 0.28, 0.14, 0.07, 0.035, 0.018],
+      "EPSG:4326": [0.7, 0.35, 0.175, 0.0875, 0.04375, 0.021875, 0.010986, 0.0054931]
+    }
+  }
+}
+```
+
+When the user switches the map CRS, the matching list of resolutions is applied to the map. If a CRS has no entry, the resolutions are computed from the projection extent. In either case the chosen list is saved together with the map so that, on reload, the CRS and the resolutions remain aligned.
+
+#### Migration steps
+
+1. Remove `mapOptions.view.resolutions` from `new.json` (and from any custom default map config used by the project). Any value left there is dropped on the next save.
+2. Add an equivalent `customResolutions` block to the `CRSSelector` plugin entry in `localConfig.json`, keyed by the SRS the resolutions were originally designed for.
+
+### print-lib updated to 2.3.5
+
+In your project, you should update the `print-lib.version` property from version `2.3.4` to version `2.3.5` in the root `pom.xml`.
+
+```diff
+-        <print-lib.version>2.3.4</print-lib.version>
++        <print-lib.version>2.3.5</print-lib.version>
+```
+
+### webpack-dev-server upgrade to v5
+
+`webpack-dev-server` has been upgraded from 3.11.0 to 5.2.4. This is a dev-only change with no impact on production builds, but projects that customize the dev server configuration must update accordingly.
+
+#### Proxy configuration must be an array
+
+The `proxy` option in `devServer` no longer accepts an object. It must be an array of objects with a `context` property.
+
+**Before (`build/devServer.js`):**
+
+```js
+const devServer = {
+    proxy: {
+        '/rest': {
+            target: MAPSTORE_BACKEND_URL,
+            secure: false,
+            headers: { host: domain }
+        },
+        '/my-path': {
+            target: 'http://localhost:9000',
+            pathRewrite: { '/my-path': '/other' }
+        }
+    }
+};
+```
+
+**After:**
+
+```js
+const devServer = {
+    proxy: [
+        {
+            context: ['/rest'],
+            target: MAPSTORE_BACKEND_URL,
+            secure: false,
+            headers: { host: domain }
+        },
+        {
+            context: ['/my-path'],
+            target: 'http://localhost:9000',
+            pathRewrite: { '^/my-path': '/other' }
+        }
+    ]
+};
+```
+
+Multiple paths sharing the same target can be grouped in a single entry:
+
+```js
+{
+    context: ['/rest', '/pdf', '/proxy'],
+    target: MAPSTORE_BACKEND_URL,
+    secure: false,
+    headers: { host: domain }
+}
+```
+
+Note: `pathRewrite` keys should now use anchored regex patterns (e.g. `'^/path'` instead of `'/path'`).
+
+#### devServer.publicPath moved to devServer.devMiddleware.publicPath
+
+If your project's `webpack.config.js` passes a custom `devServer` object to `buildConfig`, update the `publicPath` key:
+
+```diff
+ devServer: {
+-    publicPath: '/dist/',
++    devMiddleware: { publicPath: '/dist/' },
+     // ...
+ }
+```
+
+#### Package.json scripts: --inline removed, --content-base renamed
+
+Update your project's `package.json` start scripts:
+
+```diff
+-"fe:start": "webpack serve --progress --color --port 8081 --hot --inline --config webpack.config.js --content-base ."
++"fe:start": "webpack serve --progress --color --port 8081 --hot --config webpack.config.js --static ."
+```
+
+You can copy the updated scripts from `utility/projects/projectScripts.json` in the MapStore2 repository.
 
 ### MetadataExplorer plugin renamed to Catalog
 
@@ -70,6 +452,121 @@ createPlugin('MyPlugin', {
     }
 });
 ```
+
+### GeoStore 2.6 — OpenID Connect configuration changes
+
+This version ships with **GeoStore 2.6**, which consolidates all OIDC providers (Keycloak, Google, and any other) into a single generic OIDC layer. If you are using OpenID Connect authentication, you must update your configuration.
+
+#### Update `pom.xml` (custom projects only)
+
+If you maintain a custom MapStore project, bump the GeoStore version in your `pom.xml`:
+
+```diff
+-<geostore-webapp.version>2.5.x</geostore-webapp.version>
++<geostore-webapp.version>2.6.x</geostore-webapp.version>
+```
+
+Replace `2.5.x` / `2.6.x` with the exact release version used by this MapStore release (check the root `pom.xml` of MapStore for the current value of `geostore-webapp.version`).
+
+#### Keycloak: replace `jsonConfig` with `discoveryUrl` and add `oidc_providers`
+
+The Keycloak-specific configuration format (`keycloakOAuth2Config.jsonConfig`) is **no longer supported**. Replace it with the standard OIDC `discoveryUrl`.
+
+**Before:**
+
+```properties
+keycloakOAuth2Config.enabled=true
+keycloakOAuth2Config.jsonConfig={"realm":"myrealm","auth-server-url":"https://keycloak.example.com/","resource":"mapstore-server",...}
+keycloakOAuth2Config.redirectUri=...
+keycloakOAuth2Config.autoCreateUser=true
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+```
+
+**After — `mapstore-ovr.properties`**:
+
+```properties
+oidc_providers=keycloak
+
+keycloakOAuth2Config.enabled=true
+keycloakOAuth2Config.clientId=mapstore-server
+keycloakOAuth2Config.clientSecret=<CLIENT_SECRET>
+keycloakOAuth2Config.sendClientSecret=true
+keycloakOAuth2Config.discoveryUrl=https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration
+keycloakOAuth2Config.redirectUri=...
+keycloakOAuth2Config.autoCreateUser=true
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+```
+
+All other `keycloakOAuth2Config.*` properties (`roleMappings`, `groupMappings`, `dropUnmapped`, `authenticatedDefaultRole`, `autoCreateUser`, `globalLogoutEnabled`, etc.) remain unchanged.
+
+#### Google: add `oidc_providers`
+
+```properties
+# Add this line — Google is now registered via the generic OIDC layer
+oidc_providers=google
+
+# All other googleOAuth2Config.* properties remain unchanged
+googleOAuth2Config.enabled=true
+googleOAuth2Config.clientId=...
+# Add accessType=offline to request a refresh token (recommended)
+googleOAuth2Config.accessType=offline
+```
+
+#### Keycloak direct user integration removed
+
+The **Direct user integration** feature (`keycloakRESTClient.*`, `-Dsecurity.integration=keycloak-direct`) has been removed. If you were using this feature, migrate to [LDAP integration](./integrations/users/ldap.md) instead.
+
+#### Multiple providers
+
+Multiple OIDC providers can now run simultaneously. Use a comma-separated list:
+
+```properties
+oidc_providers=keycloak,google
+```
+
+!!! note
+    Use `oidc_providers` (underscore), not `oidc.providers` (dot). The dot form conflicts with Spring's `PropertyOverrideConfigurer`.
+
+#### `applicationContext.xml` update (MapStore projects only)
+
+Custom projects have their own copy of `web/src/main/resources/applicationContext.xml`. Add `ignoreInvalidKeys` to the order-10 `PropertyOverrideConfigurer` so that `oidc_providers` (a bare key with no dot) is accepted in `mapstore-ovr.properties`:
+
+```diff
+     <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+         <property name="ignoreResourceNotFound" value="true"/>
++        <property name="ignoreInvalidKeys" value="true"/>
+         <property name="order" value="10"/>
+```
+
+Without this change, adding `oidc_providers=...` to `mapstore-ovr.properties` causes a startup failure (`Invalid key 'oidc_providers': expected 'beanName.property'`).
+
+#### Spring security XML update (MapStore projects only)
+
+If you maintain a **custom MapStore project** (i.e. you have your own `geostore-spring-security-db.xml`), you must update it to use the new dynamic OIDC provider mechanism.
+
+```diff
+     <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
+-    <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
+-    <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+-    <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/>
++    <security:custom-filter ref="compositeOpenIdFilter" before="OPENID_FILTER"/>
+     <security:anonymous />
+
+-    <!-- Keycloak -->
+-    <bean id="keycloakConfig"
+-          class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
+-    <bean id="googleSecurityConfiguration"
+-          class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
++    <bean id="oidcProviderRegistrar"
++          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectProviderRegistrar"/>
++    <bean id="compositeOpenIdFilter"
++          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.CompositeOpenIdConnectFilter"/>
+     <!-- oidcSecurityConfiguration unchanged -->
+     <bean id="oidcSecurityConfiguration"
+           class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/>
+```
+
+`oidcProviderRegistrar` reads `oidc_providers` from `mapstore-ovr.properties` at startup and registers one `{name}OAuth2Config` bean per provider. `PropertyOverrideConfigurer` then populates each bean from the matching `{name}OAuth2Config.*` properties. `compositeOpenIdFilter` handles the Authorization Code Flow for all active providers through a single filter chain entry.
 
 ## Migration from 2026.01.01 to 2026.01.02
 
@@ -179,6 +676,17 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                 </configuration>
 ```
 
+The `backend.debug.args` property must be defined in the `<properties>` section of your root `pom.xml`, otherwise the unresolved placeholder is passed as-is to the JVM and Tomcat fails to start (Cargo times out waiting for the deploy):
+
+```diff
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <tomcat.port>8080</tomcat.port>
+        <tomcat.version>9.0.116</tomcat.version>
++        <!-- JDWP options for remote debugging of the cargo-run backend -->
++        <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8989</backend.debug.args>
+```
+
 ### Updating Local File Paths in `config.yaml` for Windows Compatibility
 
 If you are using local file paths for resources (such as print headers, logos, or styles) in your `config.yaml`, you must ensure they use the `file://` protocol prefix. Relative paths or absolute paths without the protocol may fail on Windows environments.
@@ -245,7 +753,6 @@ As part of improving the authentication rules to make dynamic request configurat
 |------------|------------------|
 | `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
 | `authkey` | `params: { "authkey": "${securityToken}" }` |
-| `basic` | `headers: { "Authorization": "${authHeader}" }` |
 | `header` | `headers: { ... }` |
 | `browserWithCredentials` | `withCredentials: true` |
 

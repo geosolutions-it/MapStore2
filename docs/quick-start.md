@@ -84,6 +84,9 @@ The provided `docker-compose.yml` sets up a full production stack with:
 * **MapStore** — the application container
 * **Nginx** — reverse proxy handling external traffic on port 80
 
+!!! note
+    If you need a local Docker setup with sample authentication services, see the [Auth Docker Setup](developer-guide/integrations/auth-docker-setup.md#auth-docker-setup) guide for the optional Keycloak and OpenLDAP compose overlay.
+
 ### Prerequisites
 
 * A server with [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed

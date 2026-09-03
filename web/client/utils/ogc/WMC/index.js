@@ -7,8 +7,8 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs, castArray } from 'lodash';
-import uuidv1 from 'uuid/v1';
+import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs, castArray, isEmpty } from 'lodash';
+import { v1 as uuidv1 } from 'uuid';
 
 import {
     extractTag,
@@ -214,7 +214,10 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                     group: get(msTagExtractor(layerExtensions, 'group'), 'charContent'),
                     search: searchTag && {
                         url: xlinkExtractor(searchTag, 'href'),
-                        type: attrExtractor(searchTag, 'type')
+                        type: attrExtractor(searchTag, 'type'),
+                        ...(attrExtractor(searchTag, 'typeName') && {
+                            typeName: attrExtractor(searchTag, 'typeName')
+                        })
                     },
                     dimensions: dimensions.map(dim => ({
                         name: attrExtractor(dim, 'name'),
@@ -392,15 +395,18 @@ export const toWMC = (
         };
     };
 
-    const olExtensionsGeneral = assignNamespace([{
-        name: 'maxExtent',
-        attributes: objectToAttributes({
-            minx: maxExtent[0],
-            miny: maxExtent[1],
-            maxx: maxExtent[2],
-            maxy: maxExtent[3]
-        })
-    }], namespaces.ol);
+    const maxExtentFromBbox = isEmpty(bbox) ? null : makeMaxExtentFromBbox(bbox);
+    const olExtensionsGeneral = !isEmpty(maxExtentFromBbox)
+        ? castArray(maxExtentFromBbox)
+        : assignNamespace([{
+            name: 'maxExtent',
+            attributes: objectToAttributes({
+                minx: maxExtent[0],
+                miny: maxExtent[1],
+                maxx: maxExtent[2],
+                maxy: maxExtent[3]
+            })
+        }], namespaces.ol);
     const msExtensionsGeneral = assignNamespace([groups.length > 0 ? {
         name: 'GroupList',
         children: groups.map(group => ({
@@ -512,7 +518,10 @@ export const toWMC = (
                 attributes: [{
                     name: 'type',
                     value: layer.search.type
-                }, ...makeSimpleXlink(layer.search.url)]
+                }, ...(layer.search.typeName ? [{
+                    name: 'typeName',
+                    value: layer.search.typeName
+                }] : []), ...makeSimpleXlink(layer.search.url)]
             }, layer.layerFilter && {
                 name: 'filter',
                 textContent: JSON.stringify(layer.layerFilter)

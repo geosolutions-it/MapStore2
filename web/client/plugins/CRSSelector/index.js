@@ -22,34 +22,42 @@ import { createPlugin } from '../../utils/PluginsUtils';
   * @prop {object[]} projectionDefs list of additional project definitions
   * @prop {array} cfg.allowedRoles list of the authorized roles that can use the plugin, if you want all users to access the plugin, add a "ALL" element to the array.
   * @prop {array} cfg.availableProjections list of the available projections to be displayed in the combobox.
-  * @prop {string[]} cfg.filterAllowedCRS (deprecated) list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
-  * @prop {object} cfg.additionalCRS (deprecated) additional crs added to the list. The label param is used after in the combobox.
-  * @prop {string} cfg.projectionDefsEndpoint (optional) if provided, the plugin will fetch available projections from this endpoint (only supported the GeoServer REST provider).
-  *
-  * @example
-  * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
-  * // Put the following lines at the first level of the localconfig
-  * {
-  *   "projectionDefs": [{
-  *     "code": "EPSG:3003",
-  *     "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
-  *     "extent": [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
-  *     "worldExtent": [6.6500, 8.8000, 12.0000, 47.0500]
-  *   }]
-  * }
-  * @example
-  * // And configure the new projection for the plugin as below:
-  * { "name": "CRSSelector",
-  *   "cfg": {
-  *     "projectionDefsEndpoint": "https://example.com/geoserver",
-  *     "availableProjections": [
-  *       { "value": "EPSG:4326", "label": "EPSG:4326" },
-  *       { "value": "EPSG:3857", "label": "EPSG:3857" },
-  *       { "value": "EPSG:3003", "label": "EPSG:3003" }
-  *     ],
-  *     "allowedRoles" : ["ADMIN", "USER", "ALL"]
-  *   }
-  * }
+ * @prop {string[]} cfg.filterAllowedCRS (deprecated) list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
+ * @prop {object} cfg.additionalCRS (deprecated) additional crs added to the list. The label param is used after in the combobox.
+ * @prop {string} cfg.projectionDefsEndpoint (optional) if provided, the plugin will fetch available projections from this endpoint (only supported the GeoServer REST provider).
+ * @prop {object} cfg.customResolutions (optional) map of per-CRS resolution arrays, keyed by SRS code. When the user switches the map CRS to one of the configured codes,
+ * the matching list of resolutions is applied to the map. The applied list is saved together with the map so that, when the map is reopened, the CRS and the resolutions
+ * remain aligned. If a CRS has no entry here, the resolutions are computed from the projection extent. See the migration guide for upgrading from earlier versions where
+ * custom resolutions were declared in the default map configuration.
+ *
+ * @example
+ * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
+ * // Put the following lines at the first level of the localconfig
+ * {
+ *   "projectionDefs": [{
+ *     "code": "EPSG:3003",
+ *     "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
+ *     "extent": [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
+ *     "worldExtent": [6.6500, 8.8000, 12.0000, 47.0500]
+ *   }]
+ * }
+ * @example
+ * // And configure the new projection for the plugin as below:
+ * { "name": "CRSSelector",
+ *   "cfg": {
+ *     "projectionDefsEndpoint": "https://example.com/geoserver",
+ *     "availableProjections": [
+ *       { "value": "EPSG:4326", "label": "EPSG:4326" },
+ *       { "value": "EPSG:3857", "label": "EPSG:3857" },
+ *       { "value": "EPSG:3003", "label": "EPSG:3003" }
+ *     ],
+ *     "customResolutions": {
+ *          "EPSG:3003": [2366, 1183, 591, 295, 147, 73, 36, 18, 9, 4, 2, 1, 0.5, 0.28, 0.14, 0.07, 0.035, 0.018],
+ *          "EPSG:4326": [0.7, 0.35, 0.175, 0.0875, 0.04375, 0.021875, 0.010986, 0.0054931]
+ *     }
+ *     "allowedRoles" : ["ADMIN", "USER", "ALL"]
+ *   }
+ * }
 */
 export default createPlugin('CRSSelector', {
     component: CRSSelector,

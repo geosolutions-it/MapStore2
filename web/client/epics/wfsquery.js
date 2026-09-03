@@ -101,8 +101,11 @@ export const featureTypeSelectedEpic = (action$, store) =>
         .filter(action => action.url && action.typeName)
         .switchMap(action => {
             const state = store.getState();
-            if (isDescribeLoaded(state, action.typeName)) {
-                const info = extractInfo(layerDescribeSelector(state, action.typeName), action.fields);
+            if (isDescribeLoaded(state, action.typeName, action.url)) {
+                const info = {
+                    ...extractInfo(layerDescribeSelector(state, action.typeName), action.fields),
+                    url: action.url
+                };
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
 
                 return Rx.Observable.of(featureTypeLoaded(action.typeName, info, action.owner), changeSpatialAttribute(geometry), Rx.Scheduler.async); // async scheduler is needed to allow invokers of `FEATURE_TYPE_SELECTED` to intercept `FEATURE_TYPE_LOADED` action as response.
@@ -122,7 +125,8 @@ export const featureTypeSelectedEpic = (action$, store) =>
                                 .map((attribute) => attribute
                                 ),
                             original: originalData,
-                            attributes: describeFeatureTypeToAttributes(originalData, action.fields)
+                            attributes: describeFeatureTypeToAttributes(originalData, action.fields),
+                            url: action.url
                         };
 
                         const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
@@ -142,7 +146,10 @@ export const featureTypeSelectedEpic = (action$, store) =>
             return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json', {_msAuthSourceId: selectedLayer?.security?.sourceId}))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
-                        const info = extractInfo(response.data, action.fields);
+                        const info = {
+                            ...extractInfo(response.data, action.fields),
+                            url: action.url
+                        };
                         const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
                         return Rx.Observable.from([changeSpatialAttribute(geometry), featureTypeLoaded(action.typeName, info)]);
                     }

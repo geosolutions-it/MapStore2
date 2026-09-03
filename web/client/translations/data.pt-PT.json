@@ -112,7 +112,6 @@
       "templateFormatInfoAlert1": "Clicar no botão editar para adicionar um novo template.",
       "templateFormatInfoAlert2": "Use ${ attribute } para identificar as propriedades que necessita visualizar",
       "templateFormatInfoAlertExample": "O id do tema é ${ properties }",
-      "templatePreview": "Preview do Template",
       "heightOffset": "Desvio de altura (m)",
       "tooltip": {
         "label": "Dica",
@@ -810,6 +809,7 @@
       "toggleLayerVisibilityWarning": "Ajuste visibilidade do tema, Aviso: tema não carregou correctamente",
       "createWidget": "Criar um widget para o tema seleccionado",
       "editLayerProperties": "Editar propriedades do tema",
+      "createWidgetForMap": "Criar um widget para o mapa",
       "browseData": "Ver dados",
       "removeLayer": "Remover camada",
       "loadingerror": "O tema não foi carregado correctamente",
@@ -2059,6 +2059,9 @@
       "wmcNoLayersError": "É necessária pelo menos uma camada WMS para exportar para WMC, foram encontradas zero"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Tipo de filtro de tag",
         "category": "Categoria",
@@ -2757,6 +2760,8 @@
           "backToChartOptionConfiguration": "Voltar à configuração do gráfico",
           "backToFilterOptions": "Voltar às opções de filtro",
           "selectLayers": "Selecionar uma ou mais camadas",
+          "selectMapLayers": "Selecionar uma camada do mapa",
+          "noFilterableMapLayers": "Nenhuma camada no mapa pode ser filtrada. Adicione uma camada WMS ou WFS primeiro.",
           "errorChart": "Um ou mais gráfico(s) é inválido",
           "errorFilter": "Um ou mais filtro(s) é inválido",
           "attributeEditorColumns": {
@@ -3155,6 +3160,8 @@
         "style": "Estilo",
         "actions": "Ações",
         "layoutTabLabel": "Disposição",
+        "description": "Descrição",
+        "descriptionPlaceholder": "Introduza a descrição...",
         "title": "Título",
         "label": "Etiqueta",
         "icon": "Ícone",
@@ -3198,6 +3205,12 @@
         "forceSelection": "Forçar Seleção",
         "forceSelectionTooltip": "Se ativado, um item de filtro deve estar selecionado",
         "forceSelectionEnabledTooltip": "Quando a seleção forçada está ativada, pelo menos um item deve estar selecionado",
+        "defaultExpanded": "Expandido por default",
+        "defaultExpandedTooltip": "Se selecionado, o filtro é mostrado expandido por default; caso contrário, o cartel de filtro começa colapsado",
+        "disableFilter": "Desativar este filtro",
+        "enableFilter": "Ativar este filtro",
+        "collapseFilter": "Colapsar filtro",
+        "expandFilter": "Expandir filtro",
         "selectDataSourcePlaceHolder": "Selecione a fonte de dados ...",
         "selectAttribute": "Selecionar Atributo",
         "valueFromUniqueAttributeDescription": "Obtém todas as entidades com um valor único para o atributo selecionado.",

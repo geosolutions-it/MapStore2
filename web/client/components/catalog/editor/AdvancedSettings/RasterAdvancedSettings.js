@@ -18,6 +18,7 @@ import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
 import WMSDomainAliases from "./WMSDomainAliases";
+import FeatureInfoRequestOptions from "../../../misc/FeatureInfoRequestOptions";
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 import OverlayTrigger from '../../../misc/OverlayTrigger';
 import FormControl from '../../../misc/DebouncedFormControl';
@@ -185,6 +186,19 @@ export default ({
                 &nbsp;<InfoPopover text={<Message msgId="layerProperties.useCacheOptionInfo.info" />} />
             </Checkbox>
         </FormGroup>}
+        {service.type === "wms" ? <>
+            <hr style={{margin: "8px 0"}}/>
+            <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
+                <ControlLabel className="strong"><Message msgId="layerProperties.featureInfo" /></ControlLabel>
+            </FormGroup>
+            <FeatureInfoRequestOptions
+                featureInfo={service.layerOptions?.featureInfo || {}}
+                showBuffer={service.layerOptions?.serverType === ServerTypes.GEOSERVER}
+                onChange={(featureInfo) => onChangeServiceProperty("layerOptions", {
+                    ...service.layerOptions,
+                    featureInfo
+                })} />
+        </> : null}
         <hr style={{margin: "8px 0"}}/>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
             <ControlLabel className="strong"><Message msgId="layerProperties.format.title" /></ControlLabel>

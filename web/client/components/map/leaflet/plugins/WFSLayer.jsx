@@ -51,7 +51,7 @@ const loadFeatures = (layer, options) => {
     layer.fireEvent('loading');
     const params = optionsToVendorParams(options);
     const onError = () => {
-        layer.fireEvent('loadError');
+        layer.fireEvent('loaderror');
         // // TODO: notify error
     };
     return getFeature(options.url, options.name, {

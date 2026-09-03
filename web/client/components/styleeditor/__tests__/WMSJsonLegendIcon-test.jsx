@@ -9,9 +9,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import WMSJsonLegendIcon from '../WMSJsonLegendIcon';
+import WMSJsonLegendIcon, {
+    createIconSymbolizerForPoint,
+    getExternalGraphicUrl,
+    getPointExternalGraphicUrl
+} from '../WMSJsonLegendIcon';
 
 describe('WMSJsonLegendIcon', () => {
+    const imageSrc = 'styles/tree.png';
+    const pointUrl = 'styles/point-url.png';
+
+    const createExternalGraphicLegend = () => ({
+        Legend: [{
+            layerName: 'tasmania_cities',
+            title: 'Tasmania cities',
+            rules: [{
+                title: 'City Point',
+                symbolizers: [{
+                    Point: {
+                        title: 'title',
+                        'abstract': 'abstract',
+                        url: pointUrl,
+                        size: '6',
+                        opacity: '1.0',
+                        rotation: '0.0',
+                        graphics: [{
+                            'external-graphic-url': imageSrc,
+                            'external-graphic-type': 'image/png'
+                        }]
+                    }
+                }]
+            }]
+        }]
+    });
+
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -23,6 +54,34 @@ describe('WMSJsonLegendIcon', () => {
         setTimeout(done);
     });
 
+    it('should parse external graphic url from graphic object', () => {
+        expect(getExternalGraphicUrl({
+            'external-graphic-url': imageSrc,
+            'external-graphic-type': 'image/png'
+        })).toBe(imageSrc);
+    });
+    it('should parse point external graphic url from GeoServer legend json', () => {
+        const legend = createExternalGraphicLegend();
+        const pointSymbolizer = legend.Legend[0].rules[0].symbolizers[0].Point;
+        expect(getPointExternalGraphicUrl(pointSymbolizer)).toBe(imageSrc);
+    });
+    it('should create icon symbolizer from external graphic url', () => {
+        const legend = createExternalGraphicLegend();
+        const pointSymbolizer = legend.Legend[0].rules[0].symbolizers[0].Point;
+        expect(createIconSymbolizerForPoint(pointSymbolizer)).toInclude({
+            image: imageSrc,
+            rotate: '0.0',
+            opacity: '1.0'
+        });
+    });
+    it('should create icon symbolizer from point url when external graphic is not available', () => {
+        expect(createIconSymbolizerForPoint({
+            url: imageSrc,
+            graphics: []
+        })).toInclude({
+            image: imageSrc
+        });
+    });
     it('should render polygon icon ', () => {
         const symbolizers = [{"Polygon": {
             "fill": "#4DFF4D",

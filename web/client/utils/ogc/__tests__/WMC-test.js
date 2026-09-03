@@ -13,6 +13,18 @@ import { omit, zip } from 'lodash';
 import { toMapConfig, toWMC } from '../WMC';
 
 describe('WMC tests', () => {
+    it('round-trips an optional linked WFS typeName', () =>
+        axios.get('base/web/client/test-resources/wmc/context.wmc')
+            .then(({data}) => toMapConfig(data.replace('type="wfs"', 'type="wfs" typeName="workspace:linked"')))
+            .then(config => {
+                expect(config.map.layers[1].search.typeName).toBe('workspace:linked');
+                const exported = toWMC(config, {});
+                expect(exported).toContain('typeName="workspace:linked"');
+                return toMapConfig(exported);
+            })
+            .then(config => {
+                expect(config.map.layers[1].search.typeName).toBe('workspace:linked');
+            }));
     it('toMapConfig with a valid sample context', () =>
         axios.get('base/web/client/test-resources/wmc/context.wmc').then(response => toMapConfig(response.data)).then(config => {
             expect(config).toExist();
@@ -332,16 +344,53 @@ describe('WMC tests', () => {
             done(new Error('Expected toMapConfig to throw an error!'));
         });
     });
-    it('toWMC', () =>
-        Promise.all([
-            axios.get('base/web/client/test-resources/wmc/config.json'),
-            axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
-        ]).then(([{data: config}, {data: context}]) => {
-            const exportedLines = toWMC(config, {}).split('\n').map(r => r.trim()).filter(e => e);
-            const contextLines = context.split('\n').map(r => r.trim()).filter(e => e);
+    describe('WMC export tests', () => {
+        // round decimal numbers embedded in the exported text because floating point
+        // results of transcendental functions can differ across browser versions
+        const normalizeNumbers = line => line.replace(/-?\d+\.\d+/g, match => Number(match).toFixed(6));
+        const compareLines = (exported, context) => {
+            const exportedLines = exported.split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
+            const contextLines = context.split('\n').map(r => normalizeNumbers(r.trim())).filter(e => e);
 
             zip(exportedLines, contextLines).forEach(([exportedLine, contextLine], i) =>
                 expect({text: exportedLine, line: i + 1}).toEqual({text: contextLine, line: i + 1}));
-        })
-    );
+        };
+        it('toWMC', () =>
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                compareLines(toWMC(config, {}), context);
+            })
+        );
+        it('Empty maxExtent should not fail', () => {
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/exported-context.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                const _config = omit(config, "map.maxExtent"); // remove mapExtent
+                compareLines(toWMC(_config, {}), context);
+            });
+        });
+        it('bbox should take precedence over maxExtent', () => {
+            Promise.all([
+                axios.get('base/web/client/test-resources/wmc/config.json'),
+                axios.get('base/web/client/test-resources/wmc/context-bbox.wmc')
+            ]).then(([{data: config}, {data: context}]) => {
+                const _config = {
+                    ...config,
+                    map: {
+                        ...config.map,
+                        bbox: {bounds: {
+                            minx: -447353.25587372016,
+                            miny: 3817753.15151658,
+                            maxx: 4562023.82912628,
+                            maxy: 6138992.826157694
+                        }, crs: "EPSG:900913"}
+                    }
+                };
+                compareLines(toWMC(_config, {}), context);
+            });
+        });
+    });
 });

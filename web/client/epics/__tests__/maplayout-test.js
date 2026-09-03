@@ -215,6 +215,10 @@ describe('map layout epics', () => {
             const state = { controls: { metadataexplorer: { enabled: true, group: "parent" } } };
             testEpic(updateMapLayoutEpic, 1, setControlProperties("metadataexplorer", "enabled", true, "group", "parent"), epicResult(done), state);
         });
+        it('metadataexplorer in dialog mode does not reserve right panel space', done => {
+            const state = { controls: { metadataexplorer: { enabled: true, panel: false } } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperty("metadataexplorer", "panel", false), epicResult(done, 0), state);
+        });
         it('userExtensions', (done) => {
             const state = { controls: { userExtensions: { enabled: true, group: "parent" } } };
             testEpic(updateMapLayoutEpic, 1, setControlProperties("userExtensions", "enabled", true, "group", "parent"), epicResult(done), state);

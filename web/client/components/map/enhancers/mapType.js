@@ -31,7 +31,7 @@ function mapType(Component) {
             this._isMounted = true;
         }
 
-        componentWillUpdate(newProps) {
+        UNSAFE_componentWillUpdate(newProps) {
             if (newProps.mapType !== this.props.mapType) {
                 this.setPlugins(newProps);
             }

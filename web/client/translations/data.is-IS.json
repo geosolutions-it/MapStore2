@@ -113,7 +113,6 @@
       "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
       "templateFormatInfoAlertExample": "The id of the feature is <span style='white-space:nowrap'>${ properties.id }</span> or <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
       "templateError": "There was an error applying the template to the information returned by the server, please check the template",
-      "templatePreview": "Template preview",
       "heightOffset": "Height offset (m)",
       "wmsLayerTileSize": "Tile size (WMS)",
       "serverType": "Server Type",
@@ -1481,6 +1480,9 @@
       "wmcNoLayersError": "At least one WMS layer needed to export to WMC, found zero"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "Teg sía sía",
         "category": "Flokkur",

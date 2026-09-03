@@ -724,11 +724,13 @@ describe('search Epics', () => {
                 expect(actions[0].bbox).toEqual([8.69736995, 44.46808721, 8.7002344, 44.4699759]);
                 const popupAction = actions[1];
                 expect(popupAction.type).toBe(ADD_MAP_POPUP);
-                expect(popupAction.popup?.position?.coordinates?.[0]).toBe(
-                    968346.2286324208
+                // reprojected values are compared with a tolerance because floating point
+                // results of transcendental functions can differ across browser versions
+                expect(popupAction.popup?.position?.coordinates?.[0]?.toFixed(6)).toBe(
+                    (968346.2286324208).toFixed(6)
                 );
-                expect(popupAction.popup?.position?.coordinates?.[1]).toBe(
-                    5538315.133325616
+                expect(popupAction.popup?.position?.coordinates?.[1]?.toFixed(6)).toBe(
+                    (5538315.133325616).toFixed(6)
                 );
                 done();
             },

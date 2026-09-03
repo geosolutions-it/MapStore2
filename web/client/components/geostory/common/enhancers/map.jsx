@@ -11,7 +11,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {branch, compose, createEventHandler, mapPropsStream, withHandlers, withProps, withPropsOnChange, withStateHandlers} from 'recompose';
 import {createSelector} from 'reselect';
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 
 import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector, getFocusedContentSelector, isGeoCarouselSection} from '../../../../selectors/geostory';
 import {createMapObject, getIdFromPath} from '../../../../utils/GeoStoryUtils';

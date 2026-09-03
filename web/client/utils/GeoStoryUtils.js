@@ -21,7 +21,7 @@ import isString from "lodash/isString";
 import isObject from "lodash/isObject";
 import includes from "lodash/includes";
 import replace from 'lodash/replace';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
 // Allowed StoryTypes

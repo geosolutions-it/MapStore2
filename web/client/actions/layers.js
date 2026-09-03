@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { error as errorNotification } from './notifications';
+
 export const CHANGE_LAYER_PROPERTIES = 'CHANGE_LAYER_PROPERTIES';
 export const CHANGE_LAYER_PARAMS = 'LAYERS:CHANGE_LAYER_PARAMS';
 export const CHANGE_GROUP_PROPERTIES = 'CHANGE_GROUP_PROPERTIES';
@@ -313,4 +315,13 @@ export function updateSettingsParams(newParams, update) {
         newParams,
         update
     };
+}
+
+export function layerNameChangeError() {
+    return errorNotification({
+        title: 'layerNameChangeError.title',
+        message: 'layerNameChangeError.message',
+        autoDismiss: 5,
+        position: 'tc'
+    });
 }

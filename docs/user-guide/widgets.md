@@ -222,7 +222,7 @@ Through this section, for each axis, the user is allowed to:
 * Choose the **Type** (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at the data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting).
 
 !!! Note
-    If **`Date`** is selected in the *Type* option, the **Show the Current Time** setting becomes available in the *Axes* panel, allowing you to highlight the current date in the chart.
+    If **`Date`** is selected in the *Type* option, the **Highlight selected time** setting becomes available in the *Axes* panel, allowing you to highlight the current date in the chart.
     <img src="../img/widgets/show-current-time.jpg" class="ms-docimage" style="max-width:300px;"/>
     Once enabled, you can customize the appearance of the current time line using the following options:
     <img src="../img/widgets/customize-current-time.jpg" class="ms-docimage" style="max-width:300px;"/>
@@ -241,6 +241,10 @@ Through this section, for each axis, the user is allowed to:
 
 !!! Note
     More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) in the online documentation.
+
+* Add **Axis Tick Values**, as comma-separated values, to force the axis to display only these specific points.
+
+* Add **Axis Tick Text**, as custom labels, to replace the text at the positions defined in Axis Tick Values. The alignment is strictly positional (matched by index, one label per value).
 
 * Choose the **Side** of the chart on which to display the axis labels (between `Left` or `Right`)
 
@@ -266,6 +270,8 @@ Here the user can:
 * Show/Hide the chart's grid in background with the **Hide Grid** control (only for the *Bar Charts* and the *Line Charts*)
 
 * Enable the chart's legend by activating **Display Legend**
+
+* Select the **Tooltip Mode**, choosing how the tooltip on the chart will be shown, between *Unified X tooltip*, *Unified Y tooltip*, *X tooltip*, *Y tooltip*, *Individual tooltip* and *No tooltip*.
 
 * Choose the **Color** for all chart texts through the color picker (only for the *Bar Charts* and the *Line Charts*)
 
@@ -572,11 +578,17 @@ Once the user chooses to enable the **Title**, it can be customized with the fol
 
 From the **Items**, the user can perform the following actions:
 
-* Modify the type of user interaction with the items by selecting from the dropdown menu: `Checkbox`, `Button`, `Dropdown`, or `Switch`.
+* Modify the type of user interaction with the items by selecting from the dropdown menu: `Checkbox`, `Button`, `Dropdown`, `Switch` or `Slider`.
+
+!!! Warning
+    In order to apply the **Slider**, the *Selection Mode* should be on `Single`.
+
+!!! Note
+    In particular, the **Slider** can be used to view the *Time* or *Elevation* dimension. More information can be found in the following paragraph: [Applying Time and Elevation dimensions](widgets.md#applying-time-and-elevation-dimensions).
 
 <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/variant-items.mp4"/></video>
 
-* Choose the selection mode for the items: `Single` or `Multiple`.
+* Choose the **Selection Mode** for the items: `Single` or `Multiple`.
 
 * Select the **Direction** of the items: `Vertical` or `Horizontal`.
 
@@ -624,6 +636,41 @@ The user can:
 An example of filter selector widget could be:
 
 <video class="ms-docimage" style="max-width:800px;" controls><source src="../img/widgets/filter-ex.mp4"/></video>
+
+#### Applying Time and Elevation dimensions
+
+The dynamic filter tool can also drive the `time` and `elevation` dimensions of WMS layers, synchronize with the map timeline, or control the *Highlight Selected Time* option of a chart (when not already driven by the timeline). If the value attribute is of type `datetime` or `number` and the selection mode is set to *Single*, the **Apply Dimension** option becomes available in the **Interactions** tab, given that there is at least one valid target available.
+
+A valid target is either a WMS layer exposing a `time` or `elevation` dimension, the *timeline* plugin, if present in the current context, or a chart with the *Highlight Selected Time* option enabled.
+
+To enable the **Apply Dimension** option in a filter, follow these steps:
+
+* In the [Data](widgets.md#data) tab, set the *Values From* option to **Attributes** and select a `datetime` or `number` attribute in the *Value Attribute* field.
+
+<img src="../img/widgets/time-attribute.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* In the [Interactions](widgets.md#interactions) tab, click the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button and select the **Apply Dimension** option.
+
+<img src="../img/widgets/apply-dimension-option.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* Connect the filter to the layer by clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button.
+
+<img src="../img/widgets/connect-dimension.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* To connect the filter to the map timeline, first click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, then enable the **2-way synchronization**.
+
+<img src="../img/widgets/connect-timeline.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+!!! Warning
+    *2 way synchronization* cannot be enabled if other nodes, aside from map timeline connection nodes, are already connected.
+
+Example of the time attribute applied to the filter selector slider:
+
+<video class="ms-docimage" controls><source src="../img/widgets/time-dimension.mp4"/></video>
+
+Example of the elevation attribute applied to the filter selector slider:
+
+<video class="ms-docimage" controls><source src="../img/widgets/elevation-dimension.mp4"/></video>
 
 ## Manage existing widgets
 

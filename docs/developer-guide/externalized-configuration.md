@@ -83,6 +83,20 @@ Logging has not been externalized yet, You can manually do this change in `WEB-I
 
 The `config.yaml` is by default in the `printing` folder of the webapp root. You can externalize the path to this resource (and all relative files) by setting the system variable `mapfish-print-config`. Make you sure the file exists and all the required files (header, images ...) are also available (typically they are the same directory, identified by relative paths. For more information, see [mapfish-print](http://www.mapfish.org/doc/print/) documentation ).
 
+For a generated MapStore project that always uses the same custom print configuration, the configuration can be bundled with the application. Create a `web/printing` folder in the project, add the custom `config.yaml` and its related resources (headers, images, and so on), and change the `printing` execution in `web/pom.xml` as follows:
+
+```diff
+<resources>
+    <resource>
+-        <directory>${basedir}/../MapStore2/java/printing/resources/geoserver/print</directory>
++        <directory>${basedir}/printing</directory>
+        <includes><include>*</include></includes>
+    </resource>
+</resources>
+```
+
+This copies the project-specific resources to the `printing` folder of the webapp when the application is built.
+
 *Example*:
 
 ```sh

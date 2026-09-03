@@ -42,5 +42,20 @@ describe('Test FlatGeobuf API catalog', () => {
         expect(layer.type).toEqual(FGB_LAYER_TYPE);
         expect(layer.url).toEqual(FGB_FILE);
     });
+    it('should merge service layer options into the layer config', () => {
+        const catalogRecord = {
+            serviceType: FGB_LAYER_TYPE,
+            isValid: true,
+            identifier: FGB_FILE,
+            url: FGB_FILE
+        };
+        const layer = getLayerFromRecord(catalogRecord, {
+            service: {
+                layerOptions: {
+                    maxFeaturesInView: 10
+                }
+            }
+        });
+        expect(layer.maxFeaturesInView).toBe(10);
+    });
 });
-

@@ -9,7 +9,7 @@
 
 import React, { useReducer, useEffect } from 'react';
 import { Glyphicon, ButtonGroup, Nav, NavItem, FormGroup, ControlLabel, FormControl } from "react-bootstrap";
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import undoable from 'redux-undo';
 import bbox from '@turf/bbox';
 import identity from 'lodash/identity';

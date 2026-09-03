@@ -1180,9 +1180,28 @@ export const getWFSFilterData = (filterObj, options) => {
 export const isLikeOrIlike = (operator) => operator === "ilike" || operator === "like";
 export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) =>
     !(filterFields.filter((field) => field.value || field.value === 0 || field.operator === "isNull").length > 0)
-    && !spatialField.geometry
+    && !spatialField?.geometry
     && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation)
     && !(filters && filters.length > 0);
+
+/**
+ * Checks if the layer filter contains any global filters
+ */
+export const isFilterGlobal = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) =>
+    (filterFields.filter((field) => field.value || field.value === 0 || field.operator === "isNull").length > 0)
+    || !!spatialField?.geometry
+    || !!(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation)
+    || filters.some((f) => !f.appliedFromWidget);
+/**
+ * Returns the unique IDs of widgets that applied filters
+ */
+export const getFilterWidgetIds = ({ filters = [] } = {}) =>
+    [...new Set(filters.filter((f) => f.appliedFromWidget).map((f) => f.appliedFromWidget))];
+/**
+ * Checks if the layer filter contains only widget-applied filters
+ */
+export const isFilterFromWidgetOnly = (layerFilter) =>
+    !isFilterGlobal(layerFilter) && getFilterWidgetIds(layerFilter).length > 0;
 export const isFilterValid = (f = {}) =>
     (f.filterFields && f.filterFields.length > 0)
     || (f.simpleFilterFields && f.simpleFilterFields.length > 0)

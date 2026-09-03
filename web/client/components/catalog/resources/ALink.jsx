@@ -9,15 +9,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { getSafeHref } from '../../../utils/URLUtils';
+
 function ALink({ href, readOnly, children, fallbackComponent, ...props }) {
-    if (readOnly || !href) {
+    const linkHref = getSafeHref(href);
+    if (readOnly || !linkHref) {
         if (fallbackComponent) {
             const FallbackComponent = fallbackComponent;
             return <FallbackComponent {...props}>{children}</FallbackComponent>;
         }
         return <>{children}</>;
     }
-    return <a href={href} {...props}>{children}</a>;
+    return <a href={linkHref} {...props}>{children}</a>;
 }
 
 ALink.propTypes = {

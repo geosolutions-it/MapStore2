@@ -25,29 +25,26 @@ describe("This test for HtmlRenderer component", () => {
     });
 
     it('creates componet with defaults', () => {
-        const cmp = ReactDOM.render(<HtmlRenderer/>, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
-
-        const node = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<HtmlRenderer/>, document.getElementById("container"));
+        const node = document.getElementById("container").firstChild;
+        expect(node).toBeTruthy();
         expect(node.id).toBeFalsy();
         expect(node.childNodes.length).toBe(0);
     });
 
     it('creates empty componet with id', () => {
-        const cmp = ReactDOM.render(<HtmlRenderer id="testId"/>, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
-
-        const node = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<HtmlRenderer id="testId"/>, document.getElementById("container"));
+        const node = document.getElementById("container").firstChild;
+        expect(node).toBeTruthy();
         expect(node.id).toBe("testId");
         expect(node.childNodes.length).toBe(0);
     });
 
     it('creates a filled componet', () => {
         const srcCode = '<p id="innerP"><span id="innerSPAN">text</span></p>';
-        const cmp = ReactDOM.render(<HtmlRenderer html={srcCode}/>, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
-
-        const node = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<HtmlRenderer html={srcCode}/>, document.getElementById("container"));
+        const node = document.getElementById("container").firstChild;
+        expect(node).toBeTruthy();
         expect(node.childNodes.length).toBe(1);
 
         const innerP = node.childNodes[0];
@@ -59,11 +56,35 @@ describe("This test for HtmlRenderer component", () => {
         expect(innerSPAN.innerHTML).toBe("text");
     });
     it('should change the style of the component', () => {
-        const cmp = ReactDOM.render(<HtmlRenderer style={{ color: 'rgb(255, 255, 255)' }}/>, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
-
-        const node = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<HtmlRenderer style={{ color: 'rgb(255, 255, 255)' }}/>, document.getElementById("container"));
+        const node = document.getElementById("container").firstChild;
+        expect(node).toBeTruthy();
         expect(node.id).toBeFalsy();
         expect(node.style.color).toBe('rgb(255, 255, 255)');
+    });
+
+    describe('sanitization', () => {
+        it('removes script tags from the html prop', () => {
+            window.__htmlRendererScript = undefined;
+            ReactDOM.render(<HtmlRenderer html={'<p>content</p><script>window.__htmlRendererScript = true</script>'} />, document.getElementById("container"));
+            expect(window.__htmlRendererScript).toBe(undefined);
+            expect(document.getElementById("container").innerHTML.indexOf('<script')).toBe(-1);
+        });
+        it('removes inline event handlers from the html prop', () => {
+            window.__htmlRendererHandler = undefined;
+            ReactDOM.render(<HtmlRenderer html={'<img src="missing-image" onerror="window.__htmlRendererHandler = true">'} />, document.getElementById("container"));
+            expect(window.__htmlRendererHandler).toBe(undefined);
+            expect(document.getElementById("container").innerHTML.toLowerCase().indexOf('onerror')).toBe(-1);
+        });
+        it('keeps the formatting tags of the html prop', () => {
+            ReactDOM.render(<HtmlRenderer html={'<p><b>bold</b> and <i>italic</i></p>'} />, document.getElementById("container"));
+            const inner = document.getElementById("container").innerHTML;
+            expect(inner.indexOf('<b>bold</b>')).toBeGreaterThan(-1);
+            expect(inner.indexOf('<i>italic</i>')).toBeGreaterThan(-1);
+        });
+        it('renders an empty html prop without throwing', () => {
+            expect(() => ReactDOM.render(<HtmlRenderer html={null} />, document.getElementById("container"))).toNotThrow();
+            expect(() => ReactDOM.render(<HtmlRenderer html={undefined} />, document.getElementById("container"))).toNotThrow();
+        });
     });
 });

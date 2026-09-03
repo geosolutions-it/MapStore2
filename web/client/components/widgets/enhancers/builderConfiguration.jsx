@@ -12,6 +12,7 @@ import {Message, HTML} from "../../I18N/I18N";
 const TYPES = "ALL";
 import {findGeometryProperty} from '../../../utils/ogc/WFS/base';
 import { extractTraceData } from '../../../utils/WidgetsUtils';
+import { getSearchUrl, getWFSLayerName } from '../../../utils/LayersUtils';
 
 const getGeometryKey = (editorData) => {
     if (editorData?.selectedChartId) {
@@ -30,7 +31,9 @@ export default ({needsWPS} = {}) => compose(
     defaultProps({
         dataStreamFactory: ($props, {onEditorChange = () => {}, onConfigurationError = () => {}} = {}) =>
             $props
-                .distinctUntilChanged( ({layer = {}} = {}, {layer: newLayer} = {})=> layer.name === newLayer.name)
+                .distinctUntilChanged( ({layer = {}} = {}, {layer: newLayer} = {}) =>
+                    getSearchUrl(layer) === getSearchUrl(newLayer)
+                    && getWFSLayerName(layer) === getWFSLayerName(newLayer))
                 .switchMap(({ layer, editorData } = {}) => Observable.forkJoin(
                     describeFeatureType({ layer }),
                     // if the builder needWPS service, then if missing it emits an exception
@@ -48,8 +51,9 @@ export default ({needsWPS} = {}) => compose(
                         loading: false,
                         types: TYPES,
                         featureTypeProperties: get(result, "data.featureTypes[0].properties") || []
-                    })
-                    ))
+                    }))
+                    // keep the toolbar in sync with the empty/error view shown by the emptyState enhancer below
+                    .do(({ featureTypeProperties = [] } = {}) => onConfigurationError(featureTypeProperties.length === 0)))
                 .catch( e => {
                     onConfigurationError(e);
                     return Observable.of({

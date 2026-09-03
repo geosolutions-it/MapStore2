@@ -26,6 +26,9 @@ import CounterWizard from '../../components/widgets/builder/wizard/CounterWizard
 import BuilderHeader from './BuilderHeader';
 import BaseToolbar from '../../components/widgets/builder/wizard/counter/Toolbar';
 import LayerSelector from './LayerSelector';
+import MapCatalogLayerSelector from './MapCatalogLayerSelector';
+import layerSelectorConnect from './enhancers/connection/layerSelectorConnect';
+import withBackButton from './enhancers/withBackButton';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
 
 import {wizardStateToProps, wizardSelector} from './commons';
@@ -63,6 +66,12 @@ const Toolbar = compose(
     withConnectButton(({ step }) => step === 0)
 )(BaseToolbar);
 
+// Map-layers picker (current map layers only)
+const CounterMapLayerSelector = compose(
+    layerSelectorConnect,
+    withBackButton
+)(MapCatalogLayerSelector);
+
 /*
  * in case you don't have a layer selected (e.g. dashboard) the chart builder
  * prompts a catalog view to allow layer selection
@@ -71,6 +80,10 @@ const chooseLayerEnhancer = compose(
     connect(wizardSelector),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
+    branch(
+        ({ layer, editorData } = {}) => !layer && editorData?.globalWidgetMode === true,
+        renderComponent(CounterMapLayerSelector)
+    ),
     branch(
         ({ layer } = {}) => !layer,
         renderComponent(counterLayerSelector(LayerSelector))

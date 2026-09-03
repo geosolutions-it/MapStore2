@@ -9,7 +9,7 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import set from 'lodash/fp/set';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
 import {
     UPDATE_RESOURCES,

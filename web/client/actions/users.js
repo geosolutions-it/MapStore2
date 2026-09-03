@@ -279,7 +279,7 @@ export function deleteUser(id, status = "confirm") {
     } else if ( status === "delete") {
         return (dispatch) => {
             dispatch(deletingUser(id));
-            API.deleteUser(id).then(() => {
+            API.deleteUser(id, { params: { cascadeResourceDelete: 'USERSESSION' } }).then(() => {
                 dispatch(deleteUserSuccess(id));
                 dispatch(searchUsers({ refresh: true }));
             }).catch((error) => {

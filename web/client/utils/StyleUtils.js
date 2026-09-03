@@ -13,7 +13,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import tinycolor from 'tinycolor2';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import defaultIcon from '../components/map/openlayers/img/marker-icon.png';
 import isEmpty from 'lodash/isEmpty';
 import { flattenFeatures } from './VectorStyleUtils';

@@ -8,7 +8,7 @@
 
 import * as Cesium from 'cesium';
 import max from 'lodash/max';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { createPolylinePrimitive } from './PrimitivesUtils';
 import GeoJSONStyledFeatures from './GeoJSONStyledFeatures';
 import { getStyle, layerToGeoStylerStyle } from '../VectorStyleUtils';

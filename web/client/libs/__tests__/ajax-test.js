@@ -48,8 +48,7 @@ const userB = Object.assign({}, userA, {
 
 const securityInfoB = {
     user: userB,
-    token: "263c6917-543f-43e3-8e1a-6a0d29952f72",
-    authHeader: 'Basic 263c6917-543f-43e3-8e1a-6a0d29952f72'
+    token: "263c6917-543f-43e3-8e1a-6a0d29952f72"
 };
 
 const authenticationRules = [

@@ -345,4 +345,22 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(1);
     });
+    it('uses the linked WFS service for classification autocomplete', () => {
+        const cmp = new ThemaClassesEditor();
+        const field = cmp.renderFieldByClassification({unique: 'value'}, 0, true, {
+            classificationAttribute: 'attribute',
+            layer: {
+                type: 'wms',
+                name: 'workspace:rendered',
+                url: 'wms-url',
+                search: {
+                    type: 'wfs',
+                    url: 'http://example.com/geoserver/wfs',
+                    typeName: 'workspace:linked'
+                }
+            }
+        });
+        expect(field.props.typeName).toBe('workspace:linked');
+        expect(field.props.url).toContain('http://example.com/geoserver/wps');
+    });
 });

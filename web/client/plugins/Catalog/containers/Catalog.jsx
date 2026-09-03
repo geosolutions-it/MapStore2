@@ -14,7 +14,7 @@ import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '
 import { projectionSelector, mapEnableImageryOverlaySelector } from '../../../selectors/map';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import { setProtectedServices, setShowModalStatus } from '../../../actions/security';
-import { changeLayerProperties } from '../../../actions/layers';
+import { changeLayerProperties, addGroup } from '../../../actions/layers';
 import { layersSelector } from '../../../selectors/layers';
 import { metadataSourceSelector, modalParamsSelector } from '../../../selectors/backgroundselector';
 import { setControlProperty, toggleControl } from '../../../actions/controls';
@@ -48,6 +48,7 @@ import {
 import {
     isActiveSelector,
     authkeyParamNameSelector,
+    catalogPanelSelector,
     groupSelector,
     layerErrorSelector,
     loadingErrorSelector,
@@ -109,11 +110,13 @@ const Catalog = ({
     servicesWithBackgrounds,
     services: servicesProp,
     onLayerAdd,
+    onAddGroup,
     onAddBackgroundProperties,
     onAddBackground,
     zoomToLayer = true,
     onError,
     group,
+    catalogPanel,
     authkeyParamNames,
     crs,
     enableImageryOverlay,
@@ -127,7 +130,8 @@ const Catalog = ({
 }, context) => {
     const { loadedPlugins } = context;
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
-    const [panel, setPanel] = useState(defaultView !== 'dialog');
+    const defaultPanel = defaultView !== 'dialog';
+    const panel = catalogPanel ?? defaultPanel;
     const [loadingLayers, setLoadingLayers] = useState([]);
 
     useEffect(() => {
@@ -135,6 +139,9 @@ const Catalog = ({
             editingAllowedRoles,
             editingAllowedGroups
         });
+        if (catalogPanel === undefined) {
+            onSetCatalogPanel(defaultPanel);
+        }
         return () => {
             closeCatalog();
         };
@@ -250,10 +257,56 @@ const Catalog = ({
     };
 
 
+    const buildLayerOptions = () => {
+        const selectedServiceOptions = services[selectedService];
+        return {
+            service: {
+                ...selectedServiceOptions,
+                format: selectedServiceOptions?.format ?? 'image/png'
+            },
+            layerBaseConfig,
+            removeParams: authkeyParamNames,
+            map: {
+                projection: crs,
+                resolutions: getResolutions()
+            },
+            enableImageryOverlay
+        };
+    };
+
     function handleAddLayers(newRecords = [], { clearSelected = false } = {}) {
         const recordsToAdd = newRecords.filter(Boolean);
         if (!recordsToAdd.length) {
             return Promise.resolve([]);
+        }
+        const processRecords = source !== 'backgroundSelector' && API[selectedFormat]?.processRecords;
+        if (processRecords) {
+            const allowed = recordsToAdd.filter(record => !isSRSNotAllowed(record));
+            if (allowed.length < recordsToAdd.length) {
+                onError('catalog.srs_not_allowed');
+            }
+            if (!allowed.length) {
+                return Promise.resolve([]);
+            }
+            setLoadingLayers(allowed.map(record => record.identifier));
+            return processRecords(allowed, buildLayerOptions(), locales)
+                .then(({ layers = [], groups = [] } = {}) => {
+                    groups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
+                    layers.filter(Boolean).forEach(layer => onLayerAdd(layer, { zoomToLayer }));
+                    if (clearSelected) {
+                        clearSelection();
+                    }
+                    return { layers, groups };
+                })
+                .catch(() => {
+                    onError('catalog.addLayerError');
+                    return [];
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        setLoadingLayers([]);
+                    }, 300);
+                });
         }
         setLoadingLayers(recordsToAdd.map(record => record.identifier));
         return Promise.all(
@@ -320,9 +373,7 @@ const Catalog = ({
                             tooltipPosition="bottom"
                             tooltipId={panel ? <Message msgId="catalog.gridView" /> : <Message msgId="catalog.listView" />}
                             onClick={() => {
-                                const newPanel = !panel;
-                                setPanel(newPanel);
-                                onSetCatalogPanel?.(newPanel);
+                                onSetCatalogPanel(!panel);
                             }}
                             square
                         >
@@ -331,12 +382,7 @@ const Catalog = ({
                         <ButtonWithTooltip
                             tooltipPosition="bottom"
                             tooltipId={<Message msgId="catalog.close" />}
-                            onClick={() => {
-                                closeCatalog();
-                                if (!panel) {
-                                    setPanel(true);
-                                }
-                            }}
+                            onClick={closeCatalog}
                             square
                         >
                             <Glyphicon glyph="1-close" />
@@ -394,6 +440,7 @@ const layerCatalogSelector = createStructuredSelector({
     dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     // controls
     group: groupSelector,
+    catalogPanel: catalogPanelSelector,
     // backgorund
     source: metadataSourceSelector,
     modalParams: modalParamsSelector
@@ -402,6 +449,7 @@ const layerCatalogSelector = createStructuredSelector({
 const ConnectedCatalog = connect(layerCatalogSelector, {
     onSearch: textSearch,
     onLayerAdd: addLayer,
+    onAddGroup: addGroup,
     closeCatalog: catalogClose,
     onChangeFormat: changeCatalogFormat,
     onChangeServiceFormat: changeServiceFormat,

@@ -83,12 +83,17 @@ function BackgroundSelector({
         }
         return backgroundsProp[0];
     };
+    const addTerrainLayer = (layerToAdd, { activate = true } = {}) => {
+        addLayer(layerToAdd);
+        if (activate) {
+            onPropertiesChange(layerToAdd.id, {visibility: true});
+        }
+    };
     const handleAddEditTerrainLayer = (layerToAdd) => {
         if (showTerrainModal.layer) {
             updateNode(layerToAdd.id, 'layers', layerToAdd);
         } else {
-            addLayer(layerToAdd);
-            onPropertiesChange(layerToAdd.id, {visibility: true});
+            addTerrainLayer(layerToAdd);
         }
     };
     const currentBackground = getCurrentBackground();
@@ -96,7 +101,7 @@ function BackgroundSelector({
     // Include the ellipsoidal terrain if missing
     useEffect(() => {
         const hasEllipsoidTerrain = backgroundsProp.some(bg => bg.type === 'terrain' && bg.provider === 'ellipsoid');
-        if (!hasEllipsoidTerrain) {
+        if (enableTerrainList && !hasEllipsoidTerrain) {
             const newEllipsoidLayer = {
                 type: 'terrain',
                 visibility: !currentTerrain, // only visible if no other terrain is active
@@ -105,9 +110,9 @@ function BackgroundSelector({
                 group: 'background',
                 id: "ellipsoid"
             };
-            handleAddEditTerrainLayer(newEllipsoidLayer);
+            addTerrainLayer(newEllipsoidLayer, { activate: !currentTerrain });
         }
-    }, [backgroundsProp, currentTerrain]);
+    }, [backgroundsProp, currentTerrain, enableTerrainList]);
     // handlers
     const onToggleLayer =  (layer) => {
         onPropertiesChange(layer.id ?? "ellipsoid", {visibility: true});

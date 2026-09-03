@@ -10,7 +10,7 @@
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar} from "./ToolbarButtons";
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 
 const BUTTON_CLASSES = 'square-button no-border';
 const toolButtons = {

@@ -14,12 +14,13 @@ import head from "lodash/head";
 import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
-import template from "lodash/template";
+import isString from "lodash/isString";
 import get from "lodash/get";
 import castArray from "lodash/castArray";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 import { parseUrl, WMS_GET_CAPABILITIES_VERSION } from '../api/WMS';
+import { getMonitoredState, handleExpression } from './PluginsUtils';
 
 export const USER_GROUP_ALL = 'everyone';
 
@@ -173,7 +174,20 @@ export function findUserAttributeValue(attributeName) {
 }
 
 /**
- * Parses request configuration by replacing variables with actual values using lodash template
+ * Replaces `${...}` placeholders with the matching value of securityProperties.
+ * Unresolved placeholders are left in place, filterUnresolvedTemplates drops them later.
+ * @param {string} value - configuration value containing placeholders
+ * @param {Object} securityProperties - properties used to resolve the placeholders
+ * @returns {string} the value with the resolved placeholders
+ */
+const substitutePlaceholders = (value, securityProperties) =>
+    value.replace(/\$\{([^{}]+)\}/g, (placeholder, path) => {
+        const resolved = get(securityProperties, path.trim());
+        return isNil(resolved) ? placeholder : String(resolved);
+    });
+
+/**
+ * Parses request configuration by replacing variables with actual values
  * @param {Object} config - Configuration object with headers/params
  * @param {Object} securityProperties - Security properties to replace variables
  * @returns {Object} Parsed configuration with replaced variables
@@ -185,9 +199,7 @@ const parseRequestConfiguration = (config = {}, securityProperties) => {
                 const [name, value] = entry;
                 if (typeof value === 'string' && value.includes('${')) {
                     try {
-                        // Use lodash template for variable substitution
-                        const compiled = template(value);
-                        let result = compiled(securityProperties);
+                        let result = substitutePlaceholders(value, securityProperties);
                         result = result === "" ? undefined : result;
                         return [name, result];
                     } catch (error) {
@@ -249,6 +261,23 @@ export const convertAuthenticationRulesToRequestConfiguration = (authRules = [])
 };
 
 /**
+ * Filters out the request configuration rules whose `enabled` property resolves to a falsy value.
+ * `enabled` can be a plain boolean or a plugin expression string (e.g. `"{includes(state('usergroups'), 'editor')}"`),
+ * evaluated with the same syntax used for `cfg.disablePluginIf` (see `PluginsUtils.handleExpression`).
+ * Rules without an `enabled` property are always applied.
+ * The monitored state is resolved only when at least one rule needs it, because building it requires
+ * serializing every monitored entry.
+ * @param {object[]} rules the request configuration rules
+ * @returns {object[]} the enabled rules
+ */
+const filterEnabledRules = (rules = []) => {
+    const needsMonitoredState = rules.some(rule => isString(rule?.enabled));
+    const monitoredState = needsMonitoredState ? getMonitoredState(getState(), ConfigUtils.getConfigProp('monitorState')) : {};
+    const getMonitored = (path) => get(monitoredState, path);
+    return rules.filter(rule => !!handleExpression(getMonitored, undefined, rule?.enabled ?? true));
+};
+
+/**
  * Gets all request configuration rules from Redux state or config
  * Automatically converts authenticationRules to new format if requestsConfigurationRules is missing
  * @returns {Array} Array of request configuration rules
@@ -257,19 +286,19 @@ export const getRequestConfigurationRules = () => {
     // First try to get from Redux state (if available)
     const stateRules = get(getState(), 'security.rules', []);
     if (!isEmpty(stateRules)) {
-        return stateRules;
+        return filterEnabledRules(stateRules);
     }
 
     // Try to get new format from config
     const configRules = ConfigUtils.getConfigProp('requestsConfigurationRules');
     if (!isEmpty(configRules)) {
-        return configRules;
+        return filterEnabledRules(configRules);
     }
 
     // If new format is missing, convert old authenticationRules format
     const authRules = ConfigUtils.getConfigProp('authenticationRules');
     if (!isEmpty(authRules)) {
-        return convertAuthenticationRulesToRequestConfiguration(authRules);
+        return filterEnabledRules(convertAuthenticationRulesToRequestConfiguration(authRules));
     }
 
     // No rules found

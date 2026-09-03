@@ -12,7 +12,7 @@ import expect from 'expect';
 import * as Cesium from 'cesium';
 import { waitFor } from '@testing-library/react';
 
-import '../../../../utils/cesium/Layers';
+import Layers from '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/TileProviderLayer';
 import '../plugins/WMSLayer';
@@ -26,13 +26,15 @@ import '../plugins/WFSLayer';
 import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
+import '../plugins/ArcGISFeatureLayer';
 import '../plugins/ModelLayer';
-import '../plugins/FlatGeobufLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
+import { setProxyCacheByUrl } from '../../../../utils/ProxyUtils';
+import { isMeaningfulCappedRectRefinement } from '../../../../utils/FlatGeobufLayerUtils';
 
 const tilesetMock = {
     "asset": {
@@ -228,6 +230,49 @@ describe('Cesium layer', () => {
             done();
         }).catch(done);
 
+    });
+    it('recreates a wms layer only when the service name changes', (done) => {
+        const options = {
+            id: 'wms-name-change',
+            type: 'wms',
+            visibility: true,
+            name: 'workspace:old_name',
+            title: 'Original title',
+            opacity: 0.7,
+            format: 'image/png',
+            url: '/geoserver/wms'
+        };
+        const component = ReactDOM.render(
+            <CesiumLayer type="wms"
+                options={options}
+                map={map}
+                onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                const originalLayer = component.layer;
+                ReactDOM.render(
+                    <CesiumLayer type="wms"
+                        options={{...options, title: 'Updated title'}}
+                        map={map}
+                        onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+                expect(component.layer).toBe(originalLayer);
+
+                ReactDOM.render(
+                    <CesiumLayer type="wms"
+                        options={{...options, title: 'Updated title', name: 'workspace:new_name'}}
+                        map={map}
+                        onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+                expect(component.layer).toNotBe(originalLayer);
+                expect(component.layer.layers).toBe('workspace:new_name');
+                expect(component.layer._tileProvider._resource._queryParameters.layers).toBe('workspace:new_name');
+                return waitFor(() => {
+                    expect(map.imageryLayers.length).toBe(1);
+                    expect(map.imageryLayers._layers[0].alpha).toBe(0.7);
+                });
+            })
+            .then(() => done())
+            .catch(done);
     });
 
     it('test wms vector formats must change to default image format (image/png)', () => {
@@ -601,6 +646,25 @@ describe('Cesium layer', () => {
             done();
         }).catch(done);
 
+    });
+
+    it('recreates a wms layer when its URL changes', (done) => {
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            format: 'image/png',
+            url: 'http://sample.server/geoserver/old-wms'
+        };
+        let component = ReactDOM.render(
+            <CesiumLayer type="wms" options={options} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+        const oldLayer = component.layer;
+        component = ReactDOM.render(
+            <CesiumLayer type="wms" options={{...options, url: 'http://sample.server/geoserver/new-wms'}} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+        waitFor(() => {
+            expect(component.layer).toNotBe(oldLayer);
+            expect(component.layer._tileProvider._subdomains[0]).toBe('http://sample.server/geoserver/new-wms');
+        }).then(() => done()).catch(done);
     });
 
     it('respects layer ordering 1', (done) => {
@@ -1641,6 +1705,30 @@ describe('Cesium layer', () => {
         expect(cmp.layer.styledFeatures._queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
     });
+    it('recreates a wfs layer when its URL changes', () => {
+        const options = {
+            type: 'wfs',
+            url: 'geoserver/old-wfs',
+            title: 'Title',
+            name: 'workspace:layer',
+            id: 'ws:layer_id',
+            visibility: true
+        };
+        let component = ReactDOM.render(
+            <CesiumLayer
+                type="wfs"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        const oldLayer = component.layer;
+        component = ReactDOM.render(
+            <CesiumLayer
+                type="wfs"
+                options={{ ...options, url: 'geoserver/new-wfs' }}
+                map={map}
+            />, document.getElementById('container'));
+        expect(component.layer).toNotBe(oldLayer);
+    });
     it('should create a non-queriable wfs layer', () => {
         const options = {
             type: 'wfs',
@@ -1668,6 +1756,32 @@ describe('Cesium layer', () => {
                 map={map}
             />, document.getElementById('container'));
         expect(cmp.layer.styledFeatures._queryable).toBe(false);
+    });
+    it('reloads a wfs layer with the new service name', (done) => {
+        mockAxios.onGet().reply(200, {type: 'FeatureCollection', features: []});
+        const options = {
+            type: 'wfs',
+            url: '/geoserver/wfs',
+            title: 'Title',
+            name: 'workspace:old_layer',
+            id: 'wfs-name-change',
+            visibility: true
+        };
+        ReactDOM.render(
+            <CesiumLayer type={options.type}
+                options={options} map={map}/>, document.getElementById('container'));
+
+        waitFor(() => expect(mockAxios.history.get.some(({url}) =>
+            decodeURIComponent(url).includes('typeName=workspace:old_layer'))).toBe(true))
+            .then(() => {
+                ReactDOM.render(
+                    <CesiumLayer type={options.type}
+                        options={{...options, name: 'workspace:new_layer'}} map={map}/>, document.getElementById('container'));
+                return waitFor(() => expect(mockAxios.history.get.some(({url}) =>
+                    decodeURIComponent(url).includes('typeName=workspace:new_layer'))).toBe(true));
+            })
+            .then(() => done())
+            .catch(done);
     });
 
     it('should create a bil terrain provider from wms layer (deprecated)', (done) => {
@@ -1817,6 +1931,68 @@ describe('Cesium layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.terrainProvider).toBeTruthy();
     });
+    it('should not reset the globe terrain provider when the terrain layer is recreated on update', (done) => {
+        const options = {
+            type: "terrain",
+            provider: "wms",
+            url: "/geoserver/wms",
+            name: "workspace:layername",
+            visibility: true,
+            options: {
+                crs: 'CRS:84'
+            }
+        };
+        const layer = Layers.createLayer('terrain', options, map);
+        layer.add();
+        // updating one of the watched properties recreates the layer implementation,
+        // this must not detach the terrain currently applied to the scene
+        // while the new one is loading (see #12579 regression)
+        Layers.updateLayer('terrain', layer, { ...options, securityToken: 'token' }, options, map);
+        layer.terrainProvider.then((provider) => {
+            return waitFor(() => expect(map.scene.globe.terrainProvider).toBe(provider));
+        }).then(() => done()).catch(done);
+    });
+    it('should not override the active terrain when removing a deselected terrain layer', (done) => {
+        const wmsOptions = {
+            type: "terrain",
+            provider: "wms",
+            url: "/geoserver/wms",
+            name: "workspace:layername",
+            visibility: true,
+            options: {
+                crs: 'CRS:84'
+            }
+        };
+        const ellipsoidOptions = {
+            type: "terrain",
+            provider: "ellipsoid",
+            visibility: false
+        };
+        // the ellipsoid terrain is initially the active one
+        const ellipsoidLayer = Layers.createLayer('terrain', ellipsoidOptions, map);
+        ellipsoidLayer.add();
+        // the wms terrain gets activated, then the deselected ellipsoid layer is removed,
+        // the scene must keep the wms terrain (see terrain switch from background selector)
+        const wmsLayer = Layers.createLayer('terrain', wmsOptions, map);
+        wmsLayer.add();
+        ellipsoidLayer.remove();
+        wmsLayer.terrainProvider.then((provider) => {
+            return waitFor(() => expect(map.scene.globe.terrainProvider).toBe(provider));
+        }).then(() => done()).catch(done);
+    });
+    it('should fallback to the ellipsoid terrain when the terrain provider fails to load', (done) => {
+        const options = {
+            type: "terrain",
+            provider: "cesium",
+            // connection refused, simulates an unreachable server or a CORS error
+            url: "https://localhost:1/terrain/",
+            visibility: true
+        };
+        const layer = Layers.createLayer('terrain', options, map);
+        layer.add();
+        waitFor(() => expect(map.scene.globe.terrainProvider instanceof Cesium.EllipsoidTerrainProvider).toBe(true))
+            .then(() => done()).catch(done);
+    });
     it('should create am elevation layer from wms layer', () => {
         const options = {
             type: 'elevation',
@@ -1834,6 +2010,78 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.getElevation).toBeTruthy();
+    });
+    it('should add the elevation layer to the map imagery layers when no proxy is needed', (done) => {
+        const url = 'https://host-sample/geoserver/wms';
+        // the detection request succeeds, the server is reachable without the proxy
+        mockAxios.onGet(url).reply(200);
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url,
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        // the proxy detection request is asynchronous,
+        // once completed the elevation layer must be part of the imagery layers
+        // so Cesium can request its tiles and make them available to the getElevation function
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                expect(cmp.layer.getElevation).toBeTruthy();
+                done();
+            }).catch(done);
+    });
+    it('should add the elevation layer to the map imagery layers when forceProxy is set in the options', (done) => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true,
+            forceProxy: true
+        };
+        ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                done();
+            }).catch(done);
+    });
+    it('should recreate the elevation layer with the proxy and add it when the proxy detection fails', (done) => {
+        const url = 'https://host-failing-cors/geoserver/wms';
+        // a network/CORS-like failure of the detection request marks the url as in need of the proxy
+        mockAxios.onGet(url).networkError();
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url,
+            name: 'workspace:layername',
+            visibility: true
+        };
+        ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                expect(map.imageryLayers._layers[0]._imageryProvider.getElevation).toBeTruthy();
+                setProxyCacheByUrl(url, undefined);
+                done();
+            }).catch(done);
     });
     it('creates a arcgis layer', (done) => {
         const options = {
@@ -1857,6 +2105,69 @@ describe('Cesium layer', () => {
             }
             done();
         }).catch(done);
+    });
+    it('recreates an arcgis layer with the new service name', (done) => {
+        const url = '/arcgis/MapServer/';
+        mockAxios.onGet(url).reply(200);
+        const options = {
+            id: 'arcgis-name-change',
+            type: 'arcgis',
+            url,
+            name: '1',
+            visibility: true,
+            opacity: 0.7
+        };
+        const component = ReactDOM.render(
+            <CesiumLayer type={options.type}
+                options={options}
+                map={map}
+                onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+
+        waitFor(() => expect(map.imageryLayers.length).toBe(1))
+            .then(() => {
+                const originalLayer = component.layer;
+                ReactDOM.render(
+                    <CesiumLayer type={options.type}
+                        options={{...options, name: '2'}}
+                        map={map}
+                        onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+                return waitFor(() => {
+                    expect(component.layer).toNotBe(originalLayer);
+                    expect(map.imageryLayers._layers[0]._imageryProvider.layers).toBe('2');
+                    expect(map.imageryLayers._layers[0].alpha).toBe(0.7);
+                });
+            })
+            .then(() => done())
+            .catch(done);
+    });
+    it('reloads an arcgis feature layer with the new service name', (done) => {
+        mockAxios.onGet().reply(200, {type: 'FeatureCollection', features: []});
+        const options = {
+            id: 'arcgis-feature-name-change',
+            type: 'arcgis-feature',
+            url: '/arcgis/FeatureServer',
+            name: '0',
+            strategy: 'all',
+            visibility: true,
+            opacity: 0.6
+        };
+        const component = ReactDOM.render(
+            <CesiumLayer type={options.type}
+                options={options} map={map}/>, document.getElementById("container"));
+
+        waitFor(() => expect(mockAxios.history.get.some(({url}) => url.includes('/0/query'))).toBe(true))
+            .then(() => {
+                const originalLayer = component.layer;
+                ReactDOM.render(
+                    <CesiumLayer type={options.type}
+                        options={{...options, name: '1'}} map={map}/>, document.getElementById("container"));
+                return waitFor(() => {
+                    expect(component.layer).toNotBe(originalLayer);
+                    expect(mockAxios.history.get.some(({url}) => url.includes('/1/query'))).toBe(true);
+                });
+            })
+            .then(() => done())
+            .catch(done);
     });
 
     it('ensure proxy usage in Model layer', (done) => {
@@ -1904,6 +2215,33 @@ describe('Cesium layer', () => {
             metadata: { geometryType: 3 } // Polygon
         };
 
+        it('identifies meaningful capped rect refinements', () => {
+            const loadedRect = {
+                capped: true,
+                rect: { minX: 0, minY: 0, maxX: 100, maxY: 100 }
+            };
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 0, minY: 0, maxX: 100, maxY: 100 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 1, minY: 1, maxX: 99, maxY: 99 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 25, minY: 25, maxX: 75, maxY: 75 }
+            )).toBe(true);
+            expect(isMeaningfulCappedRectRefinement(
+                loadedRect,
+                { minX: 50, minY: 50, maxX: 150, maxY: 150 }
+            )).toBe(false);
+            expect(isMeaningfulCappedRectRefinement(
+                { ...loadedRect, capped: false },
+                { minX: 25, minY: 25, maxX: 75, maxY: 75 }
+            )).toBe(false);
+        });
+
         it('exposes getStyledFeatures and getInferredGeometryType accessors', () => {
             const cmp = ReactDOM.render(
                 <CesiumLayer
@@ -1946,6 +2284,32 @@ describe('Cesium layer', () => {
             expect(cmp.layer).toBe(layerBefore);
             // Same GeoJSONStyledFeatures instance: features stay loaded.
             expect(cmp.layer.getStyledFeatures()).toBe(styledFeaturesBefore);
+        });
+
+        it('recreates the layer when maxFeaturesInView changes', () => {
+            const cmp = ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={{
+                        ...baseOptions,
+                        maxFeaturesInView: 1
+                    }}
+                    map={map}
+                />, document.getElementById('container'));
+            const layerBefore = cmp.layer;
+            expect(layerBefore).toBeTruthy();
+
+            ReactDOM.render(
+                <CesiumLayer
+                    type="flatgeobuf"
+                    options={{
+                        ...baseOptions,
+                        maxFeaturesInView: 2
+                    }}
+                    map={map}
+                />, document.getElementById('container'));
+            expect(cmp.layer).toNotBe(layerBefore);
+            expect(cmp.layer.getStyledFeatures()).toBeTruthy();
         });
     });
 });

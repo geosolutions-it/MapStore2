@@ -26,6 +26,10 @@
     "pageInfoShowMore": "Ergebnisse {count} von {total}",
     "showMore": "Zeig mehr...",
     "collapse": "Zuklappen",
+    "scrollableTabs": {
+      "scrollLeft": "Tabs nach links scrollen",
+      "scrollRight": "Tabs nach rechts scrollen"
+    },
     "Links": "Links",
     "Forbidden": "Verboten",
     "height": "Höhe",
@@ -83,6 +87,9 @@
       "windowTitle": "Ebenen Eigenschaften",
       "title": "Titel",
       "name": "Name",
+      "url": "URL",
+      "typeName": "TypeName",
+      "wfsLinkedService": "Verknüpfter WFS-Dienst",
       "group": "Gruppe",
       "description": "Beschreibung",
       "general": "Generell",
@@ -95,6 +102,10 @@
         "tooltip": "Die Ebene wird auf die Projektionserweiterung zugeschnitten, wenn sie mit aktivierter Option zur Karte hinzugefügt wird."
       },
       "cached": "Verwenden Sie Cache-Optionen",
+      "coalesceExclude": {
+        "label": "Von kombinierten Anfragen ausschließen",
+        "tooltip": "Hält diese Ebene aus kombinierten WMS-Anfragen heraus, sodass sie immer einzeln angefordert wird. Ohne Wirkung, solange kombinierte Anfragen für die Karte deaktiviert sind."
+      },
       "styleCustom": "Stil \"{value}\" nutzen",
       "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
       "stylesRefreshList": "Aktualisiere die Liste von Stilen",
@@ -109,32 +120,72 @@
       "elevation": "Höhe",
       "groupProperties": "Gruppeneigenschaften",
       "featureInfo": "Feature Info",
+      "noIdentifyView": "Keine Identify-Ansicht konfiguriert, es wird das Format aus den Karteneinstellungen verwendet.",
+      "disableIdentify": "Identifizierung deaktivieren",
+      "addIdentifyView": "Neue Identifikationsansicht hinzufügen",
       "featureInfoFormatLbl": "Antwortformat festlegen",
+      "featureInfoRequestOptions": {
+        "title": "Anfrageoptionen",
+        "description": "Limits für WMS-Identify-Anfragen konfigurieren",
+        "maxItems": "Anzahl der Features",
+        "maxItemsTooltip": "Maximale Anzahl von Features, die von einer Identify-Anfrage zurückgegeben werden. Der Standardwert ist 10.",
+        "buffer": "Puffer (px)",
+        "bufferTooltip": "GeoServer-Anbieterparameter, der den Identify-Suchradius um den angeklickten Punkt erweitert, gemessen in Bildschirmpixeln."
+      },
       "guideText": "In der URL des Bildes können Sie Platzhalter wie $\\{properties.YOUR_ATTRIBUTE\\} verwenden, um die URL abhängig von den Feature-Attributen parametrisch zu machen. Es unterstützt sowohl URLs als auch „Data URI“, die in Base64 codiert sind",
       "imageNotFound": "Für die korrekte Darstellung dieses Bildes ist möglicherweise eine Feature-Info-Anfrage erforderlich",
       "legenderror": "Legende ist nicht verfügbar",
       "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
-      "exampleOfResponse": "Beispiel",
       "changedSettings": "Geänderte Einstellungen",
       "changedSettingsAlert": "Sie schließen das Einstellungsfenster, ohne Ihre Änderungen zu speichern",
       "textFormatTitle": "TEXT",
-      "textFormatDescription": "Zeigt Feature-Info-Ergebnisse als Nur-Text an",
       "htmlFormatTitle": "HTML",
-      "htmlFormatDescription": "Zeigt Feature-Info-Ergebnisse als HTML an",
       "propertiesFormatTitle": "EIGENSCHAFTEN",
-      "propertiesFormatDescription": "Zeigt Feature-Info-Ergebnisse als Eigenschaftsliste an",
       "templateFormatTitle": "TEMPLATE",
-      "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
-      "hideFormatTitle": "IDENTIFIZIEREN DEAKTIVIEREN",
-      "hideFormatDescription": "Deaktivieren Sie das Abrufen der Feature-Informationen für diese Ebene",
       "styleWarning": "Ebenenstil-Editor für Geometrietyp '{geometryType}' wird nicht unterstützt.",
-      "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
       "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
-      "templateFormatInfoAlertExample": "Die ID des Features lautet <span style='white-space:nowrap'>${ properties.daten }</span> oder <span style='white-space:nowrap'>${ properties['daten-wert'] }</span>",
       "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
-      "templatePreview": "Vorschau template",
+      "propertiesView": {
+        "attributes": "Attribute",
+        "noAttributes": "Das Layerschema enthält keine darstellbaren Attribute."
+      },
+      "externalData": {
+        "title": "EXTERNE DATEN",
+        "description": "Attribute aus einer externen WFS-Quelle abfragen",
+        "wfsUrl": "WFS-URL",
+        "invalidWfsUrl": "Die URL stellt keinen gültigen WFS-Dienst bereit",
+        "layerName": "Layername",
+        "cqlFilter": "CQL-Filtervorlage",
+        "cqlFilterHelp": "Setzen Sie Platzhalter für Zeichenfolgen in einfache Anführungszeichen; lassen Sie Platzhalter für Zahlen und boolesche Werte ohne Anführungszeichen.",
+        "attributes": "Attribute",
+        "validate": "Validieren",
+        "validation": {
+          "missingFields": "WFS-URL, Layername und CQL-Filtervorlage sind erforderlich",
+          "invalidPlaceholder": "Die CQL-Filtervorlage muss mindestens einen gültigen Feldverweis enthalten",
+          "invalidDoubleQuotedPlaceholder": "Doppelte Anführungszeichen kennzeichnen Feldnamen in CQL. Verwenden Sie einfache Anführungszeichen für Zeichenfolgen-Platzhalter.",
+          "invalidCql": "Die CQL-Filtervorlage ist ungültig",
+          "unquotedPlaceholder": "Im Filter ist der Verweis auf das Feld „{property}“ nicht in einfache Anführungszeichen gesetzt und akzeptiert daher nur Zahlen. Fügen Sie die Anführungszeichen hinzu, um Textwerte zu verwenden.",
+          "valid": "Die Konfiguration der externen Daten ist gültig",
+          "sourceUnavailable": "Zum Ausführen der Beispielanfrage sind eine WFS-Quell-URL und ein Layername erforderlich",
+          "sampleNotFound": "Der Quelllayer hat kein Beispielfeature zurückgegeben",
+          "testRequestFailed": "Die Testanfrage für externe Daten ist fehlgeschlagen",
+          "generatedCql": "Generiertes CQL"
+        },
+        "noSourceFeatures": "Für diese externe Datenansicht sind keine identifizierten Features verfügbar",
+        "invalidConfiguration": "Ungültige Konfiguration",
+        "notConfigured": "Diese Identify-Ansicht ist nicht korrekt konfiguriert.",
+        "noResults": "Keine externen Daten gefunden",
+        "requestError": "Externe Daten konnten nicht geladen werden",
+        "missingProperty": "Das Quellfeature enthält die Eigenschaft „{property}“ nicht",
+        "unsafeSourceValue": "Die externen Daten können nicht geladen werden, da „{property}“ Text enthält, wo eine Zahl erwartet wird.",
+        "invalidInterpolatedCql": "Der aus dem Quellfeature erstellte CQL-Filter ist nicht gültig",
+        "invalidResponse": "Der externe WFS hat kein gültiges GeoJSON zurückgegeben",
+        "retry": "Erneut versuchen"
+      },
       "heightOffset": "Höhenversatz (m)",
       "wmsLayerTileSize": "Kachelgröße (WMS)",
+      "maxFeaturesInView": "Maximale Anzahl von Features in der Ansicht",
+      "maxFeaturesInViewTooltip": "Wenn der Wert undefiniert ist, funktioniert die aktuelle Funktionalität wie gewohnt (d. h. alle Features laden)",
       "serverType": "Servertyp",
       "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
       "serverTypeOption": {
@@ -257,6 +308,7 @@
       "forceProxy": "Proxy erzwingen",
       "fields": {
         "refresh": "Felder aus der Datenquelle neu laden",
+        "showAll": "Alle Attribute ein- oder ausblenden",
         "title": "Felder",
         "tooltip": "Felder",
         "name": "Name",
@@ -264,7 +316,21 @@
         "type": "Typ",
         "clearCustomization": "Alle Anpassungen entfernen",
         "clearCustomizationConfirm": "Möchten Sie wirklich alle Anpassungen entfernen?",
-        "error": "Die Felder konnten nicht automatisch geladen werden"
+        "error": "Die Felder konnten nicht automatisch geladen werden",
+        "featureInfoDisplayType": "Anzeigetyp der Feature-Informationen",
+        "configureField": "Feld konfigurieren",
+        "mediaTypeAttribute": "Medientyp-Attribut",
+        "displayTypes": {
+          "string": "Text",
+          "image": "Bild",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Panoramabild",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Medien"
+        }
       },
       "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle",
       "interactiveLegend": {
@@ -616,7 +682,9 @@
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
         },
         "collisionDetection": "Geländekollisionserkennung aktivieren",
-        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren"
+        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren",
+        "coalesceWMSLayers": "WMS-Anfragen zusammenfassen (coalesce)",
+        "coalesceWMSLayersTooltip": "Legt das Standardverhalten für die Ebenen dieser Karte fest: Wenn aktiviert, werden benachbarte WMS-Ebenen aus derselben Quelle zu einer einzigen GetMap-Anfrage zusammengefasst, wodurch die Anzahl der an den Server gesendeten Anfragen reduziert wird. Hintergrundebenen sind ausgeschlossen."
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
@@ -707,6 +775,7 @@
       "toggleLayerVisibilityWarning": "Layer-Sichtbarkeit ändern, Warnung: Layer wurde nicht richtig geladen",
       "createWidget": "Widget für die ausgewählte Ebene erstellen",
       "editLayerProperties": "Eigenschaften der Ebene ändern",
+      "createWidgetForMap": "Widget für die Karte erstellen",
       "browseData": "Attributtabelle der ausgewählten Ebene öffnen",
       "removeLayer": "Ebene entfernen",
       "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder ist nicht verfügbar",
@@ -730,6 +799,10 @@
       "radius": "Radius",
       "filterIconEnabled": "Ebenenfilter deaktivieren",
       "filterIconDisabled": "Ebenenfilter aktivieren",
+      "filterWidgetIconEnabled": "Filter des verbundenen Widgets deaktivieren",
+      "filterWidgetIconDisabled": "Filter des verbundenen Widgets aktivieren",
+      "filterAndWidgetIconEnabled": "Globale und verbundene Widget-Filter deaktivieren",
+      "filterAndWidgetIconDisabled": "Globale und verbundene Widget-Filter aktivieren",
       "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
       "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
       "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
@@ -899,6 +972,7 @@
     "identifyRevGeocodeSubmitText": "Mehr Informationen",
     "identifyRevGeocodeCloseText": "Schliessen",
     "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
+    "identifyShowFullscreen": "Vollbild anzeigen",
     "identifyEdit": "Bearbeiten",
     "identifyLayerSelectNoResult": "Keine Ebenen gefunden",
     "getFeatureInfoError": {
@@ -1604,7 +1678,8 @@
           "title": "Fehler beim Laden des Peramlinks",
           "pleaseLogin": "Dieser Permalink ist nicht öffentlich. Bitte versuchen Sie sich anzumelden",
           "notFound": "Permalink nicht gefunden",
-          "notAccessible": "Permalink nicht zugänglich"
+          "notAccessible": "Permalink nicht zugänglich",
+          "invalidTarget": "Das Ziel des Permalinks ist ungültig und kann nicht geöffnet werden"
         },
         "save": {
           "title": "Die Permalink-Generierung ist fehlgeschlagen",
@@ -1734,6 +1809,33 @@
       "fetchMetadata": {
         "label": "Dateimetadaten beim Speichern herunterladen",
         "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
+      },
+      "resourceTypes": {
+        "label": "Ressourcentypen",
+        "dataset": "Datensätze",
+        "document": "Dokumente",
+        "map": "Karten"
+      },
+      "subtypes": {
+        "label": "Inhaltstyp",
+        "vector": "Vektor",
+        "raster": "Raster",
+        "vector_time": "Zeitreihe",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabellarisch",
+        "image": "Bild",
+        "video": "Video",
+        "audio": "Audio",
+        "text": "Text",
+        "archive": "Archiv",
+        "presentation": "Präsentation",
+        "file": "File"
+      },
+      "filterFields": {
+        "category": "Kategorie",
+        "keyword": "Schlüsselwort",
+        "region": "Region",
+        "extent": "Ausdehnungsfilter"
       },
       "tagFilterType": {
         "label": "Tag-Filtertyp",
@@ -2264,6 +2366,8 @@
           "selectALayer": "Wähle eine Ebene",
           "selectLayers": "Wählen Sie eine oder mehrere Ebenen aus",
           "selectAMap": "Wählen Sie eine oder mehrere Karten aus",
+          "selectMapLayers": "Wählen Sie eine Ebene aus der Karte",
+          "noFilterableMapLayers": "In keiner Karte können Ebenen gefiltert werden. Fügen Sie zuerst ein WMS- oder WFS-Layer hinzu.",
           "configureChartOptions": "Diagrammoptionen konfigurieren",
           "configureWidgetOptions": "Widget-Optionen konfigurieren",
           "errorChart": "Mindestens ein Diagramm ist ungültig",
@@ -2584,6 +2688,8 @@
         "actions": "Aktionen",
 
         "layoutTabLabel": "Layout",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Beschreibung eingeben...",
         "title": "Titel",
         "label": "Beschriftung",
         "icon": "Symbol",
@@ -2606,6 +2712,11 @@
         "onSelectionChange": "Bei Auswahländerung",
         "applyFilter": "Filter anwenden",
         "applyDimension": "Dimension anwenden",
+        "zoomTo": "Zoom auf",
+        "zoomToRequiresApplyFilterTooltip": "Verbinden Sie ein Filter-anwenden-Ziel mit einer Ebene dieser Karte, bevor Sie Zoom auf aktivieren",
+        "zoomToFilterExtent": "Auf gefilterte Ausdehnung zoomen {names}",
+        "autoZoomLabel": "Automatischer Zoom",
+        "autoZoomInfo": "Automatischer Zoom auf gefilterte Ausdehnung bei Auswahländerungen. Deaktivieren für manuellen Zoom.",
         "noConnectableNodesAvailable": "Keine verbindbaren Knoten verfügbar",
 
         "selectAll": "Alle auswählen",
@@ -2639,6 +2750,12 @@
         "forceSelection": "Auswahl der Streitkräfte",
         "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
         "forceSelectionEnabledTooltip": "Wenn die erzwungene Auswahl aktiviert ist, muss mindestens ein Element ausgewählt werden",
+        "defaultExpanded": "Standard erweitert",
+        "defaultExpandedTooltip": "Wenn aktiviert, wird der Filter standardmäßig erweitert; andernfalls wird der Filter-Kartenbereich standardmäßig eingeklappt",
+        "disableFilter": "Diesen Filter deaktivieren",
+        "enableFilter": "Aktivieren Sie diesen Filter",
+        "collapseFilter": "Filter zuklappen",
+        "expandFilter": "Filter erweitern",
         "showNoTargetsInfoLabel": "Keine Zielmeldung",
         "showNoTargetsInfoDescription": "Wenn kein Ziel mit dem Filter verbunden ist oder die verbundenen Ebenen/Widgets nicht sichtbar sind, wird eine Meldung angezeigt, die den Benutzer darüber informiert, dass der Filter keine Wirkung hat.",
         "noInteractionsInfo": "Kein Ziel verbunden. Verwenden Sie das Verbindungsfenster, um den Filter mit Ebenen oder Widgets zu verbinden.",
@@ -2650,6 +2767,8 @@
         "applyStyleFromWidgetButton": "Stil auf alle verbundenen Ebenen aus diesem Widget anwenden",
         "dimensionChangedByWidgetInfo": "Ein oder mehrere verbundene Knoten verwenden einen anderen Dimensionswert als den hier ausgewählten. Klicken Sie auf die Schaltfläche unten, um den ausgewählten Wert auf alle verbundenen Knoten anzuwenden.",
         "applyDimensionFromWidgetButton": "Wert aus diesem Filter auf alle verbundenen Knoten anwenden",
+        "showConnectedLayers": "Verbundene Layer anzeigen",
+        "showConnectedLayersTooltip": "Mit dem Ziel verbundene Layer im Widget anzeigen",
         "labelAttribute": "Beschriftungsattribut",
         "maxHeightPlaceholder": "Maximale Höhe eingeben..",
         "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",
@@ -3179,6 +3298,7 @@
       "disableRange": "Zeitbereich deaktivieren",
       "enablePlayBack": "Aktivieren Sie die Wiedergabesteuerung",
       "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
+      "hiddenGuideLayerWarning": "Die Führungslayer ist im Inhaltsverzeichnis und auf der Karte ausgeblendet, steuert aber weiterhin das Einrasten der Zeitleiste.",
       "expand": "Erweitern Sie den Zeitschieberegler",
       "collapse": "Schieberegler für die Zeitspanne reduzieren",
       "reset": {
@@ -4568,6 +4688,10 @@
       "loadingAPI": "API wird geladen...",
       "cyclomedia": {
         "initializing": "Initialisiere Street Smart API...",
+        "logout": "Street Smart Abmelden",
+        "tryForceLogout": "Street Smart Abmeldung erzwingen",
+        "confirmLogout": "Sind Sie sicher, dass Sie sich von Street Smart abmelden möchten?",
+        "loggingOut": "Street Smart Abmeldung läuft...",
         "loadingAPI": "Lade Street Smart API...",
         "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
         "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",
@@ -4578,8 +4702,10 @@
         "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
         "errorOccurred": "Fehler aufgetreten: ",
         "errors": {
+          "notLoggedIn": "Nicht angemeldet",
           "invalidCredentials": "Ungültige Anmeldeinformationen",
-          "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
+          "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator.",
+          "apiLoadFailed": "Die Street Smart API konnte nicht geladen werden. Bitte überprüfen Sie Ihre Netzwerkverbindung oder kontaktieren Sie den Administrator."
         },
         "reloadAPI": "API neu laden"
       },
@@ -4859,6 +4985,7 @@
         "errorDefault": "Netzwerkfehler"
       },
       "myResources": "Meine Ressourcen",
+      "select": "Auswählen",
       "creationFilter": {
         "from": "Erstellungsdatum von",
         "to": "Erstellungsdatum bis"

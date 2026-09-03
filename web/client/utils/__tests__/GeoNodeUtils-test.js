@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import { setSupportedLocales, getSupportedLocales } from '../LocaleUtils';
-import { resourceToLayerConfig, getDimensions } from '../GeoNodeUtils';
+import { resourceToLayerConfig, getDimensions, resolveApiPresetParams, mergePresetParams, documentsToLayerConfig } from '../GeoNodeUtils';
 
 describe('GeoNodeUtils', () => {
     describe('resourceToLayerConfig', () => {
@@ -247,4 +247,63 @@ describe('GeoNodeUtils', () => {
             }]);
         });
     });
+
+    describe('REST API presets', () => {
+        it('resolves document/dataset/map viewer presets (regression for the *_VIEWER key mismatch)', () => {
+            const doc = resolveApiPresetParams('DOCUMENT');
+            expect(doc.include).toContain('href');
+            expect(doc.include).toContain('extension');
+            expect(doc.include).toContain('ll_bbox_polygon');
+
+            const dataset = resolveApiPresetParams('DATASET');
+            expect(dataset.include).toContain('attribute_set');
+            expect(dataset.include).toContain('default_style');
+
+            const map = resolveApiPresetParams('MAP');
+            expect(map.include).toContain('data');
+            expect(map.include).toContain('maplayers');
+        });
+
+        it('mergePresetParams merges the document viewer fields needed by the media viewer', () => {
+            const merged = mergePresetParams('VIEWER_COMMON', 'DOCUMENT');
+            // viewer_common essentials
+            expect(merged.include).toContain('resource_type');
+            expect(merged.include).toContain('perms');
+            expect(merged.include).toContain('thumbnail_url');
+            // document specific
+            expect(merged.include).toContain('href');
+            expect(merged.include).toContain('extension');
+            expect(merged.include).toContain('ll_bbox_polygon');
+            expect(merged.exclude).toContain('*');
+        });
+    });
+
+    describe('GeoNode catalog documents, maps', () => {
+
+        it('documentsToLayerConfig builds a single vector layer of point features', () => {
+            const layer = documentsToLayerConfig([
+                { pk: 10, title: 'Doc 10', subtype: 'image', detail_url: '/documents/10', extent: { coords: [0, 0, 10, 10] } },
+                { pk: 11, title: 'Doc 11', subtype: 'document', detail_url: '/documents/11' }
+            ]);
+            expect(layer.type).toBe('vector');
+            expect(layer.name).toBe('Documents');
+            expect(layer.rowViewer).toBe('GEONODE_DOCUMENTS_ROW_VIEWER');
+            // doc 11 has no extent -> skipped
+            expect(layer.features.length).toBe(1);
+            expect(layer.features[0].id).toBe(10);
+            expect(layer.features[0].geometry.type).toBe('Point');
+            expect(layer.features[0].geometry.coordinates).toEqual([5, 5]);
+            expect(layer.bbox).toExist();
+        });
+
+        it('documentsToLayerConfig skips documents whose fetch fails', () => {
+            const layer = documentsToLayerConfig([
+                { pk: 10, title: 'Doc 10', subtype: 'image', extent: { coords: [0, 0, 10, 10] } },
+                null
+            ]);
+            expect(layer.features.length).toBe(1);
+            expect(layer.features[0].id).toBe(10);
+        });
+    });
+
 });

@@ -40,10 +40,11 @@ import { createResource, updateResource, getResource, updateResourceAttribute } 
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
 import { convertDependenciesMappingForCompatibility, updateDependenciesForMultiViewCompatibility } from "../utils/WidgetsUtils";
+import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
 const getFTSelectedArgs = (state) => {
     let layer = getEditingWidgetLayer(state);
-    let url = layer.search && layer.search.url;
-    let typeName = layer.name;
+    let url = getSearchUrl(layer);
+    let typeName = getWFSLayerName(layer);
     return [url, typeName];
 };
 

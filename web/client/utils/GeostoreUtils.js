@@ -8,7 +8,7 @@
 
 import { isEmpty, isEqual, omit, isArray, isObject, isString, castArray, some } from 'lodash';
 import merge from 'lodash/fp/merge';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import MapUtils from './MapUtils';
 
 // ******************************************

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import { slice, omit, head, last, get, isNaN, isEqual, isNumber } from 'lodash';
 import turfBbox from '@turf/bbox';
 import {

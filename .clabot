@@ -31,6 +31,7 @@
     "NielsMorck",
     "jve-nordiq",
     "tha-nordiq",
+    "oskarbh7",
     "fni18300",
     "OPGuillaume",
     "Mbayyari",
@@ -40,10 +41,12 @@
     "cmotadev",
     "brynsofz",
     "jlo-arxit",
+    "endorria",
     "huntsmarinho",
     "aseques",
     "jwkaltz",
-    "ygodaert"
+    "ygodaert",
+    "Binabh"
   ],
   "label": "CLA Ready",
   "message": "In order to contribute to the MapStore project, the CLA (Contributor License agreement) should be sent signed to GeoSolutions. Please consult contributing rules at: https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore#contributing-code"

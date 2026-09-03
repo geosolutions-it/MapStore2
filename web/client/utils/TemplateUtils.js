@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {isString, has, trim, template} from 'lodash';
+import {isString, has, isNil, trim} from 'lodash';
+import escape from 'lodash/escape';
 
 /**
  * check if a string attribute is inside of a given object
@@ -42,17 +43,6 @@ export const getCleanTemplate = (chosenTemplate, feature, regex, start = 0, end 
     return replacedTag && replacedTag.reduce((temp, variable) => temp.replace(variable.previous, variable.next), chosenTemplate) || chosenTemplate || '';
 };
 
-/**
- * parses a template with attributes defined in ${ ... } and applied to the metadata object
- * @param metadataTemplate {string} text with attribute to validate
- * @param getDefaultMissingProperty {function} if defined it returns a default value for undefined attributes
- * @param metadata {object} metadata object to match attributes
- * @return {string} template without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id } and a default value for undefined attributes
- */
-export const parseCustomTemplate = (metadataTemplate = "", metadata = {}, getDefaultMissingProperty = (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} Not Available`) => {
-    return template(getCleanTemplate(metadataTemplate || '', metadata, /\$\{.*?\}/g, 2, 1, getDefaultMissingProperty))(metadata);
-};
-
 export const generateTemplateString = (function() {
     var cache = {};
 
@@ -66,9 +56,9 @@ export const generateTemplateString = (function() {
                 let sanitized = chosenTemplate
                     .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, (_, match) => {
                         const escapeFunction = escapeFn || (a => a);
-                        return escapeFunction(match.trim().split(".").reduce((a, b) => {
-                            return a && a[b] || '';
-                        }, map));
+                        // only a missing value falls back to '', 0 and false are kept
+                        const value = match.trim().split(".").reduce((a, b) => isNil(a) ? undefined : a[b], map);
+                        return escapeFunction(isNil(value) ? '' : value);
                     });
 
                 return isString(sanitized) && sanitized || '';
@@ -84,6 +74,21 @@ export const generateTemplateString = (function() {
     return generateTemplate;
 })();
 
+
+/**
+ * parses a template with attributes defined in ${ ... } and applied to the metadata object
+ * @param metadataTemplate {string} text with attribute to validate
+ * @param getDefaultMissingProperty {function} if defined it returns a default value for undefined attributes
+ * @param metadata {object} metadata object to match attributes
+ * @return {string} template without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id } and a default value for undefined attributes
+ */
+export const parseCustomTemplate = (metadataTemplate = "", metadata = {}, getDefaultMissingProperty = (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} Not Available`) => {
+    // values are escaped because the result is rendered as HTML
+    return generateTemplateString(
+        getCleanTemplate(metadataTemplate || '', metadata, /\$\{.*?\}/g, 2, 1, getDefaultMissingProperty),
+        (value) => escape(String(value ?? ''))
+    )(metadata);
+};
 
 const TemplateUtils = {
     /**

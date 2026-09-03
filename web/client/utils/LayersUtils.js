@@ -7,7 +7,7 @@
  */
 
 import toBbox from 'turf-bbox';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
@@ -19,6 +19,7 @@ import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
 import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
+import { sanitizeHtml } from './HtmlSanitizer';
 import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
@@ -422,7 +423,7 @@ export const getLayerId = (layerObj) => {
 export const createFeatureId = (feature = {}) => {
     return {
         ...feature,
-        id: feature.id || feature.properties?.id || uuidv1()
+        id: !isNil(feature.id) ? feature.id : (feature.properties?.id ?? uuidv1())
     };
 };
 /**
@@ -435,9 +436,15 @@ export const normalizeLayer = (layer) => {
     // con uuid
     let _layer = layer;
     if (layer.type === "vector") {
+        const seen = new Set(); // must be unique id for features, so we need to check if there are duplicates
         _layer = _layer?.features?.length ? {
             ..._layer,
-            features: _layer?.features?.map(createFeatureId)
+            features: _layer?.features?.map((f) => {
+                const feature = createFeatureId(f);
+                const id = seen.has(String(feature.id)) ? uuidv1() : feature.id;
+                seen.add(String(id));
+                return { ...feature, id };
+            })
         } : layer;
     }
     // regenerate geodesic lines as property since that info has not been saved
@@ -653,7 +660,7 @@ export const geoJSONToLayer = (geoJSON, id) => {
     let features = [];
     if (geoJSON.type === "FeatureCollection") {
         features = geoJSON.features.map((feature, idx) => {
-            if (!feature.id) {
+            if (isNil(feature.id)) {
                 feature.id = idx;
             }
             if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
@@ -763,7 +770,9 @@ export const saveLayer = (layer) => {
     layer.strategy ? { strategy: layer.strategy } : {},
     layer.geometryType ? { geometryType: layer.geometryType } : {},
     layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {},
-    !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : {});
+    !isNil(layer.maxFeaturesInView) ? { maxFeaturesInView: layer.maxFeaturesInView } : {},
+    !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : {},
+    !isNil(layer.coalesce) ? { coalesce: layer.coalesce } : {});
 };
 
 /**
@@ -815,8 +824,8 @@ export const getCapabilitiesUrl = (layer) => {
     if (!!matchedGeoServerName) {
         let urlParts = reqUrl.split(matchedGeoServerName);
         if (urlParts.length === 2) {
-            let layerParts = layer.name.split(":");
-            if (layerParts.length === 2) {
+            let layerParts = layer?.name?.split(":");
+            if (layerParts?.length === 2) {
                 const [workspace, layerName] = layerParts;
                 const rawTail = urlParts[1] || '';
                 const urlTail = rawTail.replace(/^\/+/, '');
@@ -855,7 +864,21 @@ export const getCapabilitiesUrl = (layer) => {
  * @param {Object} layer
  * @returns {string} layer url
  */
-export const getSearchUrl = (l = {}) => l.search && l.search.url || l.url;
+export const getSearchUrl = (l = {}) => l.search?.url ?? l.url;
+/**
+ * Returns the feature type used by the WFS service associated with a layer.
+ * WMS layers can configure a distinct linked WFS type name; native WFS layers
+ * continue to use their layer name.
+ *
+ * @param {Object} layer layer configuration
+ * @returns {string} WFS feature type name
+ */
+export const getWFSLayerName = (layer = {}) =>
+    (layer.type === 'wms'
+        && layer.search?.typeName !== undefined
+        && layer.search.typeName !== null)
+        ? layer.search.typeName
+        : layer.name;
 export const invalidateUnsupportedLayer = (layer, maptype) => {
     return isSupportedLayerFunc(layer, maptype) ? checkInvalidParam(layer) : Object.assign({}, layer, {invalid: true});
 };
@@ -911,7 +934,8 @@ export const excludeGoogleBackground = ll => {
 export const creditsToAttribution = ({ imageUrl, link, title, text }) => {
     // TODO: check if format is valid for an img (svg, for instance, may not work)
     const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title || text || "credits";
-    return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
+    const attribution = link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
+    return sanitizeHtml(attribution);
 };
 
 export const getLayerTitle = ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name;
@@ -1254,4 +1278,3 @@ LayersUtils = {
     isInsideResolutionsLimits,
     visibleTimelineLayers
 };
-

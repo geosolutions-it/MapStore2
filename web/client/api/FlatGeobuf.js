@@ -28,7 +28,12 @@ export const FGB_FEATURE_BATCH_SIZE = 200;
  * when batches arrive faster than the network roundtrip, in cesium plugin
  */
 export const FGB_STREAM_FLUSH_INTERVAL = 500;
+export const FGB_MEANINGFUL_VIEW_RATIO = 0.95;
 
+export const getFlatGeobufMaxFeaturesInView = (options) => {
+    const maxFeaturesInView = Number(options?.maxFeaturesInView);
+    return maxFeaturesInView > 0 ? maxFeaturesInView : undefined;
+};
 export const getFlatGeobufGeojson = () => import('flatgeobuf/lib/mjs/geojson').then(mod => mod);
 export const getFlatGeobufGeneric = () => import('flatgeobuf/lib/mjs/generic').then(mod => mod);
 
@@ -45,7 +50,7 @@ function getTitleFromUrl(url) {
     return nameNoExt || filename;
 }
 
-function extractCapabilities({url}) {
+function extractCapabilities({ url }) {
     const version = FGB_VERSION;
     const format = getFormat(url || '') || FGB;
     return {
@@ -81,7 +86,7 @@ export const getCapabilities = (url) => {
                 crs: getFlatGeobufCrsFromMetadata(metadata)
             };
 
-            const capabilities = extractCapabilities({flatgeobuf, url});
+            const capabilities = extractCapabilities({ flatgeobuf, url });
 
             return {
                 ...capabilities,

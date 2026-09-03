@@ -16,12 +16,13 @@ import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as 
 
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 const Button = tooltip(ButtonRB);
-import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
+import MSIntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
+import localizedProps from '../../../misc/enhancers/localizedProps';
 import Legend from '../../../../plugins/TOC/components/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
-import { ServerTypes } from '../../../../utils/LayersUtils';
+import { ServerTypes, getCapabilitiesUrl } from '../../../../utils/LayersUtils';
 import {updateLayerLegendFilter} from '../../../../utils/FilterUtils';
 import Select from 'react-select';
 import { getSupportedFormat } from '../../../../api/WMS';
@@ -31,6 +32,8 @@ import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
 import VectorLegend from '../../../../plugins/TOC/components/VectorLegend';
 import { isMapServerUrl } from '../../../../utils/ArcGISUtils';
+
+const IntlNumberFormControl = localizedProps('placeholder')(MSIntlNumberFormControl);
 
 export default class extends React.Component {
     static propTypes = {
@@ -116,13 +119,18 @@ export default class extends React.Component {
         });
     };
 
-    onFormatOptionsFetch = (url) => {
+    onFormatOptionsFetch = (layer) => {
         this.setState({formatLoading: true});
-        getSupportedFormat(url).then((imageFormats)=>{
+        getSupportedFormat(getCapabilitiesUrl(layer)).then((imageFormats)=>{
             this.props.onChange("imageFormats", imageFormats);
             this.setState({formatLoading: false});
         });
     }
+
+    onMaxFeaturesInViewChange = (value) => {
+        const maxFeaturesInView = parseInt(value, 10);
+        this.props.onChange("maxFeaturesInView", maxFeaturesInView > 0 ? maxFeaturesInView : undefined);
+    };
 
     getValidationState = (name) =>{
         if (this.state.legendOptions && this.state.legendOptions[name]) {
@@ -165,7 +173,7 @@ export default class extends React.Component {
                                     onOpen={() => {
                                         if (!this.props.element?.imageFormats
                                         || this.props.element?.imageFormats?.length === 0) {
-                                            this.onFormatOptionsFetch(this.props.element?.url);
+                                            this.onFormatOptionsFetch(this.props.element);
                                         }
                                     }}
                                     onChange={({ value }) => {
@@ -175,7 +183,7 @@ export default class extends React.Component {
                                     disabled={!!this.state.formatLoading}
                                     tooltipId="layerProperties.format.refresh"
                                     className="square-button no-border format-refresh"
-                                    onClick={() => {this.onFormatOptionsFetch(this.props.element?.url);}}
+                                    onClick={() => {this.onFormatOptionsFetch(this.props.element);}}
                                     key="format-refresh">
                                     <Glyphicon glyph="refresh" />
                                 </Button>
@@ -208,6 +216,23 @@ export default class extends React.Component {
                                 name={"opacity"}
                                 value={this.state.opacity}
                                 onChange={(val)=> this.onChange("opacity", val)}/>
+                        </FormGroup>
+                    </Col>
+                </Row>}
+
+                {this.props.element.type === "flatgeobuf" && <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel>
+                                <Message msgId="layerProperties.maxFeaturesInView" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.maxFeaturesInViewTooltip" />} />
+                            </ControlLabel>
+                            <IntlNumberFormControl
+                                data-qa="display-max-features-in-view"
+                                type="number"
+                                min={1}
+                                step={1}
+                                value={this.props.element.maxFeaturesInView === undefined ? '' : this.props.element.maxFeaturesInView}
+                                onChange={this.onMaxFeaturesInViewChange}/>
                         </FormGroup>
                     </Col>
                 </Row>}
@@ -274,6 +299,11 @@ export default class extends React.Component {
                                     />
                                 </>
                             ))}
+                            <Checkbox key="coalesce" value="coalesce"
+                                checked={this.props.element?.coalesce === false}
+                                onChange={(e) => this.props.onChange("coalesce", e.target.checked ? false : undefined)}>
+                                <Message msgId="layerProperties.coalesceExclude.label" />{' '}<InfoPopover text={<Message msgId="layerProperties.coalesceExclude.tooltip" />} />
+                            </Checkbox>
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>

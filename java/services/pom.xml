@@ -3,7 +3,7 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-java</artifactId>
-        <version>1.12-SNAPSHOT</version>
+        <version>1.13-SNAPSHOT</version>
     </parent>
 
     <groupId>it.geosolutions.mapstore</groupId>
@@ -86,10 +86,9 @@
         </dependency>
 
         <!-- servlet -->
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
 
         <!-- json-lib -->
@@ -143,8 +142,8 @@
                 <version>3.10.1</version>
                 <configuration>
                     <encoding>utf8</encoding>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>17</source>
+                    <target>17</target>
                     <debug>true</debug>
                     <encoding>UTF-8</encoding>
                     <!--

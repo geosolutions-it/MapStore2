@@ -20,7 +20,7 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 
 import { MAP_VIEWS_CONFIG_KEY } from '../utils/MapViewsUtils';
 
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 const defaultState = {};
 

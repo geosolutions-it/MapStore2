@@ -66,7 +66,7 @@ export default () => WrappedComponent =>
             this.update(this.props.scrollContainerSelector);
         }
 
-        componentWillReceiveProps(newProps) {
+        UNSAFE_componentWillReceiveProps(newProps) {
             if (this._stickybits
             && (newProps.viewWidth !== this.props.viewWidth
             || newProps.viewHeight !== this.props.viewHeight)) {

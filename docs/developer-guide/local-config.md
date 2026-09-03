@@ -78,6 +78,8 @@ This is the main structure:
   "miscSettings": {
       // Use POST requests for each WMS length URL highter than this value.
       "maxURLLength": 5000,
+      // Combine adjacent compatible WMS layers into a single GetMap request
+      "coalesceWMSLayers": false,
       // Custom path to home page
       "homePath": '/home'
   },
@@ -205,6 +207,20 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
         "sv": "2024-11-04",
         "sig": "token"
       }
+    }
+    ```
+
+  - `enabled` - Optional, a plain boolean or a plugin expression string (same syntax as a plugin's `disablePluginIf`) to
+    conditionally apply the rule, e.g. based on the current user's groups. Rules without `enabled` are always applied.
+    Example:
+
+    ```json
+    {
+      "urlPattern": ".*geoserver.*",
+      "params": {
+        "authkey": "${securityToken}"
+      },
+      "enabled": "{includes(state('usergroups'), 'editor')}"
     }
     ```
 
@@ -486,8 +502,11 @@ Nominatim configuration:
    "type": "nominatim",
    "searchTextTemplate": "${properties.display_name}", // text to use as searchText when an item is selected. Gets the result properties.
    "options": {
-     "polygon_geojson": 1,
-     "limit": 3
+     "polygon_geojson": 1, // example parameter to be passed on to the Nominatim API, consult Nominatim documentation for further information
+     "limit": 3, // further example parameter to be passed on to the Nominatim API
+     "host": "my-nominatim.example.com", // optional custom Nominatim hostname
+     "protocol": "https" // optional protocol to use for the call to Nominatim API ('https' or 'http')
+   }
 }
 ```
 

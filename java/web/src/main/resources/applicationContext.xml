@@ -46,6 +46,7 @@
     <!-- Allows getting database configuration also from the data-dir -->
     <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreInvalidKeys" value="true"/>
         <property name="order" value="10"/>
         <property name="locations">
             <list>

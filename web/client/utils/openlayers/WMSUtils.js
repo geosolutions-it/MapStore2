@@ -51,7 +51,7 @@ export const proxySource = (forceProxy, src) => {
 };
 
 export function getWMSURLs( urls ) {
-    return urls.map((url) => url.split("\?")[0]);
+    return urls.map((url) => `${url}`.split("\?")[0]);
 }
 
 export const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;

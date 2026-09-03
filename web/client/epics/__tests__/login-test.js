@@ -15,6 +15,7 @@ import { MAP_CONFIG_LOAD_ERROR } from '../../actions/config';
 import { SET_CONTROL_PROPERTY, setControlProperty } from '../../actions/controls';
 import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED, LOGIN_SUCCESS, RESET_ERROR } from '../../actions/security';
 import { setCookie, eraseCookie } from '../../utils/CookieUtils';
+import { consumeLoginRedirect, saveLoginRedirect } from '../../utils/LoginRedirectUtils';
 
 import MockAdapter from 'axios-mock-adapter';
 
@@ -23,6 +24,7 @@ import {
     promptLoginOnMapError,
     reloadMapConfig,
     redirectOnLogout,
+    restoreLoginRedirect,
     verifyOpenIdSessionCookie,
     closeLoginPromptOnLoginSuccess
 } from '../login';
@@ -142,6 +144,59 @@ describe('login Epics', () => {
         });
         testEpic(redirectOnLogout, 1, logout(), (actions) => {
             expect(actions.length).toBe(0);
+        });
+    });
+    describe('restoreLoginRedirect', () => {
+        let originalHash;
+        beforeEach(() => {
+            originalHash = window.location.hash;
+            consumeLoginRedirect();
+            window.location.hash = '#/';
+        });
+        afterEach(() => {
+            consumeLoginRedirect();
+            window.location.hash = originalHash;
+        });
+
+        [
+            '#/viewer/openlayers/123?showInfo=true',
+            '#/dashboard/123',
+            '#/geostory/123'
+        ].forEach((redirectHash) => {
+            it(`restores ${redirectHash}`, (done) => {
+                saveLoginRedirect(redirectHash);
+                testEpic(restoreLoginRedirect, 1, loginSuccess(), ([action]) => {
+                    expect(action.type).toBe('@@router/CALL_HISTORY_METHOD');
+                    expect(action.payload.method).toBe('replace');
+                    expect(action.payload.args[0]).toBe(redirectHash.slice(1));
+                    expect(consumeLoginRedirect()).toBe(null);
+                }, {}, done);
+            });
+        });
+
+        it('does not redirect when there is no saved route', (done) => {
+            testEpic(addTimeoutEpic(restoreLoginRedirect, 20), 1, loginSuccess(), ([action]) => {
+                expect(action.type).toBe(TEST_TIMEOUT);
+                expect(consumeLoginRedirect()).toBe(null);
+            }, {}, done);
+        });
+
+        it('consumes a malformed saved route without redirecting', (done) => {
+            saveLoginRedirect('#//example.com');
+            testEpic(addTimeoutEpic(restoreLoginRedirect, 20), 1, loginSuccess(), ([action]) => {
+                expect(action.type).toBe(TEST_TIMEOUT);
+                expect(consumeLoginRedirect()).toBe(null);
+            }, {}, done);
+        });
+
+        it('consumes the current route without redirecting', (done) => {
+            const currentHash = '#/viewer/openlayers/123';
+            window.location.hash = currentHash;
+            saveLoginRedirect(currentHash);
+            testEpic(addTimeoutEpic(restoreLoginRedirect, 20), 1, loginSuccess(), ([action]) => {
+                expect(action.type).toBe(TEST_TIMEOUT);
+                expect(consumeLoginRedirect()).toBe(null);
+            }, {}, done);
         });
     });
     describe('verifyOpenIdSessionCookie', () => {

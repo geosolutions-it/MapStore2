@@ -20,12 +20,13 @@ import { compose } from 'recompose';
 import {setControlProperty} from '../actions/controls';
 
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
-import {widgetBuilderSelector, widgetBuilderAvailable} from '../selectors/controls';
+import { widgetBuilderSelector } from '../selectors/controls';
 import { dependenciesSelector, availableDependenciesForEditingWidgetSelector} from '../selectors/widgets';
-import { toggleConnection, createWidget } from '../actions/widgets';
+import { toggleConnection } from '../actions/widgets';
 import withMapExitButton from './widgetbuilder/enhancers/withMapExitButton';
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
 import FeatureEditorButton from './widgetbuilder/FeatureEditorButton';
+import WidgetsBuilderButton from './widgetbuilder/WidgetBuilderButton';
 const Builder = compose(
     connect(
         createSelector(
@@ -115,32 +116,6 @@ const Plugin = connect(
         onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)
     }
 )(SideBarComponent);
-
-const WidgetsBuilderButton = connect((state) => ({ available: widgetBuilderAvailable(state) }), {
-    onClick: createWidget
-})(({
-    onClick,
-    selectedNodes,
-    status,
-    itemComponent,
-    statusTypes,
-    available,
-    ...props
-}) => {
-    const ItemComponent = itemComponent;
-    const layer = selectedNodes?.[0]?.node;
-    if (available && [statusTypes.LAYER].includes(status) && layer?.search && layer.search !== 'vector') {
-        return (
-            <ItemComponent
-                {...props}
-                glyph="widgets"
-                tooltipId={'toc.createWidget'}
-                onClick={() => layer?.error ? onClick({ mapSync: false }) : onClick()} // allows anyway to create a widget, not connected to map
-            />
-        );
-    }
-    return null;
-});
 
 export default createPlugin('WidgetsBuilder', {
     component: Plugin,

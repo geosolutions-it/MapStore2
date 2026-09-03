@@ -24,7 +24,6 @@ class PasswordResetModal extends React.Component {
     static propTypes = {
         // props
         user: PropTypes.object,
-        authHeader: PropTypes.string,
         show: PropTypes.bool,
         options: PropTypes.object,
 

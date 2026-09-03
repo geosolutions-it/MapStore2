@@ -526,6 +526,18 @@ describe('PrintUtils', () => {
             done();
         }).catch(done);
     });
+    it('wms layer generation for legend includes only the layer version', (done) => {
+        getMapfishLayersSpecification([{...layer, version: "1.3.0"}], { projection: "EPSG:3857" }, {}, 'legend').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            const legendUrl = specs[0].classes[0].icons[0];
+            // Count both version and VERSION query parameters.
+            const versionParams = legendUrl.match(/[?&]version=/gi) || [];
+            expect(versionParams.length).toBe(1);
+            expect(legendUrl.indexOf('version=1.3.0')).toBeGreaterThan(0);
+            done();
+        }).catch(done);
+    });
     it('vector layer default point style', () => {
         const style = getOlDefaultStyle({ features: [{ geometry: { type: "Point" } }] });
         expect(style).toExist();

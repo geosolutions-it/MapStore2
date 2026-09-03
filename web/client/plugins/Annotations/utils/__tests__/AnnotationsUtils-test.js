@@ -508,7 +508,10 @@ describe('AnnotationsUtils', () => {
         });
     });
     it('annotationsToGeoJSON with length and area measures', () => {
-        expect(annotationsToGeoJSON(annotationsTest)).toEqual(annotationsTestResult);
+        // round numbers to 12 significant digits because floating point results
+        // of transcendental functions can differ across browser versions
+        const roundNumbers = value => JSON.parse(JSON.stringify(value, (key, val) => typeof val === 'number' ? Number(val.toPrecision(12)) : val));
+        expect(roundNumbers(annotationsToGeoJSON(annotationsTest))).toEqual(roundNumbers(annotationsTestResult));
     });
     it('geoJSONToAnnotations', () => {
         const geoJSON = {

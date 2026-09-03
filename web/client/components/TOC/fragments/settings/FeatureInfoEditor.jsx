@@ -24,18 +24,18 @@ const DescriptionEditor = withDebounceOnCallback('onEditorStateChange', 'editorS
  * @memberof components.TOC.fragments.settings
  * @name FeatureInfoEditor
  * @class
- * @prop {object} element data of the current selected node
+ * @prop {string} template the template to edit
  * @prop {boolean} showEditor show/hide modal
  * @prop {function} onShowEditor called when click on close buttons
- * @prop {function} onChange called when text in editor has been changed
+ * @prop {function} onSaveTemplate called with the edited template on close
  * @prop {boolean} enableIFrameModule enable iframe in editor, default true
  */
 
 const FeatureInfoEditor = ({
-    element,
+    template: templateProp,
     showEditor,
     onShowEditor,
-    onChange,
+    onSaveTemplate,
     enableIFrameModule
 }, {messages}) => {
     const [, setCounter] = useState(0);
@@ -57,14 +57,12 @@ const FeatureInfoEditor = ({
 
     }, [showEditor]);
 
-    const [template, setTemplate] = useState(element?.featureInfo?.template || '');
+    const [template, setTemplate] = useState(templateProp ?? '');
     const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(template));
     const onClose = () => {
         onShowEditor(!showEditor);
-        onChange('featureInfo', {
-            ...(element && element.featureInfo || {}),
-            template: draftJSEditorStateToHtml(editorState)
-        });
+        const html = draftJSEditorStateToHtml(editorState);
+        onSaveTemplate(html);
     };
     const imageField = document.querySelector(".rdw-image-modal-url-section");
     return (
@@ -85,6 +83,7 @@ const FeatureInfoEditor = ({
                     }
                 ]}>
                 <div id="ms-template-editor" className="ms-editor">
+                    {/* eslint-disable-next-line react/no-danger -- CSS injected for DraftJS image placeholder; content is a hardcoded i18n string */}
                     <style dangerouslySetInnerHTML={{__html: ".DraftEditor-editorContainer img::after {content: '" + getMessageById(messages, "layerProperties.imageNotFound") + "'}"} }/>
                     {imageField ? createPortal(<div className="guide-text"><Message msgId="layerProperties.guideText"/></div>, imageField) : null}
 
@@ -116,8 +115,8 @@ const FeatureInfoEditor = ({
 
 FeatureInfoEditor.propTypes = {
     showEditor: PropTypes.bool,
-    element: PropTypes.object,
-    onChange: PropTypes.func,
+    template: PropTypes.string,
+    onSaveTemplate: PropTypes.func.isRequired,
     onShowEditor: PropTypes.func,
     enableIFrameModule: PropTypes.bool
 };
@@ -127,9 +126,7 @@ FeatureInfoEditor.contextTypes = {
 
 FeatureInfoEditor.defaultProps = {
     showEditor: false,
-    element: {},
     enableIFrameModule: false,
-    onChange: () => {},
     onShowEditor: () => {}
 };
 

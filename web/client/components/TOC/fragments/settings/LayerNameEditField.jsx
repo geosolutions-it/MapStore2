@@ -26,22 +26,48 @@ const LayerNameEditField = ({
     setLayerName = () => {},
     setWaitingForLayerLoading = () => {},
     setEditingLayerName = () => {},
+    setLayerError = () => {},
+    onValidate,
+    onValidationError = () => {},
     onUpdateEntry = () => {}
 }) => {
     const editButton = (
         <InputGroup.Addon className="btn" onClick={() => {
+            if (waitingForLayerLoading || waitingForLayerLoad) {
+                return;
+            }
             if (editingLayerName) {
                 if (layerName !== element.name) {
-                    onUpdateEntry('name', {target: {value: layerName}});
-                    if (enableLayerNameEditFeedback) {
+                    setLayerError();
+                    if (enableLayerNameEditFeedback || onValidate) {
                         setWaitingForLayerLoading(true);
+                    }
+                    const updateLayerName = (validationResult) => {
+                        onUpdateEntry('name', {target: {value: layerName}}, validationResult);
+                        if (!enableLayerNameEditFeedback) {
+                            setWaitingForLayerLoading(false);
+                            setEditingLayerName(false);
+                        }
+                    };
+                    if (onValidate) {
+                        Promise.resolve()
+                            .then(() => onValidate(layerName))
+                            .then(updateLayerName)
+                            .catch((error) => {
+                                setWaitingForLayerLoading(false);
+                                setLayerError(true);
+                                setEditingLayerName(true);
+                                onValidationError(error);
+                            });
                     } else {
-                        setEditingLayerName(false);
+                        updateLayerName();
                     }
                 } else {
+                    setLayerError();
                     setEditingLayerName(false);
                 }
             } else {
+                setLayerError();
                 setEditingLayerName(true);
             }
         }}>
@@ -65,6 +91,7 @@ const LayerNameEditField = ({
             <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
             <InputGroup>
                 <FormControl
+                    data-qa="layer-properties-name"
                     value={layerName}
                     key="name"
                     type="text"

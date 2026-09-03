@@ -51,7 +51,11 @@ const InteractionsRow = ({
             disabled: false,
             reason: null
         };
-
+    const context = {
+        targetType: target?.targetType,
+        nodePath: item.nodePath,
+        ...configurationContext
+    };
     return (
         <FlexBox key={item.id} component="li" gap="xs" column>
             <TFlexBox
@@ -78,15 +82,17 @@ const InteractionsRow = ({
                         isPluggable={isPluggable}
                         isConfigurable={isConfigurable}
                         configuration={configuration}
+                        context={context}
                         setPlugged={onPlugChange}
                         showConfiguration={showConfiguration}
                         setShowConfiguration={setShowConfiguration}
                         plugConstraints={nodeDisabled}
+                        setConfiguration={onConfigurationChange}
                     />
                 )}
             </TFlexBox>
             {!rowDisabled.disabled && (
-                <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={onConfigurationChange} setPlugged={onPlugChange} target={target} nodePath={item.nodePath} configurationContext={configurationContext} />
+                <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={onConfigurationChange} setPlugged={onPlugChange} target={target} context={context} />
             )}
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">

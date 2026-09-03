@@ -127,7 +127,6 @@
       "templateFormatInfoAlert2": "Använd $ {attribute} för att omsluta de egenskaper du behöver visa",
       "templateFormatInfoAlertExample": "Objektets id är <span style = 'white-space: nowrap'> $ {properties.id} </span> eller <span style = 'white-space: nowrap'> $ {properties [ 'data-value']} </span> ",
       "templateError": "Det uppstod ett fel när mallen skulle tillämpas på den information som servern returnerade. Kontrollera mallen",
-      "templatePreview": "Förhandsvisning av mall",
       "heightOffset": "Höjdoffset (m)",
       "wmsLayerTileSize": "Rutstorlek (WMS)",
       "serverType": "Servertyp",
@@ -1624,6 +1623,9 @@
       "wmcNoLayersError": "Minst ett WMS-lager behövs för att exportera till WMC, hittade inget"
     },
     "catalog": {
+      "subtypes": {
+        "file": "File"
+      },
       "tagFilterType": {
         "label": "yp av taggfilter",
         "category": "Kategori",

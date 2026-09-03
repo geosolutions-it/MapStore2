@@ -17,8 +17,8 @@ import Message from '../../../components/I18N/Message';
 import { isArray, isObject, isString } from 'lodash';
 
 /**
- * A Modal window to show password reset form
-  * @prop {bool} hideGroupUserInfo It is a flag from Login plugin (cfg.toolsCfg[0].hideGroupUserInfo): to show/hide user group in user details info, by default `false`
+ * A Modal window to show user details
+  * @prop {bool} hideGroupUserInfo if true, hides the user group information, by default `false`
  */
 class UserDetails extends React.Component {
     static propTypes = {

@@ -202,14 +202,14 @@ const ChartWizard = ({
                         onChange(`charts[${selectedChart?.chartId}].traces[${selectedTrace.id}].${key}`, value);
                     }}
                     layer={selectedTrace?.layer}
-                    disableLayerSelection={!dashBoardEditing}
+                    disableLayerSelection={false}
                     showTitle={false}
                     error={!!errors?.[selectedTrace?.layer?.name]}
-                    onChangeLayer={dashBoardEditing ? () => toggleLayerSelector({
+                    onChangeLayer={() => toggleLayerSelector({
                         key: 'chart-layer-replace',
                         chartId: selectedChart?.chartId,
                         traceId: selectedTrace?.id
-                    }) : null}
+                    })}
                     onFilterLayer={() => openFilterEditor()}
                 />}
                 <ChartStyleEditorComp

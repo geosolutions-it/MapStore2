@@ -31,7 +31,7 @@ describe('dynamiclegend epics', () => {
                 expect(actions[0].source).toBe(CONTROL_NAME);
                 expect(actions[0].layout.right).toBe(DEFAULT_PANEL_WIDTH + (layout?.boundingSidebarRect?.right ?? 0));
                 expect(actions[0].layout.rightPanel).toBe(true);
-                expect(actions[0].layout.boundingMapRect.right).toBe(DEFAULT_PANEL_WIDTH);
+                expect(actions[0].layout.boundingMapRect.right).toBe(DEFAULT_PANEL_WIDTH + (layout?.boundingSidebarRect?.right ?? 0));
                 expect(actions[0].layout.boundingSidebarRect.right).toBe(200);
                 done();
             },

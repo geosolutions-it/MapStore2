@@ -11,22 +11,46 @@ import { RESET_ERROR } from '../security';
 import { SET_CONTROL_PROPERTY } from '../controls';
 import {isFunction} from 'lodash';
 import ConfigUtils from '../../utils/ConfigUtils';
+import { consumeLoginRedirect } from '../../utils/LoginRedirectUtils';
 
 describe('login actions', () => {
     describe('openIDLogin', () => {
+        let originalHash;
+        beforeEach(() => {
+            originalHash = window.location.hash;
+            consumeLoginRedirect();
+        });
+        afterEach(() => {
+            consumeLoginRedirect();
+            window.location.hash = originalHash;
+        });
         it('default with provider', () => {
             let page;
+            let redirectHash;
             const PROVIDER = "google";
-            openIDLogin({provider: PROVIDER}, (p) => {page = p;} )();
+            const HASH = '#/viewer/openlayers/123';
+            window.location.hash = HASH;
+            openIDLogin({provider: PROVIDER}, (p) => {
+                page = p;
+                redirectHash = consumeLoginRedirect();
+            })();
             const geostore = ConfigUtils.getConfigProp("geoStoreUrl");
             expect(page).toEqual(`${geostore}openid/${PROVIDER}/login`);
+            expect(redirectHash).toEqual(HASH);
         });
         it('custom URL', () => {
             let page;
+            let redirectHash;
             const PROVIDER = "google";
             const TEST_URL = "/test/path";
-            openIDLogin({provider: PROVIDER, url: TEST_URL}, (p) => {page = p;} )();
+            const HASH = '#/dashboard/123?edit=true';
+            window.location.hash = HASH;
+            openIDLogin({provider: PROVIDER, url: TEST_URL}, (p) => {
+                page = p;
+                redirectHash = consumeLoginRedirect();
+            })();
             expect(page).toEqual(TEST_URL);
+            expect(redirectHash).toEqual(HASH);
         });
     });
     it('showLoginWindow', () => {

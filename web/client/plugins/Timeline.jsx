@@ -39,12 +39,14 @@ import withResizeSpy from '../components/misc/enhancers/withResizeSpy';
 import Toolbar from '../components/misc/toolbar/Toolbar';
 import InlineDateTimeSelector from '../components/time/InlineDateTimeSelector';
 import { currentTimeSelector, offsetEnabledSelector } from '../selectors/dimension';
+import { getEffectivelyVisibleLayers } from '../selectors/layers';
 import { playbackRangeSelector, statusSelector } from '../selectors/playback';
 import {
     currentTimeRangeSelector,
     isMapSync,
     isVisible,
     rangeSelector,
+    selectedLayerData,
     selectedLayerSelector,
     timelineLayersSelector
 } from '../selectors/timeline';
@@ -103,7 +105,9 @@ const TimelinePlugin = compose(
             rangeSelector,
             (state) => state.timeline?.loader !== undefined,
             selectedLayerSelector,
-            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady, selectedLayer) => ({
+            selectedLayerData,
+            getEffectivelyVisibleLayers,
+            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady, selectedLayer, selectedLayerObject, effectivelyVisibleLayers) => ({
                 visible,
                 layers,
                 currentTime,
@@ -113,7 +117,9 @@ const TimelinePlugin = compose(
                 status,
                 viewRange,
                 timelineIsReady,
-                selectedLayer
+                selectedLayer,
+                selectedLayerIsHidden: !!selectedLayerObject
+                    && !effectivelyVisibleLayers.some(({ id }) => id === selectedLayer)
             })
         ), {
             setCurrentTime: selectTime,
@@ -200,7 +206,8 @@ const TimelinePlugin = compose(
         initialSnap = 'now',
         resetButton,
         reset = () => {},
-        selectedLayer
+        selectedLayer,
+        selectedLayerIsHidden
     }) => {
         useEffect(()=>{
             // update state with configs coming from configuration file like localConfig.json so that can be used as props initializer
@@ -328,6 +335,12 @@ const TimelinePlugin = compose(
                         tooltip={<Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>}>
                         <Glyphicon glyph={collapsed ? 'resize-full' : 'resize-small'}/>
                     </Button>
+                    {selectedLayerIsHidden && <Button
+                        className="square-button ms-timeline-visibility-warning"
+                        bsStyle="warning"
+                        tooltip={<Message msgId="timeline.hiddenGuideLayerWarning"/>}>
+                        <Glyphicon glyph="warning-sign"/>
+                    </Button>}
                 </div>
             </div>
             {!timelineIsReady && <div className="timeline-loader">

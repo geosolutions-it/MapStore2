@@ -14,7 +14,7 @@ import {
     SectionTypes,
     updateGeoCarouselSections
 } from '../utils/GeoStoryUtils';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import {
     ADD,
     ADD_RESOURCE,

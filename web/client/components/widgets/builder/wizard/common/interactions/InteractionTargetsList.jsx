@@ -7,9 +7,8 @@
  */
 import React from 'react';
 import FlexBox from '../../../../../layout/FlexBox';
-// import { filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
 import Message from '../../../../../I18N/Message';
-import { findNodeById, getItemPluggableStatus, isMapTimeTarget } from '../../../../../../utils/InteractionUtils';
+import { findNodeById, getItemPluggableStatus, isMapTimeTarget, isAnyZoomToTarget } from '../../../../../../utils/InteractionUtils';
 import InteractionsRow from './InteractionsRow';
 import { buildInteractionObject, findInteraction, getInteractionTargetNodeDisabled } from './interactionHelpers';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
@@ -46,35 +45,58 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
         if (!sourceWidgetId || !onEditorChange) {
             return;
         }
-
+        let newInteractions = [];
         if (existingInteraction) {
             const updatedInteraction = {
                 ...existingInteraction,
                 ...updates
             };
-            const updatedInteractions = (interactions || []).map(interaction =>
+            newInteractions = (interactions || []).map(interaction =>
                 interaction.id === existingInteraction.id ? updatedInteraction : interaction
             );
-            onEditorChange('interactions', updatedInteractions);
-            return;
+        } else {
+            const interaction = buildInteractionObject({
+                sourceNodePath,
+                targetNodePath,
+                configuration: {
+                    ...(updates.configuration || DEFAULT_CONFIGURATION)
+                },
+                plugged: updates.plugged || false,
+                targetMetaData,
+                targetType: target.targetType
+            });
+            newInteractions = [...(interactions || []), interaction];
         }
-
-        const interaction = buildInteractionObject({
-            sourceNodePath,
-            targetNodePath,
-            configuration: updates.configuration || DEFAULT_CONFIGURATION,
-            plugged: updates.plugged || false,
-            targetMetaData,
-            targetType: target.targetType
+        newInteractions = newInteractions.map(interaction => {
+            if (interaction.plugged) {
+                const item = findNodeById(interactionTree, interaction.target.nodePath);
+                if (item) {
+                    const nodeDisabled = getInteractionTargetNodeDisabled({
+                        item,
+                        target: { targetType: interaction.targetType },
+                        targetNodePath: interaction.target.nodePath,
+                        sourceNodePath: interaction.source.nodePath,
+                        plugged: interaction.plugged,
+                        alreadyExistingInteractions: newInteractions,
+                        sourceSelectionMode,
+                        timelineEnabled
+                    });
+                    if (nodeDisabled.disabled) {
+                        return { ...interaction, plugged: false };
+                    }
+                }
+            }
+            return interaction;
         });
-        onEditorChange('interactions', [...(interactions || []), interaction]);
-    }, [sourceWidgetId, onEditorChange, interactions, sourceNodePath, target]);
+        onEditorChange('interactions', newInteractions);
+    }, [sourceWidgetId, onEditorChange, interactions, sourceNodePath, target, interactionTree, sourceSelectionMode, timelineEnabled]);
 
     const renderRow = (item, idx) => {
         const targetNodePath = item.nodePath;
         const targetMetaData = item?.interactionMetadata?.targets?.find(t => t.targetType === target.targetType);
         const existingInteraction = findInteraction(interactions, sourceNodePath, targetNodePath, target.targetType);
         const isMapTime = isMapTimeTarget(targetNodePath);
+        const isZoomTo = isAnyZoomToTarget(targetNodePath);
         const configuration = existingInteraction?.configuration || DEFAULT_CONFIGURATION;
         const plugged = existingInteraction?.plugged || false;
         const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(item, target, configuration);
@@ -105,7 +127,7 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
         const handleConfigurationChange = (newConfiguration) => {
             updateInteraction({
                 configuration: newConfiguration,
-                plugged: !isMapTime && !newConfiguration.forcePlug ? false : plugged
+                plugged: !isMapTime && !isZoomTo && !newConfiguration.forcePlug ? false : plugged
             });
         };
 

@@ -53,7 +53,7 @@ describe('layerdownload Epics', () => {
                     expect(action.value).toBe(false);
                     break;
                 case QUERY_CREATE:
-                    expect(action.searchUrl).toBe('myurl');
+                    expect(action.searchUrl).toBe('http://search');
                     expect(action.filterObj.featureTypeName).toBe('mylayer');
                     break;
                 default:
@@ -96,6 +96,134 @@ describe('layerdownload Epics', () => {
             downloadFeatures('/wrong/path?', { featureTypeName: 'test' }, { selectedFormat: "test-format"}),
             epicResult,
             state
+        );
+    });
+    it('startFeatureExportDownload uses the linked WFS URL', (done) => {
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{
+                    id: 'test layer',
+                    type: 'wms',
+                    name: 'workspace:rendered',
+                    url: 'wms-url',
+                    search: {
+                        type: 'wfs',
+                        url: 'linked-wfs-url',
+                        typeName: 'workspace:linked'
+                    }
+                }],
+                selected: ['test layer']
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('wms-url', { featureTypeName: 'workspace:linked' }, { selectedFormat: 'test-format' }),
+            (actions) => {
+                expect(actions[0].error.config.url).toContain('linked-wfs-url');
+                done();
+            },
+            state
+        );
+    });
+    it('startFeatureExportDownload adds viewport filter to WFS export when cropDataSet is enabled', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].error.config.url).toExist();
+            expect(actions[0].error.config.url.indexOf("test-format") > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf("<ogc:Intersects>") > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf("<ogc:PropertyName>the_geom</ogc:PropertyName>") > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<gml:Polygon srsName="EPSG:3857">') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf("<gml:posList>0 0 0 1 1 1 1 0 0 0</gml:posList>") > 0).toBe(true);
+            done();
+        };
+
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{ id: 'test layer', name: 'test', layerFilter: { featureTypeName: 'test' } }],
+                selected: ['test layer']
+            },
+            map: {
+                present: {
+                    bbox: {
+                        bounds: { minx: 0, miny: 0, maxx: 1, maxy: 1 },
+                        crs: 'EPSG:3857'
+                    }
+                }
+            },
+            query: {
+                featureTypes: {
+                    test: {
+                        original: {
+                            featureTypes: [{
+                                properties: [{
+                                    name: 'the_geom',
+                                    type: 'gml:MultiPolygon'
+                                }]
+                            }]
+                        }
+                    }
+                }
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/wrong/path?', { featureTypeName: 'test' }, { selectedFormat: "test-format", cropDataSet: true}),
+            epicResult,
+            state
+        );
+    });
+    it('startFeatureExportDownload adds viewport BBOX filter when cropDataSet is enabled without describe metadata', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].error.config.url).toExist();
+            expect(actions[0].error.config.url.indexOf("test-format") > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf("<ogc:BBOX>") > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<gml:Envelope srsName="EPSG:3857">') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf("<gml:lowerCorner>0 0</gml:lowerCorner>") > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf("<gml:upperCorner>1 1</gml:upperCorner>") > 0).toBe(true);
+        };
+
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{ id: 'test layer', name: 'test', layerFilter: { featureTypeName: 'test' } }],
+                selected: ['test layer']
+            },
+            map: {
+                present: {
+                    bbox: {
+                        bounds: { minx: 0, miny: 0, maxx: 1, maxy: 1 },
+                        crs: 'EPSG:3857'
+                    }
+                }
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/wrong/path?', { featureTypeName: 'test' }, { selectedFormat: "test-format", cropDataSet: true}),
+            epicResult,
+            state,
+            done
         );
     });
     it('startFeatureExportDownload cql_filter support', (done) => {

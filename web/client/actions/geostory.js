@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import isString from 'lodash/isString';
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 
 export const ADD = "GEOSTORY:ADD";

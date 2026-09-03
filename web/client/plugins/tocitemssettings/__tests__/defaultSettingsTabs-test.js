@@ -284,4 +284,49 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
         });
         expect(result.Component).toBeTruthy();
     });
+
+    it('VectorStyleEditor initializes a flatgeobuf layer from source metadata columns', (done) => {
+        const mockStore = configureMockStore()({});
+        const PROPS = {
+            ...BASE_STYLE_TEST_DATA,
+            element: {
+                id: 'flatgeobuf-layer',
+                type: 'flatgeobuf',
+                url: 'base/web/client/test-resources/flatgeobuf/UScounties_subset.fgb',
+                sourceMetadata: {
+                    geometryType: 6,
+                    columns: [
+                        { name: 'STATE_NAME' },
+                        { name: 'STATE_FIPS' }
+                    ]
+                }
+            },
+            onUpdateNode: (id, nodeType, update) => {
+                try {
+                    expect(id).toBe('flatgeobuf-layer');
+                    expect(nodeType).toBe('layers');
+                    expect(update.properties).toEqual({
+                        STATE_NAME: '',
+                        STATE_FIPS: ''
+                    });
+                    expect(update.geometryType).toBe('polygon');
+                    expect(update.style).toEqual({
+                        format: 'geostyler',
+                        body: {},
+                        metadata: {
+                            editorType: 'visual'
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                    return;
+                }
+                done();
+            }
+        };
+
+        act(async() => {
+            ReactDOM.render(<Provider store={mockStore}><VectorStyleEditor {...PROPS}/></Provider>, document.querySelector('#container'));
+        });
+    });
 });

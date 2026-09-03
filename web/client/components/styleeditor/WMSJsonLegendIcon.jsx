@@ -226,6 +226,35 @@ function createSymbolizerForPoint(pointSymbolizer) {
     return symbolizer;
 }
 
+export function getExternalGraphicUrl(graphic) {
+    if (!graphic) return null;
+    const externalGraphic = graphic['external-graphic'];
+    if (typeof externalGraphic === 'string') {
+        return externalGraphic;
+    }
+    return graphic['external-graphic-url']
+        || externalGraphic?.url
+        || externalGraphic?.href
+        || null;
+}
+
+export function getPointExternalGraphicUrl(pointSymbolizer) {
+    return pointSymbolizer?.graphics
+        ?.map(getExternalGraphicUrl)
+        .find(url => !!url);
+}
+
+export function createIconSymbolizerForPoint(pointSymbolizer) {
+    return {
+        ...pointSymbolizer,
+        image: pointSymbolizer?.image
+            || getPointExternalGraphicUrl(pointSymbolizer)
+            || pointSymbolizer?.url,
+        rotate: pointSymbolizer?.rotate || pointSymbolizer?.rotation || 0,
+        opacity: pointSymbolizer?.opacity || 1
+    };
+}
+
 function WMSJsonLegendIcon({
     rule
 }) {
@@ -273,10 +302,11 @@ function WMSJsonLegendIcon({
     // Handle Point symbolizers (individual icons, not stacked)
     pointSymbolizers.forEach((pointSym) => {
         let graphicSymbolyzer = pointSym?.graphics?.find(gr => Object.keys(gr).includes('mark'));
-        const graphicType = graphicSymbolyzer ? 'Mark' : 'Icon';
+        const externalGraphicUrl = getPointExternalGraphicUrl(pointSym);
+        const graphicType = graphicSymbolyzer && !externalGraphicUrl ? 'Mark' : 'Icon';
         const processedSymbolizer = graphicType === 'Mark'
             ? createSymbolizerForPoint(pointSym)
-            : pointSym;
+            : createIconSymbolizerForPoint(pointSym);
         if (graphicType === 'Mark' && graphicSymbolyzer) {
             processedSymbolizer.wellKnownName = graphicSymbolyzer.mark.charAt(0).toUpperCase() + graphicSymbolyzer.mark.slice(1);
         }

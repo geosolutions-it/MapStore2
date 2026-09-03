@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { has, includes, indexOf } from 'lodash';
+import { has, includes, indexOf, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useMemo, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { Dropdown, FormControl, Glyphicon } from 'react-bootstrap';
 import { connect } from '../../../utils/PluginsUtils';
 import { createSelector } from 'reselect';
@@ -105,7 +105,8 @@ const Selector = ({
     currentBackground,
     onError = () => {},
     canEditProjection = true,
-    unregisteredProjections = []
+    unregisteredProjections = [],
+    customResolutions
 }) => {
     const [toggled, setToggled] = useState(false);
     const [openAvailableProjections, setOpenAvailableProjections] = useState(false);
@@ -115,6 +116,18 @@ const Selector = ({
             typeInput('');
         }
     }, toggled);
+
+    // Make the configured `customResolutions` available to the rest of the
+    // plugin so that, when the user switches CRS or saves the map, the correct
+    // per-CRS resolutions are applied and persisted.
+    useEffect(() => {
+        if (
+            !isEmpty(customResolutions)
+            && isEmpty(projectionsConfig?.customResolutions)
+        ) {
+            setConfig({ ...projectionsConfig, customResolutions });
+        }
+    }, [customResolutions, projectionsConfig?.customResolutions]);
 
     const changeCrs = (crs) => {
         const allowedLayerTypes = ["wms", "osm", "tileprovider", "terrain", "empty"];
@@ -311,7 +324,8 @@ Selector.propTypes = {
     projectionsConfig: PropTypes.object,
     setConfig: PropTypes.func,
     canEditProjection: PropTypes.bool,
-    searchResultsRemote: PropTypes.array
+    searchResultsRemote: PropTypes.array,
+    customResolutions: PropTypes.object
 };
 
 const CRSSelector = connect(

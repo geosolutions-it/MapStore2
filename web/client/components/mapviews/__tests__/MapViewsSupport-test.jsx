@@ -195,4 +195,19 @@ describe('MapViewsSupport component', () => {
             })
             .catch(done);
     });
+
+    describe('sanitization', () => {
+        it('removes script tags from the description of the selected view', () => {
+            window.__mapViewsScript = undefined;
+            ReactDOM.render(<MapViewsSupport
+                mapType="cesium"
+                showDescription
+                map={{ camera: { position: {}, setView: () => {}, cancelFlight: () => {} } }}
+                views={[{ id: 'view-01', title: 'Title', description: '<p>content</p><script>window.__mapViewsScript = true</script>' }]}
+                selectedId="view-01"
+            />, document.getElementById("container"));
+            expect(window.__mapViewsScript).toBe(undefined);
+            expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+        });
+    });
 });

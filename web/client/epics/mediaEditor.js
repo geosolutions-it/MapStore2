@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {Observable} from 'rxjs';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import findKey from 'lodash/findKey';
 
 import {

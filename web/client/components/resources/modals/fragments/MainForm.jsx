@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {Col, Row} from 'react-bootstrap';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
 import Message from '../../../I18N/Message';
 import FileDrop from '../../forms/FileDrop';

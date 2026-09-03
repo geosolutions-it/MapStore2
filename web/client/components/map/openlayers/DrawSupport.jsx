@@ -19,7 +19,7 @@ import isNil from 'lodash/isNil';
 import castArray from 'lodash/castArray';
 
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
+import { v1 as uuid } from 'uuid';
 import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
@@ -52,6 +52,7 @@ import {fromCircle, circular} from 'ol/geom/Polygon';
 import {Snap} from "ol/interaction";
 import {bbox, all} from "ol/loadingstrategy";
 import {getFeatureURL} from "../../../api/WFS";
+import { getSearchUrl, getWFSLayerName } from '../../../utils/LayersUtils';
 
 const geojsonFormat = new GeoJSON();
 
@@ -179,12 +180,16 @@ export default class DrawSupport extends React.Component {
 
     getWMSSnapSource = (snappingLayerInstance, snapConfig) => {
         const isLoading = this.props.toggleSnappingIsLoading;
-        if (this?.snapMetadata?.id !== snappingLayerInstance.id) {
+        const url = getSearchUrl(snappingLayerInstance);
+        const typeName = getWFSLayerName(snappingLayerInstance);
+        if (this?.snapMetadata?.id !== snappingLayerInstance.id
+            || this?.snapMetadata?.url !== url
+            || this?.snapMetadata?.typeName !== typeName) {
             const source = new VectorSource({
                 format: new GeoJSON(),
                 loader: function(extent, resolution, projection) {
                     const proj = projection.getCode();
-                    const url = getFeatureURL(snappingLayerInstance.search.url, snappingLayerInstance.name, {
+                    const featureUrl = getFeatureURL(url, typeName, {
                         version: '1.1.0',
                         outputFormat: 'application/json',
                         srsname: proj,
@@ -196,7 +201,7 @@ export default class DrawSupport extends React.Component {
                         source.removeLoadedExtent(extent);
                         err && console.warn(err);
                     };
-                    axios.get(url)
+                    axios.get(featureUrl)
                         .then(res => {
                             isLoading();
                             if (res.status === 200) {
@@ -214,6 +219,8 @@ export default class DrawSupport extends React.Component {
             });
             this.snapMetadata = {
                 id: snappingLayerInstance.id,
+                url,
+                typeName,
                 source
             };
         }
@@ -439,7 +446,7 @@ export default class DrawSupport extends React.Component {
         });
         this.drawInteraction.on('drawend', (evt) => {
             const sketchFeature = evt.feature.clone();
-            sketchFeature.set('id', uuid.v1());
+            sketchFeature.set('id', uuid());
             if (this.props.drawMethod === "Circle" && sketchFeature.getGeometry().getType() === "Circle") {
                 const radius = sketchFeature.getGeometry().getRadius();
                 const center = sketchFeature.getGeometry().getCenter();
@@ -546,7 +553,7 @@ export default class DrawSupport extends React.Component {
 
         this.drawInteraction.on('drawend', (evt) => {
             const sketchFeature = evt.feature.clone();
-            const id = uuid.v1();
+            const id = uuid();
             sketchFeature.set('id', id);
             let drawnGeom = sketchFeature.getGeometry();
             let drawnFeatures = this.drawLayer.getSource().getFeatures();
@@ -596,7 +603,7 @@ export default class DrawSupport extends React.Component {
                 // drawnFeatures is array of Feature
                 const previousFeatures = drawnFeatures.length >= 1 ? [...this.replaceCirclesWithPolygonsInFeatureColl(drawnFeatures)] : [];
                 if (!newFeature.getProperties().id) {
-                    newFeature.setProperties({id: uuid.v1()});
+                    newFeature.setProperties({id: uuid()});
                 }
                 const newFeatures = [...previousFeatures, newFeature];
                 // create FeatureCollection externalize as function
@@ -1240,7 +1247,9 @@ export default class DrawSupport extends React.Component {
         !snappingLayerExists && !!this.snapInteraction && this.removeSnapInteraction();
         if (!!this.snapInteraction) {
             const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
-            const snappingLayerChanged = this.props.snappingLayerInstance?.id !== newProps.snappingLayerInstance?.id;
+            const snappingLayerChanged = this.props.snappingLayerInstance?.id !== newProps.snappingLayerInstance?.id
+                || getSearchUrl(this.props.snappingLayerInstance) !== getSearchUrl(newProps.snappingLayerInstance)
+                || getWFSLayerName(this.props.snappingLayerInstance) !== getWFSLayerName(newProps.snappingLayerInstance);
             const snappingToggledOff = !newProps.snapping && this.props.snapping;
             const snappingToggledOn = newProps.snapping && !this.props.snapping;
             if (snappingToggledOn) {

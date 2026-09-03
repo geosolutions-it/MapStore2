@@ -7,7 +7,7 @@ import {STREET_VIEW_DATA_LAYER_ID} from '../constants';
  * Now it's not possible because of conflicts with the `react-dnd` library.
  */
 export const loadAPI = () => (new Promise((r) => r()));
-// https://streetsmart.cyclomedia.com/api/v23.14/documentation/
+// https://streetsmart.cyclomedia.com/api/v26.1/documentation/
 // export const loadAPI = () => import('@cyclomedia/streetsmart-api').then((module) =>  module.default);
 /**
  * Get the Cyclomedia API instance (because the API is loaded in an iframe and fully handled in it, here it is not needed)

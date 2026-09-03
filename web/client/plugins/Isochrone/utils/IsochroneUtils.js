@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import _bbox from '@turf/bbox';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';

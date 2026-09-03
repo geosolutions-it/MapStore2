@@ -44,7 +44,7 @@ import {
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { set } from '../utils/ImmutableUtils';
 import { isNil } from 'lodash';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 export const emptyService = {
     url: "",

@@ -53,6 +53,33 @@ describe('test Layer Properties Display module component', () => {
         ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('100');
     });
+    it('tests Display component for FlatGeobuf max features in view field', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'flatgeobuf',
+            url: 'fakeurl',
+            maxFeaturesInView: 7
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const spyOn = expect.spyOn(handlers, 'onChange');
+        ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const maxFeaturesInView = document.querySelector('[data-qa="display-max-features-in-view"]');
+        expect(maxFeaturesInView).toBeTruthy();
+        expect(maxFeaturesInView.value).toBe('7');
+        expect(document.querySelector('.mapstore-info-popover')).toBeTruthy();
+        ReactTestUtils.Simulate.change(maxFeaturesInView, { target: { value: '15' } });
+        expect(spyOn.calls[0].arguments).toEqual([ 'maxFeaturesInView', 15 ]);
+        ReactTestUtils.Simulate.change(maxFeaturesInView, { target: { value: '' } });
+        expect(spyOn.calls[1].arguments).toEqual([ 'maxFeaturesInView', undefined ]);
+    });
     it('tests Display component for wms for map viewer', () => {
         const l = {
             name: 'layer00',
@@ -75,10 +102,10 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(15);
+        expect(inputs.length).toBe(16);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
-        inputs[8].click();
+        document.getElementById("container").querySelector('input[value="singleTile"]').click();
         expect(spy.calls.length).toBe(1);
     });
     it('tests Display component for wms for dashboard or geostory', () => {
@@ -103,11 +130,36 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
+        expect(inputs.length).toBe(15);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
-        inputs[8].click();
+        document.getElementById("container").querySelector('input[value="singleTile"]').click();
         expect(spy.calls.length).toBe(1);
+    });
+    it('tests coalesce exclude checkbox is available also for no-vendor wms servers', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            serverType: ServerTypes.NO_VENDOR
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const spy = expect.spyOn(handlers, "onChange");
+        ReactDOM.render(<Display element={l} settings={{ options: {} }} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const container = document.getElementById("container");
+        expect(container.querySelector('.ms-wms-cache-options')).toBeFalsy();
+        const coalesce = container.querySelector('input[value="coalesce"]');
+        expect(coalesce).toBeTruthy();
+        expect(coalesce.checked).toBe(false);
+        coalesce.click();
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments[0]).toBe('coalesce');
+        expect(spy.calls[0].arguments[1]).toBe(false);
     });
     it('tests Display component for wms with format fetch', (done) => {
         const l = {

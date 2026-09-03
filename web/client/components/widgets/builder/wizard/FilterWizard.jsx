@@ -71,6 +71,7 @@ const FilterWizard = ({
     filters = [],
     selections = {},
     selectedFilterId = null,
+    locale,
     onFilterSelect = () => {},
     onAddFilter = () => {},
     onDeleteFilter = () => {},
@@ -95,8 +96,8 @@ const FilterWizard = ({
     }, [editorData, setValid]);
 
     const tabContents = {
-        data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} selections={selections} interactions={editorData?.interactions || []} />,
-        layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange} selectableItems={selectableItems} interactions={editorData?.interactions || []}  />,
+        data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} globalWidgetMode={editorData?.globalWidgetMode === true} selections={selections} interactions={editorData?.interactions || []} />,
+        layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange} selectableItems={selectableItems} interactions={editorData?.interactions || []} />,
         actions: <FilterActionsTab data={filterData} onChange={onChange} onEditorChange={onEditorChange}  />
     };
 
@@ -108,6 +109,7 @@ const FilterWizard = ({
                     showNoTargetsInfo={false/* preview mode */}
                     filters={filters}
                     selections={selections}
+                    locale={locale}
                     getSelectionHandler={onSelectionChange}
                     selectedFilterId={selectedFilterId}
                     onSelectableItemsChange={onSelectableItemsChange}

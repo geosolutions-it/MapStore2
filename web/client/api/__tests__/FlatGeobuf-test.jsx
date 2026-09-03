@@ -12,6 +12,7 @@ import {
     FGB_VERSION,
     getCapabilities,
     createFlatGeobufGeometryTypeResolver,
+    getFlatGeobufMaxFeaturesInView,
     sniffFlatGeobufFirstGeometryType,
     sniffFlatGeobufFirstFeature
 } from '../FlatGeobuf';
@@ -32,6 +33,21 @@ const FGB_FILE_FIRST_FEATURE_PROPS = {
     }
 };
 describe('Test FlatGeobuf API', () => {
+    describe('getFlatGeobufMaxFeaturesInView', () => {
+        it('returns undefined when the option is not configured', () => {
+            expect(getFlatGeobufMaxFeaturesInView()).toBe(undefined);
+            expect(getFlatGeobufMaxFeaturesInView({})).toBe(undefined);
+        });
+        it('returns the positive integer option', () => {
+            expect(getFlatGeobufMaxFeaturesInView({ maxFeaturesInView: 25 })).toBe(25);
+            expect(getFlatGeobufMaxFeaturesInView({ maxFeaturesInView: '25' })).toBe(25);
+        });
+        it('ignores invalid values', () => {
+            expect(getFlatGeobufMaxFeaturesInView({ maxFeaturesInView: 0 })).toBe(undefined);
+            expect(getFlatGeobufMaxFeaturesInView({ maxFeaturesInView: -1 })).toBe(undefined);
+            expect(getFlatGeobufMaxFeaturesInView({ maxFeaturesInView: 'wrong' })).toBe(undefined);
+        });
+    });
     it('getCapabilities from FlatGeobuf file', (done) => {
         getCapabilities(FGB_FILE).then(({ bbox, format, version, title}) => {
             try {

@@ -30,11 +30,13 @@ describe('Image component', () => {
     });
     it('Image rendering with to contain', () => {
         ReactDOM.render(<Image
+            altText="Sample image"
             fit="contain"
             src={SAMPLE_SRC}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
         expect(image).toExist();
+        expect(image.getAttribute('alt')).toBe('Sample image');
         expect(image.style.objectFit).toBe('contain');
     });
     it('Image rendering with to cover', () => {

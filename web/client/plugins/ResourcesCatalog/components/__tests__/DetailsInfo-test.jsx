@@ -179,5 +179,29 @@ describe('DetailsInfo component', () => {
         const tabLink = document.querySelector('.ms-details-info li a');
         Simulate.click(tabLink);
     });
+
+    it('should not render an href that can not be used as a link target', () => {
+        ReactDOM.render(<DetailsInfo
+            tabs={[{ type: 'tab', id: 'info', labelId: 'Info', items: [
+                // eslint-disable-next-line no-script-url
+                { type: 'link', label: 'Label', href: 'javascript:void(0)', value: 'value' }
+            ] }]}
+            selectedTab="info"
+        />, document.getElementById('container'));
+        expect(document.querySelectorAll('a[href^="javascript:"]').length).toBe(0);
+    });
+    describe('sanitization', () => {
+        it('removes script tags from an html field value', () => {
+            window.__detailsInfoScript = undefined;
+            ReactDOM.render(<DetailsInfo
+                tabs={[{ type: 'tab', id: 'info', labelId: 'Info', items: [
+                    { type: 'html', value: '<p>content</p><script>window.__detailsInfoScript = true</script>' }
+                ] }]}
+                selectedTab="info"
+            />, document.getElementById('container'));
+            expect(window.__detailsInfoScript).toBe(undefined);
+            expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
+        });
+    });
 });
 

@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import ContentEditable from 'react-contenteditable';
 import {withState, compose} from 'recompose';
 
 const manageUpdates = compose(
@@ -21,24 +20,21 @@ const manageUpdates = compose(
 const TitleEditable = manageUpdates(({
     text,
     className = "ms-story-title-editable",
-    onUpdate = () =>  {},
-    setText = () => {}} = {}
-) => {
-    return (<ContentEditable
+    onUpdate = () =>  {}
+} = {}) => {
+    return (<div
         className={className}
-        html={text}
         onClick={evt => {
             // avoid trigger select state
             evt.stopPropagation();
-        }}
-        onChange={evt => {
-            setText(evt.target.value);
         }}
         onBlur={(evt) => {
             // this event has no value property
             onUpdate(evt.target.innerText);
         }}
-    />);
+        contentEditable
+        suppressContentEditableWarning
+    >{text}</div>);
 });
 
 

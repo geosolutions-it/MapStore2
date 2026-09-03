@@ -21,7 +21,8 @@ import { createPagedUniqueAutompleteStream } from '../../observables/autocomplet
 import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { generateRandomHexColor } from '../../utils/ColorUtils';
-import uuid from 'uuid';
+import { v1 as uuid } from 'uuid';
+import { getSearchUrl, getWFSLayerName } from '../../utils/LayersUtils';
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
@@ -72,8 +73,8 @@ class ThemaClassesEditor extends React.Component {
                         column={{key: classificationAttribute}}
                         onChange={value => this.updateUnique(index, value)}
                         dataType="string"
-                        typeName={layer.name}
-                        url={ConfigUtils.getParsedUrl(layer.url, {"outputFormat": "json"})}
+                        typeName={getWFSLayerName(layer)}
+                        url={ConfigUtils.getParsedUrl(getSearchUrl(layer), {"outputFormat": "json"})}
                         value={classItem.unique}
                         filter="contains"
                         autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>);
@@ -258,11 +259,11 @@ class ThemaClassesEditor extends React.Component {
             let classifyObj;
             if (!isNil(currentRule.unique)) {
                 const uniqueValue = isNumber(currentRule.unique) ? 0 : '';
-                classifyObj = { ...currentRule, id: uuid.v1(), color, title: uniqueValue, unique: uniqueValue };
+                classifyObj = { ...currentRule, id: uuid(), color, title: uniqueValue, unique: uniqueValue };
             } else if (!isNil(currentRule.quantity)) {
-                classifyObj = { ...currentRule, id: uuid.v1(), color, label: '0', quantity: 0 };
+                classifyObj = { ...currentRule, id: uuid(), color, label: '0', quantity: 0 };
             } else {
-                classifyObj = { ...currentRule, id: uuid.v1(), ...updateMinMax, color,
+                classifyObj = { ...currentRule, id: uuid(), ...updateMinMax, color,
                     title: !customLabels ? ` >= ${updateMinMax.min} AND <${updateMinMax.max}` : ""
                 };
             }

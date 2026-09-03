@@ -17,6 +17,7 @@ import GroupField from './GroupField';
 import { isSameUrl } from '../../../utils/URLUtils';
 import InfoPopover from '../../widgets/widget/InfoPopover';
 import SwitchButton from '../../misc/switch/SwitchButton';
+import { getWFSLayerName } from '../../../utils/LayersUtils';
 
 const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(origSearchUrl, url) || isSameUrl(origSearchUrl, (search && search.url));
 // bbox make not sense with cross layer filter
@@ -119,7 +120,7 @@ export default ({
                         .filter( l => isSameOGCServiceRoot(searchUrl, l))
                         .map( l => ({
                             label: l.title || l.name,
-                            value: l.name
+                            value: getWFSLayerName(l)
                         }))}
                     placeholder={<Message msgId="queryform.crossLayerFilter.placeholder" />}
                     filter="contains"

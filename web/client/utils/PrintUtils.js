@@ -778,7 +778,6 @@ export const specCreators = {
                                     ...getWMSLegendConfig({layer, legendOptions, mapBbox: spec.bbox, mapSize: spec.size, projection: spec.projection, format: LEGEND_FORMAT.IMAGE}),
                                     TRANSPARENT: true,
                                     EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                    VERSION: "1.1.1",
                                     SCALE: spec.scale,
                                     ...getLegendIconsSize(spec, layer),
                                     ...(spec.language ? {LANGUAGE: spec.language} : {})
@@ -889,7 +888,7 @@ export const specCreators = {
     },
     osm: {
         map: (layer = {}) => ({
-            "baseURL": "http://a.tile.openstreetmap.org/",
+            "baseURL": "https://tile.openstreetmap.org/",
             "opacity": getOpacity(layer),
             "singleTile": false,
             "type": "OSM",

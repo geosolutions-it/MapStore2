@@ -21,7 +21,7 @@ MapStore has a file called `geostore-datasource-ovr.properties`. This file is on
     For production deployments, consider using the [externalized configuration](externalized-configuration.md) (`-Ddatadir.location=`) instead. It provides a single data directory that centralizes all MapStore configuration files (database, proxy, JSON configs, etc.) and persists across updates. The `geostore-datasource-ovr.properties` file can simply be placed inside that directory.
 
 For instance using tomcat on linux you will have to do something like this to add the environment variable to the JAVA_OPTS
-> where to add your JAVA_OPTS depends on your operating system. For instance the file could be `/etc/default/tomcat8`, or similar, in linux debian
+> where to add your JAVA_OPTS depends on your operating system. For instance the file could be `/etc/default/tomcat10`, or similar, in linux debian
 
 ```properties
 # here the path to the ovr file

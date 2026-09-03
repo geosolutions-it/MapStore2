@@ -86,19 +86,19 @@ describe("Test the login modal", () => {
             const cmp = ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
             expect(cmp).toBeTruthy();
             expect(document.querySelector('.modal-body form')).toBeFalsy();
-            expect(document.querySelector('.modal-body > div > a > img')).toBeTruthy(); // google has a default image.
+            expect(document.querySelector('.modal-body > div > button.login-provider > img')).toBeTruthy(); // google has a default image.
         });
         it('google + geostore', () => {
             const cmp = ReactDOM.render(<LoginModal show providers={[{type: "basic", provider: "geostore"}, {type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
             expect(cmp).toBeTruthy();
             expect(document.querySelector('.modal-body form')).toBeTruthy();
-            expect(document.querySelector('.modal-body > div > a > img')).toBeTruthy(); // google has a default image.
+            expect(document.querySelector('.modal-body > div > button.login-provider > img')).toBeTruthy(); // google has a default image.
         });
         it('custom openID', () => {
             const cmp = ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "test", title: "test provider"}]} options={{animation: false}}/>, document.getElementById("container"));
             expect(cmp).toBeTruthy();
             expect(document.querySelector('.modal-body form')).toBeFalsy();
-            const link = document.querySelector('.modal-body > div > a');
+            const link = document.querySelector('.modal-body > div > button.login-provider');
             expect(link).toBeTruthy();
             expect(link.innerHTML).toEqual("test provider");
         });
@@ -107,9 +107,37 @@ describe("Test the login modal", () => {
             const cmp = ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "test", title: "test provider", imageURL}]} options={{animation: false}}/>, document.getElementById("container"));
             expect(cmp).toBeTruthy();
             expect(document.querySelector('.modal-body form')).toBeFalsy();
-            const img = document.querySelector('.modal-body > div > a > img');
+            const img = document.querySelector('.modal-body > div > button.login-provider > img');
             expect(img).toBeTruthy();
             expect(img.src).toEqual(imageURL);
+        });
+    });
+    describe('close button placement', () => {
+        it('basic only: close button with the form, not in footer', () => {
+            ReactDOM.render(<LoginModal show providers={[{type: "basic", provider: "geostore"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeTruthy();
+            expect(document.querySelector('.modal-body button.btn-default:not(.login-provider)')).toBeTruthy();
+            expect(document.querySelector('.modal-footer button')).toBeFalsy();
+        });
+        it('basic + openID (default): close button in footer only, not with the form', () => {
+            ReactDOM.render(<LoginModal show providers={[{type: "basic", provider: "geostore"}, {type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeTruthy();
+            expect(document.querySelector('.modal-body button.btn-default:not(.login-provider)')).toBeFalsy();
+            expect(document.querySelector('.modal-footer button.btn-default')).toBeTruthy();
+            expect(document.querySelectorAll('button.btn-default:not(.login-provider)').length).toBe(1);
+        });
+        it('openID only: close button in footer only', () => {
+            ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeFalsy();
+            expect(document.querySelector('.modal-body button.btn-default:not(.login-provider)')).toBeFalsy();
+            expect(document.querySelector('.modal-footer button.btn-default')).toBeTruthy();
+            expect(document.querySelectorAll('button.btn-default:not(.login-provider)').length).toBe(1);
+        });
+        it('basic + openID, includeCloseButton false: no close button', () => {
+            ReactDOM.render(<LoginModal show includeCloseButton={false} providers={[{type: "basic", provider: "geostore"}, {type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(document.querySelector('.modal-body button[value="user.signIn"]')).toBeTruthy();
+            expect(document.querySelector('.modal-body button.btn-default:not(.login-provider)')).toBeFalsy();
+            expect(document.querySelector('.modal-footer button')).toBeFalsy();
         });
     });
 });

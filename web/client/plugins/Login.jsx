@@ -62,6 +62,7 @@ const RULE_MANAGER_ID = 'rulesmanager';
   *
   * @prop {string} cfg.id identifier of the Plugin, by default `"mapstore-login-menu"`
   * @prop {boolean} cfg.isUsingLDAP flag refers to if the user with type LDAP or not to manage show/hide change psasword, by default: false
+  * @prop {boolean} cfg.hideGroupUserInfo if true, hides the user group information in the user details modal, by default: false
   * @prop {object[]} items this property contains the items injected from the other plugins
   *  * using the `containers` option in the plugin that want to inject the new menu items.
   * ```javascript
@@ -106,12 +107,16 @@ function LoginPlugin({
     displayName,
     showAccountInfo,
     bsStyle,
-    className
+    className,
+    hideGroupUserInfo,
+    toolsCfg
 }, context) {
 
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins });
     const showPasswordChange = !(!isAdmin && isUsingLDAP);
+    // Keep toolsCfg[0] as a fallback for backward compatibility.
+    const resolvedHideGroupUserInfo = hideGroupUserInfo ?? toolsCfg?.[0]?.hideGroupUserInfo ?? false;
     const authenticated = user?.[displayName];
     const userItems = authenticated ? [
         { name: 'UserDetails', Component: UserDetailsMenuItem, position: 1},
@@ -152,6 +157,7 @@ function LoginPlugin({
                 showPasswordChange={showPasswordChange}
                 showAccountInfo={showAccountInfo}
                 isUsingLDAP={isUsingLDAP}
+                hideGroupUserInfo={resolvedHideGroupUserInfo}
             />
             <Login/>
         </>
@@ -186,7 +192,9 @@ LoginPlugin.propTypes = {
     isAdmin: PropTypes.bool,
     isUsingLDAP: PropTypes.bool,
     displayName: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    hideGroupUserInfo: PropTypes.bool,
+    toolsCfg: PropTypes.array
 };
 
 LoginPlugin.defaultProps = {

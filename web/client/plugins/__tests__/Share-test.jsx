@@ -66,6 +66,45 @@ describe('Share Plugin', () => {
         expect(containers.SidebarMenu).toContain({position: 1000, priority: 1, doNotHide: true});
     });
 
+    it('shows Share menu entries in a context with or without Permalink', () => {
+        const { containers } = getPluginForTest(SharePlugin, {}, {
+            ToolbarPlugin: {},
+            BurgerMenuPlugin: {},
+            SidebarMenuPlugin: {}
+        });
+
+        [
+            [{ name: 'Share' }],
+            [{ name: 'Share' }, { name: 'Permalink' }]
+        ].forEach((desktop) => {
+            const state = {
+                context: {
+                    currentContext: {
+                        plugins: { desktop }
+                    }
+                }
+            };
+
+            ['Toolbar', 'BurgerMenu', 'SidebarMenu'].forEach((container) => {
+                expect(containers[container].selector(state)).toEqual({ style: {} });
+            });
+        });
+    });
+
+    it('hides Share menu entries when there is no shareable resource or context', () => {
+        const { containers } = getPluginForTest(SharePlugin, {}, {
+            ToolbarPlugin: {},
+            BurgerMenuPlugin: {},
+            SidebarMenuPlugin: {}
+        });
+
+        ['Toolbar', 'BurgerMenu', 'SidebarMenu'].forEach((container) => {
+            expect(containers[container].selector({})).toEqual({
+                style: { display: 'none' }
+            });
+        });
+    });
+
     it('test Share plugin on close', (done) => {
         const controls = {
             share: {

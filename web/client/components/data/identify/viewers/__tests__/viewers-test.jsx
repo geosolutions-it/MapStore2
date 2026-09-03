@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 
 import HTMLViewer from '../HTMLViewer';
 import JSONViewer from '../JSONViewer';
+import TemplateViewer from '../TemplateViewer';
 import TextViewer from '../TextViewer';
 
 import configureStore from 'redux-mock-store';
@@ -43,7 +44,27 @@ describe('Identity Viewers', () => {
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-        expect(cmpDom.getElementsByClassName("testclass").length).toBe(1);
+        // content is rendered inside a shadow root, so it is not reachable via the
+        // host's normal DOM queries — query the shadow root instead.
+        expect(cmpDom.getElementsByClassName("testclass").length).toBe(0);
+        expect(cmpDom.shadowRoot).toExist();
+        expect(cmpDom.shadowRoot.querySelectorAll(".testclass").length).toBe(1);
+    });
+
+    it('HTMLViewer scopes the response <style> block inside the shadow root', () => {
+        const response = "<html><head><style>table.featureInfo{border:1px solid #ddd;}</style></head><body><table class='featureInfo'><tr><td>value</td></tr></table></body></html>";
+        const cmp = ReactDOM.render(<HTMLViewer response={response} />, document.getElementById("container"));
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom.shadowRoot).toExist();
+        // <style> preserved (regression #12618) but confined to the shadow root
+        expect(cmpDom.shadowRoot.querySelector("style")).toExist();
+        expect(cmpDom.shadowRoot.querySelector("table.featureInfo")).toExist();
+        // and it does NOT leak into the main document (light DOM has no style,
+        // and no document stylesheet carries the WMS rule)
+        expect(cmpDom.querySelector("style")).toNotExist();
+        const leaked = Array.from(document.querySelectorAll("style"))
+            .some((s) => s.textContent.indexOf("table.featureInfo") !== -1);
+        expect(leaked).toBe(false);
     });
 
     it('test TextViewer', () => {
@@ -300,4 +321,37 @@ describe('Identity Viewers', () => {
         expect(propertiesViewer.length).toBe(1);
     });
 
+
+    describe('TemplateViewer', () => {
+        it('TemplateViewer resolves placeholders without compiling them', () => {
+            window.__viewerEvaluated = undefined;
+            const layer = {
+                featureInfo: {
+                    format: 'TEMPLATE',
+                    template: '<b>${(window.__viewerEvaluated = true)}</b>'
+                }
+            };
+            const response = { features: [{ id: 1, properties: { name: 'name' } }] };
+            ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById("container"));
+            expect(window.__viewerEvaluated).toBe(undefined);
+        });
+        it('TemplateViewer escapes the html of the feature values', () => {
+            const layer = {
+                featureInfo: { format: 'TEMPLATE', template: '<div>${properties.description}</div>' }
+            };
+            const response = { features: [{ id: 1, properties: { description: '<script>window.__viewerScript = true</script>' } }] };
+            window.__viewerScript = undefined;
+            ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById("container"));
+            expect(window.__viewerScript).toBe(undefined);
+            expect(document.getElementById("container").innerHTML.indexOf('<script')).toBe(-1);
+        });
+        it('TemplateViewer keeps the markup of the template', () => {
+            const layer = {
+                featureInfo: { format: 'TEMPLATE', template: '<b>Name: ${properties.name}</b>' }
+            };
+            const response = { features: [{ id: 1, properties: { name: 'Rome' } }] };
+            ReactDOM.render(<TemplateViewer layer={layer} response={response} />, document.getElementById("container"));
+            expect(document.getElementById("container").innerHTML.indexOf('<b>Name: Rome</b>')).toBeGreaterThan(-1);
+        });
+    });
 });

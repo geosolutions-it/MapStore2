@@ -227,9 +227,9 @@ function VectorStyleEditor({
     useEffect(() => {
         if (!loading && request) {
             setLoading(true);
-            (request
+            Promise.resolve(request
                 ? request(layer)
-                : Promise.resolve(layer))
+                : layer)
                 .then(({ properties, format, geometryType, fields } = {}) => {
                     const newLayer = {
                         ...layer,

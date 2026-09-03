@@ -12,12 +12,15 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable';
 
 import {
     closeDetailsPanelEpic,
-    fetchDataForDetailsPanel
+    fetchDataForDetailsPanel,
+    openDetailsPanelOnStartup
 } from '../details';
 
 import {
     CLOSE_DETAILS_PANEL,
+    OPEN_DETAILS_PANEL,
     closeDetailsPanel,
+    detailsLoaded,
     openDetailsPanel,
     UPDATE_DETAILS
 } from '../../actions/details';
@@ -26,6 +29,8 @@ import { testEpic, addTimeoutEpic } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { reducersLoaded } from '../../actions/storemanager';
+import { closeTutorial } from '../../actions/tutorial';
 
 const baseUrl = "base/web/client/test-resources/geostore/";
 const mapId = 1;
@@ -155,6 +160,50 @@ describe('details epics tests for map', () => {
                 }
             }
         });
+    });
+    const autoOpenState = {
+        ...mapTestState,
+        map: {
+            present: {
+                info: {
+                    attributes: {
+                        details: encodeURIComponent(detailsUri),
+                        detailsSettings: JSON.stringify({
+                            showAtStartup: true
+                        })
+                    }
+                }
+            }
+        },
+        controls: {
+            details: {
+                enabled: false
+            }
+        },
+        context: {
+            loading: false
+        }
+    };
+
+    it('test openDetailsPanelOnStartup opens details when the Details reducer is ready', (done) => {
+        testEpic(openDetailsPanelOnStartup, 1, reducersLoaded(['details']), ([action]) => {
+            expect(action.type).toBe(OPEN_DETAILS_PANEL);
+            done();
+        }, autoOpenState);
+    });
+
+    it('test openDetailsPanelOnStartup opens details when details metadata is loaded', (done) => {
+        testEpic(openDetailsPanelOnStartup, 1, detailsLoaded(mapId, detailsUri, {showAtStartup: true}), ([action]) => {
+            expect(action.type).toBe(OPEN_DETAILS_PANEL);
+            done();
+        }, autoOpenState);
+    });
+
+    it('test openDetailsPanelOnStartup opens details after closing tutorial', (done) => {
+        testEpic(openDetailsPanelOnStartup, 1, closeTutorial(), ([action]) => {
+            expect(action.type).toBe(OPEN_DETAILS_PANEL);
+            done();
+        }, autoOpenState);
     });
 });
 

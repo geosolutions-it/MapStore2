@@ -89,7 +89,7 @@ import {selectLineFeature} from "../utils/LongitudinalProfileUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
 import { drawerOwnerSelector } from "../selectors/draw";
-import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../utils/LayoutUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
@@ -369,13 +369,15 @@ export const LPlongitudinalMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => isDockOpenSelector(store.getState()) &&  source !== CONTROL_NAME)
         .map(({layout}) => {
+            const boundingSidebarRect = getBoundingSidebarRect(layout);
             const action = updateMapLayout({
                 ...layout,
-                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                right: OFFSET + boundingSidebarRect.right,
                 boundingMapRect: {
                     ...(layout.boundingMapRect || {}),
-                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                    right: OFFSET + boundingSidebarRect.right
                 },
+                boundingSidebarRect,
                 rightPanel: true
             });
             return { ...action, source: CONTROL_NAME }; // add an argument to avoid infinite loop.

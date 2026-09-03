@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import chroma from 'chroma-js';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import ColorSelector from '../../../../style/ColorSelector';
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
 import { FormGroup, ControlLabel, InputGroup, Checkbox, Button as ButtonRB, Glyphicon } from 'react-bootstrap';

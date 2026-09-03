@@ -19,11 +19,11 @@ import {
     updateNode,
     updateSettings,
     layersRefreshError,
-    changeLayerParams
+    changeLayerParams,
+    layerNameChangeError
 } from '../actions/layers';
 
 import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '../selectors/layers';
-import { basicError } from '../utils/NotificationUtils';
 import { getCapabilitiesUrl, getLayerTitleTranslations, removeWorkspace } from '../utils/LayersUtils';
 import { isArray, head } from 'lodash';
 
@@ -61,7 +61,9 @@ export const refresh = action$ =>
                                 if (result && result.name === layer.name && result.owsType === 'WFS') {
                                     return {
                                         url: result.owsURL,
-                                        type: 'wfs'
+                                        type: 'wfs',
+                                        ...(result.query?.[0]?.typeName && {typeName: result.query[0].typeName}),
+                                        ...(layer.search || {})
                                     };
                                 }
                                 return null;
@@ -136,11 +138,7 @@ export const updateSettingsParamsEpic = (action$, store) =>
             // this handles errors due to name changes
             ).concat(newParams.name && layer && layer.name !== newParams.name ?
                 action$.ofType(LAYER_LOAD).filter(({layerId}) => layerId === layer?.id).take(1).flatMap(({error}) => error ?
-                    Rx.Observable.of(basicError({
-                        title: 'layerNameChangeError.title',
-                        message: 'layerNameChangeError.message',
-                        autoDismiss: 5
-                    })) :
+                    Rx.Observable.of(layerNameChangeError()) :
                     Rx.Observable.empty()) :
                 Rx.Observable.empty());
         });

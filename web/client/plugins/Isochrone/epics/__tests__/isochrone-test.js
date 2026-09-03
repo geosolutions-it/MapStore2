@@ -142,6 +142,27 @@ describe('Isochrone Epics', () => {
                 mockStore.getState()
             );
         });
+
+        it('should default missing boundingSidebarRect right to 40', (done) => {
+            const layout = {
+                right: 300,
+                boundingMapRect: { right: 300 }
+            };
+
+            testEpic(
+                addTimeoutEpic(isochroneMapLayoutEpic, 10),
+                1,
+                updateMapLayout(layout),
+                actions => {
+                    expect(actions[0].type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(actions[0].layout.right).toBe(460);
+                    expect(actions[0].layout.boundingMapRect.right).toBe(460);
+                    expect(actions[0].layout.boundingSidebarRect.right).toBe(40);
+                    done();
+                },
+                mockStore.getState()
+            );
+        });
     });
 
     describe('isochroneSearchByLocationNameEpic', () => {

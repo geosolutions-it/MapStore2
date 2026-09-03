@@ -45,7 +45,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
         mockAxios.onGet().reply(config => {
             expect(config.url).toBe(`/rules/count`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
-            expect(config.params).toEqual(EXPECTED_PARAMS);
+            expect({...config.params}).toEqual(EXPECTED_PARAMS);
             return [200, '2'];
         });
         RuleService.getRulesCount(PARAMS)
@@ -61,7 +61,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
         mockAxios.onGet().reply(config => {
             expect(config.url).toBe(`/rules/count`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
-            expect(config.params).toEqual(EXPECTED_PARAMS);
+            expect({...config.params}).toEqual(EXPECTED_PARAMS);
             return [200, "2"];
         });
         RuleService.getRulesCount(PARAMS)
@@ -77,7 +77,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
         mockAxios.onGet().reply(config => {
             expect(config.url).toBe(`/rules`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
-            expect(config.params).toEqual({...EXPECTED_PARAMS, page: 1, entries: 10});
+            expect({...config.params}).toEqual({...EXPECTED_PARAMS, page: 1, entries: 10});
             return [200, RULES];
         });
         RuleService.loadRules(1, PARAMS, 10).then(v => {
@@ -87,7 +87,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
             expect(v.rules[0].grant).toBe("ALLOW");
             expect(v.rules[2].rolename).toBe("TEST_ROLE");
             done();
-        });
+        }).catch(e => done(e));
     });
     it('loadRules with [field]Any param with/without value for its [field]', (done) => {
         const PARAMS = { roleName: "ADMIN", workspaceAny: true, service: "WFS", serviceAny: false };
@@ -95,7 +95,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
         mockAxios.onGet().reply(config => {
             expect(config.url).toBe(`/rules`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
-            expect(config.params).toEqual({...EXPECTED_PARAMS, page: 1, entries: 10});
+            expect({...config.params}).toEqual({...EXPECTED_PARAMS, page: 1, entries: 10});
             return [200, RULES];
         });
         RuleService.loadRules(1, PARAMS, 10).then(v => {
@@ -105,18 +105,18 @@ describe('RuleService API for GeoFence StandAlone', () => {
             expect(v.rules[0].grant).toBe("ALLOW");
             expect(v.rules[0].workspace).toBe("WORKSPACE");
             done();
-        });
+        }).catch(e => done(e));
     });
     it('moveRules', (done) => {
         mockAxios.onGet().reply(config => {
             expect(config.url).toBe(`/rules/move`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
-            expect(config.params).toEqual({ targetPriority: 1, rulesIds: '1,2' });
+            expect({...config.params}).toEqual({ targetPriority: 1, rulesIds: '1,2' });
             return [200, RULES];
         });
         RuleService.moveRules(1, [{id: 1 }, { id: 2 }]).then(() => {
             done();
-        });
+        }).catch(e => done(e));
     });
     it('addRule', (done) => {
         mockAxios.onPost().reply(config => {
