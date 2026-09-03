@@ -63,6 +63,26 @@ This is the main structure:
         "sig": "${sasToken}"
       }
     }],
+  // optional adaptive throttling for HTTP 429 Too Many Requests responses
+  "rateLimit": {
+    // enabled by default
+    "enabled": true,
+    // base exponential backoff delay in milliseconds when Retry-After is missing
+    "baseDelay": 1000,
+    // maximum delay in milliseconds, including values received in Retry-After
+    "maxDelay": 60000,
+    // maximum consecutive retries; null explicitly enables unlimited retries
+    "maxRetries": 3,
+    // maximum time an OpenLayers tile can occupy the loading queue while waiting
+    "maxTileWait": 2000,
+    // default bucketing strategy: "origin", "path" or "wmsLayer"
+    "defaultBucket": "wmsLayer",
+    // optional per-server bucketing rules
+    "bucketRules": [{
+      "urlPattern": ".*tiles.example.org/.*",
+      "bucket": "path"
+    }]
+  },
   // flag for postponing mapstore 2 load time after theme
   "loadAfterTheme": false,
   // if defined, WMS layer styles localization will be added
@@ -226,6 +246,56 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 
 !!! note "Backward Compatibility"
     The old `useAuthenticationRules` and `authenticationRules` configuration still works and will be automatically converted to the new format. However, the new format is recommended for better flexibility and features like expiration support.
+
+- `rateLimit`: configures adaptive request throttling for HTTP 429 responses. MapStore respects the `Retry-After` header when present, including both seconds and HTTP-date formats, and uses exponential backoff when the header is missing.
+
+  **Configuration options:**
+  - `enabled` - Boolean to enable or disable adaptive throttling. Default is `true`.
+  - `baseDelay` - First exponential backoff delay in milliseconds when `Retry-After` is missing. Default is `1000`.
+  - `maxDelay` - Maximum delay in milliseconds for both exponential backoff and `Retry-After`. Default is `60000`.
+  - `maxRetries` - Maximum number of consecutive retries per bucket. Default is `3`; set it explicitly to `null` to retry until success, cancellation, or a non-429 error.
+  - `maxTileWait` - Maximum time in milliseconds that an OpenLayers tile stays in the shared loading queue while waiting for a rate-limit bucket. For longer delays, the tile enters the error state to release the queue and is loaded again after the backoff. Default is `2000`.
+  - `defaultBucket` - Default throttling scope. Supported values are `origin`, `path`, and `wmsLayer`. Default is `wmsLayer`.
+  - `bucketRules` - Array of `{ "urlPattern": "...", "bucket": "..." }` rules used to override the default bucket for matching URLs. A `wmsLayer` key contains the URL origin, path, and normalized `LAYERS` value; it ignores every other query parameter. Requests without a layer name, including MapStore API requests, are not assigned to the default `wmsLayer` bucket. Use an explicit `origin` or `path` rule to opt other endpoints into throttling.
+
+  Example:
+
+  ```json
+  {
+    "rateLimit": {
+      "baseDelay": 1000,
+      "maxDelay": 60000,
+      "maxRetries": 3,
+      "maxTileWait": 2000,
+      "defaultBucket": "wmsLayer",
+      "bucketRules": [
+        {
+          "urlPattern": ".*tiles.example.org/.*",
+          "bucket": "path"
+        }
+      ]
+    }
+  }
+  ```
+
+  WMS layers can override the matching `bucketRules` entry with these layer properties:
+
+  - `msRateLimitBucket` - Uses `origin`, `path`, or `wmsLayer` bucketing for the layer.
+  - `msRateLimitKey` - Uses an explicit bucket key. Layers with the same key share their backoff state; this takes precedence over `msRateLimitBucket` and `bucketRules`.
+
+  The properties can be set directly on a layer or inherited by all layers created from a catalog service through `layerOptions`:
+
+  ```json
+  {
+    "type": "wms",
+    "url": "https://example.com/geoserver/wms",
+    "layerOptions": {
+      "msRateLimitBucket": "wmsLayer"
+    }
+  }
+  ```
+
+  Native browser image requests do not expose HTTP status or response headers to JavaScript. For WMS images loaded through native image elements, MapStore can defer requests for buckets that are already known to be rate-limited; detecting a new `Retry-After` value from the image response requires CORS or proxy visibility.
 
 ### initialState configuration
 
