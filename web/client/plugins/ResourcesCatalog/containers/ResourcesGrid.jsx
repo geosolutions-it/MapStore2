@@ -24,6 +24,7 @@ import {
 import useQueryResourcesByLocation from '../hooks/useQueryResourcesByLocation';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';
 import useCardLayoutStyle from '../hooks/useCardLayoutStyle';
+import { DEFAULT_CARD_LAYOUT_STYLE, DEFAULT_CARD_LAYOUT_STYLES, DEFAULT_HIDE_THUMBNAIL } from '../constants';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import ResourcesContainer from '../components/ResourcesContainer';
 import Button from '../../../components/layout/Button';
@@ -59,7 +60,8 @@ function ResourcesGrid({
     pageSize = 12,
     panel,
     cardLayoutStyle: cardLayoutStyleProp = null,
-    defaultCardLayoutStyle: defaultCardLayoutStyleProp = 'grid',
+    cardLayoutStyles: cardLayoutStylesProp = DEFAULT_CARD_LAYOUT_STYLES,
+    defaultCardLayoutStyle: defaultCardLayoutStyleProp = DEFAULT_CARD_LAYOUT_STYLE,
     selectedResource,
     configuredItems,
     targetSelector = '',
@@ -88,7 +90,7 @@ function ResourcesGrid({
     hideWithNoResults,
     formatHref,
     storedParams,
-    hideThumbnail,
+    hideThumbnail = DEFAULT_HIDE_THUMBNAIL,
     openInNewTab,
     resourcesFoundMsgId,
     availableResourceTypes
@@ -118,15 +120,16 @@ function ResourcesGrid({
         storedParams
     });
 
+    const cardLayoutStyles = cardLayoutStylesProp ?? (isArray(metadataProp) ? [] : Object.keys(metadataProp || {}));
     const {
         cardLayoutStyle,
         setCardLayoutStyle,
         hideCardLayoutButton
     } = useCardLayoutStyle({
         cardLayoutStyle: cardLayoutStyleProp,
+        cardLayoutStyles: cardLayoutStyles,
         defaultCardLayoutStyle: defaultCardLayoutStyleProp
     });
-
 
     const {
         stickyTop,
@@ -197,6 +200,7 @@ function ResourcesGrid({
                             loading={loading}
                             cardLayoutStyle={cardLayoutStyle}
                             setCardLayoutStyle={setCardLayoutStyle}
+                            cardLayoutStyles={cardLayoutStyles}
                             hideCardLayoutButton={hideCardLayoutButton}
                             style={{
                                 position: 'sticky',

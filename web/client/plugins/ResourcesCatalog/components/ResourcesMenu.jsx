@@ -15,6 +15,7 @@ import Button from '../../../components/layout/Button';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Menu from './Menu';
+import { CARD_LAYOUT_TYPES, DEFAULT_CARD_LAYOUT_GLYPHS } from '../constants';
 const ResourcesListHeader = ({
     columns,
     metadata,
@@ -113,6 +114,16 @@ const ResourcesListHeader = ({
     );
 };
 
+const getNextCardLayoutStyle = (cardLayoutStyles = [], currentStyle) => {
+    if (!cardLayoutStyles.length) return currentStyle;
+    const currentIndex = cardLayoutStyles.indexOf(currentStyle);
+    return cardLayoutStyles[
+        currentIndex === -1
+            ? 0
+            : (currentIndex + 1) % cardLayoutStyles.length
+    ];
+};
+
 const ResourcesMenu = forwardRef(({
     menuItems,
     style,
@@ -121,6 +132,7 @@ const ResourcesMenu = forwardRef(({
     hideCardLayoutButton,
     cardLayoutStyle,
     setCardLayoutStyle,
+    cardLayoutStyles,
     orderConfig,
     query,
     formatHref,
@@ -134,7 +146,6 @@ const ResourcesMenu = forwardRef(({
     resourcesFoundMsgId = "resourcesCatalog.resourcesFound"
 }, ref) => {
 
-
     const {
         defaultLabelId,
         options: orderOptions = [],
@@ -143,8 +154,10 @@ const ResourcesMenu = forwardRef(({
     } = orderConfig || {};
 
     const selectedSort = orderOptions.find(({ value }) => query?.sort === value);
+    const nextStyle = getNextCardLayoutStyle(cardLayoutStyles, cardLayoutStyle);
+    const layoutGlyph = DEFAULT_CARD_LAYOUT_GLYPHS[nextStyle] || 'th';
     function handleToggleCardLayoutStyle() {
-        setCardLayoutStyle(cardLayoutStyle === 'grid' ? 'list' : 'grid');
+        setCardLayoutStyle(nextStyle);
     }
 
     const orderButtonNode = orderOptions.length > 0 &&
@@ -176,7 +189,6 @@ const ResourcesMenu = forwardRef(({
                 })}
             </Dropdown.Menu>
         </Dropdown>;
-
     return (
         <FlexBox
             ref={ref}
@@ -220,11 +232,11 @@ const ResourcesMenu = forwardRef(({
                     onClick={handleToggleCardLayoutStyle}
                     square
                 >
-                    <Glyphicon glyph={cardLayoutStyle === 'grid' ? 'th-list' : 'th'} />
+                    <Glyphicon glyph={layoutGlyph} />
                 </Button>}
                 {orderAlign === 'right' ? orderButtonNode : null}
             </FlexBox>
-            {cardLayoutStyle === 'list' ? <ResourcesListHeader columns={columns} setColumns={setColumns} metadata={metadata}/> : null}
+            {cardLayoutStyle === CARD_LAYOUT_TYPES.TABLE ? <ResourcesListHeader columns={columns} setColumns={setColumns} metadata={metadata}/> : null}
         </FlexBox>
     );
 });
