@@ -627,7 +627,9 @@
           "dateTimePlaceholder": "Vælg dato og tid"
         },
         "collisionDetection": "Aktiver terrænkollisionsdetektering",
-        "imageryLayersOverlay": "Slå lag-overlap til"
+        "imageryLayersOverlay": "Slå lag-overlap til",
+        "coalesceWMSLayers": "Slå WMS-forespørgslet sammen (coalesce)",
+        "coalesceWMSLayersTooltip": "Sætter standardadfærd for lag i dette kort: Når det er slået til, slås tilstødende WMS-lag fra samme kilde sammen i en enkelt GetMap forespørgsel, og reducerer på den måde antallet af forespørgslet til serveren. Baggrundskort påvirkes ikke"
       },
       "thumbnailError": {
         "error403": "Du har ikke tilladelse til at opdatere miniaturebilledet",
@@ -739,6 +741,10 @@
       "radius": "Radius",
       "filterIconEnabled": "Deaktiver lagfilter",
       "filterIconDisabled": "Aktivér lagfilter",
+      "filterWidgetIconEnabled": "Slå kobling af widget-filtre fra",
+      "filterWidgetIconDisabled": "Slå kobling af widget-filtre til",
+      "filterAndWidgetIconEnabled": "Slå globale og koblede widget-filtre fra",
+      "filterAndWidgetIconDisabled": "Slå globale og koblede widget-filtre til",
       "notVisibleZoomIn": "Laget er ikke synligt, fordi det er uden for zoom niveau. Zoom ind for at vise laget",
       "notVisibleZoomOut": "Laget er ikke synligt, fordi det er uden for zoom niveau. Zoom ud for at vise laget",
       "notVisibleSwitchTo3D": "Skift til 3D-korttilstand for at se dette lag",
@@ -3164,6 +3170,7 @@
       "disableRange": "Deaktiver tidsinterval",
       "enablePlayBack": "Aktivér afspilningskontroller",
       "disablePlayBack": "Deaktiver afspilningskontroller",
+      "hiddenGuideLayerWarning": "Hjælpelaget er skjult i TOC'en og i kortet, men styrer stadig snapping i tidsskyderen",
       "expand": "Udvid tidsskyder",
       "collapse": "Fold tidsskyder sammen",
       "reset": {
@@ -4935,7 +4942,8 @@
           "title": "Fejl ved indlæsning af permanent link",
           "pleaseLogin": "Dette permanent link er ikke offentligt. Prøv at logge ind",
           "notFound": "Permanent link ikke fundet",
-          "notAccessible": "Permanent link ikke tilgængeligt"
+          "notAccessible": "Permanent link ikke tilgængeligt",
+          "invalidTarget": "Det permanente link er ugyldigt og kan ikke åbnes"
         },
         "save": {
           "title": "Oprettelse af permanent link mislykkedes",
