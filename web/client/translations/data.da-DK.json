@@ -28,8 +28,8 @@
     "collapse": "Fold sammen",
     "expand": "Fold ud",
     "scrollableTabs": {
-      "scrollLeft": "Rul tabs til venstre",
-      "scrollRight": "Rul tabs til højre"
+      "scrollLeft": "Rul faner til venstre",
+      "scrollRight": "Rul faner til højre"
     },
     "Links": "Links",
     "Forbidden": "Forbudt",
@@ -86,7 +86,7 @@
       },
       "coalesceExclude": {
         "label": "Ekskluder fra samlede forespørgsler",
-        "tooltip": "Holder dette lag uden for samlede WMS forespørgsler, så det altid vil blive forespurgt på alene. Det har ingen effect når samlede forespørgslet er slået fra for kortet."
+        "tooltip": "Holder dette lag uden for samlede WMS-forespørgsler, så der altid forespørges separat på laget. Det har ingen effekt, når samlede forespørgsler er slået fra for kortet."
       },
       "cached": "Brug cache",
       "styleCustom": "Brug stilen med navnet \"{value}\"",
@@ -109,11 +109,11 @@
       "featureInfoFormatLbl": "Identificer svarformat",
       "featureInfoRequestOptions": {
         "title": "Forespørgselsindstillinger",
-        "description": "Opsæt WMS info forespørgselsbegrænsninger",
-        "maxItems": "Feature antal",
+        "description": "Opsæt begrænsninger for WMS-infoforespørgsler",
+        "maxItems": "Antal features",
         "maxItemsTooltip": "Det maksimale antal features som bliver returneret af en infoforespørgsel. Standardværdien er 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "GeoServer leverandørparameter der udvider info søgeradius omkring det valgte punkt, målt i pixels på skærmen."
+        "bufferTooltip": "GeoServer-leverandørparameter der udvider info-søgeradius omkring det valgte punkt, målt i pixel på skærmen."
       },
       "legenderror": "Signaturforklaring er ikke tilgængelig",
       "editCustomFormat": "Rediger brugerdefineret format",
@@ -132,34 +132,34 @@
       },
       "externalData": {
         "title": "EKSTERNE DATA",
-        "description": "Hent egenskaber fra en ekstern WFS kilde",
-        "wfsUrl": "WFS URL",
-        "invalidWfsUrl": "URL'en er ikke en gyldig WFS",
+        "description": "Hent egenskaber fra en ekstern WFS-kilde",
+        "wfsUrl": "WFS-URL",
+        "invalidWfsUrl": "URL'en udstiller ikke en gyldig WFS-service",
         "layerName": "Lagnavn",
         "cqlFilter": "CQL-filterskabelon",
-        "cqlFilterHelp": "Brug enkelt anførselstegn ' omkring tekstpladsholdere; Tal og boolske pladsholdere skrives uden anførselstegn.",
+        "cqlFilterHelp": "Brug enkelte anførselstegn ' omkring tekstpladsholdere; tal og boolske pladsholdere skrives uden anførselstegn.",
         "attributes": "Egenskaber",
         "validate": "Valider",
         "validation": {
-          "missingFields": "WFS URL, lagnavn og CQL-filterskabelon kræves",
+          "missingFields": "WFS-URL, lagnavn og CQL-filterskabelon kræves",
           "invalidPlaceholder": "CQL-filterskabelonen skal indeholde mindst en gyldig feltreference",
-          "invalidDoubleQuotedPlaceholder": "Dobbelte anførselstegn bruges i CQL til at identificere feltnavne. Brug enkelt anførselstegn ' omkring tekstpladsholdere.",
+          "invalidDoubleQuotedPlaceholder": "Dobbelte anførselstegn bruges i CQL til at identificere feltnavne. Brug enkelte anførselstegn ' omkring tekstpladsholdere.",
           "invalidCql": "CQL-filterskabelonen er ugyldig",
-          "unquotedPlaceholder": "I filteret, er referencen til “{property}” ikke omgivet af enkelt anførselstegn og virker derfor kun med tal. Tilføj anførselstegn for at bruge tekstværdier.",
-          "valid": "Konfigurationen til eksterne data er gyldig",
-          "sourceUnavailable": "En WFS kilde URL og lagnavn kræves for at kunne køre en testforespørgsel",
+          "unquotedPlaceholder": "I filteret er referencen til “{property}” ikke omgivet af enkelte anførselstegn og virker derfor kun med tal. Tilføj anførselstegn for at bruge tekstværdier.",
+          "valid": "Konfigurationen af eksterne data er gyldig",
+          "sourceUnavailable": "Der kræves en WFS-kilde-URL og et lagnavn for at kunne køre en testforespørgsel",
           "sampleNotFound": "Kildelaget returnerede ikke en test-feature",
           "testRequestFailed": "Testforespørgslen til de eksterne data fejlede",
           "generatedCql": "Genereret CQL"
         },
-        "noSourceFeatures": "Ingen features blev fundet til denne eksterne data-visning",
+        "noSourceFeatures": "Ingen features blev fundet for denne eksterne datavisning",
         "invalidConfiguration": "Ugyldig opsætning",
-        "notConfigured": "Denne info-visning er ikke sat korrekt op",
+        "notConfigured": "Denne infovisning er ikke konfigureret korrekt.",
         "noResults": "Ingen eksterne data fundet",
         "requestError": "Kunne ikke hente eksterne data",
         "missingProperty": "Kilde-featuren indeholder ikke egenskaben “{property}”",
-        "unsafeSourceValue": "De eksterne data kunne ikke hentes fordi “{property}” indeholdt tekst hvor et tal forventedes",
-        "invalidInterpolatedCql": "CQL-filteret bygget fra kilde-featuren er ikke gyldig",
+        "unsafeSourceValue": "De eksterne data kan ikke hentes, fordi “{property}” indeholder tekst, hvor der forventes et tal.",
+        "invalidInterpolatedCql": "CQL-filteret bygget fra kilde-featuren er ikke gyldigt",
         "invalidResponse": "Den eksterne WFS returnerede ikke gyldig GeoJSON",
         "retry": "Forsøg igen"
       },
@@ -628,8 +628,8 @@
         },
         "collisionDetection": "Aktiver terrænkollisionsdetektering",
         "imageryLayersOverlay": "Slå lag-overlap til",
-        "coalesceWMSLayers": "Slå WMS-forespørgslet sammen (coalesce)",
-        "coalesceWMSLayersTooltip": "Sætter standardadfærd for lag i dette kort: Når det er slået til, slås tilstødende WMS-lag fra samme kilde sammen i en enkelt GetMap forespørgsel, og reducerer på den måde antallet af forespørgslet til serveren. Baggrundskort påvirkes ikke"
+        "coalesceWMSLayers": "Slå WMS-forespørgsler sammen (coalesce)",
+        "coalesceWMSLayersTooltip": "Angiver standardadfærden for lag på dette kort: Når det er slået til, slås tilstødende WMS-lag fra samme kilde sammen i en enkelt GetMap-forespørgsel, hvilket reducerer antallet af forespørgsler til serveren. Baggrundskort medtages ikke."
       },
       "thumbnailError": {
         "error403": "Du har ikke tilladelse til at opdatere miniaturebilledet",
@@ -916,7 +916,7 @@
     "identifyRevGeocodeSubmitText": "Oplysninger om det valgte punkt",
     "identifyRevGeocodeCloseText": "Luk",
     "identifyRevGeocodeError": "Ikke muligt at geokode",
-    "identifyShowFullscreen": "Vis i fuld skærm",
+    "identifyShowFullscreen": "Vis i fuldskærm",
     "identifyEdit": "Redigér",
     "identifyLayerSelectNoResult": "Ingen lag fundet",
     "getFeatureInfoError": {
@@ -2622,16 +2622,14 @@
         "maxHeightPlaceholder": "Indtast maks. højde..",
         "interactionsTabLabel": "Interaktioner",
         "onSelectionChange": "Ved ændring af valg",
-
         "applyFilter": "Anvend filter",
         "applyDimension": "Anvend dimension",
         "zoomTo": "Zoom til",
-        "zoomToRequiresApplyFilterTooltip": "Vælg et Anvend filter til et lag i kortet inden du aktiverer Zoom til",
-        "zoomToFilterExtent": "Zoom til filtrerede udsnittet {names}",
+        "zoomToRequiresApplyFilterTooltip": "Knyt et \"Anvend filter\"-mål til et lag på kortet, før du aktiverer \"Zoom til\"",
+        "zoomToFilterExtent": "Zoom til det filtrerede udsnit {names}",
         "autoZoomLabel": "Automatisk zoom",
-        "autoZoomInfo": "Zoom automatisk til det filtrerede kortudsnit hver gang udvælgelsen ændres. Slå manuel zoom fra.",
+        "autoZoomInfo": "Zoom automatisk til det filtrerede kortudsnit, hver gang udvælgelsen ændres. Slå fra for at zoome manuelt.",
         "noConnectableNodesAvailable": "Ingen mulige forbindelser",
-
         "selectAll": "Vælg alle",
         "clear": "Ryd",
         "showSelectAllClear": "Vis Vælg alle / Ryd",
@@ -2664,7 +2662,7 @@
         "dimensionChangedByWidgetInfo": "En eller flere tilknyttede noder bruger en anden dimensionsværdi end den, der er valgt her. Klik på knappen nedenfor for at anvende den valgte værdi på alle tilknyttede noder.",
         "applyDimensionFromWidgetButton": "Anvend værdien fra dette filter på alle tilknyttede noder",
         "showConnectedLayers": "Vis forbundne lag",
-        "showConnectedLayersTooltip": "Vis lag forbundet til denne widget",
+        "showConnectedLayersTooltip": "Vis lag, der er forbundet med denne widget",
 
         "defaultFilter": "Standardfilter",
         "defaultFilterInfo": "Definér et filter, der anvendes, når intet er valgt. Forslag: Hvis du vil vise ingenting, når intet er valgt, kan du oprette et filter, der aldrig returnerer nogen objekter.",
@@ -3203,7 +3201,7 @@
       "disableRange": "Deaktiver tidsinterval",
       "enablePlayBack": "Aktivér afspilningskontroller",
       "disablePlayBack": "Deaktiver afspilningskontroller",
-      "hiddenGuideLayerWarning": "Hjælpelaget er skjult i TOC'en og i kortet, men styrer stadig snapping i tidsskyderen",
+      "hiddenGuideLayerWarning": "Hjælpelaget er skjult i TOC'en og på kortet, men styrer stadig snapping i tidsskyderen.",
       "expand": "Udvid tidsskyder",
       "collapse": "Fold tidsskyder sammen",
       "reset": {
