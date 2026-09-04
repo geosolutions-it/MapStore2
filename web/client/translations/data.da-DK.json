@@ -2622,9 +2622,16 @@
         "maxHeightPlaceholder": "Indtast maks. højde..",
         "interactionsTabLabel": "Interaktioner",
         "onSelectionChange": "Ved ændring af valg",
+
         "applyFilter": "Anvend filter",
         "applyDimension": "Anvend dimension",
+        "zoomTo": "Zoom til",
+        "zoomToRequiresApplyFilterTooltip": "Vælg et Anvend filter til et lag i kortet inden du aktiverer Zoom til",
+        "zoomToFilterExtent": "Zoom til filtrerede udsnittet {names}",
+        "autoZoomLabel": "Automatisk zoom",
+        "autoZoomInfo": "Zoom automatisk til det filtrerede kortudsnit hver gang udvælgelsen ændres. Slå manuel zoom fra.",
         "noConnectableNodesAvailable": "Ingen mulige forbindelser",
+
         "selectAll": "Vælg alle",
         "clear": "Ryd",
         "showSelectAllClear": "Vis Vælg alle / Ryd",
@@ -2656,6 +2663,8 @@
         "applyStyleFromWidgetButton": "Anvend stil på alle tilknyttede lag fra denne widget",
         "dimensionChangedByWidgetInfo": "En eller flere tilknyttede noder bruger en anden dimensionsværdi end den, der er valgt her. Klik på knappen nedenfor for at anvende den valgte værdi på alle tilknyttede noder.",
         "applyDimensionFromWidgetButton": "Anvend værdien fra dette filter på alle tilknyttede noder",
+        "showConnectedLayers": "Vis forbundne lag",
+        "showConnectedLayersTooltip": "Vis lag forbundet til denne widget",
 
         "defaultFilter": "Standardfilter",
         "defaultFilterInfo": "Definér et filter, der anvendes, når intet er valgt. Forslag: Hvis du vil vise ingenting, når intet er valgt, kan du oprette et filter, der aldrig returnerer nogen objekter.",
