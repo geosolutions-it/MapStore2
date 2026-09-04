@@ -1706,9 +1706,6 @@
       "wmcNoLayersError": "Mindst ét WMS-lag er nødvendigt for at eksportere til WMC, ingen blev fundet"
     },
     "catalog": {
-      "subtypes": {
-        "file": "File"
-      },
       "start": "Startdato",
       "end": "Slutdato",
       "notAvailable": "Ikke tilgængelig",
@@ -1829,6 +1826,33 @@
       "fetchMetadata": {
         "label": "Hent filmetadata ved gemning",
         "tooltip": "Denne mulighed henter metadata til zoom til lag. Det kan gøre søgningen langsommere, hvis billederne er for store eller for mange."
+      },
+      "resourceTypes": {
+        "label": "Ressourcetyper",
+        "dataset": "Datasæt",
+        "document": "Dokumenter",
+        "map": "Kort"
+      },
+      "subtypes": {
+        "label": "Indholdstype",
+        "vector": "Vektor",
+        "raster": "Raster",
+        "vector_time": "Tidsserie",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabulær",
+        "image": "Billede",
+        "video": "Video",
+        "audio": "Lyd",
+        "text": "Tekst",
+        "archive": "Arkiv",
+        "presentation": "Præsentation",
+        "file": "Fil"
+      },
+      "filterFields": {
+        "category": "Kategori",
+        "keyword": "Nøgleord",
+        "region": "Region",
+        "extent": "Udstrækningsfilter"
       },
       "tagFilterType": {
         "label": "Tag filter type",
