@@ -29,8 +29,7 @@ import {
     getAdditionalLayerFromId,
     getTitleSelector,
     getEffectivelyVisibleLayers,
-    layerTransientSelector,
-    layersWithTransientSelector
+    layerTransientSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -925,24 +924,6 @@ describe('Test layers selectors', () => {
         it('layerTransientSelector returns layerTransientProps from state', () => {
             const transient = { layer_1: { loading: true } };
             expect(layerTransientSelector({ layers: { layerTransientProps: transient } })).toEqual(transient);
-        });
-
-        it('layersWithTransientSelector merges transient loading state into layers', () => {
-            const state = {
-                layers: {
-                    flat: [
-                        { id: 'l1', name: 'Layer 1' },
-                        { id: 'l2', name: 'Layer 2' }
-                    ],
-                    layerTransientProps: {
-                        l1: { loading: true },
-                        l2: { loading: false }
-                    }
-                }
-            };
-            const result = layersWithTransientSelector(state);
-            expect(result[0].loading).toBe(true);
-            expect(result[1].loading).toBe(false);
         });
     });
 

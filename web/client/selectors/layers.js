@@ -42,13 +42,6 @@ export const rawGroupsSelector = (state) => state.layers && state.layers.flat &&
 export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 export const layerTransientSelector = state => (state.layers && state.layers.layerTransientProps) || {};
-export const layersWithTransientSelector = createSelector(
-    [layersSelector, layerTransientSelector],
-    (layers, layerTransientProps) => layers.map(layer => {
-        const loading = layerTransientProps?.[layer.id]?.loading;
-        return loading !== undefined ? { ...layer, loading } : layer;
-    })
-);
 
 export const layerSelectorWithMarkers = createSelector(
     [
