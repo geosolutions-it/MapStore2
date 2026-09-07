@@ -15,9 +15,10 @@ import {
     selectNode
 } from '../../actions/layers';
 import {
-    layersWithTransientSelector,
-    groupsWithTransientSelector,
-    selectedNodesSelector
+    layersSelector,
+    groupsSelector,
+    selectedNodesSelector,
+    layerTransientSelector
 } from '../../selectors/layers';
 import { userSelector } from '../../selectors/security';
 import { currentLocaleSelector, currentLocaleLanguageSelector } from '../../selectors/locale';
@@ -368,7 +369,8 @@ function TOC({
     toolbarButtonProps,
     init,
     onOpen,
-    onInitialize
+    onInitialize,
+    layerTransientProps
 }, context) {
     const activateParameter = (allow, activate) => {
         const isUserAdmin = user && user.role === 'ADMIN' || false;
@@ -514,7 +516,8 @@ function TOC({
                             mapSize,
                             mapBbox
                         }
-                    }
+                    },
+                    layerTransientProps
                 }}
                 onContextMenu={({ event, node: currentNode, nodeType, parentId }) => {
                     onSelectNode();
@@ -572,7 +575,7 @@ const getResolutionsProps = (state) => {
 
 const getTOCConfig = (state, props) => {
     const config = state?.toc?.config || {};
-    const layers = layersWithTransientSelector(state).filter(({ group }) => group !== 'background');
+    const layers = layersSelector(state).filter(({ group }) => group !== 'background');
     const mapLoadedCount = state?.toc?.mapLoadedCount;
     const initializedMapLoadedCount = state?.toc?.initializedMapLoadedCount;
     return {
@@ -591,8 +594,8 @@ const getTOCConfig = (state, props) => {
 
 const tocSelector = createShallowSelectorCreator(isEqual)(
     (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
-    groupsWithTransientSelector,
-    layersWithTransientSelector,
+    groupsSelector,
+    layersSelector,
     selectedNodesSelector,
     userSelector,
     mapSelector,
@@ -603,7 +606,8 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
     getResolutionsProps,
     visualizationModeSelector,
     getTOCConfig,
-    (enabled, tree, layers, selectedNodes, user, map, title, currentLocale, currentLocaleLanguage, isLocalizedLayerStylesEnabled, { resolutions, resolution }, visualizationMode, config) => ({
+    layerTransientSelector,
+    (enabled, tree, layers, selectedNodes, user, map, title, currentLocale, currentLocaleLanguage, isLocalizedLayerStylesEnabled, { resolutions, resolution }, visualizationMode, config, layerTransientProps) => ({
         enabled,
         tree,
         selectedNodes: selectedNodesIdsToObject(selectedNodes, layers, tree),
@@ -628,7 +632,8 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
         init: config.init,
         showFullTitle: config.showFullTitle,
         showOpacityTooltip: config.showOpacityTooltip,
-        activateFilterLayer: config.activateFilterLayer
+        activateFilterLayer: config.activateFilterLayer,
+        layerTransientProps
     })
 );
 

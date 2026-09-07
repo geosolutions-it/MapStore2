@@ -49,10 +49,6 @@ export const layersWithTransientSelector = createSelector(
         return loading !== undefined ? { ...layer, loading } : layer;
     })
 );
-export const groupsWithTransientSelector = createSelector(
-    [layersWithTransientSelector, rawGroupsSelector],
-    (layers, groups) => denormalizeGroups(layers, groups).groups
-);
 
 export const layerSelectorWithMarkers = createSelector(
     [

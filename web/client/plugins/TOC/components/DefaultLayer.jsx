@@ -372,6 +372,7 @@ const DefaultLayer = ({
     const className = getNodeClassName(node, nodeType);
     const filteredNodeItems = nodeItems
         .filter(({ selector = () => false }) => selector(layerNodeProp));
+    const loading = config?.layerTransientProps?.[node?.id]?.loading ?? node?.loading;
     return (
         connectDragPreview(
             <li
@@ -386,7 +387,7 @@ const DefaultLayer = ({
                     id={node.id}
                     parentId={parentId}
                 >
-                    <InlineLoader loading={node?.loading}/>
+                    <InlineLoader loading={loading}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (
