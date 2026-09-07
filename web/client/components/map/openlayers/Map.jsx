@@ -39,7 +39,7 @@ import withBatchedLayerLoading from '../enhancers/withBatchedLayerLoading';
 
 const geoJSONFormat = new GeoJSON();
 
-class OpenlayersMap extends React.Component {
+export class OpenlayersMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         document: PropTypes.object,
