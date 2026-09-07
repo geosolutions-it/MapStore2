@@ -18,6 +18,7 @@ import { zoomToExtent } from '../../../actions/map';
 import {error} from '../../../actions/notifications';
 import { gridTools } from '../../../plugins/featuregrid/index';
 import { getFeature } from '../../../api/WFS';
+import { getWFSLayerName } from '../../../utils/LayersUtils';
 const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => { }, id } = {}) => ({
     gridEvents: {
         ...gridEvents,
@@ -45,7 +46,7 @@ export default compose(
                             // fetch feature with geometry and zoom to it if geometry not exist
                             if (!p?.bbox) {
                                 ownProps?.updateProperty(ownProps.id, `dependencies.zoomLoader`, true);     // show loader instead of zoom icon
-                                let { data: featureData } = await getFeature(ownProps?.layer?.search?.url, ownProps?.layer?.name, {
+                                let { data: featureData } = await getFeature(ownProps?.layer?.search?.url, getWFSLayerName(ownProps?.layer), {
                                     outputFormat: "application/json",
                                     srsname: 'EPSG:4326',
                                     featureId: p.id,

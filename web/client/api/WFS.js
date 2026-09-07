@@ -14,6 +14,7 @@ import {toOGCFilterParts} from '../utils/FilterUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
 import { castArray } from 'lodash';
 import { isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
 
 const capabilitiesCache = {};
 
@@ -89,7 +90,9 @@ export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = 
  * @param {object} config axios request config (headers, etc...)
  */
 export const getFeatureLayer = (layer, {version =  "1.1.0", filters, proj, outputFormat = 'application/json', resultType = 'results'} = {}, config) => {
-    const {url, name: typeName, params } = layer;
+    const {params } = layer;
+    const url = layer.type === 'wms' ? getSearchUrl(layer) : layer.url;
+    const typeName = getWFSLayerName(layer);
     const {layerFilter, filterObj: featureGridFilter} = layer; // TODO: add
     const {getFeature: wfsGetFeature, query, filter, and} = requestBuilder({wfsVersion: version});
     const allFilters = []
@@ -159,8 +162,8 @@ export const describeFeatureType = function(url, typeName) {
 
 /**
  * Fetch the supported formats of the WFS service
- * @param url
- * @return {Promise} resolves with { infoFormats }
+ * @param {string} url WFS endpoint
+ * @returns {Promise} resolves with { infoFormats }
  */
 export const getSupportedFormat = (url) => {
     return getCapabilities(url)
@@ -175,4 +178,3 @@ export const getSupportedFormat = (url) => {
             };
         });
 };
-

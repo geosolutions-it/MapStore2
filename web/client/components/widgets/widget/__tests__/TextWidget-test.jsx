@@ -61,4 +61,13 @@ describe('TextWidget component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('#TEST_TEXT')).toExist();
     });
+
+    describe('sanitization', () => {
+        it('removes script tags from the widget text', () => {
+            window.__textWidgetScript = undefined;
+            ReactDOM.render(<TextWidget text={'<p>content</p><script>window.__textWidgetScript = true</script>'} />, document.getElementById("container"));
+            expect(window.__textWidgetScript).toBe(undefined);
+            expect(document.getElementById("container").innerHTML.indexOf('<script')).toBe(-1);
+        });
+    });
 });

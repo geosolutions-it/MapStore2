@@ -49,6 +49,11 @@ registerType('arcgis', {
         });
     },
     update: (layer, newOptions, oldOptions) => {
+        if (oldOptions.name !== newOptions.name) {
+            layer.getSource().updateParams({
+                LAYERS: newOptions.name !== undefined ? `show:${newOptions.name}` : undefined
+            });
+        }
         if (oldOptions.minResolution !== newOptions.minResolution) {
             layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
         }

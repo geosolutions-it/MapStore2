@@ -22,6 +22,7 @@ import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox
 import ConfigUtils from '../../utils/ConfigUtils';
 import { generateRandomHexColor } from '../../utils/ColorUtils';
 import { v1 as uuid } from 'uuid';
+import { getSearchUrl, getWFSLayerName } from '../../utils/LayersUtils';
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
@@ -72,8 +73,8 @@ class ThemaClassesEditor extends React.Component {
                         column={{key: classificationAttribute}}
                         onChange={value => this.updateUnique(index, value)}
                         dataType="string"
-                        typeName={layer.name}
-                        url={ConfigUtils.getParsedUrl(layer.url, {"outputFormat": "json"})}
+                        typeName={getWFSLayerName(layer)}
+                        url={ConfigUtils.getParsedUrl(getSearchUrl(layer), {"outputFormat": "json"})}
                         value={classItem.unique}
                         filter="contains"
                         autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>);

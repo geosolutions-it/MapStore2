@@ -213,7 +213,8 @@ Layers.registerType('arcgis-feature', {
             layer.setCurrentOptions(newOptions);
         }
         if (
-            oldOptions.forceProxy !== newOptions.forceProxy
+            oldOptions.name !== newOptions.name
+            || oldOptions.forceProxy !== newOptions.forceProxy
             || !isEqual(oldOptions.security, newOptions.security)
             || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
             || oldOptions.strategy !== newOptions.strategy

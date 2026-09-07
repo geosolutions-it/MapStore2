@@ -2721,6 +2721,29 @@ describe('Test DrawSupport', () => {
         expect(snappingInteraction).toBe(true);
     });
 
+    it('recreates the snapping source when the linked WFS changes', () => {
+        const support = renderDrawSupport();
+        const layer = {
+            id: 'snap_layer_1',
+            type: 'wms',
+            name: 'workspace:rendered',
+            search: {
+                type: 'wfs',
+                url: 'old-wfs',
+                typeName: 'workspace:linked'
+            }
+        };
+        const oldSource = support.getWMSSnapSource(layer, {});
+        const newSource = support.getWMSSnapSource({
+            ...layer,
+            search: {
+                ...layer.search,
+                url: 'new-wfs'
+            }
+        }, {});
+        expect(newSource).toNotBe(oldSource);
+    });
+
     it('should complete the draw or edit events for point layers even if the current GeoJSON feature geometry is null', () => {
         const fakeMap = {
             addLayer: () => {},

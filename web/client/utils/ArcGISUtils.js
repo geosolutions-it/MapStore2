@@ -100,6 +100,9 @@ export const getLayerIds = (id, layers = []) => {
         return [`${id}`];
     }
     const layer = layers.find(l => `${l.id}` === `${id}`);
+    if (!layer) {
+        return [`${id}`];
+    }
     return [
         `${id}`,
         ...(layer.subLayerIds || []).map(subLayerId => getLayerIds(subLayerId, layers)).flat()
@@ -116,6 +119,9 @@ export const getQueryLayerIds = (id, layers = []) => {
         return [`${id}`];
     }
     const layer = layers.find(l => `${l.id}` === `${id}`);
+    if (!layer) {
+        return [`${id}`];
+    }
     return [
         // the query seems to work only if a layer has not sub layers
         ...(!layer?.subLayerIds ? [`${id}`] : []),

@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce';
 import moment from 'moment';
 import { getLayerJSONFeature } from '../../../observables/wfs';
 import axios from '../../../libs/ajax';
-import { getWpsUrl } from '../../../utils/LayersUtils';
+import { getWFSLayerName, getWpsUrl } from '../../../utils/LayersUtils';
 import { getWpsPayload } from '../../../utils/ogc/WPS/autocomplete';
 import { executeProcess } from '../../../observables/wps/execute';
 import { isFilterValid, composeAttributeFilters } from '../../../utils/FilterUtils';
@@ -52,7 +52,7 @@ const fetchWPSFilterData = (filterData, options = {}) => {
 
     // Build WPS payload for distinct values
     const wpsPayload = getWpsPayload({
-        layerName: layer.name,
+        layerName: getWFSLayerName(layer),
         attribute: valueAttribute,
         maxFeatures: maxFeatures,
         startIndex: 0,
@@ -117,7 +117,7 @@ const fetchWFSFilterData = (filterData, options = {}) => {
 
     // Build filter object for WFS request
     const filterObj = {
-        featureTypeName: layer.name,
+        featureTypeName: getWFSLayerName(layer),
         filterType: 'OGC',
         ogcVersion: '1.1.0',
         pagination: {

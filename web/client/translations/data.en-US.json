@@ -87,6 +87,9 @@
       "windowTitle": "Layer Properties",
       "title": "Title",
       "name": "Name",
+      "url": "URL",
+      "typeName": "TypeName",
+      "wfsLinkedService": "WFS linked service",
       "group": "Group",
       "general": "General",
       "description": "Description",
@@ -1064,6 +1067,7 @@
       "serviceslistempty": "No custom services defined",
       "service_missing": "{serviceType} service is not configured",
       "generic_error": "An error occurred during search. Error details: {message}",
+      "services_error": "Some errors occurred during search in services: {message}",
       "showGFI": "Show GFI",
       "errors": {
         "nonQueriableLayers": "The layer provided in the URL is not queriable or not visible in map.",
@@ -1636,7 +1640,8 @@
           "title": "Error loading peramlink",
           "pleaseLogin": "This permalink is not public. Please try to login",
           "notFound": "Permalink not found",
-          "notAccessible": "Permalink not accessible"
+          "notAccessible": "Permalink not accessible",
+          "invalidTarget": "The permalink target is not valid and can not be opened"
         },
         "save": {
           "title": "Permalink generation failed",
@@ -3263,6 +3268,7 @@
       "disableRange": "Disable time range",
       "enablePlayBack": "Enable playback controls",
       "disablePlayBack": "Disable playback controls",
+      "hiddenGuideLayerWarning": "The guide layer is hidden in the TOC and on the map, but continues to control timeline snapping.",
       "expand": "Expand time slider",
       "collapse": "Collapse time slider",
       "reset": {

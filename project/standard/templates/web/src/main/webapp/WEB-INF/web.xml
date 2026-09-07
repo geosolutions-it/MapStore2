@@ -75,6 +75,29 @@
         <filter-name>noCacheFilter</filter-name>
         <url-pattern>*.txt</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>viewFramingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
+        <init-param>
+            <param-name>antiClickJackingOption</param-name>
+            <param-value>SAMEORIGIN</param-value>
+        </init-param>
+        <!-- HSTS belongs to the TLS terminator, not to the application -->
+        <init-param>
+            <param-name>hstsEnabled</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>blockContentTypeSniffingEnabled</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>viewFramingFilter</filter-name>
+        <url-pattern>/index.html</url-pattern>
+    </filter-mapping>
+
     <!--  Backend Spring MVC controllers -->
     <!--  Backward compatibility -->
     <servlet>

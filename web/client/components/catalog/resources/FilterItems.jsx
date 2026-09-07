@@ -25,6 +25,7 @@ import SelectInfiniteScroll from './SelectInfiniteScroll';
 import FilterGroup from './FilterGroup';
 
 import { getFilterByField as defaultGetFilterByField, getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
+import { getSafeHref } from '../../../utils/URLUtils';
 import InputControl from './InputControl';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
@@ -273,7 +274,7 @@ function FilterItem({
         return <div className="_row" />;
     }
     if (field.type === 'link') {
-        return <a href={field.href}>{field.labelId && getMessageById(messages, field.labelId) || field.label}</a>;
+        return <a href={getSafeHref(field.href)}>{field.labelId && getMessageById(messages, field.labelId) || field.label}</a>;
     }
     if (field.type === 'filter') {
         const filterKey = field.filterKey || "f";

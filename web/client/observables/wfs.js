@@ -15,14 +15,15 @@ import { stripPrefix } from 'xml2js/lib/processors';
 
 import axios from '../libs/ajax';
 import { createFeatureFilter, getWFSFilterData } from '../utils/FilterUtils';
-import { getCapabilitiesUrl } from '../utils/LayersUtils';
+import { getCapabilitiesUrl, getWFSLayerName } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import { getDefaultUrl } from '../utils/URLUtils';
 
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
-export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) => {
+export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL, type } = {}) => {
+    const typeName = getWFSLayerName({ name, search, type });
     const parsed = urlUtil.parse(getDefaultUrl(describeFeatureTypeURL || search.url || url), true);
     return urlUtil.format(
         {
@@ -33,14 +34,14 @@ export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} 
 
                 service: "WFS",
                 version: "1.1.0",
-                typeName: name,
+                typeName,
                 outputFormat: 'application/json',
                 request: "DescribeFeatureType"
             }
         });
 };
-export const toLayerCapabilitiesURL = ({name, search = {}, url} = {}) => {
-    const URL = getCapabilitiesUrl({name, url: search && search.url || url });
+export const toLayerCapabilitiesURL = ({name, search = {}, url, type} = {}) => {
+    const URL = getCapabilitiesUrl({name: getWFSLayerName({name, search, type}), url: search && search.url || url });
     const parsed = urlUtil.parse(URL, true);
     return urlUtil.format(
         {
@@ -240,40 +241,43 @@ export const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...op
  * retro compatibility the filter object can contain pagination info, typeName and so on.
  * @param {object} options the options (pagination, totalFeatures and so on ...)
  */
-export const getLayerJSONFeature = ({ search = {}, url, name, security } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) =>
+export const getLayerJSONFeature = ({ search = {}, url, name, security, type } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) => {
+    const typeName = getWFSLayerName({search, name, type});
+    return (
     // TODO: Apply sort workaround for no primary keys
-    getJSONFeature(search.url || url,
-        filter && typeof filter === 'object' ? {
-            ...filter,
-            typeName: name || filter.typeName
-        } : getFeature(
-            query(name,
-                [
-                    ...( sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []),
-                    ...(pn ? [propertyName(pn)] : []),
-                    ...(filter ? castArray(filter) : [])
-                ]),
-            options), // options contains startIndex, maxFeatures and it can be passed as it is
-        {security, ...options})
-        // retry using 1st propertyNames property, if present, to workaround primary-key issues
-        .catch(error => {
-            if (error.name === "OGCError" && error.code === 'NoApplicableCode' && !sortOptions && pn && pn[0]) {
-                return getJSONFeature(search.url || url,
-                    filter && typeof filter === 'object' ? {
-                        ...filter,
-                        typeName: name || filter.typeName
-                    } : getFeature(
-                        query(name,
-                            [
-                                sortBy(isArray(pn) ? pn[0] : pn),
-                                ...(pn ? [propertyName(pn)] : []),
-                                ...(filter ? castArray(filter) : [])
-                            ]),
-                        options), // options contains startIndex, maxFeatures and it can be passed as it is
-                    options);
-            }
-            throw error;
-        });
+        getJSONFeature(search.url || url,
+            filter && typeof filter === 'object' ? {
+                ...filter,
+                typeName: typeName || filter.typeName
+            } : getFeature(
+                query(typeName,
+                    [
+                        ...( sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []),
+                        ...(pn ? [propertyName(pn)] : []),
+                        ...(filter ? castArray(filter) : [])
+                    ]),
+                options), // options contains startIndex, maxFeatures and it can be passed as it is
+            {security, ...options})
+            // retry using 1st propertyNames property, if present, to workaround primary-key issues
+            .catch(error => {
+                if (error.name === "OGCError" && error.code === 'NoApplicableCode' && !sortOptions && pn && pn[0]) {
+                    return getJSONFeature(search.url || url,
+                        filter && typeof filter === 'object' ? {
+                            ...filter,
+                            typeName: typeName || filter.typeName
+                        } : getFeature(
+                            query(typeName,
+                                [
+                                    sortBy(isArray(pn) ? pn[0] : pn),
+                                    ...(pn ? [propertyName(pn)] : []),
+                                    ...(filter ? castArray(filter) : [])
+                                ]),
+                            options), // options contains startIndex, maxFeatures and it can be passed as it is
+                        options);
+                }
+                throw error;
+            }));
+};
 
 export const describeFeatureType = ({layer}) => {
     const url = toDescribeURL(layer);
@@ -299,4 +303,3 @@ export default {
     describeFeatureType,
     getLayerWFSCapabilities
 };
-

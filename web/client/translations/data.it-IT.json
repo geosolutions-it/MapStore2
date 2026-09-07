@@ -87,6 +87,9 @@
       "windowTitle": "Proprietà del livello",
       "title": "Titolo",
       "name": "Nome",
+      "url": "URL",
+      "typeName": "TypeName",
+      "wfsLinkedService": "Servizio WFS collegato",
       "group": "Gruppo",
       "description": "Descrizione",
       "general": "Generale",
@@ -1063,7 +1066,8 @@
       "s_tooltip": "Descrizione comando del menu di servizio",
       "serviceslistempty": "Nessun servizio definito",
       "service_missing": "Il servizio {serviceType} non è configurato",
-      "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}",
+      "generic_error": "Un errore e' occorso durante la ricerca. Dettagli errore: {message}",
+      "services_error": "Si sono verificati alcuni errori durante la ricerca nei servizi: {message}",
       "showGFI": "Mostra GFI",
       "errors": {
         "nonQueriableLayers": "Il layer indicato nell'url non è queriable o non è visibile in mappa",
@@ -1636,7 +1640,8 @@
           "title": "Errore durante il caricamento di peramlink",
           "pleaseLogin": "Questo permalink non è pubblico. Si prega di provare ad accedere",
           "notFound": "Permalink non trovato",
-          "notAccessible": "Permalink non accessibile"
+          "notAccessible": "Permalink non accessibile",
+          "invalidTarget": "La destinazione del permalink non è valida e non può essere aperta"
         },
         "save": {
           "title": "Generazione del permalink non riuscita",
@@ -3255,6 +3260,7 @@
       "disableRange": "Disabilita intervallo",
       "enablePlayBack": "Abilita i controlli di riproduzione",
       "disablePlayBack": "Disabilita i controlli di riproduzione",
+      "hiddenGuideLayerWarning": "Il layer guida è nascosto nel TOC e sulla mappa, ma continua a controllare l'aggancio della timeline.",
       "expand": "Espandi",
       "collapse": "Riduci",
       "reset": {

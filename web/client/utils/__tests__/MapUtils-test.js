@@ -267,6 +267,25 @@ describe('Test the MapUtils', () => {
         const applyLayerDefaults = (layers) => layers.map((layer) => {
             return {...LAYER_DEFAULTS, ...layer};
         });
+        it('preserves service layer names for all editable layer types', () => {
+            const layerTypes = ['wms', 'wfs', 'arcgis', 'arcgis-feature'];
+            const layers = layerTypes.map((type, index) => ({
+                id: `layer-${index}`,
+                name: `saved-name-${index}`,
+                title: `Layer ${index}`,
+                type,
+                url: 'https://example.com/service',
+                visibility: true
+            }));
+            const saved = saveMapConfiguration({
+                center: {x: 0, y: 0, crs: 'EPSG:4326'},
+                projection: 'EPSG:4326',
+                zoom: 0
+            }, layers, [], [], '', {});
+            expect(saved.map.layers.map(({id, name}) => ({id, name}))).toEqual(
+                layers.map(({id, name}) => ({id, name}))
+            );
+        });
         it('save map configuration', () => {
 
             const flat = [
@@ -2819,4 +2838,3 @@ describe('getMetersPerUnit', () => {
         expect(getMetersPerUnit(null, 99)).toBe(99);
     });
 });
-

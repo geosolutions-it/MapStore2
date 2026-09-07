@@ -225,13 +225,16 @@ export const describeLayers = (url, layers, security) => {
         });
         descriptions = Array.isArray(descriptions) ? descriptions : [descriptions];
         // make it compatible with json format of describe layer
-        return descriptions.map(desc => ({
-            ...(desc && desc.$ || {}),
-            layerName: desc && desc.$ && desc.$.name,
-            query: {
-                ...(desc && desc.query && desc.query.$ || {})
-            }
-        }));
+        return descriptions.map(desc => {
+            const query = castArray(desc?.Query || desc?.query || [])[0];
+            return {
+                ...(desc && desc.$ || {}),
+                layerName: desc && desc.$ && desc.$.name,
+                query: {
+                    ...(query?.$ || {})
+                }
+            };
+        });
     });
 };
 export const textSearch = (url, startPosition, maxRecords, text, options) => {
@@ -310,9 +313,9 @@ export const reset = () => {
 
 /**
  * Fetch the supported formats of the WMS service
- * @param url
- * @param includeGFIFormats
- * @return {object|string} formats
+ * @param {string} url WMS endpoint
+ * @param {boolean} includeGFIFormats include GFI formats
+ * @returns {object|string} formats
  */
 export const getSupportedFormat = (url, includeGFIFormats = false) => {
     return getCapabilities(url)

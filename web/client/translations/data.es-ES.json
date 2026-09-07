@@ -87,6 +87,9 @@
       "windowTitle": "Propiedades de la capa",
       "title": "Título",
       "name": "Nombre",
+      "url": "URL",
+      "typeName": "TypeName",
+      "wfsLinkedService": "Servicio WFS vinculado",
       "group": "Grupo",
       "description": "Descripción",
       "general": "General",
@@ -1064,6 +1067,7 @@
       "serviceslistempty": "No se ha definido ningún servicio personalizado",
       "service_missing": "el servicio {serviceType} no está configurado",
       "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
+      "services_error": "Se han producido algunos errores durante la búsqueda en los servicios: {message}",
       "showGFI": "Mostrar GFI",
       "errors": {
         "nonQueriableLayers": "La capa proporcionada en la url no es intercambiable o no es visible en el mapa",
@@ -1636,7 +1640,8 @@
           "title": "Error al cargar el enlace permanente",
           "pleaseLogin": "Este enlace permanente no es público. Intente iniciar sesión",
           "notFound": "Enlace permanente no encontrado",
-          "notAccessible": "Enlace permanente no accesible"
+          "notAccessible": "Enlace permanente no accesible",
+          "invalidTarget": "El destino del enlace permanente no es válido y no se puede abrir"
         },
         "save": {
           "title": "La generación del enlace permanente falló",
@@ -3251,6 +3256,7 @@
       "disableRange": "Desactivar intervalo de tiempo",
       "enablePlayBack": "Habilitar controles de reproducción",
       "disablePlayBack": "Deshabilitar los controles de reproducción",
+      "hiddenGuideLayerWarning": "La capa guía está oculta en la TOC y en el mapa, pero sigue controlando el ajuste de la línea de tiempo.",
       "expand": "Expandir el control deslizante de tiempo",
       "collapse": "Minimizar el control deslizante de tiempo",
       "reset": {

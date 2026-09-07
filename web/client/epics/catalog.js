@@ -298,7 +298,9 @@ export default (API) => ({
                                     return Rx.Observable.of(changeLayerProperties(id, {
                                         search: {
                                             url: filteredUrl,
-                                            type: 'wfs'
+                                            type: 'wfs',
+                                            ...(description.query?.typeName && { typeName: description.query.typeName }),
+                                            ...(layer.search || {})
                                         }, ...tileGridProperties
                                     }));
                                 }

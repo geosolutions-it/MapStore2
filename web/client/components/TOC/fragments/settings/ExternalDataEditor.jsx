@@ -18,6 +18,7 @@ import Spinner from '../../../layout/Spinner';
 import Fields from '../LayerFields/Fields';
 import { getCapabilities, getFeature } from '../../../../api/WFS';
 import { describeFeatureType } from '../../../../observables/wfs';
+import { getWFSLayerName } from '../../../../utils/LayersUtils';
 import { isGeometryType } from '../../../../utils/ogc/WFS/base';
 import {
     interpolateExternalDataCQL,
@@ -234,7 +235,7 @@ const ExternalDataEditor = ({ value = {}, onChange = () => {}, sourceLayer, curr
             || currentSourceLayer.describeFeatureTypeURL
             || currentSourceLayer.url;
         const url = Array.isArray(sourceUrl) ? sourceUrl[0] : sourceUrl;
-        const layerName = currentSourceLayer.search?.name || currentSourceLayer.name;
+        const layerName = currentSourceLayer.search?.name || getWFSLayerName(currentSourceLayer);
         return { url, layerName };
     };
 

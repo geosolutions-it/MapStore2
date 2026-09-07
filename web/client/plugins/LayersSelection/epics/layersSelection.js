@@ -17,7 +17,7 @@ import { extractGeometryAttributeName } from '../../../utils/WFSLayerUtils';
 import { mergeOptionsByOwner, removeAdditionalLayer } from '../../../actions/additionallayers';
 import { highlightStyleSelector } from '../../../selectors/mapInfo';
 import { layersSelector, groupsSelector } from '../../../selectors/layers';
-import { flattenArrayOfObjects, getInactiveNode } from '../../../utils/LayersUtils';
+import { flattenArrayOfObjects, getInactiveNode, getSearchUrl, getWFSLayerName } from '../../../utils/LayersUtils';
 
 import { optionsToVendorParams } from '../../../utils/VendorParamsUtils';
 import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions } from '../selectors/layersSelection';
@@ -94,11 +94,13 @@ const queryLayer = (layer, geometry, selectQueryMaxCount) => {
     }
     case 'wms':
     case 'wfs': {
-        return describeFeatureType(layer.url, layer.name)
+        const url = getSearchUrl(layer);
+        const typeName = getWFSLayerName(layer);
+        return describeFeatureType(url, typeName)
             .then(describe =>
                 axios.get(
                     getFeatureURL(
-                        layer.url, layer.name,
+                        url, typeName,
                         optionsToVendorParams({
                             filterObj: {
                                 spatialField: {

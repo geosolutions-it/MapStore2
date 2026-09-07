@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import Dock from 'react-dock';
+import { Dock } from 'react-dock';
 import BorderLayout from '../../layout/BorderLayout';
 import { withState } from 'recompose';
 import PanelHeader from './PanelHeader';

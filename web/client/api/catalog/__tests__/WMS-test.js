@@ -99,6 +99,32 @@ describe('Test correctness of the WMS APIs', () => {
         expect(layer.tileSize).toBe(512);
         expect(layer.serverType).toBe("no-vendor");
     });
+    it('merges nested search layer options by precedence', () => {
+        const records = getCatalogRecords({
+            records: [{}],
+            layerOptions: {
+                search: {url: 'record-url', recordValue: true}
+            }
+        }, {
+            url: 'http://sample'
+        });
+        const layer = getLayerFromRecord(records[0], {
+            layerBaseConfig: {
+                search: {url: 'base-url', baseValue: true}
+            },
+            service: {
+                layerOptions: {
+                    search: {url: 'service-url', serviceValue: true}
+                }
+            }
+        });
+        expect(layer.search).toEqual({
+            url: 'record-url',
+            baseValue: true,
+            serviceValue: true,
+            recordValue: true
+        });
+    });
 
     it('wms feature info layer options preserve catalog info format', () => {
         const records = getCatalogRecords({

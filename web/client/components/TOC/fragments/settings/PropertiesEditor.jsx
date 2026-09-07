@@ -16,6 +16,7 @@ import Fields from '../LayerFields/Fields';
 import { describeFeatureType } from '../../../../observables/wfs';
 import { isGeometryType } from '../../../../utils/ogc/WFS/base';
 import { notPrimaryGeometryFields } from '../../../../utils/FeatureTypeUtils';
+import { getWFSLayerName } from '../../../../utils/LayersUtils';
 
 const EMPTY_FIELDS = [];
 const GEOMETRY_FIELD_TYPES = new Set(['Geometry', ...Object.values(notPrimaryGeometryFields)]);
@@ -53,9 +54,7 @@ const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, c
     const attributes = getAttributes(schemaFields, value);
 
     const loadAttributes = (merge) => {
-        const layerName = sourceLayer.search?.name
-            || sourceLayer.search?.typeName
-            || sourceLayer.name;
+        const layerName = sourceLayer.search?.name || getWFSLayerName(sourceLayer);
         const sourceUrl = sourceLayer.describeFeatureTypeURL
             || sourceLayer.search?.url
             || sourceLayer.url;
@@ -68,7 +67,11 @@ const PropertiesEditor = ({ sourceLayer = {}, value = [], onChange = () => {}, c
         describeFeatureType({
             layer: {
                 ...sourceLayer,
-                name: layerName
+                name: layerName,
+                search: {
+                    ...sourceLayer.search,
+                    typeName: layerName
+                }
             }
         }).toPromise()
             .then(({ data }) => isMounted(() => {

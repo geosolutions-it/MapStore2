@@ -29,10 +29,11 @@ import { getWidgetLayer, getEditingWidgetFilter, getWidgetFilterKey, getEditingW
 import { wfsFilter } from '../selectors/query';
 import { widgetBuilderAvailable } from '../selectors/controls';
 import { generateNewTrace } from '../utils/WidgetsUtils';
+import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
 const getFTSelectedArgs = (state) => {
     let layer = getWidgetLayer(state);
-    let url = layer.search && layer.search.url;
-    let typeName = layer.name;
+    let url = getSearchUrl(layer);
+    let typeName = getWFSLayerName(layer);
     return [url, typeName, layer.fields];
 };
 

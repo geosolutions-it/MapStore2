@@ -59,7 +59,7 @@ import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } f
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
-import { getLayerTitle } from '../utils/LayersUtils';
+import { getLayerTitle, getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -256,7 +256,7 @@ export const openDownloadTool = (action$) =>
             return Rx.Observable.from([
                 toggleControl("layerdownload"),
                 onDownloadOptionChange("singlePage", false),
-                ...(action.layer.search?.url ? [createQuery(action.layer.url, {featureTypeName: action.layer.name})] : [])
+                ...(action.layer.search?.url ? [createQuery(getSearchUrl(action.layer), {featureTypeName: getWFSLayerName(action.layer)})] : [])
             ]);
         });
 export const fetchFormatsWFSDownload = (action$) =>
@@ -289,7 +289,7 @@ export const startFeatureExportDownload = (action$, store) =>
 
         const mapBbox = mapBboxSelector(state);
         const currentLocale = currentLocaleSelector(state);
-        const geometryAttribute = extractGeometryAttributeName(layerDescribeSelector(state, layer.name));
+        const geometryAttribute = extractGeometryAttributeName(layerDescribeSelector(state, getWFSLayerName(layer)));
         const propertyNames = action.downloadOptions.propertyName ? [
             ...(geometryAttribute ? [geometryAttribute] : []),
             ...action.downloadOptions.propertyName
@@ -297,7 +297,7 @@ export const startFeatureExportDownload = (action$, store) =>
         const { layerFilter } = layer;
 
         const wfsFlow = () => getWFSFeature({
-            url: action.url,
+            url: getSearchUrl(layer) || action.url,
             downloadOptions: action.downloadOptions,
             filterObj: isNil(action.filterObj) ? {} : action.filterObj,
             layer,
@@ -319,7 +319,7 @@ export const startFeatureExportDownload = (action$, store) =>
             .catch(() => {
                 // check here
                 return getWFSFeature({
-                    url: action.url,
+                    url: getSearchUrl(layer) || action.url,
                     downloadOptions: action.downloadOptions,
                     filterObj: action.filterObj,
                     layer,
@@ -365,7 +365,7 @@ export const startFeatureExportDownload = (action$, store) =>
                 xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
             }, layer.layerFilter, action.filterObj, cqlFilter);
             const wpsDownloadOptions = {
-                layerName: layer.name,
+                layerName: getWFSLayerName(layer),
                 outputFormat: action.downloadOptions.selectedFormat,
                 asynchronous: true,
                 outputAsReference: true,

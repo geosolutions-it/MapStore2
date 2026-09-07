@@ -53,6 +53,23 @@ describe('getLinkDecorator', () => {
         expect(m[0].state.showPopOver).toBe(false);
     });
 
+    it('should keep the href of the link', () => {
+        const entityK = contentState
+            .createEntity('LINK', 'MUTABLE', { url: 'https://my-host.com/page', targetOption: '_blank' })
+            .getLastCreatedEntityKey();
+        ReactDOM.render(<Link entityKey={entityK} contentState={contentState}>Link</Link>, document.getElementById("container"));
+        expect(document.querySelector('#container a').getAttribute('href')).toBe('https://my-host.com/page');
+    });
+
+    it('should not render an href that can not be used as a link target', () => {
+        const entityK = contentState
+            // eslint-disable-next-line no-script-url
+            .createEntity('LINK', 'MUTABLE', { url: 'javascript:void(0)', targetOption: '_blank' })
+            .getLastCreatedEntityKey();
+        ReactDOM.render(<Link entityKey={entityK} contentState={contentState}>Link</Link>, document.getElementById("container"));
+        expect(document.querySelector('#container a').getAttribute('href')).toBe('');
+    });
+
     it('should not render external popover img when geostory internal links', () => {
         const entityK = contentState
             .createEntity('LINK', 'MUTABLE', {

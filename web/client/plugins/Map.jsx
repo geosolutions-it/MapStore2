@@ -383,10 +383,9 @@ class MapPlugin extends React.Component {
         }
         return this._coalesceUnits;
     };
-    /**
+    /*
      * Logic for coalescing priority is: map settings > plugin cfg > config miscSettings.
      * A single layer can always opt out with `coalesce: false` in its own options.
-     * @returns true if coalescing is enabled, false otherwise
      */
     isCoalesceEnabled = () => {
         if (this.props.mapType === MapLibraries.LEAFLET) {

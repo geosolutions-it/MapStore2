@@ -7,6 +7,7 @@
  */
 
 import { checkMapSyncWithWidgetOfMapType } from '../../../../utils/WidgetsUtils';
+import { getSearchUrl, getWFSLayerName } from '../../../../utils/LayersUtils';
 
 require('rxjs');
 // const { getSearchUrl } = require('../../../../utils/LayersUtils');
@@ -31,12 +32,14 @@ export default ($props) =>
         if (mapSync && checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) && !dependencies?.viewport) {
             return false;
         }
-        return layer.name;
+        return getWFSLayerName(layer);
     } )
         .distinctUntilChanged(
             ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
-            /* getSearchUrl(layer) === getSearchUrl(layer) && */
-                (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
+                (newProps.layer
+                && getSearchUrl(layer) === getSearchUrl(newProps.layer)
+                && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
+                && layer.loadingError === newProps.layer.loadingError)
             && sameOptions(options, newProps.options)
             && sameFilter(filter, newProps.filter)
             && sameSortOptions(sortOptions, newProps.sortOptions))

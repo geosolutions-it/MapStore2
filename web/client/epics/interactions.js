@@ -35,7 +35,7 @@ import {
     unplugOrphanZoomToInteractions
 } from '../utils/InteractionUtils';
 import { defaultLayerFilter, toOGCFilter } from '../utils/FilterUtils';
-import { getWpsUrl } from '../utils/LayersUtils';
+import { getWFSLayerName, getWpsUrl } from '../utils/LayersUtils';
 import { processFilterToCQL, buildExcludeCQLFilter, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
 import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 import { getChartAxisDependencyPath, getMapDependencyPath } from '../utils/WidgetsUtils';
@@ -1027,7 +1027,7 @@ function fetchLayerExtent(layer) {
     const wfsFallback = () => Rx.Observable.fromPromise(getFeatureLayer(layer)).map(response => bbox(response.data));
     const wpsUrl = getWpsUrl(layer);
     const filterObj = layer.layerFilter;
-    const featureTypeName = layer.name;
+    const featureTypeName = getWFSLayerName(layer);
     if (!wpsUrl || !featureTypeName) {
         return Rx.Observable.throw(new Error('No WPS URL or feature type name'));
     }

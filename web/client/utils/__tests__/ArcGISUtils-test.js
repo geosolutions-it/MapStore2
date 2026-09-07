@@ -111,6 +111,8 @@ describe('ArcGISUtils', () => {
         expect(getLayerIds(0, layers)).toEqual(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
         expect(getLayerIds(6, layers)).toEqual(['6']);
         expect(getLayerIds(7, layers)).toEqual(['7', '8', '9']);
+        expect(getLayerIds('', layers)).toEqual(['']);
+        expect(getLayerIds('missing', layers)).toEqual(['missing']);
     });
     it('getQueryLayerIds', () => {
         expect(getQueryLayerIds(1)).toEqual(['1']);
@@ -118,6 +120,8 @@ describe('ArcGISUtils', () => {
         expect(getQueryLayerIds(0, layers)).toEqual(['2', '3', '4', '5', '6', '8', '9']);
         expect(getQueryLayerIds(6, layers)).toEqual(['6']);
         expect(getQueryLayerIds(7, layers)).toEqual(['8', '9']);
+        expect(getQueryLayerIds('', layers)).toEqual(['']);
+        expect(getQueryLayerIds('missing', layers)).toEqual(['missing']);
     });
     it('esriFieldTypeToPrimitive', () => {
         expect(esriFieldTypeToPrimitive('esriFieldTypeOID')).toBe('number');

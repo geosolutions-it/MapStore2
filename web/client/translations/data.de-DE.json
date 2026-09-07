@@ -87,6 +87,9 @@
       "windowTitle": "Ebenen Eigenschaften",
       "title": "Titel",
       "name": "Name",
+      "url": "URL",
+      "typeName": "TypeName",
+      "wfsLinkedService": "Verknüpfter WFS-Dienst",
       "group": "Gruppe",
       "description": "Beschreibung",
       "general": "Generell",
@@ -1103,6 +1106,7 @@
       "serviceslistempty": "Keine benutzerdefinierten Services definiert",
       "service_missing": "{serviceType} dienst ist nicht konfiguriert",
       "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
+      "services_error": "Bei der Suche in den Diensten sind einige Fehler aufgetreten: {message}",
       "showGFI": "GFI anzeigen",
       "errors": {
         "nonQueriableLayers": "Der in der URL angegebene Layer ist nicht abfragbar oder in der Karte nicht sichtbar.",
@@ -1675,7 +1679,8 @@
           "title": "Fehler beim Laden des Peramlinks",
           "pleaseLogin": "Dieser Permalink ist nicht öffentlich. Bitte versuchen Sie sich anzumelden",
           "notFound": "Permalink nicht gefunden",
-          "notAccessible": "Permalink nicht zugänglich"
+          "notAccessible": "Permalink nicht zugänglich",
+          "invalidTarget": "Das Ziel des Permalinks ist ungültig und kann nicht geöffnet werden"
         },
         "save": {
           "title": "Die Permalink-Generierung ist fehlgeschlagen",
@@ -3294,6 +3299,7 @@
       "disableRange": "Zeitbereich deaktivieren",
       "enablePlayBack": "Aktivieren Sie die Wiedergabesteuerung",
       "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
+      "hiddenGuideLayerWarning": "Die Führungslayer ist im Inhaltsverzeichnis und auf der Karte ausgeblendet, steuert aber weiterhin das Einrasten der Zeitleiste.",
       "expand": "Erweitern Sie den Zeitschieberegler",
       "collapse": "Schieberegler für die Zeitspanne reduzieren",
       "reset": {

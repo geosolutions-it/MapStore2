@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState, memo } from 'react';
 import { castArray, isObject, isNil, sortBy, debounce } from 'lodash';
 import wpsAggregate from '../../../observables/wps/aggregate';
 import { getLayerJSONFeature } from '../../../observables/wfs';
-import { getWpsUrl, getSearchUrl } from '../../../utils/LayersUtils';
+import { getWFSLayerName, getWpsUrl, getSearchUrl } from '../../../utils/LayersUtils';
 import axios from '../../../libs/ajax';
 const CancelToken = axios.CancelToken;
 
@@ -132,7 +132,7 @@ const dataServiceRequests = {
         .then((response) => wfsToChartData(response, options)),
     wps: ({ layer, options, filter }, { cancelToken }) => wpsAggregate(
         getWpsUrl(layer),
-        {featureType: layer.name, ...options, filter}, {
+        {featureType: getWFSLayerName(layer), ...options, filter}, {
             timeout: 15000,
             cancelToken
         }, layer)
@@ -158,7 +158,10 @@ const getDataServiceType = ({ layer, options }) => {
 };
 
 const arePropsEqual = (prevProps, nextProps) =>
-    (nextProps.layer && prevProps.layer.name === nextProps.layer.name && prevProps.layer.loadingError === nextProps.layer.loadingError)
+    (nextProps.layer
+    && getSearchUrl(prevProps.layer) === getSearchUrl(nextProps.layer)
+    && getWFSLayerName(prevProps.layer) === getWFSLayerName(nextProps.layer)
+    && prevProps.layer.loadingError === nextProps.layer.loadingError)
     && sameOptions(prevProps.options, nextProps.options)
     && sameFilter(prevProps.filter, nextProps.filter);
 
@@ -263,4 +266,3 @@ const multiProtocolChart = (Component) => {
 };
 
 export default multiProtocolChart;
-

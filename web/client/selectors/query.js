@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import { isNil, get, head, isArray, findIndex } from 'lodash';
+import { isNil, get, head, isArray, findIndex, isEqual } from 'lodash';
 
 /**
  * Selects the featureType name of the query filterObject
@@ -58,9 +58,9 @@ export const paginationInfo = {
     resultSize: (state) =>get(state, "query.result.features.length"),
     totalFeatures: (state) => get(state, "query.result.totalFeatures")
 };
-export const isDescribeLoaded = (state, name) => {
+export const isDescribeLoaded = (state, name, url) => {
     const ft = featureTypeSelectorCreator(name)(state);
-    if (ft && ft.attributes && ft.geometry && ft.original) {
+    if (ft && ft.attributes && ft.geometry && ft.original && (!url || isEqual(ft.url, url))) {
         return true;
     }
     return false;
