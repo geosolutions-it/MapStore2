@@ -41,16 +41,16 @@ export const getAdditionalLayerFromId = (state, id) => head(additionalLayersSele
 export const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
 export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
-export const layerTransientPropsSelector = state => (state.layers && state.layers.layerTransientProps) || {};
-export const layersWithTransientPropsSelector = createSelector(
-    [layersSelector, layerTransientPropsSelector],
+export const layerTransientSelector = state => (state.layers && state.layers.layerTransientProps) || {};
+export const layersWithTransientSelector = createSelector(
+    [layersSelector, layerTransientSelector],
     (layers, layerTransientProps) => layers.map(layer => {
         const loading = layerTransientProps?.[layer.id]?.loading;
         return loading !== undefined ? { ...layer, loading } : layer;
     })
 );
-export const groupsWithTransientPropsSelector = createSelector(
-    [layersWithTransientPropsSelector, rawGroupsSelector],
+export const groupsWithTransientSelector = createSelector(
+    [layersWithTransientSelector, rawGroupsSelector],
     (layers, groups) => denormalizeGroups(layers, groups).groups
 );
 
@@ -166,7 +166,7 @@ export const getLayersWithDimension = (state, dimension) =>
  * gets the actual node opened in settings modal
 */
 export const elementSelector = (state) => {
-    const settings = layersWithTransientPropsSelector(state);
+    const settings = layerSettingSelector(state);
     const layers = layersSelector(state);
     const groups = groupsSelector(state);
     return settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||

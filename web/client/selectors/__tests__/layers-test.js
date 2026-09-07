@@ -28,7 +28,10 @@ import {
     queryableSelectedLayersSelector,
     getAdditionalLayerFromId,
     getTitleSelector,
-    getEffectivelyVisibleLayers
+    getEffectivelyVisibleLayers,
+    layerTransientSelector,
+    layersWithTransientSelector,
+    groupsWithTransientSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -911,6 +914,52 @@ describe('Test layers selectors', () => {
                 }
             };
             expect(getTitleSelector(state, 'TEST_LAYER')).toBe('Livel');
+        });
+    });
+
+    describe('transient props selectors', () => {
+        it('layerTransientSelector returns empty object if missing', () => {
+            expect(layerTransientSelector({})).toEqual({});
+            expect(layerTransientSelector({ layers: {} })).toEqual({});
+        });
+
+        it('layerTransientSelector returns layerTransientProps from state', () => {
+            const transient = { layer_1: { loading: true } };
+            expect(layerTransientSelector({ layers: { layerTransientProps: transient } })).toEqual(transient);
+        });
+
+        it('layersWithTransientSelector merges transient loading state into layers', () => {
+            const state = {
+                layers: {
+                    flat: [
+                        { id: 'l1', name: 'Layer 1' },
+                        { id: 'l2', name: 'Layer 2' }
+                    ],
+                    layerTransientProps: {
+                        l1: { loading: true },
+                        l2: { loading: false }
+                    }
+                }
+            };
+            const result = layersWithTransientSelector(state);
+            expect(result[0].loading).toBe(true);
+            expect(result[1].loading).toBe(false);
+        });
+
+        it('groupsWithTransientSelector produces denormalized groups with transient props merged', () => {
+            const state = {
+                layers: {
+                    flat: [
+                        { id: 'l1', name: 'Layer 1', group: 'group1' }
+                    ],
+                    groups: [{ id: 'group1', name: 'Group 1', nodes: ['l1'] }],
+                    layerTransientProps: {
+                        l1: { loading: true }
+                    }
+                }
+            };
+            const groups = groupsWithTransientSelector(state);
+            expect(groups[0].nodes[0].loading).toBe(true);
         });
     });
 

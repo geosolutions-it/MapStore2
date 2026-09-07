@@ -79,29 +79,53 @@ function layers(state = { flat: [], layerTransientProps: {}}, action) {
     }
     case LAYER_LOADING: {
         const ids = castArray(action.layerId);
+        let hasChange = false;
         const layerTransientProps = { ...(state.layerTransientProps || {}) };
         ids.forEach(id => {
-            layerTransientProps[id] = { ...(layerTransientProps[id] || {}), loading: true };
+            if (!layerTransientProps[id]?.loading) {
+                layerTransientProps[id] = { ...(layerTransientProps[id] || {}), loading: true };
+                hasChange = true;
+            }
         });
-        return {...state, layerTransientProps };
+        return hasChange ? { ...state, layerTransientProps } : state;
     }
+
     case LAYER_LOAD: {
-        const { layerId } = action;
-        const newLayers = (state.flat || []).map((layer) => {
-            return layer.id === layerId ? Object.assign({}, layer, {
-                previousLoadingError: layer.loadingError, loadingError: action.error ? "Error" : false
-            }) : layer;
+        const ids = castArray(action.layerId);
+        const newLoadingError = action.error ? "Error" : false;
+        let flatChanged = false;
+        let transientChanged = false;
+        const newTransient = { ...(state.layerTransientProps || {}) };
+
+        ids.forEach(id => {
+            if (newTransient[id]?.loading !== false) {
+                newTransient[id] = { ...(newTransient[id] || {}), loading: false };
+                transientChanged = true;
+            }
         });
-        return {
-            ...state,
-            flat: newLayers,
-            layerTransientProps: {
-                ...(state.layerTransientProps || {}),
-                [layerId]: {
-                    ...((state.layerTransientProps || {})[layerId] || {}),
-                    loading: false
+        const idSet = new Set(ids);
+        const newLayers = (state.flat || []).map((layer) => {
+            if (idSet.has(layer.id)) {
+                const currentError = layer.loadingError || false;
+                if (currentError !== newLoadingError) {
+                    flatChanged = true;
+                    return Object.assign({}, layer, {
+                        previousLoadingError: layer.loadingError,
+                        loadingError: newLoadingError
+                    });
                 }
             }
+            return layer;
+        });
+
+        if (!flatChanged && !transientChanged) {
+            return state;
+        }
+
+        return {
+            ...state,
+            flat: flatChanged ? newLayers : state.flat,
+            layerTransientProps: transientChanged ? newTransient : state.layerTransientProps
         };
     }
     case LAYER_ERROR: {

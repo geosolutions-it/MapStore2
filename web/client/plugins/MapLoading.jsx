@@ -11,10 +11,10 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
-import { layersWithTransientPropsSelector } from '../selectors/layers';
+import { layerTransientSelector } from '../selectors/layers';
 
-const selector = createSelector([layersWithTransientPropsSelector], (layers) => ({
-    loading: layers && layers.some((layer) => layer.loading)
+const selector = createSelector([layerTransientSelector], (layerTransientProps = {}) => ({
+    loading: Object.values(layerTransientProps).some((prop) => prop?.loading)
 }));
 
 const MapLoadingPlugin = connect(selector)(GlobalSpinner);

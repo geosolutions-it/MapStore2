@@ -15,8 +15,8 @@ import {
     selectNode
 } from '../../actions/layers';
 import {
-    layersWithTransientPropsSelector,
-    groupsWithTransientPropsSelector,
+    layersWithTransientSelector,
+    groupsWithTransientSelector,
     selectedNodesSelector
 } from '../../selectors/layers';
 import { userSelector } from '../../selectors/security';
@@ -572,7 +572,7 @@ const getResolutionsProps = (state) => {
 
 const getTOCConfig = (state, props) => {
     const config = state?.toc?.config || {};
-    const layers = layersWithTransientPropsSelector(state).filter(({ group }) => group !== 'background');
+    const layers = layersWithTransientSelector(state).filter(({ group }) => group !== 'background');
     const mapLoadedCount = state?.toc?.mapLoadedCount;
     const initializedMapLoadedCount = state?.toc?.initializedMapLoadedCount;
     return {
@@ -591,8 +591,8 @@ const getTOCConfig = (state, props) => {
 
 const tocSelector = createShallowSelectorCreator(isEqual)(
     (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
-    groupsWithTransientPropsSelector,
-    layersWithTransientPropsSelector,
+    groupsWithTransientSelector,
+    layersWithTransientSelector,
     selectedNodesSelector,
     userSelector,
     mapSelector,
