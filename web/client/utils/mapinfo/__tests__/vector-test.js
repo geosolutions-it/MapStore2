@@ -47,7 +47,6 @@ describe("mapinfo vector utils", () => {
                 lng: 10
             },
             metadata: {
-                fields: ["prop1", "embedUrl"],
                 title: "My Layer",
                 resolution: 10,
                 buffer: 2,

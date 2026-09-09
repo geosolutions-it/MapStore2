@@ -10,6 +10,15 @@ describe('FeatureInfoAttributeUtils', () => {
         expect(getDisplayTypeFromMediaType(' VIDEO ')).toBe('video');
         expect(getDisplayTypeFromMediaType('image/jpeg')).toBe('image');
         expect(getDisplayTypeFromMediaType('application/pdf')).toBe('pdf');
+        expect(getDisplayTypeFromMediaType('text/html')).toBe('iframe');
+        expect(getDisplayTypeFromMediaType('panorama')).toBe('panorama');
+        expect(getDisplayTypeFromMediaType('png')).toBe('image');
+        expect(getDisplayTypeFromMediaType('mp4')).toBe('video');
+        expect(getDisplayTypeFromMediaType('mp3')).toBe('audio');
+        expect(getDisplayTypeFromMediaType(null)).toBe(null);
+        expect(getDisplayTypeFromMediaType(undefined)).toBe(null);
+        expect(getDisplayTypeFromMediaType(123)).toBe(null);
+        expect(getDisplayTypeFromMediaType('')).toBe(null);
         expect(getDisplayTypeFromMediaType('application/octet-stream')).toBe(null);
     });
 

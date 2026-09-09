@@ -35,7 +35,6 @@ export default {
                 lng: props.point.latlng.lng
             },
             metadata: {
-                fields: layer.features?.[0]?.properties && Object.keys(layer.features[0].properties) || [],
                 title,
                 resolution: isNil(props?.map?.resolution)
                     ? props?.map?.zoom && getCurrentResolution(props.map.zoom, 0, 21, 96)
