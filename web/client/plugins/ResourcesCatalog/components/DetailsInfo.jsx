@@ -50,7 +50,7 @@ const isFieldLabelOnly = ({style, value}) => isEmptyValue(value) && isStyleLabel
 const DetailInfoFieldLabel = ({ field }) => {
     const label = field.labelId ? <Message msgId={field.labelId} /> : field.label;
     return isStyleLabel(field.style) && field.href
-        ? (<a href={field.href} target={field.target}>{label}</a>)
+        ? (<a href={field.href} target={field.target} {...(field['data-ms-id'] ? {'data-ms-id': field['data-ms-id']} : {})}>{label}</a>)
         : label;
 };
 
@@ -60,7 +60,7 @@ function DetailsInfoField({ field, children, className }) {
     return (
         <FlexBox gap="sm" classNames={['ms-details-info-field', '_padding-b-xs', '_row']} className={className}>
             <Text className={isLinkLabel ? '' : '_label'} fontSize="sm"><DetailInfoFieldLabel field={field} /></Text>
-            {!isLinkLabel ? <FlexBox.Fill>
+            {!isLinkLabel ? <FlexBox.Fill {...(field['data-ms-id'] ? { 'data-ms-id': field['data-ms-id'] } : {})}>
                 <Text fontSize="sm">{children(values)}</Text>
             </FlexBox.Fill> : null}
         </FlexBox>
@@ -169,6 +169,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
             '_relative',
             '_padding-tb-md'
         ]}
+        data-ms-id="details-info-fields"
     >
         {fields.map((field, filedIndex) => {
 
@@ -285,6 +286,26 @@ const parseTabItems = (items) => {
 };
 const isDefaultTabType = (type) => type === 'tab';
 
+const tabCyDataMap = {
+    info: 'dataset-view-sidepanel-tab-info',
+    location: 'dataset-view-sidepanel-tab-location',
+    locations: 'dataset-view-sidepanel-tab-location',
+    assets: 'dataset-view-sidepanel-tab-assets',
+    data: 'dataset-view-sidepanel-tab-data',
+    related: 'dataset-view-sidepanel-tab-data',
+    share: 'dataset-view-sidepanel-tab-share',
+    settings: 'dataset-view-sidepanel-tab-settings'
+};
+
+const getTabCyData = (tab = {}) => {
+    const normalizedId = `${tab?.id || ''}`.toLowerCase();
+    if (tabCyDataMap[normalizedId]) {
+        return tabCyDataMap[normalizedId];
+    }
+    const normalizedLabel = `${tab?.label || ''}`.toLowerCase();
+    return tabCyDataMap[normalizedLabel] || null;
+};
+
 function DetailsInfo({
     tabs = [],
     tabComponents: tabComponentsProp,
@@ -321,9 +342,9 @@ function DetailsInfo({
             selectedTabId={selectedTab ?? filteredTabs?.[0]?.id}
             onSelect={onSelectTab}
             tabs={filteredTabs.map(({Component, ...tab} = {}) => ({
-                title: <DetailInfoFieldLabel field={tab} />,
+                title: <span {...(getTabCyData(tab) ? { 'data-ms-id': getTabCyData(tab) } : {})}><DetailInfoFieldLabel field={tab} /></span>,
                 eventKey: tab?.id,
-                component: <Component fields={tab?.items} {...props} />
+                component: <div data-ms-id="dataset-view-sidepanel-tab-content"><Component fields={tab?.items} {...props} /></div>
             }))}
         />
     );

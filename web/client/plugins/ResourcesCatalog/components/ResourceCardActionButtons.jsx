@@ -16,10 +16,18 @@ const ActionMenuItem = ({
     iconType,
     children,
     labelId,
+    cardMsIdPrefix,
+    dataMsId,
     ...props
 }) => {
+    const resolvedDataMsId = dataMsId
+        || (cardMsIdPrefix && glyph === 'duplicate' ? `${cardMsIdPrefix}-actions-clone` : null)
+        || (cardMsIdPrefix && glyph === 'trash' ? `${cardMsIdPrefix}-actions-delete` : null);
     return (
-        <MenuItem {...props}>
+        <MenuItem
+            {...props}
+            {...resolvedDataMsId ? { 'data-ms-id': resolvedDataMsId } : {}}
+        >
             {glyph ? <><Glyphicon glyph={glyph}/>{' '}</> : null}
             {labelId ? <Message msgId={labelId} /> : null}
         </MenuItem>
@@ -32,6 +40,7 @@ function ResourceCardActionButtons({
     resource,
     className,
     target,
+    cardMsIdPrefix,
     ...props
 }) {
 
@@ -59,6 +68,7 @@ function ResourceCardActionButtons({
                     size="xs"
                     noCaret
                     className="_border-transparent"
+                    {...cardMsIdPrefix ? { 'data-ms-id': `${cardMsIdPrefix}-actions` } : {}}
                 >
                     <Glyphicon glyph="option-vertical" />
                 </Dropdown.Toggle>
@@ -66,7 +76,7 @@ function ResourceCardActionButtons({
                     {options.map((option) => {
                         if (option.Component) {
                             const { Component } = option;
-                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem}/>;
+                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem} cardMsIdPrefix={cardMsIdPrefix} />;
                         }
                         return null;
                     })}
