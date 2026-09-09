@@ -119,7 +119,7 @@ describe('PropertiesViewer', () => {
         });
     });
 
-    it('test rendering properties ordered by fields and filtered by feature properties presence', () => {
+    it('test rendering properties ordered by fields, appending the ones not listed in fields', () => {
         const testProps = {
             k0: "v0",
             k1: "v1",
@@ -141,13 +141,16 @@ describe('PropertiesViewer', () => {
         expect(cmpDom).toBeTruthy();
 
         const body = cmpDom.childNodes.item(0);
-        expect(body.childNodes.length).toBe(2);
-        const row0 = body.childNodes[0].querySelectorAll('div');
-        expect(row0[0].innerHTML).toBe("alias2");
-        expect(row0[1].innerHTML).toBe("v2");
-        const row1 = body.childNodes[1].querySelectorAll('div');
-        expect(row1[0].innerHTML).toBe("alias0");
-        expect(row1[1].innerHTML).toBe("v0");
+        expect(body.childNodes.length).toBe(3);
+        const rows = [...body.childNodes].map((node) => {
+            const [key, value] = node.querySelectorAll('div');
+            return [key.innerHTML, value.innerHTML];
+        });
+        expect(rows).toEqual([
+            ["alias2", "v2"],
+            ["alias0", "v0"],
+            ["k1", "v1"]
+        ]);
     });
 
     describe('sanitization', () => {

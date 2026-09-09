@@ -25,7 +25,7 @@ describe('IdentifyUtils', () => {
         expect(objectRow.mediaTypeValues).toEqual({});
         expect(objectRow.fields).toBe(objectFields);
 
-        // vector, model, cog and flatgeobuf layers expose fields as plain names
+        // the helper is shape agnostic, an unrecognized fields entry is passed through untouched
         const nameFields = ['a', 'b'];
         const nameRow = getVisibleFeatureRow(feature, nameFields);
         expect(nameRow.feature.properties).toBe(feature.properties);

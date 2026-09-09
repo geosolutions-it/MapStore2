@@ -40,9 +40,14 @@ class PropertiesViewer extends React.Component {
     };
 
     getBodyItems = () => {
-        const propertyKeys = this.props.fields?.length
-            ? this.props.fields.map(({ name }) => name).filter(key => Object.hasOwn(this.props?.feature?.properties || {}, key))
-            : Object.keys(this.props?.feature?.properties || {});
+        const properties = this.props?.feature?.properties || {};
+        const orderedKeys = (this.props.fields || [])
+            .map(({ name }) => name)
+            .filter((key) => Object.hasOwn(properties, key));
+        const propertyKeys = [
+            ...orderedKeys,
+            ...Object.keys(properties).filter((key) => !orderedKeys.includes(key))
+        ];
         return propertyKeys
             .filter(this.props?.include?.length > 0 ? this.toInclude : this.toExclude)
             .map((key) => {
