@@ -18,6 +18,7 @@ import { getConfigProp } from './ConfigUtils';
 import { getSupportedLocales, shortLocale, getMessageById } from './LocaleUtils';
 import { ServerTypes } from './LayersUtils';
 import { getPolygonFromExtent } from './CoordinatesUtils';
+import { DEFAULT_DOCUMENTS_FEATURE_INFO } from './FeatureInfoAttributeUtils';
 
 export const SOURCE_TYPES = {
     LOCAL: 'LOCAL',
@@ -49,7 +50,6 @@ export const ResourceTypes = {
 
 export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
-export const GEONODE_DOCUMENTS_ROW_VIEWER = 'GEONODE_DOCUMENTS_ROW_VIEWER';
 
 const DEFAULT_PRESET_KEYS = {
     CATALOGS: 'catalog_list',
@@ -560,7 +560,7 @@ export const documentsToLayerConfig = (documents = [], locales) => {
         ...(bbox && { bbox }),
         features,
         style: getDocumentsStyle(locales),
-        rowViewer: GEONODE_DOCUMENTS_ROW_VIEWER
+        featureInfo: DEFAULT_DOCUMENTS_FEATURE_INFO
     };
 };
 

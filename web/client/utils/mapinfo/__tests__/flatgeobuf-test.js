@@ -107,7 +107,6 @@ describe("mapinfo flatgeobuf utils", () => {
                     "outputFormat": "application/json"
                 },
                 "metadata": {
-                    "fields": ["id", "name"],
                     "title": "countries"
                 },
                 "url": "client"
