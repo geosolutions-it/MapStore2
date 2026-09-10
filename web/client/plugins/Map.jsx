@@ -194,6 +194,7 @@ class MapPlugin extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
         map: PropTypes.object,
+        mapContainerId: PropTypes.string,
         layers: PropTypes.array,
         additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
@@ -225,6 +226,7 @@ class MapPlugin extends React.Component {
 
     static defaultProps = {
         mapType: MapLibraries.OPENLAYERS,
+        mapContainerId: MAIN_MAP_CONTAINER_ID,
         actions: {},
         zoomControl: false,
         mapLoadingMessage: "map.loading",
@@ -438,7 +440,7 @@ class MapPlugin extends React.Component {
             const {mapOptions = {}} = this.props.map;
 
             return (
-                <this.state.plugins.Map id={MAIN_MAP_CONTAINER_ID}
+                <this.state.plugins.Map id={this.props.mapContainerId}
                     {...this.props.options}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
