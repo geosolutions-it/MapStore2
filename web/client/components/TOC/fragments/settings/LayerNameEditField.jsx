@@ -28,6 +28,7 @@ const LayerNameEditField = ({
     setEditingLayerName = () => {},
     setLayerError = () => {},
     onValidate,
+    onDraftChange = () => {},
     onValidationError = () => {},
     onUpdateEntry = () => {}
 }) => {
@@ -38,13 +39,19 @@ const LayerNameEditField = ({
             }
             if (editingLayerName) {
                 if (layerName !== element.name) {
+                    if (layerError && !layerError?.required) {
+                        onUpdateEntry('name', {target: {value: layerName}}, undefined, {forced: true});
+                        setLayerError();
+                        setEditingLayerName(false);
+                        return;
+                    }
                     setLayerError();
                     if (enableLayerNameEditFeedback || onValidate) {
                         setWaitingForLayerLoading(true);
                     }
-                    const updateLayerName = (validationResult) => {
-                        onUpdateEntry('name', {target: {value: layerName}}, validationResult);
-                        if (!enableLayerNameEditFeedback) {
+                    const updateLayerName = (validationResult, metadata = {}) => {
+                        onUpdateEntry('name', {target: {value: layerName}}, validationResult, metadata);
+                        if (metadata.forced || !enableLayerNameEditFeedback) {
                             setWaitingForLayerLoading(false);
                             setEditingLayerName(false);
                         }
@@ -55,13 +62,17 @@ const LayerNameEditField = ({
                             .then(updateLayerName)
                             .catch((error) => {
                                 setWaitingForLayerLoading(false);
-                                setLayerError(true);
+                                setLayerError(error || true);
                                 setEditingLayerName(true);
                                 onValidationError(error);
                             });
                     } else {
                         updateLayerName();
                     }
+                } else if (layerError) {
+                    onUpdateEntry('name', {target: {value: layerName}}, undefined, {forced: true});
+                    setLayerError();
+                    setEditingLayerName(false);
                 } else {
                     setLayerError();
                     setEditingLayerName(false);
@@ -80,7 +91,9 @@ const LayerNameEditField = ({
 
     const overlayTriggerNameEdit = button => (
         <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-layer-name-edit">
-            <Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>
+            <Message msgId={layerError?.required
+                ? 'layerProperties.tooltip.requiredValue'
+                : `layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>
         </Tooltip>}>
             {button}
         </OverlayTrigger>
@@ -96,7 +109,11 @@ const LayerNameEditField = ({
                     key="name"
                     type="text"
                     disabled={!editingLayerName}
-                    onChange={evt => setLayerName(evt.target.value)} />
+                    onChange={evt => {
+                        setLayerError();
+                        setLayerName(evt.target.value);
+                        onDraftChange(evt.target.value);
+                    }} />
                 {enableOverlayTrigger ? overlayTriggerNameEdit(editButton) : editButton}
             </InputGroup>
         </FormGroup>
@@ -129,16 +146,26 @@ export default compose(
         componentDidMount() {
             this.props.setLayerName(this.props.element?.name);
         },
-        componentDidUpdate() {
+        componentDidUpdate(prevProps) {
             const {
                 element = {},
                 waitingForLayerLoading,
                 waitingForLayerLoad,
+                setLayerName = () => {},
                 setWaitingForLayerLoad = () => {},
                 setWaitingForLayerLoading = () => {},
                 setEditingLayerName = () => {},
                 setLayerError = () => {}
             } = this.props;
+
+            if (prevProps.element?.id !== element.id) {
+                setLayerName(element.name);
+                setWaitingForLayerLoading(false);
+                setWaitingForLayerLoad(false);
+                setEditingLayerName(false);
+                setLayerError();
+                return;
+            }
 
             if (waitingForLayerLoading && element.loading) {
                 setWaitingForLayerLoading(false);

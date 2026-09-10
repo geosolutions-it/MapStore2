@@ -266,7 +266,10 @@
         "bottom": "Bottom",
         "top": "Cima",
         "editLayerName": "Editar el nombre de la capa",
-        "confirmLayerName": "Confirmar cambio de nombre de capa"
+        "confirmLayerName": "Confirmar cambio de nombre de capa",
+        "editValue": "Editar valor",
+        "confirmValue": "Confirmar cambio de valor",
+        "requiredValue": "Se requiere un valor"
       },
       "legendOptions": {
         "title": "Leyenda",

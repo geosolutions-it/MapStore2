@@ -123,4 +123,67 @@ describe('LayerNameEditField component', () => {
             })
             .catch(done);
     });
+    it('reports the draft and force saves it on the second click after validation fails', (done) => {
+        const handlers = {
+            onValidate: expect.createSpy().andReturn(Promise.reject(new Error('Invalid layer name'))),
+            onDraftChange: expect.createSpy(),
+            onUpdateEntry: expect.createSpy()
+        };
+        ReactDOM.render(
+            <LayerNameEditField
+                element={{name: 'old-name'}}
+                onValidate={handlers.onValidate}
+                onDraftChange={handlers.onDraftChange}
+                onUpdateEntry={handlers.onUpdateEntry}/>,
+            document.getElementById('container')
+        );
+        ReactTestUtils.Simulate.click(document.querySelector('.input-group-addon'));
+        ReactTestUtils.Simulate.change(document.querySelector('input'), {target: {value: 'invalid-name'}});
+        ReactTestUtils.Simulate.click(document.querySelector('.input-group-addon'));
+
+        waitFor(() => expect(document.querySelector('.form-group').classList.contains('has-error')).toBe(true))
+            .then(() => {
+                expect(handlers.onDraftChange).toHaveBeenCalledWith('invalid-name');
+                ReactTestUtils.Simulate.click(document.querySelector('.input-group-addon'));
+                expect(handlers.onValidate.calls.length).toBe(1);
+                expect(handlers.onUpdateEntry).toHaveBeenCalledWith(
+                    'name',
+                    {target: {value: 'invalid-name'}},
+                    undefined,
+                    {forced: true}
+                );
+                done();
+            })
+            .catch(done);
+    });
+    it('does not force save a value when validation reports a required field', (done) => {
+        const requiredError = new Error('Required value');
+        requiredError.required = true;
+        const handlers = {
+            onValidate: expect.createSpy().andReturn(Promise.reject(requiredError)),
+            onUpdateEntry: expect.createSpy()
+        };
+        ReactDOM.render(
+            <LayerNameEditField
+                element={{name: 'old-name'}}
+                onValidate={handlers.onValidate}
+                onUpdateEntry={handlers.onUpdateEntry}/>,
+            document.getElementById('container')
+        );
+        ReactTestUtils.Simulate.click(document.querySelector('.input-group-addon'));
+        ReactTestUtils.Simulate.change(document.querySelector('input'), {target: {value: 'new-name'}});
+        ReactTestUtils.Simulate.click(document.querySelector('.input-group-addon'));
+
+        waitFor(() => expect(document.querySelector('.form-group').classList.contains('has-error')).toBe(true))
+            .then(() => {
+                ReactTestUtils.Simulate.click(document.querySelector('.input-group-addon'));
+                return waitFor(() => expect(handlers.onValidate.calls.length).toBe(2));
+            })
+            .then(() => {
+                expect(handlers.onUpdateEntry).toNotHaveBeenCalled();
+                expect(document.querySelector('input').getAttribute('disabled')).toBe(null);
+                done();
+            })
+            .catch(done);
+    });
 });
