@@ -49,6 +49,7 @@
     },
     "floatingIdentifyDelay": 1000
   },
+  "featureInfoMediaTypeAliases": {},
   "localizedLayerStyles": {
     "name": "mapstore_language"
   },

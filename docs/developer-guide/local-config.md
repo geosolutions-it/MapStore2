@@ -159,6 +159,17 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 - `initialState`: is an object that will initialize the state with some default values and this WILL OVERRIDE the initialState imposed by plugins & reducers.
 - `projectionDefs`: is an array of objects that contain definitions for Coordinate Reference Systems
 - `gridFiles`: is an object that contains definitions for grid files used in coordinate transformations
+- `featureInfoMediaTypeAliases`: is an object that maps display types to custom alias values used by media type attributes. Values are normalized trimming whitespace and converting to lowercase, so also numeric codes are supported. Only display types listed in `DISPLAY_TYPES` are accepted. For example:
+
+  ```json
+  "featureInfoMediaTypeAliases": {
+    "panorama": ["PAN", "PANO", "360"],
+    "image": ["IMG", "FOTO"],
+    "video": ["VID"]
+  }
+  ```
+
+  When a field uses `"displayType": "media"` and references a media type attribute, these aliases are resolved before the value's file extension is used for detection.
 - `useAuthenticationRules` (deprecated): if this flag is set to true, legacy `authenticationRules` will be used. The new `requestsConfigurationRules` system does not require this flag and is always active when rules are present.
 - `requestsConfigurationRules`: is an array of objects that contain rules to match for request configuration. Each rule has a `urlPattern` regex to match and either `headers`, `params`, or `withCredentials` configuration. If the URL of a request matches the `urlPattern` of a rule, the configuration will be applied to the request.
 
