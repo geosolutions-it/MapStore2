@@ -9,6 +9,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
 import FeatureInfoEditor from '../FeatureInfoEditor';
 
@@ -25,9 +26,24 @@ describe("test FeatureInfoEditor", () => {
     });
 
     it('test rendering edit modal', () => {
-        ReactDOM.render(<FeatureInfoEditor showEditor/>, document.getElementById("container"));
+        ReactDOM.render(<FeatureInfoEditor showEditor onSaveTemplate={() => {}}/>, document.getElementById("container"));
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(1);
+    });
+
+    it('saves the template when closing the editor', () => {
+        const onSaveTemplate = expect.createSpy();
+        ReactDOM.render(
+            <FeatureInfoEditor
+                showEditor
+                template="<p>Saved template</p>"
+                onSaveTemplate={onSaveTemplate}/>,
+            document.getElementById("container")
+        );
+
+        TestUtils.Simulate.click(document.querySelector('.ms-feature-info-editor .btn-primary'));
+        expect(onSaveTemplate).toHaveBeenCalled();
+        expect(onSaveTemplate.calls[0].arguments[0]).toContain('Saved template');
     });
 
 });

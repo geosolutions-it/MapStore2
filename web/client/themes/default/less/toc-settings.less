@@ -20,6 +20,9 @@
     .legend-preview {
         .background-color-var(@theme-vars[main-bg]);
     }
+    .ms-feature-info-view.has-error {
+        .border-color-var(@theme-vars[danger]);
+    }
 }
 
 // **************
@@ -166,6 +169,19 @@
         .layer-fields-toolbar {
             text-align: center;
             margin: 15px;
+
+            .layer-fields-title {
+                font-weight: bold;
+            }
+
+            &:has(.layer-fields-title) {
+                align-items: center;
+                display: flex;
+                gap: 8px;
+                justify-content: space-between;
+                margin: 5px;
+                text-align: left;
+            }
         }
         .layer-fields-row-header {
             height: 25px;
@@ -181,11 +197,55 @@
         .layer-field-alias {
             flex: 1;
         }
+        .layer-field-visibility {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+            width: 28px;
+
+            .checkbox {
+                margin: 0;
+            }
+        }
         .layer-field-name {
             width: 150px;
         }
         .layer-field-type {
             width: 120px;
+        }
+    }
+    // without the alias column the name takes the space it used to flex into
+    &.layer-fields-with-settings {
+        .layer-fields-row, .layer-fields-row-header {
+            .layer-field-name {
+                flex: 1;
+                width: auto;
+            }
+            .layer-field-settings-action {
+                margin-bottom: 0;
+            }
+        }
+    }
+    .layer-field-settings-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding-left: 1.25rem;
+        border-left: 1px solid var(--ms-main-border-color);
+        margin: 0 0.5rem 1rem 1rem;
+    }
+    .layer-field-settings-row {
+        align-items: center;
+        display: flex;
+        gap: 5px;
+        .control-label {
+            flex: 0 0 150px;
+            margin: 0;
+        }
+        > *:not(.control-label) {
+            flex: 1;
+            min-width: 0;
         }
     }
     .layer-fields-footer {
@@ -210,5 +270,71 @@
     .ms-wms-cache-options-toolbar {
         display: flex;
         align-items: center;
+    }
+}
+
+.ms-feature-info-settings {
+    display: block;
+
+    .ms-feature-info-toolbar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding: 6px 15px;
+    }
+
+    .ms-feature-info-views {
+        padding: 0 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .ms-feature-info-views-empty {
+        color: var(--ms-disabled-color);
+        padding: 15px 0;
+    }
+
+    .ms-feature-info-view {
+        align-items: center;
+        border: 1px solid var(--ms-main-border-color, @ms-main-border-color);
+        display: flex;
+        gap: 8px;
+        padding: 6px 10px;
+
+        &.disabled {
+            opacity: 0.5;
+        }
+
+        .grab-handle {
+            align-items: center;
+            color: var(--ms-main-color, @ms-main-color);
+            cursor: move;
+            display: flex;
+            flex: 0 0 20px;
+            justify-content: center;
+
+            &.disabled {
+                color: var(--ms-disabled-color, @ms-disabled-color);
+                cursor: default;
+            }
+        }
+
+        .ms-feature-info-view-title {
+            flex: 4 1 0;
+        }
+
+        .ms-feature-info-view-type {
+            flex: 5 1 0;
+        }
+
+        .ms-feature-info-view-action {
+            flex: 0 0 @square-btn-size;
+        }
+
+        .ms-feature-info-view-edit[disabled] {
+            background-color: var(--ms-disabled-bg, @ms-disabled-bg);
+        }
     }
 }

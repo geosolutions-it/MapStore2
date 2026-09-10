@@ -28,15 +28,18 @@
     }
     .tabs-underline {
         > .nav > li {
-            > a {
+            > a,
+            > button {
                 .color-var(@theme-vars[main-color], true);
                 .background-color-var(@theme-vars[main-bg], true);
             }
-            > a:hover {
+            > a:hover,
+            > button:hover {
                 .border-bottom-color-var(@theme-vars[main-border-color]);
             }
             &.active {
-                > a {
+                > a,
+                > button {
                     .border-bottom-color-var(@theme-vars[selected-color]);
                 }
             }
@@ -66,10 +69,20 @@
         + li {
             margin-left: 1rem;
         }
-        > a {
+        > a,
+        > button {
             padding: 0;
             border-bottom: 0.2rem solid transparent;
             border-radius: 0;
+        }
+        > button {
+            background: none;
+            border-left: 0;
+            border-right: 0;
+            border-top: 0;
+            display: block;
+            position: relative;
+            white-space: nowrap;
         }
     }
 }

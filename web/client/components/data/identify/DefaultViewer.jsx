@@ -9,13 +9,16 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer, getDefaultViewer } from '../../../utils/MapInfoUtils';
+import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer, getDefaultViewer, getDefaultInfoViewMode, getInfoViewModes, getInfoViewModeTitleIds, getLayerFeatureInfoViews } from '../../../utils/MapInfoUtils';
 import HTML from '../../../components/I18N/HTML';
 import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
+import ScrollableTabs from '../../misc/ScrollableTabs';
 import ViewerPage from './viewers/ViewerPage';
+import ExternalDataViewer from './viewers/ExternalDataViewer';
 import { isEmpty, reverse, startsWith } from 'lodash';
 import { getFormatForResponse } from '../../../utils/IdentifyUtils';
+import { clearExternalDataCacheForIdentifyRequests } from '../../../utils/mapinfo/ExternalDataCache';
 
 class DefaultViewer extends React.Component {
     static propTypes = {
@@ -69,8 +72,33 @@ class DefaultViewer extends React.Component {
         hidePopupIfNoResults: false
     };
 
-    shouldComponentUpdate(nextProps) {
-        return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses || nextProps.index !== this.props.index;
+    state = {
+        activeViewIds: {}
+    };
+
+    componentDidUpdate(previousProps) {
+        // Drop external requests that belong to identify results no longer displayed.
+        const currentRequestIds = new Set(
+            this.props.responses.map(({ reqId } = {}) => reqId).filter(Boolean)
+        );
+        const removedRequestIds = previousProps.responses
+            .map(({ reqId } = {}) => reqId)
+            .filter((reqId) => reqId && !currentRequestIds.has(reqId));
+        clearExternalDataCacheForIdentifyRequests(removedRequestIds);
+    }
+
+    componentWillUnmount() {
+        // The module-level cache must not outlive the identify viewer.
+        clearExternalDataCacheForIdentifyRequests(
+            this.props.responses.map(({ reqId } = {}) => reqId)
+        );
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.responses !== this.props.responses
+            || nextProps.missingResponses !== this.props.missingResponses
+            || nextProps.index !== this.props.index
+            || nextState.activeViewIds !== this.state.activeViewIds;
     }
 
     /**
@@ -161,17 +189,119 @@ class DefaultViewer extends React.Component {
         return null;
     }
 
+    getViewKey = (res) => res?.layer?.id ?? res?.reqId;
+
+    getActiveView = (views, res) => {
+        return views.find(({ id }) => id === this.state.activeViewIds[this.getViewKey(res)])
+            || views.find((view) => this.isViewResponseValid(res, view))
+            || views[0];
+    }
+
+    getLayerMetadataForView = (layerMetadata, view) => {
+        if (!view) {
+            return layerMetadata;
+        }
+        const featureInfo = layerMetadata?.featureInfo || {};
+        return {
+            ...layerMetadata,
+            viewer: view.viewer ?? layerMetadata.viewer,
+            featureInfo: {
+                ...featureInfo,
+                ...view,
+                format: view.type,
+                template: view.template,
+                viewer: view.viewer ?? featureInfo.viewer
+            }
+        };
+    }
+
+    getResponseForView = (res, view) => {
+        const viewResponse = view?.id && res?.viewResponses?.[view.id];
+        return {
+            response: viewResponse?.response ?? res.response,
+            queryParams: viewResponse?.queryParams ?? res.queryParams
+        };
+    }
+
+    isViewResponseValid = (res, view) => {
+        const {response, queryParams} = this.getResponseForView(res, view);
+        return this.props.validator(this.props.format)
+            .getValidResponses([{response, queryParams, layerMetadata: res?.layerMetadata}]).length > 0;
+    }
+
+    renderViewTypeTitle = (type) => {
+        const titleId = getInfoViewModeTitleIds()[type];
+        return titleId ? <Message msgId={titleId}/> : type;
+    }
+
+    renderViewTabs = (views, activeView, res) => {
+        if (views.length <= 1) {
+            return null;
+        }
+        const viewKey = this.getViewKey(res);
+        return (
+            <div className="ms-identify-view-tabs">
+                <ScrollableTabs
+                    className="tabs-underline"
+                    selectedTabId={activeView.id}
+                    onSelect={(activeViewId) => {
+                        this.setState(({activeViewIds}) => ({
+                            activeViewIds: {...activeViewIds, [viewKey]: activeViewId}
+                        }));
+                    }}
+                    tabs={views.map((view) => ({
+                        title: view.title || this.renderViewTypeTitle(view.type),
+                        eventKey: view.id
+                    }))}/>
+            </div>
+        );
+    }
+
+    getPages = (responses) => {
+        const defaultType = getDefaultInfoViewMode(this.props.format) || getInfoViewModes().PROPERTIES;
+        return responses.map((res) => {
+            const {layerMetadata, layer} = res;
+            const layerWithMetadata = {
+                ...layer,
+                ...layerMetadata,
+                featureInfo: layerMetadata?.featureInfo || layer?.featureInfo
+            };
+            const views = getLayerFeatureInfoViews(layerWithMetadata, { defaultType });
+            const activeView = this.getActiveView(views, res);
+            const layerMetadataForView = this.getLayerMetadataForView(layerWithMetadata, activeView);
+            return {
+                res,
+                views,
+                activeView,
+                layerMetadata,
+                layerMetadataForView: {
+                    ...layerMetadataForView,
+                    featureInfo: {
+                        ...layerMetadataForView?.featureInfo,
+                        identifyRequestId: res.reqId
+                    }
+                },
+                viewResponse: this.getResponseForView(res, activeView)
+            };
+        });
+    }
+
     renderPages = () => {
         const {validResponses: responses} = this.getResponseProperties(this.props.isMobile || this.props.renderValidOnly);
-        return responses.map((res, i) => {
-            const {response, layerMetadata} = res;
-            const format = getFormatForResponse(res, this.props);
-            const PageHeader = this.props.header;
-            let customViewer;
-            if (layerMetadata?.viewer?.type) {
-                customViewer = getViewer(layerMetadata.viewer.type);
-            }
-            const size = responses.filter(resp => !startsWith(resp.response, "no features were found")).length;
+        const pages = this.getPages(responses);
+        const size = pages.filter(({res, views}) => views.some((view) =>
+            !startsWith(this.getResponseForView(res, view).response, "no features were found"))).length;
+        const PageHeader = this.props.header;
+        return pages.map(({res, views, activeView, layerMetadata, layerMetadataForView, viewResponse}, i) => {
+            const format = getFormatForResponse({
+                ...res,
+                queryParams: viewResponse.queryParams
+            }, this.props);
+            const customViewer = activeView?.type === getInfoViewModes().EXTERNAL_DATA
+                ? ExternalDataViewer
+                : layerMetadataForView?.viewer?.type
+                    ? getViewer(layerMetadataForView.viewer.type)
+                    : undefined;
             return (<Panel
                 eventKey={i}
                 key={i}
@@ -185,11 +315,18 @@ class DefaultViewer extends React.Component {
                     onPrevious={() => this.props.onPrevious()}/></span> : null
                 }
                 style={this.props.style}>
-                <ViewerPage
-                    response={response}
-                    format={format}
-                    viewers={customViewer || this.props.viewers}
-                    layer={layerMetadata}/>
+                {this.renderViewTabs(views, activeView, res)}
+                {views.length > 1 && !this.isViewResponseValid(res, activeView) ? (
+                    <Alert bsStyle="danger">
+                        <h4><HTML msgId="noFeatureInfo"/></h4>
+                    </Alert>
+                ) : (
+                    <ViewerPage
+                        response={viewResponse.response}
+                        format={format}
+                        viewers={customViewer || this.props.viewers}
+                        layer={layerMetadataForView}/>
+                )}
             </Panel>);
         });
     };

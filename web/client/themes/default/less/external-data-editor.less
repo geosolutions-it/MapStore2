@@ -1,0 +1,129 @@
+// Attribute configuration shared by Feature Info view editors.
+.ms-external-data-editor,
+.ms-properties-view-editor {
+    border: 1px solid @ms2-color-shade-lighter;
+    padding: 12px;
+}
+
+// External Data configuration shown below a Feature Info view.
+.ms-external-data-editor {
+    .ms-external-data-url-row {
+        display: flex;
+        gap: 8px;
+
+        .form-control {
+            flex: 1;
+        }
+    }
+
+    .ms-external-data-validation {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+
+        .alert {
+            margin: 0;
+            width: 100%;
+        }
+    }
+
+    .ms-external-data-generated-cql {
+        width: 100%;
+
+        pre {
+            margin: 4px 0 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    }
+}
+
+// Media attributes shared by Properties and External Data Identify views.
+.ms-feature-info-attribute-media {
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--ms-main-border-color);
+    background-color: var(--ms-main-variant-bg);
+    display: block;
+    width: 100%;
+    .ms-media,
+    img,
+    video {
+        height: 100%;
+        width: 100%;
+    }
+    img,
+    video {
+        object-fit: contain;
+    }
+}
+audio.ms-feature-info-attribute-media {
+    aspect-ratio: auto;
+}
+.ms-panorama,
+.ms-pdf {
+    overflow: hidden;
+    position: relative;
+    .ms-feature-info-attribute-panorama-viewer,
+    .ms-pdf-frame {
+        border: 0;
+        height: 100%;
+        width: 100%;
+    }
+}
+.ms-pdf-fullscreen {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    z-index: 2;
+}
+.ms-feature-info-attribute-panorama-loading,
+.ms-feature-info-attribute-panorama-error,
+.ms-pdf-loading,
+.ms-pdf-error {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+// Related WFS results shown in the Identify viewer.
+.ms-external-data-viewer {
+    .ms-external-data-result {
+        border-bottom: 1px solid @ms2-color-shade-lighter;
+        padding: 0 0 12px;
+
+        .ms-external-data-result-title {
+            padding: 0 12px;
+            font-weight: bold;
+        }
+
+        + .ms-external-data-result {
+            padding-top: 12px;
+        }
+    }
+
+    .ms-external-data-runtime-loading {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        min-height: 48px;
+    }
+
+    .ms-external-data-runtime-error-header {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        justify-content: space-between;
+    }
+
+    .alert {
+        margin-bottom: 0;
+    }
+}

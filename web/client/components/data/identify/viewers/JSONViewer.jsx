@@ -17,7 +17,7 @@ const Viewers = {
     PROPERTIES
 };
 
-export default shouldUpdate((props, nextProps) => nextProps.response !== props.response)(
+export default shouldUpdate((props, nextProps) => nextProps.response !== props.response || nextProps.layer !== props.layer)(
     props => {
         const type = props.layer && props.layer.featureInfo && props.layer.featureInfo.format && (props.layer.featureInfo.template && props.layer.featureInfo.template !== '<p><br></p>') && props.layer.featureInfo.format || 'PROPERTIES';
         const Viewer = Viewers[type] || Viewers.PROPERTIES;

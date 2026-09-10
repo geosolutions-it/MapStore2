@@ -61,63 +61,6 @@
     }
 }
 
-.ms-accordion {
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    margin: 0;
-    a {
-        text-decoration: none;
-    }
-    .panel {
-        border: none;
-        box-shadow: none;
-        margin: 0;
-        &  + .panel {
-            margin: 0;
-        }
-        background-color: transparent;
-        .panel-heading {
-            padding: 0;
-            border: none;
-            background-color: transparent;
-            box-shadow: none;
-            margin: 8px 0 8px;
-            z-index: 10;
-            .mapstore-side-card {
-                margin: 0;
-            }
-        }
-        .panel-collapse {
-            .panel-body {
-                padding: 8px;
-            }
-        }
-    }
-    &.ms-fill-container {
-        height: 100%;
-        overflow: hidden;
-
-        .panel.ms-selected {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            .panel-collapse {
-                flex: 1;
-                display: flex;
-                overflow: auto;
-                .panel-body {
-                    flex: 1;
-                    overflow: auto;
-                    min-height: 100%;
-                }
-            }
-        }
-    }
-}
-
 .dock-container {
     position: absolute;
     z-index: 1025;
