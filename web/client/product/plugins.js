@@ -30,6 +30,7 @@ import MapFooter from '../plugins/MapFooter';
 import CameraPosition from '../plugins/CameraPosition';
 import Catalog from "../plugins/Catalog";
 import CRSSelector from "../plugins/CRSSelector";
+import Cookie from "../plugins/Cookie";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -42,6 +43,7 @@ export const plugins = {
 
     ContextCreatorPlugin: ContextCreator,
     ContextPlugin: Context,
+    CookiePlugin: Cookie,
     Dashboard: Dashboard,
     FeedbackMaskPlugin: FeedbackMask,
     GeoStoryPlugin: GeoStory,
@@ -77,7 +79,6 @@ export const plugins = {
     BurgerMenuPlugin: toModulePlugin('BurgerMenu', () => import(/* webpackChunkName: 'plugins/burgerMenu' */ '../plugins/BurgerMenu')),
     ContextImportPlugin: toModulePlugin('ContextImport', () => import(/* webpackChunkName: 'plugins/contextImport' */ '../plugins/ContextImport')),
     ContextExportPlugin: toModulePlugin('ContextExport', () => import(/* webpackChunkName: 'plugins/contextExport' */ '../plugins/ContextExport')),
-    CookiePlugin: toModulePlugin('Cookie', () => import(/* webpackChunkName: 'plugins/cookie' */ '../plugins/Cookie')),
     DashboardEditor: toModulePlugin('DashboardEditor', () => import(/* webpackChunkName: 'plugins/dashboardEditor' */ '../plugins/DashboardEditor')),
     DashboardExport: toModulePlugin('DashboardExport', () => import(/* webpackChunkName: 'plugins/dashboardExport' */ '../plugins/DashboardExport')),
     DashboardImport: toModulePlugin('DashboardImport', () => import( /* webpackChunkName: 'plugins/dashboardImport' */'../plugins/DashboardImport')),
