@@ -158,6 +158,7 @@ import { MAIN_MAP_CONTAINER_ID } from '../utils/MapUtils';
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @prop {boolean} coalesceWMSLayers when true, adjacent WMS layers from the same source with compatible options are combined into a single GetMap request to reduce the number of requests sent to the server (default false); if not set, falls back to the current map's `mapOptions.coalesceWMSLayers` (set from Map Settings) and then to `miscSettings.coalesceWMSLayers` in localConfig.json; a layer can opt out with `coalesce: false` in its own options; not supported on leaflet, where it is always disabled
  * @prop {number} coalesceWMSLayersMaxGroupSize maximum number of WMS layers that can be combined into a single coalesced GetMap request (default 10)
+ * @prop {string} mapContainerId the id of the html div that the map lives in. The default value is "map"
  * @prop {object} mapOptions map options grouped by map type
  * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
  * @prop {boolean} mapOptions.cesium.showSkyAtmosphere enable sky atmosphere of the globe (default true)
