@@ -17,8 +17,7 @@ import {
 import {
     layersSelector,
     groupsSelector,
-    selectedNodesSelector,
-    layerTransientSelector
+    selectedNodesSelector
 } from '../../selectors/layers';
 import { userSelector } from '../../selectors/security';
 import { currentLocaleSelector, currentLocaleLanguageSelector } from '../../selectors/locale';
@@ -369,8 +368,7 @@ function TOC({
     toolbarButtonProps,
     init,
     onOpen,
-    onInitialize,
-    layerTransientProps
+    onInitialize
 }, context) {
     const activateParameter = (allow, activate) => {
         const isUserAdmin = user && user.role === 'ADMIN' || false;
@@ -516,8 +514,7 @@ function TOC({
                             mapSize,
                             mapBbox
                         }
-                    },
-                    layerTransientProps
+                    }
                 }}
                 onContextMenu={({ event, node: currentNode, nodeType, parentId }) => {
                     onSelectNode();
@@ -606,8 +603,7 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
     getResolutionsProps,
     visualizationModeSelector,
     getTOCConfig,
-    layerTransientSelector,
-    (enabled, tree, layers, selectedNodes, user, map, title, currentLocale, currentLocaleLanguage, isLocalizedLayerStylesEnabled, { resolutions, resolution }, visualizationMode, config, layerTransientProps) => ({
+    (enabled, tree, layers, selectedNodes, user, map, title, currentLocale, currentLocaleLanguage, isLocalizedLayerStylesEnabled, { resolutions, resolution }, visualizationMode, config) => ({
         enabled,
         tree,
         selectedNodes: selectedNodesIdsToObject(selectedNodes, layers, tree),
@@ -632,8 +628,7 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
         init: config.init,
         showFullTitle: config.showFullTitle,
         showOpacityTooltip: config.showOpacityTooltip,
-        activateFilterLayer: config.activateFilterLayer,
-        layerTransientProps
+        activateFilterLayer: config.activateFilterLayer
     })
 );
 

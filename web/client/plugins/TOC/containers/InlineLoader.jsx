@@ -7,6 +7,7 @@
 */
 
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 
 /**
  * InlineLoader for the layer or group node component
@@ -32,4 +33,8 @@ const InlineLoader = ({ loading: loadingProp }) => {
     );
 };
 
-export default InlineLoader;
+const ConnectedInlineLoader = connect((state, ownProps) => ({
+    loading: ownProps.getLoading ? ownProps.getLoading(state, ownProps) : ownProps.loading
+}))(InlineLoader);
+
+export default ConnectedInlineLoader;

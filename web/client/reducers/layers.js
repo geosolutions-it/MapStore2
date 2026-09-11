@@ -129,13 +129,24 @@ function layers(state = { flat: [], layerTransientProps: {}}, action) {
         };
     }
     case LAYER_ERROR: {
+        const ids = new Set(castArray(action.layerId));
         const isError = action.tilesCount === action.tilesErrorCount;
+        const newLoadingError = isError ? 'Error' : 'Warning';
+        let flatChanged = false;
         const newLayers = (state.flat || []).map((layer) => {
-            return layer.id === action.layerId ? Object.assign({}, layer, {
-                previousLoadingError: layer.loadingError, loadingError: isError ? 'Error' : 'Warning'
-            }) : layer;
+            if (ids.has(layer.id)) {
+                const currentError = layer.loadingError || false;
+                if (currentError !== newLoadingError) {
+                    flatChanged = true;
+                    return Object.assign({}, layer, {
+                        previousLoadingError: layer.loadingError,
+                        loadingError: newLoadingError
+                    });
+                }
+            }
+            return layer;
         });
-        return Object.assign({}, state, {flat: newLayers});
+        return flatChanged ? Object.assign({}, state, {flat: newLayers}) : state;
     }
     case REFRESH_LAYERS: {
         return Object.assign({}, state, {refreshing: action.layers, refreshError: []});

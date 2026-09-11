@@ -281,7 +281,7 @@ export default class OpenlayersLayer extends React.Component {
                         const ids = this.getCoalesceGroupIds(options);
                         if (errors.length > 0 && (options && !options.hideErrors || !options)) {
                             this.props.onLayerLoad(ids, {error: true});
-                            ids.forEach((id) => this.props.onLayerError(id, tileEvents.length, errors.length));
+                            this.props.onLayerError(ids, tileEvents.length, errors.length);
                         } else {
                             this.props.onLayerLoad(ids);
                         }
@@ -326,7 +326,7 @@ export default class OpenlayersLayer extends React.Component {
                         if (errors.length > 0) {
                             this.props.onLayerLoad(ids, {error: true});
                             if (options && !options.hideErrors || !options) {
-                                ids.forEach((id) => this.props.onLayerError(id, imageEvents.length, errors.length));
+                                this.props.onLayerError(ids, imageEvents.length, errors.length);
                             }
                         } else {
                             this.props.onLayerLoad(ids);
