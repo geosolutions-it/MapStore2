@@ -15,7 +15,8 @@ import VisibilityCheck from './VisibilityCheck';
 import NodeHeader from './NodeHeader';
 import NodeTool from './NodeTool';
 import ExpandButton from './ExpandButton';
-import InlineLoader from './InlineLoader';
+import InlineLoader from '../containers/InlineLoader';
+import { getNodeLoading } from '../utils/TOCUtils';
 
 /**
  * DefaultGroupNode renders internal part of the group node
@@ -228,7 +229,7 @@ const DefaultGroup = ({
                     sort={sort}
                     sortable={sortable}
                 >
-                    <InlineLoader loading={node?.loading}/>
+                    <InlineLoader node={node} getLoading={getNodeLoading}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (

@@ -8,7 +8,7 @@
 
 
 import Rx from 'rxjs';
-import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
+import { endsWith, has, get, includes, isEqual, omit, omitBy, castArray } from 'lodash';
 
 import {
     EXPORT_CSV,
@@ -253,6 +253,7 @@ export const updateLayerOnLayerPropertiesChange = (action$, store) =>
  */
 export const updateLayerOnLoadingErrorChange = (action$, store) =>
     action$.ofType(LAYER_LOAD, LAYER_ERROR)
+        .flatMap(action => castArray(action.layerId).map(layerId => ({ ...action, layerId })))
         .groupBy(({layerId}) => layerId)
         .map(layerStream$ => layerStream$
             .switchMap(({layerId}) => {

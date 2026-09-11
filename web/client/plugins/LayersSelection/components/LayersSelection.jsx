@@ -8,7 +8,7 @@ import VisibilityCheck from '../../TOC/components/VisibilityCheck';
 import NodeHeader from '../../TOC/components/NodeHeader';
 import { getLayerTypeGlyph } from '../../../utils/LayersUtils';
 import NodeTool from '../../TOC/components/NodeTool';
-import InlineLoader from '../../TOC/components/InlineLoader';
+import InlineLoader from '../../TOC/containers/InlineLoader';
 import EllipsisButton from './EllipsisButton';
 import { isSelectQueriable, filterLayerForSelect } from '../selectors/layersSelection';
 import FlexBox from '../../../components/layout/FlexBox';

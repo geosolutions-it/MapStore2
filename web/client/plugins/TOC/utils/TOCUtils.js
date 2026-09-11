@@ -207,3 +207,15 @@ export const getEdgesIndexForToolbar = (el) => {
     if (firstIndex !== undefined && lastIndex !== undefined) return [firstIndex, lastIndex];
     return [];
 };
+
+/**
+ * Check if a node is loading
+ * @param {object} state redux store state
+ * @param {object} ownProps component ownProps containing node, or node directly
+ * @return {boolean} true or false
+ */
+export const getNodeLoading = (state, ownProps = {}) => {
+    const node = ownProps?.node ?? ownProps;
+    if (!node) return false;
+    return !!(node.loading || (node.id && get(state, `layers.layerTransientProps.${node.id}.loading`, false)));
+};

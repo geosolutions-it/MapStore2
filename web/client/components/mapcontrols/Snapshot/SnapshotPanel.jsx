@@ -141,7 +141,7 @@ class SnapshotPanel extends React.Component {
     };
 
     mapIsLoading = (layers) => {
-        return layers.some((layer) => layer.loading);
+        return layers.some((layer) => this.props.layerTransientProps?.[layer.id]?.loading);
     };
 
     renderPreview = () => {
@@ -164,6 +164,7 @@ class SnapshotPanel extends React.Component {
                 { !isGoogleLayer ? <SnapshotSupport.Preview
                     ref="snapshotPreview"
                     timeout={this.props.timeout}
+                    layerTransientProps={this.props.layerTransientProps}
                     config={this.props.map}
                     layers={this.props.layers.filter((l) => {return l.visibility; })}
                     snapstate={this.props.snapshot}

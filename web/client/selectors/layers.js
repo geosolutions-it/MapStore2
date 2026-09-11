@@ -41,6 +41,8 @@ export const getAdditionalLayerFromId = (state, id) => head(additionalLayersSele
 export const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
 export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
+export const layerTransientSelector = state => (state.layers && state.layers.layerTransientProps) || {};
+
 export const layerSelectorWithMarkers = createSelector(
     [
         layersSelector,

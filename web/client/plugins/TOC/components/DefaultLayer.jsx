@@ -10,11 +10,11 @@ import React, { useRef, useLayoutEffect, useState } from 'react';
 import { castArray, find } from 'lodash';
 import { Glyphicon } from 'react-bootstrap';
 import { isInsideResolutionsLimits, getLayerTypeGlyph } from '../../../utils/LayersUtils';
-import { getLayerErrorMessage } from '../utils/TOCUtils';
+import { getLayerErrorMessage, getNodeLoading } from '../utils/TOCUtils';
 import DropNode from './DropNode';
 import DragNode from './DragNode';
 import { VisualizationModes } from '../../../utils/MapTypeUtils';
-import InlineLoader from './InlineLoader';
+import InlineLoader from '../containers/InlineLoader';
 import WMSLegend from './WMSLegend';
 import ArcGISLegend from './ArcGISLegend';
 import OpacitySlider from './OpacitySlider';
@@ -386,7 +386,7 @@ const DefaultLayer = ({
                     id={node.id}
                     parentId={parentId}
                 >
-                    <InlineLoader loading={node?.loading}/>
+                    <InlineLoader node={node} getLoading={getNodeLoading}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (
