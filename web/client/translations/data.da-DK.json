@@ -220,7 +220,10 @@
         "bottom": "Nederst",
         "top": "Øverst",
         "editLayerName": "Rediger lagets navn",
-        "confirmLayerName": "Bekræft ændring af lagets navn"
+        "confirmLayerName": "Bekræft ændring af lagets navn",
+        "editValue": "Rediger værdi",
+        "confirmValue": "Bekræft ændring af værdi",
+        "requiredValue": "En værdi er påkrævet"
       },
       "legendOptions": {
         "title": "Signaturforklaring",
