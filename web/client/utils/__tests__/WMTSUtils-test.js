@@ -11,6 +11,7 @@ import xml2js from 'xml2js';
 import * as WMTSUtils from '../WMTSUtils';
 import restCapabilities from 'raw-loader!../../test-resources/wmts/GetCapabilities-rest.xml';
 import kvpCapabilities from 'raw-loader!../../test-resources/wmts/GetCapabilities-1.0.0.xml';
+import restCapabilitiesNoOperationsMetadata from 'raw-loader!../../test-resources/wmts/GetCapabilities-rest-no-operations-metadata.xml';
 
 describe('Test the WMTSUtils', () => {
     it('get matrix ids with object', () => {
@@ -53,6 +54,27 @@ describe('Test the WMTSUtils', () => {
             expect(tileURLs[0]).toBe("https://maps1.sampleServer.org/basemap/geolandbasemap/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png");
             done();
         });
+    });
+    it('wmts rest without OperationsMetadata', (done) => {
+        xml2js.parseString(restCapabilitiesNoOperationsMetadata, { explicitArray: false }, (ignore, json) => {
+            const operations = WMTSUtils.getOperations(json);
+            expect(operations).toEqual([]);
+            expect(WMTSUtils.getOperation(operations, "GetTile", "KVP")).toNotExist();
+            expect(WMTSUtils.getOperation(operations, "GetTile", "RESTful")).toNotExist();
+            // OperationsMetadata is optional, the RESTful encoding is advertised by the tile ResourceURL
+            expect(WMTSUtils.getRequestEncoding(json)).toBe("RESTful");
+            const tileURLs = WMTSUtils.getGetTileURL({ ...json.Capabilities.Contents.Layer[0], requestEncoding: "RESTful" });
+            expect(tileURLs).toEqual(["https://maps.sampleServer.org/basemap/baselayer/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png"]);
+            done();
+        });
+    });
+    it('getOperations with empty capabilities', () => {
+        expect(WMTSUtils.getOperations()).toEqual([]);
+        expect(WMTSUtils.getOperations({})).toEqual([]);
+        expect(WMTSUtils.getOperations({ Capabilities: {} })).toEqual([]);
+    });
+    it('getRequestEncoding without OperationsMetadata and without tile ResourceURL', () => {
+        expect(WMTSUtils.getRequestEncoding({ Capabilities: { Contents: { Layer: { "ows:Identifier": "layer" } } } })).toBe("KVP");
     });
     it('parseTileMatrixSetOption', () => {
         const layer = WMTSUtils.parseTileMatrixSetOption({
