@@ -17,7 +17,28 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+<<<<<<< HEAD
 import { getDefaultInfoViewMode } from '../../../../utils/MapInfoUtils';
+=======
+import { v1 as uuidv1 } from 'uuid';
+import {
+    getDefaultInfoViewMode,
+    getLayerFeatureInfoViews,
+    isLayerFeatureInfoDisabled
+} from '../../../../utils/MapInfoUtils';
+import Message from '../../../I18N/Message';
+import { getCapabilitiesUrl } from '../../../../utils/LayersUtils';
+import FeatureInfoEditor from './FeatureInfoEditor';
+import localizedProps from '../../../misc/enhancers/localizedProps';
+import FeatureInfoRequestOptions from '../../../misc/FeatureInfoRequestOptions';
+import { isGeoServerLayer } from '../../../../utils/FeatureInfoRequestUtils';
+import ExternalDataEditor from './ExternalDataEditor';
+import PropertiesEditor from './PropertiesEditor';
+import { EXTERNAL_DATA, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
+
+const FormControl = localizedProps('placeholder')(FormControlRB);
+const GlyphiconWithTitle = localizedProps('title')(Glyphicon);
+>>>>>>> 58535023d (#12813: Layer settings - Trigger layer-specific capabilities request (#12816))
 
 const supportedFormatRequests = {
     wms: getSupportedFormatWMS,
@@ -58,7 +79,7 @@ export default class extends React.Component {
         // we dont know supported infoFormats yet
         if (getSupportedFormat && this.props.element.url && !this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
             this.setState({ loading: true }); // eslint-disable-line -- TODO: need to be fixed
-            getSupportedFormat(this.props.element.url, true)
+            getSupportedFormat(getCapabilitiesUrl(this.props.element), true)
                 .then(({ infoFormats }) => {
                     this.props.onChange("infoFormats", infoFormats);
                     this.setState({ loading: false }); // eslint-disable-line -- TODO: need to be fixed
