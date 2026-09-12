@@ -134,6 +134,22 @@ describe('Timeline Plugin', () => {
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin.hidden')).toBeTruthy();
         });
+        it('shows the warning  when the hidden selected layer is not displayed in the timeline', () => {
+            const state = {
+                ...FALSY_STATE,
+                layers: {
+                    ...FALSY_STATE.layers,
+                    flat: FALSY_STATE.layers.flat.map(layer =>
+                        layer.id === 'TEST_LAYER_2' ? { ...layer, visibility: true } : layer
+                    )
+                }
+            };
+            const { Plugin } = getPluginForTest(TimelinePlugin, state);
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+
+            const warning = document.querySelector('.ms-timeline-visibility-warning');
+            expect(warning).toBeTruthy();
+        });
         it('Timeline plugin is not visible when there are no layers with dimension data', ()=>{
             const { Plugin } = getPluginForTest(TimelinePlugin, {});
             ReactDOM.render(<Plugin />, document.getElementById("container"));
