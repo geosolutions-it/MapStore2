@@ -43,6 +43,8 @@ export const groupsSelector = (state) => state.layers && state.layers.flat && st
 
 export const layerTransientSelector = state => (state.layers && state.layers.layerTransientProps) || {};
 
+export const layerLoadingByIdSelector = (id) => state => get(layerTransientSelector(state), `${id}.loading`, false);
+
 export const layerSelectorWithMarkers = createSelector(
     [
         layersSelector,

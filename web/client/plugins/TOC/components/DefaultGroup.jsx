@@ -15,8 +15,7 @@ import VisibilityCheck from './VisibilityCheck';
 import NodeHeader from './NodeHeader';
 import NodeTool from './NodeTool';
 import ExpandButton from './ExpandButton';
-import InlineLoader from '../containers/InlineLoader';
-import { getNodeLoading } from '../utils/TOCUtils';
+import DefaultInlineLoader from './InlineLoader';
 
 /**
  * DefaultGroupNode renders internal part of the group node
@@ -108,6 +107,7 @@ const DefaultGroupNode = ({
  * @prop {boolean} config.showTitleTooltip show the title tooltip
  * @prop {object} config.groupOptions specific options for group nodes
  * @prop {object} config.groupOptions.tooltipOptions options for group title tooltip
+ * @prop {component} loaderComponent component to render loading state
  */
 const DefaultGroup = ({
     node: nodeProp,
@@ -136,7 +136,8 @@ const DefaultGroup = ({
         config,
         nodeItems = [],
         nodeToolItems = [],
-        theme
+        theme,
+        loaderComponent: Loader = DefaultInlineLoader
     } = props;
 
     const node = replaceNodeOptions(nodeProp, nodeType);
@@ -229,7 +230,7 @@ const DefaultGroup = ({
                     sort={sort}
                     sortable={sortable}
                 >
-                    <InlineLoader node={node} getLoading={getNodeLoading}/>
+                    <Loader node={node}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (

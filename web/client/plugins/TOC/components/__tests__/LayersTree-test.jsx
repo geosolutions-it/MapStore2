@@ -9,12 +9,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import LayersTreeComp from '../LayersTree';
+import LayersTree from '../LayersTree';
 import { Simulate } from 'react-dom/test-utils';
 import { NodeTypes } from '../../../../utils/LayersUtils';
-import { Provider } from 'react-redux';
-
-const LayersTree = (props) => <Provider store={{dispatch: () => {}, subscribe: () => {}, getState: () => ({})}}><LayersTreeComp {...props} /></Provider>;
 
 describe('LayersTree', () => {
     beforeEach((done) => {

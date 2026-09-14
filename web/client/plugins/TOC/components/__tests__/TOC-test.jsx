@@ -9,11 +9,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import TOCComp from '../TOC';
+import TOC from '../TOC';
 import { Simulate } from 'react-dom/test-utils';
-import { Provider } from 'react-redux';
-
-const TOC = (props) => <Provider store={{dispatch: () => {}, subscribe: () => {}, getState: () => ({})}}><TOCComp {...props} /></Provider>;
 
 describe('TOC', () => {
     beforeEach((done) => {

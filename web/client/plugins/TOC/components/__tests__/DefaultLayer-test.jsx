@@ -8,14 +8,11 @@
 
 import expect from 'expect';
 import React from 'react';
-import { Provider } from 'react-redux';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import testBackend from 'react-dnd-test-backend';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-import DefaultLayerComp from '../DefaultLayer';
-
-const DefaultLayer = (props) => <Provider store={{dispatch: () => {}, subscribe: () => {}, getState: () => ({})}}><DefaultLayerComp {...props} /></Provider>;
+import DefaultLayer from '../DefaultLayer';
 
 const Layer = dragDropContext(testBackend)(DefaultLayer);
 

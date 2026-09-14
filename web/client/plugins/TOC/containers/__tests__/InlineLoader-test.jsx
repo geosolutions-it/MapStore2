@@ -12,19 +12,28 @@ import expect from 'expect';
 import InlineLoaderComp from '../InlineLoader';
 import { Provider } from 'react-redux';
 
-const store = {
-    dispatch: () => {},
-    subscribe: () => {},
-    getState: () => ({
-        layers: {
-            flat: []
-        }
-    })
+const renderWithStore = (props = {}, state = {}) => {
+    const testStore = {
+        dispatch: () => {},
+        subscribe: () => {},
+        getState: () => ({
+            layers: {
+                flat: [],
+                layerTransientProps: {},
+                ...state.layers
+            },
+            ...state
+        })
+    };
+    return ReactDOM.render(
+        <Provider store={testStore}>
+            <InlineLoaderComp {...props} />
+        </Provider>,
+        document.getElementById("container")
+    );
 };
 
-const InlineLoader = (props) => <Provider store={store}><InlineLoaderComp {...props} /></Provider>;
-
-describe('InlineLoader', () => {
+describe('InlineLoader container', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -36,14 +45,25 @@ describe('InlineLoader', () => {
         setTimeout(done);
     });
 
-    it('should render with defaults', () => {
-        ReactDOM.render(<InlineLoader />, document.getElementById("container"));
+    it('should render hidden by default when node is not loading', () => {
+        renderWithStore();
         expect(document.querySelector('.inline-loader-container')).toBeTruthy();
         expect(document.querySelector('.inline-loader-bar').style.display).toBe('none');
     });
-    it('should render with loading true', () => {
-        ReactDOM.render(<InlineLoader loading/>, document.getElementById("container"));
-        expect(document.querySelector('.inline-loader-container')).toBeTruthy();
+
+    it('should render hidden when layer is not loading in store', () => {
+        renderWithStore(
+            { node: { id: 'layer-1' } },
+            { layers: { layerTransientProps: { 'layer-1': { loading: false } } } }
+        );
+        expect(document.querySelector('.inline-loader-bar').style.display).toBe('none');
+    });
+
+    it('should render visible when layer is loading in store', () => {
+        renderWithStore(
+            { node: { id: 'layer-1' } },
+            { layers: { layerTransientProps: { 'layer-1': { loading: true } } } }
+        );
         expect(document.querySelector('.inline-loader-bar').style.display).toBe('block');
     });
 });

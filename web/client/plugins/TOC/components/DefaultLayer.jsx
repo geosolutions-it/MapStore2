@@ -10,11 +10,11 @@ import React, { useRef, useLayoutEffect, useState } from 'react';
 import { castArray, find } from 'lodash';
 import { Glyphicon } from 'react-bootstrap';
 import { isInsideResolutionsLimits, getLayerTypeGlyph } from '../../../utils/LayersUtils';
-import { getLayerErrorMessage, getNodeLoading } from '../utils/TOCUtils';
+import { getLayerErrorMessage } from '../utils/TOCUtils';
 import DropNode from './DropNode';
 import DragNode from './DragNode';
 import { VisualizationModes } from '../../../utils/MapTypeUtils';
-import InlineLoader from '../containers/InlineLoader';
+import DefaultInlineLoader from './InlineLoader';
 import WMSLegend from './WMSLegend';
 import ArcGISLegend from './ArcGISLegend';
 import OpacitySlider from './OpacitySlider';
@@ -280,6 +280,7 @@ const DefaultLayerNode = ({
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button
+ * @prop {component} loaderComponent component to render loading state
  */
 const DefaultLayer = ({
     node: nodeProp,
@@ -304,7 +305,8 @@ const DefaultLayer = ({
     nodeContentItems = [],
     nodeItems = [],
     nodeTypes,
-    theme
+    theme,
+    loaderComponent: Loader = DefaultInlineLoader
 }) => {
 
     const replacedNode = replaceNodeOptions(nodeProp, nodeType);
@@ -386,7 +388,7 @@ const DefaultLayer = ({
                     id={node.id}
                     parentId={parentId}
                 >
-                    <InlineLoader node={node} getLoading={getNodeLoading}/>
+                    <Loader node={node}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (

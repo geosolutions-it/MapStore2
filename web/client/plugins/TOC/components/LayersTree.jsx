@@ -69,6 +69,7 @@ const loopGroupCondition = (groupNode, condition) => {
  * @prop {object} config optional configuration available for the nodes
  * @prop {boolean} config.sortable activate the possibility to sort nodes
  * @prop {component} treeHeader display a header on top of the layer tree
+ * @prop {component} loaderComponent component to render loading state
  */
 const LayersTree = ({
     tree,
@@ -77,6 +78,7 @@ const LayersTree = ({
     onChange = () => {},
     groupNodeComponent = DefaultGroup,
     layerNodeComponent = DefaultLayer,
+    loaderComponent,
     onContextMenu = () => {},
     onSelect = () => {},
     contextMenu,
@@ -207,6 +209,7 @@ const LayersTree = ({
                             nodeItems={nodeItems}
                             nodeToolItems={nodeToolItems}
                             nodeContentItems={nodeContentItems}
+                            loaderComponent={loaderComponent}
                         />
                     );
                 })}
