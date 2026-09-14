@@ -11,7 +11,7 @@ import InlineLoader from '../components/InlineLoader';
 import { layerLoadingByIdSelector } from '../../../selectors/layers';
 
 const ConnectedInlineLoader = connect((state, ownProps) => ({
-    loading: layerLoadingByIdSelector(ownProps.node?.id)(state)
+    loading: layerLoadingByIdSelector(ownProps.nodeId)(state)
 }))(InlineLoader);
 
 export default ConnectedInlineLoader;

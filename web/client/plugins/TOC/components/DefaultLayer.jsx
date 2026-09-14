@@ -388,7 +388,7 @@ const DefaultLayer = ({
                     id={node.id}
                     parentId={parentId}
                 >
-                    <Loader node={node}/>
+                    <Loader nodeId={node.id}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (

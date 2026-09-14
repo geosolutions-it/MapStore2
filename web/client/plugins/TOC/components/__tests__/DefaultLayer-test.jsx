@@ -12,6 +12,7 @@ import { DragDropContext as dragDropContext } from 'react-dnd';
 import testBackend from 'react-dnd-test-backend';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+
 import DefaultLayer from '../DefaultLayer';
 
 const Layer = dragDropContext(testBackend)(DefaultLayer);

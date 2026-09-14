@@ -230,7 +230,7 @@ const DefaultGroup = ({
                     sort={sort}
                     sortable={sortable}
                 >
-                    <Loader node={node}/>
+                    <Loader nodeId={node.id}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (

@@ -53,7 +53,7 @@ describe('InlineLoader container', () => {
 
     it('should render hidden when layer is not loading in store', () => {
         renderWithStore(
-            { node: { id: 'layer-1' } },
+            { nodeId: 'layer-1' },
             { layers: { layerTransientProps: { 'layer-1': { loading: false } } } }
         );
         expect(document.querySelector('.inline-loader-bar').style.display).toBe('none');
@@ -61,7 +61,7 @@ describe('InlineLoader container', () => {
 
     it('should render visible when layer is loading in store', () => {
         renderWithStore(
-            { node: { id: 'layer-1' } },
+            { nodeId: 'layer-1' },
             { layers: { layerTransientProps: { 'layer-1': { loading: true } } } }
         );
         expect(document.querySelector('.inline-loader-bar').style.display).toBe('block');
