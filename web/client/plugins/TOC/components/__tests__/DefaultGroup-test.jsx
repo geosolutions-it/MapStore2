@@ -12,8 +12,10 @@ import { DragDropContext as dragDropContext } from 'react-dnd';
 import testBackend from 'react-dnd-test-backend';
 import ReactDOM from 'react-dom';
 import { Simulate } from 'react-dom/test-utils';
-import DefaultGroup from '../DefaultGroup';
+import DefaultGroupComp from '../DefaultGroup';
+import { Provider } from 'react-redux';
 
+const DefaultGroup = (props) => <Provider store={{dispatch: () => {}, subscribe: () => {}, getState: () => ({})}}><DefaultGroupComp {...props} /></Provider>;
 const Group = dragDropContext(testBackend)(DefaultGroup);
 const CustomChildNode = ({ node }) => {
     return <div className="custom-node">{node.id}</div>;

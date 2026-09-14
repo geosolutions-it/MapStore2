@@ -9,7 +9,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import InlineLoader from '../InlineLoader';
+import InlineLoaderComp from '../InlineLoader';
+import { Provider } from 'react-redux';
+
+const store = {
+    dispatch: () => {},
+    subscribe: () => {},
+    getState: () => ({
+        layers: {
+            flat: []
+        }
+    })
+};
+
+const InlineLoader = (props) => <Provider store={store}><InlineLoaderComp {...props} /></Provider>;
 
 describe('InlineLoader', () => {
     beforeEach((done) => {
