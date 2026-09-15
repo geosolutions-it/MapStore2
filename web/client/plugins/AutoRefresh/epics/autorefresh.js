@@ -20,6 +20,7 @@ const TRIGGERS = [
 const isEqual = (a, b) => {
     const aKeys = Object.keys(a);
     const bKeys = Object.keys(b);
+
     if (aKeys.length !== bKeys.length) return false;
 
     return aKeys.every(key => a[key] === b[key]);
@@ -27,7 +28,7 @@ const isEqual = (a, b) => {
 
 export const layersAutoRefreshEpic = (action$, store) => {
     const getLayersMap = () => isPaused(store.getState()) || !isActiveRefresh(store.getState()) ?
-        [] :
+        {} :
         refreshableLayers(store.getState()).reduce((acc, l) => ({ ...acc, [l.id]: l.autoRefreshInterval }), {});
 
     // this stream should emit refreshable layers map on every possible change,
@@ -40,7 +41,9 @@ export const layersAutoRefreshEpic = (action$, store) => {
 
     return active$
         .mergeMap(m => Object.keys(m).map(id => ({ id, interval: m[id] })))
-        .groupBy(d => d.id)
+        // durationSelector completes (and deregisters) the group when the layer is removed,
+        // so groupBy can create a brand new group if the same id reappears later
+        .groupBy(d => d.id, d => d, group$ => active$.filter(m => !m[group$.key]))
         // this merges N stream actions, 1 for each layer that needs a refresh, each one with its own timer
         .mergeMap(group$ => {
             const id = group$.key;
@@ -52,10 +55,9 @@ export const layersAutoRefreshEpic = (action$, store) => {
                     Rx.Observable.timer(0, interval * 1000)
                         .map(() => {
                             const time = new Date().getTime();
-                            console.debug(`[arxit] Refreshing layer ${id} at ${time}`);
                             return refreshLayerVersion(id, time);
                         })
                 )
-                .takeUntil(removed$);                        // teardown of the single timer
+                .takeUntil(removed$);
         });
 };
