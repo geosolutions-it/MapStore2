@@ -53,6 +53,17 @@
       "descriptionAdmin": "Veuillez contacter l'administrateur"
     },
     "autorefresh": {
+      "selector": "Définir l'intervalle de rafraîchissement automatique des couches",
+      "label": {
+        "default": "Activer le rafraîchissement automatique",
+        "lastUpdated": "Dernier rafraîchissement",
+        "addLayer": "Ajouter une couche",
+        "addLayerPlaceholder": "Sélectionner...",
+        "removeLayer": "Supprimer la couche",
+        "layersSummary": "Couches rafraîchies automatiquement",
+        "noLayers": "Aucune trouvée",
+        "informations": "Quelles couches sont configurées"
+      },
       "of": "de",
       "updating": "Rafraîchissement...",
       "layers": "Couches"
@@ -4024,6 +4035,10 @@
       "Isochrone": {
         "description": "Ce plugin permet de calculer les isochrones et les isodistances",
         "title": "Isochrone"
+      },
+      "AutoRefresh": {
+        "description": "Ce plugin permet de définir un intervalle de temps de rafraîchissement automatique sur les couches",
+        "title": "Rafraîchissement automatique"
       }
     },
     "contextCreator": {

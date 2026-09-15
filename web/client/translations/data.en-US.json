@@ -53,15 +53,15 @@
       "descriptionAdmin": "Please contact the administrator"
     },
     "autorefresh": {
-      "selector":"Set layers auto refresh interval",
+      "selector": "Set layers auto refresh interval",
       "label": {
-        "default":"Activate AutoRefresh" ,
+        "default": "Activate AutoRefresh",
         "lastUpdated": "Last Refresh",
         "addLayer": "Add layer",
         "addLayerPlaceholder": "Select...",
         "removeLayer": "Remove layer",
         "layersSummary": "Layers automatically refreshed",
-        "noLayers":"None found",
+        "noLayers": "None found",
         "informations": "Which layers are configured"
       },
       "of": "of",
