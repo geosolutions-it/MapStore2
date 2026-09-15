@@ -26,6 +26,24 @@ import {
 import { mapTypeSelector } from '../../selectors/maptype';
 import { autoRefreshStart, autoRefreshStop } from './actions/autorefresh';
 
+/**
+ * AutoRefresh plugin that provides automatic layer refresh functionality
+ * @memberof plugins
+ * @class
+ * @name AutoRefresh
+ * @param {number} cfg.defaultRefreshInterval - The default refresh interval in milliseconds (default to 60000)
+ * @param {number} cfg.minimumRefreshInterval - The minimum refresh interval in milliseconds (default to 30000)
+ * @example
+ * ```json
+ * {
+ *   "name": "AutoRefresh",
+ *   "cfg": {
+ *     "defaultRefreshInterval": 30000,
+ *     "minimumRefreshInterval": 10000
+ *   }
+ * }
+ * ```
+ */
 const AutoRefresh = ({ items, ...props }, context) => {
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins });

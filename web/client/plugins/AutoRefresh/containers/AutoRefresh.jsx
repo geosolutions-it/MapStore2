@@ -24,6 +24,13 @@ const AUTHORIZED_ACCESS_ROLES = ['ADMIN'];
  * @param {object} props - The props of the container
  * @param {number} props.defaultRefreshInterval - The default refresh interval in milliseconds
  * @param {number} props.minimumRefreshInterval - The minimum refresh interval in milliseconds
+ * @param {array} props.userRoles - The array of user roles
+ * @param {function} props.onUpdateNode - The function to update a node in the store
+ * @param {boolean} props.enabled - Indicates if the auto-refresh is enabled
+ * @param {array} props.availableLayers - The array of available layers for auto-refresh
+ * @param {array} props.activeLayers - The array of currently active layers for auto-refresh
+ * @param {function} props.onStart - The function to start the auto-refresh
+ * @param {function} props.onStop - The function to stop the auto-refresh
  */
 const AutoRefreshContainer = ({
     // Configured by the user when added to a Context
