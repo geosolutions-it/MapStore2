@@ -18,6 +18,12 @@ describe('HtmlSanitizer', () => {
             expect(result).toContain('<p>paragraph</p>');
         });
 
+        it('preserves ins/del tags', () => {
+            const result = sanitizeHtml('<ins>inserted</ins> <del>deleted</del>');
+            expect(result).toContain('<ins>inserted</ins>');
+            expect(result).toContain('<del>deleted</del>');
+        });
+
         it('preserves safe links', () => {
             const result = sanitizeHtml('<a href="https://example.com" target="_blank">link</a>');
             expect(result).toContain('<a');
