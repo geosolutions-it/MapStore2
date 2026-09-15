@@ -73,7 +73,7 @@ const HTML_CONFIG = {
         'blockquote', 'pre', 'code',
         'figure', 'figcaption', 'hr', 'details', 'summary',
         // Inline formatting — current HTML5
-        'b', 'i', 'u', 's', 'strong', 'em', 'small', 'mark', 'abbr', 'sup', 'sub',
+        'b', 'i', 'u', 'ins', 's', 'del', 'strong', 'em', 'small', 'mark', 'abbr', 'sup', 'sub',
         // Inline formatting — deprecated but common in stored content
         'font', 'center', 'strike',
         // Media and links
