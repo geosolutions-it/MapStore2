@@ -218,7 +218,7 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
     (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, viewportFilterIsSupported) => {
         const attribute = findGeometryProperty(describeLayer)?.name;
         const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
-        return viewportFilterIsActive && viewportFilterIsSupported ? {
+        return viewportFilterIsActive && viewportFilterIsSupported && box ? {
             spatialField: [
                 ...existingFilter,
                 {
