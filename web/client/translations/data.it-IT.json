@@ -1066,7 +1066,8 @@
       "s_tooltip": "Descrizione comando del menu di servizio",
       "serviceslistempty": "Nessun servizio definito",
       "service_missing": "Il servizio {serviceType} non è configurato",
-      "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}",
+      "generic_error": "Un errore e' occorso durante la ricerca. Dettagli errore: {message}",
+      "services_error": "Si sono verificati alcuni errori durante la ricerca nei servizi: {message}",
       "showGFI": "Mostra GFI",
       "errors": {
         "nonQueriableLayers": "Il layer indicato nell'url non è queriable o non è visibile in mappa",
