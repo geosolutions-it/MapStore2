@@ -32,7 +32,7 @@ import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets, autoRefreshActive, autoRefreshLayers}) => {
+        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets, autoRefreshActive, autoRefreshLayers = []}) => {
 
             // Check if mapSync is enabled (true), dependencyMap has mapSync dependency to Map widget and dependencies.viewport is null or falsy
             // If this condition is true, return false to filter out the event.
@@ -47,9 +47,9 @@ const dataStreamFactory = ($props) =>
             return isValid || shouldAutoRefresh;
         })
         .distinctUntilChanged(
-            ({layer = {}, options = {}, filter, autoRefreshLayers}, newProps) => {
+            ({layer = {}, options = {}, filter, autoRefreshLayers = []}, newProps) => {
                 const oldAutoRefreshLayer = autoRefreshLayers.find(l => l.id === layer.id);
-                const newAutoRefreshLayer = newProps.autoRefreshLayers.find(l => l.id === layer.id);
+                const newAutoRefreshLayer = newProps.autoRefreshLayers?.find(l => l.id === layer.id);
                 if (newProps.autoRefreshActive && newAutoRefreshLayer) {
                     if (!oldAutoRefreshLayer) {
                         return false;
