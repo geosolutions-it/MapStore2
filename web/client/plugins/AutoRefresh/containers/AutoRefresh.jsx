@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, GeoSolutions Sas.
+ * Copyright 2026, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -61,9 +61,7 @@ const AutoRefreshContainer = ({
             <Message msgId={lastUpdatedText ? 'autorefresh.label.lastUpdated' : 'autorefresh.label.default'}/>
         </Checkbox>
 
-        {/* Non-admin users see the layers information's panel,
-            Admin users see the settings panel
-        */}
+        {/* Admin users see the settings panel */}
         {AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <AutoRefreshSettings
             defaultRefreshInterval={defaultRefreshInterval / 1000}
             minimumRefreshInterval={minimumRefreshInterval / 1000}
@@ -71,6 +69,7 @@ const AutoRefreshContainer = ({
             activeLayers={activeLayers}
             onUpdateNode={onUpdateNode}
         />}
+        {/* Non-admin users see the layers information's panel */}
         {!AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <AutoRefreshInformations
             layers={Object.values(activeLayers)}/>}
     </div>);
