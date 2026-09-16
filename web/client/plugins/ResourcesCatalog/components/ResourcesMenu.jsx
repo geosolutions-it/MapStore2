@@ -11,11 +11,10 @@ import { Dropdown, Glyphicon, MenuItem } from 'react-bootstrap';
 
 import Message from '../../../components/I18N/Message';
 import Spinner from '../../../components/layout/Spinner';
-import Button from '../../../components/layout/Button';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Menu from './Menu';
-import { CARD_LAYOUT_TYPES, DEFAULT_CARD_LAYOUT_GLYPHS } from '../constants';
+import { CARD_LAYOUT_TYPES, DEFAULT_CARD_LAYOUT_GLYPHS, DEFAULT_CARD_LAYOUT_LABELS } from '../constants';
 const ResourcesListHeader = ({
     columns,
     metadata,
@@ -114,16 +113,6 @@ const ResourcesListHeader = ({
     );
 };
 
-const getNextCardLayoutStyle = (cardLayoutStyles = [], currentStyle) => {
-    if (!cardLayoutStyles.length) return currentStyle;
-    const currentIndex = cardLayoutStyles.indexOf(currentStyle);
-    return cardLayoutStyles[
-        currentIndex === -1
-            ? 0
-            : (currentIndex + 1) % cardLayoutStyles.length
-    ];
-};
-
 const ResourcesMenu = forwardRef(({
     menuItems,
     style,
@@ -154,11 +143,6 @@ const ResourcesMenu = forwardRef(({
     } = orderConfig || {};
 
     const selectedSort = orderOptions.find(({ value }) => query?.sort === value);
-    const nextStyle = getNextCardLayoutStyle(cardLayoutStyles, cardLayoutStyle);
-    const layoutGlyph = DEFAULT_CARD_LAYOUT_GLYPHS[nextStyle] || 'th';
-    function handleToggleCardLayoutStyle() {
-        setCardLayoutStyle(nextStyle);
-    }
 
     const orderButtonNode = orderOptions.length > 0 &&
         <Dropdown pullRight={orderAlign === 'right'} id="sort-dropdown">
@@ -227,13 +211,33 @@ const ResourcesMenu = forwardRef(({
                     alignRight
                     target={target}
                 />
-                {!hideCardLayoutButton && <Button
-                    variant="default"
-                    onClick={handleToggleCardLayoutStyle}
-                    square
-                >
-                    <Glyphicon glyph={layoutGlyph} />
-                </Button>}
+                {!hideCardLayoutButton && (
+                    <Dropdown pullRight={orderAlign === 'right'} id="ms-resources-card-layout-style">
+                        <Dropdown.Toggle
+                            noCaret
+                            className="square-button"
+                            bsStyle="default"
+                        >
+                            <Glyphicon glyph={DEFAULT_CARD_LAYOUT_GLYPHS[cardLayoutStyle] || 'th'} />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {(cardLayoutStyles || []).map((layout) => {
+                                const glyph = DEFAULT_CARD_LAYOUT_GLYPHS[layout];
+                                const labelId = DEFAULT_CARD_LAYOUT_LABELS[layout];
+                                return (
+                                    <MenuItem
+                                        key={layout}
+                                        active={layout === cardLayoutStyle}
+                                        onClick={() => setCardLayoutStyle(layout)}
+                                    >
+                                        {glyph && <><Glyphicon glyph={glyph} /></>}
+                                        {labelId ? <Message msgId={labelId} /> : layout}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                )}
                 {orderAlign === 'right' ? orderButtonNode : null}
             </FlexBox>
             {cardLayoutStyle === CARD_LAYOUT_TYPES.TABLE ? <ResourcesListHeader columns={columns} setColumns={setColumns} metadata={metadata}/> : null}

@@ -7,7 +7,6 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import isArray from 'lodash/isArray';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -49,7 +48,7 @@ import { DEFAULT_METADATA } from './constants';
  * @prop {number} cfg.pageSize page size of the resources grid
  * @prop {string} cfg.cardLayoutStyle one of `grid`, `list` or `table`, if undefined will render a button to select the style from UI
  * @prop {string[]} cfg.cardLayoutStyles array of card layout styles to support/show. Default is `['grid', 'table']`
- * @prop {bool|object} cfg.hideThumbnail if true or `{ grid: false, list: true }` hides the thumbnail on the card for all or specific layout styles
+ * @prop {bool|object} cfg.hideThumbnail if true or `{ grid: true, list: true }` hides the thumbnail on the card for all or specific layout styles
  * @prop {bool} cfg.hideWithNoResults if true hides the resources grid when there aren't results
  * @prop {object} cfg.defaultQuery a default query always included in the request
  * @prop {boolean} cfg.queryPage if true the page params will be managed in the url query
@@ -427,15 +426,13 @@ function ResourcesGrid({
         });
     }
 
-    const mergedMetadata = isArray(metadata) ? metadata : { ...DEFAULT_METADATA, ...metadata };
-
     return (
         <ConnectedResourcesGrid
             {...props}
             order={order}
             requestResources={(...args) => getCatalogResources(...args, resourceTypes).toPromise()}
             configuredItems={configuredItems}
-            metadata={mergedMetadata}
+            metadata={metadata}
             formatHref={handleFormatHref}
             availableResourceTypes={resourceTypes}
         />

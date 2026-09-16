@@ -120,14 +120,13 @@ function ResourcesGrid({
         storedParams
     });
 
-    const cardLayoutStyles = cardLayoutStylesProp ?? (isArray(metadataProp) ? [] : Object.keys(metadataProp || {}));
     const {
         cardLayoutStyle,
         setCardLayoutStyle,
         hideCardLayoutButton
     } = useCardLayoutStyle({
         cardLayoutStyle: cardLayoutStyleProp,
-        cardLayoutStyles: cardLayoutStyles,
+        cardLayoutStyles: cardLayoutStylesProp,
         defaultCardLayoutStyle: defaultCardLayoutStyleProp
     });
 
@@ -200,7 +199,7 @@ function ResourcesGrid({
                             loading={loading}
                             cardLayoutStyle={cardLayoutStyle}
                             setCardLayoutStyle={setCardLayoutStyle}
-                            cardLayoutStyles={cardLayoutStyles}
+                            cardLayoutStyles={cardLayoutStylesProp}
                             hideCardLayoutButton={hideCardLayoutButton}
                             style={{
                                 position: 'sticky',

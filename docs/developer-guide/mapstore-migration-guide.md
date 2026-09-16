@@ -22,6 +22,14 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Resources Catalog layout styles: `list` renamed to `table`
+
+In the `ResourcesGrid` plugin configuration, the tabular column-based layout style previously named `list` has been renamed to `table`.
+
+Any custom configuration (for example in `localConfig.json`) using `cardLayoutStyle: "list"` or `metadata: { "list": [...] }` must be updated to `cardLayoutStyle: "table"` or `metadata: { "table": [...] }`.
+
+A new `list` layout style has been added representing full resource cards displayed in a vertical list format. The supported layout styles are now `grid`, `list`, and `table`.
+
 ### Identify supports multiple views per layer
 
 The `featureInfo` of a layer describes a list of views instead of a single format. The identify panel renders one tab per view.

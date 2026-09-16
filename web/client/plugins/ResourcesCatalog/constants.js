@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { CARD_LAYOUT_TYPES } from '../../utils/ResourcesUtils';
+
+export { CARD_LAYOUT_TYPES };
+
 export const DEFAULT_METADATA = {
     table: [
         {
@@ -49,6 +53,32 @@ export const DEFAULT_METADATA = {
             disableIf: '{!state("userrole")}'
         }
     ],
+    list: [
+        {
+            path: 'name',
+            target: 'header'
+        },
+        {
+            path: 'description',
+            target: 'description'
+        },
+        {
+            path: 'tags',
+            filter: 'filter{tag.in}',
+            itemValue: 'name',
+            itemColor: 'color',
+            type: 'tag'
+        },
+        {
+            path: 'creator',
+            target: 'footer',
+            filter: 'filter{creator.in}',
+            icon: { glyph: 'user' },
+            noDataLabelId: 'resourcesCatalog.emptyUnknown',
+            disableIf: '{!state("userrole")}',
+            tooltipId: 'resourcesCatalog.columnCreatedBy'
+        }
+    ],
     grid: [
         {
             path: 'name',
@@ -74,19 +104,19 @@ export const DEFAULT_METADATA = {
     ]
 };
 
-export const CARD_LAYOUT_TYPES = {
-    GRID: 'grid',
-    LIST: 'list',
-    TABLE: 'table'
-};
-
 export const DEFAULT_CARD_LAYOUT_STYLE = CARD_LAYOUT_TYPES.GRID;
 
-export const DEFAULT_CARD_LAYOUT_STYLES = [CARD_LAYOUT_TYPES.GRID, CARD_LAYOUT_TYPES.TABLE];
+export const DEFAULT_CARD_LAYOUT_STYLES = [CARD_LAYOUT_TYPES.GRID, CARD_LAYOUT_TYPES.LIST, CARD_LAYOUT_TYPES.TABLE];
+
+export const DEFAULT_CARD_LAYOUT_LABELS = {
+    [CARD_LAYOUT_TYPES.GRID]: 'resourcesCatalog.cardLayoutGrid',
+    [CARD_LAYOUT_TYPES.LIST]: 'resourcesCatalog.cardLayoutList',
+    [CARD_LAYOUT_TYPES.TABLE]: 'resourcesCatalog.cardLayoutTable'
+};
 
 export const DEFAULT_HIDE_THUMBNAIL = {
     [CARD_LAYOUT_TYPES.GRID]: false,
-    [CARD_LAYOUT_TYPES.LIST]: true
+    [CARD_LAYOUT_TYPES.LIST]: false
 };
 
 export const DEFAULT_CARD_LAYOUT_SIZES = {

@@ -27,8 +27,7 @@ import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import HtmlRenderer from '../../../components/misc/HtmlRenderer';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
-import { replaceResourcePaths, getResourceInfo, getResourceStatus } from '../../../utils/ResourcesUtils';
-import { CARD_LAYOUT_TYPES } from '../../../plugins/ResourcesCatalog/constants';
+import { replaceResourcePaths, getResourceInfo, getResourceStatus, CARD_LAYOUT_TYPES } from '../../../utils/ResourcesUtils';
 const ButtonWithTooltip = tooltip(Button);
 
 const ResourceCardButton = ({
@@ -252,7 +251,6 @@ const ResourceCardMetadataEntry = ({
     column,
     resource,
     target,
-    showNoData = false,
     ...props
 }) => {
     // Use a plain div for html entries so block-level markup is legal;
@@ -263,7 +261,7 @@ const ResourceCardMetadataEntry = ({
 
     const renderEntryContent = () => {
         const metadataValueProps = { resource, formatHref, readOnly, query, target };
-        const renderNoData = () => showNoData && entry.noDataLabelId ? <Message msgId={entry.noDataLabelId} /> : null;
+        const renderNoData = () => entry.noDataLabelId ? <Message msgId={entry.noDataLabelId} /> : null;
         const renderValue = (valueToRender, valueEntry = entry, extraProps = {}) => (
             <ResourceCardMetadataValue
                 entry={valueEntry}
@@ -346,8 +344,9 @@ const ResourceCardMetadataEntry = ({
     };
 
     const content = renderEntryContent();
+    const isContentEmpty = Array.isArray(content) ? !content.length : !content;
     const hasIcon = !isHtml && (entry.image?.value || entry.icon);
-    if (!content && !hasIcon && !column?.width) {
+    if (isContentEmpty && !hasIcon && !column?.width) {
         return null;
     }
 
@@ -556,7 +555,6 @@ const ResourceCardTableBody = ({
                             query={query}
                             resource={resource}
                             target={target}
-                            showNoData
                             classNames={['_padding-sm']}
                         />
                     );

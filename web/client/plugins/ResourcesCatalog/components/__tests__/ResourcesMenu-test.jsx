@@ -50,7 +50,7 @@ describe('ResourcesMenu component', () => {
         const layoutButton = document.querySelector('.ms-resources-menu button .glyphicon-th, .ms-resources-menu button .glyphicon-th-list');
         expect(layoutButton).toBeFalsy();
     });
-    it('should call setCardLayoutStyle on layout toggle button click', () => {
+    it('should call setCardLayoutStyle on layout option click', () => {
         const setCardLayoutStyleSpy = expect.createSpy();
         ReactDOM.render(
             <ResourcesMenu
@@ -60,9 +60,9 @@ describe('ResourcesMenu component', () => {
             />,
             document.getElementById('container')
         );
-        const layoutButton = document.querySelector('.ms-resources-menu button.square-button');
-        expect(layoutButton).toBeTruthy();
-        ReactTestUtils.Simulate.click(layoutButton);
+        const menuItems = document.querySelectorAll('.ms-resources-menu .dropdown-menu li a');
+        expect(menuItems.length).toBe(2);
+        ReactTestUtils.Simulate.click(menuItems[1]);
         expect(setCardLayoutStyleSpy).toHaveBeenCalledWith('list');
     });
     it('should render ResourcesListHeader when cardLayoutStyle is table', () => {
