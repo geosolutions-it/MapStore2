@@ -33,6 +33,7 @@ import BaseCounterWidget from './CounterWidget';
 import BaseLegendWidget from './LegendWidget';
 import BaseFilterWidget from './FilterWidget';
 import dependenciesToShapes from '../enhancers/dependenciesToShapes';
+import dependenciesToAutorefresh from '../enhancers/dependenciesToAutorefresh';
 
 //
 // connect widgets to dependencies, remote services and add base icons/tools
@@ -112,6 +113,7 @@ export const CounterWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,
+    dependenciesToAutorefresh,
     wpsCounter,
     counterWidget
 )(BaseCounterWidget);
