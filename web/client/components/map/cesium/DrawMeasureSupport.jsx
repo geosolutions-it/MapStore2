@@ -492,7 +492,7 @@ function DrawMeasureSupport({
                 staticPrimitivesCollection.current.add(createPolygonPrimitive({ ...style?.area, coordinates: [...coordinates] }));
                 staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...coordinates] }));
                 segments = addSegmentsLabels(staticLabelsCollection.current, coordinates, MeasureTypes.AREA_3D);
-                infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, feature.properties.area, 'm²'));
+                infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, feature.properties.area, 'sqm'));
             }
             break;
         default:
@@ -698,7 +698,7 @@ function DrawMeasureSupport({
             }
             if (coordinates.length > 2) {
                 tooltipLabelText = tooltips.end;
-                infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, area, 'm²'));
+                infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, area, 'sqm'));
             }
             if (coordinates.length === 2) {
                 tooltipLabelText = tooltips.missingVertex;
