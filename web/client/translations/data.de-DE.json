@@ -1034,6 +1034,7 @@
       "serviceslistempty": "Keine benutzerdefinierten Services definiert",
       "service_missing": "{serviceType} dienst ist nicht konfiguriert",
       "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
+      "services_error": "Bei der Suche in den Diensten sind einige Fehler aufgetreten: {message}",
       "showGFI": "GFI anzeigen",
       "errors": {
         "nonQueriableLayers": "Der in der URL angegebene Layer ist nicht abfragbar oder in der Karte nicht sichtbar.",
