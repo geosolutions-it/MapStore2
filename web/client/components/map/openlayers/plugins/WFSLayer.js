@@ -176,7 +176,12 @@ Layers.registerType('wfs', {
             || !isEqual(oldOptions.security, options.security)
             || !isEqual(oldOptions.requestRuleRefreshHash, options.requestRuleRefreshHash)
         ) {
-            source.setLoader(createLoader(source, options));
+            source.setLoader(createLoader(source, {
+                ...options,
+                onLoadEnd: () => {
+                    updateStyle(layer, options, map);
+                }
+            }));
             source.clear();
             source.refresh();
         }
