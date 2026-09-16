@@ -21,14 +21,13 @@ import { getDefaultInfoFormat } from '../../../common/enhancers/withIdentifyPopu
 import { isEqual } from "lodash";
 import { isInsideResolutionsLimits } from "../../../../utils/LayersUtils";
 import {
-    buildIdentifyRequest,
     defaultQueryableFilter,
     filterRequestParams,
     getValidator,
     resolveIdentifyLayer
 } from "../../../../utils/MapInfoUtils";
 import {Observable} from "rxjs";
-import { getFeatureInfo } from "../../../../api/identify";
+import { getFeatureInfoForViews } from "../../../../api/identify";
 import find from "lodash/find";
 import { connect } from "react-redux";
 import { update } from "../../../../actions/geostory";
@@ -95,53 +94,48 @@ const withIdentifyRequest  = mapPropsStream(props$ => {
                 .mergeMap(identifyLayer => Observable
                     .defer(() => resolveIdentifyLayer(identifyLayer, identifyOptions))
                     .mergeMap(layer => {
-                        let { url, request, metadata } = buildIdentifyRequest(layer, identifyOptions);
-                        const basePath = url;
-                        const queryParams = request;
                         const appParams = filterRequestParams(layer, includeOptions, excludeParams);
-                        const param = { ...appParams, ...queryParams };
                         const reqId = uuidv1();
-                        return (url ? getFeatureInfo(basePath, param, layer)
-                            .map((response) =>
-                                response.data.exceptions
-                                    ? ({
-                                        reqId,
-                                        exceptions: response.data.exceptions,
-                                        queryParams,
-                                        layerMetadata: metadata
-                                    })
-                                    : ({
-                                        data: response.data,
-                                        reqId: reqId,
-                                        queryParams,
-                                        layerMetadata: {
-                                            ...metadata,
-                                            features: response.features,
-                                            featuresCrs: response.featuresCrs
-                                        }
-                                    })
-                            ) : Observable.empty()
-                        )
+                        const viewResponses$ = getFeatureInfoForViews(layer, identifyOptions, { params: appParams });
+                        if (!viewResponses$) {
+                            return Observable.empty();
+                        }
+                        return viewResponses$
+                            .map(({views, layerMetadata, viewResponses, features, featuresCrs, primaryResponse, error}) => error
+                                ? ({ reqId, error, layer, layerMetadata })
+                                : ({
+                                    reqId,
+                                    layer,
+                                    ...primaryResponse,
+                                    viewResponses,
+                                    layerMetadata: {
+                                        ...layerMetadata,
+                                        featureInfo: {
+                                            ...(layer.featureInfo || {}),
+                                            views
+                                        },
+                                        features,
+                                        featuresCrs
+                                    }
+                                })
+                            )
                             .catch((e) => Observable.of({
-                                error: e.data || e.statusText || e.status,
                                 reqId,
-                                queryParams,
-                                layerMetadata: metadata
+                                error: e.data || e.statusText || e.status
                             }))
                             .startWith(({
                                 start: true,
-                                reqId,
-                                request: param
+                                reqId
                             }));
                     }))
                 .scan(({requests, responses, validResponses}, action) => {
                     if (action.start) {
-                        const {reqId, request} = action;
-                        return {requests: requests.concat({ reqId, request }), responses, validResponses};
+                        const {reqId} = action;
+                        return {requests: requests.concat({ reqId }), responses, validResponses};
                     }
-                    const {data, queryParams, layerMetadata} = action;
+                    const {reqId, response, queryParams, viewResponses, layer, layerMetadata} = action;
                     const validator = getValidator(mapInfoFormat);
-                    const newResponses = responses.concat({response: data, queryParams, layerMetadata});
+                    const newResponses = responses.concat({reqId, response, queryParams, viewResponses, layer, layerMetadata});
                     const newValidResponses = validator.getValidResponses(newResponses);
                     return {requests, validResponses: newValidResponses, responses: newResponses, layerInfo};
                 }, {requests: [], responses: [], validResponses: [], layerInfo});

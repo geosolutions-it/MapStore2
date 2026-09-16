@@ -132,7 +132,6 @@
       "templateFormatInfoAlert2": "Gebruik ${ attribute } om de eigenschappen die je wenst te tonen aan te duiden.",
       "templateFormatInfoAlertExample": "Het id van het object is <span style='white-space:nowrap'>${ properties.id }</span> of <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
       "templateError": "De server geeft een foutmelding bij het toepassen van het sjabloon; gelieve het sjabloon te controleren",
-      "templatePreview": "Sjabloon voorbeeld",
       "heightOffset": "Hoogteverschuiving (m)",
       "wmsLayerTileSize": "Tegelgrootte (WMS)",
       "serverType": "Type server",

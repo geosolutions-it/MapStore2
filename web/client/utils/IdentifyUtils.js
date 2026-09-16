@@ -23,6 +23,39 @@ export const getFormatForResponse = (res, props) => {
 
 export const responseValidForEdit = (res) => !!get(res, 'layer.search.url');
 
+/**
+ * Prepares a feature and its field metadata for Identify row rendering.
+ * When visibility is configured, the returned feature is a copy containing
+ * only visible properties
+ */
+export const getVisibleFeatureRow = (feature = {}, fields = []) => {
+    const hasVisibilityConfiguration = fields.some((field) =>
+        Object.prototype.hasOwnProperty.call(field, 'visible'));
+    const visibleFields = hasVisibilityConfiguration
+        ? fields.filter(({ visible = true }) => visible)
+        : fields;
+    const mediaTypeValues = Object.fromEntries(
+        visibleFields
+            .filter(({ displayType, mediaTypeAttribute }) => displayType === 'media' && mediaTypeAttribute)
+            .map(({ name, mediaTypeAttribute }) => [name, feature.properties?.[mediaTypeAttribute]])
+    );
+    if (!hasVisibilityConfiguration) {
+        return { feature, fields, mediaTypeValues };
+    }
+    const visibleNames = new Set(visibleFields.map(({ name }) => name));
+    return {
+        feature: {
+            ...feature,
+            properties: Object.fromEntries(
+                Object.entries(feature.properties || {})
+                    .filter(([name]) => visibleNames.has(name))
+            )
+        },
+        fields: visibleFields,
+        mediaTypeValues
+    };
+};
+
 
 /**
  * Recalculates pixel and geometric filter to allow also GFI emulation for WFS.

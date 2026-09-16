@@ -100,6 +100,33 @@ describe('Test correctness of the WMS APIs', () => {
         expect(layer.serverType).toBe("no-vendor");
     });
 
+    it('wms feature info layer options preserve catalog info format', () => {
+        const records = getCatalogRecords({
+            records: [{}]
+        }, {
+            url: 'http://sample'
+        });
+        expect(records.length).toBe(1);
+        const layer = getLayerFromRecord(records[0], {
+            service: {
+                infoFormat: 'text/html',
+                layerOptions: {
+                    serverType: "geoserver",
+                    featureInfo: {
+                        maxItems: 20,
+                        buffer: 4
+                    }
+                }
+            }
+        });
+        expect(layer.serverType).toBe("geoserver");
+        expect(layer.featureInfo).toEqual({
+            format: "HTML",
+            maxItems: 20,
+            buffer: 4
+        });
+    });
+
     it('wms layer with visibility limits', () => {
         const records = getCatalogRecords({
             records: [{
@@ -222,4 +249,3 @@ describe('Test correctness of the WMS APIs', () => {
         expect(layer.forceProxy).toBeTruthy();
     });
 });
-

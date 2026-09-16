@@ -117,7 +117,6 @@
       "templateFormatInfoAlert2": "Utilitzeu $ { attribute } per embolicar les propietats que heu de mostrar",
       "templateFormatInfoAlertExample": "L\u2019identificador de la funci\u00f3 \u00e9s <span style = 'white-space: nowrap'> $ { properties.id } </span> o <span style = 'white-space: nowrap'> $ { properties['data-value'] } </span>",
       "templateError": "Hi va haver un error en aplicar la plantilla a la informaci\u00f3 retornada pel servidor,comproveu la plantilla",
-      "templatePreview": "Vista pr\u00e8via de la plantilla",
       "heightOffset": "Despla\u00e7ament d'al\u00e7ada (M)",
       "wmsLayerTileSize": "Mida de rajoles (WMS)",
       "serverType": "Tipus de servidor",

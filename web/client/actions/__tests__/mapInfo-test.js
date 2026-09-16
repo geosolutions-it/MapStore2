@@ -44,7 +44,9 @@ import {
     onInitPlugin,
     INIT_PLUGIN,
     loadFeatureInfo,
-    LOAD_FEATURE_INFO
+    LOAD_FEATURE_INFO,
+    errorFeatureInfo,
+    ERROR_FEATURE_INFO
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -60,15 +62,13 @@ describe('Test correctness of the map actions', () => {
 
     it('add new info request', () => {
         const reqIdVal = 100;
-        const requestVal = {p: "p"};
-        const e = newMapInfoRequest(reqIdVal, requestVal);
+        const e = newMapInfoRequest(reqIdVal);
         expect(e).toExist();
         expect(e.type).toBe(NEW_MAPINFO_REQUEST);
         expect(e.reqId).toExist();
         expect(e.reqId).toBeA('number');
         expect(e.reqId).toBe(100);
-        expect(e.request).toExist();
-        expect(e.request.p).toBe("p");
+        expect(e.request).toNotExist();
     });
 
     it('delete all results', () => {
@@ -172,39 +172,62 @@ describe('Test correctness of the map actions', () => {
     });
     it('test loadFeatureInfo default', () => {
         const reqId = "123";
-        const data = {id: "layer.1"};
-        const rParams = {cql_filter: "ID_ORIG=1234"};
         const lMetaData = {features: [], featuresCrs: "EPSG:4326"};
+        const viewResponses = {'default': {response: {id: "layer.1"}, queryParams: {cql_filter: "ID_ORIG=1234"}}};
         const layer = {name: "layer01"};
-        const action = loadFeatureInfo(reqId, data, rParams, lMetaData, layer);
+        const action = loadFeatureInfo(reqId, lMetaData, viewResponses, layer);
         expect(action).toExist();
         expect(action.type).toEqual(LOAD_FEATURE_INFO);
-        expect(action.data).toEqual(data);
         expect(action.reqId).toEqual(reqId);
-        expect(action.requestParams).toEqual(rParams);
         expect(action.layerMetadata).toEqual(lMetaData);
+        expect(action.viewResponses).toEqual(viewResponses);
         expect(action.layer).toEqual(layer);
         expect(action.queryParamZoomOption).toEqual(null);
     });
     it('test loadFeatureInfo with queryParamZoomOption', () => {
         const reqId = "123";
-        const data = {id: "layer.1"};
-        const rParams = {cql_filter: "ID_ORIG=1234"};
         const lMetaData = {features: [], featuresCrs: "EPSG:4326"};
+        const viewResponses = {'default': {response: {id: "layer.1"}, queryParams: {cql_filter: "ID_ORIG=1234"}}};
         const layer = {name: "layer01"};
         const queryParamZoomOption = {
             overrideZoomLvl: 5,
             isCoordsProvided: false
         };
-        const action = loadFeatureInfo(reqId, data, rParams, lMetaData, layer, queryParamZoomOption);
+        const action = loadFeatureInfo(reqId, lMetaData, viewResponses, layer, queryParamZoomOption);
         expect(action).toExist();
         expect(action.type).toEqual(LOAD_FEATURE_INFO);
-        expect(action.data).toEqual(data);
         expect(action.reqId).toEqual(reqId);
-        expect(action.requestParams).toEqual(rParams);
         expect(action.layerMetadata).toEqual(lMetaData);
+        expect(action.viewResponses).toEqual(viewResponses);
         expect(action.layer).toEqual(layer);
         expect(action.queryParamZoomOption).toEqual(queryParamZoomOption);
+    });
+    it('preserves responses for multiple identify views', () => {
+        const viewResponses = {
+            properties: {
+                response: {features: [{id: 'feature-1'}]},
+                queryParams: {info_format: 'application/json'}
+            },
+            html: {
+                response: '<p>Feature 1</p>',
+                queryParams: {info_format: 'text/html'}
+            }
+        };
+        const action = loadFeatureInfo('123', {}, viewResponses, {name: 'layer01'});
+
+        expect(action.viewResponses).toEqual(viewResponses);
+        expect(action.viewResponses.properties.queryParams.info_format).toBe('application/json');
+        expect(action.viewResponses.html.response).toBe('<p>Feature 1</p>');
+    });
+    it('creates an error feature-info action with its request ID and error', () => {
+        const error = new Error('GetFeatureInfo failed');
+        const action = errorFeatureInfo('123', error);
+
+        expect(action).toEqual({
+            type: ERROR_FEATURE_INFO,
+            error,
+            reqId: '123'
+        });
     });
     it('reset reverse geocode data', () => {
         const e = hideMapinfoRevGeocode();

@@ -31,9 +31,9 @@ describe('Test the mapInfo reducer', () => {
         },
         responses: [],
         requests: [
-            {reqId: 10, request: "test"},
-            {reqId: 11, request: "test1"},
-            {reqId: 3, request: "test3"}
+            {reqId: 10},
+            {reqId: 11},
+            {reqId: 3}
         ]};
 
     it('returns original state on unrecognized action', () => {
@@ -92,8 +92,7 @@ describe('Test the mapInfo reducer', () => {
     it('creates a feature info data from successful request', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
-            data: "data",
-            requestParams: "params",
+            viewResponses: {"default": {response: "data", queryParams: "params"}},
             layerMetadata: "meta",
             reqId: 10
         };
@@ -101,16 +100,16 @@ describe('Test the mapInfo reducer', () => {
         let state = mapInfo(appState, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("data");
-        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].viewResponses.default.response).toBe("data");
+        expect(state.responses[0].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
         expect(state.index).toBe(0);
 
         state = mapInfo(Object.assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("data");
-        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].viewResponses.default.response).toBe("data");
+        expect(state.responses[0].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
         expect(state.index).toBe(0);
 
@@ -118,16 +117,38 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBeTruthy();
-        expect(state.responses[1].response).toBe("data");
-        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].viewResponses.default.response).toBe("data");
+        expect(state.responses[1].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
         expect(state.index).toBe(1);
+    });
+    it('stores all configured identify view responses for a layer', () => {
+        const viewResponses = {
+            properties: {
+                response: {features: [{id: 'feature-1'}]},
+                queryParams: {info_format: 'application/json'}
+            },
+            html: {
+                response: '<p>Feature 1</p>',
+                queryParams: {info_format: 'text/html'}
+            }
+        };
+        const state = mapInfo({...appState, responses: []}, {
+            type: 'LOAD_FEATURE_INFO',
+            viewResponses,
+            layerMetadata: {title: 'Layer 1'},
+            layer: {id: 'layer-1'},
+            reqId: 10
+        });
+
+        expect(state.responses[0].viewResponses).toEqual(viewResponses);
+        expect(state.responses[0].viewResponses.properties.response.features[0].id).toBe('feature-1');
+        expect(state.responses[0].viewResponses.html.queryParams.info_format).toBe('text/html');
     });
     it('creates a feature info data from successful request, with showAllResponses true', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
-            data: "data",
-            requestParams: "params",
+            viewResponses: {"default": {response: "data", queryParams: "params"}},
             layerMetadata: "meta",
             reqId: 11
         };
@@ -138,17 +159,17 @@ describe('Test the mapInfo reducer', () => {
             },
             responses: [],
             requests: [
-                {reqId: 10, request: "test"},
-                {reqId: 11, request: "test1"},
-                {reqId: 3, request: "test3"}
+                {reqId: 10},
+                {reqId: 11},
+                {reqId: 3}
             ],
             showAllResponses: true
         }, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.loaded).toBe(true);
-        expect(state.responses[1].response).toBe("data");
-        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].viewResponses.default.response).toBe("data");
+        expect(state.responses[1].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
         expect(state.index).toBe(0);
 
@@ -158,9 +179,9 @@ describe('Test the mapInfo reducer', () => {
             },
             responses: [{response: "test"}, {response: "test1"}],
             requests: [
-                {reqId: 10, request: "test"},
-                {reqId: 11, request: "test1"},
-                {reqId: 3, request: "test3"}
+                {reqId: 10},
+                {reqId: 11},
+                {reqId: 3}
             ],
             showAllResponses: true
         }, {...testAction, reqId: 3, layerMetadata: "meta3"});
@@ -171,7 +192,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].response).toBe("test1");
         expect(state.responses[1]).toBeTruthy();
         expect(state.responses[2]).toBeTruthy();
-        expect(state.responses[2].queryParams).toBe("params");
+        expect(state.responses[2].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[2].layerMetadata).toBe("meta3");
         expect(state.loaded).toBe(true);
         expect(state.index).toBe(0);
@@ -179,8 +200,7 @@ describe('Test the mapInfo reducer', () => {
     it('creates a feature info data from successful request on showInMapPopup', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
-            data: "data",
-            requestParams: "params",
+            viewResponses: {"default": {response: "data", queryParams: "params"}},
             layerMetadata: "meta",
             reqId: 10
         };
@@ -188,8 +208,8 @@ describe('Test the mapInfo reducer', () => {
         let state = mapInfo({...appState, showInMapPopup: true}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
-        expect(state.responses[0].response).toBe("data");
-        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].viewResponses.default.response).toBe("data");
+        expect(state.responses[0].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
         expect(state.index).toBe(0);
 
@@ -207,8 +227,7 @@ describe('Test the mapInfo reducer', () => {
     it('creates a feature info with empty data from successful request', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
-            data: "",
-            requestParams: "params",
+            viewResponses: {"default": {response: "", queryParams: "params"}},
             layerMetadata: "meta",
             reqId: 10
         };
@@ -216,8 +235,8 @@ describe('Test the mapInfo reducer', () => {
         let state = mapInfo(appState, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("");
-        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].viewResponses.default.response).toBe("");
+        expect(state.responses[0].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
         expect(state.index).toBe(undefined);
         expect(state.loaded).toBe(undefined);
@@ -226,8 +245,8 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBeTruthy();
-        expect(state.responses[1].response).toBe("");
-        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].viewResponses.default.response).toBe("");
+        expect(state.responses[1].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
 
         state = mapInfo(Object.assign({}, appState, {responses: [{response: "test"}, {response: "test"}]}), {...testAction, layerMetadata: "meta3", reqId: 3});
@@ -236,28 +255,27 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0]).toBeTruthy();
         expect(state.responses[0].response).toBe("test");
         expect(state.responses[1].response).toBe("test");
-        expect(state.responses[2].queryParams).toBe("params");
+        expect(state.responses[2].viewResponses.default.queryParams).toBe("params");
         expect(state.responses[2].layerMetadata).toBe("meta3");
         expect(state.index).toBe(undefined);
         expect(state.loaded).toBe(true);
     });
 
     it('creates a new mapinfo request', () => {
-        let state = mapInfo({}, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
+        let state = mapInfo({}, {type: 'NEW_MAPINFO_REQUEST', reqId: 1});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(1);
-        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1).length).toBe(1);
 
-        state = mapInfo({requests: [] }, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
+        state = mapInfo({requests: [] }, {type: 'NEW_MAPINFO_REQUEST', reqId: 1});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(1);
-        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1).length).toBe(1);
 
-        state = mapInfo( appState, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
+        state = mapInfo( appState, {type: 'NEW_MAPINFO_REQUEST', reqId: 1});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(4);
-        expect(state.requests.filter((req) => req.reqId === 10)[0].request).toBe("test");
-        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1).length).toBe(1);
     });
 
     it('clear request queue', () => {
