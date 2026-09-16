@@ -1728,6 +1728,17 @@ describe('LayersUtils', () => {
         expect(LayersUtils.getCapabilitiesUrl(layer)).toEqual('localhost:8080/geoserver/world/layer1/ows?token=value');
     });
 
+    it('test getCapabilitiesUrl with layer without name', () => {
+        const layer = {
+            url: 'localhost:8080/geoserver/wms',
+            params: {
+                token: 'value'
+            }
+        };
+        expect(LayersUtils.getCapabilitiesUrl(layer))
+            .toEqual('localhost:8080/geoserver/wms?token=value');
+    });
+
     it('test getNestedGroupTitle', () => {
 
         const groups = [
