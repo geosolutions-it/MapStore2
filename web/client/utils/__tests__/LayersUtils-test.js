@@ -10,8 +10,9 @@ import { v1 as uuidv1 } from 'uuid';
 import * as LayersUtils from '../LayersUtils';
 import { readZip, shpToGeoJSON } from '../FileUtils';
 import axios from '../../libs/ajax';
+import { DEFAULT_DOCUMENTS_FEATURE_INFO } from '../FeatureInfoAttributeUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection, normalizeLayer } = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -32,6 +33,41 @@ const noVendorWmsLayer = {
     type: 'wms',
     serverType: 'no-vendor'
 };
+
+describe('getWFSLayerName', () => {
+    it('uses a linked WFS type name only for WMS layers', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:wms-name',
+            search: {typeName: 'workspace:wfs-name'}
+        })).toBe('workspace:wfs-name');
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wfs',
+            name: 'workspace:native-name',
+            search: {typeName: 'workspace:ignored'}
+        })).toBe('workspace:native-name');
+    });
+    it('falls back to layer.name for legacy WMS configurations', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:legacy-name',
+            search: {url: 'wfs-url'}
+        })).toBe('workspace:legacy-name');
+    });
+    it('does not replace an explicitly empty linked WFS type name', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:wms-name',
+            search: {typeName: ''}
+        })).toBe('');
+    });
+});
+describe('getSearchUrl', () => {
+    it('falls back only when the linked WFS URL is missing', () => {
+        expect(LayersUtils.getSearchUrl({url: 'wms-url', search: {type: 'wfs'}})).toBe('wms-url');
+        expect(LayersUtils.getSearchUrl({url: 'wms-url', search: {type: 'wfs', url: ''}})).toBe('');
+    });
+});
 const groupsExample = [{
     "id": "first",
     "title": "first",
@@ -1983,5 +2019,22 @@ describe('LayersUtils', () => {
         const background = {type: "wmts", allowedSRS: ["EPSG:4326"]};
         const projection = "EPSG:4326";
         expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
+    });
+    describe('normalizeLayer with GEONODE_DOCUMENTS_ROW_VIEWER', () => {
+        it('removes rowViewer and adds default featureInfo if missing', () => {
+            const layer = { id: 'doc-1', rowViewer: 'GEONODE_DOCUMENTS_ROW_VIEWER', name: 'documents' };
+            const normalized = normalizeLayer(layer);
+            expect(normalized.rowViewer).toBe(undefined);
+            expect(normalized.featureInfo).toEqual(DEFAULT_DOCUMENTS_FEATURE_INFO);
+            expect(normalized.id).toBe('doc-1');
+        });
+        it('removes rowViewer and keeps existing featureInfo', () => {
+            const customFeatureInfo = { views: [{ id: 'custom' }] };
+            const layer = { id: 'doc-2', rowViewer: 'GEONODE_DOCUMENTS_ROW_VIEWER', featureInfo: customFeatureInfo };
+            const normalized = normalizeLayer(layer);
+            expect(normalized.rowViewer).toBe(undefined);
+            expect(normalized.featureInfo).toEqual(customFeatureInfo);
+            expect(normalized.id).toBe('doc-2');
+        });
     });
 });

@@ -648,6 +648,25 @@ describe('Cesium layer', () => {
 
     });
 
+    it('recreates a wms layer when its URL changes', (done) => {
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            format: 'image/png',
+            url: 'http://sample.server/geoserver/old-wms'
+        };
+        let component = ReactDOM.render(
+            <CesiumLayer type="wms" options={options} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+        const oldLayer = component.layer;
+        component = ReactDOM.render(
+            <CesiumLayer type="wms" options={{...options, url: 'http://sample.server/geoserver/new-wms'}} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
+        waitFor(() => {
+            expect(component.layer).toNotBe(oldLayer);
+            expect(component.layer._tileProvider._subdomains[0]).toBe('http://sample.server/geoserver/new-wms');
+        }).then(() => done()).catch(done);
+    });
+
     it('respects layer ordering 1', (done) => {
         const options1 = {
             "type": "wms",
@@ -1685,6 +1704,30 @@ describe('Cesium layer', () => {
         expect(cmp.layer.styledFeatures._msId).toBe('ws:layer_id');
         expect(cmp.layer.styledFeatures._queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
+    });
+    it('recreates a wfs layer when its URL changes', () => {
+        const options = {
+            type: 'wfs',
+            url: 'geoserver/old-wfs',
+            title: 'Title',
+            name: 'workspace:layer',
+            id: 'ws:layer_id',
+            visibility: true
+        };
+        let component = ReactDOM.render(
+            <CesiumLayer
+                type="wfs"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        const oldLayer = component.layer;
+        component = ReactDOM.render(
+            <CesiumLayer
+                type="wfs"
+                options={{ ...options, url: 'geoserver/new-wfs' }}
+                map={map}
+            />, document.getElementById('container'));
+        expect(component.layer).toNotBe(oldLayer);
     });
     it('should create a non-queriable wfs layer', () => {
         const options = {

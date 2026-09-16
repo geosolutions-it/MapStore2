@@ -88,15 +88,19 @@ describe('LayerNameEditField component', () => {
             .catch(done);
     });
     it('keeps editing and does not commit when validation fails', (done) => {
+        const validationError = new Error('Invalid layer name');
         const handlers = {
-            onValidate: () => Promise.reject(new Error('Invalid layer name')),
+            onValidate: () => Promise.reject(validationError),
+            onValidationError: () => {},
             onUpdateEntry: () => {}
         };
+        const validationErrorSpy = expect.spyOn(handlers, 'onValidationError');
         const updateSpy = expect.spyOn(handlers, 'onUpdateEntry');
         ReactDOM.render(
             <LayerNameEditField
                 element={{name: 'old-name'}}
                 onValidate={handlers.onValidate}
+                onValidationError={handlers.onValidationError}
                 onUpdateEntry={handlers.onUpdateEntry}/>,
             document.getElementById('container')
         );
@@ -113,6 +117,7 @@ describe('LayerNameEditField component', () => {
         waitFor(() => expect(document.querySelector('.form-group').classList.contains('has-error')).toBe(true))
             .then(() => {
                 expect(updateSpy).toNotHaveBeenCalled();
+                expect(validationErrorSpy).toHaveBeenCalledWith(validationError);
                 expect(document.querySelector('input').getAttribute('disabled')).toBe(null);
                 done();
             })

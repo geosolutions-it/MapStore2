@@ -53,7 +53,7 @@ describe('layerdownload Epics', () => {
                     expect(action.value).toBe(false);
                     break;
                 case QUERY_CREATE:
-                    expect(action.searchUrl).toBe('myurl');
+                    expect(action.searchUrl).toBe('http://search');
                     expect(action.filterObj.featureTypeName).toBe('mylayer');
                     break;
                 default:
@@ -95,6 +95,40 @@ describe('layerdownload Epics', () => {
             1,
             downloadFeatures('/wrong/path?', { featureTypeName: 'test' }, { selectedFormat: "test-format"}),
             epicResult,
+            state
+        );
+    });
+    it('startFeatureExportDownload uses the linked WFS URL', (done) => {
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{
+                    id: 'test layer',
+                    type: 'wms',
+                    name: 'workspace:rendered',
+                    url: 'wms-url',
+                    search: {
+                        type: 'wfs',
+                        url: 'linked-wfs-url',
+                        typeName: 'workspace:linked'
+                    }
+                }],
+                selected: ['test layer']
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('wms-url', { featureTypeName: 'workspace:linked' }, { selectedFormat: 'test-format' }),
+            (actions) => {
+                expect(actions[0].error.config.url).toContain('linked-wfs-url');
+                done();
+            },
             state
         );
     });

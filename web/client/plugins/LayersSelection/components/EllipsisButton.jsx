@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import Message from '../../../components/I18N/Message';
 import { describeFeatureType } from '../../../api/WFS';
+import { getSearchUrl, getWFSLayerName } from '../../../utils/LayersUtils';
 import Statistics from './Statistics';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 import { v1 as uuidv1 } from 'uuid';
@@ -149,9 +150,10 @@ export default ({
         }
         case 'wms':
         case 'wfs': {
-            describeFeatureType(node.url, node.name)
+            const typeName = getWFSLayerName(node);
+            describeFeatureType(getSearchUrl(node), typeName)
                 .then(describe => {
-                    const featureType = describe.featureTypes.find(fType => node.name.endsWith(fType.typeName));
+                    const featureType = describe.featureTypes.find(fType => typeName.endsWith(fType.typeName));
                     const newNumericFields = featureType.properties.filter(property => property.localType === 'number').map(property => property.name);
                     // primary key is not always exposed
                     const newPrimaryKey = featureType.properties
@@ -169,7 +171,7 @@ export default ({
         }
         default:
         }
-    }, [node.name]);
+    }, [node.name, node.search?.typeName, node.search?.url, node.url]);
 
     return (
         <>

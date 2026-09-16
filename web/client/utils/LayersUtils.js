@@ -24,6 +24,7 @@ import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
 import { has, includes, indexOf } from 'lodash';
+import { DEFAULT_DOCUMENTS_FEATURE_INFO } from './FeatureInfoAttributeUtils';
 
 let LayersUtils;
 
@@ -452,6 +453,14 @@ export const normalizeLayer = (layer) => {
     if (_layer.id === ANNOTATIONS) {
         _layer = updateAnnotationsLayer(_layer)[0];
     }
+    // migrate legacy GeoNode document layers, preserving an existing featureInfo configuration
+    if (_layer.rowViewer === 'GEONODE_DOCUMENTS_ROW_VIEWER') {
+        const { rowViewer, ...rest } = _layer;
+        _layer = {
+            ...rest,
+            ...(!rest.featureInfo && { featureInfo: DEFAULT_DOCUMENTS_FEATURE_INFO })
+        };
+    }
 
     return {
         ..._layer,
@@ -864,7 +873,21 @@ export const getCapabilitiesUrl = (layer) => {
  * @param {Object} layer
  * @returns {string} layer url
  */
-export const getSearchUrl = (l = {}) => l.search && l.search.url || l.url;
+export const getSearchUrl = (l = {}) => l.search?.url ?? l.url;
+/**
+ * Returns the feature type used by the WFS service associated with a layer.
+ * WMS layers can configure a distinct linked WFS type name; native WFS layers
+ * continue to use their layer name.
+ *
+ * @param {Object} layer layer configuration
+ * @returns {string} WFS feature type name
+ */
+export const getWFSLayerName = (layer = {}) =>
+    (layer.type === 'wms'
+        && layer.search?.typeName !== undefined
+        && layer.search.typeName !== null)
+        ? layer.search.typeName
+        : layer.name;
 export const invalidateUnsupportedLayer = (layer, maptype) => {
     return isSupportedLayerFunc(layer, maptype) ? checkInvalidParam(layer) : Object.assign({}, layer, {invalid: true});
 };
@@ -1251,4 +1274,3 @@ LayersUtils = {
     isInsideResolutionsLimits,
     visibleTimelineLayers
 };
-

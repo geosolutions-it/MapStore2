@@ -26,7 +26,11 @@ describe("WFSLayerUtils", () => {
 
         expect(toDescribeURL({ name: 'testName', search: { url: _url }}).split('?')[0]).toBe(_url[0]);
     });
-    it('requires a reload only when the service layer name changes', () => {
+    it('reloads native WFS data when its URL changes', () => {
+        expect(needsReload({url: 'old-url'}, {url: 'new-url'})).toBe(true);
+        expect(needsReload({url: ['old-url']}, {url: ['old-url']})).toBe(false);
+    });
+    it('reloads native WFS data when its service layer name changes', () => {
         expect(needsReload({name: 'old-name'}, {name: 'new-name'})).toBe(true);
         expect(needsReload({name: 'same-name'}, {name: 'same-name', title: 'New title'})).toBe(false);
     });

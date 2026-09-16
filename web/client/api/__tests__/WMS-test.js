@@ -25,6 +25,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result).toBeTruthy();
                 expect(result.length).toBe(2);
                 expect(result[0].owsType).toBe("WFS");
+                expect(result[0].query.typeName).toBe("workspace:vector_layer");
                 done();
             } catch (ex) {
                 done(ex);

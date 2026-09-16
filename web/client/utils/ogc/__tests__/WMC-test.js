@@ -13,6 +13,18 @@ import { omit, zip } from 'lodash';
 import { toMapConfig, toWMC } from '../WMC';
 
 describe('WMC tests', () => {
+    it('round-trips an optional linked WFS typeName', () =>
+        axios.get('base/web/client/test-resources/wmc/context.wmc')
+            .then(({data}) => toMapConfig(data.replace('type="wfs"', 'type="wfs" typeName="workspace:linked"')))
+            .then(config => {
+                expect(config.map.layers[1].search.typeName).toBe('workspace:linked');
+                const exported = toWMC(config, {});
+                expect(exported).toContain('typeName="workspace:linked"');
+                return toMapConfig(exported);
+            })
+            .then(config => {
+                expect(config.map.layers[1].search.typeName).toBe('workspace:linked');
+            }));
     it('toMapConfig with a valid sample context', () =>
         axios.get('base/web/client/test-resources/wmc/context.wmc').then(response => toMapConfig(response.data)).then(config => {
             expect(config).toExist();

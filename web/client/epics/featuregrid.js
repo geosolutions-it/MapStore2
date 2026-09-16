@@ -167,6 +167,7 @@ import {dockPanelsSelector} from "../selectors/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {mapTypeSelector} from "../selectors/maptype";
 import { MapLibraries } from '../utils/MapTypeUtils';
+import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -260,7 +261,10 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
     ));
 };
 
-const createInitialQueryFlow = (action$, store, {url, name, id, fields} = {}) => {
+const createInitialQueryFlow = (action$, store, layer = {}) => {
+    const {id, fields} = layer;
+    const url = getSearchUrl(layer);
+    const name = getWFSLayerName(layer);
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     const createInitialQuery = (action) => createQuery(url, filterObj || {
         featureTypeName: name,
@@ -323,8 +327,9 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
 export const featureGridBrowseData = (action$, store) =>
     action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
         const currentTypeName = get(store.getState(), "query.typeName");
+        const typeName = getWFSLayerName(layer);
         return Rx.Observable.of(
-            ...(currentTypeName !== layer.name ? [reset()] : []),
+            ...(currentTypeName !== typeName ? [reset()] : []),
             setControlProperty('drawer', 'enabled', false),
             setLayer(layer.id),
             openFeatureGrid()

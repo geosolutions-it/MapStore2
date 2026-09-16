@@ -66,11 +66,12 @@ Layers.registerType('wms', {
     },
     update: function(layer, newOptions, oldOptions) {
         if (
-            (oldOptions.singleTile !== newOptions.singleTile
+            !isEqual(oldOptions.url, newOptions.url)
+            || ((oldOptions.singleTile !== newOptions.singleTile
             || oldOptions.tileSize !== newOptions.tileSize
             || oldOptions.securityToken !== newOptions.securityToken
             || !isEqual(oldOptions.security, newOptions.security))
-            && newOptions.visibility) {
+            && newOptions.visibility)) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
             let queryParameters = wmsToLeafletOptions(newOptions) || {};

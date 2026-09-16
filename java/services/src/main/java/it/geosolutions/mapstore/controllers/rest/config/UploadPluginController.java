@@ -226,7 +226,7 @@ public class UploadPluginController extends BaseMapStoreController {
      */
     @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "/uninstallPlugin/{pluginName}", method = RequestMethod.DELETE)
-    public @ResponseBody String uninstallPlugin(@PathVariable String pluginName) throws IOException {
+    public @ResponseBody String uninstallPlugin(@PathVariable("pluginName") String pluginName) throws IOException {
         validatePluginName(pluginName);
 
         ObjectNode configObj = getExtensionConfig();
