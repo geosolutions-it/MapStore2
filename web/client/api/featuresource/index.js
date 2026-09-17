@@ -57,6 +57,13 @@ export const getFeatureSourceType = (layer = {}) => layer?.type === 'wms'
 export const getFeatureSource = (layer) => getFeatureSourceByType(getFeatureSourceType(layer));
 
 /**
+ * Name identifying the feature type of a layer, as its own source names it
+ * @param {object} layer the layer
+ * @returns {string} the feature type name
+ */
+export const getFeatureTypeName = (layer) => getFeatureSource(layer)?.getTypeName?.(layer) ?? layer?.name;
+
+/**
  * What the attribute table can offer for a layer. A flag is `false` when the source
  * does not support it, `true` when it does, and an object when the support is partial.
  * @typedef {object} FeatureSourceCapabilities

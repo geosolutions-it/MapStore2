@@ -115,6 +115,13 @@ export const getFeatures = (layer, filter, options = {}) =>
     Rx.Observable.defer(() => Promise.resolve(filterFeatureCollection(layer?.features, filter, options)));
 
 /**
+ * Name identifying the feature type of a vector layer
+ * @param {object} layer the layer
+ * @returns {string} the feature type name
+ */
+export const getTypeName = (layer) => layer?.name ?? layer?.id;
+
+/**
  * Capabilities of a vector layer. The features are filtered in memory, which
  * covers attribute equality only, and there is no service to export them from.
  * @returns {object} the capabilities

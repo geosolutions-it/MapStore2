@@ -12,6 +12,7 @@ import { find } from 'lodash';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { getLayerJSONFeature } from '../../observables/wfs';
+import { getWFSLayerName } from '../../utils/LayersUtils';
 import { interceptOGCError } from '../../utils/ObservableUtils';
 import { mergeFiltersToOGC } from '../../utils/FilterUtils';
 import { fidFilter } from '../../utils/ogc/Filter/filter';
@@ -98,6 +99,14 @@ export const getFeatures = (layer, filter, options = {}) => {
         {...requestOptions, layer}
     );
 };
+
+/**
+ * Name identifying the feature type of a layer. A WMS layer can be linked to a
+ * distinct WFS type name, a WFS layer uses its own name.
+ * @param {object} layer the layer
+ * @returns {string} the feature type name
+ */
+export const getTypeName = (layer) => getWFSLayerName(layer);
 
 /**
  * Capabilities of a WFS layer. `browse` follows the presence of a search

@@ -15,6 +15,7 @@ import {
     areLayerFeaturesEditable,
     canBrowseFeatures,
     getCapabilities,
+    getFeatureTypeName,
     getFeatureSource,
     getFeatureSourceByType,
     getFeatureSourceType,
@@ -42,6 +43,16 @@ describe('featuresource registry', () => {
         expect(getFeatureSource({type: 'wms'})).toBe(wfs);
         expect(getFeatureSource({type: 'vector'})).toBe(vector);
         expect(getFeatureSource({type: 'unknown'})).toBe(undefined);
+    });
+    it('getFeatureTypeName follows the source of the layer', () => {
+        expect(getFeatureTypeName({type: 'wfs', name: 'topp:states'})).toBe('topp:states');
+        expect(getFeatureTypeName({type: 'wms', name: 'states', search: {type: 'wfs', typeName: 'topp:states'}})).toBe('topp:states');
+        expect(getFeatureTypeName({type: 'wms', name: 'states', search: {type: 'wfs'}})).toBe('states');
+        expect(getFeatureTypeName({type: 'vector', name: 'my file'})).toBe('my file');
+    });
+    it('getFeatureTypeName of an unregistered type falls back to the layer name', () => {
+        expect(getFeatureTypeName({type: 'wmts', name: 'tiles'})).toBe('tiles');
+        expect(getFeatureTypeName()).toBe(undefined);
     });
     it('canBrowseFeatures', () => {
         expect(canBrowseFeatures({type: 'wms', search: {type: 'wfs', url: '/dummy'}})).toBe(true);

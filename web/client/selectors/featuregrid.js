@@ -9,7 +9,7 @@
 import { head, get, isObject } from 'lodash';
 import { createSelector } from 'reselect';
 
-import { getCapabilities } from '../api/featuresource';
+import { getCapabilities, getFeatureTypeName } from '../api/featuresource';
 
 import { getLayerFromId } from './layers';
 import { getGeometryAttribute } from '../utils/FeatureSchemaUtils';
@@ -25,7 +25,6 @@ import isEqual from "lodash/isEqual";
 import { mapBboxSelector, projectionSelector } from "./map";
 import { bboxToFeatureGeometry } from "../utils/CoordinatesUtils";
 import { MapLibraries } from '../utils/MapTypeUtils';
-import { getWFSLayerName } from '../utils/LayersUtils';
 
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
@@ -186,7 +185,7 @@ export const isSimpleGeomSelector = state => isSimpleGeomType(geomTypeSelectedFe
  */
 export const selectedLayerNameSelector = state => {
     const layer = getLayerById(state, selectedLayerIdSelector(state));
-    return getWFSLayerName(layer) || '';
+    return getFeatureTypeName(layer) || '';
 
 };
 /**

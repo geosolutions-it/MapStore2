@@ -11,7 +11,7 @@ import {get, head, isEmpty, find, castArray, includes, reduce} from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import bbox from '@turf/bbox';
 import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
-import { getCapabilities, getFeatureSource, getFeatureSourceByType } from '../api/featuresource';
+import { getCapabilities, getFeatureSource, getFeatureSourceByType, getFeatureTypeName } from '../api/featuresource';
 import { getGeometryAttribute } from '../utils/FeatureSchemaUtils';
 
 import {
@@ -166,7 +166,7 @@ import {dockPanelsSelector} from "../selectors/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {mapTypeSelector} from "../selectors/maptype";
 import { MapLibraries } from '../utils/MapTypeUtils';
-import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
+import { getSearchUrl } from '../utils/LayersUtils';
 
 const sourceOf = (layer) => getFeatureSource(layer) ?? getFeatureSourceByType('wfs');
 
@@ -250,7 +250,7 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
 const createInitialQueryFlow = (action$, store, layer = {}) => {
     const {id, fields} = layer;
     const url = getSearchUrl(layer);
-    const name = getWFSLayerName(layer);
+    const name = getFeatureTypeName(layer);
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     const createInitialQuery = (action) => createQuery(url, filterObj || {
         featureTypeName: name,
@@ -313,7 +313,7 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
 export const featureGridBrowseData = (action$, store) =>
     action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
         const currentTypeName = get(store.getState(), "query.typeName");
-        const typeName = getWFSLayerName(layer);
+        const typeName = getFeatureTypeName(layer);
         return Rx.Observable.of(
             ...(currentTypeName !== typeName ? [reset()] : []),
             setControlProperty('drawer', 'enabled', false),
