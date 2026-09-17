@@ -6,12 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Rx from 'rxjs';
 import { find } from 'lodash';
 
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { getLayerJSONFeature } from '../../observables/wfs';
+import { interceptOGCError } from '../../utils/ObservableUtils';
 import { mergeFiltersToOGC } from '../../utils/FilterUtils';
+import { fidFilter } from '../../utils/ogc/Filter/filter';
+import requestBuilder from '../../utils/ogc/WFST/RequestBuilder';
 import {
     describeFeatureTypeToAttributes,
     describeFeatureTypeToJSONSchema,
@@ -93,4 +97,41 @@ export const getFeatures = (layer, filter, options = {}) => {
         ogcFilter,
         {...requestOptions, layer}
     );
+};
+
+/**
+ * Capabilities of a WFS layer. `browse` follows the presence of a search
+ * descriptor, since without it there is no feature service to query.
+ * @param {object} layer the layer
+ * @returns {object} the capabilities
+ */
+export const capabilities = (layer) => ({
+    browse: !!layer?.search,
+    editing: true
+});
+
+/**
+ * Write the pending changes of a layer with a WFS-T transaction
+ * @param {object} layer the layer
+ * @param {object} options
+ * @param {object[]} [options.inserts=[]] the new features
+ * @param {object} [options.updates={}] the changes, as `{featureId: {attribute: value}}`
+ * @param {object[]} [options.deletes=[]] the features to remove
+ * @param {object} options.describe the DescribeFeatureType of the layer
+ * @param {string} options.url the WFS url
+ * @returns {object} observable of the transaction response
+ */
+export const saveFeatures = (layer, { inserts = [], updates = {}, deletes = [], describe: describeFeatureType, url } = {}) => {
+    const { transaction, insert, update, propertyChange, getPropertyName, deleteFeature } = requestBuilder(describeFeatureType);
+    const body = transaction(
+        inserts.map((feature) => insert(feature)),
+        Object.keys(updates).map((id) => update(
+            Object.keys(updates[id]).map((prop) => propertyChange(getPropertyName(prop), updates[id][prop])),
+            fidFilter("ogc", id)
+        )),
+        deletes.map((feature) => deleteFeature(feature))
+    );
+    return Rx.Observable
+        .defer(() => axios.post(url, body, {headers: { 'Content-Type': 'application/xml'}}))
+        .let(interceptOGCError);
 };

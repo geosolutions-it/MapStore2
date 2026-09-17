@@ -11,7 +11,7 @@ import TSplitButtonComp from "./TSplitButton";
 import Spinner from "react-spinkit";
 import Select from "react-select";
 import { MapLibraries } from '../../../../utils/MapTypeUtils';
-import { areLayerFeaturesEditable } from "../../../../utils/FeatureGridUtils";
+import { areLayerFeaturesEditable } from "../../../../api/featuresource";
 
 const TButton = withHint(TButtonComp);
 const TSplitButton = withHint(TSplitButtonComp);

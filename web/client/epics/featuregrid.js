@@ -9,9 +9,9 @@ import Rx from 'rxjs';
 
 import {get, head, isEmpty, find, castArray, includes, reduce} from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import axios from '../libs/ajax';
 import bbox from '@turf/bbox';
-import { createChangesTransaction, getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
+import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
+import { getFeatureSource, getFeatureSourceByType } from '../api/featuresource';
 
 import {
     changeDrawingStatus,
@@ -20,7 +20,6 @@ import {
     setSnappingLayer,
     toggleSnapping
 } from '../actions/draw';
-import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
 import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
 
@@ -157,7 +156,6 @@ import {
     featureLoadingSelector
 } from '../selectors/query';
 
-import { interceptOGCError } from '../utils/ObservableUtils';
 import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/queryform';
 import {isSnappingActive} from "../selectors/draw";
 import { composeAttributeFilters } from '../utils/FilterUtils';
@@ -168,6 +166,8 @@ import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {mapTypeSelector} from "../selectors/maptype";
 import { MapLibraries } from '../utils/MapTypeUtils';
 import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
+
+const sourceOf = (layer) => getFeatureSource(layer) ?? getFeatureSourceByType('wfs');
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -231,21 +231,6 @@ const addPagination = (filterObj, pagination) => ({
     pagination
 });
 
-const createDeleteTransaction = (features, {transaction, deleteFeature}) => transaction(
-    features.map(deleteFeature)
-);
-const save = (url, body) => Rx.Observable.defer(() => axios.post(url, body, {headers: { 'Content-Type': 'application/xml'}}))
-    .let(interceptOGCError);
-
-const createSaveChangesFlow = (changes = {}, newFeatures = [], describeFeatureType, url) => save(
-    url,
-    createChangesTransaction(changes, newFeatures, requestBuilder(describeFeatureType))
-);
-
-const createDeleteFlow = (features, describeFeatureType, url) => save(
-    url,
-    createDeleteTransaction(features, requestBuilder(describeFeatureType))
-);
 const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
     const state = store.getState();
     return Rx.Observable.of( query(
@@ -707,36 +692,40 @@ export const updateSelectedOnSaveOrCloseFeatureGrid = (action$) =>
  * trigger WFS transaction stream on SAVE_CHANGES action
  */
 export const savePendingFeatureGridChanges = (action$, store) =>
-    action$.ofType(SAVE_CHANGES).switchMap( () =>
-        Rx.Observable.of(featureSaving())
+    action$.ofType(SAVE_CHANGES).switchMap( () => {
+        const state = store.getState();
+        const layer = selectedLayerSelector(state);
+        return Rx.Observable.of(featureSaving())
             .concat(
-                createSaveChangesFlow(
-                    changesMapSelector(store.getState()),
-                    newFeaturesSelector(store.getState()),
-                    describeSelector(store.getState()),
-                    wfsURL(store.getState())
-                ).map(() => saveSuccess())
+                sourceOf(layer).saveFeatures(layer, {
+                    inserts: newFeaturesSelector(state),
+                    updates: changesMapSelector(state),
+                    describe: describeSelector(state),
+                    url: wfsURL(state)
+                }).map(() => saveSuccess())
                     .catch((e) => Rx.Observable.of(saveError(), error({
                         title: "featuregrid.errorSaving",
                         message: e.message || "Unknown Exception",
                         uid: "saveError",
                         autoDismiss: 5
                     })))
-            )
-    );
+            );
+    });
 /**
  * trigger WFS transaction stream on DELETE_SELECTED_FEATURES action
  * @memberof epics.featuregrid
  */
 export const deleteSelectedFeatureGridFeatures = (action$, store) =>
-    action$.ofType(DELETE_SELECTED_FEATURES).switchMap( () =>
-        Rx.Observable.of(featureSaving())
+    action$.ofType(DELETE_SELECTED_FEATURES).switchMap( () => {
+        const state = store.getState();
+        const layer = selectedLayerSelector(state);
+        return Rx.Observable.of(featureSaving())
             .concat(
-                createDeleteFlow(
-                    selectedFeaturesSelector(store.getState()),
-                    describeSelector(store.getState()),
-                    wfsURL(store.getState())
-                ).map(() => saveSuccess())
+                sourceOf(layer).saveFeatures(layer, {
+                    deletes: selectedFeaturesSelector(state),
+                    describe: describeSelector(state),
+                    url: wfsURL(state)
+                }).map(() => saveSuccess())
                 // close window
                     .catch((e) => Rx.Observable.of(saveError(), error({
                         title: "featuregrid.errorSaving",
@@ -746,8 +735,8 @@ export const deleteSelectedFeatureGridFeatures = (action$, store) =>
                         toggleTool("deleteConfirm"),
                         clearSelection()
                     ))
-            )
-    );
+            );
+    });
 /**
  * Enable and manage editing draw support
  * @memberof epics.featuregrid

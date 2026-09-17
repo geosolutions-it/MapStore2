@@ -51,3 +51,12 @@ export const getFeatures = (layer, filter, options = {}) => {
         {...requestOptions, layer}
     );
 };
+
+/**
+ * Capabilities of a vector layer, read only and not reachable from the TOC
+ * @returns {object} the capabilities
+ */
+export const capabilities = () => ({
+    browse: false,
+    editing: false
+});

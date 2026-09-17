@@ -17,7 +17,6 @@ import {
 } from './FeatureSchemaUtils';
 
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
-import { fidFilter } from './ogc/Filter/filter';
 
 const getPropertyName = (name, schema) => name === "geometry" ? schema?.geometryAttribute : name;
 
@@ -395,37 +394,6 @@ export const dateFormats = {
     'time': 'HH:mm:ss[Z]',
     'date': 'YYYY-MM-DD[Z]'
 };
-
-const supportedEditLayerTypes = [ "wms", "wfs"];
-
-/**
- * Check if the layer supports feature editing
- * @param {object} layer current layer object
- * @returns {boolean} flag
- */
-export const supportsFeatureEditing = (layer) => includes(supportedEditLayerTypes, layer?.type);
-
-/**
- * Check if layer features are editable based on configured layer setting
- * @param {object} layer current layer object
- * @returns {boolean} flag
- */
-export const areLayerFeaturesEditable = (layer) =>  !layer?.disableFeaturesEditing && supportsFeatureEditing(layer);
-/**
- * Create wfs-t xml payload for insert/edit features in featuregrid
- * @param {object} changes object that contains updates e.g: {LAYER_NAME.id: {"FIELD1": 55, "FIELD2":"edit 02"}}
- * @param {object[]} newFeatures array of new inserted features
- * @param {object} wfsutils object of wfs utils that includes insert/update/propertyChange/getPropertyName/transaction
- * @returns {string} wfs-transaction xml payload
- */
-export const createChangesTransaction = (changes, newFeatures, {insert, update, propertyChange, getPropertyName: getPropertyNameFunc, transaction})=>
-    transaction(
-        newFeatures.map(f => insert(f)),
-        Object.keys(changes).map( id =>{
-            return update(Object.keys(changes[id]).map(prop => propertyChange(getPropertyNameFunc(prop), changes[id][prop])), fidFilter("ogc", id));
-        })
-    );
-
 
 export const getRestrictionsMessageInfo = (schema, required) => {
     if (!schema) {

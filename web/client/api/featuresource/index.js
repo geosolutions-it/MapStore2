@@ -55,3 +55,24 @@ export const getFeatureSourceType = (layer = {}) => layer?.type === 'wms'
  * @returns {object} the feature source
  */
 export const getFeatureSource = (layer) => getFeatureSourceByType(getFeatureSourceType(layer));
+
+/**
+ * Check if the layer can be browsed in the attribute table
+ * @param {object} layer the layer
+ * @returns {boolean} flag
+ */
+export const canBrowseFeatures = (layer) => !!getFeatureSource(layer)?.capabilities?.(layer)?.browse;
+
+/**
+ * Check if the layer supports feature editing
+ * @param {object} layer the layer
+ * @returns {boolean} flag
+ */
+export const supportsFeatureEditing = (layer) => !!getFeatureSource(layer)?.capabilities?.(layer)?.editing;
+
+/**
+ * Check if layer features are editable, combining the source capabilities with the layer setting
+ * @param {object} layer the layer
+ * @returns {boolean} flag
+ */
+export const areLayerFeaturesEditable = (layer) => !layer?.disableFeaturesEditing && supportsFeatureEditing(layer);
