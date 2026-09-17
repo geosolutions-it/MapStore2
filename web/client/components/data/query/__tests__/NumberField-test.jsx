@@ -109,6 +109,60 @@ describe('NumberField', () => {
         const input = node.getElementsByTagName('INPUT');
         TestUtils.Simulate.change(input[0], {target: {value: '7'}});
         expect(spyOnUpdateField).toHaveBeenCalled();
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, 7, 'number');
+    });
+
+    it('test onUpdateField on range bounds values', () => {
+        const actions = {
+            onUpdateField: () => {}
+        };
+        const spyOnUpdateField = expect.spyOn(actions, 'onUpdateField');
+        const cmp = ReactDOM.render(
+            <NumberField
+                operator="><"
+                onUpdateField={actions.onUpdateField}
+            />, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.changeNumber({lowBound: '10', upBound: '100'});
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, {lowBound: 10, upBound: 100}, 'number');
+
+        cmp.changeNumber({lowBound: '', upBound: '50'});
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, {lowBound: null, upBound: 50}, 'number');
+
+        cmp.changeNumber({lowBound: '50', upBound: ''});
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, {lowBound: 50, upBound: null}, 'number');
+
+        cmp.changeNumber({lowBound: '', upBound: ''});
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, {lowBound: null, upBound: null}, 'number');
+
+        cmp.changeNumber({lowBound: '0', upBound: '10'});
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, {lowBound: 0, upBound: 10}, 'number');
+
+        cmp.changeNumber({lowBound: '-10.5', upBound: '5.5'});
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, {lowBound: -10.5, upBound: 5.5}, 'number');
+    });
+
+    it('test onUpdateField on single value', () => {
+        const actions = {
+            onUpdateField: () => {}
+        };
+        const spyOnUpdateField = expect.spyOn(actions, 'onUpdateField');
+        const cmp = ReactDOM.render(
+            <NumberField
+                onUpdateField={actions.onUpdateField}
+            />, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.changeNumber('0');
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, 0, 'number');
+
+        cmp.changeNumber('');
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, null, 'number');
+
+        cmp.changeNumber('-42.5');
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, -42.5, 'number');
+
+        cmp.changeNumber(null);
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, null, 'number');
     });
 
     it("check if the number is rendered in correct language format", () => {
