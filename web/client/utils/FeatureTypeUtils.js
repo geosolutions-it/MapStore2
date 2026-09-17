@@ -7,6 +7,7 @@
  */
 import { get, find, castArray, isString } from 'lodash';
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
+import { DEFAULT_SCHEMA_SRS } from './FeatureSchemaUtils';
 
 
 const types = {
@@ -85,6 +86,14 @@ export const notPrimaryGeometryFields = {
     "xsd:Curve": "Curve",
     "xsd:Surface": "Surface"
 };
+
+/**
+ * Check if a DescribeFeatureType property type holds a geometry
+ * @param {string} type the property type, e.g. `gml:Point`
+ * @returns {boolean} flag
+ */
+export const isGeometryPropertyType = (type = '') =>
+    type.indexOf('gml:') === 0 || type === 'xsd:Geometry' || !!notPrimaryGeometryFields[type];
 
 /**
  * Transforms the DescribeFeatureType response to an array of attributes.
@@ -212,5 +221,42 @@ export const describeFeatureTypeToJSONSchema = (describeFeatureType) => {
             return acc;
         }, {}),
         ...(required.length && { required })
+    };
+};
+
+const getGeometryTypeName = ({ localType, type = '' } = {}) =>
+    localType || notPrimaryGeometryFields[type] || (type.indexOf('gml:') === 0 ? type.replace('gml:', '') : undefined);
+
+/**
+ * Transforms the DescribeFeatureType response to a {@link utils.FeatureSchemaUtils FeatureSchema}.
+ * Every property is kept, geometries and unmapped types included.
+ * @param {object} data JSON response of DescribeFeatureType
+ * @param {object[]} [fields=[]] optional `fields` array of the layer, to get the alias of the attributes
+ * @returns {object} the feature schema
+ */
+export const describeFeatureTypeToSchema = (data, fields = []) => {
+    const properties = get(data, "featureTypes[0].properties") || [];
+    const attributes = properties.map((property) => {
+        const geometry = isGeometryPropertyType(property.type);
+        const field = find(fields, {name: property.name});
+        return {
+            name: property.name,
+            label: applyDefaultToLocalizedString(field?.alias, property.name),
+            type: geometry ? 'geometry' : types[property.type],
+            localType: property.localType,
+            nillable: property.nillable,
+            minOccurs: property.minOccurs,
+            maxOccurs: property.maxOccurs,
+            geometry
+        };
+    });
+    const geometryProperty = find(properties, (property) => isGeometryPropertyType(property.type));
+    const typeName = get(data, "featureTypes[0].typeName");
+    return {
+        ...(typeName && { typeName: data.targetPrefix ? `${data.targetPrefix}:${typeName}` : typeName }),
+        attributes,
+        geometryAttribute: geometryProperty?.name,
+        geometryType: getGeometryTypeName(geometryProperty),
+        srs: DEFAULT_SCHEMA_SRS
     };
 };
