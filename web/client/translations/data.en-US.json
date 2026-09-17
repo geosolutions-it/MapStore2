@@ -267,7 +267,10 @@
         "bottom": "Bottom",
         "top": "Top",
         "editLayerName": "Edit layer name",
-        "confirmLayerName": "Confirm layer name change"
+        "confirmLayerName": "Confirm layer name change",
+        "editValue": "Edit value",
+        "confirmValue": "Confirm value change",
+        "requiredValue": "A value is required"
       },
       "legendOptions": {
         "title": "Legend",

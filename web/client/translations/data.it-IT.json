@@ -267,7 +267,10 @@
         "bottom": "Sotto",
         "top": "Sopra",
         "editLayerName": "Modifica il nome del livello",
-        "confirmLayerName": "Conferma la modifica del nome del livello"
+        "confirmLayerName": "Conferma la modifica del nome del livello",
+        "editValue": "Modifica valore",
+        "confirmValue": "Conferma modifica del valore",
+        "requiredValue": "È richiesto un valore"
       },
       "legendOptions": {
         "title": "Legenda",

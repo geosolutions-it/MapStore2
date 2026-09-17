@@ -267,7 +267,10 @@
         "bottom": "Bas",
         "top": "Haut",
         "editLayerName": "Modifier le nom du calque",
-        "confirmLayerName": "Confirmer le changement de nom du calque"
+        "confirmLayerName": "Confirmer le changement de nom du calque",
+        "editValue": "Modifier la valeur",
+        "confirmValue": "Confirmer la modification de la valeur",
+        "requiredValue": "Une valeur est requise"
       },
       "legendOptions": {
         "title": "Légende",

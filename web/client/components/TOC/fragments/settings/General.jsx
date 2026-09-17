@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { castArray, find, includes, isNil, isObject, uniqBy } from 'lodash';
+import { castArray, find, includes, isEqual, isNil, isObject, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Checkbox, Col, ControlLabel, FormControl, FormGroup, Grid } from 'react-bootstrap';
@@ -34,6 +34,14 @@ const formatURL = (url) => Array.isArray(url) ? url.join(', ') : url || '';
 const parseURL = (url) => {
     const urls = url.split(',').map((value) => value.trim());
     return urls.length > 1 ? urls : urls[0];
+};
+const isEmptyRequiredValue = (value) => Array.isArray(value)
+    ? !value.length || value.some(isEmptyRequiredValue)
+    : isNil(value) || `${value}`.trim() === '';
+const rejectRequiredValue = () => {
+    const error = new Error('A service URL and layer or type name are required');
+    error.required = true;
+    return Promise.reject(error);
 };
 const mergeArcGISFields = (fields = [], previousFields = []) => fields.map((field) => {
     const previousField = previousFields.find(({name}) => name === field.name);
@@ -76,6 +84,85 @@ class General extends React.Component {
         currentLocale: 'en-US'
     };
 
+    state = {
+        drafts: {},
+        nodeKey: this.props.element?.id ?? this.props.settings?.node
+    };
+
+    static getDerivedStateFromProps(props, state) {
+        const nodeKey = props.element?.id ?? props.settings?.node;
+        if (nodeKey !== state.nodeKey) {
+            return {
+                drafts: {},
+                nodeKey
+            };
+        }
+        const committedValues = {
+            name: props.element?.name,
+            url: props.element?.url,
+            searchUrl: props.element?.search?.url,
+            searchTypeName: props.element?.search?.typeName
+        };
+        const drafts = {...state.drafts};
+        let changed = false;
+        Object.keys(committedValues).forEach((property) => {
+            if (Object.prototype.hasOwnProperty.call(drafts, property)
+                && isEqual(drafts[property], committedValues[property])) {
+                delete drafts[property];
+                changed = true;
+            }
+        });
+        return changed ? {drafts} : null;
+    }
+
+    setDraft = (property, value) => this.setState(({drafts}) => ({
+        drafts: {
+            ...drafts,
+            [property]: value
+        }
+    }));
+
+    clearSearchDrafts = () => this.setState(({drafts}) => {
+        const nextDrafts = {...drafts};
+        delete nextDrafts.searchUrl;
+        delete nextDrafts.searchTypeName;
+        return {drafts: nextDrafts};
+    });
+
+    hasDraft = (property) => Object.prototype.hasOwnProperty.call(this.state.drafts, property);
+
+    getDraft = (property, fallback) => this.hasDraft(property)
+        ? this.state.drafts[property]
+        : fallback;
+
+    isDraftPending = (property, committedValue) => this.hasDraft(property)
+        && !isEqual(this.state.drafts[property], committedValue);
+
+    getCurrentLayer = (overrides = {}) => {
+        const {element = {}} = this.props;
+        const hasSearchDraft = this.hasDraft('searchUrl') || this.hasDraft('searchTypeName');
+        const currentSearch = (element.search || hasSearchDraft)
+            ? {
+                ...(element.search || {}),
+                url: this.getDraft('searchUrl', element.search?.url),
+                typeName: this.getDraft('searchTypeName', element.search?.typeName)
+            }
+            : element.search;
+        return {
+            ...element,
+            name: this.getDraft('name', element.name),
+            url: this.getDraft('url', element.url),
+            ...(currentSearch && {search: currentSearch}),
+            ...overrides,
+            ...(overrides.search && {
+                search: {
+                    ...(currentSearch || {}),
+                    ...overrides.search
+                }
+            })
+        };
+    };
+
     getTitle = (label) => _getTitle(label, this.props.currentLocale);
     getLabelName = (label, groups) => _getLabelName(this.getTitle(label), groups);
 
@@ -89,26 +176,28 @@ class General extends React.Component {
 
     getLayerNameValidator = () => {
         const {element = {}} = this.props;
-        const usesLayerNameForWFS = element.type === 'wfs'
-            || element.type === 'wms'
-                && element.search?.type === 'wfs'
-                && isNil(element.search.typeName);
-        return usesLayerNameForWFS || element.type === 'arcgis-feature'
+        return includes(['wms', 'wfs', 'arcgis-feature'], element.type)
             ? this.validateLayerName
             : undefined;
     };
 
     validateLayerName = (name) => {
-        const {element = {}} = this.props;
-        if (element.type === 'wfs' || element.type === 'wms') {
-            return loadFields({...element, name}, true)
+        const nextLayer = this.getCurrentLayer({name});
+        if (nextLayer.type === 'wfs') {
+            return this.validateNativeWFS(nextLayer)
                 .then((fields) => ({fields}));
         }
-        if (element.type === 'arcgis-feature') {
-            return getFeatureLayerSchema(element.url, name, {
-                authSourceId: element.security?.sourceId
+        if (nextLayer.type === 'wms') {
+            return this.validateWMS(nextLayer)
+                .then(() => nextLayer.search?.type === 'wfs' && isNil(nextLayer.search.typeName)
+                    ? this.validateLinkedWFSLayer(nextLayer).then((fields) => ({fields}))
+                    : {});
+        }
+        if (nextLayer.type === 'arcgis-feature') {
+            return getFeatureLayerSchema(nextLayer.url, name, {
+                authSourceId: nextLayer.security?.sourceId
             }).then(({fields, properties, geometryType}) => ({
-                fields: mergeArcGISFields(fields, element.fields),
+                fields: mergeArcGISFields(fields, nextLayer.fields),
                 properties,
                 geometryType
             }));
@@ -117,19 +206,20 @@ class General extends React.Component {
     };
 
     validateLayerURL = (url) => {
-        const nextLayer = { ...this.props.element, url };
+        const nextLayer = this.getCurrentLayer({url});
         if (nextLayer.type === 'wfs') {
-            return loadFields({
-                ...nextLayer,
-                describeFeatureTypeURL: undefined,
-                search: nextLayer.search && {
-                    ...nextLayer.search,
-                    url: undefined
-                }
-            }, true);
+            return this.validateNativeWFS(nextLayer);
         }
-        return Promise.all(castArray(url).map((currentUrl) =>
-            getWMSLayerCapabilities({ ...nextLayer, url: currentUrl })
+        return this.validateWMS(nextLayer);
+    };
+
+    validateWMS = (layer) => {
+        const urls = castArray(layer.url);
+        if (!urls.length || urls.some(isEmptyRequiredValue) || isEmptyRequiredValue(layer.name)) {
+            return rejectRequiredValue();
+        }
+        return Promise.all(urls.map((currentUrl) =>
+            getWMSLayerCapabilities({ ...layer, url: currentUrl })
                 .toPromise()
                 .then((layerCapability) => {
                     if (!layerCapability) {
@@ -140,22 +230,41 @@ class General extends React.Component {
         ));
     };
 
-    validateLinkedWFS = (search) => {
-        const typeName = search.typeName ?? this.props.element.name;
-        if (!search.url?.trim() || !typeName?.trim()) {
-            return Promise.reject(new Error('WFS URL and typeName are required'));
+    validateNativeWFS = (layer) => {
+        if (isEmptyRequiredValue(layer.url) || isEmptyRequiredValue(layer.name)) {
+            return rejectRequiredValue();
         }
         return loadFields({
-            ...this.props.element,
+            ...layer,
+            describeFeatureTypeURL: undefined,
+            search: layer.search && {
+                ...layer.search,
+                url: undefined
+            }
+        }, true);
+    };
+
+    validateLinkedWFSLayer = (layer) => {
+        const typeName = layer.search?.typeName ?? layer.name;
+        if (isEmptyRequiredValue(layer.search?.url) || isEmptyRequiredValue(typeName)) {
+            return rejectRequiredValue();
+        }
+        return loadFields({
+            ...layer,
             describeFeatureTypeURL: undefined,
             search: {
-                ...search,
+                ...layer.search,
                 typeName
             }
         }, true);
     };
 
+    validateLinkedWFS = (search) => this.validateLinkedWFSLayer(
+        this.getCurrentLayer({search})
+    );
+
     updateWFSPanel = (enabled) => {
+        this.clearSearchDrafts();
         if (!enabled) {
             this.props.onChange('search', undefined);
             return;
@@ -199,6 +308,11 @@ class General extends React.Component {
         const eleGroupLabel = this.findGroupLabel(this.props.element && this.props.element.group || DEFAULT_GROUP_ID);
 
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
+        const editorResetKey = this.props.element?.id ?? this.props.settings?.node;
+        const waitForNameLayerLoad = this.props.enableLayerNameEditFeedback
+            && !this.isDraftPending('url', this.props.element.url);
+        const waitForURLLayerLoad = this.props.enableLayerNameEditFeedback
+            && !this.isDraftPending('name', this.props.element.name);
 
         return (
             <Grid fluid style={{ paddingTop: 15, paddingBottom: 15 }}>
@@ -216,8 +330,9 @@ class General extends React.Component {
                     {this.canEditLayerName() &&
                     <LayerNameEditField
                         element={this.props.element}
-                        enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
+                        enableLayerNameEditFeedback={waitForNameLayerLoad}
                         onValidate={this.getLayerNameValidator()}
+                        onDraftChange={(name) => this.setDraft('name', name)}
                         onValidationError={this.props.onLayerNameValidationError}
                         onUpdateEntry={this.updateLayerName}/>}
                     {includes(this.supportedURLEditLayerTypes, this.props.element.type) &&
@@ -228,10 +343,15 @@ class General extends React.Component {
                         formatValue={formatURL}
                         parseValue={parseURL}
                         required
+                        resetKey={editorResetKey}
+                        waitForLayerLoad={!!waitForURLLayerLoad}
+                        layerLoading={!!this.props.element.loading}
+                        layerLoadingError={this.props.element.loadingError}
                         onValidate={this.validateLayerURL}
-                        onChange={(url, fields) => this.props.onChange({
+                        onDraftChange={(url) => this.setDraft('url', url)}
+                        onChange={(url, fields, {forced} = {}) => this.props.onChange({
                             url,
-                            ...(this.props.element.type === 'wfs' && { fields })
+                            ...(this.props.element.type === 'wfs' && { fields: forced ? undefined : fields })
                         })} />}
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
@@ -321,32 +441,30 @@ class General extends React.Component {
                             labelId="layerProperties.url"
                             value={this.props.element.search?.url}
                             required
-                            onValidate={(url) => this.validateLinkedWFS({
-                                ...this.props.element.search,
-                                url
-                            })}
-                            onChange={(url, fields) => this.props.onChange({
+                            resetKey={editorResetKey}
+                            onValidate={(url) => this.validateLinkedWFS({url})}
+                            onDraftChange={(url) => this.setDraft('searchUrl', url)}
+                            onChange={(url, fields, {forced} = {}) => this.props.onChange({
                                 search: {
                                     ...this.props.element.search,
                                     url
                                 },
-                                fields
+                                fields: forced ? undefined : fields
                             })} />
                         <EditableTextField
                             dataQa="layer-properties-search-type-name"
                             labelId="layerProperties.typeName"
                             value={this.props.element.search?.typeName ?? this.props.element.name}
                             required
-                            onValidate={(typeName) => this.validateLinkedWFS({
-                                ...this.props.element.search,
-                                typeName
-                            })}
-                            onChange={(typeName, fields) => this.props.onChange({
+                            resetKey={editorResetKey}
+                            onValidate={(typeName) => this.validateLinkedWFS({typeName})}
+                            onDraftChange={(typeName) => this.setDraft('searchTypeName', typeName)}
+                            onChange={(typeName, fields, {forced} = {}) => this.props.onChange({
                                 search: {
                                     ...this.props.element.search,
                                     typeName
                                 },
-                                fields
+                                fields: forced ? undefined : fields
                             })} />
                     </SwitchPanel>}
 
@@ -359,10 +477,18 @@ class General extends React.Component {
     supportedURLEditLayerTypes = ['wms', 'wfs'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
-    updateLayerName = (key, event, properties) => this.props.onChange({
-        [key]: event.target.value,
-        ...(properties || {})
-    });
+    updateLayerName = (key, event, properties, {forced} = {}) => {
+        const {element = {}} = this.props;
+        const controlsWFSSchema = element.type === 'wfs'
+            || element.type === 'wms'
+                && element.search?.type === 'wfs'
+                && isNil(element.search.typeName);
+        this.props.onChange({
+            [key]: event.target.value,
+            ...(properties || {}),
+            ...(forced && controlsWFSSchema && {fields: undefined})
+        });
+    };
     updateTitle = (title) => this.props.onChange("title", title);
 
     findGroupLabel = () => {

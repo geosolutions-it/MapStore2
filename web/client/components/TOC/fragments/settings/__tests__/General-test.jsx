@@ -24,12 +24,20 @@ const WMS_CAPABILITIES = `<?xml version="1.0" encoding="UTF-8"?>
     </Capability>
 </WMS_Capabilities>`;
 
+const getWMSCapabilities = (name) => `<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0">
+    <Capability>
+        <Request><GetMap><Format>image/png</Format></GetMap></Request>
+        <Layer><Layer><Name>${name}</Name><Title>Layer</Title></Layer></Layer>
+    </Capability>
+</WMS_Capabilities>`;
+
 const WFS_PROPERTIES = [
     {name: 'shared', localType: 'string'},
     {name: 'new-field', localType: 'number'}
 ];
 const WFS_DESCRIBE = {
-    featureTypes: ['workspace:linked', 'workspace:layer', 'workspace:renamed']
+    featureTypes: ['workspace:linked', 'workspace:layer', 'workspace:renamed', 'workspace:new']
         .map((typeName) => ({typeName, properties: WFS_PROPERTIES}))
 };
 
@@ -166,6 +174,9 @@ describe('test  Layer Properties General module component', () => {
     });
     it('refreshes linked WFS fields when its type name follows the WMS layer name', (done) => {
         mockAxios.onGet().reply((config) => {
+            if (decodeURIComponent(config.url).includes('GetCapabilities')) {
+                return [200, getWMSCapabilities('topp:new')];
+            }
             expect(decodeURIComponent(config.url)).toContain('typeName=topp:new');
             return [200, {
                 featureTypes: [{
@@ -198,7 +209,8 @@ describe('test  Layer Properties General module component', () => {
                 done(error);
             });
     });
-    it('does not refresh linked WFS fields when it has an explicit type name', () => {
+    it('does not refresh linked WFS fields when it has an explicit type name', (done) => {
+        mockAxios.onGet().reply(200, getWMSCapabilities('topp:new'));
         const handlers = {onChange: () => {}};
         const spy = expect.spyOn(handlers, 'onChange');
         const element = {
@@ -211,7 +223,13 @@ describe('test  Layer Properties General module component', () => {
 
         editLayerName('topp:new');
 
-        expect(spy.calls[0].arguments).toEqual([{name: 'topp:new'}]);
+        waitFor(() => expect(spy).toHaveBeenCalled())
+            .then(() => {
+                expect(spy.calls[0].arguments).toEqual([{name: 'topp:new'}]);
+                expect(mockAxios.history.get.length).toBe(1);
+                done();
+            })
+            .catch(done);
     });
     it('refreshes ArcGIS FeatureServer schema when changing the layer name', (done) => {
         mockAxios.onGet('/arcgis/rest/services/SchemaRefresh/FeatureServer/1').reply(200, {
@@ -470,6 +488,74 @@ describe('test  Layer Properties General module component', () => {
             done();
         });
     });
+    it('validates a WMS URL with the current Name draft', (done) => {
+        mockAxios.onGet().reply((config) => {
+            expect(config.url).toContain('new-wms-url');
+            return [200, getWMSCapabilities('workspace:new')];
+        });
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{name: 'workspace:old', title: 'Layer', type: 'wms', url: 'old-wms-url'}}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById('container'));
+
+        const nameInput = document.querySelector('[data-qa="layer-properties-name"]');
+        const nameEdit = nameInput.parentElement.querySelector('.input-group-addon');
+        ReactTestUtils.Simulate.click(nameEdit);
+        ReactTestUtils.Simulate.change(nameInput, {target: {value: 'workspace:new'}});
+
+        const urlInput = document.querySelector('[data-qa="layer-properties-url"]');
+        const urlEdit = document.querySelector('[data-qa="layer-properties-url-edit"]');
+        ReactTestUtils.Simulate.click(urlEdit);
+        ReactTestUtils.Simulate.change(urlInput, {target: {value: 'new-wms-url'}});
+        ReactTestUtils.Simulate.click(urlEdit);
+
+        waitFor(() => expect(onChange).toHaveBeenCalledWith({url: 'new-wms-url'}))
+            .then(() => done())
+            .catch(done);
+    });
+    it('validates a WMS Name with the current URL draft', (done) => {
+        mockAxios.onGet().reply((config) => {
+            expect(config.url).toContain('new-wms-url');
+            return [200, getWMSCapabilities('workspace:new')];
+        });
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{name: 'workspace:old', title: 'Layer', type: 'wms', url: 'old-wms-url'}}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById('container'));
+
+        const urlInput = document.querySelector('[data-qa="layer-properties-url"]');
+        ReactTestUtils.Simulate.click(document.querySelector('[data-qa="layer-properties-url-edit"]'));
+        ReactTestUtils.Simulate.change(urlInput, {target: {value: 'new-wms-url'}});
+        editLayerName('workspace:new');
+
+        waitFor(() => expect(onChange).toHaveBeenCalledWith({name: 'workspace:new'}))
+            .then(() => done())
+            .catch(done);
+    });
+    it('does not force save a WMS Name while its required URL is empty', (done) => {
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{name: 'workspace:old', title: 'Layer', type: 'wms', url: ''}}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById('container'));
+
+        editLayerName('workspace:new');
+        const nameInput = document.querySelector('[data-qa="layer-properties-name"]');
+        const nameEdit = nameInput.parentElement.querySelector('.input-group-addon');
+        waitFor(() => expect(nameInput.closest('.form-group').classList.contains('has-error')).toBe(true))
+            .then(() => {
+                ReactTestUtils.Simulate.click(nameEdit);
+                return waitFor(() => expect(nameInput.closest('.form-group').classList.contains('has-error')).toBe(true));
+            })
+            .then(() => {
+                expect(onChange).toNotHaveBeenCalled();
+                expect(mockAxios.history.get.length).toBe(0);
+                done();
+            })
+            .catch(done);
+    });
     it('edits native WFS name and URL without adding a linked TypeName editor', () => {
         ReactDOM.render(<General
             element={{name: 'workspace:features', title: 'Layer', type: 'wfs', url: 'wfs-url'}}
@@ -480,7 +566,9 @@ describe('test  Layer Properties General module component', () => {
     });
     it('validates a native WFS URL and refreshes its fields', (done) => {
         mockAxios.onGet().reply((config) => {
-            expect(config.url).toContain('new-wfs-url');
+            const requestURL = decodeURIComponent(config.url);
+            expect(requestURL).toContain('new-wfs-url');
+            expect(requestURL).toContain('workspace:new');
             expect(config.url).toNotContain('old-describe-url');
             expect(config.url).toNotContain('old-search-url');
             return [200, WFS_DESCRIBE];
@@ -498,6 +586,9 @@ describe('test  Layer Properties General module component', () => {
             }}
             settings={{options: {opacity: 1}}}
             onChange={onChange}/>, document.getElementById("container"));
+        const nameInput = document.querySelector('[data-qa="layer-properties-name"]');
+        ReactTestUtils.Simulate.click(nameInput.parentElement.querySelector('.input-group-addon'));
+        ReactTestUtils.Simulate.change(nameInput, {target: {value: 'workspace:new'}});
         const input = document.querySelector('[data-qa="layer-properties-url"]');
         const edit = document.querySelector('[data-qa="layer-properties-url-edit"]');
         ReactTestUtils.Simulate.click(edit);
@@ -513,6 +604,93 @@ describe('test  Layer Properties General module component', () => {
             });
             done();
         });
+    });
+    it('validates a native WFS Name with the current URL draft', (done) => {
+        mockAxios.onGet().reply((config) => {
+            const requestURL = decodeURIComponent(config.url);
+            expect(requestURL).toContain('new-wfs-url');
+            expect(requestURL).toContain('workspace:new');
+            return [200, WFS_DESCRIBE];
+        });
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{name: 'workspace:old', title: 'Layer', type: 'wfs', url: 'old-wfs-url'}}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById('container'));
+
+        const urlInput = document.querySelector('[data-qa="layer-properties-url"]');
+        ReactTestUtils.Simulate.click(document.querySelector('[data-qa="layer-properties-url-edit"]'));
+        ReactTestUtils.Simulate.change(urlInput, {target: {value: 'new-wfs-url'}});
+        editLayerName('workspace:new');
+
+        waitFor(() => expect(onChange).toHaveBeenCalledWith({
+            name: 'workspace:new',
+            fields: [
+                {name: 'shared', type: 'string'},
+                {name: 'new-field', type: 'number'}
+            ]
+        }))
+            .then(() => done())
+            .catch(done);
+    });
+    it('force saves an invalid native WFS URL and clears its fields', (done) => {
+        mockAxios.onGet().reply(500);
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{
+                name: 'workspace:linked',
+                title: 'Layer',
+                type: 'wfs',
+                url: 'old-wfs-url',
+                fields: [{name: 'old-field', type: 'string'}]
+            }}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById('container'));
+        const urlInput = document.querySelector('[data-qa="layer-properties-url"]');
+        const urlEdit = document.querySelector('[data-qa="layer-properties-url-edit"]');
+        ReactTestUtils.Simulate.click(urlEdit);
+        ReactTestUtils.Simulate.change(urlInput, {target: {value: 'invalid-wfs-url'}});
+        ReactTestUtils.Simulate.click(urlEdit);
+
+        waitFor(() => expect(urlInput.closest('.form-group').classList.contains('has-error')).toBe(true))
+            .then(() => {
+                ReactTestUtils.Simulate.click(urlEdit);
+                expect(onChange).toHaveBeenCalledWith({
+                    url: 'invalid-wfs-url',
+                    fields: undefined
+                });
+                done();
+            })
+            .catch(done);
+    });
+    it('clears fields when force saving a WMS Name used as the linked WFS TypeName', (done) => {
+        mockAxios.onGet().reply(500);
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{
+                name: 'workspace:old',
+                title: 'Layer',
+                type: 'wms',
+                url: 'wms-url',
+                search: {type: 'wfs', url: 'wfs-url'},
+                fields: [{name: 'old-field', type: 'string'}]
+            }}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById('container'));
+
+        editLayerName('workspace:invalid');
+        const nameInput = document.querySelector('[data-qa="layer-properties-name"]');
+        const nameEdit = nameInput.parentElement.querySelector('.input-group-addon');
+        waitFor(() => expect(nameInput.closest('.form-group').classList.contains('has-error')).toBe(true))
+            .then(() => {
+                ReactTestUtils.Simulate.click(nameEdit);
+                expect(onChange).toHaveBeenCalledWith({
+                    name: 'workspace:invalid',
+                    fields: undefined
+                });
+                done();
+            })
+            .catch(done);
     });
     it('detects and removes a linked WFS service', (done) => {
         mockAxios.onGet().reply(({url}) => url.includes('DescribeLayer')
@@ -575,13 +753,18 @@ describe('test  Layer Properties General module component', () => {
             settings={{options: {opacity: 1}}}
             onChange={onChange}/>, document.getElementById("container"));
         expect(document.querySelector('[data-qa="layer-properties-search-type-name"]').value).toBe('workspace:layer');
+        const typeNameInput = document.querySelector('[data-qa="layer-properties-search-type-name"]');
+        const typeNameEdit = document.querySelector('[data-qa="layer-properties-search-type-name-edit"]');
+        ReactTestUtils.Simulate.click(typeNameEdit);
+        ReactTestUtils.Simulate.change(typeNameInput, {target: {value: 'workspace:linked'}});
         const input = document.querySelector('[data-qa="layer-properties-search-url"]');
         const edit = document.querySelector('[data-qa="layer-properties-search-url-edit"]');
         ReactTestUtils.Simulate.click(edit);
         ReactTestUtils.Simulate.change(input, {target: {value: 'new-wfs-url'}});
         ReactTestUtils.Simulate.click(edit);
         setTimeout(() => {
-            expect(requestedURLs[0]).toContain('new-wfs-url');
+            expect(decodeURIComponent(requestedURLs[0])).toContain('new-wfs-url');
+            expect(decodeURIComponent(requestedURLs[0])).toContain('workspace:linked');
             expect(requestedURLs[0]).toNotContain('old-describe-url');
             expect(onChange).toHaveBeenCalledWith({
                 search: {
@@ -594,13 +777,10 @@ describe('test  Layer Properties General module component', () => {
                     {name: 'new-field', type: 'number'}
                 ]
             });
-            const typeNameInput = document.querySelector('[data-qa="layer-properties-search-type-name"]');
-            const typeNameEdit = document.querySelector('[data-qa="layer-properties-search-type-name-edit"]');
-            ReactTestUtils.Simulate.click(typeNameEdit);
-            ReactTestUtils.Simulate.change(typeNameInput, {target: {value: 'workspace:linked'}});
             ReactTestUtils.Simulate.click(typeNameEdit);
             setTimeout(() => {
-                expect(requestedURLs[1]).toContain('old-wfs-url');
+                expect(decodeURIComponent(requestedURLs[1])).toContain('new-wfs-url');
+                expect(decodeURIComponent(requestedURLs[1])).toContain('workspace:linked');
                 expect(requestedURLs[1]).toNotContain('old-describe-url');
                 expect(onChange).toHaveBeenCalledWith({
                     search: {
@@ -618,7 +798,7 @@ describe('test  Layer Properties General module component', () => {
             });
         });
     });
-    it('rejects empty and invalid linked WFS values', (done) => {
+    it('blocks an empty linked WFS value and force saves an invalid value on the second click', (done) => {
         mockAxios.onGet().reply(500);
         const onChange = expect.createSpy();
         ReactDOM.render(<General
@@ -641,11 +821,51 @@ describe('test  Layer Properties General module component', () => {
 
         ReactTestUtils.Simulate.change(urlInput, {target: {value: 'invalid-wfs-url'}});
         ReactTestUtils.Simulate.click(urlEdit);
-        setTimeout(() => {
-            expect(onChange).toNotHaveBeenCalled();
-            expect(urlInput.closest('.form-group').classList.contains('has-error')).toBe(true);
-            done();
-        });
+        waitFor(() => expect(urlInput.closest('.form-group').classList.contains('has-error')).toBe(true))
+            .then(() => {
+                expect(onChange).toNotHaveBeenCalled();
+                ReactTestUtils.Simulate.click(urlEdit);
+                expect(onChange).toHaveBeenCalledWith({
+                    search: {
+                        type: 'wfs',
+                        url: 'invalid-wfs-url',
+                        typeName: 'workspace:layer'
+                    },
+                    fields: undefined
+                });
+                done();
+            })
+            .catch(done);
+    });
+    it('does not force save a linked WFS field while its related required field is empty', (done) => {
+        const onChange = expect.createSpy();
+        ReactDOM.render(<General
+            element={{
+                name: 'workspace:layer',
+                title: 'Layer',
+                type: 'wms',
+                url: 'wms-url',
+                search: {type: 'wfs', url: '', typeName: ''}
+            }}
+            settings={{options: {opacity: 1}}}
+            onChange={onChange}/>, document.getElementById('container'));
+        const urlInput = document.querySelector('[data-qa="layer-properties-search-url"]');
+        const urlEdit = document.querySelector('[data-qa="layer-properties-search-url-edit"]');
+        ReactTestUtils.Simulate.click(urlEdit);
+        ReactTestUtils.Simulate.change(urlInput, {target: {value: 'new-wfs-url'}});
+        ReactTestUtils.Simulate.click(urlEdit);
+
+        waitFor(() => expect(urlInput.closest('.form-group').classList.contains('has-error')).toBe(true))
+            .then(() => {
+                ReactTestUtils.Simulate.click(urlEdit);
+                return waitFor(() => expect(urlInput.closest('.form-group').classList.contains('has-error')).toBe(true));
+            })
+            .then(() => {
+                expect(onChange).toNotHaveBeenCalled();
+                expect(mockAxios.history.get.length).toBe(0);
+                done();
+            })
+            .catch(done);
     });
     it('leaves linked WFS fields empty when DescribeLayer is unsupported', (done) => {
         mockAxios.onGet().reply(500);
@@ -665,7 +885,9 @@ describe('test  Layer Properties General module component', () => {
         });
     });
     it('refreshes merged fields when the WMS name supplies the legacy WFS typeName', (done) => {
-        mockAxios.onGet().reply(200, WFS_DESCRIBE);
+        mockAxios.onGet().reply(({url}) => decodeURIComponent(url).includes('GetCapabilities')
+            ? [200, getWMSCapabilities('workspace:renamed')]
+            : [200, WFS_DESCRIBE]);
         const onChange = expect.createSpy();
         ReactDOM.render(<General
             element={{
