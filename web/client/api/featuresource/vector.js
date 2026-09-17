@@ -7,8 +7,9 @@
  */
 
 import Rx from 'rxjs';
-import { isNil, uniq } from 'lodash';
+import { isNil, omit, uniq } from 'lodash';
 
+import { applyChanges } from '../../utils/FeatureGridUtils';
 import { filterFeatureCollection } from '../../utils/VectorFeaturesUtils';
 import {
     describeFeatureTypeToAttributes,
@@ -115,6 +116,29 @@ export const getFeatures = (layer, filter, options = {}) =>
     Rx.Observable.defer(() => Promise.resolve(filterFeatureCollection(layer?.features, filter, options)));
 
 /**
+ * Apply the pending changes of the grid to the features of the layer. The write is
+ * local, so the new features are returned as an update of the layer, for the caller to commit.
+ * @param {object} layer the layer
+ * @param {object} options
+ * @param {object[]} [options.inserts=[]] the new features
+ * @param {object} [options.updates={}] the changes, as `{featureId: {attribute: value}}`
+ * @param {object[]} [options.deletes=[]] the features to remove
+ * @returns {object} observable of `{layer: {features}}`
+ */
+export const saveFeatures = (layer, { inserts = [], updates = {}, deletes = [] } = {}) => {
+    const removed = deletes.map(({ id }) => id);
+    const withChanges = (feature) => updates[feature.id] ? applyChanges(feature, updates[feature.id]) : feature;
+    const features = [
+        ...(layer?.features || [])
+            .filter((feature) => !removed.includes(feature.id))
+            .map(withChanges),
+        // the changes of a new row live in `updates` as well, there is no insert step to fold them into
+        ...inserts.map((feature) => withChanges(omit(feature, '_new')))
+    ];
+    return Rx.Observable.defer(() => Promise.resolve({ layer: { features } }));
+};
+
+/**
  * Name identifying the feature type of a vector layer
  * @param {object} layer the layer
  * @returns {string} the feature type name
@@ -122,13 +146,13 @@ export const getFeatures = (layer, filter, options = {}) =>
 export const getTypeName = (layer) => layer?.name ?? layer?.id;
 
 /**
- * Capabilities of a vector layer. The features are filtered in memory, which
- * covers attribute equality only, and there is no service to export them from.
+ * Capabilities of a vector layer. The features are filtered and edited in memory,
+ * which covers attribute equality only, and there is no service to export them from.
  * @returns {object} the capabilities
  */
 export const capabilities = () => ({
     browse: true,
-    editing: false,
+    editing: true,
     attributeFilter: { operators: false },
     spatialFilter: false,
     advancedFilter: false,

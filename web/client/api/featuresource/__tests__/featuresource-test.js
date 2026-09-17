@@ -64,7 +64,7 @@ describe('featuresource registry', () => {
     it('supportsFeatureEditing', () => {
         expect(supportsFeatureEditing({type: 'wms'})).toBe(true);
         expect(supportsFeatureEditing({type: 'wfs'})).toBe(true);
-        expect(supportsFeatureEditing({type: 'vector'})).toBe(false);
+        expect(supportsFeatureEditing({type: 'vector'})).toBe(true);
         expect(supportsFeatureEditing({type: 'wmts'})).toBe(false);
     });
     it('areLayerFeaturesEditable', () => {
@@ -102,7 +102,7 @@ describe('featuresource registry', () => {
     it('getCapabilities of a vector layer', () => {
         const capabilities = getCapabilities({type: 'vector'});
         expect(capabilities.browse).toBe(true);
-        expect(capabilities.editing).toBe(false);
+        expect(capabilities.editing).toBe(true);
         expect(capabilities.spatialFilter).toBe(false);
         expect(capabilities.advancedFilter).toBe(false);
         expect(capabilities.download).toBe(false);
@@ -212,7 +212,7 @@ describe('vector feature source', () => {
     it('capabilities', () => {
         expect(vector.capabilities()).toEqual({
             browse: true,
-            editing: false,
+            editing: true,
             attributeFilter: { operators: false },
             spatialFilter: false,
             advancedFilter: false,
@@ -251,6 +251,60 @@ describe('vector feature source', () => {
             expect(collection.totalFeatures).toBe(0);
             done();
         }, done);
+    });
+    describe('saveFeatures', () => {
+        const layer = {
+            name: 'test',
+            features: [
+                {type: 'Feature', id: 'f1', geometry: {type: 'Point', coordinates: [0, 0]}, properties: {name: 'a'}},
+                {type: 'Feature', id: 'f2', geometry: {type: 'Point', coordinates: [1, 1]}, properties: {name: 'b'}}
+            ]
+        };
+        it('applies the attribute changes', (done) => {
+            vector.saveFeatures(layer, {updates: {f2: {name: 'updated'}}}).subscribe((result) => {
+                expect(result.layer.features.length).toBe(2);
+                expect(result.layer.features[1].properties.name).toBe('updated');
+                expect(result.layer.features[0].properties.name).toBe('a');
+                done();
+            }, done);
+        });
+        it('applies a geometry change', (done) => {
+            vector.saveFeatures(layer, {updates: {f1: {geometry: {type: 'Point', coordinates: [9, 9]}}}}).subscribe((result) => {
+                expect(result.layer.features[0].geometry.coordinates).toEqual([9, 9]);
+                expect(result.layer.features[0].properties.name).toBe('a');
+                done();
+            }, done);
+        });
+        it('removes the deleted features', (done) => {
+            vector.saveFeatures(layer, {deletes: [{id: 'f1'}]}).subscribe((result) => {
+                expect(result.layer.features.map(({id}) => id)).toEqual(['f2']);
+                done();
+            }, done);
+        });
+        it('appends the new features with their changes and without the _new flag', (done) => {
+            vector.saveFeatures(layer, {
+                inserts: [{type: 'Feature', id: 'f3', _new: true, geometry: null, properties: {}}],
+                updates: {f3: {name: 'c'}}
+            }).subscribe((result) => {
+                expect(result.layer.features.length).toBe(3);
+                expect(result.layer.features[2].id).toBe('f3');
+                expect(result.layer.features[2].properties.name).toBe('c');
+                expect(result.layer.features[2]._new).toBe(undefined);
+                done();
+            }, done);
+        });
+        it('does not mutate the layer', (done) => {
+            vector.saveFeatures(layer, {deletes: [{id: 'f1'}]}).subscribe(() => {
+                expect(layer.features.length).toBe(2);
+                done();
+            }, done);
+        });
+        it('with no change returns the same features', (done) => {
+            vector.saveFeatures(layer, {}).subscribe((result) => {
+                expect(result.layer.features.map(({id}) => id)).toEqual(['f1', 'f2']);
+                done();
+            }, done);
+        });
     });
     it('toInfo', () => {
         const info = vector.toInfo({

@@ -170,6 +170,13 @@ import { getSearchUrl } from '../utils/LayersUtils';
 
 const sourceOf = (layer) => getFeatureSource(layer) ?? getFeatureSourceByType('wfs');
 
+// a source that writes locally returns the updated layer, it never touches the store itself.
+// the update has to land before SAVE_SUCCESS, the reload that follows reads the layer back.
+const commitSave = (layer, result) => [
+    ...(result?.layer ? [changeLayerProperties(layer.id, result.layer)] : []),
+    saveSuccess()
+];
+
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
     const geomType = getGeometryAttribute(featureSchemaSelector(state))?.localType;
@@ -705,7 +712,7 @@ export const savePendingFeatureGridChanges = (action$, store) =>
                     updates: changesMapSelector(state),
                     describe: describeSelector(state),
                     url: wfsURL(state)
-                }).map(() => saveSuccess())
+                }).mergeMap((result) => Rx.Observable.from(commitSave(layer, result)))
                     .catch((e) => Rx.Observable.of(saveError(), error({
                         title: "featuregrid.errorSaving",
                         message: e.message || "Unknown Exception",
@@ -728,7 +735,7 @@ export const deleteSelectedFeatureGridFeatures = (action$, store) =>
                     deletes: selectedFeaturesSelector(state),
                     describe: describeSelector(state),
                     url: wfsURL(state)
-                }).map(() => saveSuccess())
+                }).mergeMap((result) => Rx.Observable.from(commitSave(layer, result)))
                 // close window
                     .catch((e) => Rx.Observable.of(saveError(), error({
                         title: "featuregrid.errorSaving",

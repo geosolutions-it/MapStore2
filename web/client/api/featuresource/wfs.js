@@ -133,7 +133,7 @@ export const capabilities = (layer) => ({
  * @param {object[]} [options.deletes=[]] the features to remove
  * @param {object} options.describe the DescribeFeatureType of the layer
  * @param {string} options.url the WFS url
- * @returns {object} observable of the transaction response
+ * @returns {object} observable of an empty result, the features live on the server
  */
 export const saveFeatures = (layer, { inserts = [], updates = {}, deletes = [], describe: describeFeatureType, url } = {}) => {
     const { transaction, insert, update, propertyChange, getPropertyName, deleteFeature } = requestBuilder(describeFeatureType);
@@ -147,5 +147,6 @@ export const saveFeatures = (layer, { inserts = [], updates = {}, deletes = [], 
     );
     return Rx.Observable
         .defer(() => axios.post(url, body, {headers: { 'Content-Type': 'application/xml'}}))
-        .let(interceptOGCError);
+        .let(interceptOGCError)
+        .map(() => ({}));
 };

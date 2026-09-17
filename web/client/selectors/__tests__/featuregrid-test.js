@@ -829,7 +829,7 @@ describe('Test featuregrid selectors', () => {
             };
             const capabilities = featureSourceCapabilitiesSelector(state);
             expect(capabilities.browse).toBe(true);
-            expect(capabilities.editing).toBe(false);
+            expect(capabilities.editing).toBe(true);
             expect(capabilities.spatialFilter).toBe(false);
         });
         it('keeps the same reference while the layer does not change', () => {
