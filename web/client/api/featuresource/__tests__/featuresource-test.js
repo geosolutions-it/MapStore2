@@ -45,7 +45,7 @@ describe('featuresource registry', () => {
     it('canBrowseFeatures', () => {
         expect(canBrowseFeatures({type: 'wms', search: {type: 'wfs', url: '/dummy'}})).toBe(true);
         expect(canBrowseFeatures({type: 'wms'})).toBe(false);
-        expect(canBrowseFeatures({type: 'vector'})).toBe(false);
+        expect(canBrowseFeatures({type: 'vector'})).toBe(true);
         expect(canBrowseFeatures({type: 'wmts'})).toBe(false);
         expect(canBrowseFeatures()).toBe(false);
     });
@@ -114,6 +114,87 @@ describe('wfs feature source', () => {
 });
 
 describe('vector feature source', () => {
+    const features = [{
+        type: 'Feature',
+        geometry: {type: 'Point', coordinates: [0, 0]},
+        properties: {name: 'a', count: 1}
+    }, {
+        type: 'Feature',
+        geometry: {type: 'Point', coordinates: [1, 1]},
+        properties: {name: 'b', count: 2, flag: true}
+    }];
+    it('featuresToFeatureType collects every property', () => {
+        const featureType = vector.featuresToFeatureType(features, 'test');
+        expect(featureType.featureTypes[0].typeName).toBe('test');
+        expect(featureType.featureTypes[0].properties.map(({name}) => name)).toEqual(['geometry', 'name', 'count', 'flag']);
+    });
+    it('featuresToFeatureType types the properties from the values', () => {
+        const properties = vector.featuresToFeatureType(features).featureTypes[0].properties;
+        expect(properties.map(({localType}) => localType)).toEqual(['Point', 'string', 'number', 'boolean']);
+    });
+    it('featuresToFeatureType types a Date property as date-time', () => {
+        const properties = vector.featuresToFeatureType([{
+            type: 'Feature',
+            properties: {when: new Date('2015-04-24T00:00:00Z')}
+        }]).featureTypes[0].properties;
+        expect(properties[0].type).toBe('xsd:date-time');
+        expect(properties[0].localType).toBe('date-time');
+    });
+    it('featuresToFeatureType with no geometry', () => {
+        const properties = vector.featuresToFeatureType([{type: 'Feature', properties: {name: 'a'}}]).featureTypes[0].properties;
+        expect(properties.map(({name}) => name)).toEqual(['name']);
+    });
+    it('featuresToFeatureType with no features', () => {
+        expect(vector.featuresToFeatureType().featureTypes[0].properties).toEqual([]);
+    });
+    it('describe reads the features of the layer', (done) => {
+        vector.describe({name: 'test', features})
+            .then((info) => {
+                expect(info.geometry.length).toBe(1);
+                expect(info.geometry[0].attribute).toBe('geometry');
+                expect(info.geometry[0].type).toBe('geometry');
+                expect(info.schema.geometryAttribute).toBe('geometry');
+                expect(info.schema.geometryType).toBe('Point');
+                expect(info.attributes.map(({attribute}) => attribute)).toEqual(['name', 'count', 'flag']);
+                done();
+            })
+            .catch(done);
+    });
+    it('capabilities', () => {
+        expect(vector.capabilities()).toEqual({browse: true, editing: false});
+    });
+    it('getFeatures filters and sorts client side', (done) => {
+        vector.getFeatures({features}, {
+            sortOptions: {sortBy: 'count', sortOrder: 'DESC'}
+        }).subscribe((collection) => {
+            expect(collection.type).toBe('FeatureCollection');
+            expect(collection.totalFeatures).toBe(2);
+            expect(collection.features.map(({properties}) => properties.count)).toEqual([2, 1]);
+            done();
+        }, done);
+    });
+    it('getFeatures does not emit synchronously', () => {
+        let emitted = false;
+        vector.getFeatures({features}, {}).subscribe(() => {
+            emitted = true;
+        });
+        expect(emitted).toBe(false);
+    });
+    it('getFeatures returns the requested page', (done) => {
+        vector.getFeatures({features}, {}, {startIndex: 1, maxFeatures: 1}).subscribe((collection) => {
+            expect(collection.features.length).toBe(1);
+            expect(collection.features[0].properties.name).toBe('b');
+            expect(collection.totalFeatures).toBe(2);
+            done();
+        }, done);
+    });
+    it('getFeatures with no features', (done) => {
+        vector.getFeatures({}, {}).subscribe((collection) => {
+            expect(collection.features).toEqual([]);
+            expect(collection.totalFeatures).toBe(0);
+            done();
+        }, done);
+    });
     it('toInfo', () => {
         const info = vector.toInfo({
             featureTypes: [{
@@ -125,7 +206,7 @@ describe('vector feature source', () => {
             }]
         });
         expect(info.geometry.length).toBe(1);
-        expect(info.geometry[0].name).toBe('geometry');
+        expect(info.geometry[0].attribute).toBe('geometry');
         expect(info.attributes.map(({attribute}) => attribute)).toEqual(['NAME']);
         expect(info.schema.geometryAttribute).toBe('geometry');
     });

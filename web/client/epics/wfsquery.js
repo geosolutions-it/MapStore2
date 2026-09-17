@@ -71,7 +71,8 @@ const getDefaultSortOptions = (attribute) => {
 
 export const featureTypeSelectedEpic = (action$, store) =>
     action$.ofType(FEATURE_TYPE_SELECTED)
-        .filter(action => action.url && action.typeName)
+        // the url is optional, a source can carry its own data instead of describing it through a service
+        .filter(action => !!action.typeName)
         .switchMap(action => {
             const state = store.getState();
             const selectedLayer = selectedLayerSelector(state);
