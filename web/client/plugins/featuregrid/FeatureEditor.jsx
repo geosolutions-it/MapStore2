@@ -16,6 +16,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import Grid from '../../components/data/featuregrid/FeatureGrid';
 import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
+import { describeFeatureTypeToSchema } from '../../utils/FeatureTypeUtils';
 import { setUp, setSyncTool } from '../../actions/featuregrid';
 import {paginationInfo, describeSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, hasNoGeometry as hasNoGeometrySelector} from '../../selectors/featuregrid';
@@ -177,6 +178,10 @@ const Editor = (props = {
     const filterRenderers = useMemo(() => {
         return getFilterRenderers(props.describe, props.fields, props.isWithinAttrTbl);
     }, [props.describe, props.fields]);
+    const schema = useMemo(
+        () => props.describe ? describeFeatureTypeToSchema(props.describe, props.fields) : undefined,
+        [props.describe, props.fields]
+    );
 
     // If the dataset has no geometry, hide the geometry tool column
     const hideGeometryColumn = props?.hasNoGeometry;
@@ -235,7 +240,7 @@ const Editor = (props = {
                         fields={props.fields}
                         gridEvents={props.gridEvents}
                         pageEvents={props.pageEvents}
-                        describeFeatureType={props.describe}
+                        schema={schema}
                         features={props.features}
                         minHeight={600}
                         tools={gridTools}

@@ -325,10 +325,10 @@ describe('FeatureGridUtils', () => {
         expect(getAttributesNames(attributes)).toEqual(['ATTR1']);
     });
     it('test featureTypeToGridColumns', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}, {name: 'Test2', localType: 'number'}]};
         const columnSettings = {name: 'Test1', hide: false};
         const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
-        const featureGridColumns = featureTypeToGridColumns(describe, {}, columnSettings, [], {options});
+        const featureGridColumns = featureTypeToGridColumns(schema, {}, columnSettings, [], {options});
         expect(featureGridColumns.length).toBe(2);
         featureGridColumns.forEach((fgColumns, index) => {
             if (index === 0) {
@@ -346,10 +346,10 @@ describe('FeatureGridUtils', () => {
     });
     it('test featureTypeToGridColumns with headerRenderer, filterRenderer, formatter and editor', () => {
         const DUMMY = () => {};
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}, {name: 'Test2', localType: 'number'}]};
         const columnSettings = {name: 'Test1', hide: false};
         const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
-        const featureGridColumns = featureTypeToGridColumns(describe, {}, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => DUMMY, getEditor: () => DUMMY});
+        const featureGridColumns = featureTypeToGridColumns(schema, {}, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => DUMMY, getEditor: () => DUMMY});
         expect(featureGridColumns.length).toBe(2);
         featureGridColumns.forEach((fgColumns, index) => {
             if (index === 0) {
@@ -371,10 +371,10 @@ describe('FeatureGridUtils', () => {
     });
     it('test featureTypeToGridColumns with headerRenderer, filterRenderer, formatter and editor for attribute table', () => {
         const DUMMY = () => {};
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}, {name: 'Test2', localType: 'number'}]};
         const columnSettings = {name: 'Test1', hide: false};
         const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
-        const featureGridColumns = featureTypeToGridColumns(describe, {}, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => DUMMY, getEditor: () => DUMMY, isWithinAttrTbl: true});
+        const featureGridColumns = featureTypeToGridColumns(schema, {}, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => DUMMY, getEditor: () => DUMMY, isWithinAttrTbl: true});
         expect(featureGridColumns.length).toBe(2);
         featureGridColumns.forEach((fgColumns, index) => {
             if (index === 0) {
@@ -395,27 +395,27 @@ describe('FeatureGridUtils', () => {
         });
     });
     it('featureTypeToGridColumns with fields', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}, {name: 'Test2', localType: 'number'}]};
         const columnSettings = {name: 'Test1', hide: false};
         const fields = [{name: 'Test1', type: "xsd:number", alias: 'Test1 alias'}];
-        const featureGridColumns = featureTypeToGridColumns(describe, {}, columnSettings, fields);
+        const featureGridColumns = featureTypeToGridColumns(schema, {}, columnSettings, fields);
         expect(featureGridColumns.length).toBe(2);
         expect(featureGridColumns[0].title).toBe('Test1 alias');
         // test alias empty string
-        expect(featureTypeToGridColumns(describe, {}, columnSettings, [{name: "Test1", alias: ""}])[0].title).toEqual('Test1');
+        expect(featureTypeToGridColumns(schema, {}, columnSettings, [{name: "Test1", alias: ""}])[0].title).toEqual('Test1');
         // test localized alias
-        expect(featureTypeToGridColumns(describe, {}, columnSettings, [{name: "Test1", alias: {"default": "XX"}}])[0].title.default).toEqual('XX');
+        expect(featureTypeToGridColumns(schema, {}, columnSettings, [{name: "Test1", alias: {"default": "XX"}}])[0].title.default).toEqual('XX');
         // test localized alias with empty default
-        expect(featureTypeToGridColumns(describe, {}, columnSettings, [{name: "Test1", alias: {"default": ""}}])[0].title.default).toEqual('Test1');
+        expect(featureTypeToGridColumns(schema, {}, columnSettings, [{name: "Test1", alias: {"default": ""}}])[0].title.default).toEqual('Test1');
 
     });
     it('featureTypeToGridColumns formatters', () => {
         const DUMMY = () => {};
         const formatterWrapper = () => (<div>testtttt</div>);
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}, {name: 'Test2', localType: 'number'}]};
         const columnSettings = {name: 'Test1', hide: false};
         const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
-        const featureGridColumns = featureTypeToGridColumns(describe, {}, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => formatterWrapper, getEditor: () => DUMMY});
+        const featureGridColumns = featureTypeToGridColumns(schema, {}, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => formatterWrapper, getEditor: () => DUMMY});
         expect(featureGridColumns.length).toBe(2);
         featureGridColumns.forEach((fgColumns)=>{
             const Formatter = fgColumns.formatter;
@@ -428,20 +428,20 @@ describe('FeatureGridUtils', () => {
 
     });
     it('featureTypeToGridColumns with featurePropertiesJSONSchema', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:string"}]}]};
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}, {name: 'Test2', localType: 'string'}]};
         const featurePropertiesJSONSchema = {
             properties: {
                 Test1: { type: 'number', minimum: 0, maximum: 100 },
                 Test2: { type: 'string', minLength: 1, maxLength: 50 }
             }
         };
-        const featureGridColumns = featureTypeToGridColumns(describe, featurePropertiesJSONSchema, {}, []);
+        const featureGridColumns = featureTypeToGridColumns(schema, featurePropertiesJSONSchema, {}, []);
         expect(featureGridColumns.length).toBe(2);
         expect(featureGridColumns[0].schema).toEqual({ type: 'number', minimum: 0, maximum: 100 });
         expect(featureGridColumns[1].schema).toEqual({ type: 'string', minLength: 1, maxLength: 50 });
     });
     it('featureTypeToGridColumns with schemaRequired', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:string"}, {name: 'Test3', type: "xsd:boolean"}]}]};
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}, {name: 'Test2', localType: 'string'}, {name: 'Test3', type: "xsd:boolean"}]};
         const featurePropertiesJSONSchema = {
             properties: {
                 Test1: { type: 'number' },
@@ -450,14 +450,14 @@ describe('FeatureGridUtils', () => {
             },
             required: ['Test1', 'Test2']
         };
-        const featureGridColumns = featureTypeToGridColumns(describe, featurePropertiesJSONSchema, {}, []);
+        const featureGridColumns = featureTypeToGridColumns(schema, featurePropertiesJSONSchema, {}, []);
         expect(featureGridColumns.length).toBe(3);
         expect(featureGridColumns[0].schemaRequired).toBeTruthy(); // Test1 is required
         expect(featureGridColumns[1].schemaRequired).toBeTruthy(); // Test2 is required
         expect(featureGridColumns[2].schemaRequired).toBeFalsy(); // Test3 is not required
     });
     it('featureTypeToGridColumns with primaryKeyAttributes', () => {
-        const describe = {featureTypes: [{properties: [{name: 'fid', type: "xsd:string"}, {name: 'name', type: "xsd:string"}, {name: 'ogc_fid', type: "xsd:number"}]}]};
+        const schema = {attributes: [{name: 'fid', localType: 'string'}, {name: 'name', localType: 'string'}, {name: 'ogc_fid', localType: 'number'}]};
         const featurePropertiesJSONSchema = {
             properties: {
                 fid: { type: 'string' },
@@ -465,40 +465,40 @@ describe('FeatureGridUtils', () => {
                 ogc_fid: { type: 'number' }
             }
         };
-        const featureGridColumns = featureTypeToGridColumns(describe, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: ['fid', 'ogc_fid']});
+        const featureGridColumns = featureTypeToGridColumns(schema, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: ['fid', 'ogc_fid']});
         expect(featureGridColumns.length).toBe(3);
         expect(featureGridColumns[0].isPrimaryKey).toBeTruthy(); // fid is primary key
         expect(featureGridColumns[1].isPrimaryKey).toBeFalsy(); // name is not primary key
         expect(featureGridColumns[2].isPrimaryKey).toBeTruthy(); // ogc_fid is primary key
     });
     it('featureTypeToGridColumns with primaryKeyAttributes case insensitive', () => {
-        const describe = {featureTypes: [{properties: [{name: 'FID', type: "xsd:string"}, {name: 'name', type: "xsd:string"}]}]};
+        const schema = {attributes: [{name: 'FID', localType: 'string'}, {name: 'name', localType: 'string'}]};
         const featurePropertiesJSONSchema = {
             properties: {
                 FID: { type: 'string' },
                 name: { type: 'string' }
             }
         };
-        const featureGridColumns = featureTypeToGridColumns(describe, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: ['fid']});
+        const featureGridColumns = featureTypeToGridColumns(schema, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: ['fid']});
         expect(featureGridColumns.length).toBe(2);
         expect(featureGridColumns[0].isPrimaryKey).toBeTruthy(); // FID matches 'fid' (case insensitive)
         expect(featureGridColumns[1].isPrimaryKey).toBeFalsy(); // name is not primary key
     });
     it('featureTypeToGridColumns with empty primaryKeyAttributes', () => {
-        const describe = {featureTypes: [{properties: [{name: 'fid', type: "xsd:string"}, {name: 'name', type: "xsd:string"}]}]};
+        const schema = {attributes: [{name: 'fid', localType: 'string'}, {name: 'name', localType: 'string'}]};
         const featurePropertiesJSONSchema = {
             properties: {
                 fid: { type: 'string' },
                 name: { type: 'string' }
             }
         };
-        const featureGridColumns = featureTypeToGridColumns(describe, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: []});
+        const featureGridColumns = featureTypeToGridColumns(schema, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: []});
         expect(featureGridColumns.length).toBe(2);
         expect(featureGridColumns[0].isPrimaryKey).toBeFalsy(); // No primary keys defined
         expect(featureGridColumns[1].isPrimaryKey).toBeFalsy();
     });
     it('featureTypeToGridColumns with featurePropertiesJSONSchema, schemaRequired, and primaryKeyAttributes combined', () => {
-        const describe = {featureTypes: [{properties: [{name: 'id', type: "xsd:number"}, {name: 'name', type: "xsd:string"}, {name: 'description', type: "xsd:string"}]}]};
+        const schema = {attributes: [{name: 'id', localType: 'number'}, {name: 'name', localType: 'string'}, {name: 'description', localType: 'string'}]};
         const featurePropertiesJSONSchema = {
             properties: {
                 id: { type: 'number', minimum: 1 },
@@ -507,7 +507,7 @@ describe('FeatureGridUtils', () => {
             },
             required: ['id', 'name']
         };
-        const featureGridColumns = featureTypeToGridColumns(describe, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: ['id']});
+        const featureGridColumns = featureTypeToGridColumns(schema, featurePropertiesJSONSchema, {}, [], {primaryKeyAttributes: ['id']});
         expect(featureGridColumns.length).toBe(3);
 
         // Test id column
@@ -529,21 +529,21 @@ describe('FeatureGridUtils', () => {
         expect(featureGridColumns[2].isPrimaryKey).toBeFalsy();
     });
     it('featureTypeToGridColumns with featurePropertiesJSONSchema undefined', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}]}]};
-        const featureGridColumns = featureTypeToGridColumns(describe, undefined, {}, []);
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}]};
+        const featureGridColumns = featureTypeToGridColumns(schema, undefined, {}, []);
         expect(featureGridColumns.length).toBe(1);
         expect(featureGridColumns[0].schema).toBeFalsy();
         expect(featureGridColumns[0].schemaRequired).toBeFalsy();
     });
     it('featureTypeToGridColumns with featurePropertiesJSONSchema null', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}]}]};
-        const featureGridColumns = featureTypeToGridColumns(describe, null, {}, []);
+        const schema = {attributes: [{name: 'Test1', localType: 'number'}]};
+        const featureGridColumns = featureTypeToGridColumns(schema, null, {}, []);
         expect(featureGridColumns.length).toBe(1);
         expect(featureGridColumns[0].schema).toBeFalsy();
         expect(featureGridColumns[0].schemaRequired).toBeFalsy();
     });
     it('featureTypeToGridColumns with getEditor receiving schema parameter', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}]}]};
+        const featureSchema = {attributes: [{name: 'Test1', localType: 'number'}]};
         const featurePropertiesJSONSchema = {
             properties: {
                 Test1: { type: 'number', minimum: 0, maximum: 100 }
@@ -554,7 +554,7 @@ describe('FeatureGridUtils', () => {
             receivedSchemas.push({ name: desc.name, schema });
             return () => {};
         };
-        featureTypeToGridColumns(describe, featurePropertiesJSONSchema, {}, [], {}, {getEditor});
+        featureTypeToGridColumns(featureSchema, featurePropertiesJSONSchema, {}, [], {}, {getEditor});
         expect(receivedSchemas.length).toBe(1);
         expect(receivedSchemas[0].name).toBe('Test1');
         expect(receivedSchemas[0].schema).toEqual({ type: 'number', minimum: 0, maximum: 100 });

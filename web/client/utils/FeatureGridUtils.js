@@ -9,19 +9,17 @@
 import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlainObject, includes, isEmpty } from 'lodash';
 
 import {
-    findGeometryProperty,
-    getFeatureTypeProperties,
-    getPropertyDescriptor,
-    isGeometryType,
-    isValid,
-    isValidValueForPropertyName as isValidValueForPropertyNameBase
-} from './ogc/WFS/base';
+    getGeometryAttribute,
+    getSchemaAttribute,
+    getSchemaAttributes,
+    isValidValueForAttribute,
+    isValidValueForAttributeName
+} from './FeatureSchemaUtils';
 
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import { fidFilter } from './ogc/Filter/filter';
 
-const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
-const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
+const getPropertyName = (name, schema) => name === "geometry" ? schema?.geometryAttribute : name;
 
 /**
  * Check if a field name is considered a primary key
@@ -98,7 +96,7 @@ const upsertFilterField = (filterFields = [], filter, newObject) => {
     }
     return [...filterFields, newObject];
 };
-export const getAttributeFields = (describe) => (getFeatureTypeProperties(describe) || []).filter( e => !isGeometryType(e));
+export const getAttributeFields = (schema) => getSchemaAttributes(schema);
 
 // virtual scroll utility functions
 const getIdxFarthestEl = (startIdx, pages = [], firstRow, lastRow) => {
@@ -130,24 +128,24 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
 
 
 /**
- * Utility function to get from a describeFeatureType response the columns to use in the react-data-grid
- * @param {object} describe describeFeatureType response
+ * Utility function to get from a feature schema the columns to use in the react-data-grid
+ * @param {object} schema the {@link utils.FeatureSchemaUtils FeatureSchema}
  * @param {object} columnSettings column settings a set of column configuration (Includes `hide` `width`, `label`)
  * @param {object[]} fields fields configuration (Includes `name` `alias`)
  * @param {object} getters getters functions for creating header, filterRenderer, formatter, heditor ( Includes `getEditor` `getFilterRenderer` `getFormatter` `getHeaderRenderer`)
  * @param {*} param4
  */
 export const featureTypeToGridColumns = (
-    describe,
+    schema,
     featurePropertiesJSONSchema,
     columnSettings = {},
     fields = [],
     {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = [], primaryKeyAttributes = []} = {},
     {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isWithinAttrTbl = false} = {}) =>
-    getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
+    getAttributeFields(schema).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
         const field = fields.find(f => f.name === desc.name);
-        const schema = featurePropertiesJSONSchema?.properties?.[desc.name];
+        const propertySchema = featurePropertiesJSONSchema?.properties?.[desc.name];
         const schemaRequired = (featurePropertiesJSONSchema?.required || []).includes(desc.name);
         const isPrimaryKey = isPrimaryKeyField(desc.name, primaryKeyAttributes);
         let columnProp = {
@@ -162,10 +160,10 @@ export const featureTypeToGridColumns = (
             resizable,
             editable,
             filterable,
-            editor: getEditor(desc, field, schema),
+            editor: getEditor(desc, field, propertySchema),
             formatter: getFormatter(desc, field),
             filterRenderer: getFilterRenderer(desc, field),
-            schema,
+            schema: propertySchema,
             schemaRequired,
             isPrimaryKey
         };
@@ -178,14 +176,14 @@ export const featureTypeToGridColumns = (
  * @param  {array} rows        Data rows
  * @return {array}             Array of the columns to use in react-data-grid, with proper event bindings.
  */
-export const getToolColumns = (toolColumns = [], rowGetter = () => {}, describe, actionOpts, getFilterRenderer = () => {}) => {
-    const geometryProperty = findGeometryProperty(describe);
+export const getToolColumns = (toolColumns = [], rowGetter = () => {}, schema, actionOpts, getFilterRenderer = () => {}) => {
+    const geometryProperty = getGeometryAttribute(schema);
 
     return toolColumns.map(tool => ({
         ...tool,
         events: tool.events && Object.keys(tool.events).reduce( (events, key) => ({
             ...events,
-            [key]: (evt, opts) => tool.events[key](rowGetter(opts.rowIdx), opts, describe, actionOpts)
+            [key]: (evt, opts) => tool.events[key](rowGetter(opts.rowIdx), opts, schema, actionOpts)
         }), {}),
         ...(tool.key === 'geometry' && geometryProperty ? {
             filterRenderer: getFilterRenderer({...geometryProperty, localType: 'geometry'}, geometryProperty.name),
@@ -195,24 +193,26 @@ export const getToolColumns = (toolColumns = [], rowGetter = () => {}, describe,
     }));
 };
 /**
- * Maps every grid event to a function that passes all the arguments, plus the rowgetter, describe and actionOpts passed
+ * Maps every grid event to a function that passes all the arguments, plus the rowgetter, schema and actionOpts passed
  * @param  {Object} [gridEvents={}] The functions to call
  * @param  {function} rowGetter     the method to retrieve the feature
- * @param  {object} describe        the describe feature type
+ * @param  {object} schema          the feature schema
  * @param  {object} actionOpts      some options
  * @param  {object} columns         columns definition
  * @return {object}                 The events with the additional parameters
  */
-export const getGridEvents = (gridEvents = {}, rowGetter, describe, actionOpts, columns) => Object.keys(gridEvents).reduce((events, currentEventKey) => ({
+export const getGridEvents = (gridEvents = {}, rowGetter, schema, actionOpts, columns) => Object.keys(gridEvents).reduce((events, currentEventKey) => ({
     ...events,
-    [currentEventKey]: (...args) => gridEvents[currentEventKey](...args, rowGetter, describe, actionOpts, columns)
+    [currentEventKey]: (...args) => gridEvents[currentEventKey](...args, rowGetter, schema, actionOpts, columns)
 }), {});
-export const isProperty = (k, d) => !!getPropertyDescriptor(k, d);
-export const isValidValueForPropertyName = (v, k, d) => isValidValueForPropertyNameBase(v, getPropertyName(k, d), d);
+export const isProperty = (k, schema) => !!getSchemaAttribute(schema, k);
+export const isValidValueForPropertyName = (v, k, schema) => isValidValueForAttributeName(v, getPropertyName(k, schema), schema);
 export const getDefaultFeatureProjection = () => "EPSG:4326";
 
 export const createNewAndEditingFilter = (hasChanges, newFeatures, changes) => f => newFeatures.length > 0 ? f._new : !hasChanges || hasChanges && !!changes[f.id];
-export const hasValidNewFeatures = (newFeatures = [], describeFeatureType) => newFeatures.map(f => isValid(f, describeFeatureType)).reduce((acc, cur) => cur && acc, true);
+export const hasValidNewFeatures = (newFeatures = [], schema) => newFeatures
+    .map(f => (schema?.attributes || []).map(attribute => isValidValueForAttribute(attribute.geometry ? f.geom : f.properties[attribute.name], attribute)))
+    .reduce((acc, cur) => cur && acc, true);
 export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {});
 
 export const EXPRESSION_REGEX = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?\s*(-?\d*\.?\d*)\s*/;
