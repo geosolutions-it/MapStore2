@@ -9,6 +9,7 @@
 import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlainObject, includes, isEmpty } from 'lodash';
 
 import {
+    DEFAULT_SCHEMA_SRS,
     getGeometryAttribute,
     getSchemaAttribute,
     getSchemaAttributes,
@@ -206,7 +207,12 @@ export const getGridEvents = (gridEvents = {}, rowGetter, schema, actionOpts, co
 }), {});
 export const isProperty = (k, schema) => !!getSchemaAttribute(schema, k);
 export const isValidValueForPropertyName = (v, k, schema) => isValidValueForAttributeName(v, getPropertyName(k, schema), schema);
-export const getDefaultFeatureProjection = () => "EPSG:4326";
+/**
+ * Projection the features reach the grid in, whatever the source, so that draw
+ * support, highlight and zoom stay independent from the service
+ * @returns {string} the projection
+ */
+export const getDefaultFeatureProjection = () => DEFAULT_SCHEMA_SRS;
 
 export const createNewAndEditingFilter = (hasChanges, newFeatures, changes) => f => newFeatures.length > 0 ? f._new : !hasChanges || hasChanges && !!changes[f.id];
 export const hasValidNewFeatures = (newFeatures = [], schema) => newFeatures

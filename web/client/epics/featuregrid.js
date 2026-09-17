@@ -12,6 +12,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import bbox from '@turf/bbox';
 import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
 import { getFeatureSource, getFeatureSourceByType } from '../api/featuresource';
+import { getGeometryAttribute } from '../utils/FeatureSchemaUtils';
 
 import {
     changeDrawingStatus,
@@ -20,7 +21,6 @@ import {
     setSnappingLayer,
     toggleSnapping
 } from '../actions/draw';
-import { findGeometryProperty } from '../utils/ogc/WFS/base';
 import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
 
 import {
@@ -148,6 +148,7 @@ import { error, warning } from '../actions/notifications';
 
 import {
     describeSelector,
+    featureSchemaSelector,
     getFeatureById,
     wfsURL,
     wfsFilter,
@@ -171,7 +172,7 @@ const sourceOf = (layer) => getFeatureSource(layer) ?? getFeatureSourceByType('w
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
-    const geomType = findGeometryProperty(describeSelector(state))?.localType;
+    const geomType = getGeometryAttribute(featureSchemaSelector(state))?.localType;
     const drawOptions = {
         featureProjection: defaultFeatureProj,
         stopAfterDrawing: MapUtils.isSimpleGeomType(geomType),
@@ -425,7 +426,7 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                             // if closed. the filter must be reset or a reopen (e.g. from advanced filter)
                             // could make inconsistent the UI.
                             const resetFilter = updateFilter({
-                                attribute: findGeometryProperty(describeSelector(store.getState()))?.name,
+                                attribute: getGeometryAttribute(featureSchemaSelector(store.getState()))?.name,
                                 enabled: false,
                                 type: "geometry"
                             });
@@ -468,7 +469,7 @@ export const enableGeometryFilterOnEditMode = (action$, store) =>
         .switchMap(() => {
             const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
             return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
-                attribute: findGeometryProperty(describeSelector(store.getState()))?.name,
+                attribute: getGeometryAttribute(featureSchemaSelector(store.getState()))?.name,
                 enabled: true,
                 type: "geometry"
             }));
@@ -744,9 +745,8 @@ export const deleteSelectedFeatureGridFeatures = (action$, store) =>
 export const handleEditFeature = (action$, store) => action$.ofType(START_EDITING_FEATURE)
     .switchMap( () => {
         const state = store.getState();
-        const describe = describeSelector(state);
         const defaultFeatureProj = getDefaultFeatureProjection();
-        const geomType = findGeometryProperty(describe).localType;
+        const geomType = getGeometryAttribute(featureSchemaSelector(state)).localType;
         const drawOptions = {
             featureProjection: defaultFeatureProj,
             stopAfterDrawing: false,
@@ -767,9 +767,8 @@ export const handleEditFeature = (action$, store) => action$.ofType(START_EDITIN
 export const handleDrawFeature = (action$, store) => action$.ofType(START_DRAWING_FEATURE)
     .switchMap( () => {
         const state = store.getState();
-        const describe = describeSelector(state);
         const defaultFeatureProj = getDefaultFeatureProjection();
-        const geomType = findGeometryProperty(describe).localType;
+        const geomType = getGeometryAttribute(featureSchemaSelector(state)).localType;
         let feature = Object.assign({}, selectedFeatureSelector(state), {type: "Feature"});
         let changes = changesMapSelector(state);
         if (changes[feature.id] && (changes[feature.id].geometry || changes[feature.id].geometry === null)) {
