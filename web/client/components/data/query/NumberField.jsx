@@ -9,6 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import isNil from 'lodash/isNil';
 import { Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import { getMessageById } from '../../../utils/LocaleUtils';
@@ -134,22 +135,29 @@ class NumberField extends React.Component {
         );
     }
 
+    parseNumber = (value) => !isNil(value) && value !== '' && !Number.isNaN(Number(value)) ? Number(value) : null;
+
     changeNumber = (value) => {
+        let parsedValue = value;
         if (this.props.operator === "><") {
-            if (value.lowBound !== null && value.lowBound !== undefined && ( value.upBound !== null && value.upBound !== undefined) && value.lowBound >= value.upBound) {
+            const lowBound = this.parseNumber(value?.lowBound);
+            const upBound = this.parseNumber(value?.upBound);
+            parsedValue = { lowBound, upBound };
+            if (lowBound !== null && upBound !== null && lowBound >= upBound) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, getMessageById(this.context.messages, "queryform.attributefilter.numberfield.wrong_range"));
             } else if (this.props.fieldException) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }
         } else {
-            if (this.props.isRequired && ( value === null || value === undefined)) {
+            parsedValue = this.parseNumber(value);
+            if (this.props.isRequired && isNil(parsedValue)) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, getMessageById(this.context.messages, "queryform.attributefilter.numberfield.isRequired"));
             } else if (this.props.fieldException) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }
         }
 
-        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType);
+        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, parsedValue, this.props.attType);
     };
 }
 
