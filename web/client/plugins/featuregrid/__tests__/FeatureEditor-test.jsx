@@ -36,7 +36,7 @@ describe('FeatureEditor plugin component', () => {
             url: undefined,
             typeName: undefined,
             features: [],
-            describe: undefined,
+            schema: undefined,
             featurePropertiesJSONSchema: undefined,
             fields: [],
             attributes: undefined,

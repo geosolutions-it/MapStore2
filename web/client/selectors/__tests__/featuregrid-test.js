@@ -460,18 +460,35 @@ describe('Test featuregrid selectors', () => {
     });
 
     it('test hasSupportedGeometry', () => {
+        const featureType = initialState.query.featureTypes['editing:polygons.test'];
+        const original = featureType.original;
+        const withGeometryType = (localType) => ({
+            ...initialState,
+            query: {
+                ...initialState.query,
+                featureTypes: {
+                    ...initialState.query.featureTypes,
+                    'editing:polygons.test': {
+                        ...featureType,
+                        original: {
+                            ...original,
+                            featureTypes: [{
+                                ...original.featureTypes[0],
+                                properties: original.featureTypes[0].properties.map(
+                                    (property, index) => index === 1
+                                        ? {...property, type: `gml:${localType}`, localType}
+                                        : property
+                                )
+                            }]
+                        }
+                    }
+                }
+            }
+        });
         expect(hasSupportedGeometry(initialState)).toBe(true);
-        let initialStateWithGmlGeometry = Object.assign({}, initialState);
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].type = 'gml:Geometry';
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'Geometry';
-        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].type = 'gml:GeometryCollection';
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'GeometryCollection';
-        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].type = 'gml:Polygon';
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'Polygon';
-        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(true);
-
+        expect(hasSupportedGeometry(withGeometryType('Geometry'))).toBe(false);
+        expect(hasSupportedGeometry(withGeometryType('GeometryCollection'))).toBe(false);
+        expect(hasSupportedGeometry(withGeometryType('Polygon'))).toBe(true);
     });
 
     it('showTimeSync', () => {

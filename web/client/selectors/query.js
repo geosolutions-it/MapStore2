@@ -8,6 +8,9 @@
 
 import { isNil, get, head, isArray, findIndex, isEqual } from 'lodash';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
+import { createSelector } from 'reselect';
+
+import { describeFeatureTypeToSchema } from '../utils/FeatureTypeUtils';
 
 /**
  * Selects the featureType name of the query filterObject
@@ -71,6 +74,15 @@ export const isGeometrylessFeatureType = (state) => {
     const describe = layerDescribeSelector(state, typeNameSelector(state));
     return !!describe && !findGeometryProperty(describe);
 };
+/**
+ * Selects the {@link utils.FeatureSchemaUtils FeatureSchema} of the current feature type
+ * @param {object} state
+ * @return {object} the feature schema
+ */
+export const featureSchemaSelector = createSelector(
+    describeSelector,
+    (describe) => describe ? describeFeatureTypeToSchema(describe) : undefined
+);
 export const attributesJSONSchemaSelector = state => get(featureTypeSelectorCreator(queryFeatureTypeName(state))(state), `attributesJSONSchema`);
 export const featureLoadingSelector = (state) => get(state, "query.featureLoading");
 export const isSyncWmsActive = (state) => get(state, "query.syncWmsFilter", false);

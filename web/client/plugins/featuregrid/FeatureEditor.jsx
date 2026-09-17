@@ -16,9 +16,8 @@ import ContainerDimensions from 'react-container-dimensions';
 import Grid from '../../components/data/featuregrid/FeatureGrid';
 import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
-import { describeFeatureTypeToSchema } from '../../utils/FeatureTypeUtils';
 import { setUp, setSyncTool } from '../../actions/featuregrid';
-import {paginationInfo, describeSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
+import {paginationInfo, featureSchemaSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, hasNoGeometry as hasNoGeometrySelector} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
@@ -176,12 +175,8 @@ const Editor = (props = {
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
     const filterRenderers = useMemo(() => {
-        return getFilterRenderers(props.describe, props.fields, props.isWithinAttrTbl);
-    }, [props.describe, props.fields]);
-    const schema = useMemo(
-        () => props.describe ? describeFeatureTypeToSchema(props.describe, props.fields) : undefined,
-        [props.describe, props.fields]
-    );
+        return getFilterRenderers(props.schema, props.fields, props.isWithinAttrTbl);
+    }, [props.schema, props.fields]);
 
     // If the dataset has no geometry, hide the geometry tool column
     const hideGeometryColumn = props?.hasNoGeometry;
@@ -240,7 +235,7 @@ const Editor = (props = {
                         fields={props.fields}
                         gridEvents={props.gridEvents}
                         pageEvents={props.pageEvents}
-                        schema={schema}
+                        schema={props.schema}
                         features={props.features}
                         minHeight={600}
                         tools={gridTools}
@@ -274,7 +269,7 @@ export const selector = createStructuredSelector({
     url: state => wfsURLSelector(state),
     typeName: state => typeNameSelector(state),
     features: state => get(state, 'featuregrid.features') || EMPTY_ARR,
-    describe: describeSelector,
+    schema: featureSchemaSelector,
     featurePropertiesJSONSchema: attributesJSONSchemaSelector,
     fields: selectedLayerFieldsSelector,
     attributes: state => get(state, "featuregrid.attributes"),
