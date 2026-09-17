@@ -37,6 +37,15 @@ describe('FeatureEditor plugin component', () => {
             typeName: undefined,
             features: [],
             schema: undefined,
+            capabilities: {
+                browse: false,
+                editing: false,
+                attributeFilter: false,
+                spatialFilter: false,
+                advancedFilter: false,
+                mapFilterSync: false,
+                download: false
+            },
             featurePropertiesJSONSchema: undefined,
             fields: [],
             attributes: undefined,

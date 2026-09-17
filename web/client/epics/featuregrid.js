@@ -11,7 +11,7 @@ import {get, head, isEmpty, find, castArray, includes, reduce} from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import bbox from '@turf/bbox';
 import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
-import { getFeatureSource, getFeatureSourceByType } from '../api/featuresource';
+import { getCapabilities, getFeatureSource, getFeatureSourceByType } from '../api/featuresource';
 import { getGeometryAttribute } from '../utils/FeatureSchemaUtils';
 
 import {
@@ -486,6 +486,7 @@ export const disableMultiSelect = (action$) =>
 export const handleClickOnMap = (action$, store) =>
     action$.ofType(UPDATE_FILTER)
         .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
+        .filter(() => getCapabilities(selectedLayerSelector(store.getState())).spatialFilter)
         .switchMap(() =>
             action$.ofType(CLICK_ON_MAP).switchMap(({point}) => {
                 const {latlng, pixel, modifiers: {ctrl, metaKey}} = point;
@@ -522,6 +523,7 @@ export const handleClickOnMap = (action$, store) =>
 export const handleBoxSelectionDrawEnd =  (action$, store) =>
     action$.ofType(UPDATE_FILTER)
         .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
+        .filter(() => getCapabilities(selectedLayerSelector(store.getState())).spatialFilter)
         .switchMap(() => {
             return action$.ofType(BOX_END).switchMap(({boxEndInfo}) => {
                 const { boxExtent, modifiers: {ctrl, metaKey} } = boxEndInfo;

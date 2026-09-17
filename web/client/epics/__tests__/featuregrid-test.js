@@ -2105,11 +2105,15 @@ describe('featuregrid Epics', () => {
             expect(actions[1].update.value.geometry.radius).toExist();
         }, {
             featuregrid: {
+                selectedLayer: 'layer1',
                 filters: [{
                     type: 'geometry',
                     attribute: 'the_geom',
                     enabled: true
                 }]
+            },
+            layers: {
+                flat: [{id: 'layer1', type: 'wms', search: {type: 'wfs', url: '/dummy'}}]
             },
             map: {
                 present: {
@@ -2287,11 +2291,15 @@ describe('featuregrid Epics', () => {
             expect(actions[1].update.value.geometry.type).toBe('Polygon');
         }, {
             featuregrid: {
+                selectedLayer: 'layer1',
                 filters: [{
                     type: 'geometry',
                     attribute: 'the_geom',
                     enabled: true
                 }]
+            },
+            layers: {
+                flat: [{id: 'layer1', type: 'wms', search: {type: 'wfs', url: '/dummy'}}]
             },
             map: {
                 present: {

@@ -47,6 +47,7 @@ import {
     isViewportFilterActive,
     isFilterByViewportSupported,
     selectedLayerSelector,
+    featureSourceCapabilitiesSelector,
     hasNoGeometry
 } from '../../../selectors/featuregrid';
 import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
@@ -107,6 +108,7 @@ const Toolbar = connect(
         viewportFilter: isViewportFilterActive,
         isFilterByViewportSupported,
         layer: selectedLayerSelector,
+        capabilities: featureSourceCapabilitiesSelector,
         hideSpatialFunctionalityTools: hasNoGeometry
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
@@ -189,11 +191,13 @@ export const getEmptyRowsView = () => {
  * Returns an object with field name as key and a filterRenderer components as value
  * @param {object} schema the {@link utils.FeatureSchemaUtils FeatureSchema} of the features
  * @param {object[]} fields array of fields (with `filterRenderer` property)
+ * @param {boolean} isWithinAttrTbl true when rendered inside the attribute table
+ * @param {object} [options] `spatialFilter` and `showOperators`, false when the source does not honour them
  * @returns {object} object with field name as key and filterRenderer as value
  */
-export const getFilterRenderers =  (schema, fields = [], isWithinAttrTbl) => {
+export const getFilterRenderers =  (schema, fields = [], isWithinAttrTbl, { spatialFilter = true, showOperators = true } = {}) => {
     if (schema) {
-        return (schema.attributes || []).reduce( (out, cur) => {
+        return (schema.attributes || []).filter((attribute) => !attribute.geometry || spatialFilter).reduce( (out, cur) => {
             const field = fields.find(f => f.name === cur.name);
             return {
                 ...out,
@@ -216,7 +220,7 @@ export const getFilterRenderers =  (schema, fields = [], isWithinAttrTbl) => {
                             } : {};
                             return mode === "EDIT" ? {...props, ...editProps} : props;
                         }
-                    ))(getFilterRenderer({type: cur.geometry ? 'geometry' : cur.localType, name: field?.filterRenderer?.name, options: field?.filterRenderer?.options, isWithinAttrTbl}))
+                    ))(getFilterRenderer({type: cur.geometry ? 'geometry' : cur.localType, name: field?.filterRenderer?.name, options: field?.filterRenderer?.options, isWithinAttrTbl, showOperators}))
             };
         }, {});
     }

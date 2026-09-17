@@ -25,7 +25,8 @@ class AttributeFilter extends React.PureComponent {
         tooltipMsgId: PropTypes.string,
         defaultOperator: PropTypes.string,
         type: PropTypes.string,
-        isWithinAttrTbl: PropTypes.bool
+        isWithinAttrTbl: PropTypes.bool,
+        showOperators: PropTypes.bool
     };
 
     static contextTypes = {
@@ -39,7 +40,8 @@ class AttributeFilter extends React.PureComponent {
         column: {},
         placeholderMsgId: "featuregrid.filter.placeholders.default",
         defaultOperator: "=",
-        isWithinAttrTbl: false
+        isWithinAttrTbl: false,
+        showOperators: true
     };
     constructor(props) {
         super(props);
@@ -147,7 +149,7 @@ class AttributeFilter extends React.PureComponent {
         return (
             <div key={inputKey} className={`form-group${((this.state.isInputValid && this.props.valid) ? "" : " has-error")}`}>
                 {this.props.isWithinAttrTbl ? <>
-                    {this.renderOperatorField()}
+                    {this.props.showOperators ? this.renderOperatorField() : null}
                     {this.isDateTimeField() ? this.renderInput() : this.renderTooltip(this.renderInput())}
                 </> : this.renderTooltip(this.renderInput())}
             </div>

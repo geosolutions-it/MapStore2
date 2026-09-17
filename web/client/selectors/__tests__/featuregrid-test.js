@@ -40,7 +40,8 @@ import {
     selectedLayerFieldsSelector,
     editingAllowedGroupsSelector,
     isEditingAllowedSelector,
-    hasNoGeometry
+    hasNoGeometry,
+    featureSourceCapabilitiesSelector
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -818,6 +819,25 @@ describe('Test featuregrid selectors', () => {
                     }
                 }
             })).toBeTruthy();
+        });
+    });
+    describe('featureSourceCapabilitiesSelector', () => {
+        it('returns the capabilities of the selected layer', () => {
+            const state = {
+                featuregrid: {selectedLayer: 'layer1'},
+                layers: {flat: [{id: 'layer1', type: 'vector'}]}
+            };
+            const capabilities = featureSourceCapabilitiesSelector(state);
+            expect(capabilities.browse).toBe(true);
+            expect(capabilities.editing).toBe(false);
+            expect(capabilities.spatialFilter).toBe(false);
+        });
+        it('keeps the same reference while the layer does not change', () => {
+            const state = {
+                featuregrid: {selectedLayer: 'layer1'},
+                layers: {flat: [{id: 'layer1', type: 'vector'}]}
+            };
+            expect(featureSourceCapabilitiesSelector(state)).toBe(featureSourceCapabilitiesSelector(state));
         });
     });
     describe('hasNoGeometry', () => {

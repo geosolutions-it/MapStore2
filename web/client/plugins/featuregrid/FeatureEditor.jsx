@@ -18,7 +18,7 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
 import { setUp, setSyncTool } from '../../actions/featuregrid';
 import {paginationInfo, featureSchemaSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
-import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, hasNoGeometry as hasNoGeometrySelector} from '../../selectors/featuregrid';
+import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, featureSourceCapabilitiesSelector, hasNoGeometry as hasNoGeometrySelector} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
 import {gridTools as defaultGridTools, gridEvents, pageEvents, toolbarEvents} from './index';
@@ -172,11 +172,16 @@ const Editor = (props = {
 }) => {
     const virtualScroll  = props.virtualScroll ?? true;
     const maxZoom  = props?.pluginCfg?.maxZoom;
+    const actionOpts = useMemo(() => ({maxZoom}), [maxZoom]);
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
+    // depend on the flags, not on the capabilities object: every query rebuilds the
+    // layer through LAYER_LOAD, so the object identity changes on each keystroke
+    const spatialFilter = props.capabilities?.spatialFilter !== false;
+    const showOperators = props.capabilities?.attributeFilter?.operators !== false;
     const filterRenderers = useMemo(() => {
-        return getFilterRenderers(props.schema, props.fields, props.isWithinAttrTbl);
-    }, [props.schema, props.fields]);
+        return getFilterRenderers(props.schema, props.fields, props.isWithinAttrTbl, { spatialFilter, showOperators });
+    }, [props.schema, props.fields, props.isWithinAttrTbl, spatialFilter, showOperators]);
 
     // If the dataset has no geometry, hide the geometry tool column
     const hideGeometryColumn = props?.hasNoGeometry;
@@ -246,7 +251,7 @@ const Editor = (props = {
                         vsOverScan={props.vsOverScan}
                         scrollDebounce={props.scrollDebounce}
                         size={props.size}
-                        actionOpts={{maxZoom}}
+                        actionOpts={actionOpts}
                         dateFormats={props.dateFormats}
                         useUTCOffset={props.useUTCOffset}
                         validationErrors={validationErrors}
@@ -270,6 +275,7 @@ export const selector = createStructuredSelector({
     typeName: state => typeNameSelector(state),
     features: state => get(state, 'featuregrid.features') || EMPTY_ARR,
     schema: featureSchemaSelector,
+    capabilities: featureSourceCapabilitiesSelector,
     featurePropertiesJSONSchema: attributesJSONSchemaSelector,
     fields: selectedLayerFieldsSelector,
     attributes: state => get(state, "featuregrid.attributes"),

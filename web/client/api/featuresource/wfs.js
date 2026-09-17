@@ -107,7 +107,12 @@ export const getFeatures = (layer, filter, options = {}) => {
  */
 export const capabilities = (layer) => ({
     browse: !!layer?.search,
-    editing: true
+    editing: true,
+    attributeFilter: { operators: true },
+    spatialFilter: true,
+    advancedFilter: true,
+    mapFilterSync: true,
+    download: !!layer?.search?.url
 });
 
 /**

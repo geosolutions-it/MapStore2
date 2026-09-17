@@ -115,10 +115,16 @@ export const getFeatures = (layer, filter, options = {}) =>
     Rx.Observable.defer(() => Promise.resolve(filterFeatureCollection(layer?.features, filter, options)));
 
 /**
- * Capabilities of a vector layer, browsable and read only
+ * Capabilities of a vector layer. The features are filtered in memory, which
+ * covers attribute equality only, and there is no service to export them from.
  * @returns {object} the capabilities
  */
 export const capabilities = () => ({
     browse: true,
-    editing: false
+    editing: false,
+    attributeFilter: { operators: false },
+    spatialFilter: false,
+    advancedFilter: false,
+    mapFilterSync: true,
+    download: false
 });

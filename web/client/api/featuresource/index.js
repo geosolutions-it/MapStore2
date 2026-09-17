@@ -57,18 +57,50 @@ export const getFeatureSourceType = (layer = {}) => layer?.type === 'wms'
 export const getFeatureSource = (layer) => getFeatureSourceByType(getFeatureSourceType(layer));
 
 /**
+ * What the attribute table can offer for a layer. A flag is `false` when the source
+ * does not support it, `true` when it does, and an object when the support is partial.
+ * @typedef {object} FeatureSourceCapabilities
+ * @property {boolean} browse the features can be listed
+ * @property {boolean} editing the features can be written back
+ * @property {boolean|object} attributeFilter the attribute filters are honoured, `{operators}` tells if the comparison operators are
+ * @property {boolean|object} spatialFilter the spatial filters are honoured, geometry filter, map selection and viewport filter
+ * @property {boolean} advancedFilter the filters built by the query panel are honoured
+ * @property {boolean} mapFilterSync the filter of the grid can be pushed to the layer on the map
+ * @property {boolean} download the features can be exported
+ */
+const DEFAULT_CAPABILITIES = {
+    browse: false,
+    editing: false,
+    attributeFilter: false,
+    spatialFilter: false,
+    advancedFilter: false,
+    mapFilterSync: false,
+    download: false
+};
+
+/**
+ * Get the capabilities of the source of a layer, defaulting to no support at all
+ * @param {object} layer the layer
+ * @returns {FeatureSourceCapabilities} the capabilities
+ */
+export const getCapabilities = (layer) => ({
+    ...DEFAULT_CAPABILITIES,
+    ...(getFeatureSource(layer)?.capabilities?.(layer) || {})
+});
+
+/**
  * Check if the layer can be browsed in the attribute table
  * @param {object} layer the layer
  * @returns {boolean} flag
  */
-export const canBrowseFeatures = (layer) => !!getFeatureSource(layer)?.capabilities?.(layer)?.browse;
+export const canBrowseFeatures = (layer) => !!getCapabilities(layer).browse;
 
 /**
  * Check if the layer supports feature editing
  * @param {object} layer the layer
  * @returns {boolean} flag
  */
-export const supportsFeatureEditing = (layer) => !!getFeatureSource(layer)?.capabilities?.(layer)?.editing;
+export const supportsFeatureEditing = (layer) => !!getCapabilities(layer).editing;
 
 /**
  * Check if layer features are editable, combining the source capabilities with the layer setting

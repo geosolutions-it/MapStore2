@@ -7,6 +7,9 @@
   */
 
 import { head, get, isObject } from 'lodash';
+import { createSelector } from 'reselect';
+
+import { getCapabilities } from '../api/featuresource';
 
 import { getLayerFromId } from './layers';
 import { getGeometryAttribute } from '../utils/FeatureSchemaUtils';
@@ -75,6 +78,14 @@ export const hasNewFeaturesSelector = state => newFeaturesSelector(state) && new
 export const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
 export const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLayerIdSelector(state)), "params");
 export const selectedLayerSelector = state => getLayerById(state, selectedLayerIdSelector(state));
+/**
+ * Capabilities of the source of the selected layer. Memoized, the object identity
+ * has to stay stable or the grid rebuilds its columns and filter renderers.
+ */
+export const featureSourceCapabilitiesSelector = createSelector(
+    selectedLayerSelector,
+    (layer) => getCapabilities(layer)
+);
 export const editingAllowedRolesSelector = state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]);
 export const editingAllowedGroupsSelector = state => get(state, "featuregrid.editingAllowedGroups", []);
 export const canEditSelector = state => state && state.featuregrid && state.featuregrid.canEdit;

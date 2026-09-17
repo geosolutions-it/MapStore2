@@ -14,6 +14,7 @@ import describePois from '../../../test-resources/wfs/describe-pois.json';
 import {
     areLayerFeaturesEditable,
     canBrowseFeatures,
+    getCapabilities,
     getFeatureSource,
     getFeatureSourceByType,
     getFeatureSourceType,
@@ -59,6 +60,43 @@ describe('featuresource registry', () => {
         expect(areLayerFeaturesEditable({type: 'wms'})).toBe(true);
         expect(areLayerFeaturesEditable({type: 'wms', disableFeaturesEditing: true})).toBe(false);
         expect(areLayerFeaturesEditable({type: 'wmts'})).toBe(false);
+    });
+    it('getCapabilities defaults to no support for an unregistered type', () => {
+        expect(getCapabilities({type: 'wmts'})).toEqual({
+            browse: false,
+            editing: false,
+            attributeFilter: false,
+            spatialFilter: false,
+            advancedFilter: false,
+            mapFilterSync: false,
+            download: false
+        });
+        expect(getCapabilities()).toEqual(getCapabilities({type: 'wmts'}));
+    });
+    it('getCapabilities of a wfs backed layer', () => {
+        const capabilities = getCapabilities({type: 'wms', search: {type: 'wfs', url: '/dummy'}});
+        expect(capabilities.browse).toBe(true);
+        expect(capabilities.editing).toBe(true);
+        expect(capabilities.spatialFilter).toBe(true);
+        expect(capabilities.advancedFilter).toBe(true);
+        expect(capabilities.mapFilterSync).toBe(true);
+        expect(capabilities.download).toBe(true);
+        expect(capabilities.attributeFilter.operators).toBe(true);
+    });
+    it('getCapabilities of a wms layer with no search service', () => {
+        const capabilities = getCapabilities({type: 'wms'});
+        expect(capabilities.browse).toBe(false);
+        expect(capabilities.download).toBe(false);
+    });
+    it('getCapabilities of a vector layer', () => {
+        const capabilities = getCapabilities({type: 'vector'});
+        expect(capabilities.browse).toBe(true);
+        expect(capabilities.editing).toBe(false);
+        expect(capabilities.spatialFilter).toBe(false);
+        expect(capabilities.advancedFilter).toBe(false);
+        expect(capabilities.download).toBe(false);
+        expect(capabilities.mapFilterSync).toBe(true);
+        expect(capabilities.attributeFilter.operators).toBe(false);
     });
     it('registerFeatureSource', () => {
         const source = { describe: () => {}, getFeatures: () => {} };
@@ -161,7 +199,15 @@ describe('vector feature source', () => {
             .catch(done);
     });
     it('capabilities', () => {
-        expect(vector.capabilities()).toEqual({browse: true, editing: false});
+        expect(vector.capabilities()).toEqual({
+            browse: true,
+            editing: false,
+            attributeFilter: { operators: false },
+            spatialFilter: false,
+            advancedFilter: false,
+            mapFilterSync: true,
+            download: false
+        });
     });
     it('getFeatures filters and sorts client side', (done) => {
         vector.getFeatures({features}, {
