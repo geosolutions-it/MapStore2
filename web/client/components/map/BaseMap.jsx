@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isString } from 'lodash';
 import { createVectorFeatureFilter } from '../../utils/FilterUtils';
-import { groupWMSLayers } from '../../utils/WMSCoalesceUtils';
+import { groupWMSLayers, DEFAULT_MAX_GROUP_SIZE } from '../../utils/WMSCoalesceUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 
 /**
@@ -70,7 +70,7 @@ class BaseMap extends React.Component {
         },
         env: [],
         zoomControl: false,
-        coalesceWMSLayersMaxGroupSize: 10
+        coalesceWMSLayersMaxGroupSize: DEFAULT_MAX_GROUP_SIZE
     };
 
     getTool = (tool) => {
