@@ -190,16 +190,9 @@ const SettingsPlugin = connect((state) => ({
  * @memberof plugins
  * @static
  *
- * @prop {string} [cfg.id="mapstore-settings"] HTML identifier used by the panel or dialog wrapper.
- * @prop {object} [cfg.style] Inline style applied to the settings content. The default width is 300 px.
- * @prop {boolean} [cfg.wrap=false] If `true`, renders the content only while the Settings control is enabled and adds a panel or dialog wrapper.
- * @prop {boolean} [cfg.wrapWithPanel=false] If `true` and `cfg.wrap` is enabled, uses a Bootstrap panel instead of a modal dialog rendered through a portal.
- * @prop {object} [cfg.panelStyle] Inline style applied to the panel or dialog wrapper. By default it creates an absolutely positioned overlay with a minimum width of 300 px.
- * @prop {string} [cfg.panelClassName="toolbar-panel"] CSS class applied to the panel or dialog wrapper.
- * @prop {string} [cfg.closeGlyph="1-close"] Glyph used by the modal dialog close button. A falsy value renders the multiplication sign instead.
  * @prop {object} [cfg.overrideSettings] Overrides the visibility of built-in sections. The default is `{language: false, history: false}`.
- * @prop {boolean} [cfg.overrideSettings.language] Shows or hides the language selector. If omitted from a custom override object, availability is inferred from the locale state.
- * @prop {boolean} [cfg.overrideSettings.history] Shows or hides the undo/redo controls. If omitted from a custom override object, availability is inferred from map-history state.
+ * @prop {boolean} [cfg.overrideSettings.language] Set to `true` to show the language selector or `false` to hide it.
+ * @prop {boolean} [cfg.overrideSettings.history] Set to `true` to show the navigation-history undo/redo controls or `false` to hide them.
  */
 export default {
     SettingsPlugin: Object.assign(SettingsPlugin, {
