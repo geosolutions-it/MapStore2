@@ -303,18 +303,24 @@ export const onOpenFilterEditorEpic = (action$, store) =>
         .switchMap(() => {
             const state = store.getState();
             const layer = getWidgetLayer(state);
-            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857"), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
+            const bbox = layer?.bbox;
+            const extent = bbox?.bounds && bbox?.crs
+                ? reprojectBbox(bbox.bounds, bbox.crs, "EPSG:3857")
+                : null;
+            if (!extent) {
+                return Rx.Observable.of(changeMapEditor(null));
+            }
+            const zoom = defaultGetZoomForExtent(extent, DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
             const map = {
                 ...DEFAULT_MAP_SETTINGS,
                 zoom,
                 center: {
-                    crs: layer.bbox.crs,
-                    x: (layer.bbox.bounds.maxx + layer.bbox.bounds.minx) / 2,
-                    y: (layer.bbox.bounds.maxy + layer.bbox.bounds.miny) / 2
+                    crs: bbox.crs,
+                    x: (bbox.bounds.maxx + bbox.bounds.minx) / 2,
+                    y: (bbox.bounds.maxy + bbox.bounds.miny) / 2
                 }
             };
-            const mapData = layer?.bbox ? map : null;
-            return Rx.Observable.of( changeMapEditor(mapData) );
+            return Rx.Observable.of(changeMapEditor(map));
         });
 
 
