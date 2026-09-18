@@ -304,8 +304,8 @@ export const onOpenFilterEditorEpic = (action$, store) =>
             const state = store.getState();
             const layer = getWidgetLayer(state);
             const bbox = layer?.bbox;
-            const extent = bbox?.bounds && bbox?.crs
-                ? reprojectBbox(bbox.bounds, bbox.crs, "EPSG:3857")
+            const extent = bbox?.bounds
+                ? reprojectBbox(bbox.bounds, bbox?.crs || "EPSG:4326", "EPSG:3857")
                 : null;
             if (!extent) {
                 return Rx.Observable.of(changeMapEditor(null));
@@ -315,7 +315,7 @@ export const onOpenFilterEditorEpic = (action$, store) =>
                 ...DEFAULT_MAP_SETTINGS,
                 zoom,
                 center: {
-                    crs: bbox.crs,
+                    crs: bbox?.crs || "EPSG:4326",
                     x: (bbox.bounds.maxx + bbox.bounds.minx) / 2,
                     y: (bbox.bounds.maxy + bbox.bounds.miny) / 2
                 }
