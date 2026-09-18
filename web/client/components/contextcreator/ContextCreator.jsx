@@ -238,6 +238,7 @@ export default class ContextCreator extends React.Component {
             "Annotations",
             "MapImport",
             "MapExport",
+            "Settings",
             "Undo",
             "Redo",
             "Expander",

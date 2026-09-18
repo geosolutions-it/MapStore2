@@ -180,10 +180,19 @@ const SettingsPlugin = connect((state) => ({
 /**
  * Settings window to configure some details of the current map.
  * Is also a container for settings coming from the other plugins.
- * Renders in {@link #plugins.BurgerMenu|BurgerMenu} an entry to open this window.
+ *
+ * The plugin exposes entries for {@link #plugins.Toolbar|Toolbar},
+ * {@link #plugins.DrawerMenu|DrawerMenu}, {@link #plugins.BurgerMenu|BurgerMenu},
+ * and {@link #plugins.SidebarMenu|SidebarMenu}.
+ *
  * @name Settings
  * @class
  * @memberof plugins
+ * @static
+ *
+ * @prop {object} [cfg.overrideSettings] Overrides the visibility of built-in sections. The default is `{language: false, history: false}`.
+ * @prop {boolean} [cfg.overrideSettings.language] Set to `true` to show the language selector or `false` to hide it.
+ * @prop {boolean} [cfg.overrideSettings.history] Set to `true` to show the navigation-history undo/redo controls or `false` to hide them.
  */
 export default {
     SettingsPlugin: Object.assign(SettingsPlugin, {
