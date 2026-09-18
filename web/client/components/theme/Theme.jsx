@@ -102,6 +102,14 @@ const Theme = memo(({
                 link.current.setAttribute('data-ms-state', 'mounted');
             } else {
                 link.current = linkNode;
+
+                // run handleLoad for secondary containers which require same theme
+                const alreadyLoaded = !!linkNode.sheet;
+                if (alreadyLoaded) {
+                    handleLoad();
+                } else {
+                    linkNode.addEventListener('load', handleLoad, { once: true });
+                }
             }
 
             // compare previous and current href to change the theme
