@@ -72,3 +72,9 @@ export const isMenuItemSupportedSupported = (item, availableResourceTypes, user)
     const supportedResourceTypes = getSupportedResourceTypes(availableResourceTypes, user);
     return supportedResourceTypes.includes(item.resourceType);
 };
+
+export const CARD_LAYOUT_TYPES = {
+    GRID: 'grid',
+    LIST: 'list',
+    TABLE: 'table'
+};

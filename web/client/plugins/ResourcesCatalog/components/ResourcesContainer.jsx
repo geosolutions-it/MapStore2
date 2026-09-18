@@ -13,6 +13,7 @@ import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
 import { getResourceStatus } from '../../../utils/ResourcesUtils';
+import { CARD_LAYOUT_TYPES, DEFAULT_CARD_LAYOUT_SIZES } from '../constants';
 
 const ResourcesContainer = (props) => {
     const {
@@ -48,9 +49,9 @@ const ResourcesContainer = (props) => {
                 {children}
                 <FlexBox
                     component="ul"
-                    column={cardLayoutStyle === 'list'}
-                    wrap={cardLayoutStyle !== 'list'}
-                    gap={cardLayoutStyle === 'list' ? 'md' : 'lg'}
+                    column={[CARD_LAYOUT_TYPES.LIST, CARD_LAYOUT_TYPES.TABLE].includes(cardLayoutStyle)}
+                    wrap={cardLayoutStyle === CARD_LAYOUT_TYPES.GRID}
+                    gap={DEFAULT_CARD_LAYOUT_SIZES[cardLayoutStyle]}
                     className={`ms-resources-container-${cardLayoutStyle}`}
                     classNames={['_relative', '_padding-tb-lg']}
                 >

@@ -50,4 +50,20 @@ describe('useCardLayoutStyle', () => {
         Simulate.click(button);
         expect(button.innerHTML).toBe('grid-true');
     });
+    it('should fallback to valid style and hide button when stored style is not in cardLayoutStyles', () => {
+        getApi().setItem(getItemKey(USE_LOCAL_STORAGE_SECTION, STORAGE_FRAGMENT), JSON.stringify('list'));
+        act(() => {
+            ReactDOM.render(<Component cardLayoutStyles={['grid']} defaultCardLayoutStyle="grid" />, document.getElementById('container'));
+        });
+        const button = document.querySelector('button');
+        expect(button.innerHTML).toBe('grid-true');
+    });
+    it('should use stored style if present in cardLayoutStyles and show button when multiple styles available', () => {
+        getApi().setItem(getItemKey(USE_LOCAL_STORAGE_SECTION, STORAGE_FRAGMENT), JSON.stringify('table'));
+        act(() => {
+            ReactDOM.render(<Component cardLayoutStyles={['grid', 'table']} defaultCardLayoutStyle="grid" />, document.getElementById('container'));
+        });
+        const button = document.querySelector('button');
+        expect(button.innerHTML).toBe('table-false');
+    });
 });
