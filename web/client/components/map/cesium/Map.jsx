@@ -28,6 +28,7 @@ import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import { throttle, isEqual, debounce } from 'lodash';
 import TIFFImageryProvider from 'tiff-imagery-provider';
 import { getCOGPixelData } from '../../../utils/cog/IdentifyUtils';
+import withBatchedLayerLoading from '../enhancers/withBatchedLayerLoading';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -854,4 +855,4 @@ const ReloadCesiumMap = forwardRef((props, ref) => {
     );
 });
 
-export default ReloadCesiumMap;
+export default withBatchedLayerLoading(ReloadCesiumMap);

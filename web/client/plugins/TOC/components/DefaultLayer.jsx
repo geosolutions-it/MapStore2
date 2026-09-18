@@ -14,7 +14,7 @@ import { getLayerErrorMessage } from '../utils/TOCUtils';
 import DropNode from './DropNode';
 import DragNode from './DragNode';
 import { VisualizationModes } from '../../../utils/MapTypeUtils';
-import InlineLoader from './InlineLoader';
+import DefaultInlineLoader from './InlineLoader';
 import WMSLegend from './WMSLegend';
 import ArcGISLegend from './ArcGISLegend';
 import OpacitySlider from './OpacitySlider';
@@ -280,6 +280,7 @@ const DefaultLayerNode = ({
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button
+ * @prop {component} loaderComponent component to render loading state
  */
 const DefaultLayer = ({
     node: nodeProp,
@@ -304,7 +305,8 @@ const DefaultLayer = ({
     nodeContentItems = [],
     nodeItems = [],
     nodeTypes,
-    theme
+    theme,
+    loaderComponent: Loader = DefaultInlineLoader
 }) => {
 
     const replacedNode = replaceNodeOptions(nodeProp, nodeType);
@@ -386,7 +388,7 @@ const DefaultLayer = ({
                     id={node.id}
                     parentId={parentId}
                 >
-                    <InlineLoader loading={node?.loading}/>
+                    <Loader nodeId={node.id}/>
                     {filteredNodeItems.length
                         ? filteredNodeItems.map(({ Component, name }) => {
                             return (
