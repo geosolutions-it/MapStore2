@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import ConfigUtils from './ConfigUtils';
+
 export const DISPLAY_TYPES = [
     'image', 'video', 'audio', 'panorama', 'pdf', 'url', 'iframe', 'media'
 ];
@@ -55,12 +57,25 @@ export const getDisplayTypeFromExtension = (value) => {
     return extension ? EXTENSION_TO_TYPE[extension] || null : null;
 };
 
+const getDisplayTypeFromAlias = (value) => {
+    if (value === undefined || value === null) {
+        return null;
+    }
+    const normalizedValue = String(value).trim().toLowerCase();
+    const aliases = ConfigUtils.getConfigProp('featureInfoMediaTypeAliases') || {};
+    return Object.entries(aliases).find(([displayType, displayTypeAliases]) =>
+        DISPLAY_TYPES.includes(displayType)
+        && Array.isArray(displayTypeAliases)
+        && displayTypeAliases.some(alias => String(alias).trim().toLowerCase() === normalizedValue)
+    )?.[0] || null;
+};
+
 export const resolveAttributeDisplayType = ({ value, attribute = {}, mediaTypeValue } = {}) => {
     if (!attribute.displayType) {
         return 'string';
     }
     const configuredType = attribute.displayType === 'media'
-        ? getDisplayTypeFromMediaType(mediaTypeValue)
+        ? getDisplayTypeFromAlias(mediaTypeValue) || getDisplayTypeFromMediaType(mediaTypeValue)
         : getDisplayTypeFromMediaType(attribute.displayType);
     return configuredType || getDisplayTypeFromExtension(value) || (attribute.displayType === 'media' ? 'url' : 'string');
 };
