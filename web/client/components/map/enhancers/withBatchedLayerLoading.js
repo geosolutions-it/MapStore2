@@ -81,16 +81,64 @@ const useBatchedLayerLoad = (onLayerLoad, delay = 0) => {
     }, [delay]);
 };
 
+const useBatchedLayerError = (onLayerError, delay = 0) => {
+    const onLayerErrorRef = useRef(onLayerError);
+    onLayerErrorRef.current = onLayerError;
+    const pendingErrorsRef = useRef(new Set());
+    const pendingWarningsRef = useRef(new Set());
+    const timerRef = useRef(null);
+
+    useEffect(() => () => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        pendingErrorsRef.current.clear();
+        pendingWarningsRef.current.clear();
+    }, []);
+
+    return useCallback((layerId, tilesCount, tilesErrorCount) => {
+        if (!onLayerErrorRef.current || !layerId) return;
+        const ids = castArray(layerId);
+        const isError = tilesCount === tilesErrorCount;
+        ids.forEach(id => {
+            if (isError) {
+                pendingWarningsRef.current.delete(id);
+                pendingErrorsRef.current.add(id);
+            } else {
+                if (!pendingErrorsRef.current.has(id)) {
+                    pendingWarningsRef.current.add(id);
+                }
+            }
+        });
+
+        if (!timerRef.current) {
+            timerRef.current = setTimeout(() => {
+                const errorIds = Array.from(pendingErrorsRef.current);
+                const warningIds = Array.from(pendingWarningsRef.current);
+                pendingErrorsRef.current.clear();
+                pendingWarningsRef.current.clear();
+                timerRef.current = null;
+                if (errorIds.length > 0) {
+                    onLayerErrorRef.current(errorIds, 1, 1);
+                }
+                if (warningIds.length > 0) {
+                    onLayerErrorRef.current(warningIds, 2, 1);
+                }
+            }, delay);
+        }
+    }, [delay]);
+};
+
 const withBatchedLayerLoading = (Component) => forwardRef((props, ref) => {
     const delay = props.layerLoadingBatchDelay ?? 50;
     const batchedLoading = useBatchedLayerLoading(props.onLayerLoading, delay);
     const batchedLoad = useBatchedLayerLoad(props.onLayerLoad, delay);
+    const batchedError = useBatchedLayerError(props.onLayerError, delay);
     return (
         <Component
             ref={ref}
             {...props}
             onLayerLoading={batchedLoading}
             onLayerLoad={batchedLoad}
+            onLayerError={batchedError}
         />
     );
 });

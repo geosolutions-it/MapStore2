@@ -274,7 +274,7 @@ export default class OpenlayersLayer extends React.Component {
             });
 
             tileLoadEndStream$
-                .bufferWhen(() => tileStopStream$)
+                .bufferWhen(() => tileStopStream$.debounceTime(50))
                 .subscribe({
                     next: (tileEvents) => {
                         const errors = tileEvents.filter(e => e.type === 'tileloaderror');
@@ -318,7 +318,7 @@ export default class OpenlayersLayer extends React.Component {
             });
 
             imageLoadEndStream$
-                .bufferWhen(() => imageStopStream$)
+                .bufferWhen(() => imageStopStream$.debounceTime(50))
                 .subscribe({
                     next: (imageEvents) => {
                         const errors = imageEvents.filter(e => e.type === 'imageloaderror');
