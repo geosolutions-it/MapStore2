@@ -172,4 +172,89 @@ describe('withBatchedLayerLoading enhancer', () => {
         ReactDOM.render(<Enhanced />, container);
         expect(() => container.querySelector('#btn').click()).toNotThrow();
     });
+
+    it('batches multiple onLayerLoad calls into single array call with default delay', (done) => {
+        let batchedPayload = null;
+        let callCount = 0;
+        const MockComp = ({ onLayerLoad }) => (
+            <button
+                id="btn"
+                onClick={() => {
+                    onLayerLoad('layer-1');
+                    onLayerLoad('layer-2');
+                    onLayerLoad('layer-1');
+                }}
+            />
+        );
+        const Enhanced = withBatchedLayerLoading(MockComp);
+        ReactDOM.render(
+            <Enhanced
+                onLayerLoad={(ids) => {
+                    callCount++;
+                    batchedPayload = ids;
+                }}
+            />,
+            container
+        );
+
+        container.querySelector('#btn').click();
+        expect(callCount).toBe(0);
+
+        setTimeout(() => {
+            expect(callCount).toBe(1);
+            expect(batchedPayload).toEqual(['layer-1', 'layer-2']);
+            done();
+        }, 80);
+    });
+
+    it('separates success and error onLayerLoad calls into distinct batches', (done) => {
+        let successPayload = null;
+        let errorPayload = null;
+        let successCalls = 0;
+        let errorCalls = 0;
+        const MockComp = ({ onLayerLoad }) => (
+            <button
+                id="btn"
+                onClick={() => {
+                    onLayerLoad('layer-1');
+                    onLayerLoad('layer-2', { error: true });
+                    onLayerLoad('layer-3');
+                }}
+            />
+        );
+        const Enhanced = withBatchedLayerLoading(MockComp);
+        ReactDOM.render(
+            <Enhanced
+                onLayerLoad={(ids, error) => {
+                    if (error) {
+                        errorCalls++;
+                        errorPayload = ids;
+                    } else {
+                        successCalls++;
+                        successPayload = ids;
+                    }
+                }}
+            />,
+            container
+        );
+
+        container.querySelector('#btn').click();
+
+        setTimeout(() => {
+            expect(successCalls).toBe(1);
+            expect(successPayload).toEqual(['layer-1', 'layer-3']);
+            expect(errorCalls).toBe(1);
+            expect(errorPayload).toEqual(['layer-2']);
+            done();
+        }, 80);
+    });
+
+    it('handles missing onLayerLoad gracefully without error', () => {
+        const MockComp = ({ onLayerLoad }) => (
+            <button id="btn" onClick={() => onLayerLoad('layer-1')} />
+        );
+        const Enhanced = withBatchedLayerLoading(MockComp);
+        ReactDOM.render(<Enhanced />, container);
+        expect(() => container.querySelector('#btn').click()).toNotThrow();
+    });
 });
