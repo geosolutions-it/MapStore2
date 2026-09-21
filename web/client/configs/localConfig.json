@@ -31,6 +31,9 @@
   "initialMapFilter": "",
   "ignoreMobileCss": false,
   "loadAfterTheme": true,
+  "miscSettings": {
+    "maxURLLength": 2048
+  },
   "defaultMapOptions": {
     "cesium": {
       "navigationTools": true,

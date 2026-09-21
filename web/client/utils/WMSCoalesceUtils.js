@@ -16,6 +16,8 @@ import { getConfigProp } from './ConfigUtils';
 
 export const SHARED_KEYS = [
     'baseParams',
+    'crossOrigin',
+    'forceProxy',
     'format',
     'localizedLayerStyles',
     'maxResolution',
@@ -54,25 +56,6 @@ const sameURLs = (a, b) => {
 const hasBlockedParam = (layer) => {
     const params = optionsToVendorParams(layer) || {};
     return BLOCKED_PARAMS.some((key) => params[key] !== undefined);
-};
-
-const isCoalescable = (layer) => {
-    if (layer.coalesce === false) {
-        return false;
-    }
-    if (layer.type !== 'wms') {
-        return false;
-    }
-    if (layer.useForElevation) {
-        return false;
-    }
-    if (layer.group === 'background') {
-        return false;
-    }
-    if (isVectorFormat(layer.format)) {
-        return false;
-    }
-    return !hasBlockedParam(layer);
 };
 
 const mergeVisibleLayerParams = (members) => {
@@ -155,11 +138,11 @@ export const defaultGroupCondition = (prev, item, chunk, {
     if (excludeIds?.includes(reference.id) || excludeIds?.includes(item.id)) {
         return false;
     }
-    if (item.visibility === false) {
-        return isCoalescable(item);
-    }
     if (!mergeable(reference, item)) {
         return false;
+    }
+    if (item.visibility === false) {
+        return true;
     }
     const members = [...chunk, item];
     if (members.filter((m) => m.visibility !== false).length > maxGroupSize) {
