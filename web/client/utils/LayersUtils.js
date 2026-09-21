@@ -24,6 +24,7 @@ import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
 import { has, includes, indexOf } from 'lodash';
+import { DEFAULT_DOCUMENTS_FEATURE_INFO } from './FeatureInfoAttributeUtils';
 
 let LayersUtils;
 
@@ -451,6 +452,14 @@ export const normalizeLayer = (layer) => {
     // regenerate geodesic lines as property since that info has not been saved
     if (_layer.id === ANNOTATIONS) {
         _layer = updateAnnotationsLayer(_layer)[0];
+    }
+    // migrate legacy GeoNode document layers, preserving an existing featureInfo configuration
+    if (_layer.rowViewer === 'GEONODE_DOCUMENTS_ROW_VIEWER') {
+        const { rowViewer, ...rest } = _layer;
+        _layer = {
+            ...rest,
+            ...(!rest.featureInfo && { featureInfo: DEFAULT_DOCUMENTS_FEATURE_INFO })
+        };
     }
 
     return {

@@ -23,7 +23,7 @@ describe('mapinfo 3D tiles utils', () => {
                 lng: undefined
             },
             metadata: {
-                title: layer.title, fields: [], resolution: undefined, buffer: 2, units: undefined, rowViewer: undefined, viewer: undefined, layerId: undefined
+                title: layer.title, resolution: undefined, buffer: 2, units: undefined, rowViewer: undefined, viewer: undefined, layerId: undefined
             },
             url: 'client'
         });
@@ -45,7 +45,7 @@ describe('mapinfo 3D tiles utils', () => {
                 lng: 1
             },
             metadata: {
-                title: layer.title, fields: [], resolution: undefined, buffer: 2, units: undefined, rowViewer: undefined, viewer: undefined, layerId: 'layer-id'
+                title: layer.title, resolution: undefined, buffer: 2, units: undefined, rowViewer: undefined, viewer: undefined, layerId: 'layer-id'
             },
             url: 'client'
         });

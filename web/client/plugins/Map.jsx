@@ -32,7 +32,7 @@ import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
 import { MapLibraries } from '../utils/MapTypeUtils';
-import { groupWMSLayers } from '../utils/WMSCoalesceUtils';
+import { groupWMSLayers, DEFAULT_MAX_GROUP_SIZE } from '../utils/WMSCoalesceUtils';
 import {getHighlightLayerOptions} from "../utils/HighlightUtils";
 import Spinner from '../components/layout/Spinner';
 import { MAIN_MAP_CONTAINER_ID } from '../utils/MapUtils';
@@ -259,7 +259,7 @@ class MapPlugin extends React.Component {
         onLoadingMapPlugins: () => {},
         onMapTypeLoaded: () => {},
         pluginsCreator,
-        coalesceWMSLayersMaxGroupSize: 10
+        coalesceWMSLayersMaxGroupSize: DEFAULT_MAX_GROUP_SIZE
     };
 
     state = {};

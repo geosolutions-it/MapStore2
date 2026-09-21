@@ -8,6 +8,7 @@
 
 import isEqual from 'lodash/isEqual';
 import isArray from 'lodash/isArray';
+import findLast from 'lodash/findLast';
 import { isVectorFormat } from './VectorTileUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
 import { getWMSURLs, wmsToOpenlayersOptions } from './openlayers/WMSUtils';
@@ -41,7 +42,7 @@ export const BLOCKED_PARAMS = [
 ];
 
 
-export const DEFAULT_MAX_GROUP_SIZE = 10;
+export const DEFAULT_MAX_GROUP_SIZE = 30;
 
 const getMaxURLLength = () => getConfigProp('miscSettings')?.maxURLLength || Infinity;
 
@@ -53,6 +54,25 @@ const sameURLs = (a, b) => {
 const hasBlockedParam = (layer) => {
     const params = optionsToVendorParams(layer) || {};
     return BLOCKED_PARAMS.some((key) => params[key] !== undefined);
+};
+
+const isCoalescable = (layer) => {
+    if (layer.coalesce === false) {
+        return false;
+    }
+    if (layer.type !== 'wms') {
+        return false;
+    }
+    if (layer.useForElevation) {
+        return false;
+    }
+    if (layer.group === 'background') {
+        return false;
+    }
+    if (isVectorFormat(layer.format)) {
+        return false;
+    }
+    return !hasBlockedParam(layer);
 };
 
 const mergeVisibleLayerParams = (members) => {
@@ -128,14 +148,25 @@ export const defaultGroupCondition = (prev, item, chunk, {
     maxURLLength = getMaxURLLength(),
     excludeIds
 } = {}) => {
-    if (excludeIds?.includes(prev.id) || excludeIds?.includes(item.id)) {
+    const reference = findLast(chunk, (m) => m.visibility !== false);
+    if (!reference) {
         return false;
     }
-    if (chunk.length >= maxGroupSize || !mergeable(prev, item)) {
+    if (excludeIds?.includes(reference.id) || excludeIds?.includes(item.id)) {
         return false;
     }
-    const { name, style } = mergeVisibleLayerParams([...chunk, item]);
-    const getRequestLength = estimateWMSRequestURLLength({ ...chunk[0], name, style });
+    if (item.visibility === false) {
+        return isCoalescable(item);
+    }
+    if (!mergeable(reference, item)) {
+        return false;
+    }
+    const members = [...chunk, item];
+    if (members.filter((m) => m.visibility !== false).length > maxGroupSize) {
+        return false;
+    }
+    const { name, style } = mergeVisibleLayerParams(members);
+    const getRequestLength = estimateWMSRequestURLLength({ ...reference, name, style });
     return getRequestLength <= maxURLLength;
 };
 
@@ -146,7 +177,7 @@ export const toGroupUnit = (members, groupKey) => {
     return {
         key,
         options: {
-            ...members[0],
+            ...(visible[0] || members[0]),
             id: key,
             type: 'wms',
             ...mergeVisibleLayerParams(members),
@@ -161,14 +192,14 @@ export const toGroupUnit = (members, groupKey) => {
  * Groups WMS layers into coalesced LayerNodes based on their mergeability and a maximum group size.
  * @param {Array} layers - The array of WMS layers to be grouped.
  * @param {Object} options - Options for grouping.
- * @param {function} options.groupCondition - The condition function to determine if layers should be grouped together.
+ * @param {function} options. - The condition function to determine if layers should be grouped together.
  * @param {function} options.groupKeyGen - The function to generate a unique key for the grouped layers.
  * @param {Array} options.excludeIds - Ids of layers that must never be coalesced, e.g. the layer currently used by Swipe.
  * @returns {Array} An array of grouped WMS layers.
  */
 export const groupWMSLayers = (layers = [], {maxGroupSize, groupCondition, groupKeyGen = defaultGroupKeyGen, excludeIds} = {}) =>
     chunkWhile(layers, groupCondition || ((prev, item, chunk) => defaultGroupCondition(prev, item, chunk, { maxGroupSize, excludeIds })))
-        .map((run) => run.length === 1
-            ? { key: run[0].id || run[0].name, options: run[0] }
-            : toGroupUnit(run, groupKeyGen)
-        );
+        .reduce((units, run) => run.filter((layer) => layer.visibility !== false).length < 2
+            ? [...units, ...run.map((layer) => ({ key: layer.id || layer.name, options: layer }))]
+            : [...units, toGroupUnit(run, groupKeyGen)]
+        , []);
