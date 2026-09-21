@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import withContainer from '../../components/misc/WithContainer';
+import Message from '../locale/Message';
 
 import MapWithDraw from './MapWithDraw';
 import {
@@ -51,7 +52,7 @@ export const MapComponent = connect(
  *
  * @param {Object} props - Component props
  * @param {boolean} props.useEmbeddedMap - Whether to use embedded map mode
- * @param {boolean} props.hideSpatialFilter - Whether to hide the spatial filter
+ * @param {boolean} props.hideSpatialFilter - Whether to hide the spatial filter map
  * @param {boolean} props.queryPanelEnabled - Whether the query panel is enabled
  * @param {string} [props.targetContainerSelector=null] - CSS selector for the target container where the map should be rendered (optional, defaults to withContainer HOC's container)
  * @param {Element} [props.container] - Fallback container element (provided by withContainer HOC)
@@ -88,10 +89,13 @@ export default withContainer((props) => {
         ? document.querySelector(targetContainerSelector) || container
         : container;
 
-    return useEmbeddedMap && !hideSpatialFilter && queryPanelEnabled ?
+    // the container is kept even without the map: it masks the page content behind the query panel
+    return useEmbeddedMap && queryPanelEnabled ?
         createPortal(
             <div className="mapstore-query-map">
-                <MapComponent {...props}/>
+                {hideSpatialFilter
+                    ? <div className="mapstore-query-map-empty"><Message msgId="queryform.spatialfilter.notAvailable"/></div>
+                    : <MapComponent {...props}/>}
             </div>,
             targetContainer
         )
