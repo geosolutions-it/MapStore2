@@ -60,6 +60,8 @@ import {
     buildServiceUrl,
     buildSRSMap,
     extractOGCServicesReferences,
+    getCatalogSearchErrorMessage,
+    normalizeCatalogSearchError,
     updateServiceData
 } from '../utils/CatalogUtils';
 import { getCapabilities, describeLayers, flatLayers } from '../api/WMS';
@@ -75,7 +77,6 @@ import { getResolutions, METERS_PER_UNIT } from "../utils/MapUtils";
 import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle, simplifyGeometryType } from '../utils/StyleUtils';
-import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
 import { getCustomTileGridProperties } from '../utils/WMSUtils';
 import {getLayerTileMatrixSetsInfo} from '../api/WMTS';
@@ -87,29 +88,25 @@ import { updateUrlParams } from '../utils/URLUtils';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     logError({message: errObj});
-
-    // Exception text is shown as is while the network errors are shown
-    // with generic error message in the notification
-    let [errorMsg] = castArray(errObj?.error);
-    if (errorMsg) {
-        // Remove any instance of duplicated line string from the exception text
-        errorMsg = removeDuplicateLines(errorMsg);
-    }
+    const normalizedError = normalizeCatalogSearchError(errObj);
+    const { message, values } = getCatalogSearchErrorMessage(normalizedError);
+    const notification = error({
+        title: "notification.warning",
+        message: truncate(message, { length: 400 }),
+        values,
+        autoDismiss: 6,
+        position: "tc"
+    });
     if (isNewService) {
-        const message = errorMsg
-            ? truncate(errorMsg, { length: 400 })
-            : "catalog.notification.errorServiceUrl";
         return Rx.Observable.of(
-            error({
-                title: "notification.warning",
-                message,
-                autoDismiss: 6,
-                position: "tc"
-            }),
+            notification,
             savingService(false)
         );
     }
-    return Rx.Observable.of(recordsLoadError(errorMsg));
+    return Rx.Observable.of(
+        recordsLoadError(normalizedError),
+        notification
+    );
 };
 /**
     * Epics for CATALOG

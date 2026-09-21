@@ -1857,6 +1857,12 @@
       "addToMap": "Zur Karte hinzufügen",
       "getWMSLink": "WMS Link erhalten",
       "error": "Beim Laden der Daten ist ein Fehler aufgetreten",
+      "errors": {
+        "unauthorized": "Für den Zugriff auf den Katalogdienst ist eine Authentifizierung erforderlich (HTTP 401).",
+        "forbidden": "Der Zugriff auf den Katalogdienst wurde verweigert (HTTP 403). Überprüfen Sie Ihre Berechtigungen.",
+        "http": "Die Anfrage an den Katalogdienst ist fehlgeschlagen (HTTP {status}).",
+        "serviceUnavailable": "Der Katalogdienst konnte nicht erreicht werden. Möglicherweise wurde die Anfrage vom Browser blockiert."
+      },
       "pageInfo": "Resultat {start}-{end} von {total}",
       "resultInfo": "{total, plural, =0 {Keine Gegenstände} =1 {{total} von {total} stimmt überein} other {{start}-{end} von {total}}}",
       "pageInfoInfinite": "{total, plural, =undefined {} =0 {Keine Ergebnisse} =1 {{total} von {total} stimmt überein} other {Geladen {loaded} von {total} übereinstimmend}",

@@ -1818,6 +1818,12 @@
       "addToMap": "Añadir al mapa",
       "getWMSLink": "Enlace WMS",
       "error": "Ha ocurrido un error al cargar los datos.",
+      "errors": {
+        "unauthorized": "Se requiere autenticación para acceder al servicio de catálogo (HTTP 401).",
+        "forbidden": "Se denegó el acceso al servicio de catálogo (HTTP 403). Compruebe sus permisos.",
+        "http": "La solicitud al servicio de catálogo falló (HTTP {status}).",
+        "serviceUnavailable": "No se pudo contactar con el servicio de catálogo. Es posible que el navegador haya bloqueado la solicitud."
+      },
       "pageInfo": "{start}-{end} resultados de {total}",
       "resultInfo": "{total, plural, =0 No hay artículos} =1 {{total} artículo de {total}} other {{start}-{end} de {total}}}",
       "pageInfoInfinite": "{total, plural, =undefined {} =0 {No hay resultados} =1 {{total} de {total} emparejados} other {Cargado {loaded} de {total} emparejados}}",

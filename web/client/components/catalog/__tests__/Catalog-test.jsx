@@ -437,6 +437,40 @@ describe('Test Catalog panel', () => {
         expect(alertNode).toBeTruthy();
     });
 
+    it('renders the resolved catalog loading error in view mode', () => {
+        const SERVICE = {
+            type: 'csw',
+            url: 'http://sample.service/catalog',
+            title: 'csw'
+        };
+        const renderCatalog = (loadingError) => ReactDOM.render(<Catalog
+            services={{ csw: SERVICE }}
+            selectedService="csw"
+            selectedFormat="csw"
+            mode="view"
+            loadingError={loadingError}
+        />, document.getElementById('container'));
+        const getAlertMessage = () => document.querySelector('.alert.alert-danger span').textContent;
+
+        renderCatalog({ message: 'catalog.errors.serviceUnavailable', status: 401 });
+        expect(getAlertMessage()).toBe('catalog.errors.unauthorized');
+
+        renderCatalog({ message: 'catalog.errors.serviceUnavailable', status: 403 });
+        expect(getAlertMessage()).toBe('catalog.errors.forbidden');
+
+        renderCatalog({ message: 'catalog.errors.serviceUnavailable', status: 500 });
+        expect(getAlertMessage()).toBe('catalog.errors.http');
+
+        renderCatalog({ message: 'catalog.errors.serviceUnavailable' });
+        expect(getAlertMessage()).toBe('catalog.errors.serviceUnavailable');
+
+        renderCatalog({ message: 'OGC exception detail' });
+        expect(getAlertMessage()).toBe('OGC exception detail');
+
+        renderCatalog('legacy catalog error');
+        expect(getAlertMessage()).toBe('legacy catalog error');
+    });
+
     it('renders no records matched message section', () => {
         const SERVICE = {
             type: 'csw',
