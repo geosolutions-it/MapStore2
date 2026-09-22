@@ -169,7 +169,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
             '_relative',
             '_padding-tb-md'
         ]}
-        data-ms-id="details-info-fields"
+        data-ms-id="resource-details-fields"
     >
         {fields.map((field, filedIndex) => {
 
@@ -287,14 +287,14 @@ const parseTabItems = (items) => {
 const isDefaultTabType = (type) => type === 'tab';
 
 const tabCyDataMap = {
-    info: 'dataset-view-sidepanel-tab-info',
-    location: 'dataset-view-sidepanel-tab-location',
-    locations: 'dataset-view-sidepanel-tab-location',
-    assets: 'dataset-view-sidepanel-tab-assets',
-    data: 'dataset-view-sidepanel-tab-data',
-    related: 'dataset-view-sidepanel-tab-data',
-    share: 'dataset-view-sidepanel-tab-share',
-    settings: 'dataset-view-sidepanel-tab-settings'
+    info: 'resource-details-tab-info',
+    location: 'resource-details-tab-location',
+    locations: 'resource-details-tab-location',
+    assets: 'resource-details-tab-assets',
+    data: 'resource-details-tab-data',
+    related: 'resource-details-tab-data',
+    share: 'resource-details-tab-share',
+    settings: 'resource-details-tab-settings'
 };
 
 const getTabCyData = (tab = {}) => {
@@ -344,7 +344,7 @@ function DetailsInfo({
             tabs={filteredTabs.map(({Component, ...tab} = {}) => ({
                 title: <span {...(getTabCyData(tab) ? { 'data-ms-id': getTabCyData(tab) } : {})}><DetailInfoFieldLabel field={tab} /></span>,
                 eventKey: tab?.id,
-                component: <div data-ms-id="dataset-view-sidepanel-tab-content"><Component fields={tab?.items} {...props} /></div>
+                component: <div data-ms-id={`resource-details-tab-${tab?.id}-content`}><Component fields={tab?.items} {...props} /></div>
             }))}
         />
     );

@@ -39,8 +39,8 @@ const ResourceCardButton = ({
     ...props
 }) => {
     const resolvedDataMsId = dataMsId
-        || (cardMsIdPrefix && ['heart', 'heart-o'].includes(glyph) ? `${cardMsIdPrefix}-btn-favorite` : null)
-        || (cardMsIdPrefix && glyph === 'details' ? `${cardMsIdPrefix}-properties` : null);
+        || (cardMsIdPrefix && ['heart', 'heart-o'].includes(glyph) ? `${cardMsIdPrefix}-favorite` : null)
+        || (cardMsIdPrefix && glyph === 'details' ? `${cardMsIdPrefix}-details` : null);
 
     function handleOnClick(event) {
         event.stopPropagation();
@@ -429,8 +429,7 @@ const ResourceCard = forwardRef(({
     formatHref,
     onClick,
     hideThumbnail,
-    target,
-    cardIndex
+    target
 }, ref) => {
 
     const resource = data;
@@ -439,7 +438,7 @@ const ResourceCard = forwardRef(({
         viewerUrl,
         thumbnailUrl
     } = getResourceInfo(resource);
-    const cardMsIdPrefix = cardIndex !== undefined ? `dataset-card-${cardIndex}` : undefined;
+    const cardMsIdPrefix = resource?.id !== undefined ? `resource-card-${resource.id}` : undefined;
 
     const CardComponent = component || ResourceCardWrapper;
     const CardBody = cardBody[layoutCardsStyle];
