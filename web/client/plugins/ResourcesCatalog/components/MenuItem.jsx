@@ -44,7 +44,6 @@ const DropdownMenuItems = ({
                 if (itm.type === 'divider') {
                     return <RBMenuItem key={idx} divider />;
                 }
-                const menuItemAttributes = itm.menuItemAttributes || {};
                 const labelNode = itm.labelId ? <Message msgId={itm.labelId} /> : itm.label;
                 return (
                     <React.Fragment key={idx}>
@@ -54,7 +53,7 @@ const DropdownMenuItems = ({
                             as={itm?.items ? 'span' : 'a' }
                             target={itm.target ?? target}
                             className={itm.className}
-                            {...menuItemAttributes}
+                            data-ms-id={itm['data-ms-id']}
                         >
                             {itm.glyph ? <Glyphicon glyph={itm.glyph} /> : null}
                             {itm.glyph && labelNode ? ' ' : null}
@@ -90,6 +89,7 @@ const DropdownMenuItems = ({
  * @prop {string} item.square square style for button
  * @prop {string} item.tooltipId tooltip message id
  * @prop {string} item.src image source
+ * @prop {string} item['data-ms-id'] test automation identifier
  * @prop {node} containerNode the node to append the child element into a DOM
  * @prop {number} tabIndex define navigation order
  * @prop {string} size button size, one of `xs`, `sm`, `md` or `xl`
@@ -127,9 +127,7 @@ const MenuItem = ({
         square,
         tooltipId,
         src,
-        toggleAttributes,
-        menuItemAttributes,
-        dataMsId
+        dataMsId = item?.['data-ms-id']
     } = item || {};
 
     const target = itemTarget ?? defaultTarget;
@@ -160,7 +158,7 @@ const MenuItem = ({
                     style={style}
                     bsSize={size}
                     noCaret={noCaret}
-                    {...toggleAttributes}
+                    data-ms-id={dataMsId}
                 >
                     {src
                         ? <img src={src} />
@@ -185,7 +183,7 @@ const MenuItem = ({
 
     if (type === 'link') {
         return (<li>
-            <MenuNavLink href={href} target={target} {...(menuItemAttributes || {})}>
+            <MenuNavLink href={href} target={target} data-ms-id={dataMsId}>
                 {glyph ? <Glyphicon glyph={glyph} type={iconType}/> : null}
                 {glyph && labelNode ? ' ' : null}
                 {labelNode}
@@ -216,7 +214,6 @@ const MenuItem = ({
                 target={target}
                 borderTransparent
                 dataMsId={dataMsId}
-                {...(menuItemAttributes || {})}
             >
                 {glyph ? <Glyphicon glyph={glyph} /> : null}
                 {glyph && labelNode ? ' ' : null}
