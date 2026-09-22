@@ -286,25 +286,7 @@ const parseTabItems = (items) => {
 };
 const isDefaultTabType = (type) => type === 'tab';
 
-const tabCyDataMap = {
-    info: 'resource-details-tab-info',
-    location: 'resource-details-tab-location',
-    locations: 'resource-details-tab-location',
-    assets: 'resource-details-tab-assets',
-    data: 'resource-details-tab-data',
-    related: 'resource-details-tab-data',
-    share: 'resource-details-tab-share',
-    settings: 'resource-details-tab-settings'
-};
-
-const getTabCyData = (tab = {}) => {
-    const normalizedId = `${tab?.id || ''}`.toLowerCase();
-    if (tabCyDataMap[normalizedId]) {
-        return tabCyDataMap[normalizedId];
-    }
-    const normalizedLabel = `${tab?.label || ''}`.toLowerCase();
-    return tabCyDataMap[normalizedLabel] || null;
-};
+const getTabDataMsId = (tab = {}) => tab?.['data-ms-id'] || (tab?.id ? `resource-details-tab-${tab.id}` : undefined);
 
 function DetailsInfo({
     tabs = [],
@@ -342,7 +324,7 @@ function DetailsInfo({
             selectedTabId={selectedTab ?? filteredTabs?.[0]?.id}
             onSelect={onSelectTab}
             tabs={filteredTabs.map(({Component, ...tab} = {}) => ({
-                title: <span {...(getTabCyData(tab) ? { 'data-ms-id': getTabCyData(tab) } : {})}><DetailInfoFieldLabel field={tab} /></span>,
+                title: <span data-ms-id={getTabDataMsId(tab)}><DetailInfoFieldLabel field={tab} /></span>,
                 eventKey: tab?.id,
                 component: <div data-ms-id={`resource-details-tab-${tab?.id}-content`}><Component fields={tab?.items} {...props} /></div>
             }))}
