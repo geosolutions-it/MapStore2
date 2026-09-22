@@ -225,7 +225,9 @@ class SidebarMenu extends React.Component {
     targetMatch = (target, elementTarget) => elementTarget === target || !elementTarget && target === this.defaultTarget;
 
     getTools = (namespace = 'sidebar', height) => {
-        return this.getItems(namespace, height).sort((a, b) => a.position - b.position);
+        return this.getItems(namespace, height)
+            .sort((a, b) => a.position - b.position)
+            .map((tool) => ({ ...tool, dataMsId: tool.dataMsId ?? `sidebar-btn-${tool.name}` }));
     };
 
     renderExtraItems = (items) => {
@@ -266,28 +268,18 @@ class SidebarMenu extends React.Component {
         return this.state.hidden ? false : (
             <div id="mapstore-sidebar-menu-container" className={`shadow-soft ${this.props.isSidebarFullHeight ? "fullHeightSideBar" : ""}`} style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
-                    { ({ height }) => {
-                        const tools = this.getTools('sidebar', height).map((tool, index) => ({
-                            ...tool,
-                            cfg: {
-                                ...(tool.cfg || {}),
-                                'data-ms-id': (tool.cfg && tool.cfg['data-ms-id']) || (tool.name ? `sidebar-btn-${tool.name}` : `tooltip-btn-${index}`)
-                            }
-                        }));
-                        return (
-                            <ToolsContainer id={this.props.id}
-                                className={this.props.className}
-                                container={(props) => <>{props.children}</>}
-                                toolStyle="tray"
-                                activeStyle="primary"
-                                stateSelector="sidebarMenu"
-                                tool={SidebarElement}
-                                tools={tools}
-                                panels={this.getPanels(this.props.items)}
-                                toolComponent={SidebarMenuItem}
-                            />
-                        );
-                    } }
+                    { ({ height }) =>
+                        <ToolsContainer id={this.props.id}
+                            className={this.props.className}
+                            container={(props) => <>{props.children}</>}
+                            toolStyle="tray"
+                            activeStyle="primary"
+                            stateSelector="sidebarMenu"
+                            tool={SidebarElement}
+                            tools={this.getTools('sidebar', height)}
+                            panels={this.getPanels(this.props.items)}
+                            toolComponent={SidebarMenuItem}
+                        /> }
                 </ContainerDimensions>
             </div>
 
