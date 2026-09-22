@@ -48,23 +48,25 @@ function TextOptions({ data = {}, onChange = () => {} }) {
                     </FormGroup>
                 </Form>
             </Col>
-            <DescriptorEditor
-                uploadEnabled
-                editorState={editorState}
-                onEditorStateChange={(newEditorState) => {
-                    const previousHTML = draftJSEditorStateToHtml(editorState);
-                    const newHTML = draftJSEditorStateToHtml(newEditorState);
-                    if (newHTML !== previousHTML) {
-                        onChange(
-                            "text",
-                            draftJSEditorStateToHtml(newEditorState)
-                        );
-                        setEditorState(newEditorState);
-                    }
-                }}
-                // Array of custom or built in fonts can be set via props
-                // fonts={["Arial", "Impact", "Roman"]}
-            />
+            <div data-ms-id="widget-text-description">
+                <DescriptorEditor
+                    uploadEnabled
+                    editorState={editorState}
+                    onEditorStateChange={(newEditorState) => {
+                        const previousHTML = draftJSEditorStateToHtml(editorState);
+                        const newHTML = draftJSEditorStateToHtml(newEditorState);
+                        if (newHTML !== previousHTML) {
+                            onChange(
+                                "text",
+                                draftJSEditorStateToHtml(newEditorState)
+                            );
+                            setEditorState(newEditorState);
+                        }
+                    }}
+                    // Array of custom or built in fonts can be set via props
+                    // fonts={["Arial", "Impact", "Roman"]}
+                />
+            </div>
         </div>
     );
 }
