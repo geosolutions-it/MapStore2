@@ -45,7 +45,11 @@ const DownloadWPSOptions = ({
     return (
         <>
             {advancedOptionsVisible && <div className="mapstore-downloadwpsoptions-advanced-options">
-                <Button className="no-border" onClick={() => openAdvancedOptions(!advancedOptionsOpened)}>
+                <Button
+                    className="no-border"
+                    data-ms-id="layer-download-advanced-toggle"
+                    onClick={() => openAdvancedOptions(!advancedOptionsOpened)}
+                >
                     <Glyphicon glyph={`chevron-${advancedOptionsOpened ? 'down' : 'right'}`}/>
                     &nbsp;&nbsp;&nbsp;
                     <Message msgId="layerdownload.advancedOptions"/>
@@ -62,6 +66,7 @@ const DownloadWPSOptions = ({
                             clearable={false}
                             value={selectedSrs}
                             onChange={(sel) => onChange("selectedSrs", sel.value)}
+                            inputProps={{ 'data-ms-id': 'layer-download-srs' }}
                             options={srsList.map(f => ({value: f.name, label: f.label || f.name}))} />
                     </div>
                 </div>

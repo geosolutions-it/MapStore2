@@ -30,7 +30,16 @@ const DropdownMenuItems = ({
         {items
             .map((itm, idx) => {
                 if (itm.Component) {
-                    return (<itm.Component key={idx} variant="default" className={itm.className} showMessage />);
+                    return (
+                        <itm.Component
+                            key={idx}
+                            variant="default"
+                            className={itm.className}
+                            showMessage
+                            dataMsId={itm.dataMsId}
+                            data-ms-id={itm.dataMsId}
+                        />
+                    );
                 }
                 if (itm.type === 'divider') {
                     return <RBMenuItem key={idx} divider />;
@@ -44,6 +53,7 @@ const DropdownMenuItems = ({
                             as={itm?.items ? 'span' : 'a' }
                             target={itm.target ?? target}
                             className={itm.className}
+                            data-ms-id={itm['data-ms-id']}
                         >
                             {itm.glyph ? <Glyphicon glyph={itm.glyph} /> : null}
                             {itm.glyph && labelNode ? ' ' : null}
@@ -79,6 +89,7 @@ const DropdownMenuItems = ({
  * @prop {string} item.square square style for button
  * @prop {string} item.tooltipId tooltip message id
  * @prop {string} item.src image source
+ * @prop {string} item['data-ms-id'] test automation identifier
  * @prop {node} containerNode the node to append the child element into a DOM
  * @prop {number} tabIndex define navigation order
  * @prop {string} size button size, one of `xs`, `sm`, `md` or `xl`
@@ -115,13 +126,20 @@ const MenuItem = ({
         iconType,
         square,
         tooltipId,
-        src
+        src,
+        dataMsId = item?.['data-ms-id']
     } = item || {};
 
     const target = itemTarget ?? defaultTarget;
 
     if (Component) {
-        return <Component variant={variant} size={size} className={className} component={menuItemComponent}/>;
+        return <Component
+            variant={variant}
+            size={size}
+            className={className}
+            component={menuItemComponent}
+            dataMsId={dataMsId}
+        />;
     }
 
     const labelNode = labelId ? <Message msgId={labelId} /> : label;
@@ -140,6 +158,7 @@ const MenuItem = ({
                     style={style}
                     bsSize={size}
                     noCaret={noCaret}
+                    data-ms-id={dataMsId}
                 >
                     {src
                         ? <img src={src} />
@@ -164,7 +183,7 @@ const MenuItem = ({
 
     if (type === 'link') {
         return (<li>
-            <MenuNavLink href={href} target={target}>
+            <MenuNavLink href={href} target={target} data-ms-id={dataMsId}>
                 {glyph ? <Glyphicon glyph={glyph} type={iconType}/> : null}
                 {glyph && labelNode ? ' ' : null}
                 {labelNode}
@@ -194,6 +213,7 @@ const MenuItem = ({
                 href={href}
                 target={target}
                 borderTransparent
+                dataMsId={dataMsId}
             >
                 {glyph ? <Glyphicon glyph={glyph} /> : null}
                 {glyph && labelNode ? ' ' : null}

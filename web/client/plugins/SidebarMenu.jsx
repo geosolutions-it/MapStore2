@@ -225,7 +225,9 @@ class SidebarMenu extends React.Component {
     targetMatch = (target, elementTarget) => elementTarget === target || !elementTarget && target === this.defaultTarget;
 
     getTools = (namespace = 'sidebar', height) => {
-        return this.getItems(namespace, height).sort((a, b) => a.position - b.position);
+        return this.getItems(namespace, height)
+            .sort((a, b) => a.position - b.position)
+            .map((tool) => ({ ...tool, dataMsId: tool.dataMsId ?? `sidebar-btn-${tool.name}` }));
     };
 
     renderExtraItems = (items) => {

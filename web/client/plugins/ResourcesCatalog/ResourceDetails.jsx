@@ -64,7 +64,7 @@ const tabComponents = {
  * @memberof plugins
  * @class
  * @name ResourceDetails
- * @prop {object[]} cfg.tabs configuration for the available tabs
+ * @prop {object[]} cfg.tabs configuration for the available tabs. The test automation identifier defaults to `resource-details-tab-{id}` and a tab can override it with `data-ms-id`
  * @prop {string} cfg.resourceType one of `MAP`, `DASHBOARD` or `GEOSTORY` when used in a viewer, if undefined can be used in the homepage
  * @prop {string} cfg.headerNodeSelector optional valid query selector for the header in the page, used to set the position of the panel
  * @prop {string} cfg.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
@@ -423,7 +423,7 @@ export default createPlugin('ResourceDetails', {
                     onSelect: setSelectedResource,
                     onShow: setShowDetails
                 }
-            )(({ resourcesGridId, resource, onSelect, component, selectedResource, onShow }) => {
+            )(({ resourcesGridId, resource, onSelect, component, selectedResource, onShow, cardMsIdPrefix }) => {
                 const Component = component;
                 function handleClick() {
                     if (selectedResource?.id !== resource?.id) {
@@ -437,6 +437,7 @@ export default createPlugin('ResourceDetails', {
                         glyph="details"
                         square
                         labelId="resourcesCatalog.viewResourceProperties"
+                        dataMsId={cardMsIdPrefix ? `${cardMsIdPrefix}-details` : undefined}
                     />
                 );
             }),

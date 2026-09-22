@@ -28,7 +28,8 @@ class Dialog extends React.Component {
         modal: PropTypes.bool,
         start: PropTypes.object,
         draggable: PropTypes.bool,
-        bounds: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+        bounds: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+        dataMsId: PropTypes.string
     };
 
     static defaultProps = {
@@ -75,7 +76,7 @@ class Dialog extends React.Component {
     };
 
     render() {
-        const body = (<div id={this.props.id} style={{ ...this.props.style}} className={`${this.props.draggable ? 'modal-dialog-draggable' : ''} ${this.props.className} modal-dialog-container`}>
+        const body = (<div id={this.props.id} data-ms-id={this.props.dataMsId} style={{ ...this.props.style}} className={`${this.props.draggable ? 'modal-dialog-draggable' : ''} ${this.props.className} modal-dialog-container`}>
             <div className={this.props.headerClassName + " draggable-header"}>
                 {this.renderRole('header')}
             </div>

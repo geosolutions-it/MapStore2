@@ -150,10 +150,16 @@ const DownloadDialog = ({
     const noSupportedServiceFound = !wfsAvailable && !wpsAvailable;
 
     return enabled ? (<Portal>
-        <Dialog id="mapstore-export" draggable={false} modal>
+        <Dialog id="mapstore-export" dataMsId="layer-download-dialog" draggable={false} modal>
             <span role="header">
                 <span className="modal-title  about-panel-title"><Message msgId="layerdownload.title" /></span>
-                <button onClick={onClose} className="settings-panel-close close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>
+                <button
+                    onClick={onClose}
+                    className="settings-panel-close close"
+                    data-ms-id="layer-download-dialog-close"
+                >
+                    {closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}
+                </button>
             </span>
             <div role="body">
                 {showLoader
@@ -190,6 +196,7 @@ const DownloadDialog = ({
                 <Button
                     bsStyle="primary"
                     className="download-button"
+                    data-ms-id="layer-download-submit"
                     disabled={formatsLoading || formats.length === 0}
                     onClick={handleExport}>
                     {renderIcon()} <Message msgId="layerdownload.export" />

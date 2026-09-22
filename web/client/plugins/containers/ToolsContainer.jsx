@@ -96,7 +96,7 @@ class ToolsContainer extends React.Component {
         if (tool.tool) {
             return {};
         }
-        return this.props.toolCfg;
+        return { ...this.props.toolCfg, dataMsId: tool.dataMsId };
     };
 
     getTool = (tool) => {

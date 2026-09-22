@@ -34,6 +34,7 @@ const ResourceCardButton = ({
     variant,
     borderTransparent,
     loading,
+    dataMsId,
     ...props
 }) => {
     function handleOnClick(event) {
@@ -48,6 +49,7 @@ const ResourceCardButton = ({
             square={square}
             borderTransparent={borderTransparent}
             {...props}
+            data-ms-id={dataMsId}
             tooltipId={square && labelId ? labelId : null}
             onClick={handleOnClick}
         >
@@ -74,6 +76,7 @@ const ResourceCardWrapper = ({
     layoutCardsStyle,
     query,
     target,
+    cardMsIdPrefix,
     ...props
 }) => {
     const showViewerLink = !!(!readOnly && viewerUrl);
@@ -104,6 +107,7 @@ const ResourceCardWrapper = ({
                 <a
                     className="_absolute _fill"
                     href={viewerUrl}
+                    data-ms-id={cardMsIdPrefix ? `${cardMsIdPrefix}-link` : undefined}
                     {...target && {target}}
                 />
             ) : null}
@@ -234,7 +238,8 @@ const ResourceCardGridBody = ({
     options,
     thumbnailUrl,
     hideThumbnail,
-    target
+    target,
+    cardMsIdPrefix
 }) => {
 
     const headerEntry = metadata.find(entry => entry.target === 'header');
@@ -254,7 +259,11 @@ const ResourceCardGridBody = ({
             >
                 <FlexBox className="ms-resource-card-body-header" gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox>
-                        <Text fontSize="md" ellipsis={!headerEntry.showFullContent}>
+                        <Text
+                            fontSize="md"
+                            ellipsis={!headerEntry.showFullContent}
+                            data-ms-id={cardMsIdPrefix ? `${cardMsIdPrefix}-title` : undefined}
+                        >
                             {((icon || headerEntry?.icon) && !loading) && (
                                 <><Glyphicon {...(icon || headerEntry?.icon)} />{' '}</>
                             )}
@@ -304,6 +313,7 @@ const ResourceCardGridBody = ({
                                     resource={resource}
                                     viewerUrl={viewerUrl}
                                     component={ResourceCardButton}
+                                    cardMsIdPrefix={cardMsIdPrefix}
                                     readOnly={readOnly}
                                     target={target}
                                 />
@@ -318,6 +328,7 @@ const ResourceCardGridBody = ({
                         resource={resource}
                         viewerUrl={viewerUrl}
                         options={options}
+                        cardMsIdPrefix={cardMsIdPrefix}
                         readOnly={readOnly}
                         target={target}
                         className="_absolute _margin-sm _corner-tr"
@@ -340,7 +351,8 @@ const ResourceCardListBody = ({
     options: optionsProp,
     buttons,
     columns,
-    target
+    target,
+    cardMsIdPrefix
 }) => {
     const options = [
         ...(buttons || []),
@@ -379,6 +391,7 @@ const ResourceCardListBody = ({
                             resource={resource}
                             viewerUrl={viewerUrl}
                             options={options}
+                            cardMsIdPrefix={cardMsIdPrefix}
                             readOnly={readOnly}
                             target={target}
                         />
@@ -420,6 +433,7 @@ const ResourceCard = forwardRef(({
         viewerUrl,
         thumbnailUrl
     } = getResourceInfo(resource);
+    const cardMsIdPrefix = resource?.id !== undefined ? `resource-card-${resource.id}` : undefined;
 
     const CardComponent = component || ResourceCardWrapper;
     const CardBody = cardBody[layoutCardsStyle];
@@ -437,6 +451,7 @@ const ResourceCard = forwardRef(({
             columns={columns}
             metadata={metadata}
             query={query}
+            cardMsIdPrefix={cardMsIdPrefix}
             target={target}
         >
             {CardBody ? <CardBody
@@ -454,6 +469,7 @@ const ResourceCard = forwardRef(({
                 columns={columns}
                 thumbnailUrl={thumbnailUrl}
                 hideThumbnail={hideThumbnail}
+                cardMsIdPrefix={cardMsIdPrefix}
                 target={target}
             /> : null}
         </CardComponent>

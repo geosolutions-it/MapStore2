@@ -16,10 +16,14 @@ const ActionMenuItem = ({
     iconType,
     children,
     labelId,
+    dataMsId,
     ...props
 }) => {
     return (
-        <MenuItem {...props}>
+        <MenuItem
+            {...props}
+            data-ms-id={dataMsId}
+        >
             {glyph ? <><Glyphicon glyph={glyph}/>{' '}</> : null}
             {labelId ? <Message msgId={labelId} /> : null}
         </MenuItem>
@@ -32,6 +36,7 @@ function ResourceCardActionButtons({
     resource,
     className,
     target,
+    cardMsIdPrefix,
     ...props
 }) {
 
@@ -59,6 +64,7 @@ function ResourceCardActionButtons({
                     size="xs"
                     noCaret
                     className="_border-transparent"
+                    data-ms-id={cardMsIdPrefix ? `${cardMsIdPrefix}-actions` : undefined}
                 >
                     <Glyphicon glyph="option-vertical" />
                 </Dropdown.Toggle>
@@ -66,7 +72,7 @@ function ResourceCardActionButtons({
                     {options.map((option) => {
                         if (option.Component) {
                             const { Component } = option;
-                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem}/>;
+                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem} cardMsIdPrefix={cardMsIdPrefix} />;
                         }
                         return null;
                     })}

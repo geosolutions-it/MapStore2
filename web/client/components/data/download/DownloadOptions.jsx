@@ -144,6 +144,7 @@ class DownloadOptions extends React.Component {
                     value={this.props.downloadOptions?.selectedFormat}
                     noResultsText={<Message msgId="layerdownload.format" />}
                     onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
+                    inputProps={{ 'data-ms-id': 'layer-download-format' }}
                     options={this.props.formats.map(f => ({value: f.name, label: f.label || f.name}))} />
             </div>
 

@@ -50,7 +50,7 @@ const isFieldLabelOnly = ({style, value}) => isEmptyValue(value) && isStyleLabel
 const DetailInfoFieldLabel = ({ field }) => {
     const label = field.labelId ? <Message msgId={field.labelId} /> : field.label;
     return isStyleLabel(field.style) && field.href
-        ? (<a href={field.href} target={field.target}>{label}</a>)
+        ? (<a href={field.href} target={field.target} data-ms-id={field['data-ms-id']}>{label}</a>)
         : label;
 };
 
@@ -60,7 +60,7 @@ function DetailsInfoField({ field, children, className }) {
     return (
         <FlexBox gap="sm" classNames={['ms-details-info-field', '_padding-b-xs', '_row']} className={className}>
             <Text className={isLinkLabel ? '' : '_label'} fontSize="sm"><DetailInfoFieldLabel field={field} /></Text>
-            {!isLinkLabel ? <FlexBox.Fill>
+            {!isLinkLabel ? <FlexBox.Fill data-ms-id={field['data-ms-id']}>
                 <Text fontSize="sm">{children(values)}</Text>
             </FlexBox.Fill> : null}
         </FlexBox>
@@ -169,6 +169,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
             '_relative',
             '_padding-tb-md'
         ]}
+        data-ms-id="resource-details-fields"
     >
         {fields.map((field, filedIndex) => {
 
@@ -285,6 +286,8 @@ const parseTabItems = (items) => {
 };
 const isDefaultTabType = (type) => type === 'tab';
 
+const getTabDataMsId = (tab = {}) => tab?.['data-ms-id'] || (tab?.id ? `resource-details-tab-${tab.id}` : undefined);
+
 function DetailsInfo({
     tabs = [],
     tabComponents: tabComponentsProp,
@@ -321,9 +324,9 @@ function DetailsInfo({
             selectedTabId={selectedTab ?? filteredTabs?.[0]?.id}
             onSelect={onSelectTab}
             tabs={filteredTabs.map(({Component, ...tab} = {}) => ({
-                title: <DetailInfoFieldLabel field={tab} />,
+                title: <span data-ms-id={getTabDataMsId(tab)}><DetailInfoFieldLabel field={tab} /></span>,
                 eventKey: tab?.id,
-                component: <Component fields={tab?.items} {...props} />
+                component: <div data-ms-id={`resource-details-tab-${tab?.id}-content`}><Component fields={tab?.items} {...props} /></div>
             }))}
         />
     );
