@@ -23,7 +23,8 @@ import {
     getFeatureById,
     attributesSelector,
     isSyncWmsActive,
-    isFilterActive
+    isFilterActive,
+    isGeometrylessFeatureType
 } from '../query';
 
 const STRANGE_LAYER_NAME = "test.workspace:test.layer";
@@ -527,5 +528,45 @@ describe('Test query selectors', () => {
         isFilterActiveState = isFilterActive(crossLayerState);
         expect(isFilterActiveState).toBe(true);
 
+    });
+
+    describe('isGeometrylessFeatureType', () => {
+        const stateWith = (properties) => ({
+            query: {
+                typeName: 'ft',
+                featureTypes: {
+                    ft: {
+                        original: {
+                            featureTypes: [{ typeName: 'ft', properties }]
+                        }
+                    }
+                }
+            }
+        });
+
+        it('is false when the feature type exposes a gml geometry', () => {
+            expect(isGeometrylessFeatureType(stateWith([
+                { name: 'name', type: 'xsd:string' },
+                { name: 'the_geom', type: 'gml:Point' }
+            ]))).toBe(false);
+        });
+
+        it('is false when the feature type exposes a xsd geometry', () => {
+            expect(isGeometrylessFeatureType(stateWith([
+                { name: 'name', type: 'xsd:string' },
+                { name: 'the_shape', type: 'xsd:Polygon' }
+            ]))).toBe(false);
+        });
+
+        it('is true when the feature type has no geometry', () => {
+            expect(isGeometrylessFeatureType(stateWith([
+                { name: 'name', type: 'xsd:string' },
+                { name: 'pop', type: 'xsd:int' }
+            ]))).toBe(true);
+        });
+
+        it('is false when the describe is not loaded yet', () => {
+            expect(isGeometrylessFeatureType({ query: { typeName: 'ft', featureTypes: {} } })).toBe(false);
+        });
     });
 });

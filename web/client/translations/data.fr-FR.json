@@ -1320,6 +1320,7 @@
         }
       },
       "spatialfilter": {
+        "notAvailable": "Le filtre spatial n'est pas disponible pour cette couche.",
         "filterType": "Type de filtre",
         "geometric_operation": "Opération géométrique",
         "combo_placeholder": "Sélectionner...",
