@@ -34,6 +34,7 @@ function DeleteResource({
     onRefresh,
     redirectTo,
     onPush,
+    cardMsIdPrefix,
     setPendingChanges
 }) {
     const Component = component;
@@ -81,6 +82,7 @@ function DeleteResource({
                 square
                 active={!!showModal}
                 onClick={() => setShowModal(true)}
+                dataMsId={cardMsIdPrefix ? `${cardMsIdPrefix}-delete` : undefined}
             /> : null}
             <ConfirmDialog
                 show={!!showModal}

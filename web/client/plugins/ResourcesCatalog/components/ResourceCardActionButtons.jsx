@@ -16,17 +16,13 @@ const ActionMenuItem = ({
     iconType,
     children,
     labelId,
-    cardMsIdPrefix,
     dataMsId,
     ...props
 }) => {
-    const resolvedDataMsId = dataMsId
-        || (cardMsIdPrefix && glyph === 'duplicate' ? `${cardMsIdPrefix}-clone` : null)
-        || (cardMsIdPrefix && glyph === 'trash' ? `${cardMsIdPrefix}-delete` : null);
     return (
         <MenuItem
             {...props}
-            {...resolvedDataMsId ? { 'data-ms-id': resolvedDataMsId } : {}}
+            {...dataMsId ? { 'data-ms-id': dataMsId } : {}}
         >
             {glyph ? <><Glyphicon glyph={glyph}/>{' '}</> : null}
             {labelId ? <Message msgId={labelId} /> : null}

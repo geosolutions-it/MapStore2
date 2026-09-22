@@ -34,14 +34,9 @@ const ResourceCardButton = ({
     variant,
     borderTransparent,
     loading,
-    cardMsIdPrefix,
     dataMsId,
     ...props
 }) => {
-    const resolvedDataMsId = dataMsId
-        || (cardMsIdPrefix && ['heart', 'heart-o'].includes(glyph) ? `${cardMsIdPrefix}-favorite` : null)
-        || (cardMsIdPrefix && glyph === 'details' ? `${cardMsIdPrefix}-details` : null);
-
     function handleOnClick(event) {
         event.stopPropagation();
         if (onClick) {
@@ -54,7 +49,7 @@ const ResourceCardButton = ({
             square={square}
             borderTransparent={borderTransparent}
             {...props}
-            {...resolvedDataMsId ? { 'data-ms-id': resolvedDataMsId } : {}}
+            {...dataMsId ? { 'data-ms-id': dataMsId } : {}}
             tooltipId={square && labelId ? labelId : null}
             onClick={handleOnClick}
         >

@@ -423,7 +423,7 @@ export default createPlugin('ResourceDetails', {
                     onSelect: setSelectedResource,
                     onShow: setShowDetails
                 }
-            )(({ resourcesGridId, resource, onSelect, component, selectedResource, onShow }) => {
+            )(({ resourcesGridId, resource, onSelect, component, selectedResource, onShow, cardMsIdPrefix }) => {
                 const Component = component;
                 function handleClick() {
                     if (selectedResource?.id !== resource?.id) {
@@ -437,6 +437,7 @@ export default createPlugin('ResourceDetails', {
                         glyph="details"
                         square
                         labelId="resourcesCatalog.viewResourceProperties"
+                        dataMsId={cardMsIdPrefix ? `${cardMsIdPrefix}-details` : undefined}
                     />
                 );
             }),
