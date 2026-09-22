@@ -6,12 +6,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-<<<<<<< HEAD
 import { isNil, get, head, isArray, findIndex } from 'lodash';
-=======
-import { isNil, get, head, isArray, findIndex, isEqual } from 'lodash';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
->>>>>>> ba03b204e (#12878 Query panel not working correctly with widgets based on WFS services (#12905))
 
 /**
  * Selects the featureType name of the query filterObject
