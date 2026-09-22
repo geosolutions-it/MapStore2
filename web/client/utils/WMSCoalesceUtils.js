@@ -44,7 +44,7 @@ export const BLOCKED_PARAMS = [
 ];
 
 
-export const DEFAULT_MAX_GROUP_SIZE = 30;
+export const DEFAULT_MAX_GROUP_SIZE = 10;
 
 const getMaxURLLength = () => getConfigProp('miscSettings')?.maxURLLength || Infinity;
 
