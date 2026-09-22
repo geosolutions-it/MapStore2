@@ -137,16 +137,15 @@ class DownloadOptions extends React.Component {
 
             <div className="mapstore-downloadoptions">
                 <label><Message msgId="layerdownload.format" /></label>
-                <div {...{ 'data-ms-id': 'layer-download-format' }}>
-                    <Select
-                        clearable={false}
-                        isLoading={this.props.formatsLoading}
-                        onOpen={() => this.props.formatOptionsFetch(this.props.layer)}
-                        value={this.props.downloadOptions?.selectedFormat}
-                        noResultsText={<Message msgId="layerdownload.format" />}
-                        onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
-                        options={this.props.formats.map(f => ({value: f.name, label: f.label || f.name}))} />
-                </div>
+                <Select
+                    clearable={false}
+                    isLoading={this.props.formatsLoading}
+                    onOpen={() => this.props.formatOptionsFetch(this.props.layer)}
+                    value={this.props.downloadOptions?.selectedFormat}
+                    noResultsText={<Message msgId="layerdownload.format" />}
+                    onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
+                    inputProps={{ 'data-ms-id': 'layer-download-format' }}
+                    options={this.props.formats.map(f => ({value: f.name, label: f.label || f.name}))} />
             </div>
 
             <DownloadWPSOptions

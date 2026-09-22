@@ -42,14 +42,6 @@ const DownloadWPSOptions = ({
         onChange('compression', selectedCompression || head(compressionOptions));
     }, []);
 
-    useEffect(() => {
-        if (!advancedOptionsOpened) {
-            return;
-        }
-        const srsInput = document.querySelector('.mapstore-downloadwpsoptions-advanced .mapstore-downloadwpsoptions-advanced-menuitem .Select-input input');
-        srsInput?.setAttribute('data-ms-id', 'layer-download-srs');
-    }, [advancedOptionsOpened, selectedSrs, srsList]);
-
     return (
         <>
             {advancedOptionsVisible && <div className="mapstore-downloadwpsoptions-advanced-options">
@@ -68,12 +60,13 @@ const DownloadWPSOptions = ({
 
                 {/* select SRS must be always visibile */}
                 <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                    <div className="mapstore-downloadwpsoptions-advanced-menuitem-control" {...{ 'data-ms-id': 'layer-download-srs' }}>
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
                         <label><Message msgId="layerdownload.srs" /></label>
                         <Select
                             clearable={false}
                             value={selectedSrs}
                             onChange={(sel) => onChange("selectedSrs", sel.value)}
+                            inputProps={{ 'data-ms-id': 'layer-download-srs' }}
                             options={srsList.map(f => ({value: f.name, label: f.label || f.name}))} />
                     </div>
                 </div>

@@ -124,17 +124,6 @@ const DownloadDialog = ({
         }
     }, [enabled, selectedLayer, defaultSelectedService]); // equivalent componentDidUpdate
 
-    useEffect(() => {
-        if (!enabled) {
-            return;
-        }
-        const dialogRoot = document.querySelector('#mapstore-export');
-        dialogRoot?.setAttribute('data-ms-id', 'layer-download-dialog');
-
-        const formatInput = document.querySelector('#mapstore-export .mapstore-downloadoptions:not(.downloadMode) .Select-input input');
-        formatInput?.setAttribute('data-ms-id', 'layer-download-format');
-    }, [enabled, downloadOptions, service, showLoader]);
-
     const renderIcon = () => {
         return loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
     };
@@ -161,7 +150,7 @@ const DownloadDialog = ({
     const noSupportedServiceFound = !wfsAvailable && !wpsAvailable;
 
     return enabled ? (<Portal>
-        <Dialog id="mapstore-export" draggable={false} modal>
+        <Dialog id="mapstore-export" dataMsId="layer-download-dialog" draggable={false} modal>
             <span role="header">
                 <span className="modal-title  about-panel-title"><Message msgId="layerdownload.title" /></span>
                 <button
