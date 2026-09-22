@@ -1287,6 +1287,7 @@
         }
       },
       "spatialfilter": {
+        "notAvailable": "Die räumliche Filterung ist für diese Ebene nicht verfügbar.",
         "filterType": "Filtertyp",
         "geometric_operation": "Geometrische Operation",
         "spatial_filter_header": "Interessensgebiet",

@@ -516,6 +516,61 @@ describe('wfsquery Epics', () => {
                     done();
                 }, mockState);
         });
+
+        it('wfs layer with a xsd geometry type', (done) => {
+            const mockState = {
+                query: {
+                    data: {},
+                    featureTypes: [],
+                    typeName: 'poi',
+                    url: '/dummy'},
+                featuregrid: {
+                    timeSync: true,
+                    pagination: {
+                        size: 10
+                    },
+                    open: true,
+                    selectedLayer: "layer1",
+                    changes: [],
+                    mode: 'VIEW'
+                },
+                layers: {
+                    flat: wmsLayer,
+                    layerMetadata: {
+                        expanded: false,
+                        maskLoading: false
+                    },
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    }
+                }
+            };
+            const wfsResults = {
+                featureTypes: [{
+                    properties: [
+                        {name: "the_shape", type: "xsd:Polygon"},
+                        {name: "NAME", type: "xsd:string"}
+                    ]
+                }]
+            };
+            mockAxios.onGet().reply(() => [200, wfsResults]);
+            testEpic(featureTypeSelectedEpic, 2,
+                featureTypeSelected('/dummy', 'poi'), ([changeSpatialAttributeAction, featureTypeLoadedAction]) => {
+                    try {
+                        expect(changeSpatialAttributeAction.type).toBe(CHANGE_SPATIAL_ATTRIBUTE);
+                        expect(changeSpatialAttributeAction.attribute).toBe('the_shape');
+                        expect(featureTypeLoadedAction.type).toBe(FEATURE_TYPE_LOADED);
+                        expect(featureTypeLoadedAction.featureType.geometry.length).toBe(1);
+                        expect(featureTypeLoadedAction.featureType.geometry[0].attribute).toBe('the_shape');
+                    } catch (error) {
+                        done(error);
+                    }
+                    done();
+                }, mockState);
+        });
     });
 
 

@@ -6,7 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
+<<<<<<< HEAD
 import { isNil, get, head, isArray, findIndex } from 'lodash';
+=======
+import { isNil, get, head, isArray, findIndex, isEqual } from 'lodash';
+import { findGeometryProperty } from '../utils/ogc/WFS/base';
+>>>>>>> ba03b204e (#12878 Query panel not working correctly with widgets based on WFS services (#12905))
 
 /**
  * Selects the featureType name of the query filterObject
@@ -66,6 +71,10 @@ export const isDescribeLoaded = (state, name) => {
     return false;
 };
 export const describeSelector = (state) => layerDescribeSelector(state, queryFeatureTypeName(state));
+export const isGeometrylessFeatureType = (state) => {
+    const describe = layerDescribeSelector(state, typeNameSelector(state));
+    return !!describe && !findGeometryProperty(describe);
+};
 export const attributesJSONSchemaSelector = state => get(featureTypeSelectorCreator(queryFeatureTypeName(state))(state), `attributesJSONSchema`);
 export const featureLoadingSelector = (state) => get(state, "query.featureLoading");
 export const isSyncWmsActive = (state) => get(state, "query.syncWmsFilter", false);
