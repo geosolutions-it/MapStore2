@@ -7,7 +7,7 @@
 */
 
 import expect from 'expect';
-import { addSearchObservable } from '../layerSelector';
+import { addSearchObservable, toLayer } from '../layerSelector';
 
 
 describe('layerSelector enhancer', function() {
@@ -27,6 +27,33 @@ describe('layerSelector enhancer', function() {
         }, {
             type: "wfs"
         }).value).toBeTruthy();
+    });
+
+    it('normalizes WFS boundingBox to bbox', () => {
+        const boundingBox = {
+            crs: 'EPSG:4326',
+            bounds: {
+                minx: -124,
+                miny: 24,
+                maxx: -66,
+                maxy: 49
+            }
+        };
+        const layer = toLayer({
+            type: 'wfs',
+            name: 'test-layer',
+            url: 'test-url',
+            boundingBox
+        }, {
+            type: 'wfs'
+        });
+
+        expect(layer.bbox).toBe(boundingBox);
+        expect(layer.boundingBox).toBe(boundingBox);
+        expect(layer.search).toEqual({
+            url: 'test-url',
+            type: 'wfs'
+        });
     });
 
 });
