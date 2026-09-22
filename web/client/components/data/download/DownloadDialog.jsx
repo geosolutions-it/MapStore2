@@ -156,7 +156,7 @@ const DownloadDialog = ({
                 <button
                     onClick={onClose}
                     className="settings-panel-close close"
-                    {...{ 'data-ms-id': 'layer-download-dialog-close' }}
+                    data-ms-id="layer-download-dialog-close"
                 >
                     {closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}
                 </button>
@@ -196,7 +196,7 @@ const DownloadDialog = ({
                 <Button
                     bsStyle="primary"
                     className="download-button"
-                    {...{ 'data-ms-id': 'layer-download-submit' }}
+                    data-ms-id="layer-download-submit"
                     disabled={formatsLoading || formats.length === 0}
                     onClick={handleExport}>
                     {renderIcon()} <Message msgId="layerdownload.export" />

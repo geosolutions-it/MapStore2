@@ -37,7 +37,7 @@ const DropdownMenuItems = ({
                             className={itm.className}
                             showMessage
                             dataMsId={itm.dataMsId}
-                            {...(itm.dataMsId ? { 'data-ms-id': itm.dataMsId } : {})}
+                            data-ms-id={itm.dataMsId}
                         />
                     );
                 }

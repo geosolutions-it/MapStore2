@@ -47,7 +47,7 @@ const DownloadWPSOptions = ({
             {advancedOptionsVisible && <div className="mapstore-downloadwpsoptions-advanced-options">
                 <Button
                     className="no-border"
-                    {...{ 'data-ms-id': 'layer-download-advanced-toggle' }}
+                    data-ms-id="layer-download-advanced-toggle"
                     onClick={() => openAdvancedOptions(!advancedOptionsOpened)}
                 >
                     <Glyphicon glyph={`chevron-${advancedOptionsOpened ? 'down' : 'right'}`}/>

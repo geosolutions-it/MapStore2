@@ -49,7 +49,7 @@ const ResourceCardButton = ({
             square={square}
             borderTransparent={borderTransparent}
             {...props}
-            {...dataMsId ? { 'data-ms-id': dataMsId } : {}}
+            data-ms-id={dataMsId}
             tooltipId={square && labelId ? labelId : null}
             onClick={handleOnClick}
         >
@@ -107,7 +107,7 @@ const ResourceCardWrapper = ({
                 <a
                     className="_absolute _fill"
                     href={viewerUrl}
-                    {...cardMsIdPrefix ? { 'data-ms-id': `${cardMsIdPrefix}-link` } : {}}
+                    data-ms-id={cardMsIdPrefix ? `${cardMsIdPrefix}-link` : undefined}
                     {...target && {target}}
                 />
             ) : null}
@@ -262,7 +262,7 @@ const ResourceCardGridBody = ({
                         <Text
                             fontSize="md"
                             ellipsis={!headerEntry.showFullContent}
-                            {...cardMsIdPrefix ? { 'data-ms-id': `${cardMsIdPrefix}-title` } : {}}
+                            data-ms-id={cardMsIdPrefix ? `${cardMsIdPrefix}-title` : undefined}
                         >
                             {((icon || headerEntry?.icon) && !loading) && (
                                 <><Glyphicon {...(icon || headerEntry?.icon)} />{' '}</>

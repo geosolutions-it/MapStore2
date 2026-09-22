@@ -50,7 +50,7 @@ const isFieldLabelOnly = ({style, value}) => isEmptyValue(value) && isStyleLabel
 const DetailInfoFieldLabel = ({ field }) => {
     const label = field.labelId ? <Message msgId={field.labelId} /> : field.label;
     return isStyleLabel(field.style) && field.href
-        ? (<a href={field.href} target={field.target} {...(field['data-ms-id'] ? {'data-ms-id': field['data-ms-id']} : {})}>{label}</a>)
+        ? (<a href={field.href} target={field.target} data-ms-id={field['data-ms-id']}>{label}</a>)
         : label;
 };
 
@@ -60,7 +60,7 @@ function DetailsInfoField({ field, children, className }) {
     return (
         <FlexBox gap="sm" classNames={['ms-details-info-field', '_padding-b-xs', '_row']} className={className}>
             <Text className={isLinkLabel ? '' : '_label'} fontSize="sm"><DetailInfoFieldLabel field={field} /></Text>
-            {!isLinkLabel ? <FlexBox.Fill {...(field['data-ms-id'] ? { 'data-ms-id': field['data-ms-id'] } : {})}>
+            {!isLinkLabel ? <FlexBox.Fill data-ms-id={field['data-ms-id']}>
                 <Text fontSize="sm">{children(values)}</Text>
             </FlexBox.Fill> : null}
         </FlexBox>

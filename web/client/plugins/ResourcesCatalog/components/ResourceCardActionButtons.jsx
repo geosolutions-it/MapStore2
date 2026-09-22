@@ -22,7 +22,7 @@ const ActionMenuItem = ({
     return (
         <MenuItem
             {...props}
-            {...dataMsId ? { 'data-ms-id': dataMsId } : {}}
+            data-ms-id={dataMsId}
         >
             {glyph ? <><Glyphicon glyph={glyph}/>{' '}</> : null}
             {labelId ? <Message msgId={labelId} /> : null}
@@ -64,7 +64,7 @@ function ResourceCardActionButtons({
                     size="xs"
                     noCaret
                     className="_border-transparent"
-                    {...cardMsIdPrefix ? { 'data-ms-id': `${cardMsIdPrefix}-actions` } : {}}
+                    data-ms-id={cardMsIdPrefix ? `${cardMsIdPrefix}-actions` : undefined}
                 >
                     <Glyphicon glyph="option-vertical" />
                 </Dropdown.Toggle>
