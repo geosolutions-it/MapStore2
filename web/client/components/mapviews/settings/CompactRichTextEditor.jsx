@@ -49,7 +49,7 @@ function CompactRichTextEditor({
 }) {
 
     return (
-        <div data-ms-id="add-widget-text-description">
+        <div data-ms-id="widget-text-description">
             <Editor
                 {...props}
                 editorStyle={{ minHeight: 200 }}

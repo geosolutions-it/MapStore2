@@ -137,7 +137,7 @@ class DownloadOptions extends React.Component {
 
             <div className="mapstore-downloadoptions">
                 <label><Message msgId="layerdownload.format" /></label>
-                <div {...{ 'data-ms-id': 'dataset-export-select-format' }}>
+                <div {...{ 'data-ms-id': 'layer-download-format' }}>
                     <Select
                         clearable={false}
                         isLoading={this.props.formatsLoading}

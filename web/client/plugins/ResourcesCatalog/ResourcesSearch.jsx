@@ -104,7 +104,7 @@ function ResourcesSearch({
                         onChange={(q) => onSearch({ params: { q } })}
                         debounceTime={debounceTime}
                         placeholder="maps.search"
-                        data-ms-id="catalogue-search"
+                        data-ms-id="resources-search"
                     />
                 </FlexFill>
                 {!isEmpty(query) ? <ResourcesSearchTool

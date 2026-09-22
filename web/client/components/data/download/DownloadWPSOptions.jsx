@@ -47,7 +47,7 @@ const DownloadWPSOptions = ({
             return;
         }
         const srsInput = document.querySelector('.mapstore-downloadwpsoptions-advanced .mapstore-downloadwpsoptions-advanced-menuitem .Select-input input');
-        srsInput?.setAttribute('data-ms-id', 'dataset-export-select-reference-system');
+        srsInput?.setAttribute('data-ms-id', 'layer-download-srs');
     }, [advancedOptionsOpened, selectedSrs, srsList]);
 
     return (
@@ -55,7 +55,7 @@ const DownloadWPSOptions = ({
             {advancedOptionsVisible && <div className="mapstore-downloadwpsoptions-advanced-options">
                 <Button
                     className="no-border"
-                    {...{ 'data-ms-id': 'dataset-export-toggle-advanced' }}
+                    {...{ 'data-ms-id': 'layer-download-advanced-toggle' }}
                     onClick={() => openAdvancedOptions(!advancedOptionsOpened)}
                 >
                     <Glyphicon glyph={`chevron-${advancedOptionsOpened ? 'down' : 'right'}`}/>
@@ -68,7 +68,7 @@ const DownloadWPSOptions = ({
 
                 {/* select SRS must be always visibile */}
                 <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                    <div className="mapstore-downloadwpsoptions-advanced-menuitem-control" {...{ 'data-ms-id': 'dataset-export-select-reference-system' }}>
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem-control" {...{ 'data-ms-id': 'layer-download-srs' }}>
                         <label><Message msgId="layerdownload.srs" /></label>
                         <Select
                             clearable={false}

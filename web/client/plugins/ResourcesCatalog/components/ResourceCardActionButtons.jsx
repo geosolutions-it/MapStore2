@@ -21,8 +21,8 @@ const ActionMenuItem = ({
     ...props
 }) => {
     const resolvedDataMsId = dataMsId
-        || (cardMsIdPrefix && glyph === 'duplicate' ? `${cardMsIdPrefix}-actions-clone` : null)
-        || (cardMsIdPrefix && glyph === 'trash' ? `${cardMsIdPrefix}-actions-delete` : null);
+        || (cardMsIdPrefix && glyph === 'duplicate' ? `${cardMsIdPrefix}-clone` : null)
+        || (cardMsIdPrefix && glyph === 'trash' ? `${cardMsIdPrefix}-delete` : null);
     return (
         <MenuItem
             {...props}
