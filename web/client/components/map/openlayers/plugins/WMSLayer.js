@@ -78,19 +78,15 @@ const loadFunction = (options, headers) => function(image, src) {
                 "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
                 ...headers
             },
-            responseType: 'arraybuffer'
+            responseType: 'blob'
         }).then(response => {
             if (response.status === 200) {
-                const uInt8Array = new Uint8Array(response.data);
-                let i = uInt8Array.length;
-                const binaryString = new Array(i);
-                while (i--) {
-                    binaryString[i] = String.fromCharCode(uInt8Array[i]);
-                }
-                const dataImg = binaryString.join('');
-                const type = response.headers['content-type'];
+                const type = response.headers?.['content-type'] || response.data?.type || '';
                 if (type.indexOf('image') === 0) {
-                    img.src = 'data:' + type + ';base64,' + window.btoa(dataImg);
+                    img.src = URL.createObjectURL(response.data);
+                } else {
+                    setErrorState(image);
+                    failTiles.add(src);
                 }
             }
         }).catch(e => {
@@ -165,7 +161,8 @@ const createLayer = (options, map, mapId) => {
         crossOrigin: options.crossOrigin,
         params: queryParameters,
         tileGrid: generateTileGrid(options, map),
-        tileLoadFunction: loadFunction(options, headers)
+        tileLoadFunction: loadFunction(options, headers),
+        transition: options.transition !== undefined ? options.transition : 0
     };
 
     const wmsSource = new TileWMS({ ...sourceOptions });
@@ -175,7 +172,8 @@ const createLayer = (options, map, mapId) => {
         visible: options.visibility !== false,
         zIndex: options.zIndex,
         minResolution: options.minResolution,
-        maxResolution: options.maxResolution
+        maxResolution: options.maxResolution,
+        preload: options.preload !== undefined ? options.preload : 0
     };
     let layer;
     if (vectorFormat) {
