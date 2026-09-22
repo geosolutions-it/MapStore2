@@ -58,11 +58,12 @@ import {selectedLayerSelector, useLayerFilterSelector} from '../selectors/featur
 import {layerLoad} from '../actions/layers';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
+import { isGeometryType } from '../utils/ogc/WFS/base';
 
 const extractInfo = (data, fields = []) => {
     return {
         geometry: data.featureTypes[0].properties
-            .filter((attribute) => attribute.type.indexOf('gml:') === 0)
+            .filter(isGeometryType)
             .map((attribute) => {
                 const label = find(fields, {name: attribute.name}) ?? attribute.name;
                 let conf = {

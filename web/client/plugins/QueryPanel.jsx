@@ -89,7 +89,7 @@ import {
 } from '../selectors/queryform';
 import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
-import {typeNameSelector} from "../selectors/query";
+import {typeNameSelector, isGeometrylessFeatureType} from "../selectors/query";
 
 // include application component
 
@@ -99,7 +99,7 @@ const onReset = reset.bind(null, "query");
 // makes it a smart component
 // we both connect state => props
 // and actions to event handlers
-const SmartQueryForm = connect((state) => {
+const SmartQueryForm = connect((state, ownProps) => {
     return {
         // QueryBuilder props
         useMapProjection: state.queryform.useMapProjection,
@@ -133,7 +133,11 @@ const SmartQueryForm = connect((state) => {
         emptyFilterWarning: true,
         maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height,
         zoom: (mapSelector(state) || {}).zoom,
-        projection: (mapSelector(state) || {}).projection
+        projection: (mapSelector(state) || {}).projection,
+        toolsOptions: {
+            ...ownProps.toolsOptions,
+            ...(isGeometrylessFeatureType(state) ? {hideSpatialFilter: true, hideCrossLayer: true} : {})
+        }
     };
 }, dispatch => {
     return {
