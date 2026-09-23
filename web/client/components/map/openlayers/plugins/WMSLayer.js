@@ -30,7 +30,6 @@ import VectorTileSource from 'ol/source/VectorTile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import { isValidResponse } from '../../../../utils/WMSUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
@@ -67,59 +66,69 @@ const loadFunction = (options, headers) => function(image, src) {
     let img = image.getImage();
     let newSrc = proxySource(options.forceProxy, src);
 
-    if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity)) {
-        // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
+    const isPost = typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity);
+
+    if (!isPost && !headers) {
+        img.src = newSrc;
+        return;
+    }
+
+    let requestPromise;
+    if (isPost) {
+        // GET ALL THE PARAMETERS OUT OF THE SOURCE URL
         let [url, ...dataEntries] = src.split("&");
         url = proxySource(options.forceProxy, url);
 
         // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
-        axios.post(url, "&" + dataEntries.join("&"), {
+        requestPromise = axios.post(url, "&" + dataEntries.join("&"), {
             headers: {
                 "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
                 ...headers
             },
             responseType: 'blob'
-        }).then(response => {
-            if (response.status === 200) {
-                const type = response.headers?.['content-type'] || response.data?.type || '';
-                if (type.indexOf('image') === 0) {
-                    img.src = URL.createObjectURL(response.data);
-                } else {
-                    setErrorState(image);
-                    failTiles.add(src);
-                }
-            }
-        }).catch(e => {
-            setErrorState(image);
-            failTiles.add(src);
-            console.error(e);
         });
     } else {
-        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
-            axios.get(newSrc, {
-                headers,
-                responseType: 'blob'
-            })
-                .then((response) => {
-                    return response.data.type === "text/xml"
-                        ? response.data.text().then(dataText => ({...response, dataText}))
-                        : response;
-                })
-                .then(response => {
-                    if (isValidResponse(response)) { // not contains OGC exception
-                        image.getImage().src = URL.createObjectURL(response.data);
-                    } else {
-                        throw new Error(response.dataText);
-                    }
-                }).catch(errorMessage => {
-                    setErrorState(image);         // set error state for tile and removed from the queue to prevent reloading loops
-                    failTiles.add(src);           // indexing fail url tile to prevent reloading loops
-                    console.error(errorMessage);  // show ogc exception in console for debugging
-                });
-        } else {
-            img.src = newSrc;
-        }
+        // case of custom headers is setted in localConfig, example requestsConfigurationRules
+        requestPromise = axios.get(newSrc, { headers, responseType: 'blob' });
     }
+
+    requestPromise
+        .then(response => {
+            const type = response?.headers?.['content-type'] || response?.data?.type || '';
+
+            if (response?.status !== 200 || !type.startsWith('image/')) {
+                if (typeof response?.data?.text === 'function') {
+                    return response.data.text().then(text => {
+                        throw new Error(text || response?.statusText);
+                    });
+                }
+                throw new Error(typeof response?.data === 'string' ? response.data : response?.statusText);
+            }
+
+            if (img._msBlobUrl) {
+                URL.revokeObjectURL(img._msBlobUrl);
+            }
+            // revoke blob URL once loaded or errored to prevent memory leaks
+            const blobUrl = URL.createObjectURL(response.data);
+            img._msBlobUrl = blobUrl;
+            const revoke = () => {
+                img.removeEventListener('load', revoke);
+                img.removeEventListener('error', revoke);
+                if (img._msBlobUrl === blobUrl) {
+                    img._msBlobUrl = undefined;
+                }
+                URL.revokeObjectURL(blobUrl);
+            };
+            img.addEventListener('load', revoke);
+            img.addEventListener('error', revoke);
+            img.src = blobUrl;
+            return null;
+        })
+        .catch(error => {
+            setErrorState(image); // set error state for tile and removed from the queue to prevent reloading loops
+            failTiles.add(src);   // indexing fail url tile to prevent reloading loops
+            console.error(error); // show ogc exception in console for debugging
+        });
 };
 
 const createLayer = (options, map, mapId) => {
@@ -162,7 +171,7 @@ const createLayer = (options, map, mapId) => {
         params: queryParameters,
         tileGrid: generateTileGrid(options, map),
         tileLoadFunction: loadFunction(options, headers),
-        transition: options.transition !== undefined ? options.transition : 0
+        transition: options.transition ?? 0
     };
 
     const wmsSource = new TileWMS({ ...sourceOptions });
@@ -173,7 +182,7 @@ const createLayer = (options, map, mapId) => {
         zIndex: options.zIndex,
         minResolution: options.minResolution,
         maxResolution: options.maxResolution,
-        preload: options.preload !== undefined ? options.preload : 0
+        preload: options.preload ?? 0
     };
     let layer;
     if (vectorFormat) {

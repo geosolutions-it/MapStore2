@@ -154,7 +154,7 @@ export class OpenlayersMap extends React.Component {
             layers: [],
             controls: controls,
             interactions: interactions,
-            maxTilesLoading: Infinity,
+            maxTilesLoading: this.props.mapOptions?.maxTilesLoading ?? Infinity,
             target: this.getDocument().getElementById(this.props.id) || `${this.props.id}`,
             view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
