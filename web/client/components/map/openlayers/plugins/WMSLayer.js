@@ -75,8 +75,11 @@ const loadFunction = (options, headers) => function(image, src) {
 
     let requestPromise;
     if (isPost) {
+        // GET ALL THE PARAMETERS OUT OF THE SOURCE URL
         let [url, ...dataEntries] = src.split("&");
         url = proxySource(options.forceProxy, url);
+
+        // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
         requestPromise = axios.post(url, "&" + dataEntries.join("&"), {
             headers: {
                 "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
@@ -85,15 +88,27 @@ const loadFunction = (options, headers) => function(image, src) {
             responseType: 'blob'
         });
     } else {
+        // case of custom headers is setted in localConfig, example requestsConfigurationRules
         requestPromise = axios.get(newSrc, { headers, responseType: 'blob' });
     }
 
-    requestPromise.then(response => {
-        const type = response?.headers?.['content-type'] || response?.data?.type || '';
-        if (type.startsWith('image/') === 0) {
+    requestPromise
+        .then(response => {
+            const type = response?.headers?.['content-type'] || response?.data?.type || '';
+
+            if (response?.status !== 200 || !type.startsWith('image/')) {
+                if (typeof response?.data?.text === 'function') {
+                    return response.data.text().then(text => {
+                        throw new Error(text || response?.statusText);
+                    });
+                }
+                throw new Error(typeof response?.data === 'string' ? response.data : response?.statusText);
+            }
+
             if (img._msBlobUrl) {
                 URL.revokeObjectURL(img._msBlobUrl);
             }
+            // revoke blob URL once loaded or errored to prevent memory leaks
             const blobUrl = URL.createObjectURL(response.data);
             img._msBlobUrl = blobUrl;
             const revoke = () => {
@@ -107,20 +122,13 @@ const loadFunction = (options, headers) => function(image, src) {
             img.addEventListener('load', revoke);
             img.addEventListener('error', revoke);
             img.src = blobUrl;
-        } else {
-            setErrorState(image);
-            failTiles.add(src);
-            if (typeof response?.data?.text === 'function') {
-                response.data.text().then(text => console.error(text || response.statusText));
-            } else {
-                console.error(response?.statusText || 'Invalid image response');
-            }
-        }
-    }).catch(e => {
-        setErrorState(image);
-        failTiles.add(src);
-        console.error(e);
-    });
+            return null;
+        })
+        .catch(error => {
+            setErrorState(image); // set error state for tile and removed from the queue to prevent reloading loops
+            failTiles.add(src);   // indexing fail url tile to prevent reloading loops
+            console.error(error); // show ogc exception in console for debugging
+        });
 };
 
 const createLayer = (options, map, mapId) => {
