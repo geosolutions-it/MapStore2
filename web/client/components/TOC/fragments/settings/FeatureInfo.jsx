@@ -18,6 +18,7 @@ import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
 import { getDefaultInfoViewMode } from '../../../../utils/MapInfoUtils';
+import { getCapabilitiesUrl } from '../../../../utils/LayersUtils';
 
 const supportedFormatRequests = {
     wms: getSupportedFormatWMS,
@@ -58,7 +59,7 @@ export default class extends React.Component {
         // we dont know supported infoFormats yet
         if (getSupportedFormat && this.props.element.url && !this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
             this.setState({ loading: true }); // eslint-disable-line -- TODO: need to be fixed
-            getSupportedFormat(this.props.element.url, true)
+            getSupportedFormat(getCapabilitiesUrl(this.props.element), true)
                 .then(({ infoFormats }) => {
                     this.props.onChange("infoFormats", infoFormats);
                     this.setState({ loading: false }); // eslint-disable-line -- TODO: need to be fixed
