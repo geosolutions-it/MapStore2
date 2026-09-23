@@ -249,9 +249,127 @@ describe('withBatchedLayerLoading enhancer', () => {
         }, 80);
     });
 
+    it('ensures error overrides success for same layer in onLayerLoad', (done) => {
+        let successPayload = null;
+        let errorPayload = null;
+        const MockComp = ({ onLayerLoad }) => (
+            <button
+                id="btn"
+                onClick={() => {
+                    onLayerLoad('layer-1');
+                    onLayerLoad('layer-1', { error: true });
+                }}
+            />
+        );
+        const Enhanced = withBatchedLayerLoading(MockComp);
+        ReactDOM.render(
+            <Enhanced
+                layerLoadingBatchDelay={20}
+                onLayerLoad={(ids, error) => {
+                    if (error) {
+                        errorPayload = ids;
+                    } else {
+                        successPayload = ids;
+                    }
+                }}
+            />,
+            container
+        );
+
+        container.querySelector('#btn').click();
+
+        setTimeout(() => {
+            expect(successPayload).toBe(null);
+            expect(errorPayload).toEqual(['layer-1']);
+            done();
+        }, 40);
+    });
+
     it('handles missing onLayerLoad gracefully without error', () => {
         const MockComp = ({ onLayerLoad }) => (
             <button id="btn" onClick={() => onLayerLoad('layer-1')} />
+        );
+        const Enhanced = withBatchedLayerLoading(MockComp);
+        ReactDOM.render(<Enhanced />, container);
+        expect(() => container.querySelector('#btn').click()).toNotThrow();
+    });
+
+    it('batches onLayerError into full error and warning batches', (done) => {
+        let errorPayload = null;
+        let warningPayload = null;
+        const MockComp = ({ onLayerError }) => (
+            <button
+                id="btn"
+                onClick={() => {
+                    onLayerError('layer-1', 10, 10);
+                    onLayerError('layer-2', 10, 3);
+                    onLayerError('layer-3', 5, 5);
+                }}
+            />
+        );
+        const Enhanced = withBatchedLayerLoading(MockComp);
+        ReactDOM.render(
+            <Enhanced
+                layerLoadingBatchDelay={20}
+                onLayerError={(ids, count, errorCount) => {
+                    if (count === 1 && errorCount === 1) {
+                        errorPayload = ids;
+                    } else if (count === 2 && errorCount === 1) {
+                        warningPayload = ids;
+                    }
+                }}
+            />,
+            container
+        );
+
+        container.querySelector('#btn').click();
+
+        setTimeout(() => {
+            expect(errorPayload).toEqual(['layer-1', 'layer-3']);
+            expect(warningPayload).toEqual(['layer-2']);
+            done();
+        }, 40);
+    });
+
+    it('promotes warning to full error when both occur for same layer in onLayerError', (done) => {
+        let errorPayload = null;
+        let warningPayload = null;
+        const MockComp = ({ onLayerError }) => (
+            <button
+                id="btn"
+                onClick={() => {
+                    onLayerError('layer-1', 10, 2);
+                    onLayerError('layer-1', 10, 10);
+                }}
+            />
+        );
+        const Enhanced = withBatchedLayerLoading(MockComp);
+        ReactDOM.render(
+            <Enhanced
+                layerLoadingBatchDelay={20}
+                onLayerError={(ids, count, errorCount) => {
+                    if (count === 1 && errorCount === 1) {
+                        errorPayload = ids;
+                    } else {
+                        warningPayload = ids;
+                    }
+                }}
+            />,
+            container
+        );
+
+        container.querySelector('#btn').click();
+
+        setTimeout(() => {
+            expect(errorPayload).toEqual(['layer-1']);
+            expect(warningPayload).toBe(null);
+            done();
+        }, 40);
+    });
+
+    it('handles missing onLayerError gracefully without error', () => {
+        const MockComp = ({ onLayerError }) => (
+            <button id="btn" onClick={() => onLayerError('layer-1', 1, 1)} />
         );
         const Enhanced = withBatchedLayerLoading(MockComp);
         ReactDOM.render(<Enhanced />, container);

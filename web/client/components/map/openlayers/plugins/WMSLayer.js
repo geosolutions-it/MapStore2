@@ -30,7 +30,6 @@ import VectorTileSource from 'ol/source/VectorTile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import { isValidResponse } from '../../../../utils/WMSUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
@@ -67,63 +66,61 @@ const loadFunction = (options, headers) => function(image, src) {
     let img = image.getImage();
     let newSrc = proxySource(options.forceProxy, src);
 
-    if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity)) {
-        // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
+    const isPost = typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity);
+
+    if (!isPost && !headers) {
+        img.src = newSrc;
+        return;
+    }
+
+    let requestPromise;
+    if (isPost) {
         let [url, ...dataEntries] = src.split("&");
         url = proxySource(options.forceProxy, url);
-
-        // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
-        axios.post(url, "&" + dataEntries.join("&"), {
+        requestPromise = axios.post(url, "&" + dataEntries.join("&"), {
             headers: {
                 "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
                 ...headers
             },
-            responseType: 'arraybuffer'
-        }).then(response => {
-            if (response.status === 200) {
-                const uInt8Array = new Uint8Array(response.data);
-                let i = uInt8Array.length;
-                const binaryString = new Array(i);
-                while (i--) {
-                    binaryString[i] = String.fromCharCode(uInt8Array[i]);
-                }
-                const dataImg = binaryString.join('');
-                const type = response.headers['content-type'];
-                if (type.indexOf('image') === 0) {
-                    img.src = 'data:' + type + ';base64,' + window.btoa(dataImg);
-                }
-            }
-        }).catch(e => {
-            setErrorState(image);
-            failTiles.add(src);
-            console.error(e);
+            responseType: 'blob'
         });
     } else {
-        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
-            axios.get(newSrc, {
-                headers,
-                responseType: 'blob'
-            })
-                .then((response) => {
-                    return response.data.type === "text/xml"
-                        ? response.data.text().then(dataText => ({...response, dataText}))
-                        : response;
-                })
-                .then(response => {
-                    if (isValidResponse(response)) { // not contains OGC exception
-                        image.getImage().src = URL.createObjectURL(response.data);
-                    } else {
-                        throw new Error(response.dataText);
-                    }
-                }).catch(errorMessage => {
-                    setErrorState(image);         // set error state for tile and removed from the queue to prevent reloading loops
-                    failTiles.add(src);           // indexing fail url tile to prevent reloading loops
-                    console.error(errorMessage);  // show ogc exception in console for debugging
-                });
-        } else {
-            img.src = newSrc;
-        }
+        requestPromise = axios.get(newSrc, { headers, responseType: 'blob' });
     }
+
+    requestPromise.then(response => {
+        const type = response?.headers?.['content-type'] || response?.data?.type || '';
+        if (type.startsWith('image/') === 0) {
+            if (img._msBlobUrl) {
+                URL.revokeObjectURL(img._msBlobUrl);
+            }
+            const blobUrl = URL.createObjectURL(response.data);
+            img._msBlobUrl = blobUrl;
+            const revoke = () => {
+                img.removeEventListener('load', revoke);
+                img.removeEventListener('error', revoke);
+                if (img._msBlobUrl === blobUrl) {
+                    img._msBlobUrl = undefined;
+                }
+                URL.revokeObjectURL(blobUrl);
+            };
+            img.addEventListener('load', revoke);
+            img.addEventListener('error', revoke);
+            img.src = blobUrl;
+        } else {
+            setErrorState(image);
+            failTiles.add(src);
+            if (typeof response?.data?.text === 'function') {
+                response.data.text().then(text => console.error(text || response.statusText));
+            } else {
+                console.error(response?.statusText || 'Invalid image response');
+            }
+        }
+    }).catch(e => {
+        setErrorState(image);
+        failTiles.add(src);
+        console.error(e);
+    });
 };
 
 const createLayer = (options, map, mapId) => {
@@ -165,7 +162,8 @@ const createLayer = (options, map, mapId) => {
         crossOrigin: options.crossOrigin,
         params: queryParameters,
         tileGrid: generateTileGrid(options, map),
-        tileLoadFunction: loadFunction(options, headers)
+        tileLoadFunction: loadFunction(options, headers),
+        transition: options.transition ?? 0
     };
 
     const wmsSource = new TileWMS({ ...sourceOptions });
@@ -175,7 +173,8 @@ const createLayer = (options, map, mapId) => {
         visible: options.visibility !== false,
         zIndex: options.zIndex,
         minResolution: options.minResolution,
-        maxResolution: options.maxResolution
+        maxResolution: options.maxResolution,
+        preload: options.preload ?? 0
     };
     let layer;
     if (vectorFormat) {
