@@ -175,42 +175,7 @@ export class OpenlayersMap extends React.Component {
             setTimeout(() => this.props.onMouseOut(), 150);
         });
         // TODO support disableEventListener
-        if (map.tileQueue_ && typeof map.tileQueue_.loadMoreTiles === 'function') {
-            const originalLoadMoreTiles = map.tileQueue_.loadMoreTiles.bind(map.tileQueue_);
-            map.tileQueue_.loadMoreTiles = (maxTotalLoading, maxNewLoads) => {
-                const isMoving = this.isMapMoving
-                    || map.getView()?.getInteracting?.()
-                    || map.getView()?.getAnimating?.();
-                if (isMoving) {
-                    return;
-                }
-                if (this.isDrainingBacklog) {
-                    originalLoadMoreTiles(
-                        Math.min(maxTotalLoading, 128),
-                        Math.min(maxNewLoads, 64)
-                    );
-                    if (map.tileQueue_.isEmpty()) {
-                        this.isDrainingBacklog = false;
-                    }
-                    return;
-                }
-                originalLoadMoreTiles(maxTotalLoading, maxNewLoads);
-            };
-        }
-        map.on('movestart', () => {
-            this.isMapMoving = true;
-        });
-        map.on('moveend', () => {
-            this.isMapMoving = false;
-            if (this.pendingLayerEvents?.length > 0) {
-                const pending = this.pendingLayerEvents;
-                this.pendingLayerEvents = [];
-                pending.forEach(cb => cb());
-            }
-            this.isDrainingBacklog = true;
-            this.updateMapInfoState();
-            map.render();
-        });
+        map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
                 const latLng = this.coordinateToLatLng(event.coordinate);
@@ -382,8 +347,6 @@ export class OpenlayersMap extends React.Component {
             this.unsubscribeProjAdapter = null;
         }
         if (this.map) {
-            this.pendingLayerEvents = [];
-            this.isDrainingBacklog = false;
             this.map.setTarget(null);
         }
     }
@@ -531,9 +494,9 @@ export class OpenlayersMap extends React.Component {
             return child ? React.cloneElement(child, {
                 map: map,
                 mapId: this.props.id,
-                onLayerLoading: this.handleLayerLoading,
-                onLayerError: this.handleLayerError,
-                onLayerLoad: this.handleLayerLoad,
+                onLayerLoading: this.props.onLayerLoading,
+                onLayerError: this.props.onLayerError,
+                onLayerLoad: this.props.onLayerLoad,
                 projection: this.props.projection,
                 onCreationError: this.props.onCreationError,
                 resolutions: this.getResolutions()
@@ -599,33 +562,6 @@ export class OpenlayersMap extends React.Component {
                 intersectedPixels
             });
         }
-    };
-
-    handleLayerLoading = (...args) => {
-        if (this.isMapMoving) {
-            this.pendingLayerEvents = this.pendingLayerEvents || [];
-            this.pendingLayerEvents.push(() => this.props.onLayerLoading(...args));
-            return;
-        }
-        this.props.onLayerLoading(...args);
-    };
-
-    handleLayerLoad = (...args) => {
-        if (this.isMapMoving) {
-            this.pendingLayerEvents = this.pendingLayerEvents || [];
-            this.pendingLayerEvents.push(() => this.props.onLayerLoad(...args));
-            return;
-        }
-        this.props.onLayerLoad(...args);
-    };
-
-    handleLayerError = (...args) => {
-        if (this.isMapMoving) {
-            this.pendingLayerEvents = this.pendingLayerEvents || [];
-            this.pendingLayerEvents.push(() => this.props.onLayerError(...args));
-            return;
-        }
-        this.props.onLayerError(...args);
     };
 
     updateMapInfoState = () => {
