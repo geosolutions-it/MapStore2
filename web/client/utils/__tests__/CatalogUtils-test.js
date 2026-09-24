@@ -9,6 +9,46 @@ import expect from 'expect';
 import * as CatalogUtils from '../CatalogUtils';
 
 describe('Test the CatalogUtils', () => {
+    it('normalizes catalog exception text and response status', () => {
+        expect(CatalogUtils.normalizeCatalogSearchError({
+            error: ['First line\nFirst line\nSecond line'],
+            response: { status: 500 }
+        })).toEqual({
+            message: 'First line Second line',
+            status: 500
+        });
+    });
+    it('normalizes response-less catalog errors with a generic message', () => {
+        expect(CatalogUtils.normalizeCatalogSearchError(new Error('Network Error'))).toEqual({
+            message: CatalogUtils.CATALOG_SERVICE_UNAVAILABLE,
+            status: undefined
+        });
+    });
+    it('resolves catalog search error messages by priority', () => {
+        expect(CatalogUtils.getCatalogSearchErrorMessage({
+            message: 'OGC exception',
+            status: 401
+        })).toEqual({ message: 'catalog.errors.unauthorized' });
+        expect(CatalogUtils.getCatalogSearchErrorMessage({
+            message: 'OGC exception',
+            status: 403
+        })).toEqual({ message: 'catalog.errors.forbidden' });
+        expect(CatalogUtils.getCatalogSearchErrorMessage({
+            message: 'OGC exception',
+            status: 500
+        })).toEqual({ message: 'OGC exception' });
+        expect(CatalogUtils.getCatalogSearchErrorMessage({
+            message: CatalogUtils.CATALOG_SERVICE_UNAVAILABLE,
+            status: 500
+        })).toEqual({
+            message: 'catalog.errors.http',
+            values: { status: 500 }
+        });
+        expect(CatalogUtils.getCatalogSearchErrorMessage({
+            message: CatalogUtils.CATALOG_SERVICE_UNAVAILABLE
+        })).toEqual({ message: CatalogUtils.CATALOG_SERVICE_UNAVAILABLE });
+        expect(CatalogUtils.getCatalogSearchErrorMessage('legacy error')).toEqual({ message: 'legacy error' });
+    });
     it('buildServiceUrl', ( ) => {
         const legacyWMSServiceWithAlias = {
             type: "wms",
