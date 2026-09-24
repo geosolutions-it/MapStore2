@@ -10,6 +10,7 @@ import csw from '../api/CSW';
 import wms from '../api/WMS';
 import wmts from '../api/WMTS';
 import backgrounds from '../api/mapBackground';
+import { normalizeCatalogSearchError } from '../utils/CatalogUtils';
 var API = {
     csw,
     wms,
@@ -248,7 +249,7 @@ export function getRecords(format, url, startPosition = 1, maxRecords, filter, o
         dispatch(setLoading(true));
         API[format].getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
             if (result.error) {
-                dispatch(recordsLoadError(result));
+                dispatch(recordsLoadError(normalizeCatalogSearchError(result)));
             } else {
                 dispatch(recordsLoaded({
                     url,
@@ -258,7 +259,7 @@ export function getRecords(format, url, startPosition = 1, maxRecords, filter, o
                 }, result));
             }
         }).catch((e) => {
-            dispatch(recordsLoadError(e));
+            dispatch(recordsLoadError(normalizeCatalogSearchError(e)));
         });
     };
 }

@@ -443,10 +443,15 @@ describe('catalog Epics', () => {
         } });
     });
     it('recordSearchEpic with network error', (done) => {
-        const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+        const NUM_ACTIONS = 3;
+        const networkErrorRecordSearchEpic = catalog({
+            csw: {
+                textSearch: () => Promise.reject(new Error('Network Error'))
+            }
+        }).recordSearchEpic;
+        testEpic(addTimeoutEpic(networkErrorRecordSearchEpic), NUM_ACTIONS, textSearch({
             format: "csw",
-            url: "base/web/client/test-resources/csw/getRecordsResponseEsxception.xml",
+            url: "https://unreachable.example.com/csw",
             startPosition: 1,
             maxRecords: 1,
             text: "a",
@@ -459,6 +464,14 @@ describe('catalog Epics', () => {
                     expect(action.loading).toBe(true);
                     break;
                 case RECORD_LIST_LOAD_ERROR:
+                    expect(action.error).toEqual({
+                        message: 'catalog.errors.serviceUnavailable',
+                        status: undefined
+                    });
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.level).toBe('error');
+                    expect(action.message).toBe('catalog.errors.serviceUnavailable');
                     break;
                 case TEST_TIMEOUT:
                     break;
@@ -470,7 +483,7 @@ describe('catalog Epics', () => {
         }, { });
     });
     it('recordSearchEpic with exception', (done) => {
-        const NUM_ACTIONS = 2;
+        const NUM_ACTIONS = 3;
         testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
             format: "csw",
             url: "base/web/client/test-resources/csw/getRecordsResponseException.xml",
@@ -486,7 +499,12 @@ describe('catalog Epics', () => {
                     expect(action.loading).toBe(true);
                     break;
                 case RECORD_LIST_LOAD_ERROR:
-                    expect(action.error).toContain('IllegalArgumentException');
+                    expect(action.error.message).toContain('IllegalArgumentException');
+                    expect(action.error.status).toBe(undefined);
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.level).toBe('error');
+                    expect(action.message).toContain('IllegalArgumentException');
                     break;
                 case TEST_TIMEOUT:
                     break;
@@ -498,30 +516,51 @@ describe('catalog Epics', () => {
         }, { });
     });
     it('recordSearchEpic with exception with new service', (done) => {
-        const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+        const NUM_ACTIONS = 3;
+        const networkErrorRecordSearchEpic = catalog({
+            csw: {
+                textSearch: () => Promise.reject(new Error('Network Error'))
+            }
+        }).recordSearchEpic;
+        testEpic(addTimeoutEpic(networkErrorRecordSearchEpic), NUM_ACTIONS, textSearch({
             format: "csw",
-            url: "base/web/client/test-resources/csw/getRecordsResponseEsxception.xml",
+            url: "https://unreachable.example.com/csw",
             startPosition: 1,
             maxRecords: 1,
             text: "a",
             options: {isNewService: true}
         }), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((action) => {
-                switch (action.type) {
-                case SAVING_SERVICE:
-                    expect(action.status).toBe(true);
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(action.message).toBe('catalog.notification.errorServiceUrl');
-                    break;
-                case TEST_TIMEOUT:
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
+            const savingActions = actions.filter(({ type }) => type === SAVING_SERVICE);
+            expect(savingActions.map(({ status }) => status)).toEqual([true, false]);
+            const notificationAction = actions.find(({ type }) => type === SHOW_NOTIFICATION);
+            expect(notificationAction.message).toBe('catalog.errors.serviceUnavailable');
+            done();
+        }, { });
+    });
+
+    it('recordSearchEpic preserves an HTTP error status', (done) => {
+        const NUM_ACTIONS = 3;
+        const forbiddenRecordSearchEpic = catalog({
+            csw: {
+                textSearch: () => Promise.reject({ response: { status: 403 } })
+            }
+        }).recordSearchEpic;
+        testEpic(addTimeoutEpic(forbiddenRecordSearchEpic), NUM_ACTIONS, textSearch({
+            format: "csw",
+            url: "https://forbidden.example.com/csw",
+            startPosition: 1,
+            maxRecords: 1,
+            text: "a",
+            options: {}
+        }), (actions) => {
+            const loadErrorAction = actions.find(({ type }) => type === RECORD_LIST_LOAD_ERROR);
+            expect(loadErrorAction.error).toEqual({
+                message: 'catalog.errors.serviceUnavailable',
+                status: 403
             });
+            const notificationAction = actions.find(({ type }) => type === SHOW_NOTIFICATION);
+            expect(notificationAction.message).toBe('catalog.errors.forbidden');
             done();
         }, { });
     });

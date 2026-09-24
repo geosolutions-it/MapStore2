@@ -306,7 +306,8 @@ describe('Test correctness of the catalog actions', () => {
                     expect(result.loading).toBe(true);
                 } else {
                     expect(result).toExist();
-                    expect(result.error).toExist();
+                    expect(result.error.message).toContain('IllegalArgumentException');
+                    expect(result.error.status).toBe(undefined);
                 }
                 done();
             } catch (ex) {
