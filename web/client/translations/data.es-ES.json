@@ -1248,6 +1248,7 @@
         }
       },
       "spatialfilter": {
+        "notAvailable": "El filtrado espacial no está disponible para esta capa.",
         "filterType": "Tipo de filtro",
         "geometric_operation": "Operación geométrica",
         "combo_placeholder": "Seleccionar...",
