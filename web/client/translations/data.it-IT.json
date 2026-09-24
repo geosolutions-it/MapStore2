@@ -1822,7 +1822,7 @@
         "unauthorized": "Per accedere al servizio di catalogo è necessaria l'autenticazione (HTTP 401).",
         "forbidden": "L'accesso al servizio di catalogo è stato negato (HTTP 403). Verifica le tue autorizzazioni.",
         "http": "La richiesta al servizio di catalogo non è riuscita (HTTP {status}).",
-        "serviceUnavailable": "Non è stato possibile contattare il servizio di catalogo. La richiesta potrebbe essere stata bloccata dal browser."
+        "serviceUnavailable": "Non è stato possibile contattare il servizio di catalogo. La richiesta potrebbe essere stata bloccata."
       },
       "pageInfo": "Risultati {start}-{end} di {total}",
       "resultInfo": "{total, plural, =0 {Nessun Risultato} =1 {{total} Risultato di {total}} other {{start}-{end} di {total}}}",
