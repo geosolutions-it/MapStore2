@@ -53,7 +53,7 @@ describe('InlineLoader container', () => {
 
     it('should render hidden when layer is not loading in store', () => {
         renderWithStore(
-            { nodeId: 'layer-1' },
+            { node: { id: 'layer-1' }, nodeType: 'layers' },
             { layers: { layerTransientProps: { 'layer-1': { loading: false } } } }
         );
         expect(document.querySelector('.inline-loader-bar').style.display).toBe('none');
@@ -61,9 +61,25 @@ describe('InlineLoader container', () => {
 
     it('should render visible when layer is loading in store', () => {
         renderWithStore(
-            { nodeId: 'layer-1' },
+            { node: { id: 'layer-1' }, nodeType: 'layers' },
             { layers: { layerTransientProps: { 'layer-1': { loading: true } } } }
         );
         expect(document.querySelector('.inline-loader-bar').style.display).toBe('block');
+    });
+
+    it('should render visible when a nested layer of a group is loading in store', () => {
+        renderWithStore(
+            { node: { id: 'group-1', nodes: [{ id: 'layer-1' }, { id: 'group-2', nodes: [{ id: 'layer-2' }] }] }, nodeType: 'groups' },
+            { layers: { layerTransientProps: { 'layer-1': { loading: false }, 'layer-2': { loading: true } } } }
+        );
+        expect(document.querySelector('.inline-loader-bar').style.display).toBe('block');
+    });
+
+    it('should render hidden when no layer of a group is loading in store', () => {
+        renderWithStore(
+            { node: { id: 'group-1', nodes: [{ id: 'layer-1' }] }, nodeType: 'groups' },
+            { layers: { layerTransientProps: { 'group-1': { loading: true }, 'layer-1': { loading: false } } } }
+        );
+        expect(document.querySelector('.inline-loader-bar').style.display).toBe('none');
     });
 });

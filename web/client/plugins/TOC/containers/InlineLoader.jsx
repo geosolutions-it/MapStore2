@@ -8,11 +8,21 @@
 
 import { connect } from 'react-redux';
 import InlineLoader from '../components/InlineLoader';
-import { layerLoadingByIdSelector } from '../../../selectors/layers';
+import { layerTransientSelector } from '../../../selectors/layers';
+import { NodeTypes } from '../../../utils/LayersUtils';
 
-const ConnectedInlineLoader = connect((state, ownProps) => ({
-    loading: layerLoadingByIdSelector(ownProps.nodeId)(state)
-}))(InlineLoader);
+const isGroupLoading = (group, layerTransientProps) =>
+    (group?.nodes || []).some(child => child?.nodes
+        ? isGroupLoading(child, layerTransientProps)
+        : !!layerTransientProps[child?.id]?.loading);
+
+const ConnectedInlineLoader = connect((state, { node, nodeType }) => {
+    const layerTransientProps = layerTransientSelector(state);
+    return {
+        loading: nodeType === NodeTypes.GROUP
+            ? isGroupLoading(node, layerTransientProps)
+            : !!layerTransientProps[node?.id]?.loading
+    };
+})(InlineLoader);
 
 export default ConnectedInlineLoader;
-
