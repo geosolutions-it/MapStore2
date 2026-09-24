@@ -8,13 +8,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
-<<<<<<< HEAD
-import { buildServiceUrl } from '../../../utils/CatalogUtils';
-import API from '../../../api/catalog';
-=======
 import { buildServiceUrl, getCatalogSearchErrorMessage } from '../../../utils/CatalogUtils';
-import defaultAPI from '../../../api/catalog';
->>>>>>> 79e3f2b7b (#12888 Missing error message in catalog (#12907))
+import API from '../../../api/catalog';
 import { Alert, Glyphicon } from 'react-bootstrap';
 import Message from '../../I18N/Message';
 
