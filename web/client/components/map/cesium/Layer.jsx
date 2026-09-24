@@ -235,8 +235,12 @@ class CesiumLayer extends React.Component {
      * @param {Object} options layer options, can be a single layer or a group of layers
      * @param {*} callback
      */
+    getCoalesceGroupIds = (options) => {
+        return (options && options._coalesceGroupIds) || [options && options.id];
+    };
+
     forEachCoalesceGroupId = (options, callback) => {
-        ((options && options._coalesceGroupIds) || [options && options.id]).forEach(callback);
+        this.getCoalesceGroupIds(options).forEach(callback);
     };
 
     setLayerLoading = (layer, options) => {
@@ -248,14 +252,14 @@ class CesiumLayer extends React.Component {
                         clearTimeout(loadTimeout);
                         loadTimeout = undefined;
                     }
-                    this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
+                    this.props.onLayerLoading(this.getCoalesceGroupIds(options));
                 },
                 onLayerLoad: (error) => {
                     if (loadTimeout) {
                         clearTimeout(loadTimeout);
                     }
                     loadTimeout = setTimeout(() => {
-                        this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id, error));
+                        this.props.onLayerLoad(this.getCoalesceGroupIds(options), error);
                     }, 300);
                 }
             };
@@ -278,7 +282,7 @@ class CesiumLayer extends React.Component {
                         clearTimeout(loadTimeout);
                         loadTimeout = undefined;
                     }
-                    this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
+                    this.props.onLayerLoading(this.getCoalesceGroupIds(options));
                 }
                 pending++;
                 const onComplete = (error) => {
@@ -288,7 +292,7 @@ class CesiumLayer extends React.Component {
                             clearTimeout(loadTimeout);
                         }
                         loadTimeout = setTimeout(() => {
-                            this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id, error));
+                            this.props.onLayerLoad(this.getCoalesceGroupIds(options), error);
                         }, 300);
                     }
                 };

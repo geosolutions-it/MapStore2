@@ -34,6 +34,7 @@ import ReloadLayersButton from './containers/ReloadLayersButton';
 import RemoveNodesButton from './containers/RemoveNodesButton';
 import GroupOptionsButton from './containers/GroupOptionsButton';
 import TOCSettings from './containers/TOCSettings';
+import InlineLoader from './containers/InlineLoader';
 import Toolbar from './components/Toolbar';
 import { ControlledTOC } from './components/TOC';
 import ContextMenu from './components/ContextMenu';
@@ -488,6 +489,7 @@ function TOC({
                 onChange={onChange}
                 groupNodeComponent={groupNodeComponent}
                 layerNodeComponent={layerNodeComponent}
+                loaderComponent={InlineLoader}
                 contextMenu={contextMenu}
                 theme={theme}
                 className={contextMenu?.id === ROOT_GROUP_ID ? 'focused' : ''}

@@ -35,10 +35,11 @@ import 'ol/ol.css';
 import './mapstore-ol-overrides.css';
 import Feature from "ol/Feature";
 import RenderFeature from "ol/render/Feature";
+import withBatchedLayerLoading from '../enhancers/withBatchedLayerLoading';
 
 const geoJSONFormat = new GeoJSON();
 
-class OpenlayersMap extends React.Component {
+export class OpenlayersMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         document: PropTypes.object,
@@ -153,7 +154,7 @@ class OpenlayersMap extends React.Component {
             layers: [],
             controls: controls,
             interactions: interactions,
-            maxTilesLoading: Infinity,
+            maxTilesLoading: this.props.mapOptions?.maxTilesLoading ?? Infinity,
             target: this.getDocument().getElementById(this.props.id) || `${this.props.id}`,
             view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
@@ -760,4 +761,4 @@ class OpenlayersMap extends React.Component {
     };
 }
 
-export default OpenlayersMap;
+export default withBatchedLayerLoading(OpenlayersMap);

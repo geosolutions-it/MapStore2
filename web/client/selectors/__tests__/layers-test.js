@@ -28,7 +28,8 @@ import {
     queryableSelectedLayersSelector,
     getAdditionalLayerFromId,
     getTitleSelector,
-    getEffectivelyVisibleLayers
+    getEffectivelyVisibleLayers,
+    layerTransientSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -911,6 +912,18 @@ describe('Test layers selectors', () => {
                 }
             };
             expect(getTitleSelector(state, 'TEST_LAYER')).toBe('Livel');
+        });
+    });
+
+    describe('transient props selectors', () => {
+        it('layerTransientSelector returns empty object if missing', () => {
+            expect(layerTransientSelector({})).toEqual({});
+            expect(layerTransientSelector({ layers: {} })).toEqual({});
+        });
+
+        it('layerTransientSelector returns layerTransientProps from state', () => {
+            const transient = { layer_1: { loading: true } };
+            expect(layerTransientSelector({ layers: { layerTransientProps: transient } })).toEqual(transient);
         });
     });
 
