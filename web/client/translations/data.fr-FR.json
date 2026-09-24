@@ -1718,6 +1718,12 @@
       "addToMap": "Ajouter à la carte",
       "getWMSLink": "Lien WMS",
       "error": "Une erreur s'est produite lors du chargement des données.",
+      "errors": {
+        "unauthorized": "Une authentification est requise pour accéder au service de catalogue (HTTP 401).",
+        "forbidden": "L'accès au service de catalogue a été refusé (HTTP 403). Vérifiez vos autorisations.",
+        "http": "La requête au service de catalogue a échoué (HTTP {status}).",
+        "serviceUnavailable": "Le service de catalogue n'a pas pu être contacté. La requête a peut-être été bloquée."
+      },
       "pageInfo": "{start}-{end} résultats parmi {total}",
       "resultInfo": "{total, plural, =0 {Pas d'objet} =1 {{total} sur {total}} other {{start}-{end} sur {total}}}",
       "pageInfoInfinite": "{total, plural, =undefined {} =0 {Aucun résultat} =1 {{total} sur {total} trouvés} other {chargé {loaded} sur {total} trouvés}}",
