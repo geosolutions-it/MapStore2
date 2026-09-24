@@ -6,9 +6,57 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { head, isArray, get } from 'lodash';
+import { head, isArray, get, castArray, isString } from 'lodash';
 import CoordinatesUtils from './CoordinatesUtils';
+import { removeDuplicateLines } from './StringUtils';
+
 export const COG_LAYER_TYPE = 'cog';
+export const CATALOG_SERVICE_UNAVAILABLE = 'catalog.errors.serviceUnavailable';
+
+/**
+ * Normalize catalog search errors so reducers and views always receive a
+ * meaningful error object, including errors without an HTTP response.
+ * @param {object} error catalog API result or rejected request error
+ * @returns {object} normalized catalog error
+ */
+export const normalizeCatalogSearchError = (error = {}) => {
+    const [errorMessage] = castArray(error?.error);
+    const message = isString(errorMessage) && errorMessage
+        ? removeDuplicateLines(errorMessage)
+        : CATALOG_SERVICE_UNAVAILABLE;
+    return {
+        message,
+        status: error?.status ?? error?.response?.status
+    };
+};
+
+/**
+ * Resolve a normalized catalog error to a localized message configuration.
+ * String errors are supported for backward compatibility with custom clients.
+ * @param {object|string} error normalized or legacy catalog error
+ * @returns {object} notification/message component configuration
+ */
+export const getCatalogSearchErrorMessage = (error) => {
+    const normalizedError = isString(error) ? { message: error } : error || {};
+    const { message, status } = normalizedError;
+    const statusCode = Number(status);
+    if (statusCode === 401) {
+        return { message: 'catalog.errors.unauthorized' };
+    }
+    if (statusCode === 403) {
+        return { message: 'catalog.errors.forbidden' };
+    }
+    if (message && message !== CATALOG_SERVICE_UNAVAILABLE) {
+        return { message };
+    }
+    if (statusCode > 0) {
+        return {
+            message: 'catalog.errors.http',
+            values: { status: statusCode }
+        };
+    }
+    return { message: CATALOG_SERVICE_UNAVAILABLE };
+};
 
 export const buildSRSMap = (srs) => {
     return srs.filter(s => CoordinatesUtils.isSRSAllowed(s)).reduce((previous, current) => {
