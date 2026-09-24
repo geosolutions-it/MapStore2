@@ -267,7 +267,10 @@
         "bottom": "Unten",
         "top": "Oben",
         "editLayerName": "Ebenennamen bearbeiten",
-        "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens"
+        "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens",
+        "editValue": "Wert bearbeiten",
+        "confirmValue": "Wertänderung bestätigen",
+        "requiredValue": "Ein Wert ist erforderlich"
       },
       "legendOptions": {
         "title": "Legende",
