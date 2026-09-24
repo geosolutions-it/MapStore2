@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import isObject from 'lodash/isObject';
 
 export default {
-    buildRequest: (layer, { point, currentLocale } = {}) => {
+    buildRequest: (layer, { point, currentLocale } = {}, infoFormat, viewer, featureInfo) => {
         const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
         return {
             request: {
@@ -20,7 +20,9 @@ export default {
             metadata: {
                 title: isObject(layer.title)
                     ? layer.title[currentLocale] || layer.title.default
-                    : layer.title
+                    : layer.title,
+                ...(viewer && { viewer }),
+                ...(featureInfo && { featureInfo })
             },
             url: 'client'
         };
