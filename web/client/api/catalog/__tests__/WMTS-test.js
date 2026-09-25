@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import { getCatalogRecords } from '../WMTS';
+import { getCatalogRecords, getLayerFromRecord, textSearch } from '../WMTS';
 
 describe('Test correctness of the WMTS APIs', () => {
     it('wmts', () => {
@@ -141,6 +141,23 @@ describe('Test correctness of the WMTS APIs', () => {
         const records = getCatalogRecords({ records: wmtsRecords });
         expect(records.length).toBe(1);
         expect(records[0].references[0].url).toBe(undefined);
+    });
+    it('wmts layer from a RESTful service without OperationsMetadata', (done) => {
+        textSearch('base/web/client/test-resources/wmts/GetCapabilities-rest-no-operations-metadata.xml', 1, 2, '').then((result) => {
+            try {
+                const records = getCatalogRecords(result, {});
+                expect(records.length).toBe(2);
+                expect(records[0].requestEncoding).toBe('RESTful');
+                const layer = getLayerFromRecord(records[0]);
+                expect(layer.type).toBe('wmts');
+                expect(layer.name).toBe('baselayer');
+                expect(layer.requestEncoding).toBe('RESTful');
+                expect(layer.url).toBe('https://maps.sampleServer.org/basemap/baselayer/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png');
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }).catch(done);
     });
     it('wmts capabilities url', () => {
         const wmtsRecords = [{ GetTileURL: "tileURL" }];
