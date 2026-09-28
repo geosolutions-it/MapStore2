@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import {getByOutputFormat} from '../FileFormatUtils';
+import {getByOutputFormat, NETCDF_FORMAT} from '../FileFormatUtils';
 
 
 describe('FileFormatUtils', () => {
@@ -16,5 +16,11 @@ describe('FileFormatUtils', () => {
         expect(result).toExist();
         expect(result.extension).toBe("csv");
         expect(result.outputFormat).toBe("TEST-CSV");
+    });
+    it('getByOutputFormat for NETCDF_FORMAT', () => {
+        const result = getByOutputFormat(NETCDF_FORMAT);
+        expect(result).toExist();
+        expect(result.extension).toBe("nc");
+        expect(result.outputFormat).toBe(NETCDF_FORMAT);
     });
 });
