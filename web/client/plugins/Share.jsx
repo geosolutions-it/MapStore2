@@ -159,8 +159,9 @@ const shareButtonSelector = createSelector([
     geostoryResourceSelector,
     currentContextSelector
 ], (mapId, dashboard, geostory, context) => {
+    const isDefaultMap = location.pathname === "/";
     return {
-        style: mapId || dashboard?.id || geostory?.id || context ? { } : { display: 'none' }
+        style: mapId || dashboard?.id || geostory?.id || context || isDefaultMap ? { } : { display: 'none' }
     };
 });
 
