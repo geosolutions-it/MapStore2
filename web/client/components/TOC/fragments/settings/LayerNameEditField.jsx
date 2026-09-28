@@ -132,6 +132,7 @@ export default compose(
         componentDidUpdate() {
             const {
                 element = {},
+                loading,
                 waitingForLayerLoading,
                 waitingForLayerLoad,
                 setWaitingForLayerLoad = () => {},
@@ -140,10 +141,10 @@ export default compose(
                 setLayerError = () => {}
             } = this.props;
 
-            if (waitingForLayerLoading && element.loading) {
+            if (waitingForLayerLoading && loading) {
                 setWaitingForLayerLoading(false);
                 setWaitingForLayerLoad(true);
-            } else if (waitingForLayerLoad && !element.loading) {
+            } else if (waitingForLayerLoad && !loading) {
                 setWaitingForLayerLoad(false);
                 setLayerError(element.loadingError);
                 setEditingLayerName(!!element.loadingError);

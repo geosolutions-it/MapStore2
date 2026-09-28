@@ -12,16 +12,20 @@ import {
     changeLayerProperties,
     refreshLayerVersion
 } from '../../../actions/layers';
+import { layerTransientSelector } from '../../../selectors/layers';
 
 /**
  * This component provides the reload layer node with errors actions to make them available inside the toolbar or context menu
  */
-const ReloadLayersButton = connect(() => ({}), {
+const ReloadLayersButton = connect((state) => ({
+    layerTransientProps: layerTransientSelector(state)
+}), {
     onShow: changeLayerProperties,
     onReload: refreshLayerVersion
 })(({
     onShow,
     onReload,
+    layerTransientProps,
     status,
     itemComponent,
     selectedNodes,
@@ -41,7 +45,7 @@ const ReloadLayersButton = connect(() => ({}), {
         if (!nodesWithError?.length) {
             return null;
         }
-        const isLoading = nodesWithError.some((selected) => !!selected?.node?.loading);
+        const isLoading = nodesWithError.some((selected) => !!layerTransientProps[selected?.node?.id]?.loading);
         return (
             <ItemComponent
                 {...props}

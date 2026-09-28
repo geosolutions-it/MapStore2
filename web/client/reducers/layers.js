@@ -69,7 +69,7 @@ const insertNode = (nodes, node, parent, asFirst = false) => {
     }));
 };
 
-function layers(state = { flat: [] }, action) {
+function layers(state = { flat: [], layerTransientProps: {}}, action) {
     switch (action.type) {
     case TOGGLE_CONTROL: {
         if (action.control === 'RefreshLayers') {
@@ -78,27 +78,75 @@ function layers(state = { flat: [] }, action) {
         return state;
     }
     case LAYER_LOADING: {
-        const newLayers = (state.flat || []).map((layer) => {
-            return layer.id === action.layerId ? Object.assign({}, layer, {loading: true}) : layer;
+        const ids = castArray(action.layerId);
+        let hasChange = false;
+        const layerTransientProps = { ...(state.layerTransientProps || {}) };
+        ids.forEach(id => {
+            if (!layerTransientProps[id]?.loading) {
+                layerTransientProps[id] = { ...(layerTransientProps[id] || {}), loading: true };
+                hasChange = true;
+            }
         });
-        return Object.assign({}, state, {flat: newLayers});
+        return hasChange ? { ...state, layerTransientProps } : state;
     }
+
     case LAYER_LOAD: {
-        const newLayers = (state.flat || []).map((layer) => {
-            return layer.id === action.layerId ? Object.assign({}, layer, {
-                loading: false, previousLoadingError: layer.loadingError, loadingError: action.error ? "Error" : false
-            }) : layer;
+        const ids = castArray(action.layerId);
+        const newLoadingError = action.error ? "Error" : false;
+        let flatChanged = false;
+        let transientChanged = false;
+        const newTransient = { ...(state.layerTransientProps || {}) };
+
+        ids.forEach(id => {
+            if (newTransient[id]?.loading !== false) {
+                newTransient[id] = { ...(newTransient[id] || {}), loading: false };
+                transientChanged = true;
+            }
         });
-        return Object.assign({}, state, {flat: newLayers});
+        const idSet = new Set(ids);
+        const newLayers = (state.flat || []).map((layer) => {
+            if (idSet.has(layer.id)) {
+                const currentError = layer.loadingError || false;
+                if (currentError !== newLoadingError) {
+                    flatChanged = true;
+                    return Object.assign({}, layer, {
+                        previousLoadingError: layer.loadingError,
+                        loadingError: newLoadingError
+                    });
+                }
+            }
+            return layer;
+        });
+
+        if (!flatChanged && !transientChanged) {
+            return state;
+        }
+
+        return {
+            ...state,
+            flat: flatChanged ? newLayers : state.flat,
+            layerTransientProps: transientChanged ? newTransient : state.layerTransientProps
+        };
     }
     case LAYER_ERROR: {
+        const ids = new Set(castArray(action.layerId));
         const isError = action.tilesCount === action.tilesErrorCount;
+        const newLoadingError = isError ? 'Error' : 'Warning';
+        let flatChanged = false;
         const newLayers = (state.flat || []).map((layer) => {
-            return layer.id === action.layerId ? Object.assign({}, layer, {
-                previousLoadingError: layer.loadingError, loadingError: isError ? 'Error' : 'Warning'
-            }) : layer;
+            if (ids.has(layer.id)) {
+                const currentError = layer.loadingError || false;
+                if (currentError !== newLoadingError) {
+                    flatChanged = true;
+                    return Object.assign({}, layer, {
+                        previousLoadingError: layer.loadingError,
+                        loadingError: newLoadingError
+                    });
+                }
+            }
+            return layer;
         });
-        return Object.assign({}, state, {flat: newLayers});
+        return flatChanged ? Object.assign({}, state, {flat: newLayers}) : state;
     }
     case REFRESH_LAYERS: {
         return Object.assign({}, state, {refreshing: action.layers, refreshError: []});
@@ -260,7 +308,8 @@ function layers(state = { flat: [] }, action) {
             return {
                 selected: getSelectedNodes(state?.selected || [], action?.node, true),
                 flat: newLayers,
-                groups: newGroups
+                groups: newGroups,
+                layerTransientProps: state.layerTransientProps || {}
             };
         }
         if (action.nodeType === 'layers') {
@@ -268,10 +317,12 @@ function layers(state = { flat: [] }, action) {
                 removeEmptyGroups(deepRemove(state.groups, action.node)) :
                 deepRemove(state.groups, action.node);
             const newLayers = state.flat.filter((layer) => layer.id !== action.node);
+            const { [action.node]: _removed, ...newTransientProps } = state.layerTransientProps || {};
             return Object.assign({}, state, {
                 flat: newLayers,
                 groups: newGroups,
-                selected: (state?.selected || []).filter((selectedId) => selectedId !== action.node)
+                selected: (state?.selected || []).filter((selectedId) => selectedId !== action.node),
+                layerTransientProps: newTransientProps
             });
         }
         return state;
@@ -295,9 +346,11 @@ function layers(state = { flat: [] }, action) {
     case REMOVE_LAYER: {
         const newGroups = deepRemove(state.groups, action.layerId);
         const newLayers = state.flat.filter((layer) => layer.id !== action.layerId);
+        const { [action.layerId]: _removed, ...newTransientProps } = state.layerTransientProps || {};
         return Object.assign({}, state, {
             flat: newLayers,
-            groups: newGroups
+            groups: newGroups,
+            layerTransientProps: newTransientProps
         });
     }
     case ADD_GROUP: {
@@ -375,7 +428,8 @@ function layers(state = { flat: [] }, action) {
         return Object.assign({}, state, {
             flat: [],
             groups: [],
-            selected: []
+            selected: [],
+            layerTransientProps: {}
         });
     }
     case SELECT_NODE: {
