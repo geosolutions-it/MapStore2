@@ -232,8 +232,12 @@ export default class OpenlayersLayer extends React.Component {
      * @param {Object} options layer options, can be a single layer or a group of layers
      * @param {*} callback
      */
+    getCoalesceGroupIds = (options) => {
+        return (options && options._coalesceGroupIds) || [options && options.id];
+    };
+
     forEachCoalesceGroupId = (options, callback) => {
-        ((options && options._coalesceGroupIds) || [options && options.id]).forEach(callback);
+        this.getCoalesceGroupIds(options).forEach(callback);
     };
 
     addLayer = (options) => {
@@ -248,7 +252,7 @@ export default class OpenlayersLayer extends React.Component {
             }
             this.layer.getSource().on('tileloadstart', () => {
                 if (this.tilestoload === 0) {
-                    this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
+                    this.props.onLayerLoading(this.getCoalesceGroupIds(options));
                     this.tilestoload++;
                 } else {
                     this.tilestoload++;
@@ -270,17 +274,16 @@ export default class OpenlayersLayer extends React.Component {
             });
 
             tileLoadEndStream$
-                .bufferWhen(() => tileStopStream$)
+                .bufferWhen(() => tileStopStream$.debounceTime(50))
                 .subscribe({
                     next: (tileEvents) => {
                         const errors = tileEvents.filter(e => e.type === 'tileloaderror');
+                        const ids = this.getCoalesceGroupIds(options);
                         if (errors.length > 0 && (options && !options.hideErrors || !options)) {
-                            this.forEachCoalesceGroupId(options, (id) => {
-                                this.props.onLayerLoad(id, {error: true});
-                                this.props.onLayerError(id, tileEvents.length, errors.length);
-                            });
+                            this.props.onLayerLoad(ids, {error: true});
+                            this.props.onLayerError(ids, tileEvents.length, errors.length);
                         } else {
-                            this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id));
+                            this.props.onLayerLoad(ids);
                         }
                     }
                 });
@@ -293,7 +296,7 @@ export default class OpenlayersLayer extends React.Component {
 
             this.layer.getSource().on('imageloadstart', () => {
                 if (this.imagestoload === 0) {
-                    this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoading(id));
+                    this.props.onLayerLoading(this.getCoalesceGroupIds(options));
                     this.imagestoload++;
                 } else {
                     this.imagestoload++;
@@ -315,19 +318,18 @@ export default class OpenlayersLayer extends React.Component {
             });
 
             imageLoadEndStream$
-                .bufferWhen(() => imageStopStream$)
+                .bufferWhen(() => imageStopStream$.debounceTime(50))
                 .subscribe({
                     next: (imageEvents) => {
                         const errors = imageEvents.filter(e => e.type === 'imageloaderror');
+                        const ids = this.getCoalesceGroupIds(options);
                         if (errors.length > 0) {
-                            this.forEachCoalesceGroupId(options, (id) => {
-                                this.props.onLayerLoad(id, {error: true});
-                                if (options && !options.hideErrors || !options) {
-                                    this.props.onLayerError(id, imageEvents.length, errors.length);
-                                }
-                            });
+                            this.props.onLayerLoad(ids, {error: true});
+                            if (options && !options.hideErrors || !options) {
+                                this.props.onLayerError(ids, imageEvents.length, errors.length);
+                            }
                         } else {
-                            this.forEachCoalesceGroupId(options, (id) => this.props.onLayerLoad(id));
+                            this.props.onLayerLoad(ids);
                         }
                     }
                 });

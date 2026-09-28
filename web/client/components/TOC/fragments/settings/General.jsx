@@ -216,6 +216,7 @@ class General extends React.Component {
                     {this.canEditLayerName() &&
                     <LayerNameEditField
                         element={this.props.element}
+                        loading={this.props.elementLoading}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
                         onValidate={this.getLayerNameValidator()}
                         onValidationError={this.props.onLayerNameValidationError}
