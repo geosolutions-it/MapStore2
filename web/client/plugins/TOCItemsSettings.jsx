@@ -19,7 +19,7 @@ import {toggleStyleEditor} from '../actions/styleeditor';
 import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
 import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
 import { activeTabSettingsSelector } from '../selectors/controls';
-import {elementSelector, groupsSelector, layerSettingSelector} from '../selectors/layers';
+import {elementSelector, groupsSelector, layerSettingSelector, layerLoadingByIdSelector} from '../selectors/layers';
 import {currentLocaleLanguageSelector, currentLocaleSelector} from '../selectors/locale';
 import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
@@ -44,10 +44,12 @@ const tocItemsSettingsSelector = createSelector([
     elementSelector,
     isLocalizedLayerStylesEnabledSelector,
     isCesium,
-    showEditableFeatureCheckboxSelector
-], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive, showFeatureEditOption) => ({
+    showEditableFeatureCheckboxSelector,
+    state => layerLoadingByIdSelector(layerSettingSelector(state).node)(state)
+], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive, showFeatureEditOption, elementLoading) => ({
     settings,
     element,
+    elementLoading,
     groups,
     currentLocale,
     currentLocaleLanguage,

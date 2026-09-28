@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import {find} from 'lodash';
 import OpenlayersLayer from '../Layer';
-import OpenlayersMap from '../Map';
+import OpenlayersMapWithHOC, {OpenlayersMap} from '../Map';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../../utils/openlayers/DrawUtils';
 
 import proj from 'proj4';
@@ -1746,6 +1746,33 @@ describe('OpenlayersMap', () => {
         updatedView.setZoom(5);
         expect(updatedView.getProjection().getCode()).toBe('EPSG:3857');
         expect(updatedView.getResolutions()).toNotEqual(resolutions);
+    });
+
+    it('batches onLayerLoading calls', (done) => {
+        const onLayerLoading = expect.createSpy();
+        let mapComp;
+        ReactDOM.render(
+            <OpenlayersMapWithHOC
+                ref={comp => { mapComp = comp; }}
+                onLayerLoading={onLayerLoading}
+                layerLoadingBatchDelay={10}
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+            />,
+            document.getElementById('map')
+        );
+
+        expect(mapComp).toBeTruthy();
+        mapComp.props.onLayerLoading('layer-1');
+        mapComp.props.onLayerLoading('layer-2');
+        mapComp.props.onLayerLoading('layer-1');
+        expect(onLayerLoading.calls.length).toBe(0);
+
+        setTimeout(() => {
+            expect(onLayerLoading.calls.length).toBe(1);
+            expect(onLayerLoading).toHaveBeenCalledWith(['layer-1', 'layer-2']);
+            done();
+        }, 30);
     });
 
 });

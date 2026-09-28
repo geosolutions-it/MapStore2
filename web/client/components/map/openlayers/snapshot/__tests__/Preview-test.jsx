@@ -11,7 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { waitFor } from '@testing-library/react';
 import Preview from '../Preview';
-import OLMap from '../../../../map/openlayers/Map';
+import {OpenlayersMap as OLMap} from '../../../../map/openlayers/Map';
 import OpenlayersLayer from '../../../../map/openlayers/Layer';
 
 import '../../../../../utils/openlayers/Layers';

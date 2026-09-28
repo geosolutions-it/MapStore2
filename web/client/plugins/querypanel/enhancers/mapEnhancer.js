@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 import { compose, withStateHandlers, defaultProps, withPropsOnChange, withProps } from 'recompose';
-import { isEmpty } from 'lodash';
+import { isEmpty, castArray } from 'lodash';
 
 import { getCenterForExtent, getZoomForExtent, createRegisterHooks, ZOOM_TO_EXTENT_HOOK } from '../../../utils/MapUtils';
 import { reprojectBbox, getExtentFromViewport } from '../../../utils/CoordinatesUtils';
@@ -44,7 +44,7 @@ const mapEnhancer = compose(
         onMapViewChanges: () => (map) => ( {map}),
         onLayerLoad: ({map, initialized}, {onMapReady, baseLayer, hookRegister, layer}) => (layerId) => {
             // Map is ready when background is loaded just first load
-            if (!initialized && layerId === baseLayer.id) {
+            if (!initialized && castArray(layerId).includes(baseLayer.id)) {
                 onMapReady(map);
                 const bounds4326 = layer.bbox.bounds;
                 const hook = hookRegister.getHook(ZOOM_TO_EXTENT_HOOK);
