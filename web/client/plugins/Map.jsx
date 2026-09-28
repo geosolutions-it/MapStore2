@@ -158,6 +158,7 @@ import { MAIN_MAP_CONTAINER_ID } from '../utils/MapUtils';
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @prop {boolean} coalesceWMSLayers when true, adjacent WMS layers from the same source with compatible options are combined into a single GetMap request to reduce the number of requests sent to the server (default false); if not set, falls back to the current map's `mapOptions.coalesceWMSLayers` (set from Map Settings) and then to `miscSettings.coalesceWMSLayers` in localConfig.json; a layer can opt out with `coalesce: false` in its own options; not supported on leaflet, where it is always disabled
  * @prop {number} coalesceWMSLayersMaxGroupSize maximum number of WMS layers that can be combined into a single coalesced GetMap request (default 10)
+ * @prop {string} mapContainerId the id of the html div that the map lives in. The default value is "map"
  * @prop {object} mapOptions map options grouped by map type
  * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
  * @prop {boolean} mapOptions.cesium.showSkyAtmosphere enable sky atmosphere of the globe (default true)
@@ -194,6 +195,7 @@ class MapPlugin extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
         map: PropTypes.object,
+        mapContainerId: PropTypes.string,
         layers: PropTypes.array,
         additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
@@ -225,6 +227,7 @@ class MapPlugin extends React.Component {
 
     static defaultProps = {
         mapType: MapLibraries.OPENLAYERS,
+        mapContainerId: MAIN_MAP_CONTAINER_ID,
         actions: {},
         zoomControl: false,
         mapLoadingMessage: "map.loading",
@@ -438,7 +441,7 @@ class MapPlugin extends React.Component {
             const {mapOptions = {}} = this.props.map;
 
             return (
-                <this.state.plugins.Map id={MAIN_MAP_CONTAINER_ID}
+                <this.state.plugins.Map id={this.props.mapContainerId}
                     {...this.props.options}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
