@@ -264,9 +264,20 @@
         "right": "Derecha",
         "left": "Izquierda",
         "bottom": "Bottom",
-        "top": "Cima",
-        "editLayerName": "Editar el nombre de la capa",
-        "confirmLayerName": "Confirmar cambio de nombre de capa"
+        "top": "Cima"
+      },
+      "sourceField": {
+        "edit": "Editar valor",
+        "confirm": "Confirmar valor",
+        "required": "Se requiere un valor",
+        "requiredUrl": "La URL del servicio es necesaria para validar este valor",
+        "requiredName": "El nombre de la capa es necesario para validar este valor",
+        "requiredSearchUrl": "La URL del servicio WFS es necesaria para validar este valor",
+        "requiredSearchTypeName": "El TypeName WFS es necesario para validar este valor",
+        "service": "El servicio no es accesible en esta URL. Corrija la URL o confirme de nuevo para mantener este valor",
+        "notFound": "No se encontró la capa en este servicio. Compruebe el nombre y la URL o confirme de nuevo para mantener este valor",
+        "load": "No se pudo cargar la capa, por ejemplo porque el estilo no es compatible. Corrija los valores o confirme para mantenerlos",
+        "generic": "La validación falló. Compruebe el nombre y la URL o confirme de nuevo para mantener este valor"
       },
       "legendOptions": {
         "title": "Leyenda",
