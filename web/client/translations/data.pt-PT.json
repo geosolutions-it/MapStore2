@@ -123,9 +123,7 @@
         "right": "Direita",
         "bottom": "Em baixo",
         "left": "Esquerda",
-        "top": "Topo",
-        "editLayerName": "Editar nome da camada",
-        "confirmLayerName": "Confirmar alteração do nome da camada"
+        "top": "Topo"
       },
       "fields": {
         "refresh": "Recarregar campos da fonte de dados",
