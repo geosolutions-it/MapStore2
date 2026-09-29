@@ -151,7 +151,7 @@ describe('Test the catalog reducer', () => {
         expect(state.saving).toBe(saving);
     });
     it('RECORD_LIST_LOAD_ERROR', () => {
-        const error = "some error thrown";
+        const error = { message: "some error thrown", status: 500 };
         const state = catalog({}, {type: RECORD_LIST_LOAD_ERROR, error});
         expect(state.result).toBe(null);
         expect(state.loadingError).toBe(error);

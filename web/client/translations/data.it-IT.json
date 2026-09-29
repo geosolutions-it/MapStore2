@@ -1066,7 +1066,8 @@
       "s_tooltip": "Descrizione comando del menu di servizio",
       "serviceslistempty": "Nessun servizio definito",
       "service_missing": "Il servizio {serviceType} non è configurato",
-      "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}",
+      "generic_error": "Un errore e' occorso durante la ricerca. Dettagli errore: {message}",
+      "services_error": "Si sono verificati alcuni errori durante la ricerca nei servizi: {message}",
       "showGFI": "Mostra GFI",
       "errors": {
         "nonQueriableLayers": "Il layer indicato nell'url non è queriable o non è visibile in mappa",
@@ -1319,6 +1320,7 @@
         }
       },
       "spatialfilter": {
+        "notAvailable": "Il filtro spaziale non è disponibile per questo livello.",
         "filterType": "Tipo di filtro",
         "geometric_operation": "Operazione Geometrica",
         "combo_placeholder": "Seleziona...",
@@ -1817,6 +1819,12 @@
       "addToMap": "Aggiungi alla mappa",
       "getWMSLink": "Ottieni link WMS",
       "error": "C'è stato un errore durante il caricamento dei dati",
+      "errors": {
+        "unauthorized": "Per accedere al servizio di catalogo è necessaria l'autenticazione (HTTP 401).",
+        "forbidden": "L'accesso al servizio di catalogo è stato negato (HTTP 403). Verifica le tue autorizzazioni.",
+        "http": "La richiesta al servizio di catalogo non è riuscita (HTTP {status}).",
+        "serviceUnavailable": "Non è stato possibile contattare il servizio di catalogo. La richiesta potrebbe essere stata bloccata."
+      },
       "pageInfo": "Risultati {start}-{end} di {total}",
       "resultInfo": "{total, plural, =0 {Nessun Risultato} =1 {{total} Risultato di {total}} other {{start}-{end} di {total}}}",
       "pageInfoInfinite": "{total, plural, =undefined {} =0 {Nessun Risultato} =1 {{total} risultato} other {Caricati {loaded} di {total} risultati}}",

@@ -17,7 +17,8 @@ import {
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,
     onWidgetCreationFromMap,
-    onMapEditorOpenEpic
+    onMapEditorOpenEpic,
+    onOpenFilterEditorEpic
 } from '../widgets';
 
 import {
@@ -33,7 +34,8 @@ import {
     updateWidgetProperty,
     REPLACE,
     onEditorChange,
-    UPDATE_PROPERTY
+    UPDATE_PROPERTY,
+    openFilterEditor
 } from '../../actions/widgets';
 
 import { configureMap } from '../../actions/config';
@@ -42,8 +44,58 @@ import { onLocationChanged } from 'connected-react-router';
 import { ActionsObservable } from 'redux-observable';
 import Rx from 'rxjs';
 import { HIDE, save } from '../../actions/mapEditor';
+import { CHANGE_MAP_EDITOR } from '../../actions/queryform';
 
 describe('widgets Epics', () => {
+    it('onOpenFilterEditorEpic initializes the spatial filter map from the layer bbox', (done) => {
+        const state = {
+            widgets: {
+                builder: {
+                    editor: {
+                        layer: {
+                            bbox: {
+                                crs: 'EPSG:4326',
+                                bounds: {
+                                    minx: -124,
+                                    miny: 24,
+                                    maxx: -66,
+                                    maxy: 49
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        testEpic(onOpenFilterEditorEpic, 1, openFilterEditor(), ([action]) => {
+            expect(action.type).toBe(CHANGE_MAP_EDITOR);
+            expect(action.mapData.center).toEqual({
+                crs: 'EPSG:4326',
+                x: -95,
+                y: 36.5
+            });
+            expect(action.mapData.zoom).toBeA('number');
+        }, state, done);
+    });
+
+    it('onOpenFilterEditorEpic does not fail when the layer bbox is missing', (done) => {
+        const state = {
+            widgets: {
+                builder: {
+                    editor: {
+                        layer: {
+                            type: 'wfs'
+                        }
+                    }
+                }
+            }
+        };
+        testEpic(onOpenFilterEditorEpic, 1, openFilterEditor(), ([action]) => {
+            expect(action.type).toBe(CHANGE_MAP_EDITOR);
+            expect(action.mapData).toBe(null);
+        }, state, done);
+    });
+
     it('clearWidgetsOnLocationChange triggers CLEAR_WIDGETS on LOCATION_CHANGE', (done) => {
         const checkActions = actions => {
             expect(actions.length).toBe(1);

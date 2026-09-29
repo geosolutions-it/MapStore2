@@ -119,6 +119,40 @@ describe('PropertiesViewer', () => {
         });
     });
 
+    it('test rendering properties ordered by fields, appending the ones not listed in fields', () => {
+        const testProps = {
+            k0: "v0",
+            k1: "v1",
+            k2: "v2"
+        };
+        const fields = [
+            { name: "k2", alias: "alias2" },
+            { name: "nonExistingKey", alias: "nonExisting" },
+            { name: "k0", alias: "alias0" }
+        ];
+
+        const cmp = ReactDOM.render(<PropertiesViewer
+            feature={{ properties: testProps }}
+            fields={fields}
+        />, document.getElementById("container"));
+        expect(cmp).toBeTruthy();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toBeTruthy();
+
+        const body = cmpDom.childNodes.item(0);
+        expect(body.childNodes.length).toBe(3);
+        const rows = [...body.childNodes].map((node) => {
+            const [key, value] = node.querySelectorAll('div');
+            return [key.innerHTML, value.innerHTML];
+        });
+        expect(rows).toEqual([
+            ["alias2", "v2"],
+            ["alias0", "v0"],
+            ["k1", "v1"]
+        ]);
+    });
+
     describe('sanitization', () => {
         it('removes script tags from a property value', () => {
             window.__propertiesViewerScript = undefined;

@@ -8,7 +8,7 @@
 
 
 import Rx from 'rxjs';
-import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
+import { endsWith, has, get, includes, isEqual, omit, omitBy, castArray } from 'lodash';
 
 import {
     EXPORT_CSV,
@@ -253,17 +253,14 @@ export const updateLayerOnLayerPropertiesChange = (action$, store) =>
  */
 export const updateLayerOnLoadingErrorChange = (action$, store) =>
     action$.ofType(LAYER_LOAD, LAYER_ERROR)
+        .flatMap(action => castArray(action.layerId).map(layerId => ({ ...action, layerId })))
         .groupBy(({layerId}) => layerId)
         .map(layerStream$ => layerStream$
-            .switchMap(({layerId}) => {
-                const state = store.getState();
-                const flatLayer = getLayerFromId(state, layerId);
-                return Rx.Observable.of(
-                    ...(flatLayer && flatLayer.previousLoadingError !== flatLayer.loadingError ?
-                        [updateWidgetLayer(flatLayer)] :
-                        [])
-                );
-            })
+            .map(({layerId}) => getLayerFromId(store.getState(), layerId))
+            .filter(flatLayer => !!flatLayer)
+            .distinctUntilChanged((a, b) => (a.loadingError || false) === (b.loadingError || false))
+            .filter(flatLayer => flatLayer.previousLoadingError !== flatLayer.loadingError)
+            .map(flatLayer => updateWidgetLayer(flatLayer))
         ).mergeAll();
 
 export const updateDependenciesMapOnMapSwitch = (action$, store) =>
@@ -303,18 +300,24 @@ export const onOpenFilterEditorEpic = (action$, store) =>
         .switchMap(() => {
             const state = store.getState();
             const layer = getWidgetLayer(state);
-            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857"), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
+            const bbox = layer?.bbox;
+            const extent = bbox?.bounds
+                ? reprojectBbox(bbox.bounds, bbox?.crs || "EPSG:4326", "EPSG:3857")
+                : null;
+            if (!extent) {
+                return Rx.Observable.of(changeMapEditor(null));
+            }
+            const zoom = defaultGetZoomForExtent(extent, DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
             const map = {
                 ...DEFAULT_MAP_SETTINGS,
                 zoom,
                 center: {
-                    crs: layer.bbox.crs,
-                    x: (layer.bbox.bounds.maxx + layer.bbox.bounds.minx) / 2,
-                    y: (layer.bbox.bounds.maxy + layer.bbox.bounds.miny) / 2
+                    crs: bbox?.crs || "EPSG:4326",
+                    x: (bbox.bounds.maxx + bbox.bounds.minx) / 2,
+                    y: (bbox.bounds.maxy + bbox.bounds.miny) / 2
                 }
             };
-            const mapData = layer?.bbox ? map : null;
-            return Rx.Observable.of( changeMapEditor(mapData) );
+            return Rx.Observable.of(changeMapEditor(map));
         });
 
 

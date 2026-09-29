@@ -592,6 +592,20 @@ describe('Test featuregrid selectors', () => {
         expect(filter.spatialField[0].method).toBe('Rectangle');
         expect(filter.spatialField[0].operation).toBe('INTERSECTS');
     });
+    it('viewportFilter - no bbox', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
+            }
+        };
+        const filter = viewportFilter(state);
+        expect(filter).toEqual({});
+    });
     it('viewportFilter - cesium', () => {
         const state = {
             featuregrid: {

@@ -963,6 +963,7 @@
       "serviceslistempty": "No es defineixen serveis personalitzats",
       "service_missing": "{serviceType} El servei no est\u00e0 configurat",
       "generic_error": "S'ha produ\u00eft un error durant la cerca. Detalls de l'error: {message}",
+      "services_error": "S'han produït alguns errors durant la cerca en els serveis: {message}",
       "showGFI": "Mostra GFI",
       "errors": {
         "nonQueriableLayers": "La capa proporcionada a l'URL no \u00e9s consultable o no \u00e9s visible al mapa.",

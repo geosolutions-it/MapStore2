@@ -335,16 +335,30 @@ describe('Test the layers reducer', () => {
             layerId: "layer2"
         };
 
-        var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1"}, {id: "layer2", name: "layer2"}]};
+        var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1"}, {id: "layer2", name: "layer2"}], layerTransientProps: {}};
         var state = layers(originalLoadingLayers, action1);
 
-        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
-        expect(state.flat.filter((layer) => layer.loading).length).toBe(1);
+        expect(state.layerTransientProps.layer1.loading).toBe(true);
 
         state = layers(state, action2);
-        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
-        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
-        expect(state.flat.filter((layer) => layer.loading).length).toBe(2);
+        expect(state.layerTransientProps.layer1.loading).toBe(true);
+        expect(state.layerTransientProps.layer2.loading).toBe(true);
+    });
+
+    it('LAYER_LOADING with array of IDs and preserves state reference if already loading', () => {
+        const originalState = {
+            flat: [{ id: "l1", name: "l1" }, { id: "l2", name: "l2" }],
+            layerTransientProps: { l1: { loading: true }, l2: { loading: true } }
+        };
+        const stateSame = layers(originalState, { type: 'LAYER_LOADING', layerId: ['l1', 'l2'] });
+        expect(stateSame).toBe(originalState);
+
+        const stateUpdate = layers({ flat: [], layerTransientProps: {} }, {
+            type: 'LAYER_LOADING',
+            layerId: ['l1', 'l2']
+        });
+        expect(stateUpdate.layerTransientProps.l1.loading).toBe(true);
+        expect(stateUpdate.layerTransientProps.l2.loading).toBe(true);
     });
 
     it('a layer load, loading flag is updated', () => {
@@ -359,18 +373,44 @@ describe('Test the layers reducer', () => {
             error: true
         };
 
-        var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1", loading: true}, {id: "layer2", name: "layer2", loading: true}]};
+        var originalLoadingLayers = {
+            flat: [{id: "layer1", name: "layer1"}, {id: "layer2", name: "layer2"}],
+            layerTransientProps: {
+                layer1: { loading: true },
+                layer2: { loading: true }
+            }
+        };
         var state = layers(originalLoadingLayers, action1);
 
-        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);
-        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
-        expect(state.flat.filter((layer) => layer.loading).length).toBe(1);
+        expect(state.layerTransientProps.layer1.loading).toBe(false);
+        expect(state.layerTransientProps.layer2.loading).toBe(true);
 
         state = layers(state, action2);
-        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);
-        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(false);
-        expect(state.flat.filter((layer) => layer.loading).length).toBe(0);
+        expect(state.layerTransientProps.layer1.loading).toBe(false);
+        expect(state.layerTransientProps.layer2.loading).toBe(false);
         expect(state.flat.filter((layer) => layer.loadingError === 'Error').length).toBe(1);
+    });
+
+    it('LAYER_LOAD preserves flat reference when loadingError is unchanged', () => {
+        const flatArray = [{ id: "l1", name: "l1", loadingError: false }];
+        const originalState = {
+            flat: flatArray,
+            layerTransientProps: { l1: { loading: true } }
+        };
+        const nextState = layers(originalState, { type: 'LAYER_LOAD', layerId: 'l1' });
+        expect(nextState.flat).toBe(flatArray);
+        expect(nextState.layerTransientProps.l1.loading).toBe(false);
+    });
+
+    it('LAYER_LOAD with array of IDs updates transient loading and handles errors', () => {
+        const originalState = {
+            flat: [{ id: "l1" }, { id: "l2" }],
+            layerTransientProps: { l1: { loading: true }, l2: { loading: true } }
+        };
+        const nextState = layers(originalState, { type: 'LAYER_LOAD', layerId: ['l1', 'l2'], error: true });
+        expect(nextState.layerTransientProps.l1.loading).toBe(false);
+        expect(nextState.layerTransientProps.l2.loading).toBe(false);
+        expect(nextState.flat.filter(l => l.loadingError === 'Error').length).toBe(2);
     });
 
     it('a layer load ends with error, loadingError flag is updated', () => {

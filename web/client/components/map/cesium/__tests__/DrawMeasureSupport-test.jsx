@@ -13,9 +13,11 @@ import expect from 'expect';
 import { act } from 'react-dom/test-utils';
 import DrawMeasureSupport from '../DrawMeasureSupport';
 import {
+    convertUom,
     MeasureTypes,
     defaultUnitOfMeasure
 } from '../../../../utils/MeasureUtils';
+import { computeArea } from '../../../../utils/cesium/MathUtils';
 import * as Cesium from 'cesium';
 import {
     simulateClick,
@@ -178,6 +180,141 @@ describe('Cesium DrawMeasureSupport', () => {
         simulateClick(mapCanvas);
         simulateClick(mapCanvas);
         simulateDoubleClick(mapCanvas);
+    });
+    it('should convert a completed 3D area when the unit of measure changes', (done) => {
+        let ref;
+        let count = 0;
+        let phase = 'initial';
+        let area;
+        const polygon = [
+            new Cesium.Cartographic(10, 43, 0),
+            new Cesium.Cartographic(11, 44, 0),
+            new Cesium.Cartographic(10, 44, 0)
+        ];
+        const squareFeetUnitsOfMeasure = {
+            ...defaultUnitOfMeasure,
+            [MeasureTypes.AREA_3D]: { unit: 'sqft', label: 'ft²', value: 'sqft' }
+        };
+
+        const renderMeasure = (unitsOfMeasure) => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    id="map"
+                    center={{ x: 10.3, y: 43.9 }}
+                    zoom={11}
+                >
+                    <DrawMeasureSupport
+                        active
+                        type={MeasureTypes.AREA_3D}
+                        unitsOfMeasure={unitsOfMeasure}
+                        getPositionInfo={() => {
+                            const cartographic = polygon[count] ?? polygon[polygon.length - 1];
+                            count++;
+                            return {
+                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartographic
+                            };
+                        }}
+                        onUpdateCollection={(collection) => {
+                            if (!collection.features.length || phase === 'completed') {
+                                return;
+                            }
+                            try {
+                                const feature = collection.features[0];
+                                const staticLabelsCollection = ref.map.scene.primitives.get(4);
+                                const areaLabel = staticLabelsCollection.get(staticLabelsCollection.length - 1).text;
+                                if (phase === 'initial') {
+                                    area = feature.properties.area;
+                                    expect(areaLabel).toBe(`${area.toFixed(2)} m²`);
+                                    phase = 'squareFeet';
+                                    setTimeout(() => {
+                                        act(() => renderMeasure(squareFeetUnitsOfMeasure));
+                                    });
+                                    return;
+                                }
+                                if (phase === 'squareFeet') {
+                                    const expectedLabel = `${convertUom(area, 'sqm', 'sqft').toFixed(2)} ft²`;
+                                    expect(areaLabel).toBe(expectedLabel);
+                                    expect(feature.properties.infoLabelText).toBe(expectedLabel);
+                                    expect(feature.properties.area).toBe(area);
+                                    expect(staticLabelsCollection.get(0).text.endsWith(' ft')).toBe(true);
+                                    phase = 'squareMetresAgain';
+                                    setTimeout(() => {
+                                        act(() => renderMeasure(defaultUnitOfMeasure));
+                                    });
+                                    return;
+                                }
+                                expect(areaLabel).toBe(`${area.toFixed(2)} m²`);
+                                expect(feature.properties.area).toBe(area);
+                                phase = 'completed';
+                                done();
+                            } catch (e) {
+                                phase = 'completed';
+                                done(e);
+                            }
+                        }}
+                    />
+                </CesiumMap>,
+                document.getElementById('container')
+            );
+        };
+
+        act(() => renderMeasure(defaultUnitOfMeasure));
+        const mapCanvas = ref.map.canvas;
+
+        simulateClick(mapCanvas);
+        simulateClick(mapCanvas);
+        simulateDoubleClick(mapCanvas);
+    });
+    it('should convert the live 3D area label to the selected unit of measure', () => {
+        let ref;
+        let count = 0;
+        const polygon = [
+            new Cesium.Cartographic(10, 43, 0),
+            new Cesium.Cartographic(11, 44, 0),
+            new Cesium.Cartographic(10, 44, 0)
+        ];
+        const squareFeetUnitsOfMeasure = {
+            ...defaultUnitOfMeasure,
+            [MeasureTypes.AREA_3D]: { unit: 'sqft', label: 'ft²', value: 'sqft' }
+        };
+
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    id="map"
+                    center={{ x: 10.3, y: 43.9 }}
+                    zoom={11}
+                >
+                    <DrawMeasureSupport
+                        active
+                        type={MeasureTypes.AREA_3D}
+                        unitsOfMeasure={squareFeetUnitsOfMeasure}
+                        getPositionInfo={() => {
+                            const cartographic = polygon[count] ?? polygon[polygon.length - 1];
+                            count++;
+                            return {
+                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartographic
+                            };
+                        }}
+                    />
+                </CesiumMap>,
+                document.getElementById('container')
+            );
+        });
+        const mapCanvas = ref.map.canvas;
+
+        simulateClick(mapCanvas);
+        simulateClick(mapCanvas);
+        simulateClick(mapCanvas);
+
+        const dynamicLabelsCollection = ref.map.scene.primitives.get(7);
+        const area = computeArea(polygon.map((cartographic) => Cesium.Cartographic.toCartesian(cartographic)));
+        const expectedLabel = `${convertUom(area, 'sqm', 'sqft').toFixed(2)} ft²`;
+        expect(dynamicLabelsCollection.get(dynamicLabelsCollection.length - 1).text).toBe(expectedLabel);
     });
     it('should be able to measure a point coordinates', (done) => {
         let ref;

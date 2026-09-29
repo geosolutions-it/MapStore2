@@ -59,6 +59,7 @@ import {
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes
  * @prop {component} treeHeader display a header on top of the layer tree
+ * @prop {component} loaderComponent component to render loading state
  */
 export function ControlledTOC({
     tree,
@@ -69,6 +70,7 @@ export function ControlledTOC({
     onContextMenu = () => {},
     groupNodeComponent,
     layerNodeComponent,
+    loaderComponent,
     filterText,
     selectedNodes,
     rootGroupId,
@@ -95,6 +97,7 @@ export function ControlledTOC({
             }
             groupNodeComponent={groupNodeComponent}
             layerNodeComponent={layerNodeComponent}
+            loaderComponent={loaderComponent}
             contextMenu={contextMenu}
             onContextMenu={onContextMenu}
             selectedNodes={selectedNodes}
@@ -148,6 +151,7 @@ export function ControlledTOC({
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes
  * @prop {component} treeHeader display a header on top of the layer tree
+ * @prop {component} loaderComponent component to render loading state
  */
 function TOC({
     map = { layers: [], groups: [] },
@@ -163,7 +167,8 @@ function TOC({
     nodeItems,
     theme,
     filterText,
-    treeHeader
+    treeHeader,
+    loaderComponent
 }) {
     const { layers } = splitMapAndLayers(map) || {};
     const tree = denormalizeGroups(layers.flat || [], layers.groups || []).groups;
@@ -211,6 +216,7 @@ function TOC({
             onSelectNode={onSelectNode}
             onSort={handleOnSort}
             onChange={handleUpdateNode}
+            loaderComponent={loaderComponent}
             config={{
                 ...config,
                 layerOptions: {
