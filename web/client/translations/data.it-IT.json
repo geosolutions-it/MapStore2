@@ -265,9 +265,20 @@
         "right": "Destra",
         "left": "Sinistra",
         "bottom": "Sotto",
-        "top": "Sopra",
-        "editLayerName": "Modifica il nome del livello",
-        "confirmLayerName": "Conferma la modifica del nome del livello"
+        "top": "Sopra"
+      },
+      "sourceField": {
+        "edit": "Modifica valore",
+        "confirm": "Conferma valore",
+        "required": "È richiesto un valore",
+        "requiredUrl": "L'URL del servizio è necessario per validare questo valore",
+        "requiredName": "Il nome del livello è necessario per validare questo valore",
+        "requiredSearchUrl": "L'URL del servizio WFS è necessario per validare questo valore",
+        "requiredSearchTypeName": "Il TypeName WFS è necessario per validare questo valore",
+        "service": "Il servizio non è raggiungibile a questo URL. Correggi l'URL o conferma di nuovo per mantenere questo valore",
+        "notFound": "Il livello non è stato trovato in questo servizio. Controlla il nome e l'URL o conferma di nuovo per mantenere questo valore",
+        "load": "Il caricamento del livello non è riuscito, ad esempio perché lo stile non è compatibile. Correggi i valori o conferma per mantenerli",
+        "generic": "Validazione non riuscita. Controlla il nome e l'URL o conferma di nuovo per mantenere questo valore"
       },
       "legendOptions": {
         "title": "Legenda",

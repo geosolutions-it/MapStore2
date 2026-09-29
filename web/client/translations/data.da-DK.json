@@ -218,9 +218,7 @@
         "right": "Til højre",
         "left": "Til venstre",
         "bottom": "Nederst",
-        "top": "Øverst",
-        "editLayerName": "Rediger lagets navn",
-        "confirmLayerName": "Bekræft ændring af lagets navn"
+        "top": "Øverst"
       },
       "legendOptions": {
         "title": "Signaturforklaring",
