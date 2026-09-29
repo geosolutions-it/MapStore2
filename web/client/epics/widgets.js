@@ -8,7 +8,7 @@
 
 
 import Rx from 'rxjs';
-import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
+import { endsWith, has, get, includes, isEqual, omit, omitBy, castArray } from 'lodash';
 
 import {
     EXPORT_CSV,
@@ -253,17 +253,14 @@ export const updateLayerOnLayerPropertiesChange = (action$, store) =>
  */
 export const updateLayerOnLoadingErrorChange = (action$, store) =>
     action$.ofType(LAYER_LOAD, LAYER_ERROR)
+        .flatMap(action => castArray(action.layerId).map(layerId => ({ ...action, layerId })))
         .groupBy(({layerId}) => layerId)
         .map(layerStream$ => layerStream$
-            .switchMap(({layerId}) => {
-                const state = store.getState();
-                const flatLayer = getLayerFromId(state, layerId);
-                return Rx.Observable.of(
-                    ...(flatLayer && flatLayer.previousLoadingError !== flatLayer.loadingError ?
-                        [updateWidgetLayer(flatLayer)] :
-                        [])
-                );
-            })
+            .map(({layerId}) => getLayerFromId(store.getState(), layerId))
+            .filter(flatLayer => !!flatLayer)
+            .distinctUntilChanged((a, b) => (a.loadingError || false) === (b.loadingError || false))
+            .filter(flatLayer => flatLayer.previousLoadingError !== flatLayer.loadingError)
+            .map(flatLayer => updateWidgetLayer(flatLayer))
         ).mergeAll();
 
 export const updateDependenciesMapOnMapSwitch = (action$, store) =>

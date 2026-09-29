@@ -265,9 +265,20 @@
         "right": "Rechts",
         "left": "Links",
         "bottom": "Unten",
-        "top": "Oben",
-        "editLayerName": "Ebenennamen bearbeiten",
-        "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens"
+        "top": "Oben"
+      },
+      "sourceField": {
+        "edit": "Wert bearbeiten",
+        "confirm": "Wert bestätigen",
+        "required": "Ein Wert ist erforderlich",
+        "requiredUrl": "Die Dienst-URL ist erforderlich, um diesen Wert zu validieren",
+        "requiredName": "Der Ebenenname ist erforderlich, um diesen Wert zu validieren",
+        "requiredSearchUrl": "Die WFS-Dienst-URL ist erforderlich, um diesen Wert zu validieren",
+        "requiredSearchTypeName": "Der WFS-TypeName ist erforderlich, um diesen Wert zu validieren",
+        "service": "Der Dienst ist unter dieser URL nicht erreichbar. Korrigieren Sie die URL oder bestätigen Sie erneut, um diesen Wert beizubehalten",
+        "notFound": "Die Ebene wurde in diesem Dienst nicht gefunden. Prüfen Sie den Namen und die URL oder bestätigen Sie erneut, um diesen Wert beizubehalten",
+        "load": "Die Ebene konnte nicht geladen werden, zum Beispiel weil der Stil nicht kompatibel ist. Korrigieren Sie die Werte oder bestätigen Sie, um sie beizubehalten",
+        "generic": "Die Validierung ist fehlgeschlagen. Prüfen Sie den Namen und die URL oder bestätigen Sie erneut, um diesen Wert beizubehalten"
       },
       "legendOptions": {
         "title": "Legende",
