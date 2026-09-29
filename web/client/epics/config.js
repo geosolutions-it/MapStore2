@@ -71,11 +71,11 @@ export const loadNewMapEpic = (action$) =>
         .switchMap(({configName, contextId}) =>
             contextId ?
                 Persistence.getResource(contextId)
-                    .switchMap(resource => Observable.of(loadMapConfig('', null, get(resource, 'data.mapConfig', {}), {context: contextId})))
+                    .switchMap(resource => Observable.of(loadMapConfig('', null, get(resource, 'data.mapConfig', {}), {context: contextId}, undefined, true)))
                     .catch(() => Observable.of(configureError({
                         messageId: `map.errors.loading.contextLoadFailed`
                     }))) :
-                Observable.of(loadMapConfig(configName, null))
+                Observable.of(loadMapConfig(configName, null, undefined, undefined, undefined, true))
         );
 
 /**
@@ -92,10 +92,11 @@ export const loadNewMapEpic = (action$) =>
  * @param {Object} state current redux state
  * @param {Object} overrideConfig override object of the given or loaded config, allows to apply a
  * partial override of the main configuration (e.g. for sessions management)
+ * @param {Boolean} isNew true if the map is a new, not yet saved, resource
  * @returns {Observable} map configuration flow
  * @ignore
  */
-const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, overrideConfig = {}) => {
+const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, overrideConfig = {}, isNew) => {
     // delay here is to postpone map load to ensure that
     // certain epics always function correctly
     // i.e. FeedbackMask disables correctly after load
@@ -116,6 +117,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
             if (typeof response.data === 'object') {
                 const projectionDefs = projectionDefsSelector(state);
                 const projection = get(response, "data.map.projection", "EPSG:3857");
+<<<<<<< HEAD
                 if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                     return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                 }
@@ -130,13 +132,37 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
                         ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
                     );
+=======
+                const alwaysSupported = ["EPSG:4326", "EPSG:3857", "EPSG:900913"];
+                // Register persisted dynamic projection defs from the JUST-FETCHED
+                // config before validating the projection. When the map is loaded
+                // by configName (no inline config), the parent epic cannot see
+                // these defs - they only arrive here in the response.
+                const dynamicDefs = response.data?.map?.projections?.defs || [];
+                return Observable.fromPromise(ProjectionRegistry.registerAll(dynamicDefs)).switchMap(() => {
+                    if (!alwaysSupported.includes(projection) && !ProjectionRegistry.isRegistered(projection)) {
+                        return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
+                    }
+                    const mapConfig = prepareMapConfiguration(response.data, overrideConfig, state);
+                    return isNumberId ? Observable.of(
+                        configureMap(mapConfig, mapId, undefined, isNew),
+                        mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
+                        ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
+                    ) :
+                        Observable.of(
+                            configureMap(mapConfig, mapId, undefined, isNew),
+                            ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
+                            ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
+                        );
+                });
+>>>>>>> 5613d59a7 (#12913 Share button is not visible in sidebar in default map (#12914))
             }
             try {
                 const data = JSON.parse(response.data);
                 const mapConfig = prepareMapConfiguration(data, overrideConfig, state);
-                return isNumberId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                return isNumberId ? Observable.of(configureMap(mapConfig, mapId, undefined, isNew), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
                     Observable.of(
-                        configureMap(mapConfig, mapId),
+                        configureMap(mapConfig, mapId, undefined, isNew),
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
                         ...(response.staticConfig ? [] : saveMapConfig(data))
                     );
@@ -155,16 +181,25 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
  */
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
+<<<<<<< HEAD
         .switchMap(({configName, mapId, config, mapInfo, overrideConfig}) => {
+=======
+        .switchMap(({configName, mapId, config, mapInfo, overrideConfig, isNew}) => {
+            // Persisted dynamic projection defs are registered inside
+            // mapFlowWithOverride, after the config has been resolved (either
+            // from the inline payload or fetched via configName). That guarantees
+            // ProjectionRegistry.isRegistered is accurate for the validation
+            // performed there.
+>>>>>>> 5613d59a7 (#12913 Share button is not visible in sidebar in default map (#12914))
             const sessionsEnabled = userSessionEnabledSelector(store.getState());
             if (overrideConfig || !sessionsEnabled) {
-                return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig);
+                return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig, isNew);
             }
             const userName = userSelector(store.getState())?.name;
             return Observable.of(loadUserSession(buildSessionName(null, mapId, userName))).merge(
                 action$.ofType(USER_SESSION_LOADED).switchMap(({session}) => {
                     return Observable.merge(
-                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), session),
+                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), session, isNew),
                         Observable.of(userSessionStartSaving())
                     );
                 })

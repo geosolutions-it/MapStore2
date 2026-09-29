@@ -33,6 +33,7 @@ export const projectionSelector = createSelector([mapSelector], (map) => map && 
 export const stateMapIdSelector = (state) => get(mapSelector(state), "mapId") && parseInt(get(mapSelector(state), "mapId"), 10) || null;
 export const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && parseInt(get(state, "mapInitialConfig.mapId"), 10) || stateMapIdSelector(state);
 export const mapInfoSelector = state => get(mapSelector(state), "info");
+export const mapIsNewSelector = state => !!mapSelector(state)?.isNew;
 export const mapInfoLoadingSelector = state => get(mapSelector(state), "loadingInfo", false);
 export const mapSaveErrorsSelector = state => get(mapSelector(state), "mapSaveErrors");
 export const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "attributes.details");

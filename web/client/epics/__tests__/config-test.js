@@ -9,11 +9,17 @@
 import expect from 'expect';
 import {head} from 'lodash';
 import {
+<<<<<<< HEAD
     loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic,    getSupportedFormatsEpic
+=======
+    loadMapConfigAndConfigureMap, loadNewMapEpic, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic, getSupportedFormatsEpic
+>>>>>>> 5613d59a7 (#12913 Share button is not visible in sidebar in default map (#12914))
 } from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,
+    loadNewMap,
+    LOAD_MAP_CONFIG,
     MAP_CONFIG_LOADED,
     MAP_CONFIG_LOAD_ERROR,
     LOAD_MAP_INFO,
@@ -292,6 +298,29 @@ describe('config epics', () => {
                 }
             });
         });
+        it('load new map flags the configured map as new', (done) => {
+            mockAxios.onGet("/new.json").reply(() => ([ 200, {} ]));
+            testEpic(loadMapConfigAndConfigureMap, 1, loadMapConfig('new.json', null, undefined, undefined, undefined, true), ([a]) => {
+                expect(a.type).toBe(MAP_CONFIG_LOADED);
+                expect(a.isNew).toBe(true);
+                done();
+            }, {
+                security: {
+                    user: {
+                        role: "USER",
+                        name: "user"
+                    }
+                }
+            });
+        });
+        it('load static configuration does not flag the map as new', (done) => {
+            mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
+            testEpic(loadMapConfigAndConfigureMap, 1, loadMapConfig('base/web/client/test-resources/testConfig.json', null), ([a]) => {
+                expect(a.type).toBe(MAP_CONFIG_LOADED);
+                expect(a.isNew).toBeFalsy();
+                done();
+            });
+        });
         it('load existing configuration file with alphanumeric mapId', (done) => {
             mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
             const checkActions = ([a]) => {
@@ -304,6 +333,18 @@ describe('config epics', () => {
                 [loadMapConfig('base/web/client/test-resources/testConfig.json', 'testConfig')],
                 checkActions
             );
+        });
+    });
+
+    describe('loadNewMapEpic', () => {
+        it('loads the map config flagged as new', (done) => {
+            testEpic(loadNewMapEpic, 1, loadNewMap('new.json'), ([a]) => {
+                expect(a.type).toBe(LOAD_MAP_CONFIG);
+                expect(a.configName).toBe('new.json');
+                expect(a.mapId).toBe(null);
+                expect(a.isNew).toBe(true);
+                done();
+            });
         });
     });
 
