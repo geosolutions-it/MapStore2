@@ -18,7 +18,7 @@ import { versionSelector } from '../selectors/version';
 import shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
-import { mapIdSelector, mapSelector } from '../selectors/map';
+import { mapIdSelector, mapSelector, mapIsNewSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
@@ -154,14 +154,16 @@ const ActionCardShareButton = connect(
 });
 
 const shareButtonSelector = createSelector([
+    mapSelector,
     mapIdSelector,
+    mapIsNewSelector,
     dashboardResource,
     geostoryResourceSelector,
     currentContextSelector
-], (mapId, dashboard, geostory, context) => {
-    const isDefaultMap = location.pathname === "/";
+], (map, mapId, mapIsNew, dashboard, geostory, context) => {
+    const isSharableMap = !!map && (mapId || !mapIsNew);
     return {
-        style: mapId || dashboard?.id || geostory?.id || context || isDefaultMap ? { } : { display: 'none' }
+        style: isSharableMap || dashboard?.id || geostory?.id || context ? { } : { display: 'none' }
     };
 });
 
