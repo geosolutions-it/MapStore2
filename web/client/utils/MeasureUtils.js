@@ -57,7 +57,8 @@ export const defaultUnitOfMeasureOptions = {
         { value: 'sqm', label: 'm²' },
         { value: 'sqkm', label: 'km²' },
         { value: 'sqmi', label: 'mi²' },
-        { value: 'sqnm', label: 'nm²' }
+        { value: 'sqnm', label: 'nm²' },
+        { value: 'ha', label: 'ha' }
     ],
     [MeasureTypes.HEIGHT_FROM_TERRAIN]: [
         { value: 'ft', label: 'ft' },
