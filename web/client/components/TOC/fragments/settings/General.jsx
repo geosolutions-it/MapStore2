@@ -36,6 +36,7 @@ export class GeneralSettings extends React.Component {
     static propTypes = {
         onChange: PropTypes.func,
         element: PropTypes.object,
+        elementLoading: PropTypes.bool,
         settings: PropTypes.object,
         groups: PropTypes.array,
         nodeType: PropTypes.string,
@@ -235,6 +236,7 @@ const GeneralWithSource = (props) => {
     const source = useLayerSource(props.element, {
         nodeType: props.nodeType,
         onChange: props.onChange,
+        loading: props.elementLoading,
         enableLayerNameEditFeedback: props.enableLayerNameEditFeedback,
         onValidationError: props.onLayerNameValidationError
     });

@@ -35,6 +35,7 @@ const getInitialValues = (fields, node) => fields.reduce((values, field) => ({
 export const useLayerSource = (node = {}, {
     nodeType,
     onChange = () => {},
+    loading = node.loading,
     enableLayerNameEditFeedback = false,
     onValidationError = () => {}
 } = {}) => {
@@ -63,17 +64,17 @@ export const useLayerSource = (node = {}, {
             if (fieldStatus.state !== 'waitingLoad') {
                 return;
             }
-            if (fieldStatus.phase === 'start' && node.loading) {
+            if (fieldStatus.phase === 'start' && loading) {
                 setFieldStatus(field, { ...fieldStatus, phase: 'end' });
                 return;
             }
-            if (fieldStatus.phase === 'end' && !node.loading) {
+            if (fieldStatus.phase === 'end' && !loading) {
                 setFieldStatus(field, node.loadingError
                     ? { editing: true, state: 'error', error: { code: 'load', field } }
                     : IDLE);
             }
         });
-    }, [node.loading, node.loadingError, status]);
+    }, [loading, node.loadingError, status]);
 
     const getEditedValues = () => fields.reduce((edited, field) => values[field] !== undefined
         && values[field] !== getCommittedValue(field, node)

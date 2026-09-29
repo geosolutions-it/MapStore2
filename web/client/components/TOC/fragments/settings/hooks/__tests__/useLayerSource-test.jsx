@@ -232,14 +232,14 @@ describe('useLayerSource', () => {
     it('closes after the layer reload succeeds', (done) => {
         mockAxios.onGet().reply(200, WFS_DESCRIBE);
         const onChange = expect.createSpy();
-        const options = {onChange, enableLayerNameEditFeedback: true};
+        const options = {onChange, loading: true, enableLayerNameEditFeedback: true};
         render(WFS_LAYER, options);
         edit('name', 'workspace:new');
         confirm('name');
         waitFor(() => expect(onChange).toHaveBeenCalled())
             .then(() => {
-                render({...WFS_LAYER, name: 'workspace:new', loading: true}, options);
-                render({...WFS_LAYER, name: 'workspace:new', loading: false, loadingError: false}, options);
+                render({...WFS_LAYER, name: 'workspace:new'}, options);
+                render({...WFS_LAYER, name: 'workspace:new', loading: false, loadingError: false}, {...options, loading: false});
                 expect(source.fields.name.editing).toBe(false);
                 expect(source.fields.name.error).toNotExist();
             })
