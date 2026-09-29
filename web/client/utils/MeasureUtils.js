@@ -83,7 +83,8 @@ export const mapUomAreaToLength = {
     sqm: { value: 'm', label: 'm' },
     sqkm: { value: 'km', label: 'km' },
     sqmi: { value: 'mi', label: 'mi' },
-    sqnm: { value: 'nm', label: 'nm' }
+    sqnm: { value: 'nm', label: 'nm' },
+    ha: { value: 'm', label: 'm' }
 };
 
 export const mapUomLabels = {
@@ -97,6 +98,7 @@ export const mapUomLabels = {
     sqkm: 'km²',
     sqmi: 'mi²',
     sqnm: 'nm²',
+    ha: 'ha',
     deg: '°',
     rad: 'rad',
     percentage: '%'
@@ -190,12 +192,14 @@ export const CONVERSION_RATE = {
         "mi": 1.1507794848484809158,
         "nm": 1
     },
+    // area
     "sqft": {
         "sqft": 1,
         "sqm": 0.09290304,
         "sqkm": 9.2903043596611E-8,
         "sqmi": 3.587E-8,
-        "sqnm": 2.7051601137505E-8
+        "sqnm": 2.7051601137505E-8,
+        "ha": 9.290304E-6  // 0.09290304/10^4
     },
     "sqyd": {
         "sqft": 8.9999247491639,
@@ -203,16 +207,17 @@ export const CONVERSION_RATE = {
         "sqkm": 8.3612040133779e-7,
         "sqyd": 1,
         "sqmi": 3.228278917579e-7,
-        "sqnm": 2.4346237458194e-7
+        "sqnm": 2.4346237458194e-7,
+        "ha": 8.3612736e-5  // 0.83612736/10^4
     },
-    // area
     "sqm": {
         "sqft": 10.76391,
         "sqm": 1,
         "sqkm": 1.0E-6,
         "sqyd": 1.196,
         "sqmi": 3.8610215854245e-7,
-        "sqnm": 2.91181e-7
+        "sqnm": 2.91181e-7,
+        "ha": 1.0E-4 // 1/10000
     },
     "sqkm": {
         "sqft": 10763910,
@@ -220,7 +225,8 @@ export const CONVERSION_RATE = {
         "sqkm": 1,
         "sqyd": 1196000,
         "sqmi": 0.38610215854245,
-        "sqnm": 0.291181
+        "sqnm": 0.291181,
+        "ha": 100 // 1000000/10^4
     },
     "sqmi": {
         "sqft": 27878398.920726,
@@ -228,7 +234,8 @@ export const CONVERSION_RATE = {
         "sqkm": 2.589988110336,
         "sqyd": 27878398.920726,
         "sqmi": 1,
-        "sqnm": 0.75415532795574
+        "sqnm": 0.75415532795574,
+        "ha": 258.9988110336 // 2589988.110336/10^4
     },
     "sqnm": {
         "sqft": 36966388.603652,
@@ -236,7 +243,17 @@ export const CONVERSION_RATE = {
         "sqkm": 3.4342900120544,
         "sqyd": 36966388.603652,
         "sqmi": 1.325986786715,
-        "sqnm": 1
+        "sqnm": 1,
+        "ha": 343.42900120544  // 3434290.0120544/10^4
+    },
+    "ha": {
+        "sqft": 107639.1,
+        "sqm": 10000, // 1 ha = 10000 m^2
+        "sqkm": 0.01,
+        "sqyd": 11960,
+        "sqmi": 0.0038610215854245,
+        "sqnm": 0.00291181,
+        "ha": 1
     }
 };
 
