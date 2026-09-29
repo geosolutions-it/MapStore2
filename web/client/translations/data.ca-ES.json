@@ -198,9 +198,7 @@
         "right": "Dret",
         "left": "Esquerre",
         "bottom": "Fons",
-        "top": "Cim",
-        "editLayerName": "Edita el nom de la capa",
-        "confirmLayerName": "Confirmeu el canvi de nom de la capa"
+        "top": "Cim"
       },
       "legendOptions": {
         "title": "Llegenda",

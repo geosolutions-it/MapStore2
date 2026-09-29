@@ -213,9 +213,7 @@
         "right": "Rechts",
         "left": "Links",
         "bottom": "Onder",
-        "top": "Boven",
-        "editLayerName": "Bewerk laagnaam",
-        "confirmLayerName": "Bevestig de wijziging van de laagnaam"
+        "top": "Boven"
       },
       "legendOptions": {
         "title": "Legende",

@@ -276,9 +276,20 @@
         "right": "Droite",
         "left": "Gauche",
         "bottom": "Bas",
-        "top": "Haut",
-        "editLayerName": "Modifier le nom du calque",
-        "confirmLayerName": "Confirmer le changement de nom du calque"
+        "top": "Haut"
+      },
+      "sourceField": {
+        "edit": "Modifier la valeur",
+        "confirm": "Confirmer la valeur",
+        "required": "Une valeur est requise",
+        "requiredUrl": "L'URL du service est requise pour valider cette valeur",
+        "requiredName": "Le nom de la couche est requis pour valider cette valeur",
+        "requiredSearchUrl": "L'URL du service WFS est requise pour valider cette valeur",
+        "requiredSearchTypeName": "Le TypeName WFS est requis pour valider cette valeur",
+        "service": "Le service n'est pas joignable à cette URL. Corrigez l'URL ou confirmez à nouveau pour conserver cette valeur",
+        "notFound": "La couche est introuvable sur ce service. Vérifiez le nom et l'URL ou confirmez à nouveau pour conserver cette valeur",
+        "load": "Le chargement de la couche a échoué, par exemple parce que le style n'est pas compatible. Corrigez les valeurs ou confirmez pour les conserver",
+        "generic": "La validation a échoué. Vérifiez le nom et l'URL ou confirmez à nouveau pour conserver cette valeur"
       },
       "legendOptions": {
         "title": "Légende",

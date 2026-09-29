@@ -276,9 +276,20 @@
         "right": "Right",
         "left": "Left",
         "bottom": "Bottom",
-        "top": "Top",
-        "editLayerName": "Edit layer name",
-        "confirmLayerName": "Confirm layer name change"
+        "top": "Top"
+      },
+      "sourceField": {
+        "edit": "Edit value",
+        "confirm": "Confirm value",
+        "required": "A value is required",
+        "requiredUrl": "The service URL is required to validate this value",
+        "requiredName": "The layer name is required to validate this value",
+        "requiredSearchUrl": "The WFS service URL is required to validate this value",
+        "requiredSearchTypeName": "The WFS TypeName is required to validate this value",
+        "service": "The service is not reachable at this URL. Fix the URL or confirm again to keep this value",
+        "notFound": "The layer was not found on this service. Check the name and the URL or confirm again to keep this value",
+        "load": "The layer failed to load, for example because the style is not compatible. Fix the values or confirm to keep them",
+        "generic": "Validation failed. Check the name and the URL or confirm again to keep this value"
       },
       "legendOptions": {
         "title": "Legend",
