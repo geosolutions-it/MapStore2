@@ -208,9 +208,7 @@
         "right": "Direita",
         "left": "Esquerda",
         "bottom": "Inferior",
-        "top": "Superior",
-        "editLayerName": "Editar nome da camada",
-        "confirmLayerName": "Confirmar alteração do nome da camada"
+        "top": "Superior"
       },
       "legendOptions": {
         "title": "Legenda",

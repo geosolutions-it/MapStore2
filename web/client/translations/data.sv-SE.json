@@ -208,9 +208,7 @@
         "right": "Höger",
         "left": "Vänster",
         "bottom": "Nederst",
-        "top": "Överst",
-        "editLayerName": "Redigera lagernamn",
-        "confirmLayerName": "Bekräfta lagernamnändring"
+        "top": "Överst"
       },
       "legendOptions": {
         "title": "Förklaring",

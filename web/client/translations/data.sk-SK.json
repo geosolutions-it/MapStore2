@@ -134,9 +134,7 @@
         "right": "Vpravo",
         "left": "Vľavo",
         "bottom": "Dole",
-        "top": "Hore",
-        "editLayerName": "Upraviť názov vrstvy",
-        "confirmLayerName": "Potvrdenie zmeny v názve vrstvy"
+        "top": "Hore"
       },
       "legendOptions": {
         "title": "Legenda",
