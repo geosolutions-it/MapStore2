@@ -53,6 +53,17 @@
       "descriptionAdmin": "Bitte wenden Sie sich an den Administrator"
     },
     "autorefresh": {
+      "selector": "Intervall für die automatische Aktualisierung der Ebenen festlegen",
+      "label": {
+        "default": "Automatische Aktualisierung aktivieren",
+        "lastUpdated": "Letzte Aktualisierung",
+        "addLayer": "Ebene hinzufügen",
+        "addLayerPlaceholder": "Auswählen...",
+        "removeLayer": "Ebene entfernen",
+        "layersSummary": "Ebenen werden automatisch aktualisiert",
+        "noLayers": "Keine gefunden",
+        "informations": "Welche Ebenen konfiguriert sind"
+      },
       "of": "of",
       "updating": "Lade...",
       "layers": "layers"
@@ -4071,6 +4082,10 @@
       "Isochrone": {
         "description": "Dieses Plugin ermöglicht die Berechnung von Isochronen und Isodistanzen",
         "title": "Isochrone"
+      },
+      "AutoRefresh": {
+        "description": "Mit diesem Plugin lässt sich ein Zeitintervall für die automatische Aktualisierung von Ebenen festlegen.",
+        "title": "Auto Refresh"
       }
     },
     "contextCreator": {
