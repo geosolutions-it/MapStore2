@@ -117,45 +117,20 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
             if (typeof response.data === 'object') {
                 const projectionDefs = projectionDefsSelector(state);
                 const projection = get(response, "data.map.projection", "EPSG:3857");
-<<<<<<< HEAD
                 if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                     return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                 }
                 const mapConfig = prepareMapConfiguration(response.data, overrideConfig, state);
                 return isNumberId ? Observable.of(
-                    configureMap(mapConfig, mapId),
+                    configureMap(mapConfig, mapId, undefined, isNew),
                     mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
                     ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
                 ) :
                     Observable.of(
-                        configureMap(mapConfig, mapId),
+                        configureMap(mapConfig, mapId, undefined, isNew),
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
                         ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
                     );
-=======
-                const alwaysSupported = ["EPSG:4326", "EPSG:3857", "EPSG:900913"];
-                // Register persisted dynamic projection defs from the JUST-FETCHED
-                // config before validating the projection. When the map is loaded
-                // by configName (no inline config), the parent epic cannot see
-                // these defs - they only arrive here in the response.
-                const dynamicDefs = response.data?.map?.projections?.defs || [];
-                return Observable.fromPromise(ProjectionRegistry.registerAll(dynamicDefs)).switchMap(() => {
-                    if (!alwaysSupported.includes(projection) && !ProjectionRegistry.isRegistered(projection)) {
-                        return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
-                    }
-                    const mapConfig = prepareMapConfiguration(response.data, overrideConfig, state);
-                    return isNumberId ? Observable.of(
-                        configureMap(mapConfig, mapId, undefined, isNew),
-                        mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
-                        ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
-                    ) :
-                        Observable.of(
-                            configureMap(mapConfig, mapId, undefined, isNew),
-                            ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
-                            ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
-                        );
-                });
->>>>>>> 5613d59a7 (#12913 Share button is not visible in sidebar in default map (#12914))
             }
             try {
                 const data = JSON.parse(response.data);
@@ -181,16 +156,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
  */
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
-<<<<<<< HEAD
-        .switchMap(({configName, mapId, config, mapInfo, overrideConfig}) => {
-=======
         .switchMap(({configName, mapId, config, mapInfo, overrideConfig, isNew}) => {
-            // Persisted dynamic projection defs are registered inside
-            // mapFlowWithOverride, after the config has been resolved (either
-            // from the inline payload or fetched via configName). That guarantees
-            // ProjectionRegistry.isRegistered is accurate for the validation
-            // performed there.
->>>>>>> 5613d59a7 (#12913 Share button is not visible in sidebar in default map (#12914))
             const sessionsEnabled = userSessionEnabledSelector(store.getState());
             if (overrideConfig || !sessionsEnabled) {
                 return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig, isNew);

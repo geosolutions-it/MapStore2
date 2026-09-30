@@ -9,11 +9,7 @@
 import expect from 'expect';
 import {head} from 'lodash';
 import {
-<<<<<<< HEAD
-    loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic,    getSupportedFormatsEpic
-=======
     loadMapConfigAndConfigureMap, loadNewMapEpic, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic, getSupportedFormatsEpic
->>>>>>> 5613d59a7 (#12913 Share button is not visible in sidebar in default map (#12914))
 } from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
@@ -619,4 +615,3 @@ describe('config epics', () => {
         });
     });
 });
-
