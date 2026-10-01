@@ -386,11 +386,17 @@ export const startFeatureExportDownload = (action$, store) =>
             const cqlFilter = getCQLFilterFromLayer(layer);
 
             const getOGCDataFilter = (tempFilter) => {
-                const filterXml = mergeFiltersToOGC({
-                    ogcVersion: '1.1.0',
-                    addXmlnsToRoot: true,
-                    xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
-                }, action.downloadOptions.downloadFilteredDataSet ? layer.layerFilter : {}, action.downloadOptions.downloadFilteredDataSet ? action.filterObj : {}, cqlFilter, tempFilter?.ogcFilterObj);
+                const filterXml = mergeFiltersToOGC(
+                    {
+                        ogcVersion: '1.1.0',
+                        addXmlnsToRoot: true,
+                        xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+                    },
+                    action.downloadOptions.downloadFilteredDataSet ? layer.layerFilter : {},
+                    action.downloadOptions.downloadFilteredDataSet ? action.filterObj : {},
+                    cqlFilter,
+                    tempFilter?.ogcFilterObj
+                );
 
                 return !isEmpty(filterXml) ? {
                     type: 'TEXT',
