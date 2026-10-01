@@ -93,7 +93,7 @@ jobs:
       # JAVA CHECKS
       ##############
       - name: java
-        run: mvn --batch-mode --update-snapshots verify -Pprintingbundle,binary
+        run: mvn --batch-mode --update-snapshots verify -Pprintingbundle
   build:
     runs-on: ubuntu-latest
     steps:

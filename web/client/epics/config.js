@@ -71,11 +71,11 @@ export const loadNewMapEpic = (action$) =>
         .switchMap(({configName, contextId}) =>
             contextId ?
                 Persistence.getResource(contextId)
-                    .switchMap(resource => Observable.of(loadMapConfig('', null, get(resource, 'data.mapConfig', {}), {context: contextId})))
+                    .switchMap(resource => Observable.of(loadMapConfig('', null, get(resource, 'data.mapConfig', {}), {context: contextId}, undefined, true)))
                     .catch(() => Observable.of(configureError({
                         messageId: `map.errors.loading.contextLoadFailed`
                     }))) :
-                Observable.of(loadMapConfig(configName, null))
+                Observable.of(loadMapConfig(configName, null, undefined, undefined, undefined, true))
         );
 
 /**
@@ -92,10 +92,11 @@ export const loadNewMapEpic = (action$) =>
  * @param {Object} state current redux state
  * @param {Object} overrideConfig override object of the given or loaded config, allows to apply a
  * partial override of the main configuration (e.g. for sessions management)
+ * @param {Boolean} isNew true if the map is a new, not yet saved, resource
  * @returns {Observable} map configuration flow
  * @ignore
  */
-const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, overrideConfig = {}) => {
+const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, overrideConfig = {}, isNew) => {
     // delay here is to postpone map load to ensure that
     // certain epics always function correctly
     // i.e. FeedbackMask disables correctly after load
@@ -121,12 +122,12 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
                 }
                 const mapConfig = prepareMapConfiguration(response.data, overrideConfig, state);
                 return isNumberId ? Observable.of(
-                    configureMap(mapConfig, mapId),
+                    configureMap(mapConfig, mapId, undefined, isNew),
                     mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
                     ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
                 ) :
                     Observable.of(
-                        configureMap(mapConfig, mapId),
+                        configureMap(mapConfig, mapId, undefined, isNew),
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
                         ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
                     );
@@ -134,9 +135,9 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
             try {
                 const data = JSON.parse(response.data);
                 const mapConfig = prepareMapConfiguration(data, overrideConfig, state);
-                return isNumberId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                return isNumberId ? Observable.of(configureMap(mapConfig, mapId, undefined, isNew), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
                     Observable.of(
-                        configureMap(mapConfig, mapId),
+                        configureMap(mapConfig, mapId, undefined, isNew),
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
                         ...(response.staticConfig ? [] : saveMapConfig(data))
                     );
@@ -155,16 +156,16 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
  */
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
-        .switchMap(({configName, mapId, config, mapInfo, overrideConfig}) => {
+        .switchMap(({configName, mapId, config, mapInfo, overrideConfig, isNew}) => {
             const sessionsEnabled = userSessionEnabledSelector(store.getState());
             if (overrideConfig || !sessionsEnabled) {
-                return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig);
+                return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig, isNew);
             }
             const userName = userSelector(store.getState())?.name;
             return Observable.of(loadUserSession(buildSessionName(null, mapId, userName))).merge(
                 action$.ofType(USER_SESSION_LOADED).switchMap(({session}) => {
                     return Observable.merge(
-                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), session),
+                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), session, isNew),
                         Observable.of(userSessionStartSaving())
                     );
                 })

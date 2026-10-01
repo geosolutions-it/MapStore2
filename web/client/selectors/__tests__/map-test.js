@@ -16,6 +16,7 @@ import {
     projectionDefsSelector,
     mapNameSelector,
     mapInfoSelector,
+    mapIsNewSelector,
     mapInfoDetailsUriFromIdSelector,
     configuredRestrictedExtentSelector,
     configuredExtentCrsSelector,
@@ -101,6 +102,13 @@ describe('Test map selectors', () => {
         expect(props).toBe(123);
         const propsEmpty = mapIdSelector({});
         expect(propsEmpty).toBe(null);
+    });
+
+    it('test mapIsNewSelector', () => {
+        expect(mapIsNewSelector({ map: { isNew: true } })).toBe(true);
+        expect(mapIsNewSelector({ map: { present: { isNew: true } } })).toBe(true);
+        expect(mapIsNewSelector({ map: { isNew: false } })).toBe(false);
+        expect(mapIsNewSelector({})).toBe(false);
     });
 
     it('test mapVersionSelector', () => {
