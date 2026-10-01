@@ -40,6 +40,7 @@ import {attributesSelector} from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { customAttributesSettingsSelector } from "../selectors/featuregrid";
+import { offsetEnabledSelector } from '../selectors/dimension';
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
 
@@ -167,7 +168,8 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         checkingWPSAvailability: checkingWPSAvailabilitySelector,
         virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll,
         customAttributeSettings: customAttributesSettingsSelector,
-        attributes: attributesSelector
+        attributes: attributesSelector,
+        isRangeEnabled: offsetEnabledSelector
     }), {
         onExport: downloadFeatures,
         onSetService: setService,
