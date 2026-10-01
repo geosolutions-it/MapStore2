@@ -119,7 +119,8 @@ class MeasureComponent extends React.Component {
             {value: "sqm", label: "m²"},
             {value: "sqkm", label: "km²"},
             {value: "sqmi", label: "mi²"},
-            {value: "sqnm", label: "nm²"}
+            {value: "sqnm", label: "nm²"},
+            {value: "ha", label: "ha"}
         ],
         id: "measure-result-panel",
         uom: {
