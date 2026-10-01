@@ -30,8 +30,8 @@ export const MEASURE_TYPE = 'Measure';
 export const MEASURE_CESIUM_TARGET_ID = 'measure-cesium-wrapper';
 
 const getFormattedValue = (uom, value) => ({
-    [MeasureTypes.LENGTH]: round(convertUom(value, "m", uom.length.label) || 0, 2) + " " + uom.length.unit,
-    [MeasureTypes.AREA]: round(convertUom(value, "sqm", uom.area.label) || 0, 2) + " " + uom.area.unit,
+    [MeasureTypes.LENGTH]: round(convertUom(value, "m", uom.length.label) || 0, 2) + " " + uom.length.label,
+    [MeasureTypes.AREA]: round(convertUom(value, "sqm", uom.area.label) || 0, 2) + " " + uom.area.label,
     [MeasureTypes.BEARING]: getFormattedBearingValue(round(value || 0, 6)).toString()
 });
 
