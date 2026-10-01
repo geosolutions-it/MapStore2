@@ -9,12 +9,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { Checkbox } from 'react-bootstrap';
+import { Checkbox, Glyphicon } from 'react-bootstrap';
 import { get, head, isObject, isEmpty, isEqual} from 'lodash';
 import InfoPopover from '../../widgets/widget/InfoPopover';
 
 import Message from '../../I18N/Message';
 import DownloadWPSOptions from './DownloadWPSOptions';
+import { NETCDF_FORMAT } from '../../../utils/FileFormatUtils';
+import { fetchTimeAttributes } from '../../../utils/LayerDownloadUtils';
 
 /**
  * Download Options Form. Shows a selector of the options to perform a WFS download
@@ -48,7 +50,10 @@ class DownloadOptions extends React.Component {
         wfsAvailable: PropTypes.bool,
         wpsAdvancedOptionsVisible: PropTypes.bool,
         wpsAvailable: PropTypes.bool,
-        wpsOptionsVisible: PropTypes.bool
+        wpsOptionsVisible: PropTypes.bool,
+        hasTime: PropTypes.bool,
+        isRange: PropTypes.bool,
+        attributes: PropTypes.array
     };
 
     static defaultProps = {
@@ -70,16 +75,48 @@ class DownloadOptions extends React.Component {
             { value: "wps", label: <Message msgId="layerdownload.services.wps.title" /> },
             { value: "wfs", label: <Message msgId="layerdownload.services.wfs.title" /> }
         ],
-        hideServiceSelector: false
+        hideServiceSelector: false,
+        hasTime: false,
+        isRange: false,
+        attributes: []
     };
 
     constructor(props) {
         super(props);
+        this.state = {
+            timeAttributes: []
+        };
     }
 
+    fetchTimeAttributes = (layer, hasTime, attributes) => {
+        const layerId = layer?.id;
+        this._fetchLayer = layerId;
+        if (hasTime) {
+            fetchTimeAttributes(layer, { attributes })
+                .then(attrs => {
+                    if (this._isMounted && this._fetchLayer === layerId) {
+                        const timeAttributes = attrs || [];
+                        this.setState({ timeAttributes });
+                        if (timeAttributes.length === 1) {
+                            this.props.onChange("timeAttribute", timeAttributes[0]);
+                        } else if (timeAttributes.length > 1) {
+                            const currentAttr = this.props.downloadOptions?.timeAttribute;
+                            const selected = timeAttributes.includes(currentAttr) ? currentAttr : timeAttributes[0];
+                            this.props.onChange("timeAttribute", selected);
+                        }
+                    }
+                });
+        } else if (this._fetchLayer === layerId) {
+            this.setState({ timeAttributes: [] });
+        }
+    };
+
     componentDidMount = () => {
+        this._isMounted = true;
         this.props.onClearDownloadOptions(this.props.service || this.props.defaultSelectedService);
-        const format = get(this.props, "downloadOptions.selectedFormat") || get(head(this.props.formats), "name");
+        const currentFormat = get(this.props, "downloadOptions.selectedFormat");
+        const isValidFormat = this.props.formats.some(f => f.name === currentFormat);
+        const format = (isValidFormat ? currentFormat : null) || get(head(this.props.formats), "name");
         const srs = get(this.props, "downloadOptions.selectedSrs") || get(this.props, "defaultSrs") || get(head(this.props.srsList), "name");
         const filter = get(this.props, "layer.layerFilter"); // This will miss the widget filter
         const filtered = isObject(filter) && !isEmpty(filter) || this.props.filterObj;
@@ -87,21 +124,26 @@ class DownloadOptions extends React.Component {
         this.props.onChange("selectedSrs", srs);
         this.props.onChange("downloadFilteredDataSet", filtered);
         this.props.formatOptionsFetch(this.props.layer);
+        this.fetchTimeAttributes(this.props.layer, this.props.hasTime, this.props.attributes);
     };
 
     componentWillReceiveProps = (newProps) => {
         if ( !isEqual( this.props.formats, newProps.formats)) {
-            const format = get(newProps, "downloadOptions.selectedFormat") || get(head(newProps.formats), "name");
-            newProps.onChange("selectedFormat", format);
+            const currentFormat = get(newProps, "downloadOptions.selectedFormat");
+            const isValidFormat = newProps.formats.some(f => f.name === currentFormat);
+            const format = (isValidFormat ? currentFormat : null) || get(head(newProps.formats), "name");
+            if (format !== currentFormat) {
+                newProps.onChange("selectedFormat", format);
+            }
         }
         if ( !isEqual( this.props.service, newProps.service) ) {
             newProps.formatOptionsFetch(newProps.layer);
         }
-        if ( !isEqual( this.props.layer, newProps.layer) ) {
+        if (!isEqual(this.props.layer, newProps.layer) || this.props.hasTime !== newProps.hasTime || !isEqual(this.props.attributes, newProps.attributes)) {
             const filter = get(newProps, "layer.layerFilter");
             const filtered = isObject(filter) && !isEmpty(filter) || newProps.filterObj;
             newProps.onChange("downloadFilteredDataSet", filtered);
-
+            this.fetchTimeAttributes(newProps.layer, newProps.hasTime, newProps.attributes);
         }
         if ( !isEqual( this.props.srsList, newProps.srsList) ) {
             const srs = get(newProps, "downloadOptions.selectedSrs") || get(newProps, "defaultSrs") || get(head(newProps.srsList), "name");
@@ -110,14 +152,20 @@ class DownloadOptions extends React.Component {
     }
 
     componentWillUnmount = () => {
+        this._isMounted = false;
         this.props.onClearDownloadOptions(this.props.defaultSelectedService);
     }
 
     render() {
-
-        const rasterOptionsVisibile = this.props.formats.some(item => item.type === 'raster');
+        const selectedFormat = this.props.downloadOptions?.selectedFormat;
+        const rasterOptionsVisibile = selectedFormat !== NETCDF_FORMAT && this.props.formats.some(item => item.type === 'raster');
+        const timeAttributes = this.state.timeAttributes || [];
+        const showTimeAttributes = timeAttributes.length > 1;
 
         return (<form>
+            {!isEmpty(timeAttributes) && <div className="mapstore-downloadoptions alert alert-info">
+                <Glyphicon glyph="info-sign" />&nbsp;<Message msgId="layerdownload.visibleGranuleInfo" />
+            </div>}
             {!this.props.hideServiceSelector && this.props.wpsAvailable && this.props.wfsAvailable &&
 
                 <div className="mapstore-downloadoptions downloadMode">
@@ -134,7 +182,17 @@ class DownloadOptions extends React.Component {
                     </div>
                 </div>
             }
-
+            {showTimeAttributes && <div className="mapstore-downloadoptions">
+                <label><Message msgId="layerdownload.timeAttribute" /></label>
+                <div className="mapstore-downloadoptions-row">
+                    <Select
+                        clearable={false}
+                        value={this.props.downloadOptions?.timeAttribute || this.state.timeAttributes[0]}
+                        onChange={(sel) => this.props.onChange("timeAttribute", sel.value)}
+                        options={this.state.timeAttributes.map(attr => ({value: attr, label: attr}))} />
+                        &nbsp;<InfoPopover text={<Message msgId={`layerdownload.timeAttributeInfo`} />} />
+                </div>
+            </div>}
             <div className="mapstore-downloadoptions">
                 <label><Message msgId="layerdownload.format" /></label>
                 <Select

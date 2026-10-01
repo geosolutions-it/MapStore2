@@ -17,6 +17,7 @@ import { QUERY_CREATE } from '../../actions/wfsquery';
 import { closeExportDownload, openDownloadTool, startFeatureExportDownload, downloadVectorLayerAsGeoJSON } from '../layerdownload';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import FileSaver from 'file-saver';
+import { NETCDF_FORMAT } from '../../utils/FileFormatUtils';
 
 describe('layerdownload Epics', () => {
     let mockAxios;
@@ -253,6 +254,376 @@ describe('layerdownload Epics', () => {
                 expect(actions[0].type).toBe(TEST_TIMEOUT);
                 done();
             }
+        );
+    });
+    it('startFeatureExportDownload includes temporal filter when timeAttribute and currentTime are set', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].error.config.url).toExist();
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyIsEqualTo>') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyName>timestamp</ogc:PropertyName>') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('2024-01-01T00:00:00.000Z') > 0).toBe(true);
+            done();
+        };
+
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            dimension: {
+                currentTime: '2024-01-01T00:00:00.000Z'
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{
+                    id: 'test layer',
+                    name: 'test',
+                    layerFilter: { featureTypeName: 'test' },
+                    dimensions: [{ name: 'time' }],
+                    search: { url: '/geoserver/wfs' }
+                }],
+                selected: ['test layer']
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/geoserver/wfs', { featureTypeName: 'test' }, { selectedFormat: 'test-format', timeAttribute: 'timestamp' }),
+            epicResult,
+            state
+        );
+    });
+    it('startFeatureExportDownload includes temporal range filter (PropertyIsBetween) and time parameter when range is active', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].error.config.url).toExist();
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyIsBetween>') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyName>timestamp</ogc:PropertyName>') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<ogc:LowerBoundary><ogc:Literal>2024-01-01T00:00:00.000Z</ogc:Literal></ogc:LowerBoundary>') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<ogc:UpperBoundary><ogc:Literal>2024-01-05T00:00:00.000Z</ogc:Literal></ogc:UpperBoundary>') > 0).toBe(true);
+            done();
+        };
+
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            dimension: {
+                currentTime: '2024-01-01T00:00:00.000Z',
+                offsetTime: '2024-01-05T00:00:00.000Z'
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{
+                    id: 'test layer',
+                    name: 'test',
+                    layerFilter: { featureTypeName: 'test' },
+                    dimensions: [{ name: 'time' }],
+                    search: { url: '/geoserver/wfs' }
+                }],
+                selected: ['test layer']
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/geoserver/wfs', { featureTypeName: 'test' }, { selectedFormat: 'test-format', timeAttribute: 'timestamp' }),
+            epicResult,
+            state
+        );
+    });
+    it('startFeatureExportDownload falls back to time attribute "time" when timeAttribute is not specified', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].error.config.url).toExist();
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyIsEqualTo>') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyName>time</ogc:PropertyName>') > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('2024-01-01T00:00:00.000Z') > 0).toBe(true);
+            done();
+        };
+
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            dimension: {
+                currentTime: '2024-01-01T00:00:00.000Z'
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{
+                    id: 'test layer',
+                    name: 'test',
+                    layerFilter: { featureTypeName: 'test' },
+                    dimensions: [{ name: 'time' }],
+                    search: { url: '/geoserver/wfs' }
+                }],
+                selected: ['test layer']
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/geoserver/wfs', { featureTypeName: 'test' }, { selectedFormat: 'test-format' }),
+            epicResult,
+            state
+        );
+    });
+    it('startFeatureExportDownload does not include temporal filter when layer has no time dimension', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].error.config.url).toExist();
+            expect(actions[0].error.config.url.indexOf('time=') < 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyIsEqualTo>') < 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf('<ogc:PropertyIsBetween>') < 0).toBe(true);
+            done();
+        };
+
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            dimension: {
+                currentTime: '2024-01-01T00:00:00.000Z'
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{
+                    id: 'test layer',
+                    name: 'test',
+                    layerFilter: { featureTypeName: 'test' },
+                    search: { url: '/geoserver/wfs' }
+                }],
+                selected: ['test layer']
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/geoserver/wfs', { featureTypeName: 'test' }, { selectedFormat: 'test-format', timeAttribute: 'timestamp' }),
+            epicResult,
+            state
+        );
+    });
+    it('startFeatureExportDownload wps flow omits writeParameters when format is NetCDF', (done) => {
+        const postedPayloads = [];
+        mockAxios.onPost().reply((config) => {
+            postedPayloads.push(config.data);
+            if (config.data && config.data.indexOf('gs:DownloadEstimator') > 0) {
+                return [200,
+                    `<?xml version="1.0" encoding="UTF-8"?>
+                        <wps:ExecuteResponse xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1">
+                        <wps:Status>
+                            <wps:ProcessSucceeded>Process succeeded.</wps:ProcessSucceeded>
+                        </wps:Status>
+                        <wps:ProcessOutputs>
+                            <wps:Output>
+                                <ows:Identifier>result</ows:Identifier>
+                                <wps:Data><wps:LiteralData>true</wps:LiteralData></wps:Data>
+                            </wps:Output>
+                        </wps:ProcessOutputs>
+                    </wps:ExecuteResponse>`,
+                    { 'content-type': 'application/xml' }
+                ];
+            }
+            if (config.data && config.data.indexOf('gs:Download') > 0) {
+                return [200,
+                    `<?xml version="1.0" encoding="UTF-8"?>
+                        <wps:ExecuteResponse xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1">
+                        <wps:Status>
+                            <wps:ProcessSucceeded>Process succeeded.</wps:ProcessSucceeded>
+                        </wps:Status>
+                        <wps:ProcessOutputs>
+                            <wps:Output>
+                                <ows:Identifier>result</ows:Identifier>
+                                <wps:Reference href="http://geoserver/wps/result.zip"/>
+                            </wps:Output>
+                        </wps:ProcessOutputs>
+                    </wps:ExecuteResponse>`,
+                    { 'content-type': 'application/xml' }
+                ];
+            }
+            return [404];
+        });
+
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            layerdownload: {
+                service: 'wps'
+            },
+            layers: {
+                flat: [{
+                    id: 'raster-layer',
+                    name: 'workspace:raster',
+                    url: '/geoserver/wps'
+                }],
+                selected: ['raster-layer']
+            }
+        };
+
+        testEpic(
+            startFeatureExportDownload,
+            5,
+            downloadFeatures('/geoserver/wps', { featureTypeName: 'workspace:raster' }, {
+                selectedFormat: NETCDF_FORMAT,
+                tileWidth: 512,
+                tileHeight: 512,
+                compression: 'DEFLATE'
+            }),
+            () => {
+                expect(postedPayloads.length).toBeGreaterThan(1);
+                const downloadPayload = postedPayloads.find(p => p.indexOf('gs:Download') > 0 && p.indexOf('gs:DownloadEstimator') < 0);
+                expect(downloadPayload).toExist();
+                expect(downloadPayload.indexOf(NETCDF_FORMAT) > 0).toBe(true);
+                expect(downloadPayload.indexOf('writeParameters') < 0).toBe(true);
+                expect(downloadPayload.indexOf('tilewidth') < 0).toBe(true);
+                done();
+            },
+            state
+        );
+    });
+    it('startFeatureExportDownload wps flow includes writeParameters for non-NetCDF raster format', (done) => {
+        const postedPayloads = [];
+        mockAxios.onPost().reply((config) => {
+            postedPayloads.push(config.data);
+            if (config.data && config.data.indexOf('gs:DownloadEstimator') > 0) {
+                return [200,
+                    `<?xml version="1.0" encoding="UTF-8"?>
+                        <wps:ExecuteResponse xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1">
+                        <wps:Status>
+                            <wps:ProcessSucceeded>Process succeeded.</wps:ProcessSucceeded>
+                        </wps:Status>
+                        <wps:ProcessOutputs>
+                            <wps:Output>
+                                <ows:Identifier>result</ows:Identifier>
+                                <wps:Data><wps:LiteralData>true</wps:LiteralData></wps:Data>
+                            </wps:Output>
+                        </wps:ProcessOutputs>
+                    </wps:ExecuteResponse>`,
+                    { 'content-type': 'application/xml' }
+                ];
+            }
+            if (config.data && config.data.indexOf('gs:Download') > 0) {
+                return [200,
+                    `<?xml version="1.0" encoding="UTF-8"?>
+                        <wps:ExecuteResponse xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1">
+                        <wps:Status>
+                            <wps:ProcessSucceeded>Process succeeded.</wps:ProcessSucceeded>
+                        </wps:Status>
+                        <wps:ProcessOutputs>
+                            <wps:Output>
+                                <ows:Identifier>result</ows:Identifier>
+                                <wps:Reference href="http://geoserver/wps/result.zip"/>
+                            </wps:Output>
+                        </wps:ProcessOutputs>
+                    </wps:ExecuteResponse>`,
+                    { 'content-type': 'application/xml' }
+                ];
+            }
+            return [404];
+        });
+
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            layerdownload: {
+                service: 'wps'
+            },
+            layers: {
+                flat: [{
+                    id: 'raster-layer',
+                    name: 'workspace:raster',
+                    url: '/geoserver/wps'
+                }],
+                selected: ['raster-layer']
+            }
+        };
+
+        testEpic(
+            startFeatureExportDownload,
+            5,
+            downloadFeatures('/geoserver/wps', { featureTypeName: 'workspace:raster' }, {
+                selectedFormat: 'image/tiff',
+                tileWidth: 256,
+                tileHeight: 256,
+                compression: 'DEFLATE',
+                quality: 75
+            }),
+            () => {
+                expect(postedPayloads.length).toBeGreaterThan(1);
+                const downloadPayload = postedPayloads.find(p => p.indexOf('gs:Download') > 0 && p.indexOf('gs:DownloadEstimator') < 0);
+                expect(downloadPayload).toExist();
+                expect(downloadPayload.indexOf('writeParameters') > 0).toBe(true);
+                expect(downloadPayload.indexOf('tilewidth') > 0).toBe(true);
+                expect(downloadPayload.indexOf('256') > 0).toBe(true);
+                expect(downloadPayload.indexOf('compression') > 0).toBe(true);
+                expect(downloadPayload.indexOf('DEFLATE') > 0).toBe(true);
+                done();
+            },
+            state
+        );
+    });
+    it('startFeatureExportDownload wps flow includes temporal filter in dataFilter when time dimension is present', (done) => {
+        const postedPayloads = [];
+        mockAxios.onPost().reply((config) => {
+            postedPayloads.push(config.data);
+            return [404];
+        });
+
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            layerdownload: {
+                service: 'wps'
+            },
+            dimension: {
+                currentTime: '2024-01-01T00:00:00.000Z',
+                offsetTime: '2024-01-05T00:00:00.000Z'
+            },
+            layers: {
+                flat: [{
+                    id: 'raster-layer',
+                    name: 'workspace:raster',
+                    url: '/geoserver/wps',
+                    dimensions: [{ name: 'time' }]
+                }],
+                selected: ['raster-layer']
+            }
+        };
+
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/geoserver/wps', { featureTypeName: 'workspace:raster' }, {
+                selectedFormat: NETCDF_FORMAT,
+                timeAttribute: 'time'
+            }),
+            () => {
+                expect(postedPayloads.length).toBeGreaterThan(0);
+                const estimatorPayload = postedPayloads[0];
+                expect(estimatorPayload.indexOf('gs:DownloadEstimator') > 0).toBe(true);
+                expect(estimatorPayload.indexOf('<ows:Identifier>filter</ows:Identifier>') > 0).toBe(true);
+                expect(estimatorPayload.indexOf('PropertyIsBetween') > 0).toBe(true);
+                expect(estimatorPayload.indexOf('2024-01-01T00:00:00.000Z') > 0).toBe(true);
+                expect(estimatorPayload.indexOf('2024-01-05T00:00:00.000Z') > 0).toBe(true);
+                done();
+            },
+            state
         );
     });
 });
