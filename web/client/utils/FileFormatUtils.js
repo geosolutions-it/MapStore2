@@ -24,6 +24,8 @@ export const formatToText = {
     wmc: 'WMC'
 };
 
+export const NETCDF_FORMAT = "application/x-netcdf";
+
 const formats = [{
     outputFormat: "shape-zip",
     extension: "zip"
@@ -84,6 +86,9 @@ const formats = [{
 }, {
     outputFormat: "application/x-gpk",
     extension: "gpk"
+}, {
+    outputFormat: "application/x-netcdf",
+    extension: "nc"
 }
 ];
 
