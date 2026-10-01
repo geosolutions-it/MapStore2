@@ -42,7 +42,7 @@ To **Add a Rule**, the user can click the <img src="../img/button/++++.jpg" clas
 
 * Add the **Validity Period**: specify the start and end dates for access to the service, workspace, and/or layer. The rule thus defined is be applied at run time only within the date period defined.
 
-* Select the **Access** type: choose between `ALLOW` o `DENY`
+* Select the **Access** type: choose between `ALLOW` or `DENY`
 
 Once all the rule information has been configured, it can be saved by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button. The rule will be displayed in the rules list according to the assigned priority.
 

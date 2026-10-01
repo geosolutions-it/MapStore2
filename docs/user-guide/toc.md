@@ -66,7 +66,7 @@ When right-clicking on the TOC body, in addition to the options available in the
 
 ### Search for layers
 
-With the TOC it is also possible to perform a search between the added layers. This operation can be done simply by typing the name (o part of it) of the layer in the search bar:
+With the TOC it is also possible to perform a search between the added layers. This operation can be done simply by typing the name (or part of it) of the layer in the search bar:
 
 <img src="../img/toc/search.jpg" class="ms-docimage"  style="max-width:300px;"/>
 

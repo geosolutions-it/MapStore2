@@ -7,7 +7,7 @@ Since a layer is added to the [TOC](toc.md#table-of-contents) it is possible to 
 
 <img src="../img/layer-settings/layer-settings.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
-The layer settings panel is composed of four sections:
+The layer settings panel is composed of five sections:
 
 <img src="../img/layer-settings/panel_sections.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
@@ -52,7 +52,7 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
+* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the [Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
 
 ## Display
 
@@ -295,7 +295,7 @@ Existing styles can be edited clicking on the <img src="../img/button/style_edit
 
 The editor is easy to approach thanks also to the following functions:
 
-* The *sintax control* highlights any possible error with a red underline (if error are detected an icon with a red exclamation point <img src="../img/button/style_editor_error_icon.jpg" class="ms-docbutton"/> will be shown in the top-right side of the editor)
+* The *syntax control* highlights any possible error with a red underline (if error are detected an icon with a red exclamation point <img src="../img/button/style_editor_error_icon.jpg" class="ms-docbutton"/> will be shown in the top-right side of the editor)
 
 <img src="../img/layer-settings/style_editor_syntax_error.jpg" class="ms-docimage">
 
@@ -364,7 +364,7 @@ The Text rule is used to style features as text labels. Text labels are position
 
 <img src="../img/layer-settings/text_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
+The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). An example can be the following one:
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/ex_text_style.mp4"></video>
 
@@ -390,7 +390,7 @@ The Simple style is the default style described above for each symbolizer.
 
 <img src="../img/layer-settings/classification_styl_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-It this case the editor is allowed to choose a `Color ramp` and the order (with `Reverse order`) of the classification intervals colors. It is obviously possible to select the layer `Attribute` to use for the classification along with the classification `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Standard deviation*), the number of classification `Intervals` and the `Opacity` (%) of each interval range. An example of the *Classification style* for a *Fill* rule type can be the following one:
+In this case the editor is allowed to choose a `Color ramp` and the order (with `Reverse order`) of the classification intervals colors. It is obviously possible to select the layer `Attribute` to use for the classification along with the classification `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Standard deviation*), the number of classification `Intervals` and the `Opacity` (%) of each interval range. An example of the *Classification style* for a *Fill* rule type can be the following one:
 
 <img src="../img/layer-settings/classification_style_ex.jpg" class="ms-docimage">
 
@@ -416,7 +416,7 @@ The style editor can configure a *Mark* as explained [here](#mark) along with th
 
 <img src="../img/layer-settings/classify_mark_ex.jpg" class="ms-docimage">
 
-#### Patter icon style
+#### Pattern icon style
 
 With the *Pattern icon style*  it is possible to represent *Line* or *Fill* style rules with an icon by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern icon style** options from the dropdown menu.
 

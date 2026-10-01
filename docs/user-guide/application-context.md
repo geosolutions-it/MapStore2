@@ -2,7 +2,7 @@
 
 *******************
 
-In order to create a context, the user can click on the **Create Context** from the **Add Resource** <img src="../img/button/add_resouces.jpg" class="ms-docbutton"/> button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
+In order to create a context, the user can click on the **Create Context** from the **Add Resource** <img src="../img/button/add_resouces.jpg" class="ms-docbutton"/> button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) and he will be addressed directly to a wizard. The wizard consists of the following four steps:
 
 <img src="../img/application-context/wizard.jpg" class="ms-docimage"/>
 

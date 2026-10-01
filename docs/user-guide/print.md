@@ -1,6 +1,6 @@
 # Printing a Map
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to print a map by selecting the **Print** <img src="../img/button/print2.jpg" class="ms-docbutton"  style="max-height:20px;"/> button from [Side Toolbar](mapstore-toolbars.md#side-toolbar). The print process is composed by two main steps:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to print a map by selecting the **Print** <img src="../img/button/print2.jpg" class="ms-docbutton"  style="max-height:20px;"/> button from [Side Toolbar](mapstore-toolbars.md#side-toolbar). The print process consists of two main steps:
 
 * *Print Settings* definition
 

@@ -1,6 +1,6 @@
 # MapStore vector style
 
-The `vector` and `wfs` layer types are rendered by the client as GeoJSON features and it possible to apply specific symbolizer using the `style` property available in the layer options. The style object is composed by these properties
+The `vector` and `wfs` layer types are rendered by the client as GeoJSON features and it possible to apply specific symbolizer using the `style` property available in the layer options. The style object consists of these properties
 
 - `format` the format encoding used by style body
 - `body` the actual style rules and symbolizers
@@ -36,12 +36,12 @@ example:
 The default format used by MapStore is "geostyler" that is an encoding based on the [geostyler-style](https://github.com/geostyler/geostyler-style) specification that could include some variations or limitations related to the map libraries used by MapStore app.
 We suggest to refer to following doc for the rule/symbolizer properties available in MapStore.
 
-Ths style `body` is composed by following properties:
+Ths style `body` consists of the following properties:
 
 - `name` style name
 - `rules` list of rule object that describe the style
 
-A `rule` object is composed by following properties:
+A `rule` object consists of the following properties:
 
 - `name` rule name that could be used to generate a legend
 - `filter` filter expression
