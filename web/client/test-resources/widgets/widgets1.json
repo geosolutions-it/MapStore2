@@ -97,14 +97,14 @@
           {
             "id": "geosolutions:regioni__7",
             "search": {
-              "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+              "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs",
               "type": "wfs"
             },
             "name": "geosolutions:regioni",
             "description": "Regioni Italiane",
             "title": "Regioni Italiane",
             "type": "wms",
-            "url": "https://demo.geo-solutions.it/geoserver/wms",
+            "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
             "bbox": {
               "crs": "EPSG:4326",
               "bounds": {
@@ -128,13 +128,13 @@
           {
             "id": "unesco:Unesco_point__6",
             "search": {
-              "url": "https://demo.geo-solutions.it:443/geoserver/wfs?",
+              "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs?",
               "type": "wfs"
             },
             "name": "unesco:Unesco_point",
             "title": "Unesco Items",
             "type": "wms",
-            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
             "bbox": {
               "crs": "EPSG:4326",
               "bounds": {
@@ -195,7 +195,7 @@
       "id": "ec974c50-37ef-11e8-a12b-f182297314df",
       "layer": {
         "type": "wms",
-        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
         "visibility": true,
         "dimensions": [],
         "name": "unesco:Unesco_point",
@@ -217,10 +217,10 @@
         "allowedSRS": {},
         "search": {
           "type": "wfs",
-          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+          "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs?"
         }
       },
-      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
       "legend": false,
       "mapSync": true,
       "widgetType": "counter",
@@ -335,7 +335,7 @@
           },
           {
             "type": "wms",
-            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
             "visibility": true,
             "dimensions": [],
             "name": "topp:states",
@@ -357,7 +357,7 @@
             "allowedSRS": {},
             "search": {
               "type": "wfs",
-              "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+              "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs?"
             },
             "id": "topp:states__kv71kamysw"
           }
@@ -402,7 +402,7 @@
       "id": "1ac5f5e0-37f0-11e8-a12b-f182297314df",
       "layer": {
         "type": "wms",
-        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
         "visibility": true,
         "dimensions": [],
         "name": "topp:states",
@@ -424,10 +424,10 @@
         "allowedSRS": {},
         "search": {
           "type": "wfs",
-          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+          "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs?"
         }
       },
-      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
       "legend": false,
       "mapSync": true,
       "widgetType": "counter",
