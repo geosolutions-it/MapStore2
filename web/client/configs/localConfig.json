@@ -2,11 +2,7 @@
   "proxyUrl": {
     "url": "proxy/?url=",
     "useCORS": [
-      "http://demo.geo-solutions.it/geoserver",
-      "https://demo.geo-solutions.it:443/geoserver",
-      "https://demo.geo-solutions.it/geoserver",
       "https://nominatim.openstreetmap.org",
-      "http://cloudsdi.geo-solutions.it",
       "https://gs-stable.geo-solutions.it/geoserver",
       "https://gs-stable.geo-solutions.it:443/geoserver",
       "http://gs-stable.geo-solutions.it/geoserver",
@@ -131,7 +127,7 @@
                   "visibility": false,
                   "singleTile": false,
                   "credits": {
-                    "title": "OSM Simple Light | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+                    "title": "OSM Simple Light | Rendering <a href=\"https://www.geosolutionsgroup.com/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
                   }
                 },
                 {
@@ -154,7 +150,7 @@
                   "visibility": false,
                   "singleTile": false,
                   "credits": {
-                    "title": "OSM Simple Dark | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+                    "title": "OSM Simple Dark | Rendering <a href=\"https://www.geosolutionsgroup.com/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
                   }
                 },
                 {
@@ -177,7 +173,7 @@
                   "visibility": true,
                   "singleTile": false,
                   "credits": {
-                    "title": "OSM Bright | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+                    "title": "OSM Bright | Rendering <a href=\"https://www.geosolutionsgroup.com/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
                   }
                 },
                 {

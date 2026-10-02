@@ -30,7 +30,7 @@
         "visibility": true,
         "singleTile": false,
         "credits": {
-          "title": "OSM Bright | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+          "title": "OSM Bright | Rendering <a href=\"https://www.geosolutionsgroup.com/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
         }
       }
     ]
