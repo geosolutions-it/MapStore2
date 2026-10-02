@@ -1103,6 +1103,13 @@
         "cfg": {
           "containerPosition": "header"
         }
+      },
+      {
+        "name": "Cookie",
+        "cfg": {
+          "externalCookieUrl": "",
+          "declineUrl": "http://www.google.com"
+        }
       }
     ],
     "geostory-embedded": [
@@ -1119,6 +1126,13 @@
         "cfg": {
           "containerPosition": "header"
         }
+      },
+      {
+        "name": "Cookie",
+        "cfg": {
+          "externalCookieUrl": "",
+          "declineUrl": "http://www.google.com"
+        }
       }
     ],
     "dashboard-embedded": [
@@ -1129,7 +1143,14 @@
         }
       },
       { "name": "SecurityPopup" },
-      { "name": "FeedbackMask" }
+      { "name": "FeedbackMask" },
+      {
+        "name": "Cookie",
+        "cfg": {
+          "externalCookieUrl": "",
+          "declineUrl": "http://www.google.com"
+        }
+      }
     ],
     "geostory": [
       { "name": "SecurityPopup" },
@@ -1213,7 +1234,14 @@
           }
         }
       },
-      "Permalink"
+      "Permalink",
+      {
+        "name": "Cookie",
+        "cfg": {
+          "externalCookieUrl": "",
+          "declineUrl": "http://www.google.com"
+        }
+      }
     ],
     "context-creator": [
       {
@@ -1242,6 +1270,13 @@
         "name": "FeedbackMask",
         "cfg": {
           "containerPosition": "header"
+        }
+      },
+      {
+        "name": "Cookie",
+        "cfg": {
+          "externalCookieUrl": "",
+          "declineUrl": "http://www.google.com"
         }
       }
     ],
