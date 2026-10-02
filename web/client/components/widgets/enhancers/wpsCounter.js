@@ -32,23 +32,42 @@ import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets}) => {
+        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets, autoRefreshActive, autoRefreshLayers = []}) => {
+
             // Check if mapSync is enabled (true), dependencyMap has mapSync dependency to Map widget and dependencies.viewport is null or falsy
             // If this condition is true, return false to filter out the event.
             // This prevents an extra API call from being triggered when the viewport is not available.
             if (mapSync && checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) && !dependencies?.viewport) {
                 return false;
             }
-            return layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
+
+            const isValid = layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
+            const shouldAutoRefresh = autoRefreshActive && autoRefreshLayers.find(l => l.id === layer.id) !== undefined;
+
+            return isValid || shouldAutoRefresh;
         })
         .distinctUntilChanged(
-            ({layer = {}, options = {}, filter}, newProps) =>
-                (newProps.layer
-                && getWpsUrl(layer) === getWpsUrl(newProps.layer)
-                && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
-                && layer.loadingError === newProps.layer.loadingError)
-                && sameOptions(options, newProps.options)
-                && sameFilter(filter, newProps.filter))
+            ({layer = {}, options = {}, filter, autoRefreshLayers = []}, newProps) => {
+                const oldAutoRefreshLayer = autoRefreshLayers.find(l => l.id === layer.id);
+                const newAutoRefreshLayer = newProps.autoRefreshLayers?.find(l => l.id === layer.id);
+                if (newProps.autoRefreshActive && newAutoRefreshLayer) {
+                    if (!oldAutoRefreshLayer) {
+                        return false;
+                    }
+                    if (oldAutoRefreshLayer && oldAutoRefreshLayer._v_ !== newAutoRefreshLayer._v_) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return (newProps.layer
+                    && getWpsUrl(layer) === getWpsUrl(newProps.layer)
+                    && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
+                    && layer.loadingError === newProps.layer.loadingError)
+                    && sameOptions(options, newProps.options)
+                    && sameFilter(filter, newProps.filter);
+            })
         .switchMap(
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(
