@@ -46,6 +46,8 @@ export default class PopupSupport extends React.Component {
         if (this.props.map) {
             // This prevent the pointermove to be sent event when stopevent is active. See:  https://github.com/openlayers/openlayers/issues/4953
             this.props.map.getOverlayContainerStopEvent().addEventListener('pointermove', this.stopPropagationOnPointerMove);
+            // without the pointermove, the map's touchmove listener calls preventDefault and the popup content can't be scrolled on touch devices
+            this.props.map.getOverlayContainerStopEvent().addEventListener('touchmove', this.stopPropagationOnTouchMove, { passive: true });
         }
     }
     shouldComponentUpdate({popups}) {
@@ -54,6 +56,7 @@ export default class PopupSupport extends React.Component {
     componentWillUnmount() {
         if (this.props.map) {
             this.props.map.getOverlayContainerStopEvent().removeEventListener('pointermove', this.stopPropagationOnPointerMove);
+            this.props.map.getOverlayContainerStopEvent().removeEventListener('touchmove', this.stopPropagationOnTouchMove);
         }
     }
     onPopupClose = (id) => {
@@ -142,6 +145,9 @@ export default class PopupSupport extends React.Component {
         return this._popups;
     }
     stopPropagationOnPointerMove = (event) => {
+        event.stopPropagation();
+    }
+    stopPropagationOnTouchMove = (event) => {
         event.stopPropagation();
     }
 }

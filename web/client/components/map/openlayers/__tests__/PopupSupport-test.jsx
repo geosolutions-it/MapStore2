@@ -149,6 +149,18 @@ describe('Openlayers PopupSupport', () => {
         expect(document.querySelector('#test-component-map-popup')).toExist();
     });
 
+    it('does not block touch scrolling inside the popup', () => {
+        const popups = [{
+            id: 'test',
+            content: 'popup text content',
+            position: { coordinates: [0, 0] },
+            autoPan: false
+        }];
+        renderPopups({ popups });
+        const event = new Event('touchmove', { bubbles: true, cancelable: true });
+        document.querySelector('#test-map-popup').dispatchEvent(event);
+        expect(event.defaultPrevented).toBe(false);
+    });
 
     describe('sanitization', () => {
         it('removes script tags from the popup content', () => {
