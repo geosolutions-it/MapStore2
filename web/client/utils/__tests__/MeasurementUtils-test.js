@@ -204,6 +204,49 @@ describe('MeasurementUtils', () => {
         expect(featuresList[0].properties.label).toEqual('175466734247.21 m²\n2079229.38 m');
     });
 
+    it('computeFeatureMeasurement with Areas and Hectares', () => {
+        const fts = {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[
+            [10.042417613994017, 53.9617045912569],
+            [21.29241761399402, 57.23667168428492],
+            [22.522886363994022, 53.17884325605559],
+            [10.042417613994017, 53.9617045912569]
+        ]]}, "properties": {
+            geodesic: true,
+            lengthUom: 'm',
+            lengthTargetUom: 'm',
+            areaUom: 'sqm',
+            areaTargetUom: 'ha',
+            type: 'measurement',
+            measureType: 'area',
+            annotationType: 'Polygon',
+            name: 'area'
+        }};
+        const featuresList = computeFeatureMeasurement(fts, {
+            formatNumber: v => v
+        });
+        expect(featuresList[0].properties.label).toEqual('17546673.42 ha\n2079229.38 m');
+    });
+
+    it('convertMeasuresToGeoJSON with Areas and Hectares', () => {
+        const fts = [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[
+            [10.042417613994017, 53.9617045912569],
+            [21.29241761399402, 57.23667168428492],
+            [22.522886363994022, 53.17884325605559],
+            [10.042417613994017, 53.9617045912569]
+        ]]}, "properties": {"values": [
+            {"value": 175074750490.87378, "type": "area"},
+            {"value": 2079229.382, "type": "length"}
+        ]}}];
+        const uom = {
+            length: { unit: 'm', label: 'm' },
+            area: { unit: 'ha', label: 'ha' }
+        };
+        const collection = convertMeasuresToGeoJSON(fts, [], uom);
+        const { properties } = collection.features[0];
+        expect(properties.areaTargetUom).toBe('ha');
+        expect(properties.label).toBe('17507475.05 ha');
+    });
+
     it('getGeomTypeSelected', ()=>{
         const geomTypeSelected = getGeomTypeSelected(features);
         expect(geomTypeSelected).toBeTruthy();
