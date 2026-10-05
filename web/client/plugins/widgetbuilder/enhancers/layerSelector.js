@@ -18,6 +18,7 @@ export const toLayer = (r, service) => {
     return ["tms", "wfs"].includes(service?.type) // for tms and wfs the layer is ready
         ? {
             ...r,
+            ...(r.type === 'wfs' ? { bbox: r.bbox || r.boundingBox } : {}),
             search: r.type === 'wfs' ? {
                 url: r.url,
                 type: "wfs"
