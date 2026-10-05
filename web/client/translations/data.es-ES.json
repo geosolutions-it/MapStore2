@@ -1009,7 +1009,20 @@
       "tooltipSlopeStart": "Un solo clic para dibujar 3 puntos que representan una superficie triangular.\nEl valor de la pendiente se calcula en función de la superficie triangular dibujada",
       "altitude": "Altitud",
       "latitude": "Latitud",
-      "longitude": "Longitud"
+      "longitude": "Longitud",
+      "measurementsLayerTitle": "Mediciones",
+      "styleRules": {
+        "geodesicMeasurement": "Medición geodésica",
+        "linearMeasurement": "Medición lineal",
+        "angleMeasurement": "Medición de ángulo",
+        "slopeMeasurement": "Medición de pendiente",
+        "areaMeasurement": "Medición de área",
+        "startPosition": "Posición inicial",
+        "endPosition": "Posición final",
+        "centerPosition": "Posición central",
+        "segmentLabels": "Etiquetas de segmento",
+        "measurementLabel": "Etiqueta de medición"
+      }
     },
     "search": {
       "layerMustBeVisible": "La capa de destino está inactiva",

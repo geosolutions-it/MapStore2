@@ -1111,7 +1111,20 @@
       "saveMeasure": "Guardar medições na anotação",
       "resetTooltip": "Limpar medições",
       "addAsLayer": "Adicionar como camada",
-      "lengthMeasure": "Medir distância geodésica no espaço 3D calculada no elipsoide, mas renderizada onde clicar"
+      "lengthMeasure": "Medir distância geodésica no espaço 3D calculada no elipsoide, mas renderizada onde clicar",
+      "measurementsLayerTitle": "Medições",
+      "styleRules": {
+        "geodesicMeasurement": "Medição geodésica",
+        "linearMeasurement": "Medição linear",
+        "angleMeasurement": "Medição de ângulo",
+        "slopeMeasurement": "Medição de declive",
+        "areaMeasurement": "Medição de área",
+        "startPosition": "Posição inicial",
+        "endPosition": "Posição final",
+        "centerPosition": "Posição central",
+        "segmentLabels": "Etiquetas de segmento",
+        "measurementLabel": "Etiqueta de medição"
+      }
     },
     "search": {
       "decimal": "Decimal",

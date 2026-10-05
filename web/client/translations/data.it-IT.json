@@ -1009,7 +1009,20 @@
       "tooltipSlopeStart": "Click singolo per disegnare 3 punti che rappresentano una superficie triangolare.\nIl valore della pendenza viene calcolato in base alla superficie triangolare disegnata",
       "altitude": "Altitudine",
       "latitude": "Latitudine",
-      "longitude": "Longitudine"
+      "longitude": "Longitudine",
+      "measurementsLayerTitle": "Misurazioni",
+      "styleRules": {
+        "geodesicMeasurement": "Misura geodetica",
+        "linearMeasurement": "Misura lineare",
+        "angleMeasurement": "Misura dell'angolo",
+        "slopeMeasurement": "Misura della pendenza",
+        "areaMeasurement": "Misura dell'area",
+        "startPosition": "Posizione iniziale",
+        "endPosition": "Posizione finale",
+        "centerPosition": "Posizione centrale",
+        "segmentLabels": "Etichette dei segmenti",
+        "measurementLabel": "Etichetta della misura"
+      }
     },
     "search": {
       "layerMustBeVisible": "Il livello di destinazione è inattivo",

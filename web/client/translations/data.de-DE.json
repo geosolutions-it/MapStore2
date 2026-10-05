@@ -1048,7 +1048,20 @@
       "tooltipSlopeStart": "Klicken Sie einmal, um 3 Punkte zu zeichnen, die eine Dreiecksfläche darstellen.\nDer Neigungswert wird basierend auf der gezeichneten Dreiecksfläche berechnet",
       "altitude": "Höhe",
       "latitude": "Lat",
-      "longitude": "Lon"
+      "longitude": "Lon",
+      "measurementsLayerTitle": "Messungen",
+      "styleRules": {
+        "geodesicMeasurement": "Geodätische Messung",
+        "linearMeasurement": "Lineare Messung",
+        "angleMeasurement": "Winkelmessung",
+        "slopeMeasurement": "Neigungsmessung",
+        "areaMeasurement": "Flächenmessung",
+        "startPosition": "Startposition",
+        "endPosition": "Endposition",
+        "centerPosition": "Mittelpunktposition",
+        "segmentLabels": "Segmentbeschriftungen",
+        "measurementLabel": "Messbeschriftung"
+      }
     },
     "search": {
       "layerMustBeVisible": "Die Zielebene ist inaktiv",
