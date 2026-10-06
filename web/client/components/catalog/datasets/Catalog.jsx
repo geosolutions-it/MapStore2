@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
-import { buildServiceUrl } from '../../../utils/CatalogUtils';
+import { buildServiceUrl, getCatalogSearchErrorMessage } from '../../../utils/CatalogUtils';
 import API from '../../../api/catalog';
 import { Alert, Glyphicon } from 'react-bootstrap';
 import Message from '../../I18N/Message';
@@ -228,10 +228,11 @@ const Catalog = ({
             );
         }
         if (loadingError) {
+            const { message, values } = getCatalogSearchErrorMessage(loadingError);
             return (
                 <div className="_padding-sm">
                     <Alert bsStyle="danger">
-                        <Message msgId={"catalog.error"} />
+                        <Message msgId={message} msgParams={values} />
                     </Alert>
                 </div>
             );
