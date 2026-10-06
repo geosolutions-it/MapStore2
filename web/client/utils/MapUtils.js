@@ -1050,16 +1050,17 @@ export const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
 
 
 /**
- * Determines if a field should be included in the comparison based on picked fields and exclusion rules.
+ * Determines if a field should be included in the comparison based on picked fields, inclusion and exclusion rules.
  * @param {string} path - The full path to the field (e.g., 'root.obj.key').
  * @param {string} key - The key of the field being checked.
  * @param {any} value - The value of the field.
- * @param {object} rules - The rules object containing pickedFields and excludes.
+ * @param {object} rules - The rules object containing pickedFields, includes and excludes.
  * @param {string[]} rules.pickedFields - Array of field paths to include in the comparison.
+ * @param {object} [rules.includes] - Object mapping parent paths to allowed keys. Missing or empty lists do not restrict keys; excludes apply afterwards.
  * @param {object} rules.excludes - Object mapping parent paths to arrays of keys to exclude.
  * @returns {boolean} True if the field should be included, false otherwise.
  */
-export const filterFieldByRules = (path, key, value, { pickedFields = [], excludes = {} }) => {
+export const filterFieldByRules = (path, key, value, { pickedFields = [], includes = {}, excludes = {} }) => {
     // remove all empty objects, nill or false value to normalize comparison
     if (
         value === undefined
@@ -1070,8 +1071,11 @@ export const filterFieldByRules = (path, key, value, { pickedFields = [], exclud
         return false;
     }
     if (pickedFields.some((field) => field.includes(path) || path.includes(field))) {
-        // Fix: check parent path for excludes
+        // Apply inclusion and exclusion rules for the parent path
         const parentPath = path.substring(0, path.lastIndexOf('.'));
+        if (includes[parentPath]?.length && !includes[parentPath].includes(key)) {
+            return false;
+        }
         if (excludes[parentPath] === undefined) {
             return true;
         }
@@ -1098,7 +1102,7 @@ export const parseFieldValue = (path, key, value, { parsers }) => {
 /**
  * Prepares object entries for comparison by applying aliasing, filtering, and sorting.
  * @param {object} obj - The object whose entries are to be prepared.
- * @param {object} rules - The rules object containing aliases, pickedFields, and excludes.
+ * @param {object} rules - The rules object containing aliases, pickedFields, includes and excludes.
  * @param {string} parentKey - The parent key path for the current object.
  * @returns {array} Array of [key, value] pairs, filtered and sorted for comparison.
  */
@@ -1181,9 +1185,86 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
     const aliases = {
         text_serch_config: 'text_search_config'
     };
-    const excludes = {
-        'root.map.layers[]': ['apiKey', 'time', 'args', 'fixed']
+    const includes = {
+        // Compare the layer configuration fields persisted by saveLayer in LayersUtils.
+        'root.map.layers[]': [
+            'id',
+            'features',
+            'format',
+            'thumbURL',
+            'group',
+            'search',
+            'fields',
+            'source',
+            'name',
+            'opacity',
+            'provider',
+            'description',
+            'styles',
+            'style',
+            'styleName',
+            'layerFilter',
+            'title',
+            'transparent',
+            'tiled',
+            'type',
+            'url',
+            'bbox',
+            'visibility',
+            'singleTile',
+            'allowedSRS',
+            'requestEncoding',
+            'dimensions',
+            'maxZoom',
+            'maxNativeZoom',
+            'maxResolution',
+            'minResolution',
+            'disableResolutionLimits',
+            'hideLoading',
+            'handleClickOnLayer',
+            'queryable',
+            'featureInfo',
+            'catalogURL',
+            'capabilitiesURL',
+            'serverType',
+            'useForElevation',
+            'hidden',
+            'origin',
+            'thematic',
+            'tooltipOptions',
+            'tooltipPlacement',
+            'legendOptions',
+            'tileSize',
+            'version',
+            'expanded',
+            'enableInteractiveLegend',
+            'enableDynamicLegend',
+            'sources',
+            'heightOffset',
+            'params',
+            'extendedParams',
+            'localizedLayerStyles',
+            'options',
+            'credits',
+            'security',
+            'tileGrids',
+            'tileGridStrategy',
+            'tileGridCacheSupport',
+            'rowViewer',
+            'forceProxy',
+            'disableFeaturesEditing',
+            'pointCloudShading',
+            'sourceMetadata',
+            'enableImageryOverlay',
+            'strategy',
+            'geometryType',
+            'maxRecordCount',
+            'maxFeaturesInView',
+            'cropToProjectionExtent',
+            'coalesce'
+        ]
     };
+    const excludes = {};
     const parsers = {
         // in some cases widgets have an empty configuration
         // we could exclude them if there are not widgets listed
@@ -1199,7 +1280,7 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
             return (value || []).filter(layer => !(layer.type === 'terrain' && layer.provider === 'ellipsoid'));
         }
     };
-    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, excludes, parsers }, 'root');
+    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, includes, excludes, parsers }, 'root');
     return isSame;
 };
 /**

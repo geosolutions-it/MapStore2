@@ -2060,6 +2060,112 @@ describe('Test the MapUtils', () => {
         expect(compareMapChanges(map1, map2)).toBeTruthy();
     });
 
+    describe('compareMapChanges layer configuration', () => {
+        const makeMap = (options = {}) => ({
+            map: {
+                layers: [{ id: 'layer001', name: 'workspace:roads', type: 'wms', ...options }]
+            }
+        });
+        [
+            ['name', 'workspace:roads', 'workspace:rivers'],
+            ['type', 'wms', 'wmts'],
+            ['url', '/geoserver/wms', '/other/wms'],
+            ['title', { 'en-US': 'Roads' }, { 'en-US': 'Streets' }],
+            ['description', 'Road network', 'Updated road network'],
+            ['group', 'transport', 'infrastructure'],
+            ['visibility', true, false],
+            ['opacity', 1, 0],
+            ['format', 'image/png', 'image/jpeg'],
+            ['transparent', true, false],
+            ['singleTile', false, true],
+            ['tiled', true, false],
+            ['styles', 'default', 'alternate'],
+            ['style', { format: 'geostyler', body: { name: 'Roads' } }, { format: 'geostyler', body: { name: 'Streets' } }],
+            ['styleName', 'circle', 'square'],
+            ['layerFilter', { cql: "kind = 'road'" }, { cql: "kind = 'street'" }],
+            ['params', { CQL_FILTER: "kind = 'road'" }, { CQL_FILTER: "kind = 'street'" }],
+            ['extendedParams', { viewparams: 'year:2025' }, { viewparams: 'year:2026' }],
+            ['search', { type: 'wfs', typeName: 'workspace:roads' }, { type: 'wfs', typeName: 'workspace:streets' }],
+            ['fields', [{ name: 'name', alias: 'Name' }], [{ name: 'name', alias: 'Road name' }]],
+            ['featureInfo', { format: 'TEXT' }, { format: 'HTML' }],
+            ['queryable', true, false],
+            ['disableFeaturesEditing', false, true],
+            ['legendOptions', { legendWidth: 20 }, { legendWidth: 30 }],
+            ['enableInteractiveLegend', true, false],
+            ['enableDynamicLegend', true, false],
+            ['minResolution', 1, 2],
+            ['maxResolution', 100, 200],
+            ['disableResolutionLimits', true, false],
+            ['maxZoom', 18, 20],
+            ['tileSize', 256, 512],
+            ['requestEncoding', 'KVP', 'RESTful'],
+            ['tileGrids', [{ crs: 'EPSG:3857', tileSize: [256, 256] }], [{ crs: 'EPSG:3857', tileSize: [512, 512] }]],
+            ['tileGridStrategy', 'custom', 'native'],
+            ['dimensions', [{ name: 'time', 'default': '2025-01-01' }], [{ name: 'time', 'default': '2026-01-01' }]],
+            ['features', [{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] } }], [{ type: 'Feature', geometry: { type: 'Point', coordinates: [1, 0] } }]],
+            ['sources', [{ url: '/raster1.tif' }], [{ url: '/raster2.tif' }]],
+            ['options', { layers: [{ id: 0 }] }, { layers: [{ id: 1 }] }],
+            ['provider', 'cesium', 'cesium-ion'],
+            ['heightOffset', 0, 10],
+            ['pointCloudShading', { maximumAttenuation: 4 }, { maximumAttenuation: 8 }],
+            ['enableImageryOverlay', true, false],
+            ['sourceMetadata', { crs: 'EPSG:4326' }, { crs: 'EPSG:3857' }],
+            ['strategy', 'tile', 'bbox'],
+            ['geometryType', 'Point', 'Polygon'],
+            ['maxRecordCount', 1000, 2000],
+            ['maxFeaturesInView', 1000, 2000],
+            ['cropToProjectionExtent', true, false],
+            ['credits', { title: 'Source' }, { title: 'Other source' }],
+            ['security', { type: 'basic' }, { type: 'bearer' }],
+            ['forceProxy', true, false]
+        ].forEach(([field, original, updated]) => {
+            it(`detects changes to the layer ${field}`, () => {
+                const map1 = makeMap({ [field]: original });
+                const map2 = makeMap({ [field]: updated });
+                expect(compareMapChanges(map1, map2)).toBe(false);
+                expect(compareMapChanges(map2, map1)).toBe(false);
+            });
+        });
+        it('detects added and removed layer configuration fields', () => {
+            const map1 = makeMap();
+            const map2 = makeMap({ layerFilter: { cql: "kind = 'road'" } });
+            expect(compareMapChanges(map1, map2)).toBe(false);
+            expect(compareMapChanges(map2, map1)).toBe(false);
+        });
+        it('ignores runtime and unrecognized layer fields', () => {
+            const map1 = makeMap({ apiKey: 'old-key', time: '2025-01-01', args: ['old'], fixed: true, loading: true });
+            const map2 = makeMap({
+                apiKey: 'new-key',
+                time: '2026-01-01',
+                args: ['new'],
+                fixed: false,
+                loading: false,
+                loadingError: 'Network error',
+                imageFormats: ['image/png'],
+                infoFormats: ['text/html'],
+                legendEmpty: true,
+                unrecognizedField: 'value'
+            });
+            expect(compareMapChanges(map1, map2)).toBe(true);
+            expect(compareMapChanges(map2, map1)).toBe(true);
+        });
+        it('detects layer additions, removals and reordering', () => {
+            const layer1 = makeMap().map.layers[0];
+            const layer2 = { ...layer1, id: 'layer002', name: 'workspace:rivers' };
+            const map1 = { map: { layers: [layer1, layer2] } };
+            const map2 = { map: { layers: [layer2, layer1] } };
+            expect(compareMapChanges(map1, map2)).toBe(false);
+            expect(compareMapChanges(map1, makeMap())).toBe(false);
+            expect(compareMapChanges(makeMap(), map1)).toBe(false);
+        });
+        it('ignores the default ellipsoid terrain layer', () => {
+            const map1 = makeMap();
+            const map2 = { map: { layers: [...map1.map.layers, { type: 'terrain', provider: 'ellipsoid' }] } };
+            expect(compareMapChanges(map1, map2)).toBe(true);
+            expect(compareMapChanges(map2, map1)).toBe(true);
+        });
+    });
+
 
     it('mergeMapConfigs', () => {
         const testBackground = {
@@ -2513,6 +2619,61 @@ describe('Test the MapUtils', () => {
 });
 
 describe('recursiveIsChangedWithRules', () => {
+    it('only compares included keys at the configured parent path', () => {
+        const rules = {
+            pickedFields: ['root.obj', 'root.other'],
+            includes: { 'root.obj': ['keep'] }
+        };
+        const a = { obj: { keep: 1, skip: 2 }, other: { value: 3 } };
+        const b = { obj: { keep: 1, added: 4 }, other: { value: 3 } };
+        expect(recursiveIsChangedWithRules(a, b, rules)).toBe(false);
+        expect(recursiveIsChangedWithRules(a, { ...b, obj: { keep: 2 } }, rules)).toBe(true);
+        expect(recursiveIsChangedWithRules(a, { ...b, other: { value: 4 } }, rules)).toBe(true);
+    });
+    it('detects added and removed included keys', () => {
+        const rules = {
+            pickedFields: ['root.obj'],
+            includes: { 'root.obj': ['keep'] }
+        };
+        expect(recursiveIsChangedWithRules({ skip: 1 }, { keep: 2, skip: 1 }, rules, 'root.obj')).toBe(true);
+        expect(recursiveIsChangedWithRules({ keep: 2, skip: 1 }, { skip: 1 }, rules, 'root.obj')).toBe(true);
+    });
+    it('applies includes to array entries and their nested objects', () => {
+        const rules = {
+            pickedFields: ['root.arr'],
+            includes: {
+                'root.arr[]': ['keep'],
+                'root.arr[].keep': ['id']
+            }
+        };
+        const a = { arr: [{ keep: { id: 1, skip: 2 }, skip: 3 }] };
+        const b = { arr: [{ keep: { id: 1, skip: 4 }, skip: 5 }] };
+        expect(recursiveIsChangedWithRules(a, b, rules)).toBe(false);
+        expect(recursiveIsChangedWithRules(a, { arr: [{ keep: { id: 2 } }] }, rules)).toBe(true);
+    });
+    it('applies excludes after includes', () => {
+        const rules = {
+            pickedFields: ['root.obj'],
+            includes: { 'root.obj': ['keep', 'overlap'] },
+            excludes: { 'root.obj': ['overlap'] }
+        };
+        const a = { keep: 1, overlap: 2, skip: 3 };
+        const b = { keep: 1, overlap: 4, skip: 5 };
+        expect(recursiveIsChangedWithRules(a, b, rules, 'root.obj')).toBe(false);
+        expect(recursiveIsChangedWithRules(a, { ...b, keep: 2 }, rules, 'root.obj')).toBe(true);
+    });
+    it('does not restrict comparison when includes are missing or empty', () => {
+        [undefined, {}, { 'root.obj': [] }].forEach(includes => {
+            const rules = {
+                pickedFields: ['root.obj'],
+                includes,
+                excludes: { 'root.obj': ['skip'] }
+            };
+            const a = { keep: 1, skip: 2 };
+            expect(recursiveIsChangedWithRules(a, { keep: 1, skip: 3 }, rules, 'root.obj')).toBe(false);
+            expect(recursiveIsChangedWithRules(a, { keep: 2, skip: 2 }, rules, 'root.obj')).toBe(true);
+        });
+    });
     it('ignores excluded keys', () => {
         const rules = {
             pickedFields: ['root.obj'],
@@ -2576,6 +2737,18 @@ describe('recursiveIsChangedWithRules', () => {
 });
 
 describe('filterFieldByRules', () => {
+    it('returns false for keys outside a non-empty includes list', () => {
+        const rules = { pickedFields: ['root.obj'], includes: { 'root.obj': ['y'] } };
+        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(false);
+    });
+    it('returns true for included keys that are not excluded', () => {
+        const rules = { pickedFields: ['root.obj'], includes: { 'root.obj': ['x'] } };
+        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(true);
+    });
+    it('does not include fields outside pickedFields', () => {
+        const rules = { pickedFields: ['root.other'], includes: { 'root.obj': ['x'] } };
+        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(false);
+    });
     it('returns false if value is undefined', () => {
         const rules = { pickedFields: ['root.obj'], excludes: {} };
         expect(filterFieldByRules('root.obj.x', 'x', undefined, rules)).toBe(false);
@@ -2620,6 +2793,17 @@ describe('parseFieldValue', () => {
 });
 
 describe('prepareObjectEntries', () => {
+    it('applies includes and excludes using aliased keys', () => {
+        const rules = {
+            pickedFields: ['root.obj'],
+            aliases: { old: 'new', ignored: 'skip' },
+            includes: { 'root.obj': ['new', 'skip'] },
+            excludes: { 'root.obj': ['skip'] }
+        };
+        expect(prepareObjectEntries({ old: 1, ignored: 2, other: 3 }, rules, 'root.obj')).toEqual([
+            ['new', 1]
+        ]);
+    });
     it('returns filtered and sorted entries with aliasing ', () => {
         const obj = { a: 1, b: 2, c: 3 };
         const rules = {
