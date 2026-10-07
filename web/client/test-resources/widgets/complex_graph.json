@@ -151,7 +151,7 @@
       "id": "c66b2830-37e5-11e8-8356-a9f1e7707f6f",
       "layer": {
         "type": "wms",
-        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
         "visibility": true,
         "dimensions": [],
         "name": "topp:states",
@@ -173,10 +173,10 @@
         "allowedSRS": {},
         "search": {
           "type": "wfs",
-          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+          "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs?"
         }
       },
-      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
       "legend": false,
       "mapSync": true,
       "type": "bar",
@@ -433,13 +433,13 @@
           },
           {
             "search": {
-              "url": "https://demo.geo-solutions.it:443/geoserver/wfs?",
+              "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs?",
               "type": "wfs"
             },
             "name": "topp:states",
             "title": "USA Population",
             "type": "wms",
-            "url": "https://demo.geo-solutions.it/geoserver/wms",
+            "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
             "bbox": {
               "crs": "EPSG:4326",
               "bounds": {
@@ -498,7 +498,7 @@
       "id": "e6db99b0-37e5-11e8-8356-a9f1e7707f6f",
       "layer": {
         "type": "wms",
-        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
         "visibility": true,
         "dimensions": [],
         "name": "topp:states",
@@ -520,10 +520,10 @@
         "allowedSRS": {},
         "search": {
           "type": "wfs",
-          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+          "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs?"
         }
       },
-      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
       "legend": false,
       "mapSync": true,
       "widgetType": "counter",

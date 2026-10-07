@@ -152,7 +152,7 @@ overrides.mappings=initialState.defaultState.catalog.default.services.gs_stable_
 In `datadir_path/env.properties`:
 
 ```properties
-geoserverUrl=https://demo.geo-solutions.it/geoserver/wms
+geoserverUrl=https://gs-stable.geosolutionsgroup.com/geoserver/wms
 ```
 
 This allows to have in `datadir_path/env.properties` a set of variables that can be used in overrides (even in different places) that are indicated by `overrides.mappings`.
