@@ -4627,14 +4627,14 @@ Introducing this library will allow to :
 
 If you are using the Plugin system and the StandardStore, you may have only to include the missing new dependencies in your package.json (redux-observable and an updated version of redux).
 
-Check the current package.json to get he most recent versions. For testing we included also redux-mockup-store as a dependency, but you are free to test your epics as you want.
+Check the current package.json to get the most recent versions. For testing we included also redux-mockup-store as a dependency, but you are free to test your epics as you want.
 
 For more complex integrations check [this](https://github.com/geosolutions-it/MapStore2/pull/1471) pull request to see how to integrate redux-observable or follow the guide on the [redux-observable site](https://redux-observable.js.org/).
 
 ### Webpack update to version 2
 
 We updated webpack (old one is deprecated), check [this pull request](https://github.com/geosolutions-it/MapStore2/pull/1491) to find out how to update your webpack files.
-here a list of what we had to update:
+Here is a list of what we had to update:
 
 - module.loaders are now module.rules
 - update your package.json with latest versions of webpack, webpack plugins and karma libs and integrations (Take a look to the changes on package.json in the pull request if you want a detailed list of what to update in this case).
@@ -4656,4 +4656,4 @@ Check this pull request to see how to:
 ### React Bootstrap update
 
 The version we are using is not documented anymore, and not too much compatible with react 15 (too many warnings). So this update can not be postponed anymore.
-The bigger change in this case is that the Input component do not exists anymore. You will have to replace all your Input with the proper components, and update the `package.json`. See [this pull request](https://github.com/geosolutions-it/MapStore2/pull/1511) for details.
+The bigger change in this case is that the Input component does not exist anymore. You will have to replace all your Input with the proper components, and update the `package.json`. See [this pull request](https://github.com/geosolutions-it/MapStore2/pull/1511) for details.
