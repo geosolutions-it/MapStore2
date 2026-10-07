@@ -82,19 +82,19 @@
           "selectedService": "gs_stable_csw",
           "services": {
             "gs_stable_csw": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
+              "url": "https://gs-stable.geosolutionsgroup.com/geoserver/csw",
               "type": "csw",
               "title": "GeoSolutions GeoServer CSW",
               "autoload": true
             },
             "gs_stable_wms": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+              "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
               "type": "wms",
               "title": "GeoSolutions GeoServer WMS",
               "autoload": false
             },
             "gs_stable_wmts": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+              "url": "https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts",
               "type": "wmts",
               "title": "GeoSolutions GeoServer WMTS",
               "autoload": false
@@ -1035,17 +1035,17 @@
           "selectedService": "GeoSolutions GeoServer CSW",
           "services": {
             "GeoSolutions GeoServer CSW": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
+              "url": "https://gs-stable.geosolutionsgroup.com/geoserver/csw",
               "type": "csw",
               "title": "GeoSolutions GeoServer CSW"
             },
             "GeoSolutions GeoServer WMS": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+              "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
               "type": "wms",
               "title": "GeoSolutions GeoServer WMS"
             },
             "GeoSolutions GeoServer WMTS": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+              "url": "https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts",
               "type": "wmts",
               "title": "GeoSolutions GeoServer WMTS"
             }
