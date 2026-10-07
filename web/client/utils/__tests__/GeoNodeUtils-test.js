@@ -1,0 +1,326 @@
+/*
+ * Copyright 2025, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import expect from 'expect';
+
+import { setSupportedLocales, getSupportedLocales } from '../LocaleUtils';
+import { resourceToLayerConfig, getDimensions, resolveApiPresetParams, mergePresetParams, documentsToLayerConfig } from '../GeoNodeUtils';
+import { DEFAULT_DOCUMENTS_FEATURE_INFO } from '../FeatureInfoAttributeUtils';
+
+describe('GeoNodeUtils', () => {
+    describe('resourceToLayerConfig', () => {
+
+        let originalLocales;
+        beforeEach(() => {
+            originalLocales = getSupportedLocales();
+        });
+        afterEach(() => {
+            setSupportedLocales(originalLocales);
+        });
+
+        it('should keep the wms params from the url if available', () => {
+            const newLayer = resourceToLayerConfig({
+                alternate: 'geonode:layer_name',
+                links: [{
+                    extension: 'html',
+                    link_type: 'OGC:WMS',
+                    name: 'OGC WMS Service',
+                    mime: 'text/html',
+                    url: 'http://localhost:8080/geoserver/wms?map=name&map_resolution=91'
+                }],
+                title: 'Layer title',
+                perms: [],
+                pk: 1
+            });
+            expect(newLayer.params).toEqual({ map: 'name', map_resolution: '91' });
+        });
+
+        it('should apply layer settings from dataset data', () => {
+            const newLayer = resourceToLayerConfig({
+                alternate: 'geonode:layer_name',
+                links: [{
+                    extension: 'html',
+                    link_type: 'OGC:WMS',
+                    name: 'OGC WMS Service',
+                    mime: 'text/html',
+                    url: 'http://localhost:8080/geoserver/wms?map=name&map_resolution=91'
+                }],
+                title: 'Layer title',
+                perms: [],
+                pk: 1,
+                data: {opacity: 0.8}
+            });
+            expect(newLayer.opacity).toBe(0.8);
+        });
+
+        it('should not override generated id and bbox with the persisted layer settings', () => {
+            const newLayer = resourceToLayerConfig({
+                alternate: 'geonode:layer_name',
+                links: [{ link_type: 'OGC:WMS', url: '/geoserver/wms' }],
+                title: 'Layer title',
+                perms: [],
+                pk: 1,
+                extent: { coords: [10, 20, 30, 40] },
+                data: { layerSettings: { id: 'geonode-id', opacity: 0.5 } }
+            });
+            expect(newLayer.id).toBeTruthy();
+            expect(newLayer.id).toNotBe('geonode-id');  // generate new id
+            expect(newLayer.opacity).toBe(0.5);
+        });
+
+        it('should parse arcgis dataset', () => {
+            const newLayer = resourceToLayerConfig({
+                alternate: 'remoteWorkspace:1',
+                title: 'Layer title',
+                perms: [],
+                links: [{
+                    extension: 'html',
+                    link_type: 'image',
+                    mime: 'text/html',
+                    name: 'ArcGIS REST ImageServer',
+                    url: 'http://localhost:8080/MapServer'
+                }],
+                pk: 1,
+                ptype: 'gxp_arcrestsource'
+            });
+            expect(newLayer.type).toBe('arcgis');
+            expect(newLayer.name).toBe('1');
+            expect(newLayer.url).toBe('http://localhost:8080/MapServer');
+        });
+
+        it('should return localized title object when supported locales have translations', () => {
+            setSupportedLocales({
+                'en': { code: 'en-US', description: 'English' },
+                'it': { code: 'it-IT', description: 'Italiano' },
+                'fr': { code: 'fr-FR', description: 'Français' }
+            });
+            const newLayer = resourceToLayerConfig({
+                alternate: 'geonode:layer_numtilangue',
+                title: 'Default title',
+                title_en: 'Layer title',
+                title_it: 'Titolo del layer',
+                title_fr: 'Titre de la couche',
+                perms: [],
+                pk: 1
+            });
+            expect(newLayer.title).toEqual({
+                'en-US': 'Layer title',
+                'it-IT': 'Titolo del layer',
+                'fr-FR': 'Titre de la couche',
+                'default': 'Default title'
+            });
+        });
+
+        it('should return plain title string when no locale translations exist', () => {
+            setSupportedLocales({});
+            const newLayer = resourceToLayerConfig({
+                alternate: 'geonode:layer_name',
+                title: 'Plain title',
+                links: [{ link_type: 'OGC:WMS', url: '/geoserver/wms' }],
+                perms: [],
+                pk: 1
+            });
+            expect(newLayer.title).toBe('Plain title');
+        });
+
+        describe('alternate in extendedParams', () => {
+            it('WMS layer includes alternate in extendedParams', () => {
+                const newLayer = resourceToLayerConfig({
+                    alternate: 'geonode:layer_name',
+                    links: [{
+                        extension: 'html',
+                        link_type: 'OGC:WMS',
+                        name: 'OGC WMS Service',
+                        mime: 'text/html',
+                        url: '/geoserver/wms'
+                    }],
+                    title: 'Layer title',
+                    perms: [],
+                    pk: 1
+                });
+                expect(newLayer.extendedParams).toEqual({ pk: 1, alternate: 'geonode:layer_name' });
+            });
+
+            it('3dtiles layer includes alternate in extendedParams', () => {
+                const newLayer = resourceToLayerConfig({
+                    alternate: 'geonode:tileset',
+                    subtype: '3dtiles',
+                    links: [{ extension: '3dtiles', url: '/tileset.json' }],
+                    title: 'Tileset',
+                    perms: [],
+                    pk: 2
+                });
+                expect(newLayer.extendedParams).toEqual({ pk: 2, alternate: 'geonode:tileset' });
+            });
+
+            it('cog layer includes alternate in extendedParams', () => {
+                const newLayer = resourceToLayerConfig({
+                    alternate: 'geonode:cog_layer',
+                    subtype: 'cog',
+                    links: [{ extension: 'cog', url: '/raster.tif' }],
+                    title: 'COG',
+                    perms: [],
+                    pk: 3
+                });
+                expect(newLayer.extendedParams).toEqual({ pk: 3, alternate: 'geonode:cog_layer' });
+            });
+
+            it('cog layer has top-level url, sources url, and nodata', () => {
+                const newLayer = resourceToLayerConfig({
+                    alternate: 'geonode:cog_layer',
+                    subtype: 'cog',
+                    links: [{ extension: 'cog', url: '/raster.tif' }],
+                    title: 'COG',
+                    perms: [],
+                    pk: 3
+                });
+                expect(newLayer.url).toBe('/raster.tif');
+                expect(newLayer.sources).toEqual([{ url: '/raster.tif', nodata: 0 }]);
+            });
+
+            it('flatgeobuf layer includes alternate in extendedParams', () => {
+                const newLayer = resourceToLayerConfig({
+                    alternate: 'geonode:fgb_layer',
+                    subtype: 'flatgeobuf',
+                    links: [{ extension: 'flatgeobuf', url: '/data.fgb' }],
+                    title: 'FGB',
+                    perms: [],
+                    pk: 4
+                });
+                expect(newLayer.extendedParams).toEqual({ pk: 4, alternate: 'geonode:fgb_layer' });
+            });
+
+            it('arcgis layer includes alternate in extendedParams', () => {
+                const newLayer = resourceToLayerConfig({
+                    alternate: 'remoteWorkspace:1',
+                    title: 'Layer title',
+                    perms: [],
+                    links: [{
+                        extension: 'html',
+                        link_type: 'image',
+                        mime: 'text/html',
+                        name: 'ArcGIS REST ImageServer',
+                        url: '/MapServer'
+                    }],
+                    pk: 5,
+                    ptype: 'gxp_arcrestsource'
+                });
+                expect(newLayer.extendedParams).toEqual({ pk: 5, alternate: 'remoteWorkspace:1' });
+            });
+        });
+    });
+
+    describe('getDimensions', () => {
+        it('should return empty array if no links and has_time is false', () => {
+            const result = getDimensions();
+            expect(result).toEqual([]);
+        });
+
+        it('should return dimensions with time if has_time is true and WMTS link is present', () => {
+            const links = [{ link_type: 'OGC:WMTS', url: 'http://example.com/wmts' }];
+            const result = getDimensions({ links, has_time: true });
+            expect(result).toEqual([{
+                name: 'time',
+                source: {
+                    type: 'multidim-extension',
+                    url: 'http://example.com/wmts'
+                }
+            }]);
+        });
+
+        it('should return dimensions with time if has_time is true and only WMS link is present', () => {
+            const links = [{ link_type: 'OGC:WMS', url: 'http://example.com/geoserver/wms' }];
+            const result = getDimensions({ links, has_time: true });
+            expect(result).toEqual([{
+                name: 'time',
+                source: {
+                    type: 'multidim-extension',
+                    url: 'http://example.com/geoserver/gwc/service/wmts'
+                }
+            }]);
+        });
+
+        it('should return empty array if has_time is false', () => {
+            const links = [{ link_type: 'OGC:WMTS', url: 'http://example.com/wmts' }];
+            const result = getDimensions({ links, has_time: false });
+            expect(result).toEqual([]);
+        });
+
+        it('should return default url if no matching link types are found', () => {
+            const links = [{ link_type: 'OGC:OTHER', url: 'http://example.com/other' }];
+            const result = getDimensions({ links, has_time: true });
+            expect(result).toEqual([{
+                name: 'time',
+                source: {
+                    type: 'multidim-extension',
+                    url: '/geoserver/gwc/service/wmts'
+                }
+            }]);
+        });
+    });
+
+    describe('REST API presets', () => {
+        it('resolves document/dataset/map viewer presets (regression for the *_VIEWER key mismatch)', () => {
+            const doc = resolveApiPresetParams('DOCUMENT');
+            expect(doc.include).toContain('href');
+            expect(doc.include).toContain('extension');
+            expect(doc.include).toContain('ll_bbox_polygon');
+
+            const dataset = resolveApiPresetParams('DATASET');
+            expect(dataset.include).toContain('attribute_set');
+            expect(dataset.include).toContain('default_style');
+
+            const map = resolveApiPresetParams('MAP');
+            expect(map.include).toContain('data');
+            expect(map.include).toContain('maplayers');
+        });
+
+        it('mergePresetParams merges the document viewer fields needed by the media viewer', () => {
+            const merged = mergePresetParams('VIEWER_COMMON', 'DOCUMENT');
+            // viewer_common essentials
+            expect(merged.include).toContain('resource_type');
+            expect(merged.include).toContain('perms');
+            expect(merged.include).toContain('thumbnail_url');
+            // document specific
+            expect(merged.include).toContain('href');
+            expect(merged.include).toContain('extension');
+            expect(merged.include).toContain('ll_bbox_polygon');
+            expect(merged.exclude).toContain('*');
+        });
+    });
+
+    describe('GeoNode catalog documents, maps', () => {
+
+        it('documentsToLayerConfig builds a single vector layer of point features', () => {
+            const layer = documentsToLayerConfig([
+                { pk: 10, title: 'Doc 10', subtype: 'image', detail_url: '/documents/10', extent: { coords: [0, 0, 10, 10] } },
+                { pk: 11, title: 'Doc 11', subtype: 'document', detail_url: '/documents/11' }
+            ]);
+            expect(layer.type).toBe('vector');
+            expect(layer.name).toBe('Documents');
+            expect(layer.rowViewer).toNotExist();
+            expect(layer.featureInfo).toEqual(DEFAULT_DOCUMENTS_FEATURE_INFO);
+            // doc 11 has no extent -> skipped
+            expect(layer.features.length).toBe(1);
+            expect(layer.features[0].id).toBe(10);
+            expect(layer.features[0].geometry.type).toBe('Point');
+            expect(layer.features[0].geometry.coordinates).toEqual([5, 5]);
+            expect(layer.bbox).toExist();
+        });
+
+        it('documentsToLayerConfig skips documents whose fetch fails', () => {
+            const layer = documentsToLayerConfig([
+                { pk: 10, title: 'Doc 10', subtype: 'image', extent: { coords: [0, 0, 10, 10] } },
+                null
+            ]);
+            expect(layer.features.length).toBe(1);
+            expect(layer.features[0].id).toBe(10);
+        });
+    });
+
+});
