@@ -1186,7 +1186,7 @@ describe('PrintUtils', () => {
                     center: [10, 20],
                     name: "layer 01",
                     credits: {
-                        title: 'OSM Simple Light | Rendering <a href="https://www.geo-solutions.it/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                        title: 'OSM Simple Light | Rendering <a href="https://www.geosolutionsgroup.com/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
                     }
                 };
                 const parsedCreditTxt = parseCreditRemovingTagsOrSymbol(layerObj.credits.title);
@@ -1197,7 +1197,7 @@ describe('PrintUtils', () => {
                     center: [10, 20],
                     name: "layer 01",
                     credits: {
-                        title: 'OSM Simple Light | Rendering <a href="https://www.geo-solutions.it/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                        title: 'OSM Simple Light | Rendering <a href="https://www.geosolutionsgroup.com/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
                     }
                 },
                 {
@@ -1237,7 +1237,7 @@ describe('PrintUtils', () => {
                 const layersArr = [{
                     center: [10, 20],
                     name: "layer 01",
-                    attribution: 'OSM Simple Light | Rendering <a href="https://www.geo-solutions.it/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                    attribution: 'OSM Simple Light | Rendering <a href="https://www.geosolutionsgroup.com/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
                 },
                 {
                     center: [10, 30],

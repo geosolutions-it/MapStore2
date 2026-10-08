@@ -70,7 +70,7 @@
           },
           {
             "type": "wms",
-            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
             "visibility": true,
             "dimensions": [],
             "name": "topp:states",
@@ -90,7 +90,7 @@
             "allowedSRS": {},
             "search": {
               "type": "wfs",
-              "url": "https://demo.geo-solutions.it:443/geoserver/wfs"
+              "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs"
             },
             "id": "topp:states__xbiwklaqww"
           }

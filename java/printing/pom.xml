@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <name>MapStore 2 - Printing extension bundle</name>
-    <url>http://www.geo-solutions.it</url>
+    <url>http://www.geosolutionsgroup.com</url>
 
     <dependencies>
         <!-- mapfish-print -->

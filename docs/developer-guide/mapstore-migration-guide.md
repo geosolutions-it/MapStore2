@@ -580,6 +580,12 @@ The entries that you can remove because are available by default are documented 
 
 ## Migration from 2025.02.02 to 2026.01.00
 
+### Theme update
+
+if you have a custom theme, make sure to include also this line in your main theme.less file
+
+.get-root-css-variables(@ms-theme-vars);
+
 ### Database update
 
 This version of MapStore ships with **GeoStore 2.5.0**, which introduces a structural change to the `gs_user_favorites` table. Unlike other GeoStore upgrades, this change **cannot be handled automatically** by `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` and **requires applying the manual migration script** described below.
@@ -750,7 +756,7 @@ As part of improving the authentication rules to make dynamic request configurat
 #### Method Mapping
 
 | Old Method | New Configuration |
-|------------|------------------|
+| ------------ | ------------------ |
 | `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
 | `authkey` | `params: { "authkey": "${securityToken}" }` |
 | `header` | `headers: { ... }` |

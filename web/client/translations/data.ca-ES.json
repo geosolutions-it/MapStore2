@@ -892,7 +892,20 @@
       "tooltipSlopeStart": "Un sol clic per dibuixar 3 punts que representen una superf\u00edcie del triangle.\nEl valor de la pendent es calcula en funci\u00f3 de la superf\u00edcie del triangle dibuixat",
       "altitude": "Altitud",
       "latitude": "Latitud",
-      "longitude": "Longitud"
+      "longitude": "Longitud",
+      "measurementsLayerTitle": "Mesures",
+      "styleRules": {
+        "geodesicMeasurement": "Mesura geodèsica",
+        "linearMeasurement": "Mesura lineal",
+        "angleMeasurement": "Mesura d'angle",
+        "slopeMeasurement": "Mesura de pendent",
+        "areaMeasurement": "Mesura d'àrea",
+        "startPosition": "Posició inicial",
+        "endPosition": "Posició final",
+        "centerPosition": "Posició central",
+        "segmentLabels": "Etiquetes de segment",
+        "measurementLabel": "Etiqueta de mesura"
+      }
     },
     "search": {
       "layerMustBeVisible": "La capa objectiu est\u00e0 inactiva",

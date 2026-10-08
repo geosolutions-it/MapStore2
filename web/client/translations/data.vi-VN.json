@@ -927,7 +927,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Các phép đo",
+      "styleRules": {
+        "geodesicMeasurement": "Đo trắc địa",
+        "linearMeasurement": "Đo tuyến tính",
+        "angleMeasurement": "Đo góc",
+        "slopeMeasurement": "Đo độ dốc",
+        "areaMeasurement": "Đo diện tích",
+        "startPosition": "Vị trí bắt đầu",
+        "endPosition": "Vị trí kết thúc",
+        "centerPosition": "Vị trí trung tâm",
+        "segmentLabels": "Nhãn đoạn",
+        "measurementLabel": "Nhãn đo lường"
+      }
     },
     "measureSupport": {
       "continueLine": "Nhấn vào đây để tiếp tục vẽ đường",

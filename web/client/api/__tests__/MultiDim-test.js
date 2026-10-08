@@ -51,7 +51,7 @@ describe('MultiDim API', () => {
     });
     it('getDomainValues', (done) => {
         getDomainValues('base/web/client/test-resources/wmts/DomainValues.xml', "test:layer")
-        // getDomainValues('http://cloudsdi.geo-solutions.it:80/geoserver/gwc/service/wmts', "landsat8:B3", "time" ,{
+        // getDomainValues('https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts', "landsat8:B3", "time" ,{
         //    limit: 2
         // })
             .subscribe(

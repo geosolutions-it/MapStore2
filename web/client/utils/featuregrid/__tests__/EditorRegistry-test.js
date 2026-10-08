@@ -19,7 +19,7 @@ import {
     remove
 } from '../EditorRegistry';
 const attribute = "STATE_NAME";
-const url = "https://demo.geo-solutions.it/geoserver/wfs";
+const url = "https://gs-stable.geosolutionsgroup.com/geoserver/wfs";
 const typeName = "topp:states";
 const rules = [{
     "regex": {
