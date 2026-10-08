@@ -1186,7 +1186,6 @@ export const recursiveIsChangedWithRules = (a, b, rules, parentKey = 'root') => 
 export const compareMapChanges = (map1 = {}, map2 = {}) => {
     const pickedFields = [
         'root.map.layers',
-        'root.map.sources',
         'root.map.backgrounds',
         'root.map.text_search_config',
         'root.map.bookmark_search_config',
