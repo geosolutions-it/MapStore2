@@ -38,6 +38,29 @@ describe('legacy tile matrix placeholders', () => {
                 id: 'wmts', matrixIds: ['PM'], tileMatrixSet
             })).toEqual({ id: 'wmts' });
         });
+<<<<<<< HEAD
+=======
+    });
+    it('extracts sources safely when a layer has no resolved matrix definitions', () => {
+        expect(LayersUtils.extractSourcesFromLayers([
+            { id: 'wmts', url: '/wmts', tileMatrixSet: true, matrixIds: ['PM'] }
+        ])).toEqual({ '/wmts': { tileMatrixSet: {} } });
+    });
+});
+
+describe('getWFSLayerName', () => {
+    it('uses a linked WFS type name only for WMS layers', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:wms-name',
+            search: {typeName: 'workspace:wfs-name'}
+        })).toBe('workspace:wfs-name');
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wfs',
+            name: 'workspace:native-name',
+            search: {typeName: 'workspace:ignored'}
+        })).toBe('workspace:native-name');
+>>>>>>> be4973f34 (#12951 False save button activation happens on map first load  (#12952))
     });
     it('extracts sources safely when a layer has no resolved matrix definitions', () => {
         expect(LayersUtils.extractSourcesFromLayers([
