@@ -1009,7 +1009,20 @@
       "tooltipSlopeStart": "Cliquez une fois pour dessiner 3 points représentant une surface triangulaire.\nLa valeur de la pente est calculée en fonction de la surface triangulaire dessinée",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Mesures",
+      "styleRules": {
+        "geodesicMeasurement": "Mesure géodésique",
+        "linearMeasurement": "Mesure linéaire",
+        "angleMeasurement": "Mesure d'angle",
+        "slopeMeasurement": "Mesure de pente",
+        "areaMeasurement": "Mesure de surface",
+        "startPosition": "Position de départ",
+        "endPosition": "Position d'arrivée",
+        "centerPosition": "Position centrale",
+        "segmentLabels": "Étiquettes de segment",
+        "measurementLabel": "Étiquette de mesure"
+      }
     },
     "search": {
       "layerMustBeVisible": "Le calque cible est inactif",

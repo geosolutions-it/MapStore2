@@ -569,7 +569,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "测量",
+      "styleRules": {
+        "geodesicMeasurement": "大地测量",
+        "linearMeasurement": "线性测量",
+        "angleMeasurement": "角度测量",
+        "slopeMeasurement": "坡度测量",
+        "areaMeasurement": "面积测量",
+        "startPosition": "起始位置",
+        "endPosition": "结束位置",
+        "centerPosition": "中心位置",
+        "segmentLabels": "分段标签",
+        "measurementLabel": "测量标签"
+      }
     },
     "search": {
       "decimal": "十进制",

@@ -1009,7 +1009,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Measurements",
+      "styleRules": {
+        "geodesicMeasurement": "Geodesic measurement",
+        "linearMeasurement": "Linear measurement",
+        "angleMeasurement": "Angle measurement",
+        "slopeMeasurement": "Slope measurement",
+        "areaMeasurement": "Area measurement",
+        "startPosition": "Start position",
+        "endPosition": "End position",
+        "centerPosition": "Center position",
+        "segmentLabels": "Segment labels",
+        "measurementLabel": "Measurement label"
+      }
     },
     "search": {
       "layerMustBeVisible": "The target layer is inactive",

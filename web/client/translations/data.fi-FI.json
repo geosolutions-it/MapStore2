@@ -621,7 +621,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Mittaukset",
+      "styleRules": {
+        "geodesicMeasurement": "Geodeettinen mittaus",
+        "linearMeasurement": "Lineaarinen mittaus",
+        "angleMeasurement": "Kulmamittaus",
+        "slopeMeasurement": "Kaltevuuden mittaus",
+        "areaMeasurement": "Pinta-alan mittaus",
+        "startPosition": "Alkupiste",
+        "endPosition": "Loppupiste",
+        "centerPosition": "Keskipiste",
+        "segmentLabels": "Segmenttien tekstit",
+        "measurementLabel": "Mittaustulos"
+      }
     },
     "search": {
       "decimal": "Desimaali",
