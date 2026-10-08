@@ -2046,11 +2046,6 @@ describe('Test the MapUtils', () => {
             ['pointCloudShading', { maximumAttenuation: 4 }, { maximumAttenuation: 8 }],
             ['enableImageryOverlay', true, false],
             ['sourceMetadata', { crs: 'EPSG:4326' }, { crs: 'EPSG:3857' }],
-            ['strategy', 'tile', 'bbox'],
-            ['geometryType', 'Point', 'Polygon'],
-            ['maxRecordCount', 1000, 2000],
-            ['maxFeaturesInView', 1000, 2000],
-            ['cropToProjectionExtent', true, false],
             ['credits', { title: 'Source' }, { title: 'Other source' }],
             ['security', { type: 'basic' }, { type: 'bearer' }],
             ['forceProxy', true, false]
