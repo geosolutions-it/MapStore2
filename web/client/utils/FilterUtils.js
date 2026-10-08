@@ -805,10 +805,39 @@ export const processCQLFilterGroup = function(root, objFilter) {
     return cql;
 };
 
+// matches the default discretization of OpenLayers circular() (32 sides + closing vertex) used when the circle is first drawn,
+// while DrawSupport re-creates it with 100 sides on edit, producing CQL filters that exceed the max URL length
+export const CQL_CIRCLE_MAX_VERTICES = 33;
+
+export const simplifyCircleRing = function(ring, maxVertices = CQL_CIRCLE_MAX_VERTICES) {
+    const closed = closePolygon(ring);
+    if (closed.length <= maxVertices) {
+        return closed;
+    }
+    const open = closed.slice(0, -1);
+    const sides = maxVertices - 1;
+    const vertices = [];
+    for (let i = 0; i < sides; i++) {
+        vertices.push(open[Math.round(i * open.length / sides) % open.length]);
+    }
+    return [...vertices, vertices[0]];
+};
+
 export const getCQLGeometryElement = function(coordinates, type) {
-    let geometry = type + "(";
+    let geometry = (type === "Circle" ? "Polygon" : type) + "(";
 
     switch (type) {
+    case "Circle":
+        coordinates.forEach((element, index) => {
+            geometry += "(";
+            geometry += simplifyCircleRing(element).map((coordinate) => {
+                return coordinate[0] + " " + coordinate[1];
+            }).join(", ");
+            geometry += ")";
+
+            geometry += index < coordinates.length - 1 ? ", " : "";
+        });
+        break;
     case "Point":
         geometry += coordinates.join(" ");
         break;
@@ -869,7 +898,8 @@ export const processCQLSpatialFilter = function(objFilter) {
         } else {
             let crs = field.geometry.projection || "";
             crs = crs.split(":").length === 2 ? "SRID=" + crs.split(":")[1] + ";" : "";
-            cql += crs + FilterUtils.getCQLGeometryElement(field.geometry.coordinates, field.geometry.type);
+            const geometryType = field.method === "Circle" && field.geometry.type === "Polygon" ? "Circle" : field.geometry.type;
+            cql += crs + FilterUtils.getCQLGeometryElement(field.geometry.coordinates, geometryType);
         }
         cql += ")";
 

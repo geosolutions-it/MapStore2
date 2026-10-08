@@ -38,7 +38,10 @@ import {
     resetLayerLegendFilter,
     updateLayerWFSVectorLegendFilter,
     createVectorFeatureFilter,
-    setupCrossLayerFilterDefaults
+    setupCrossLayerFilterDefaults,
+    getCQLGeometryElement,
+    processCQLSpatialFilter,
+    CQL_CIRCLE_MAX_VERTICES
 } from '../FilterUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
@@ -2961,6 +2964,38 @@ describe('FilterUtils', () => {
         it('should return true if there are only widget filters', () => {
             expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }] })).toBe(true);
             expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }, { appliedFromWidget: 'w2' }] })).toBe(true);
+        });
+    });
+
+    describe('getCQLGeometryElement circle simplification', () => {
+        const ring = Array.from({ length: 100 }, (v, i) => {
+            const angle = 2 * Math.PI * i / 100;
+            return [Math.cos(angle), Math.sin(angle)];
+        });
+        const closedRing = [...ring, ring[0]];
+        const countVertices = (cql) => cql.substring(cql.indexOf('((') + 2, cql.indexOf('))')).split(', ');
+        it('should simplify a Circle ring to CQL_CIRCLE_MAX_VERTICES vertices', () => {
+            const cql = getCQLGeometryElement([closedRing], 'Circle');
+            expect(cql.indexOf('Polygon((')).toBe(0);
+            const vertices = countVertices(cql);
+            expect(vertices.length).toBe(CQL_CIRCLE_MAX_VERTICES);
+            expect(vertices[0]).toBe(vertices[vertices.length - 1]);
+        });
+        it('should not simplify a Polygon ring', () => {
+            const cql = getCQLGeometryElement([closedRing], 'Polygon');
+            expect(countVertices(cql).length).toBe(101);
+        });
+        it('should simplify the geometry of a Circle spatial filter', () => {
+            const cql = processCQLSpatialFilter({
+                spatialField: {
+                    method: 'Circle',
+                    operation: 'INTERSECTS',
+                    attribute: 'the_geom',
+                    geometry: { type: 'Polygon', projection: 'EPSG:4326', coordinates: [closedRing] }
+                }
+            });
+            expect(cql.indexOf('INTERSECTS("the_geom",SRID=4326;Polygon((')).toBe(0);
+            expect(countVertices(cql).length).toBe(CQL_CIRCLE_MAX_VERTICES);
         });
     });
 });
