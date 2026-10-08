@@ -30,6 +30,59 @@ const noVendorWmsLayer = {
     type: 'wms',
     serverType: 'no-vendor'
 };
+<<<<<<< HEAD
+=======
+
+describe('legacy tile matrix placeholders', () => {
+    [true, 'PM'].forEach(tileMatrixSet => {
+        it(`handles ${tileMatrixSet} without treating it as an inline matrix array`, () => {
+            expect(LayersUtils.updateAvailableTileMatrixSetsOptions({
+                id: 'wmts', matrixIds: ['PM'], tileMatrixSet
+            })).toEqual({ id: 'wmts' });
+        });
+    });
+    it('extracts sources safely when a layer has no resolved matrix definitions', () => {
+        expect(LayersUtils.extractSourcesFromLayers([
+            { id: 'wmts', url: '/wmts', tileMatrixSet: true, matrixIds: ['PM'] }
+        ])).toEqual({ '/wmts': { tileMatrixSet: {} } });
+    });
+});
+
+describe('getWFSLayerName', () => {
+    it('uses a linked WFS type name only for WMS layers', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:wms-name',
+            search: {typeName: 'workspace:wfs-name'}
+        })).toBe('workspace:wfs-name');
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wfs',
+            name: 'workspace:native-name',
+            search: {typeName: 'workspace:ignored'}
+        })).toBe('workspace:native-name');
+    });
+    it('falls back to layer.name for legacy WMS configurations', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:legacy-name',
+            search: {url: 'wfs-url'}
+        })).toBe('workspace:legacy-name');
+    });
+    it('does not replace an explicitly empty linked WFS type name', () => {
+        expect(LayersUtils.getWFSLayerName({
+            type: 'wms',
+            name: 'workspace:wms-name',
+            search: {typeName: ''}
+        })).toBe('');
+    });
+});
+describe('getSearchUrl', () => {
+    it('falls back only when the linked WFS URL is missing', () => {
+        expect(LayersUtils.getSearchUrl({url: 'wms-url', search: {type: 'wfs'}})).toBe('wms-url');
+        expect(LayersUtils.getSearchUrl({url: 'wms-url', search: {type: 'wfs', url: ''}})).toBe('');
+    });
+});
+>>>>>>> be4973f34 (#12951 False save button activation happens on map first load  (#12952))
 const groupsExample = [{
     "id": "first",
     "title": "first",
