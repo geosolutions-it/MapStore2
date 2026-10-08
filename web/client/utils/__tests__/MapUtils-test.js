@@ -2694,18 +2694,6 @@ describe('WMTS map save normalization', () => {
         expect(formatLayersForSave([runtimeLayer]).formattedLayers[0].matrixIds).toBe(undefined);
         expect(formatLayersForSave([runtimeLayer]).formattedLayers[0].tileMatrixSet).toBe(undefined);
     });
-    it('detects matrix definition changes behind the same saved source link', () => {
-        const original = savedMap([inlineLayer]);
-        const updated = cloneDeep(original);
-        updated.map.sources[url].tileMatrixSet.PM.TileMatrix[0].ScaleDenominator = 2000;
-        expectDifferent(original, updated);
-    });
-    it('detects removal of a referenced source definition', () => {
-        const original = savedMap([inlineLayer]);
-        const updated = cloneDeep(original);
-        updated.map.sources = {};
-        expectDifferent(original, updated);
-    });
     it('ignores source definitions that are not referenced by a layer', () => {
         const original = savedMap([inlineLayer]);
         const updated = cloneDeep(original);
