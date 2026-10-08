@@ -39,6 +39,7 @@ import {
     getGroupNodes,
     getNode,
     extractSourcesFromLayers,
+    extractTileMatrixFromSources,
     updateAvailableTileMatrixSetsOptions,
     getTileMatrixSetLink,
     DEFAULT_GROUP_ID
@@ -784,6 +785,76 @@ export const groupSaveFormatted = (node) => {
     };
 };
 
+/**
+ * Formats persisted layer properties and extracts referenced WMTS definitions.
+ * Resolves saved source links before formatting so saved and runtime layers use the same representation.
+ * @param {object[]} layers layers to save
+ * @param {object} [initialSources] sources from an existing map configuration
+ * @returns {object} formattedLayers and their referenced sources
+ */
+export const formatLayersForSave = (layers = [], initialSources = {}) => {
+    const savedLayers = layers.map(saveLayer).map(layer => {
+        if (layer.availableTileMatrixSets) {
+            return updateAvailableTileMatrixSetsOptions({
+                ...layer,
+                availableTileMatrixSets: Object.keys(layer.availableTileMatrixSets).reduce((acc, id) => {
+                    const options = layer.availableTileMatrixSets[id];
+                    const tileMatrixSet = options.tileMatrixSet
+                        || get({ sources: initialSources }, options.tileMatrixSetLink || getTileMatrixSetLink(layer, id));
+                    return {
+                        ...acc,
+                        [id]: { ...options, ...(tileMatrixSet && { tileMatrixSet }) }
+                    };
+                }, {})
+            });
+        }
+        // Legacy configurations can reference source definitions with a boolean instead of an inline array.
+        if (layer.tileMatrixSet === true && layer.matrixIds) {
+            const ids = Array.isArray(layer.matrixIds) ? layer.matrixIds : Object.keys(layer.matrixIds);
+            const tileMatrixSet = ids.map(id => get({ sources: initialSources }, getTileMatrixSetLink(layer, id))).filter(Boolean);
+            // Resolve array references through the load path, which also derives limits from source ranges.
+            const options = Array.isArray(layer.matrixIds) && tileMatrixSet.length
+                ? extractTileMatrixFromSources(initialSources, { ...layer })
+                : { tileMatrixSet };
+            return updateAvailableTileMatrixSetsOptions({ ...layer, ...options });
+        }
+        return updateAvailableTileMatrixSetsOptions(layer);
+    });
+    const sources = extractSourcesFromLayers(savedLayers.filter(layer =>
+        Object.values(layer.availableTileMatrixSets || {}).some(options => !!options.tileMatrixSet)
+    ));
+    const formattedLayers = savedLayers.map(layer => {
+        const { availableTileMatrixSets, ...updatedLayer } = layer;
+        return availableTileMatrixSets
+            ? {
+                ...updatedLayer,
+                availableTileMatrixSets: Object.keys(availableTileMatrixSets).reduce((acc, id) => {
+                    const tileMatrixSetLink = getTileMatrixSetLink(layer, id);
+                    return {
+                        ...acc,
+                        [id]: get({ sources }, tileMatrixSetLink)
+                            ? { ...omit(availableTileMatrixSets[id], 'tileMatrixSet'), tileMatrixSetLink }
+                            : availableTileMatrixSets[id]
+                    };
+                }, {})
+            }
+            : updatedLayer;
+    });
+    const removeGeometryGeodesic = feature => {
+        if (feature.type === 'FeatureCollection') {
+            return { ...feature, features: (feature.features || []).map(removeGeometryGeodesic) };
+        }
+        return feature.properties?.geometryGeodesic
+            ? set('properties.geometryGeodesic', null, feature)
+            : feature;
+    };
+    return {
+        formattedLayers: formattedLayers.map(layer => layer.id === 'annotations' && layer.features
+            ? { ...layer, features: layer.features.map(removeGeometryGeodesic) }
+            : layer),
+        sources
+    };
+};
 
 export function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs) {
 
@@ -800,9 +871,7 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
         ...(projectionDefs?.length && { projections: { defs: projectionDefs } })
     };
 
-    const layers = currentLayers.map((layer) => {
-        return saveLayer(layer);
-    });
+    const { formattedLayers, sources } = formatLayersForSave(currentLayers, currentMap.sources);
 
     const flatGroupId = currentGroups.reduce((a, b) => {
         const flatGroups = a.concat(getGroupNodes(b));
@@ -815,59 +884,6 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
     }).filter(g => g);
 
     const backgrounds = currentBackgrounds.filter(background => !!background.thumbnail);
-
-    // extract sources map
-    const sources = extractSourcesFromLayers(layers);
-
-    // removes tile matrix set from layers and replace it with a link if available in sources
-    const formattedLayers = layers.map(layer => {
-        const { availableTileMatrixSets, ...updatedLayer } = updateAvailableTileMatrixSetsOptions(layer);
-        return availableTileMatrixSets
-            ? {
-                ...updatedLayer,
-                availableTileMatrixSets: Object.keys(availableTileMatrixSets)
-                    .reduce((acc, tileMatrixSetId) => {
-                        const tileMatrixSetLink = getTileMatrixSetLink(layer, tileMatrixSetId);
-                        if (get({ sources }, tileMatrixSetLink)) {
-                            return {
-                                ...acc,
-                                [tileMatrixSetId]: {
-                                    ...omit(availableTileMatrixSets[tileMatrixSetId], 'tileMatrixSet'),
-                                    tileMatrixSetLink
-                                }
-                            };
-                        }
-                        return {
-                            ...acc,
-                            [tileMatrixSetId]: availableTileMatrixSets[tileMatrixSetId]
-                        };
-                    }, {})
-            }
-            : updatedLayer;
-    });
-
-    /* removes the geometryGeodesic property from the features in the annotations layer*/
-    let annotationsLayerIndex = findIndex(formattedLayers, layer => layer.id === "annotations");
-    if (annotationsLayerIndex !== -1) {
-        let featuresLayer = formattedLayers[annotationsLayerIndex].features.map(feature => {
-            if (feature.type === "FeatureCollection") {
-                return {
-                    ...feature,
-                    features: feature.features.map(f => {
-                        if (f.properties.geometryGeodesic) {
-                            return set("properties.geometryGeodesic", null, f);
-                        }
-                        return f;
-                    })
-                };
-            }
-            if (feature.properties.geometryGeodesic) {
-                return set("properties.geometryGeodesic", null, feature);
-            }
-            return {};
-        });
-        formattedLayers[annotationsLayerIndex] = set("features", featuresLayer, formattedLayers[annotationsLayerIndex]);
-    }
 
     return {
         version: 2,
@@ -1050,17 +1066,16 @@ export const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
 
 
 /**
- * Determines if a field should be included in the comparison based on picked fields, inclusion and exclusion rules.
+ * Determines if a field should be included in the comparison based on picked fields and exclusion rules.
  * @param {string} path - The full path to the field (e.g., 'root.obj.key').
  * @param {string} key - The key of the field being checked.
  * @param {any} value - The value of the field.
- * @param {object} rules - The rules object containing pickedFields, includes and excludes.
+ * @param {object} rules - The rules object containing pickedFields and excludes.
  * @param {string[]} rules.pickedFields - Array of field paths to include in the comparison.
- * @param {object} [rules.includes] - Object mapping parent paths to allowed keys. Missing or empty lists do not restrict keys; excludes apply afterwards.
  * @param {object} rules.excludes - Object mapping parent paths to arrays of keys to exclude.
  * @returns {boolean} True if the field should be included, false otherwise.
  */
-export const filterFieldByRules = (path, key, value, { pickedFields = [], includes = {}, excludes = {} }) => {
+export const filterFieldByRules = (path, key, value, { pickedFields = [], excludes = {} }) => {
     // remove all empty objects, nill or false value to normalize comparison
     if (
         value === undefined
@@ -1071,11 +1086,8 @@ export const filterFieldByRules = (path, key, value, { pickedFields = [], includ
         return false;
     }
     if (pickedFields.some((field) => field.includes(path) || path.includes(field))) {
-        // Apply inclusion and exclusion rules for the parent path
+        // Check the parent path for excludes
         const parentPath = path.substring(0, path.lastIndexOf('.'));
-        if (includes[parentPath]?.length && !includes[parentPath].includes(key)) {
-            return false;
-        }
         if (excludes[parentPath] === undefined) {
             return true;
         }
@@ -1102,7 +1114,7 @@ export const parseFieldValue = (path, key, value, { parsers }) => {
 /**
  * Prepares object entries for comparison by applying aliasing, filtering, and sorting.
  * @param {object} obj - The object whose entries are to be prepared.
- * @param {object} rules - The rules object containing aliases, pickedFields, includes and excludes.
+ * @param {object} rules - The rules object containing aliases, pickedFields and excludes.
  * @param {string} parentKey - The parent key path for the current object.
  * @returns {array} Array of [key, value] pairs, filtered and sorted for comparison.
  */
@@ -1174,6 +1186,7 @@ export const recursiveIsChangedWithRules = (a, b, rules, parentKey = 'root') => 
 export const compareMapChanges = (map1 = {}, map2 = {}) => {
     const pickedFields = [
         'root.map.layers',
+        'root.map.sources',
         'root.map.backgrounds',
         'root.map.text_search_config',
         'root.map.bookmark_search_config',
@@ -1185,86 +1198,9 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
     const aliases = {
         text_serch_config: 'text_search_config'
     };
-    const includes = {
-        // Compare the layer configuration fields persisted by saveLayer in LayersUtils.
-        'root.map.layers[]': [
-            'id',
-            'features',
-            'format',
-            'thumbURL',
-            'group',
-            'search',
-            'fields',
-            'source',
-            'name',
-            'opacity',
-            'provider',
-            'description',
-            'styles',
-            'style',
-            'styleName',
-            'layerFilter',
-            'title',
-            'transparent',
-            'tiled',
-            'type',
-            'url',
-            'bbox',
-            'visibility',
-            'singleTile',
-            'allowedSRS',
-            'requestEncoding',
-            'dimensions',
-            'maxZoom',
-            'maxNativeZoom',
-            'maxResolution',
-            'minResolution',
-            'disableResolutionLimits',
-            'hideLoading',
-            'handleClickOnLayer',
-            'queryable',
-            'featureInfo',
-            'catalogURL',
-            'capabilitiesURL',
-            'serverType',
-            'useForElevation',
-            'hidden',
-            'origin',
-            'thematic',
-            'tooltipOptions',
-            'tooltipPlacement',
-            'legendOptions',
-            'tileSize',
-            'version',
-            'expanded',
-            'enableInteractiveLegend',
-            'enableDynamicLegend',
-            'sources',
-            'heightOffset',
-            'params',
-            'extendedParams',
-            'localizedLayerStyles',
-            'options',
-            'credits',
-            'security',
-            'tileGrids',
-            'tileGridStrategy',
-            'tileGridCacheSupport',
-            'rowViewer',
-            'forceProxy',
-            'disableFeaturesEditing',
-            'pointCloudShading',
-            'sourceMetadata',
-            'enableImageryOverlay',
-            'strategy',
-            'geometryType',
-            'maxRecordCount',
-            'maxFeaturesInView',
-            'cropToProjectionExtent',
-            'coalesce'
-        ]
+    const excludes = {
+        'root.map.layers[]': ['apiKey', 'time', 'args', 'fixed']
     };
-    const excludes = {};
     const parsers = {
         // in some cases widgets have an empty configuration
         // we could exclude them if there are not widgets listed
@@ -1274,13 +1210,17 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
             }
             return value;
         },
-        // the ellipsoid layer is included by default from the background selector
-        // we could exclude it because it's not currently configurable
-        'root.map.layers': (value) => {
-            return (value || []).filter(layer => !(layer.type === 'terrain' && layer.provider === 'ellipsoid'));
+        'root.map': (value) => {
+            if (!value || isEmpty(value)) {
+                return value;
+            }
+            // The default ellipsoid terrain is not configurable and should not make the map dirty.
+            const layers = (value.layers || []).filter(layer => !(layer.type === 'terrain' && layer.provider === 'ellipsoid'));
+            const { formattedLayers, sources } = formatLayersForSave(layers, value.sources);
+            return { ...value, layers: formattedLayers, sources };
         }
     };
-    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, includes, excludes, parsers }, 'root');
+    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, excludes, parsers }, 'root');
     return isSame;
 };
 /**
@@ -1401,6 +1341,7 @@ export default {
     getCurrentResolution,
     transformExtent,
     saveMapConfiguration,
+    formatLayersForSave,
     generateNewUUIDs,
     mergeMapConfigs,
     addRootParentGroup,

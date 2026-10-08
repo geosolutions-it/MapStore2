@@ -10,7 +10,7 @@ import * as Cesium from 'cesium';
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
 
-import { keys, sortBy } from 'lodash';
+import { cloneDeep, keys, sortBy } from 'lodash';
 
 import {
     RESOLUTIONS_HOOK,
@@ -34,6 +34,7 @@ import {
     getBbox,
     getCurrentResolution,
     saveMapConfiguration,
+    formatLayersForSave,
     getIdFromUri,
     getSimpleGeomType,
     isSimpleGeomType,
@@ -59,6 +60,7 @@ import {
     getMetersPerUnit
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
+import { extractTileMatrixFromSources } from '../LayersUtils';
 
 const POINT = "Point";
 const CIRCLE = "Circle";
@@ -2618,62 +2620,175 @@ describe('Test the MapUtils', () => {
 
 });
 
-describe('recursiveIsChangedWithRules', () => {
-    it('only compares included keys at the configured parent path', () => {
-        const rules = {
-            pickedFields: ['root.obj', 'root.other'],
-            includes: { 'root.obj': ['keep'] }
-        };
-        const a = { obj: { keep: 1, skip: 2 }, other: { value: 3 } };
-        const b = { obj: { keep: 1, added: 4 }, other: { value: 3 } };
-        expect(recursiveIsChangedWithRules(a, b, rules)).toBe(false);
-        expect(recursiveIsChangedWithRules(a, { ...b, obj: { keep: 2 } }, rules)).toBe(true);
-        expect(recursiveIsChangedWithRules(a, { ...b, other: { value: 4 } }, rules)).toBe(true);
+describe('WMTS map save normalization', () => {
+    const url = 'https://data.geopf.fr/wmts';
+    const matrix = {
+        'ows:Identifier': 'PM',
+        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::3857',
+        TileMatrix: [{ 'ows:Identifier': '0', ScaleDenominator: 1000 }]
+    };
+    const layer = {
+        id: 'id',
+        title: 'WMTS Layer',
+        type: 'wmts',
+        group: 'background',
+        url,
+        name: 'IMAGERY.ORTHOPHOTOS',
+        format: 'image/jpeg',
+        style: 'normal',
+        visibility: false,
+        allowedSRS: { 'EPSG:3857': true },
+        credits: { title: 'Layer Attribution' }
+    };
+    const sources = { [url]: { tileMatrixSet: { PM: matrix } } };
+    const inlineLayer = {
+        ...layer,
+        availableTileMatrixSets: { PM: { crs: 'EPSG:3857', tileMatrixSet: matrix } }
+    };
+    const mapFor = (layers, sourceData) => ({ map: { layers, sources: sourceData } });
+    const savedMap = (layers, sourceData) => saveMapConfiguration({ sources: sourceData }, layers, [], [], undefined, {});
+    const expectSame = (a, b) => {
+        expect(compareMapChanges(a, b)).toBe(true);
+        expect(compareMapChanges(b, a)).toBe(true);
+    };
+    const expectDifferent = (a, b) => {
+        expect(compareMapChanges(a, b)).toBe(false);
+        expect(compareMapChanges(b, a)).toBe(false);
+    };
+
+    it('does not report pending changes for the issue configuration without source definitions', () => {
+        const rawLayer = { ...layer, matrixIds: ['PM', 'EPSG:3857'], tileMatrixSet: true };
+        expectSame(mapFor([rawLayer]), savedMap([rawLayer]));
     });
-    it('detects added and removed included keys', () => {
-        const rules = {
-            pickedFields: ['root.obj'],
-            includes: { 'root.obj': ['keep'] }
-        };
-        expect(recursiveIsChangedWithRules({ skip: 1 }, { keep: 2, skip: 1 }, rules, 'root.obj')).toBe(true);
-        expect(recursiveIsChangedWithRules({ keep: 2, skip: 1 }, { skip: 1 }, rules, 'root.obj')).toBe(true);
+    it('resolves legacy boolean source references before comparing them to saved layers', () => {
+        const rawLayer = { ...layer, matrixIds: ['PM', 'EPSG:3857'], tileMatrixSet: true };
+        expectSame(mapFor([rawLayer], sources), savedMap([inlineLayer]));
     });
-    it('applies includes to array entries and their nested objects', () => {
-        const rules = {
-            pickedFields: ['root.arr'],
-            includes: {
-                'root.arr[]': ['keep'],
-                'root.arr[].keep': ['id']
-            }
-        };
-        const a = { arr: [{ keep: { id: 1, skip: 2 }, skip: 3 }] };
-        const b = { arr: [{ keep: { id: 1, skip: 4 }, skip: 5 }] };
-        expect(recursiveIsChangedWithRules(a, b, rules)).toBe(false);
-        expect(recursiveIsChangedWithRules(a, { arr: [{ keep: { id: 2 } }] }, rules)).toBe(true);
+    it('does not report changes when map loading derives limits from source matrix ranges', () => {
+        const ranges = { cols: { min: '0', max: '1' }, rows: { min: '0', max: '1' } };
+        const sourceMatrix = { ...matrix, TileMatrix: [{ ...matrix.TileMatrix[0], ranges }] };
+        const sourceData = { [url]: { tileMatrixSet: { PM: sourceMatrix } } };
+        const rawLayer = { ...layer, matrixIds: ['PM', 'EPSG:3857'], tileMatrixSet: true };
+        const loadedLayer = { ...rawLayer, ...extractTileMatrixFromSources(sourceData, { ...rawLayer }) };
+        const rawMap = mapFor([rawLayer], sourceData);
+        const original = cloneDeep(rawMap);
+        const saved = savedMap([loadedLayer], sourceData);
+
+        expect(saved.map.layers[0].availableTileMatrixSets.PM.limits).toEqual([{ identifier: '0', ranges }]);
+        expectSame(rawMap, saved);
+        expect(rawMap).toEqual(original);
+
+        const updated = cloneDeep(saved);
+        updated.map.layers[0].availableTileMatrixSets.PM.limits[0].ranges.cols.max = '2';
+        expectDifferent(rawMap, updated);
     });
-    it('applies excludes after includes', () => {
-        const rules = {
-            pickedFields: ['root.obj'],
-            includes: { 'root.obj': ['keep', 'overlap'] },
-            excludes: { 'root.obj': ['overlap'] }
-        };
-        const a = { keep: 1, overlap: 2, skip: 3 };
-        const b = { keep: 1, overlap: 4, skip: 5 };
-        expect(recursiveIsChangedWithRules(a, b, rules, 'root.obj')).toBe(false);
-        expect(recursiveIsChangedWithRules(a, { ...b, keep: 2 }, rules, 'root.obj')).toBe(true);
+    it('compares equivalent inline, legacy array and linked matrix definitions', () => {
+        const legacyLayer = { ...layer, matrixIds: ['PM'], tileMatrixSet: [matrix] };
+        const saved = savedMap([inlineLayer]);
+        expectSame(mapFor([inlineLayer]), saved);
+        expectSame(mapFor([legacyLayer]), saved);
     });
-    it('does not restrict comparison when includes are missing or empty', () => {
-        [undefined, {}, { 'root.obj': [] }].forEach(includes => {
-            const rules = {
-                pickedFields: ['root.obj'],
-                includes,
-                excludes: { 'root.obj': ['skip'] }
-            };
-            const a = { keep: 1, skip: 2 };
-            expect(recursiveIsChangedWithRules(a, { keep: 1, skip: 3 }, rules, 'root.obj')).toBe(false);
-            expect(recursiveIsChangedWithRules(a, { keep: 2, skip: 2 }, rules, 'root.obj')).toBe(true);
+    it('ignores regenerated legacy matrix fields when available matrix sets are present', () => {
+        const runtimeLayer = { ...inlineLayer, matrixIds: { PM: [{ identifier: '0' }] }, tileMatrixSet: [matrix] };
+        expectSame(mapFor([runtimeLayer]), savedMap([inlineLayer]));
+        expect(formatLayersForSave([runtimeLayer]).formattedLayers[0].matrixIds).toBe(undefined);
+        expect(formatLayersForSave([runtimeLayer]).formattedLayers[0].tileMatrixSet).toBe(undefined);
+    });
+    it('detects matrix definition changes behind the same saved source link', () => {
+        const original = savedMap([inlineLayer]);
+        const updated = cloneDeep(original);
+        updated.map.sources[url].tileMatrixSet.PM.TileMatrix[0].ScaleDenominator = 2000;
+        expectDifferent(original, updated);
+    });
+    it('detects removal of a referenced source definition', () => {
+        const original = savedMap([inlineLayer]);
+        const updated = cloneDeep(original);
+        updated.map.sources = {};
+        expectDifferent(original, updated);
+    });
+    it('ignores source definitions that are not referenced by a layer', () => {
+        const original = savedMap([inlineLayer]);
+        const updated = cloneDeep(original);
+        updated.map.sources.unused = { tileMatrixSet: { PM: { ...matrix, TileMatrix: [] } } };
+        expectSame(original, updated);
+    });
+    it('detects changes to available matrix sets', () => {
+        const updatedLayer = {
+            ...inlineLayer,
+            availableTileMatrixSets: { other: { crs: 'EPSG:3857', tileMatrixSet: { ...matrix, 'ows:Identifier': 'other' } } }
+        };
+        expectDifferent(savedMap([inlineLayer]), savedMap([updatedLayer]));
+    });
+    it('preserves legacy layer limits and detects edits to those limits', () => {
+        const limits = [{ identifier: '0', ranges: { cols: { min: 0, max: 1 }, rows: { min: 0, max: 1 } } }];
+        const legacyLayer = { ...layer, matrixIds: { PM: limits }, tileMatrixSet: true };
+        const limitedLayer = {
+            ...inlineLayer,
+            availableTileMatrixSets: { PM: { ...inlineLayer.availableTileMatrixSets.PM, limits } }
+        };
+        const saved = savedMap([limitedLayer]);
+        expectSame(mapFor([legacyLayer], sources), saved);
+        const updated = cloneDeep(saved);
+        updated.map.layers[0].availableTileMatrixSets.PM.limits[0].ranges.cols.max = 2;
+        expectDifferent(saved, updated);
+    });
+    it('preserves source definitions when saving an already saved map', () => {
+        const original = savedMap([inlineLayer]);
+        expect(savedMap(original.map.layers, original.map.sources)).toEqual(original);
+    });
+    it('does not mutate the raw configuration during comparison', () => {
+        const raw = mapFor([{ ...layer, matrixIds: { PM: [] }, tileMatrixSet: true }], sources);
+        const original = cloneDeep(raw);
+        expectSame(raw, savedMap([inlineLayer]));
+        expect(raw).toEqual(original);
+    });
+    it('handles unresolved named tile matrix sets without throwing', () => {
+        const rawLayer = { ...layer, matrixIds: ['PM'], tileMatrixSet: 'PM' };
+        expectSame(mapFor([rawLayer]), savedMap([rawLayer]));
+    });
+    it('normalizes blob thumbnails and default layer values consistently with saving', () => {
+        const rawLayer = { ...layer, thumbURL: 'blob:temporary-thumbnail' };
+        expectSame(mapFor([rawLayer]), savedMap([rawLayer]));
+    });
+});
+
+describe('formatLayersForSave annotations', () => {
+    const feature = {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [0, 0] },
+        properties: { title: 'Annotation', geometryGeodesic: { type: 'Point', coordinates: [0, 0] } }
+    };
+    [feature, { type: 'FeatureCollection', features: [feature] }].forEach(annotation => {
+        it(`preserves a ${annotation.type} when formatting twice`, () => {
+            const layers = [{ id: 'annotations', type: 'vector', features: [annotation] }];
+            const original = cloneDeep(layers);
+            const first = formatLayersForSave(layers);
+            const second = formatLayersForSave(first.formattedLayers, first.sources);
+            expect(second).toEqual(first);
+            expect(layers).toEqual(original);
+            const savedFeature = annotation.type === 'FeatureCollection'
+                ? first.formattedLayers[0].features[0].features[0]
+                : first.formattedLayers[0].features[0];
+            expect(savedFeature.properties.geometryGeodesic).toBe(null);
+            expect(savedFeature.geometry).toEqual(feature.geometry);
+            expect(savedFeature.properties.title).toBe('Annotation');
         });
     });
+    it('preserves features without geodesic geometry or properties', () => {
+        const ordinaryFeature = { type: 'Feature', geometry: feature.geometry };
+        const saved = formatLayersForSave([{ id: 'annotations', features: [ordinaryFeature] }]);
+        expect(saved.formattedLayers[0].features).toEqual([ordinaryFeature]);
+    });
+    it('detects annotation edits after formatting the saved map again', () => {
+        const original = { map: { layers: formatLayersForSave([{ id: 'annotations', features: [feature] }]).formattedLayers } };
+        const updated = cloneDeep(original);
+        updated.map.layers[0].features[0].properties.title = 'Edited annotation';
+        expect(compareMapChanges(original, updated)).toBe(false);
+        expect(compareMapChanges(updated, original)).toBe(false);
+    });
+});
+
+describe('recursiveIsChangedWithRules', () => {
     it('ignores excluded keys', () => {
         const rules = {
             pickedFields: ['root.obj'],
@@ -2737,18 +2852,6 @@ describe('recursiveIsChangedWithRules', () => {
 });
 
 describe('filterFieldByRules', () => {
-    it('returns false for keys outside a non-empty includes list', () => {
-        const rules = { pickedFields: ['root.obj'], includes: { 'root.obj': ['y'] } };
-        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(false);
-    });
-    it('returns true for included keys that are not excluded', () => {
-        const rules = { pickedFields: ['root.obj'], includes: { 'root.obj': ['x'] } };
-        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(true);
-    });
-    it('does not include fields outside pickedFields', () => {
-        const rules = { pickedFields: ['root.other'], includes: { 'root.obj': ['x'] } };
-        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(false);
-    });
     it('returns false if value is undefined', () => {
         const rules = { pickedFields: ['root.obj'], excludes: {} };
         expect(filterFieldByRules('root.obj.x', 'x', undefined, rules)).toBe(false);
@@ -2793,17 +2896,6 @@ describe('parseFieldValue', () => {
 });
 
 describe('prepareObjectEntries', () => {
-    it('applies includes and excludes using aliased keys', () => {
-        const rules = {
-            pickedFields: ['root.obj'],
-            aliases: { old: 'new', ignored: 'skip' },
-            includes: { 'root.obj': ['new', 'skip'] },
-            excludes: { 'root.obj': ['skip'] }
-        };
-        expect(prepareObjectEntries({ old: 1, ignored: 2, other: 3 }, rules, 'root.obj')).toEqual([
-            ['new', 1]
-        ]);
-    });
     it('returns filtered and sorted entries with aliasing ', () => {
         const obj = { a: 1, b: 2, c: 3 };
         const rules = {
