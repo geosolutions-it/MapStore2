@@ -10,7 +10,7 @@ import * as Cesium from 'cesium';
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
 
-import { keys, sortBy } from 'lodash';
+import { cloneDeep, keys, sortBy } from 'lodash';
 
 import {
     RESOLUTIONS_HOOK,
@@ -34,6 +34,7 @@ import {
     getBbox,
     getCurrentResolution,
     saveMapConfiguration,
+    formatLayersForSave,
     getIdFromUri,
     getSimpleGeomType,
     isSimpleGeomType,
@@ -59,6 +60,7 @@ import {
     getMetersPerUnit
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
+import { extractTileMatrixFromSources } from '../LayersUtils';
 
 const POINT = "Point";
 const CIRCLE = "Circle";
@@ -2060,6 +2062,112 @@ describe('Test the MapUtils', () => {
         expect(compareMapChanges(map1, map2)).toBeTruthy();
     });
 
+    describe('compareMapChanges layer configuration', () => {
+        const makeMap = (options = {}) => ({
+            map: {
+                layers: [{ id: 'layer001', name: 'workspace:roads', type: 'wms', ...options }]
+            }
+        });
+        [
+            ['name', 'workspace:roads', 'workspace:rivers'],
+            ['type', 'wms', 'wmts'],
+            ['url', '/geoserver/wms', '/other/wms'],
+            ['title', { 'en-US': 'Roads' }, { 'en-US': 'Streets' }],
+            ['description', 'Road network', 'Updated road network'],
+            ['group', 'transport', 'infrastructure'],
+            ['visibility', true, false],
+            ['opacity', 1, 0],
+            ['format', 'image/png', 'image/jpeg'],
+            ['transparent', true, false],
+            ['singleTile', false, true],
+            ['tiled', true, false],
+            ['styles', 'default', 'alternate'],
+            ['style', { format: 'geostyler', body: { name: 'Roads' } }, { format: 'geostyler', body: { name: 'Streets' } }],
+            ['styleName', 'circle', 'square'],
+            ['layerFilter', { cql: "kind = 'road'" }, { cql: "kind = 'street'" }],
+            ['params', { CQL_FILTER: "kind = 'road'" }, { CQL_FILTER: "kind = 'street'" }],
+            ['extendedParams', { viewparams: 'year:2025' }, { viewparams: 'year:2026' }],
+            ['search', { type: 'wfs', typeName: 'workspace:roads' }, { type: 'wfs', typeName: 'workspace:streets' }],
+            ['fields', [{ name: 'name', alias: 'Name' }], [{ name: 'name', alias: 'Road name' }]],
+            ['featureInfo', { format: 'TEXT' }, { format: 'HTML' }],
+            ['queryable', true, false],
+            ['disableFeaturesEditing', false, true],
+            ['legendOptions', { legendWidth: 20 }, { legendWidth: 30 }],
+            ['enableInteractiveLegend', true, false],
+            ['enableDynamicLegend', true, false],
+            ['minResolution', 1, 2],
+            ['maxResolution', 100, 200],
+            ['disableResolutionLimits', true, false],
+            ['maxZoom', 18, 20],
+            ['tileSize', 256, 512],
+            ['requestEncoding', 'KVP', 'RESTful'],
+            ['tileGrids', [{ crs: 'EPSG:3857', tileSize: [256, 256] }], [{ crs: 'EPSG:3857', tileSize: [512, 512] }]],
+            ['tileGridStrategy', 'custom', 'native'],
+            ['dimensions', [{ name: 'time', 'default': '2025-01-01' }], [{ name: 'time', 'default': '2026-01-01' }]],
+            ['features', [{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] } }], [{ type: 'Feature', geometry: { type: 'Point', coordinates: [1, 0] } }]],
+            ['sources', [{ url: '/raster1.tif' }], [{ url: '/raster2.tif' }]],
+            ['options', { layers: [{ id: 0 }] }, { layers: [{ id: 1 }] }],
+            ['provider', 'cesium', 'cesium-ion'],
+            ['heightOffset', 0, 10],
+            ['pointCloudShading', { maximumAttenuation: 4 }, { maximumAttenuation: 8 }],
+            ['enableImageryOverlay', true, false],
+            ['sourceMetadata', { crs: 'EPSG:4326' }, { crs: 'EPSG:3857' }],
+            ['strategy', 'tile', 'bbox'],
+            ['geometryType', 'Point', 'Polygon'],
+            ['maxRecordCount', 1000, 2000],
+            ['maxFeaturesInView', 1000, 2000],
+            ['cropToProjectionExtent', true, false],
+            ['credits', { title: 'Source' }, { title: 'Other source' }],
+            ['security', { type: 'basic' }, { type: 'bearer' }],
+            ['forceProxy', true, false]
+        ].forEach(([field, original, updated]) => {
+            it(`detects changes to the layer ${field}`, () => {
+                const map1 = makeMap({ [field]: original });
+                const map2 = makeMap({ [field]: updated });
+                expect(compareMapChanges(map1, map2)).toBe(false);
+                expect(compareMapChanges(map2, map1)).toBe(false);
+            });
+        });
+        it('detects added and removed layer configuration fields', () => {
+            const map1 = makeMap();
+            const map2 = makeMap({ layerFilter: { cql: "kind = 'road'" } });
+            expect(compareMapChanges(map1, map2)).toBe(false);
+            expect(compareMapChanges(map2, map1)).toBe(false);
+        });
+        it('ignores runtime and unrecognized layer fields', () => {
+            const map1 = makeMap({ apiKey: 'old-key', time: '2025-01-01', args: ['old'], fixed: true, loading: true });
+            const map2 = makeMap({
+                apiKey: 'new-key',
+                time: '2026-01-01',
+                args: ['new'],
+                fixed: false,
+                loading: false,
+                loadingError: 'Network error',
+                imageFormats: ['image/png'],
+                infoFormats: ['text/html'],
+                legendEmpty: true,
+                unrecognizedField: 'value'
+            });
+            expect(compareMapChanges(map1, map2)).toBe(true);
+            expect(compareMapChanges(map2, map1)).toBe(true);
+        });
+        it('detects layer additions, removals and reordering', () => {
+            const layer1 = makeMap().map.layers[0];
+            const layer2 = { ...layer1, id: 'layer002', name: 'workspace:rivers' };
+            const map1 = { map: { layers: [layer1, layer2] } };
+            const map2 = { map: { layers: [layer2, layer1] } };
+            expect(compareMapChanges(map1, map2)).toBe(false);
+            expect(compareMapChanges(map1, makeMap())).toBe(false);
+            expect(compareMapChanges(makeMap(), map1)).toBe(false);
+        });
+        it('ignores the default ellipsoid terrain layer', () => {
+            const map1 = makeMap();
+            const map2 = { map: { layers: [...map1.map.layers, { type: 'terrain', provider: 'ellipsoid' }] } };
+            expect(compareMapChanges(map1, map2)).toBe(true);
+            expect(compareMapChanges(map2, map1)).toBe(true);
+        });
+    });
+
 
     it('mergeMapConfigs', () => {
         const testBackground = {
@@ -2510,6 +2618,162 @@ describe('Test the MapUtils', () => {
         expect(getExactZoomFromResolution(10000, resolutions)).toEqual(3.9684870930408915);
     });
 
+});
+
+describe('WMTS map save normalization', () => {
+    const url = 'https://data.geopf.fr/wmts';
+    const matrix = {
+        'ows:Identifier': 'PM',
+        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::3857',
+        TileMatrix: [{ 'ows:Identifier': '0', ScaleDenominator: 1000 }]
+    };
+    const layer = {
+        id: 'id',
+        title: 'WMTS Layer',
+        type: 'wmts',
+        group: 'background',
+        url,
+        name: 'IMAGERY.ORTHOPHOTOS',
+        format: 'image/jpeg',
+        style: 'normal',
+        visibility: false,
+        allowedSRS: { 'EPSG:3857': true },
+        credits: { title: 'Layer Attribution' }
+    };
+    const sources = { [url]: { tileMatrixSet: { PM: matrix } } };
+    const inlineLayer = {
+        ...layer,
+        availableTileMatrixSets: { PM: { crs: 'EPSG:3857', tileMatrixSet: matrix } }
+    };
+    const mapFor = (layers, sourceData) => ({ map: { layers, sources: sourceData } });
+    const savedMap = (layers, sourceData) => saveMapConfiguration({ sources: sourceData }, layers, [], [], undefined, {});
+    const expectSame = (a, b) => {
+        expect(compareMapChanges(a, b)).toBe(true);
+        expect(compareMapChanges(b, a)).toBe(true);
+    };
+    const expectDifferent = (a, b) => {
+        expect(compareMapChanges(a, b)).toBe(false);
+        expect(compareMapChanges(b, a)).toBe(false);
+    };
+
+    it('does not report pending changes for the issue configuration without source definitions', () => {
+        const rawLayer = { ...layer, matrixIds: ['PM', 'EPSG:3857'], tileMatrixSet: true };
+        expectSame(mapFor([rawLayer]), savedMap([rawLayer]));
+    });
+    it('resolves legacy boolean source references before comparing them to saved layers', () => {
+        const rawLayer = { ...layer, matrixIds: ['PM', 'EPSG:3857'], tileMatrixSet: true };
+        expectSame(mapFor([rawLayer], sources), savedMap([inlineLayer]));
+    });
+    it('does not report changes when map loading derives limits from source matrix ranges', () => {
+        const ranges = { cols: { min: '0', max: '1' }, rows: { min: '0', max: '1' } };
+        const sourceMatrix = { ...matrix, TileMatrix: [{ ...matrix.TileMatrix[0], ranges }] };
+        const sourceData = { [url]: { tileMatrixSet: { PM: sourceMatrix } } };
+        const rawLayer = { ...layer, matrixIds: ['PM', 'EPSG:3857'], tileMatrixSet: true };
+        const loadedLayer = { ...rawLayer, ...extractTileMatrixFromSources(sourceData, { ...rawLayer }) };
+        const rawMap = mapFor([rawLayer], sourceData);
+        const original = cloneDeep(rawMap);
+        const saved = savedMap([loadedLayer], sourceData);
+
+        expect(saved.map.layers[0].availableTileMatrixSets.PM.limits).toEqual([{ identifier: '0', ranges }]);
+        expectSame(rawMap, saved);
+        expect(rawMap).toEqual(original);
+
+        const updated = cloneDeep(saved);
+        updated.map.layers[0].availableTileMatrixSets.PM.limits[0].ranges.cols.max = '2';
+        expectDifferent(rawMap, updated);
+    });
+    it('compares equivalent inline, legacy array and linked matrix definitions', () => {
+        const legacyLayer = { ...layer, matrixIds: ['PM'], tileMatrixSet: [matrix] };
+        const saved = savedMap([inlineLayer]);
+        expectSame(mapFor([inlineLayer]), saved);
+        expectSame(mapFor([legacyLayer]), saved);
+    });
+    it('ignores regenerated legacy matrix fields when available matrix sets are present', () => {
+        const runtimeLayer = { ...inlineLayer, matrixIds: { PM: [{ identifier: '0' }] }, tileMatrixSet: [matrix] };
+        expectSame(mapFor([runtimeLayer]), savedMap([inlineLayer]));
+        expect(formatLayersForSave([runtimeLayer]).formattedLayers[0].matrixIds).toBe(undefined);
+        expect(formatLayersForSave([runtimeLayer]).formattedLayers[0].tileMatrixSet).toBe(undefined);
+    });
+    it('ignores source definitions that are not referenced by a layer', () => {
+        const original = savedMap([inlineLayer]);
+        const updated = cloneDeep(original);
+        updated.map.sources.unused = { tileMatrixSet: { PM: { ...matrix, TileMatrix: [] } } };
+        expectSame(original, updated);
+    });
+    it('detects changes to available matrix sets', () => {
+        const updatedLayer = {
+            ...inlineLayer,
+            availableTileMatrixSets: { other: { crs: 'EPSG:3857', tileMatrixSet: { ...matrix, 'ows:Identifier': 'other' } } }
+        };
+        expectDifferent(savedMap([inlineLayer]), savedMap([updatedLayer]));
+    });
+    it('preserves legacy layer limits and detects edits to those limits', () => {
+        const limits = [{ identifier: '0', ranges: { cols: { min: 0, max: 1 }, rows: { min: 0, max: 1 } } }];
+        const legacyLayer = { ...layer, matrixIds: { PM: limits }, tileMatrixSet: true };
+        const limitedLayer = {
+            ...inlineLayer,
+            availableTileMatrixSets: { PM: { ...inlineLayer.availableTileMatrixSets.PM, limits } }
+        };
+        const saved = savedMap([limitedLayer]);
+        expectSame(mapFor([legacyLayer], sources), saved);
+        const updated = cloneDeep(saved);
+        updated.map.layers[0].availableTileMatrixSets.PM.limits[0].ranges.cols.max = 2;
+        expectDifferent(saved, updated);
+    });
+    it('preserves source definitions when saving an already saved map', () => {
+        const original = savedMap([inlineLayer]);
+        expect(savedMap(original.map.layers, original.map.sources)).toEqual(original);
+    });
+    it('does not mutate the raw configuration during comparison', () => {
+        const raw = mapFor([{ ...layer, matrixIds: { PM: [] }, tileMatrixSet: true }], sources);
+        const original = cloneDeep(raw);
+        expectSame(raw, savedMap([inlineLayer]));
+        expect(raw).toEqual(original);
+    });
+    it('handles unresolved named tile matrix sets without throwing', () => {
+        const rawLayer = { ...layer, matrixIds: ['PM'], tileMatrixSet: 'PM' };
+        expectSame(mapFor([rawLayer]), savedMap([rawLayer]));
+    });
+    it('normalizes blob thumbnails and default layer values consistently with saving', () => {
+        const rawLayer = { ...layer, thumbURL: 'blob:temporary-thumbnail' };
+        expectSame(mapFor([rawLayer]), savedMap([rawLayer]));
+    });
+});
+
+describe('formatLayersForSave annotations', () => {
+    const feature = {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [0, 0] },
+        properties: { title: 'Annotation', geometryGeodesic: { type: 'Point', coordinates: [0, 0] } }
+    };
+    [feature, { type: 'FeatureCollection', features: [feature] }].forEach(annotation => {
+        it(`preserves a ${annotation.type} when formatting twice`, () => {
+            const layers = [{ id: 'annotations', type: 'vector', features: [annotation] }];
+            const original = cloneDeep(layers);
+            const first = formatLayersForSave(layers);
+            const second = formatLayersForSave(first.formattedLayers, first.sources);
+            expect(second).toEqual(first);
+            expect(layers).toEqual(original);
+            const savedFeature = annotation.type === 'FeatureCollection'
+                ? first.formattedLayers[0].features[0].features[0]
+                : first.formattedLayers[0].features[0];
+            expect(savedFeature.properties.geometryGeodesic).toBe(null);
+            expect(savedFeature.geometry).toEqual(feature.geometry);
+            expect(savedFeature.properties.title).toBe('Annotation');
+        });
+    });
+    it('preserves features without geodesic geometry or properties', () => {
+        const ordinaryFeature = { type: 'Feature', geometry: feature.geometry };
+        const saved = formatLayersForSave([{ id: 'annotations', features: [ordinaryFeature] }]);
+        expect(saved.formattedLayers[0].features).toEqual([ordinaryFeature]);
+    });
+    it('detects annotation edits after formatting the saved map again', () => {
+        const original = { map: { layers: formatLayersForSave([{ id: 'annotations', features: [feature] }]).formattedLayers } };
+        const updated = cloneDeep(original);
+        updated.map.layers[0].features[0].properties.title = 'Edited annotation';
+        expect(compareMapChanges(original, updated)).toBe(false);
+        expect(compareMapChanges(updated, original)).toBe(false);
+    });
 });
 
 describe('recursiveIsChangedWithRules', () => {
