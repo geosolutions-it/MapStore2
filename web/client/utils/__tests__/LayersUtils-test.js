@@ -30,6 +30,22 @@ const noVendorWmsLayer = {
     type: 'wms',
     serverType: 'no-vendor'
 };
+
+describe('legacy tile matrix placeholders', () => {
+    [true, 'PM'].forEach(tileMatrixSet => {
+        it(`handles ${tileMatrixSet} without treating it as an inline matrix array`, () => {
+            expect(LayersUtils.updateAvailableTileMatrixSetsOptions({
+                id: 'wmts', matrixIds: ['PM'], tileMatrixSet
+            })).toEqual({ id: 'wmts' });
+        });
+    });
+    it('extracts sources safely when a layer has no resolved matrix definitions', () => {
+        expect(LayersUtils.extractSourcesFromLayers([
+            { id: 'wmts', url: '/wmts', tileMatrixSet: true, matrixIds: ['PM'] }
+        ])).toEqual({ '/wmts': { tileMatrixSet: {} } });
+    });
+});
+
 const groupsExample = [{
     "id": "first",
     "title": "first",
