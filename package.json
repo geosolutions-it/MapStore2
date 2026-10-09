@@ -188,7 +188,7 @@
     "lrucache": "1.0.3",
     "mapillary-js": "4.1.2",
     "md5": "2.3.0",
-    "moment": "2.29.4",
+    "moment": "2.31.0",
     "node-geo-distance": "1.2.0",
     "ol": "7.4.0",
     "pannellum": "2.5.7",
