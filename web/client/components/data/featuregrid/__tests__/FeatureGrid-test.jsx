@@ -38,6 +38,31 @@ describe('Test for FeatureGrid component', () => {
         expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(3);
         expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
     });
+    it('renders an empty page while pagination still reports the previous total', () => {
+        const container = document.getElementById("container");
+        const pagination = {totalFeatures: 100};
+        ReactDOM.render(<FeatureGrid describeFeatureType={describePois} virtualScroll={false} features={museam.features} pagination={pagination}/>, container);
+        expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
+        ReactDOM.render(<FeatureGrid describeFeatureType={describePois} virtualScroll={false} features={[]} pagination={pagination}/>, container);
+        expect(document.getElementsByClassName('react-grid-Row').length).toBe(0);
+    });
+    it('counts new features once when virtual scrolling is disabled', () => {
+        const newFeature = {...museam.features[0], id: 'new-feature', _new: true};
+        ReactDOM.render(<FeatureGrid describeFeatureType={describePois} virtualScroll={false} features={[]} newFeatures={[newFeature]} mode="EDIT"/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
+    });
+    it('keeps the dataset total and new features as the virtual row count', () => {
+        const Grid = ({rowsCount}) => <div id="row-count">{rowsCount}</div>;
+        const newFeature = {...museam.features[0], id: 'new-feature', _new: true};
+        ReactDOM.render(<FeatureGrid gridComponent={Grid} virtualScroll features={museam.features} newFeatures={[newFeature]} pagination={{totalFeatures: 100}}/>, document.getElementById("container"));
+        expect(document.getElementById('row-count').textContent).toBe('101');
+    });
+    it('counts new features once when virtual scrolling is focused on editing', () => {
+        const Grid = ({rowsCount}) => <div id="row-count">{rowsCount}</div>;
+        const newFeature = {...museam.features[0], id: 'new-feature', _new: true};
+        ReactDOM.render(<FeatureGrid gridComponent={Grid} virtualScroll focusOnEdit mode="EDIT" features={museam.features} newFeatures={[newFeature]} pagination={{totalFeatures: 100}}/>, document.getElementById("container"));
+        expect(document.getElementById('row-count').textContent).toBe('1');
+    });
     it('render sample features with a tool', () => {
         const tool = {
             key: "test_tool",
