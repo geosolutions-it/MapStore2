@@ -58,12 +58,12 @@ const standardButtons = {
         visible={mode === "VIEW" && showAdvancedFilterButton}
         onClick={events.showQueryPanel}
         glyph="filter"/>),
-    zoomAll: ({disabled, disableZoomAll = false, mode, events = {}, hideSpatialFunctionalityTools = false}) => (<VisibleTButton
+    zoomAll: ({disabled, disableZoomAll = false, showZoomAll = true, mode, events = {}, hideSpatialFunctionalityTools = false}) => (<VisibleTButton
         id="zoom-all"
         keyProp="zoom-all"
         tooltipId="featuregrid.toolbar.zoomAll"
         disabled={disabled || disableZoomAll}
-        visible={mode === "VIEW" && !hideSpatialFunctionalityTools}
+        visible={mode === "VIEW" && showZoomAll && !hideSpatialFunctionalityTools}
         onClick={events.zoomAll}
         glyph="zoom-to"/>),
     backToViewMode: ({disabled, mode, hasChanges, hasNewFeatures, events = {}}) => (<VisibleTButton
@@ -297,7 +297,7 @@ const buttons = [
     {name: "deleteGeometry", Component: standardButtons.deleteGeometry}, // EDITOR
     {name: "filter", Component: standardButtons.filter}, // GRID (needs query panel plugin)
     {name: "viewportFilter", Component: standardButtons.viewportFilter},
-    {name: "zoomAll", Component: standardButtons.zoomAll}, // GRID (should remove or hide? Is always disabled and not to much useful)
+    {name: "zoomAll", Component: standardButtons.zoomAll}, // GRID
     {name: "gridSettings", position: 900, Component: standardButtons.gridSettings}, // GRID. (settings buttons are usually near the end of a toolbar)
     {name: "snap", position: 1300, Component: standardButtons.snapToFeature}, // GRID. (settings buttons are usually near the end of a toolbar)
     // note: `syncGridFilterToMap` needs to stay at the end of the toolbar because of a bug. The tooltip active forces this button to be at the end (see #7271)
@@ -314,6 +314,7 @@ const buttons = [
  *
  * @param {bool} disableToolbar if true it disables all the buttons in the toolbar
  * @param {bool} disableZoomAll if true it disables the ZoomAll button (defaults to false)
+ * @param {bool} showZoomAll shows / hides the ZoomAll button (defaults to true)
  * @param {bool} showAdvancedFilterButton shows / hide the advanced filter button (defaults to true)
  * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
  * @param {bool} showTimeSyncButton shows / hide the timeSync button (defaults to false)
