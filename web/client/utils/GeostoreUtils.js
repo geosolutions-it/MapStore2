@@ -81,7 +81,8 @@ const resourceTypes = {
  * @private
  */
 export const getGeostoreResourceTypesInfo = (resource, context) => {
-    const thumbnailUrl = parseNODATA(resource?.attributes?.thumbnail);
+    const thumbnail = parseNODATA(resource?.attributes?.thumbnail);
+    const thumbnailUrl = thumbnail ? decodeURIComponent(thumbnail) : thumbnail;
     const title = resource?.name || '';
     const { icon, formatViewerPath } = resourceTypes[resource?.category?.name] || {};
     const viewerPath = resource?.id && formatViewerPath ? formatViewerPath(resource, context) : undefined;
