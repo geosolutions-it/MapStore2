@@ -22,6 +22,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+<<<<<<< HEAD
 ### Default users removed: initial administrator password
 
 MapStore does not create the sample users `admin`/`admin` and `user`/`user` anymore (the `sample_users.xml` file is no longer shipped with the bundled GeoStore). On the first start with an empty database the `admin` user is created with the password taken from the `INITIAL_ADMIN_PASSWORD` environment variable; if the variable is not set, no administrator is created and start-up continues with a warning in the log. On a database that still contains an `admin` using the former default password, setting `INITIAL_ADMIN_PASSWORD` resets it to that value. See [Initial Administrator Password](initial-admin-password.md) for the details.
@@ -71,6 +72,8 @@ allowedPrivateHosts = geoserver.intranet.local
 
 then set `hostnameWhitelist` (and, if needed, `allowedPrivateHosts`, `allowedPrivateNetworks`, `allowForwardProxy`) for the services your project uses.
 
+=======
+>>>>>>> 6b0d259a5 (Fix #12826 Add new card layout support to the Resources Catalog)
 ### Resources Catalog layout styles: `list` renamed to `table`
 
 In the `ResourcesGrid` plugin configuration, the tabular column-based layout style previously named `list` has been renamed to `table`.
