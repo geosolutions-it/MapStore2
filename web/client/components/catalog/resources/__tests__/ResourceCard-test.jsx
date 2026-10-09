@@ -375,4 +375,40 @@ describe('ResourceCard component', () => {
         expect(card).toBeTruthy();
         expect(card.textContent.trim()).toBe('');
     });
+    it('should render noDataLabelId in grid layout when the value is missing', () => {
+        const metadata = [
+            {
+                path: 'name',
+                target: 'header'
+            },
+            {
+                path: 'description',
+                noDataLabelId: 'resourcesCatalog.emptyNA'
+            },
+            {
+                path: 'creator',
+                target: 'footer',
+                icon: { glyph: 'user' },
+                noDataLabelId: 'resourcesCatalog.emptyUnknown'
+            }
+        ];
+        const data = {
+            name: 'Map'
+        };
+        ReactDOM.render(
+            <ResourceCard
+                layoutCardsStyle="grid"
+                data={data}
+                metadata={metadata}
+                hideThumbnail
+            />,
+            document.getElementById('container')
+        );
+        const card = document.querySelector('.ms-resource-card-type-grid');
+        expect(card).toBeTruthy();
+        const footer = card.querySelector('.ms-resource-card-body-footer');
+        expect(footer).toBeTruthy();
+        expect(footer.textContent).toContain('resourcesCatalog.emptyUnknown');
+        expect(card.textContent).toContain('resourcesCatalog.emptyNA');
+    });
 });
