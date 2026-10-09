@@ -208,9 +208,7 @@
         "right": "Höger",
         "left": "Vänster",
         "bottom": "Nederst",
-        "top": "Överst",
-        "editLayerName": "Redigera lagernamn",
-        "confirmLayerName": "Bekräfta lagernamnändring"
+        "top": "Överst"
       },
       "legendOptions": {
         "title": "Förklaring",
@@ -909,7 +907,20 @@
       "tooltipSlopeStart": "Enklicka för att rita 3 punkter som bildar en triangelyta.\nLutningsvärdet beräknas baserat på den ritade triangelytan",
       "altitude": "Höjd",
       "latitude": "Latitud",
-      "longitude": "Longitud"
+      "longitude": "Longitud",
+      "measurementsLayerTitle": "Mätningar",
+      "styleRules": {
+        "geodesicMeasurement": "Geodetisk mätning",
+        "linearMeasurement": "Linjär mätning",
+        "angleMeasurement": "Vinkelmätning",
+        "slopeMeasurement": "Lutningsmätning",
+        "areaMeasurement": "Areamätning",
+        "startPosition": "Startposition",
+        "endPosition": "Slutposition",
+        "centerPosition": "Mittposition",
+        "segmentLabels": "Segmentetiketter",
+        "measurementLabel": "Mätetikett"
+      }
     },
     "search": {
       "layerMustBeVisible": "Målskiktet är inaktivt",

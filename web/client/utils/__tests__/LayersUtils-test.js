@@ -34,6 +34,21 @@ const noVendorWmsLayer = {
     serverType: 'no-vendor'
 };
 
+describe('legacy tile matrix placeholders', () => {
+    [true, 'PM'].forEach(tileMatrixSet => {
+        it(`handles ${tileMatrixSet} without treating it as an inline matrix array`, () => {
+            expect(LayersUtils.updateAvailableTileMatrixSetsOptions({
+                id: 'wmts', matrixIds: ['PM'], tileMatrixSet
+            })).toEqual({ id: 'wmts' });
+        });
+    });
+    it('extracts sources safely when a layer has no resolved matrix definitions', () => {
+        expect(LayersUtils.extractSourcesFromLayers([
+            { id: 'wmts', url: '/wmts', tileMatrixSet: true, matrixIds: ['PM'] }
+        ])).toEqual({ '/wmts': { tileMatrixSet: {} } });
+    });
+});
+
 describe('getWFSLayerName', () => {
     it('uses a linked WFS type name only for WMS layers', () => {
         expect(LayersUtils.getWFSLayerName({
@@ -87,7 +102,7 @@ const groupsExample = [{
                             "id": "topp:states__6",
                             "format": "image/png8",
                             "search": {
-                                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                                "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs",
                                 "type": "wfs"
                             },
                             "name": "topp:states",
@@ -95,7 +110,7 @@ const groupsExample = [{
                             "description": "This is some census data on the states.",
                             "title": "USA Population",
                             "type": "wms",
-                            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+                            "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
                             "bbox": {
                                 "crs": "EPSG:4326",
                                 "bounds": {
@@ -111,7 +126,7 @@ const groupsExample = [{
                             "dimensions": [],
                             "hideLoading": false,
                             "handleClickOnLayer": false,
-                            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+                            "catalogURL": "https://gs-stable.geosolutionsgroup.com/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
                             "useForElevation": false,
                             "hidden": false,
                             "params": {

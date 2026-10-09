@@ -25,12 +25,12 @@ describe("The ShareQRCode component", () => {
     });
 
     it('is created with defaults', () => {
-        const cmpShareQRCode = ReactDOM.render(<ShareQRCode shareUrl="www.geo-solutions.it"/>, document.getElementById("container"));
+        const cmpShareQRCode = ReactDOM.render(<ShareQRCode shareUrl="www.geosolutionsgroup.com"/>, document.getElementById("container"));
         expect(cmpShareQRCode).toExist();
     });
 
     it('should contain the canvas of the QRCode', () => {
-        const cmpShareQRCode = ReactDOM.render(<ShareQRCode shareUrl="www.geo-solutions.it"/>, document.getElementById("container"));
+        const cmpShareQRCode = ReactDOM.render(<ShareQRCode shareUrl="www.geosolutionsgroup.com"/>, document.getElementById("container"));
         expect(cmpShareQRCode).toExist();
 
         const canvasQRCode = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpShareQRCode, "canvas")[0]);

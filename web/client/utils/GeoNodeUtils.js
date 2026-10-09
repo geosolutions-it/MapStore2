@@ -8,7 +8,7 @@
 
 
 import { v4 as uuid } from 'uuid';
-import { isEmpty } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import queryString from 'query-string';
 import url from 'url';
 import turfCenter from '@turf/center';
@@ -387,7 +387,9 @@ export const resourceToLayerConfig = (resource, options) => {
         data
     } = resource;
 
-    const layerSettings = data?.layerSettings ?? data;
+    // persisted id and bbox must not override the generated ones:
+    // every layer instance needs its own id and the bbox must follow the current resource extent
+    const layerSettings = omit(data?.layerSettings ?? data, ['id', 'bbox']);
 
     const title = getLocalizedValues(resource, 'title', defaultTitle);
 

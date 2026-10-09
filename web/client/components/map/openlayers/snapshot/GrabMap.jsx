@@ -110,8 +110,8 @@ export default class GrabOlMap extends React.Component {
             : null;
     }
 
-    layerLoad = () => {
-        this.toLoad--;
+    layerLoad = (layerIds) => {
+        this.toLoad -= Array.isArray(layerIds) ? layerIds.length : 1;
         if (this.toLoad === 0) {
             let map = this.refs.snapMap ? this.refs.snapMap.map : null;
             if (map) {
@@ -126,13 +126,13 @@ export default class GrabOlMap extends React.Component {
         }
     };
 
-    layerLoading = () => {
+    layerLoading = (layerIds) => {
         if (this.props.snapstate.state !== "SHOTING") {
             this.props.onStatusChange("SHOTING");
 
         }
         this.toLoad = this.toLoad ? this.toLoad : 0;
-        this.toLoad++;
+        this.toLoad += Array.isArray(layerIds) ? layerIds.length : 1;
     };
 
     createSnapshot = (canvas) => {

@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <name>MapStore 2 Binary Module</name>
     <description>Project to create the binary package</description>
-    <url>http://www.geo-solutions.it</url>
+    <url>http://www.geosolutionsgroup.com</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tomcat.version>11.0.25</tomcat.version>

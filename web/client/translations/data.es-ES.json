@@ -264,9 +264,20 @@
         "right": "Derecha",
         "left": "Izquierda",
         "bottom": "Bottom",
-        "top": "Cima",
-        "editLayerName": "Editar el nombre de la capa",
-        "confirmLayerName": "Confirmar cambio de nombre de capa"
+        "top": "Cima"
+      },
+      "sourceField": {
+        "edit": "Editar valor",
+        "confirm": "Confirmar valor",
+        "required": "Se requiere un valor",
+        "requiredUrl": "La URL del servicio es necesaria para validar este valor",
+        "requiredName": "El nombre de la capa es necesario para validar este valor",
+        "requiredSearchUrl": "La URL del servicio WFS es necesaria para validar este valor",
+        "requiredSearchTypeName": "El TypeName WFS es necesario para validar este valor",
+        "service": "El servicio no es accesible en esta URL. Corrija la URL o confirme de nuevo para mantener este valor",
+        "notFound": "No se encontró la capa en este servicio. Compruebe el nombre y la URL o confirme de nuevo para mantener este valor",
+        "load": "No se pudo cargar la capa, por ejemplo porque el estilo no es compatible. Corrija los valores o confirme para mantenerlos",
+        "generic": "La validación falló. Compruebe el nombre y la URL o confirme de nuevo para mantener este valor"
       },
       "legendOptions": {
         "title": "Leyenda",
@@ -998,7 +1009,20 @@
       "tooltipSlopeStart": "Un solo clic para dibujar 3 puntos que representan una superficie triangular.\nEl valor de la pendiente se calcula en función de la superficie triangular dibujada",
       "altitude": "Altitud",
       "latitude": "Latitud",
-      "longitude": "Longitud"
+      "longitude": "Longitud",
+      "measurementsLayerTitle": "Mediciones",
+      "styleRules": {
+        "geodesicMeasurement": "Medición geodésica",
+        "linearMeasurement": "Medición lineal",
+        "angleMeasurement": "Medición de ángulo",
+        "slopeMeasurement": "Medición de pendiente",
+        "areaMeasurement": "Medición de área",
+        "startPosition": "Posición inicial",
+        "endPosition": "Posición final",
+        "centerPosition": "Posición central",
+        "segmentLabels": "Etiquetas de segmento",
+        "measurementLabel": "Etiqueta de medición"
+      }
     },
     "search": {
       "layerMustBeVisible": "La capa de destino está inactiva",
@@ -2211,6 +2235,9 @@
       "title": "Exportar los datos",
       "service": "Servicio",
       "downloadMode": "Modo de exportación",
+      "visibleGranuleInfo": "Solo se descargará el gránulo actualmente visible en el mapa",
+      "timeAttributeInfo": "Seleccione el atributo que representa la información de tiempo en sus datos. Este atributo se utilizará para filtrar las entidades por una fecha u hora específica o un rango de horas.",
+      "timeAttribute": "Atributo de tiempo",
       "format": "Formato de fichero",
       "srs": "Sistema de referencia espacial",
       "export": "Exportar",
@@ -4831,6 +4858,9 @@
       "filter": "Filtrar",
       "filters": "Filtros",
       "view": "Ver",
+      "cardLayoutGrid": "Cuadrícula",
+      "cardLayoutList": "Lista",
+      "cardLayoutTable": "Tabla",
       "resourcesFound": "{count, plural, =0 {0 Recursos encontrados} =1 {1 Recurso encontrado} other {# Recursos encontrados}}",
       "unadvertised": "El recurso no está anunciado. Está oculto en el catálogo y en los resultados de búsqueda",
       "mapUsesContext": "Este mapa utiliza el contexto: {contextName}",

@@ -5,7 +5,7 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Grid } from 'react-bootstrap';
 import ContainerDimensions from 'react-container-dimensions';
@@ -26,6 +26,28 @@ const spatialMethodOptions = [
     {"id": "CQL", "name": "queryform.spatialfilter.methods.cql"}
 ];
 
+function CQLFilterEditor({ active, width, ...props }) {
+    const [editor, setEditor] = useState(null);
+    useEffect(() => {
+        if (active && width > 0 && editor) {
+            editor.refresh();
+        }
+    }, [active, width, editor]);
+
+    return (
+        <div style={{ width }}>
+            <CodeMirror
+                {...props}
+                options={{
+                    mode: { name: 'sql' },
+                    lineNumbers: true,
+                    lineWrapping: true
+                }}
+                editorDidMount={instance => setEditor(instance)}/>
+        </div>
+    );
+}
+
 
 export default filtersEnhancer(({onMapReady, geometryState = {}, spatialField = {}, layer = {}, constraints = {}, active = false, setOption = () => {}, mapActive = false, actions = {}}) => {
     const enabled = !isEmpty(layer);
@@ -34,32 +56,22 @@ export default filtersEnhancer(({onMapReady, geometryState = {}, spatialField = 
             <SwitchPanel reset={() => setOption({key: "cqlFilterRead", value: ""})} title={<Message msgId="rulesmanager.cqlRead"/>} initExpanded={!!constraints.cqlFilterRead}>
                 <div style={{width: '100%'}}>
                     <ContainerDimensions>
-                        {({width}) => <div style={{width}}>
-                            <CodeMirror
-                                value={constraints.cqlFilterRead}
-                                onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterRead", value})}
-                                options={{
-                                    mode: {name: "sql"},
-                                    lineNumbers: true,
-                                    lineWrapping: true
-                                }}/>
-                        </div>}
+                        {({width}) => <CQLFilterEditor
+                            active={active}
+                            width={width}
+                            value={constraints.cqlFilterRead}
+                            onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterRead", value})}/>}
                     </ContainerDimensions>
                 </div>
             </SwitchPanel>
             <SwitchPanel reset={() => setOption({key: "cqlFilterWrite", value: ""})} title={<Message msgId="rulesmanager.cqlWrite"/>} initExpanded={!!constraints.cqlFilterWrite}>
                 <div style={{width: '100%'}}>
                     <ContainerDimensions>
-                        {({width}) => <div style={{width}}>
-                            <CodeMirror
-                                value={constraints.cqlFilterWrite}
-                                onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterWrite", value})}
-                                options={{
-                                    mode: {name: "sql"},
-                                    lineNumbers: true,
-                                    lineWrapping: true
-                                }}/>
-                        </div>}
+                        {({width}) => <CQLFilterEditor
+                            active={active}
+                            width={width}
+                            value={constraints.cqlFilterWrite}
+                            onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterWrite", value})}/>}
                     </ContainerDimensions>
                 </div>
             </SwitchPanel>

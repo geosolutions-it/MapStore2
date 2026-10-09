@@ -20,7 +20,7 @@ import {
     UPDATE_LAYER_DIMENSION_DATA
 } from '../../actions/dimension';
 
-const domainsTestResponse = `<?xml version="1.0" encoding="UTF-8"?><Domains xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1" version="1.1">
+const domainsTestResponse = `<?xml version="1.0" encoding="UTF-8"?><Domains xmlns="http://gs-stable.geosolutionsgroup.com/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1" version="1.1">
   <DimensionDomain>
     <ows:Identifier>time</ows:Identifier>
     <Domain>1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z</Domain>

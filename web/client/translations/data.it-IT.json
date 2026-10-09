@@ -265,9 +265,20 @@
         "right": "Destra",
         "left": "Sinistra",
         "bottom": "Sotto",
-        "top": "Sopra",
-        "editLayerName": "Modifica il nome del livello",
-        "confirmLayerName": "Conferma la modifica del nome del livello"
+        "top": "Sopra"
+      },
+      "sourceField": {
+        "edit": "Modifica valore",
+        "confirm": "Conferma valore",
+        "required": "È richiesto un valore",
+        "requiredUrl": "L'URL del servizio è necessario per validare questo valore",
+        "requiredName": "Il nome del livello è necessario per validare questo valore",
+        "requiredSearchUrl": "L'URL del servizio WFS è necessario per validare questo valore",
+        "requiredSearchTypeName": "Il TypeName WFS è necessario per validare questo valore",
+        "service": "Il servizio non è raggiungibile a questo URL. Correggi l'URL o conferma di nuovo per mantenere questo valore",
+        "notFound": "Il livello non è stato trovato in questo servizio. Controlla il nome e l'URL o conferma di nuovo per mantenere questo valore",
+        "load": "Il caricamento del livello non è riuscito, ad esempio perché lo stile non è compatibile. Correggi i valori o conferma per mantenerli",
+        "generic": "Validazione non riuscita. Controlla il nome e l'URL o conferma di nuovo per mantenere questo valore"
       },
       "legendOptions": {
         "title": "Legenda",
@@ -998,7 +1009,20 @@
       "tooltipSlopeStart": "Click singolo per disegnare 3 punti che rappresentano una superficie triangolare.\nIl valore della pendenza viene calcolato in base alla superficie triangolare disegnata",
       "altitude": "Altitudine",
       "latitude": "Latitudine",
-      "longitude": "Longitudine"
+      "longitude": "Longitudine",
+      "measurementsLayerTitle": "Misurazioni",
+      "styleRules": {
+        "geodesicMeasurement": "Misura geodetica",
+        "linearMeasurement": "Misura lineare",
+        "angleMeasurement": "Misura dell'angolo",
+        "slopeMeasurement": "Misura della pendenza",
+        "areaMeasurement": "Misura dell'area",
+        "startPosition": "Posizione iniziale",
+        "endPosition": "Posizione finale",
+        "centerPosition": "Posizione centrale",
+        "segmentLabels": "Etichette dei segmenti",
+        "measurementLabel": "Etichetta della misura"
+      }
     },
     "search": {
       "layerMustBeVisible": "Il livello di destinazione è inattivo",
@@ -2211,6 +2235,9 @@
       "title": "Esporta dati",
       "service": "Servizio",
       "downloadMode": "Modalità di esportazione",
+      "visibleGranuleInfo": "Verrà scaricato solo il granulo attualmente visibile nella mappa",
+      "timeAttributeInfo": "Seleziona l'attributo che rappresenta l'informazione temporale nei tuoi dati. Questo attributo verrà utilizzato per filtrare le entità in base a un'ora o a un intervallo di tempo specifico.",
+      "timeAttribute": "Attributo temporale",
       "format": "Formato file",
       "srs": "Sistema di riferimento",
       "export": "Esporta",
@@ -4835,6 +4862,9 @@
       "filter": "Filtro",
       "filters": "Filtri",
       "view": "Visualizza",
+      "cardLayoutGrid": "Griglia",
+      "cardLayoutList": "Lista",
+      "cardLayoutTable": "Tabella",
       "resourcesFound": "{count, plural, =0 {0 Risorse trovate} =1 {1 Risorsa trovata} other {# Risorse trovate}}",
       "unadvertised": "La risorsa non è pubblicizzata. È nascosta dal catalogo e dai risultati di ricerca",
       "mapUsesContext": "Questa mappa usa il contesto: {contextName}",

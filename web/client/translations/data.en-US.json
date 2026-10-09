@@ -265,9 +265,20 @@
         "right": "Right",
         "left": "Left",
         "bottom": "Bottom",
-        "top": "Top",
-        "editLayerName": "Edit layer name",
-        "confirmLayerName": "Confirm layer name change"
+        "top": "Top"
+      },
+      "sourceField": {
+        "edit": "Edit value",
+        "confirm": "Confirm value",
+        "required": "A value is required",
+        "requiredUrl": "The service URL is required to validate this value",
+        "requiredName": "The layer name is required to validate this value",
+        "requiredSearchUrl": "The WFS service URL is required to validate this value",
+        "requiredSearchTypeName": "The WFS TypeName is required to validate this value",
+        "service": "The service is not reachable at this URL. Fix the URL or confirm again to keep this value",
+        "notFound": "The layer was not found on this service. Check the name and the URL or confirm again to keep this value",
+        "load": "The layer failed to load, for example because the style is not compatible. Fix the values or confirm to keep them",
+        "generic": "Validation failed. Check the name and the URL or confirm again to keep this value"
       },
       "legendOptions": {
         "title": "Legend",
@@ -998,7 +1009,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Measurements",
+      "styleRules": {
+        "geodesicMeasurement": "Geodesic measurement",
+        "linearMeasurement": "Linear measurement",
+        "angleMeasurement": "Angle measurement",
+        "slopeMeasurement": "Slope measurement",
+        "areaMeasurement": "Area measurement",
+        "startPosition": "Start position",
+        "endPosition": "End position",
+        "centerPosition": "Center position",
+        "segmentLabels": "Segment labels",
+        "measurementLabel": "Measurement label"
+      }
     },
     "search": {
       "layerMustBeVisible": "The target layer is inactive",
@@ -2211,6 +2235,9 @@
       "title": "Export Data",
       "service": "Service",
       "downloadMode": "Download Mode",
+      "visibleGranuleInfo": "Only the granule currently visible in the map will be download",
+      "timeAttributeInfo": "Select the attribute that represents the time information in your data. This will be used to filter features by a specific time or time range.",
+      "timeAttribute": "Time Attribute",
       "format": "File Format",
       "srs": "Spatial Reference System",
       "export": "Export",
@@ -4843,6 +4870,9 @@
       "filter": "Filter",
       "filters": "Filters",
       "view": "View",
+      "cardLayoutGrid": "Grid",
+      "cardLayoutList": "List",
+      "cardLayoutTable": "Table",
       "resourcesFound": "{count, plural, =0 {0 Resources found} =1 {1 Resource found} other {# Resources found}}",
       "unadvertised": "Resource is not advertised. It is hidden from the catalog and search results",
       "mapUsesContext": "This map uses the context: {contextName}",
