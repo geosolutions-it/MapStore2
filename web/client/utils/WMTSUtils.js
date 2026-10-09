@@ -56,9 +56,26 @@ export const getTileMatrixSet = (tileMatrixSet, srs, allowedSRS, matrixIds = {},
  */
 export const getRequestEncoding = json => {
     const operations = WMTSUtils.getOperations(json);
+    if (operations.length === 0) {
+        // ows:OperationsMetadata is optional, so the encoding can only be deduced
+        // from the layers: a tile ResourceURL is what a RESTful service advertises
+        return WMTSUtils.hasTileResourceURL(json) ? "RESTful" : "KVP";
+    }
     return WMTSUtils.getOperation(operations, "GetTile", "KVP") ? "KVP" : WMTSUtils.getOperation(operations, "GetTile", "RESTful") && "RESTful";
 };
-export const getOperations = (json = {}) => castArray(json.Capabilities["ows:OperationsMetadata"]["ows:Operation"]);
+/**
+ * Gets the 'Operations' array from the WMTS Capabilities json parsed object.
+ * Returns an empty array when the optional 'ows:OperationsMetadata' section is missing
+ */
+export const getOperations = (json = {}) => {
+    const operations = json?.Capabilities?.["ows:OperationsMetadata"]?.["ows:Operation"];
+    return operations ? castArray(operations) : [];
+};
+/**
+ * Checks if at least one layer of the WMTS Capabilities json parsed object declares a tile ResourceURL
+ */
+export const hasTileResourceURL = (json = {}) => castArray(json?.Capabilities?.Contents?.Layer || [])
+    .some((layer) => castArray(layer.ResourceURL || []).some((resource) => resource?.$?.resourceType === "tile"));
 /**
  * gets the first operation of the type and with the name provided from the 'Operations' array of the WMTS Capabilities json parsed object
  */
@@ -213,5 +230,6 @@ export const generateGeoServerWMTSUrl = (options) => {
 
 WMTSUtils = {
     getOperations,
-    getOperation
+    getOperation,
+    hasTileResourceURL
 };
