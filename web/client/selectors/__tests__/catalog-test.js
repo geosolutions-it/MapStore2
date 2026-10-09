@@ -40,7 +40,7 @@ import {
 import { set } from '../../utils/ImmutableUtils';
 import { getDefaultSupportedGetFeatureInfoFormats } from '../../utils/WMSUtils';
 
-const url = "https://demo.geo-solutions.it/geoserver/wms";
+const url = "https://gs-stable.geosolutionsgroup.com/geoserver/wms";
 const state = {
     controls: {
         metadataexplorer: {
@@ -62,12 +62,12 @@ const state = {
         selectedService: 'Basic WMS Service',
         services: {
             'Basic CSW Service': {
-                url: 'https://demo.geo-solutions.it/geoserver/csw',
+                url: 'https://gs-stable.geosolutionsgroup.com/geoserver/csw',
                 type: 'csw',
                 title: 'Basic CSW Service'
             },
             'Basic WMS Service': {
-                url: 'https://demo.geo-solutions.it/geoserver/wms',
+                url: 'https://gs-stable.geosolutionsgroup.com/geoserver/wms',
                 type: 'wms',
                 title: 'Basic WMS Service',
                 layerOptions: {
@@ -75,7 +75,7 @@ const state = {
                 }
             },
             'Basic WMTS Service': {
-                url: 'https://demo.geo-solutions.it/geoserver/gwc/service/wmts',
+                url: 'https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts',
                 type: 'wmts',
                 title: 'Basic WMTS Service'
             }
@@ -163,17 +163,17 @@ describe('Test catalog selectors', () => {
                 selectedService: "Service.with.Points",
                 services: {
                     'Basic CSW Service': {
-                        url: 'https://demo.geo-solutions.it/geoserver/csw',
+                        url: 'https://gs-stable.geosolutionsgroup.com/geoserver/csw',
                         type: 'csw',
                         title: 'Basic CSW Service'
                     },
                     'Basic WMS Service': {
-                        url: 'https://demo.geo-solutions.it/geoserver/wms',
+                        url: 'https://gs-stable.geosolutionsgroup.com/geoserver/wms',
                         type: 'wms',
                         title: 'Basic WMS Service'
                     },
                     'Basic WMTS Service': {
-                        url: 'https://demo.geo-solutions.it/geoserver/gwc/service/wmts',
+                        url: 'https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts',
                         type: 'wmts',
                         title: 'Basic WMTS Service'
                     },

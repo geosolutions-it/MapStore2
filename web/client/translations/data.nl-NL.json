@@ -213,9 +213,7 @@
         "right": "Rechts",
         "left": "Links",
         "bottom": "Onder",
-        "top": "Boven",
-        "editLayerName": "Bewerk laagnaam",
-        "confirmLayerName": "Bevestig de wijziging van de laagnaam"
+        "top": "Boven"
       },
       "legendOptions": {
         "title": "Legende",
@@ -923,7 +921,20 @@
       "tooltipSlopeStart": "Klik om drie punten aan te duiden die een driehoek afbakenen.\nDe helling wordt berekend op basis van de getekende driehoek",
       "altitude": "Hoogte",
       "latitude": "Breedtegraad",
-      "longitude": "Lengtegraad"
+      "longitude": "Lengtegraad",
+      "measurementsLayerTitle": "Metingen",
+      "styleRules": {
+        "geodesicMeasurement": "Geodetische meting",
+        "linearMeasurement": "Lineaire meting",
+        "angleMeasurement": "Hoekmeting",
+        "slopeMeasurement": "Hellingmeting",
+        "areaMeasurement": "Oppervlaktemeting",
+        "startPosition": "Beginpositie",
+        "endPosition": "Eindpositie",
+        "centerPosition": "Middenpositie",
+        "segmentLabels": "Segmentlabels",
+        "measurementLabel": "Meetlabel"
+      }
     },
     "search": {
       "layerMustBeVisible": "De doellaag is inactief",

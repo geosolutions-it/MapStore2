@@ -22,7 +22,7 @@ theme:
     - navigation.footer
     - content.code.copy
   logo: 'img/mapstore2-logo.png'
-  company_url: 'http://www.geo-solutions.it'
+  company_url: 'http://www.geosolutionsgroup.com'
   company_logo: 'img/geosolutions-brand.png'
   company_contacts: 'GeoSolutions | sales@geosolutionsgroup.com '
   palette:

@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {ButtonToolbar, Col, Glyphicon, Grid, Row, Tooltip} from 'react-bootstrap';
 import {DropdownList} from 'react-widgets';
-import { v1 as uuidv1 } from 'uuid';
 
 import { download } from '../../../utils/FileUtils';
 import {getMessageById} from '../../../utils/LocaleUtils';
@@ -119,7 +118,8 @@ class MeasureComponent extends React.Component {
             {value: "sqm", label: "m²"},
             {value: "sqkm", label: "km²"},
             {value: "sqmi", label: "mi²"},
-            {value: "sqnm", label: "nm²"}
+            {value: "sqnm", label: "nm²"},
+            {value: "ha", label: "ha"}
         ],
         id: "measure-result-panel",
         uom: {
@@ -361,8 +361,7 @@ class MeasureComponent extends React.Component {
                                                     this.props.measurement.features,
                                                     this.props.measurement.textLabels,
                                                     this.props.uom,
-                                                    uuidv1(),
-                                                    'MapStore Measurements'
+                                                    this.context.messages
                                                 )), 'measurements.json', 'application/geo+json');
                                             }
                                         },

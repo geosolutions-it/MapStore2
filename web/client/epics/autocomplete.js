@@ -83,7 +83,7 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
                 attribute: filterField.attribute,
                 layerName: action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? state.queryform.crossLayerFilter?.collectGeometries?.queryCollection.typeName : typeNameSelector(state),
                 maxFeatures: maxFeaturesWPS,
-                startIndex: action.fieldOptions.currentPage ? (action.fieldOptions.currentPage - 1) : 1 * maxFeaturesWPS,
+                startIndex: ((action.fieldOptions.currentPage || 1) - 1) * maxFeaturesWPS,
                 value: action.fieldValue
             });
             const parsedUrl = getParsedUrl(state.query.url, {"outputFormat": "json"}, authkeyParamNameSelector(store.getState()));
@@ -126,4 +126,3 @@ export default {
     isAutoCompleteEnabled,
     fetchAutocompleteOptionsEpic
 };
-

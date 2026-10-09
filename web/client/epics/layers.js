@@ -25,7 +25,7 @@ import {
 
 import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '../selectors/layers';
 import { getCapabilitiesUrl, getLayerTitleTranslations, removeWorkspace } from '../utils/LayersUtils';
-import { isArray, head } from 'lodash';
+import { isArray, head, castArray } from 'lodash';
 
 export const getUpdates = (updates, options) => {
     return Object.keys(options).filter((opt) => options[opt]).reduce((previous, current) => {
@@ -137,7 +137,7 @@ export const updateSettingsParamsEpic = (action$, store) =>
                 )] : [])
             // this handles errors due to name changes
             ).concat(newParams.name && layer && layer.name !== newParams.name ?
-                action$.ofType(LAYER_LOAD).filter(({layerId}) => layerId === layer?.id).take(1).flatMap(({error}) => error ?
+                action$.ofType(LAYER_LOAD).filter(({layerId}) => castArray(layerId).includes(layer?.id)).take(1).flatMap(({error}) => error ?
                     Rx.Observable.of(layerNameChangeError()) :
                     Rx.Observable.empty()) :
                 Rx.Observable.empty());

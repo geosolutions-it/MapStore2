@@ -208,9 +208,7 @@
         "right": "Direita",
         "left": "Esquerda",
         "bottom": "Inferior",
-        "top": "Superior",
-        "editLayerName": "Editar nome da camada",
-        "confirmLayerName": "Confirmar alteração do nome da camada"
+        "top": "Superior"
       },
       "legendOptions": {
         "title": "Legenda",
@@ -898,7 +896,20 @@
       "tooltipSlopeStart": "Clique simples para desenhar 3 pontos que representam uma superfície triangular.\nO valor da inclinação é calculado com base na superfície triangular desenhada",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Medições",
+      "styleRules": {
+        "geodesicMeasurement": "Medição geodésica",
+        "linearMeasurement": "Medição linear",
+        "angleMeasurement": "Medição de ângulo",
+        "slopeMeasurement": "Medição de declividade",
+        "areaMeasurement": "Medição de área",
+        "startPosition": "Posição inicial",
+        "endPosition": "Posição final",
+        "centerPosition": "Posição central",
+        "segmentLabels": "Rótulos de segmento",
+        "measurementLabel": "Rótulo de medição"
+      }
     },
     "search": {
       "layerMustBeVisible": "A camada alvo está inativa",

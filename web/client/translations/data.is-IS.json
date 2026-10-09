@@ -170,9 +170,7 @@
         "right": "Right",
         "left": "Left",
         "bottom": "Bottom",
-        "top": "Top",
-        "editLayerName": "Edit layer name",
-        "confirmLayerName": "Confirm layer name change"
+        "top": "Top"
       },
       "legendOptions": {
         "title": "Legend",
@@ -818,7 +816,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Mælingar",
+      "styleRules": {
+        "geodesicMeasurement": "Jarðfræðileg mæling",
+        "linearMeasurement": "Línuleg mæling",
+        "angleMeasurement": "Hornamæling",
+        "slopeMeasurement": "Hallamæling",
+        "areaMeasurement": "Flatarmálsmæling",
+        "startPosition": "Upphafsstaðsetning",
+        "endPosition": "Lokastaðsetning",
+        "centerPosition": "Miðstaðsetning",
+        "segmentLabels": "Merkingar hluta",
+        "measurementLabel": "Merking mælingar"
+      }
     },
     "search": {
       "layerMustBeVisible": "The target layer is inactive",

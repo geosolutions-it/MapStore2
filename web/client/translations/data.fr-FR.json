@@ -265,9 +265,20 @@
         "right": "Droite",
         "left": "Gauche",
         "bottom": "Bas",
-        "top": "Haut",
-        "editLayerName": "Modifier le nom du calque",
-        "confirmLayerName": "Confirmer le changement de nom du calque"
+        "top": "Haut"
+      },
+      "sourceField": {
+        "edit": "Modifier la valeur",
+        "confirm": "Confirmer la valeur",
+        "required": "Une valeur est requise",
+        "requiredUrl": "L'URL du service est requise pour valider cette valeur",
+        "requiredName": "Le nom de la couche est requis pour valider cette valeur",
+        "requiredSearchUrl": "L'URL du service WFS est requise pour valider cette valeur",
+        "requiredSearchTypeName": "Le TypeName WFS est requis pour valider cette valeur",
+        "service": "Le service n'est pas joignable à cette URL. Corrigez l'URL ou confirmez à nouveau pour conserver cette valeur",
+        "notFound": "La couche est introuvable sur ce service. Vérifiez le nom et l'URL ou confirmez à nouveau pour conserver cette valeur",
+        "load": "Le chargement de la couche a échoué, par exemple parce que le style n'est pas compatible. Corrigez les valeurs ou confirmez pour les conserver",
+        "generic": "La validation a échoué. Vérifiez le nom et l'URL ou confirmez à nouveau pour conserver cette valeur"
       },
       "legendOptions": {
         "title": "Légende",
@@ -998,7 +1009,20 @@
       "tooltipSlopeStart": "Cliquez une fois pour dessiner 3 points représentant une surface triangulaire.\nLa valeur de la pente est calculée en fonction de la surface triangulaire dessinée",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Mesures",
+      "styleRules": {
+        "geodesicMeasurement": "Mesure géodésique",
+        "linearMeasurement": "Mesure linéaire",
+        "angleMeasurement": "Mesure d'angle",
+        "slopeMeasurement": "Mesure de pente",
+        "areaMeasurement": "Mesure de surface",
+        "startPosition": "Position de départ",
+        "endPosition": "Position d'arrivée",
+        "centerPosition": "Position centrale",
+        "segmentLabels": "Étiquettes de segment",
+        "measurementLabel": "Étiquette de mesure"
+      }
     },
     "search": {
       "layerMustBeVisible": "Le calque cible est inactif",
@@ -1320,6 +1344,7 @@
         }
       },
       "spatialfilter": {
+        "notAvailable": "Le filtre spatial n'est pas disponible pour cette couche.",
         "filterType": "Type de filtre",
         "geometric_operation": "Opération géométrique",
         "combo_placeholder": "Sélectionner...",
@@ -1818,6 +1843,12 @@
       "addToMap": "Ajouter à la carte",
       "getWMSLink": "Lien WMS",
       "error": "Une erreur s'est produite lors du chargement des données.",
+      "errors": {
+        "unauthorized": "Une authentification est requise pour accéder au service de catalogue (HTTP 401).",
+        "forbidden": "L'accès au service de catalogue a été refusé (HTTP 403). Vérifiez vos autorisations.",
+        "http": "La requête au service de catalogue a échoué (HTTP {status}).",
+        "serviceUnavailable": "Le service de catalogue n'a pas pu être contacté. La requête a peut-être été bloquée."
+      },
       "pageInfo": "{start}-{end} résultats parmi {total}",
       "resultInfo": "{total, plural, =0 {Pas d'objet} =1 {{total} sur {total}} other {{start}-{end} sur {total}}}",
       "pageInfoInfinite": "{total, plural, =undefined {} =0 {Aucun résultat} =1 {{total} sur {total} trouvés} other {chargé {loaded} sur {total} trouvés}}",
@@ -2204,6 +2235,9 @@
       "title": "Exporter des données",
       "service": "Service",
       "downloadMode": "Mode d’exportation",
+      "visibleGranuleInfo": "Seul le granule actuellement visible sur la carte sera téléchargé",
+      "timeAttributeInfo": "Sélectionnez l'attribut qui représente l'information temporelle de vos données. Cet attribut sera utilisé pour filtrer les entités par une date ou une période spécifique.",
+      "timeAttribute": "Attribut temporel",
       "format": "Format de fichier",
       "srs": "Système de référence spatiale",
       "export": "Exporter",

@@ -63,4 +63,38 @@ describe('Test for DownloadOptions component', () => {
         ReactDOM.render(<DownloadOptions service="wfs" defaultSelectedService="wps" onClearDownloadOptions={action.onClearDownloadOptions} />, document.getElementById("container"));
         expect(onClearDownloadOptionsSpy).toHaveBeenCalledWith('wfs');
     });
+    it('render time attribute dropdown and notice when multiple time attributes exist', (done) => {
+        const attributes = [
+            { name: 'start_date', type: 'date' },
+            { name: 'end_date', type: 'date' }
+        ];
+        const layer = {
+            name: 'workspace:test_layer',
+            search: { url: '/geoserver/wfs' }
+        };
+        ReactDOM.render(
+            <DownloadOptions
+                layer={layer}
+                hasTime
+                attributes={attributes}
+                service="wfs"
+            />,
+            document.getElementById("container")
+        );
+        setTimeout(() => {
+            try {
+                const form = document.getElementsByTagName('form')[0];
+                expect(form).toBeTruthy();
+                const timeAttrSelect = form.querySelector('.mapstore-downloadoptions-row .Select');
+                expect(timeAttrSelect).toExist();
+                const alert = form.querySelector('.alert.alert-info');
+                expect(alert).toExist();
+                expect(alert.querySelector('.glyphicon-info-sign')).toExist();
+                expect(alert.innerText.trim()).toBe('layerdownload.visibleGranuleInfo');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 50);
+    });
 });

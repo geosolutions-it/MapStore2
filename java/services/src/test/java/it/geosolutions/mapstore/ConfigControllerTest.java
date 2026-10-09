@@ -78,7 +78,7 @@ public class ConfigControllerTest {
         controller.setOverrides(tempProperties.getAbsolutePath());
         controller.setMappings("header.height=headerHeight,header.url=headerUrl");
         String resource = new String(controller.loadResource("localConfig", true), "UTF-8");
-        assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore2.geo-solutions.it\"}}", resource.trim());
+        assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore.geosolutionsgroup.com\"}}", resource.trim());
         tempResource.delete();
     }
     @Test
@@ -94,7 +94,7 @@ public class ConfigControllerTest {
         controller.setOverrides("mapstore.properties");
         controller.setMappings("header.height=headerHeight,header.url=headerUrl");
         String resource = new String(controller.loadResource("localConfig", true), "UTF-8");
-        assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore2.geo-solutions.it\"}}", resource.trim());
+        assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore.geosolutionsgroup.com\"}}", resource.trim());
         tempResource.delete();
     }
 

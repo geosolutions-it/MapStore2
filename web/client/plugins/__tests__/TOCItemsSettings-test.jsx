@@ -78,7 +78,8 @@ describe('TOCItemsSettings Plugin', () => {
         const tabIndexes = document.querySelectorAll(TAB_INDEX_SELECTOR);
         expect(tabIndexes.length).toBe(4);
         expect(tabIndexes[0].className).toBe("active"); // general tab active
-        expect(document.querySelectorAll(`${TAB_CONTENT_SELECTOR} div.form-group`).length).toBe(7); // check content is general settings tab.
+        // title, name, URL, description and group, the WFS linked service fields are rendered only when configured
+        expect(document.querySelectorAll(`${TAB_CONTENT_SELECTOR} div.form-group`).length).toBe(5);
 
     });
     it('shows the layer name error notification when pre-validation fails', (done) => {

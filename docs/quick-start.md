@@ -1,36 +1,10 @@
 # Quick Start
 
-You can either choose to download a standalone binary package, a WAR file, or use Docker to quickly start playing with MapStore.
+You can either choose to download a WAR file or use Docker to quickly start playing with MapStore.
 
 ## Local Setup
 
 This section covers how to get MapStore running on your local machine for testing and development.
-
-### Binary package
-
-The easiest way to try out MapStore is to download and extract the binary package available on MapStore [release page](https://github.com/geosolutions-it/MapStore2/releases/latest).
-Here you can find some preconfigured maps as well users and groups.
-The goal for this package is to ease all the requirements needed for you to take MapStore for a test-drive.
-
-Go to the location where you saved the zip file, unzip the contents and run:
-
-Windows: `mapstore2_startup.bat`
-
-Linux: `./mapstore2_startup.sh`
-
-Point your browser to: [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
-
-To stop MapStore simply do:
-
-Windows: `mapstore2_shutdown.bat`
-
-Linux: `./mapstore2_shutdown.sh`
-
-#### Package Contents
-
-* [MapStore](https://github.com/geosolutions-it/MapStore2/releases/latest)
-* [Tomcat](https://tomcat.apache.org/download-90.cgi)
-* [Java JDK](https://jdk.java.net/archive/)
 
 ### WAR file
 

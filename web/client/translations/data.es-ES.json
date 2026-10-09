@@ -264,9 +264,20 @@
         "right": "Derecha",
         "left": "Izquierda",
         "bottom": "Bottom",
-        "top": "Cima",
-        "editLayerName": "Editar el nombre de la capa",
-        "confirmLayerName": "Confirmar cambio de nombre de capa"
+        "top": "Cima"
+      },
+      "sourceField": {
+        "edit": "Editar valor",
+        "confirm": "Confirmar valor",
+        "required": "Se requiere un valor",
+        "requiredUrl": "La URL del servicio es necesaria para validar este valor",
+        "requiredName": "El nombre de la capa es necesario para validar este valor",
+        "requiredSearchUrl": "La URL del servicio WFS es necesaria para validar este valor",
+        "requiredSearchTypeName": "El TypeName WFS es necesario para validar este valor",
+        "service": "El servicio no es accesible en esta URL. Corrija la URL o confirme de nuevo para mantener este valor",
+        "notFound": "No se encontró la capa en este servicio. Compruebe el nombre y la URL o confirme de nuevo para mantener este valor",
+        "load": "No se pudo cargar la capa, por ejemplo porque el estilo no es compatible. Corrija los valores o confirme para mantenerlos",
+        "generic": "La validación falló. Compruebe el nombre y la URL o confirme de nuevo para mantener este valor"
       },
       "legendOptions": {
         "title": "Leyenda",
@@ -998,7 +1009,20 @@
       "tooltipSlopeStart": "Un solo clic para dibujar 3 puntos que representan una superficie triangular.\nEl valor de la pendiente se calcula en función de la superficie triangular dibujada",
       "altitude": "Altitud",
       "latitude": "Latitud",
-      "longitude": "Longitud"
+      "longitude": "Longitud",
+      "measurementsLayerTitle": "Mediciones",
+      "styleRules": {
+        "geodesicMeasurement": "Medición geodésica",
+        "linearMeasurement": "Medición lineal",
+        "angleMeasurement": "Medición de ángulo",
+        "slopeMeasurement": "Medición de pendiente",
+        "areaMeasurement": "Medición de área",
+        "startPosition": "Posición inicial",
+        "endPosition": "Posición final",
+        "centerPosition": "Posición central",
+        "segmentLabels": "Etiquetas de segmento",
+        "measurementLabel": "Etiqueta de medición"
+      }
     },
     "search": {
       "layerMustBeVisible": "La capa de destino está inactiva",
@@ -1320,6 +1344,7 @@
         }
       },
       "spatialfilter": {
+        "notAvailable": "El filtrado espacial no está disponible para esta capa.",
         "filterType": "Tipo de filtro",
         "geometric_operation": "Operación geométrica",
         "combo_placeholder": "Seleccionar...",
@@ -1818,6 +1843,12 @@
       "addToMap": "Añadir al mapa",
       "getWMSLink": "Enlace WMS",
       "error": "Ha ocurrido un error al cargar los datos.",
+      "errors": {
+        "unauthorized": "Se requiere autenticación para acceder al servicio de catálogo (HTTP 401).",
+        "forbidden": "Se denegó el acceso al servicio de catálogo (HTTP 403). Compruebe sus permisos.",
+        "http": "La solicitud al servicio de catálogo falló (HTTP {status}).",
+        "serviceUnavailable": "No se pudo contactar con el servicio de catálogo. Es posible que la solicitud haya sido bloqueada."
+      },
       "pageInfo": "{start}-{end} resultados de {total}",
       "resultInfo": "{total, plural, =0 No hay artículos} =1 {{total} artículo de {total}} other {{start}-{end} de {total}}}",
       "pageInfoInfinite": "{total, plural, =undefined {} =0 {No hay resultados} =1 {{total} de {total} emparejados} other {Cargado {loaded} de {total} emparejados}}",
@@ -2204,6 +2235,9 @@
       "title": "Exportar los datos",
       "service": "Servicio",
       "downloadMode": "Modo de exportación",
+      "visibleGranuleInfo": "Solo se descargará el gránulo actualmente visible en el mapa",
+      "timeAttributeInfo": "Seleccione el atributo que representa la información de tiempo en sus datos. Este atributo se utilizará para filtrar las entidades por una fecha u hora específica o un rango de horas.",
+      "timeAttribute": "Atributo de tiempo",
       "format": "Formato de fichero",
       "srs": "Sistema de referencia espacial",
       "export": "Exportar",

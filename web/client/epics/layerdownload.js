@@ -58,12 +58,14 @@ import { download } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
-import { getByOutputFormat } from '../utils/FileFormatUtils';
+import { getByOutputFormat, NETCDF_FORMAT } from '../utils/FileFormatUtils';
 import { getLayerTitle, getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import { toWKT } from '../utils/ogc/WKT';
+import { currentTimeSelector, offsetTimeSelector, offsetEnabledSelector, getLayerStaticDimension } from '../selectors/dimension';
+import { buildTemporalFilter } from '../utils/LayerDownloadUtils';
 import {extractGeometryAttributeName} from "../utils/WFSLayerUtils";
 
 const DOWNLOAD_FORMATS_LOOKUP = {
@@ -101,11 +103,18 @@ const hasOutputFormat = (data) => {
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
-const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, viewportFilter, downloadOptions = {}, options } = {}) => {
+const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, viewportFilter, temporalFilter, downloadOptions = {}, options } = {}) => {
     const { sortOptions, propertyNames } = options;
 
     const cqlFilter = getCQLFilterFromLayer(layer);
-    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, downloadOptions.downloadFilteredDataSet ? layerFilter : {}, downloadOptions.downloadFilteredDataSet ? filterObj : {}, viewportFilter, cqlFilter);
+    const data = mergeFiltersToOGC(
+        { ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] },
+        downloadOptions.downloadFilteredDataSet ? layerFilter : {},
+        downloadOptions.downloadFilteredDataSet ? filterObj : {},
+        viewportFilter,
+        cqlFilter,
+        temporalFilter
+    );
 
     return getXMLFeature(url, getFilterFeature(query(
         filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
@@ -277,6 +286,19 @@ export const fetchFormatsWFSDownload = (action$) =>
                     );
                 });
         });
+
+const getTimeLayerParams = (state, action, layer) => {
+    const currentTime = currentTimeSelector(state);
+    const offsetTime = offsetTimeSelector(state);
+    const offsetEnabled = offsetEnabledSelector(state);
+    const hasTimeDim = !!getLayerStaticDimension(layer, 'time');
+    const isVectorLayer = !!layer.search?.url;
+    const timeParam = hasTimeDim && currentTime ? (offsetEnabled && offsetTime ? `${currentTime}/${offsetTime}` : currentTime) : undefined;
+    const timeAttribute = hasTimeDim && currentTime ? (action.downloadOptions?.timeAttribute || 'time') : null;
+    const temporalFilter = buildTemporalFilter({ timeAttribute, currentTime, offsetTime, offsetEnabled });
+    return {isVectorLayer, timeParam, temporalFilter};
+};
+
 export const startFeatureExportDownload = (action$, store) =>
     action$.ofType(DOWNLOAD_FEATURES).switchMap(action => {
         const state = store.getState();
@@ -295,7 +317,7 @@ export const startFeatureExportDownload = (action$, store) =>
             ...action.downloadOptions.propertyName
         ] : null;
         const { layerFilter } = layer;
-
+        const {isVectorLayer, timeParam, temporalFilter} = getTimeLayerParams(state, action, layer);
         const wfsFlow = () => getWFSFeature({
             url: getSearchUrl(layer) || action.url,
             downloadOptions: action.downloadOptions,
@@ -303,9 +325,11 @@ export const startFeatureExportDownload = (action$, store) =>
             layer,
             layerFilter,
             viewportFilter: getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute),
+            temporalFilter: temporalFilter?.ogcFilterObj,
             options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
-                propertyNames
+                propertyNames,
+                params: timeParam ? { time: timeParam } : undefined
             }
         })
             .do(({ data, headers }) => {
@@ -325,11 +349,13 @@ export const startFeatureExportDownload = (action$, store) =>
                     layer,
                     layerFilter,
                     viewportFilter: getViewportFilter(action.downloadOptions.cropDataSet, mapBbox, geometryAttribute),
+                    temporalFilter: temporalFilter?.ogcFilterObj,
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
                         propertyNames: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
-                            ...(geometryAttribute ? [geometryAttribute] : [])] : null
+                            ...(geometryAttribute ? [geometryAttribute] : [])] : null,
+                        params: timeParam ? { time: timeParam } : undefined
                     }
                 }).do(({ data, headers }) => {
                     if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
@@ -356,14 +382,31 @@ export const startFeatureExportDownload = (action$, store) =>
             );
 
         const wpsFlow = () => {
-            const isVectorLayer = !!layer.search?.url;
             const cropToROI = action.downloadOptions.cropDataSet && !!mapBbox && !!mapBbox.bounds;
             const cqlFilter = getCQLFilterFromLayer(layer);
-            const filterData = mergeFiltersToOGC({
-                ogcVersion: '1.1.0',
-                addXmlnsToRoot: true,
-                xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
-            }, layer.layerFilter, action.filterObj, cqlFilter);
+
+            const getOGCDataFilter = (tempFilter) => {
+                const filterXml = mergeFiltersToOGC(
+                    {
+                        ogcVersion: '1.1.0',
+                        addXmlnsToRoot: true,
+                        xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+                    },
+                    action.downloadOptions.downloadFilteredDataSet ? layer.layerFilter : {},
+                    action.downloadOptions.downloadFilteredDataSet ? action.filterObj : {},
+                    cqlFilter,
+                    tempFilter?.ogcFilterObj
+                );
+
+                return !isEmpty(filterXml) ? {
+                    type: 'TEXT',
+                    data: { mimeType: 'text/xml; subtype=filter/1.1', data: filterXml }
+                } : undefined;
+            };
+
+            const dataFilter = getOGCDataFilter(temporalFilter);
+            const isNetCDF = action.downloadOptions.selectedFormat === NETCDF_FORMAT;
+            const hasWriteParameters = !isNetCDF && !isVectorLayer && (action.downloadOptions.tileWidth || action.downloadOptions.tileHeight || action.downloadOptions.compression);
             const wpsDownloadOptions = {
                 layerName: getWFSLayerName(layer),
                 outputFormat: action.downloadOptions.selectedFormat,
@@ -371,10 +414,7 @@ export const startFeatureExportDownload = (action$, store) =>
                 outputAsReference: true,
                 targetCRS: action.downloadOptions.selectedSrs && action.downloadOptions.selectedSrs !== 'native' ? action.downloadOptions.selectedSrs : undefined,
                 cropToROI,
-                dataFilter: action.downloadOptions.downloadFilteredDataSet && !isEmpty(filterData) ? {
-                    type: 'TEXT',
-                    data: { mimeType: 'text/xml; subtype=filter/1.1', data: filterData }
-                } : undefined,
+                dataFilter,
                 ROI: cropToROI ? {
                     type: 'TEXT',
                     data: {
@@ -383,14 +423,14 @@ export const startFeatureExportDownload = (action$, store) =>
                     }
                 } : undefined,
                 roiCRS: cropToROI ? (mapBbox.crs || 'EPSG:4326') : undefined,
-                writeParameters: {
+                writeParameters: hasWriteParameters ? {
                     ...(action.downloadOptions.tileWidth ? {tilewidth: action.downloadOptions.tileWidth} : {}),
                     ...(action.downloadOptions.tileHeight ? {tileheight: action.downloadOptions.tileHeight} : {}),
                     ...(action.downloadOptions.compression ? {
                         compression: action.downloadOptions.compression,
                         ...(action.downloadOptions.quality ? {quality: action.downloadOptions.quality} : {})
                     } : {})
-                },
+                } : undefined,
                 notifyDownloadEstimatorSuccess: true,
                 attribute: isVectorLayer && propertyNames ? propertyNames : undefined
             };
