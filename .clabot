@@ -47,7 +47,8 @@
     "jwkaltz",
     "ygodaert",
     "Binabh",
-    "tibovanheule"
+    "tibovanheule",
+    "christianbraun"
   ],
   "label": "CLA Ready",
   "message": "In order to contribute to the MapStore project, the CLA (Contributor License agreement) should be sent signed to GeoSolutions. Please consult contributing rules at: https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore#contributing-code"
