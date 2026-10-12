@@ -8,7 +8,9 @@
 
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { findIndex, head } from 'lodash';
+import findIndex from 'lodash/findIndex';
+import head from 'lodash/head';
+import find from 'lodash/find';
 import { Glyphicon } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 
@@ -24,6 +26,8 @@ import {getAttributesList} from "../../../utils/FeatureGridUtils";
 import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 import { describeProcess } from '../../../observables/wps/describe';
+import { filterFormatsByTimeState } from '../../../utils/LayerDownloadUtils';
+import { NETCDF_FORMAT } from '../../../utils/FileFormatUtils';
 
 /**
  * @prop {Array<{
@@ -72,7 +76,8 @@ const DownloadDialog = ({
     srsList,
     virtualScroll,
     wfsFormats,
-    wpsAvailable
+    wpsAvailable,
+    isRangeEnabled
 }) => {
 
     const selectedLayer = mapLayer || downloadLayer || {};
@@ -144,8 +149,10 @@ const DownloadDialog = ({
         validWFSFormats.filter(f => wfsFormats.find(wfsF => wfsF.name.toLowerCase() === f.name.toLowerCase())) :
         wfsFormats;
     const wfsAvailable = Boolean(selectedLayer?.search?.url);
-
-    const formatsAvailable = service === 'wfs' ? wfsFormatsList : validWPSFormats;
+    const hasTime = !!find(selectedLayer?.dimensions || [], { name: "time" });
+    const baseFormatsAvailable = service === 'wfs' ? wfsFormatsList : validWPSFormats;
+    const isVector = selectedLayer?.search?.url;
+    const formatsAvailable = isVector ? baseFormatsAvailable : filterFormatsByTimeState(baseFormatsAvailable, hasTime, isRangeEnabled);
 
     const noSupportedServiceFound = !wfsAvailable && !wpsAvailable;
 
@@ -183,6 +190,8 @@ const DownloadDialog = ({
                             wfsAvailable={wfsAvailable}
                             wpsAdvancedOptionsVisible={!selectedLayer?.search?.url}
                             wpsAvailable={wpsAvailable}
+                            hasTime={hasTime}
+                            isRange={isRangeEnabled}
                         />
                 }
             </div>
@@ -216,6 +225,7 @@ DownloadDialog.propTypes = {
     hideServiceSelector: PropTypes.bool,
     loading: PropTypes.bool,
     mapLayer: PropTypes.object,
+    isRangeEnabled: PropTypes.bool,
     onCheckWPSAvailability: PropTypes.func,
     onClearDownloadOptions: PropTypes.func,
     onClose: PropTypes.func,
@@ -249,6 +259,7 @@ DownloadDialog.defaultProps = {
     formats: [
         {name: 'image/tiff', label: 'TIFF', type: 'raster', validServices: ['wps']},
         {name: 'application/arcgrid', label: 'ArcGrid', type: 'raster', validServices: ['wps']},
+        {name: NETCDF_FORMAT, label: 'NetCDF', type: 'raster', validServices: ['wps']},
         {name: 'application/json', label: 'GeoJSON', type: 'vector', validServices: ['wps']},
         {name: 'application/zip', label: 'Shapefile', type: 'vector', validServices: ['wps']},
         {name: 'text/csv', label: 'CSV', type: 'vector', validServices: ['wps']},
