@@ -12,6 +12,7 @@ import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
 
 import { testEpic } from '../../epics/__tests__/epicTestUtils';
+import LOCAL_CONFIG from '../../configs/localConfig';
 
 const MockPlugin = {
     MockPlugin: () => null,
@@ -694,5 +695,13 @@ describe('PluginsUtils', () => {
             },
             mode: 'mobile'
         })).toEqual([{ name: 'Map' }]);
+    });
+    it('localConfig.json has no two plugins on the same page resolving to the same id', () => {
+        Object.keys(LOCAL_CONFIG.plugins || {}).forEach((page) => {
+            const entries = LOCAL_CONFIG.plugins[page];
+            const ids = entries.map((entry) => typeof entry === 'string' ? entry : entry.id || entry.name);
+            const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+            expect(duplicates).toEqual([]);
+        });
     });
 });
