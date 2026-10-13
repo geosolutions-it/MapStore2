@@ -25,7 +25,7 @@ import {
     Tooltip
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join, isNil, isEqual, inRange, isEmpty, pick, omit } from 'lodash';
+import { join, isNil, isEqual, inRange, isEmpty, pick, omit, isString } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
 import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
@@ -46,10 +46,11 @@ import Portal from '../misc/Portal';
  * @class
  * @memberof components.share
  * @prop {boolean} [isVisible] display or hide
- * @prop {node} [title] the title of the page
+ * @prop {string|node} [title="share.title"] the title of the modal or translation message id
  * @prop {string} [shareUrl] the url to use for share. by default location.href
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
+ * @prop {boolean} [socialPanel=true] if false, hide the social tab.
  * @prop {boolean} [embedPanel=true] if false, hide the embed tab.
  * @prop {object} [embedOptions] options to pass to the embed tab.(`showTOCToggle` - if false hides the 'show TOC' checkbox (used only by map))
  * @prop {string} [shareApiUrl] url for share API part
@@ -62,7 +63,8 @@ class SharePanel extends React.Component {
     static propTypes = {
         items: PropTypes.array,
         isVisible: PropTypes.bool,
-        title: PropTypes.node,
+        title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+        socialPanel: PropTypes.bool,
         modal: PropTypes.bool,
         draggable: PropTypes.bool,
         sharedTitle: PropTypes.string,
@@ -104,7 +106,8 @@ class SharePanel extends React.Component {
     };
 
     static defaultProps = {
-        title: <Message msgId="share.titlePanel"/>,
+        title: "share.title",
+        socialPanel: true,
         modal: false,
         draggable: true,
         onClose: () => {},
@@ -151,9 +154,11 @@ class SharePanel extends React.Component {
     UNSAFE_componentWillMount() {
         const bbox = join(this.props.bbox, ',');
         const coordinate = this.getCoordinates(this.props);
+        const itemTabs = this.props.items?.filter(({target} = {}) => target === 'tabs') ?? [];
+        const tabsMap = this.getShareTabs(itemTabs);
         this.setState({
             bbox,
-            eventKey: SHARE_TABS[this.props.selectedTab] || 1,
+            eventKey: tabsMap[this.props.selectedTab] || SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
             coordinate,
             ...this.processOrientation(this.props)
@@ -239,32 +244,92 @@ class SharePanel extends React.Component {
         return orig;
     };
 
-    getEmbedEventKey = (itemTabs = []) => {
-        return itemTabs.length + 3; // 2 Default panels (direct, social)
-    }
+    getTabs = ({ shareUrl, shareEmbeddedUrl, shareApiUrl, itemTabs = [] } = {}) => {
+        const tabsList = [
+            {
+                key: 'link',
+                title: <Message msgId="share.direct" />,
+                content: () => (
+                    <div>
+                        <ShareLink shareUrl={shareUrl} bbox={this.props.bbox}/>
+                        <ShareQRCode shareUrl={shareUrl}/>
+                    </div>
+                ),
+                hide: false
+            },
+            {
+                key: 'social',
+                title: <Message msgId="share.social" />,
+                content: () => (
+                    <ShareSocials
+                        sharedTitle={this.props.sharedTitle}
+                        shareUrl={shareUrl}
+                        getCount={this.props.getCount}
+                    />
+                ),
+                hide: !this.props.socialPanel
+            },
+            ...itemTabs.map(({ title, component: Component, tabName } = {}) => ({
+                key: tabName,
+                title,
+                content: () => <Component shareUrl={shareUrl} />,
+                hide: false
+            })),
+            {
+                key: 'embed',
+                title: <Message msgId="share.code" />,
+                content: () => (
+                    <div>
+                        <ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
+                        {this.props.showAPI ? (
+                            <ShareApi
+                                baseUrl={shareApiUrl}
+                                shareUrl={shareUrl}
+                                shareConfigUrl={this.props.shareConfigUrl}
+                                version={this.props.version}
+                            />
+                        ) : null}
+                    </div>
+                ),
+                hide: !this.props.embedPanel
+            }
+        ];
+
+        return tabsList
+            .filter(tab => !tab.hide)
+            .map((tab, index) => ({
+                ...tab,
+                eventKey: index + 1
+            }));
+    };
 
     getShareTabs = (itemTabs = []) => {
-        return  {
-            ...SHARE_TABS,
-            ...itemTabs?.map(({tabName} = {}, index) => ({[tabName]: 2 + (index + 1)})).reduce((f, c) => ({...f, ...c}), {}),
-            embed: this.getEmbedEventKey(itemTabs)
-        };
-    }
+        const tabs = this.getTabs({ itemTabs });
+        return tabs.reduce((acc, tab) => ({ ...acc, [tab.key]: tab.eventKey }), {});
+    };
 
     getHideIntabs = (itemTabs = []) => {
         return [
             this.props?.advancedSettings?.hideInTab,
             ...itemTabs?.map(({tabName, hideAdvancedSettingsInTab} = {}) => hideAdvancedSettingsInTab ? tabName : "")
-        ];
-    }
+        ].filter(Boolean);
+    };
 
-    getCurrenTab = (itemTabs = []) => {
-        const embedEventKey = this.getEmbedEventKey(itemTabs);
-        return (
-            (!this.props.embedPanel && this.state.eventKey === embedEventKey)
-            || (isEmpty(itemTabs) && this.state.eventKey > (this.props.embedPanel ? 3 : 2))
-        ) ? 1 : this.state.eventKey; // fallback to tab link if embed is disabled and selected at the same time
-    }
+    getCurrenTab = (tabs = []) => {
+        const activeKeys = tabs.map(t => t.eventKey);
+        return activeKeys.includes(this.state.eventKey) ? this.state.eventKey : (activeKeys[0] || 1);
+    };
+
+    getTitle = () => {
+        const { title } = this.props;
+        if (React.isValidElement(title)) {
+            return title;
+        }
+        if (isString(title)) {
+            return getMessageById(this.context.messages, title) || title;
+        }
+        return getMessageById(this.context.messages, "share.title");
+    };
 
     render() {
         // ************************ CHANGE URL PARAMETER FOR EMBED CODE ****************************
@@ -277,33 +342,25 @@ class SharePanel extends React.Component {
         }
 
         const itemTabs = this.props.items?.filter(({target} = {}) => target === 'tabs') ?? [];
-        const embedEventKey = this.getEmbedEventKey(itemTabs);
-        const currentTab = this.getCurrenTab(itemTabs);
         const shareApiUrl = this.props.shareApiUrl || cleanShareUrl || location.href;
-        const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
-        const direct = <div><ShareLink shareUrl={shareUrl} bbox={this.props.bbox}/><ShareQRCode shareUrl={shareUrl}/></div>;
-        const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
-            {this.props.showAPI ? <ShareApi baseUrl={shareApiUrl} shareUrl={shareUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
+        const tabs = this.getTabs({ shareUrl, shareEmbeddedUrl, shareApiUrl, itemTabs });
+        const tabsMap = tabs.reduce((acc, tab) => ({ ...acc, [tab.key]: tab.eventKey }), {});
+        const currentTab = this.getCurrenTab(tabs);
 
-        const SHARE_TABS_UPDATED = this.getShareTabs(itemTabs);
-        const tabs = (<Tabs defaultActiveKey={currentTab} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
-            <Tab eventKey={1} title={<Message msgId="share.direct" />}>{currentTab === 1 && direct}</Tab>
-            <Tab eventKey={2} title={<Message msgId="share.social" />}>{currentTab === 2 && social}</Tab>
-            {!isEmpty(itemTabs)
-                ? itemTabs.map(({title, component: Component}, index) => {
-                    const eventKey = 2 + (index + 1);
-                    return <Tab eventKey={eventKey} title={title}>{currentTab === eventKey && <Component shareUrl={shareUrl} />}</Tab>;
-                })
-                : null
-            }
-            {/* Keep embed panel at the last */}
-            {this.props.embedPanel ? <Tab eventKey={embedEventKey} title={<Message msgId="share.code" />}>{currentTab === embedEventKey && code}</Tab> : null}
-        </Tabs>);
+        const tabsElement = (
+            <Tabs defaultActiveKey={currentTab} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
+                {tabs.map(({ eventKey, title, content }) => (
+                    <Tab key={eventKey} eventKey={eventKey} title={title}>
+                        {currentTab === eventKey && content()}
+                    </Tab>
+                ))}
+            </Tabs>
+        );
         const hideInTabs = this.getHideIntabs(itemTabs);
         let sharePanel =
             (<Portal><ResizableModal
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
-                title={getMessageById(this.context.messages, "share.title")}
+                title={this.getTitle()}
                 dialogClassName=" share-win"
                 bodyClassName="share-panel-modal-body"
                 show={this.props.isVisible}
@@ -311,9 +368,9 @@ class SharePanel extends React.Component {
                 style={{zIndex: 1993}}
                 onClose={this.props.onClose}>
                 <div role="body" className="share-panels">
-                    {tabs}
+                    {tabsElement}
                     {!isEmpty(this.props.advancedSettings)
-                        && hideInTabs.every(hideInTab => currentTab !== SHARE_TABS_UPDATED[hideInTab])
+                        && hideInTabs.every(hideInTab => currentTab !== tabsMap[hideInTab])
                         && this.renderAdvancedSettings()
                     }
                 </div>

@@ -169,4 +169,27 @@ describe("The SharePanel component", () => {
         expect(panel.state.eventKey).toBe(3);
         expect(document.getElementById('permalink')).toBeTruthy();
     });
+    it('test hide social option removes the social panel', () => {
+        let panel = ReactDOM.render(<SharePanel showAPI={false} socialPanel={false} getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
+        let liTags = document.querySelectorAll('li');
+        expect(liTags.length).toBe(2);
+        const secondTab = document.getElementById('sharePanel-tabs-tab-2');
+        expect(secondTab).toBeTruthy();
+        ReactTestUtils.Simulate.click(secondTab);
+        expect(panel.state.eventKey).toBe(2);
+        expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
+    });
+    it('test custom panel title configuration', () => {
+        const panel = ReactDOM.render(<SharePanel title="Custom Share Title" getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
+        expect(panel).toBeTruthy();
+        let header = document.querySelector('[role="header"]');
+        expect(header).toBeTruthy();
+        expect(header.textContent).toContain('Custom Share Title');
+
+        ReactDOM.render(<SharePanel title={<span id="custom-title-node">Custom Node Title</span>} getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
+        header = document.querySelector('[role="header"]');
+        expect(header).toBeTruthy();
+        expect(document.getElementById('custom-title-node')).toBeTruthy();
+        expect(document.getElementById('custom-title-node').textContent).toBe('Custom Node Title');
+    });
 });
