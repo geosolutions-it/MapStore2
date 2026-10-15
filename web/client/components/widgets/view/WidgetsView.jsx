@@ -9,13 +9,14 @@ import React from 'react';
 
 import { pure, branch } from 'recompose';
 import { castArray, find, mapValues } from 'lodash';
-import { Responsive, WidthProvider as widthProvider } from 'react-grid-layout';
+import { Responsive, WidthProvider as widthProvider } from 'react-grid-layout/legacy';
 const ResponsiveReactGridLayout =
     branch(
         ({ useDefaultWidthProvider = true }) => useDefaultWidthProvider,
         widthProvider
     )(Responsive);
 import withGroupColor from '../enhancers/withGroupColor';
+import { fitLayoutInRows, placeNewWidgets } from '../../../utils/WidgetsUtils';
 const DefaultWidget = withGroupColor(require('../widget/DefaultWidget').default);
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
 import 'react-grid-layout/css/styles.css';
@@ -26,6 +27,7 @@ export default pure(({
     className = "",
     toolsOptions = {},
     rowHeight = 150,
+    maxRows,
     breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols = { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 },
     // eslint-disable-next-line no-unused-vars
@@ -38,6 +40,7 @@ export default pure(({
     compactType = null,
     compactMode,
     useDefaultWidthProvider = true,
+    gridComponent: GridComponent = ResponsiveReactGridLayout,
     measureBeforeMount,
     width,
     showGroupColor,
@@ -68,7 +71,7 @@ export default pure(({
     const effectiveLayouts = isMaximized ? maximizedLayouts : layouts;
     const getEnableColumnFilters = w => w.widgetType  === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(w.id) !== -1).length > 0 ).length > 0;
 
-    return (<ResponsiveReactGridLayout
+    return (<GridComponent
         key={id || "widgets-view"}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
@@ -81,6 +84,7 @@ export default pure(({
         style={style}
         className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
+        maxRows={maxRows}
         autoSize
         // TODO: this prop triggers a deprecation warning
         // we should remove it keeping the current behavior
@@ -100,8 +104,13 @@ export default pure(({
                  * Note: the layouts state will be automatically updated by ResponsiveReactGridLayout triggering onLayoutChange
                  * (this is triggered by the lib itself).
                  */
-                mapValues(effectiveLayouts, v =>
-                    v.map(l => {
+                mapValues(effectiveLayouts, (v, breakpoint) =>
+                    placeNewWidgets(
+                        fitLayoutInRows(v, cols[breakpoint], maxRows),
+                        widgets,
+                        cols[breakpoint],
+                        maxRows
+                    ).map(l => {
                         const w = find(widgets, { id: l.i });
                         if (w) {
                             const maximizedItem = maximizedIds.includes(l.i);
@@ -142,5 +151,5 @@ export default pure(({
                 currentLocale={currentLocale}
                 env={env} /></div>))
         }
-    </ResponsiveReactGridLayout>);
+    </GridComponent>);
 });
