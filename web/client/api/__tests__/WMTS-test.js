@@ -10,6 +10,7 @@ import expect from 'expect';
 
 import API, { getLayerTileMatrixSetsInfo, parseUrl } from '../WMTS';
 import { getGetTileURL } from '../../utils/WMTSUtils';
+import { castArray } from 'lodash';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
 let mockAxios;
@@ -57,6 +58,26 @@ describe('Test correctness of the WMTS APIs', () => {
                 done(ex);
             }
         });
+    });
+    it('GetRecords RESTful without OperationsMetadata', (done) => {
+        API.getRecords('base/web/client/test-resources/wmts/GetCapabilities-rest-no-operations-metadata.xml', 0, 2, '').then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.numberOfRecordsMatched).toBe(2);
+                result.records.map(record => {
+                    expect(record.requestEncoding).toBe('RESTful');
+                    expect(record.queryable).toBe(false);
+                    expect(record.GetTileURL).toNotExist();
+                    expect(getGetTileURL(record)).toEqual(castArray(record.ResourceURL).map(({ $: v }) => v.template));
+                });
+                expect(result.records[0].style).toBe("default");
+                expect(result.records[0].format).toBe("image/png");
+                expect(getGetTileURL(result.records[0])).toEqual(["https://maps.sampleServer.org/basemap/baselayer/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png"]);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }).catch(done);
     });
     it('GetRecords KVP for GeoServer 2.15', (done) => {
         // GS 2.15 has ResourceURLs together with KVP. This checks that the proper URL is returned by getTileURL, used to generate the layer. See #3796
