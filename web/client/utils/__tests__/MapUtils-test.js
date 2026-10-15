@@ -2046,14 +2046,6 @@ describe('Test the MapUtils', () => {
             ['pointCloudShading', { maximumAttenuation: 4 }, { maximumAttenuation: 8 }],
             ['enableImageryOverlay', true, false],
             ['sourceMetadata', { crs: 'EPSG:4326' }, { crs: 'EPSG:3857' }],
-<<<<<<< HEAD
-=======
-            ['strategy', 'tile', 'bbox'],
-            ['geometryType', 'Point', 'Polygon'],
-            ['maxRecordCount', 1000, 2000],
-            ['maxFeaturesInView', 1000, 2000],
-            ['cropToProjectionExtent', true, false],
->>>>>>> be4973f34 (#12951 False save button activation happens on map first load  (#12952))
             ['credits', { title: 'Source' }, { title: 'Other source' }],
             ['security', { type: 'basic' }, { type: 'bearer' }],
             ['forceProxy', true, false]
