@@ -83,6 +83,10 @@ import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import API from '../../../api/catalog';
 import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
+// import { getMiscSetting } from '../../../utils/ConfigUtils';
+import ProjectionRegistry from '../../../utils/ProjectionRegistry';
+import { getProjectionDef } from '../../../api/GeoServerProjections';
+import { addProjectionDef } from '../../../actions/projections';
 import { getResolutions } from '../../../utils/MapUtils';
 import { buildSRSMap } from '../../../utils/CatalogUtils';
 import { useCatalogSelection } from '../../../components/catalog/hooks/useCatalogSelection';
@@ -126,6 +130,8 @@ const Catalog = ({
     result,
     searchOptions,
     layerOptions,
+    projectionDefsEndpoint,
+    onAddProjectionDef = () => {},
     ...props
 }, context) => {
     const { loadedPlugins } = context;
@@ -181,6 +187,41 @@ const Catalog = ({
         return recordCrs && !isSRSAllowed(recordCrs);
     };
 
+    const loadRecordCRS = (record) => {
+        const recordCrs = record?.sourceMetadata?.crs;
+        // TODO: fallback if needed to miscSettings.projectionDefsEndpoint, uncomment also the import of getMiscSetting below
+        // const endpoint = projectionDefsEndpoint ?? getMiscSetting('projectionDefsEndpoint');
+        const endpoint = projectionDefsEndpoint;
+        if (record?.serviceType !== 'cog' || !recordCrs || isSRSAllowed(recordCrs) || !endpoint) {
+            return Promise.resolve(record);
+        }
+        return getProjectionDef(endpoint, recordCrs)
+            .then((def) => {
+                if (!ProjectionRegistry.isRegistered(def.code)) {
+                    ProjectionRegistry.register(def);
+                }
+                onAddProjectionDef(def);
+                const extent = record.sourceMetadata.extent;
+                if (record.bbox?.bounds || !extent?.length) {
+                    return record;
+                }
+                return {
+                    ...record,
+                    bbox: {
+                        ...record.bbox,
+                        crs: recordCrs,
+                        bounds: {
+                            minx: extent[0],
+                            miny: extent[1],
+                            maxx: extent[2],
+                            maxy: extent[3]
+                        }
+                    }
+                };
+            })
+            .catch(() => record);
+    };
+
 
     const {
         selected,
@@ -195,7 +236,7 @@ const Catalog = ({
         active
     });
 
-    const createLayer = (record, serviceType = record.serviceType) => {
+    const createLayer = (originalRecord, serviceType = originalRecord.serviceType) => loadRecordCRS(originalRecord).then((record) => {
         if (isSRSNotAllowed(record)) {
             onError('catalog.srs_not_allowed');
             return Promise.resolve();
@@ -235,7 +276,7 @@ const Catalog = ({
             }
             return null;
         });
-    };
+    });
 
     const addCatalogLayer = ({ record, layer } = {}) => {
         if (!layer) {
@@ -467,6 +508,7 @@ const ConnectedCatalog = connect(layerCatalogSelector, {
     onToggleTemplate: toggleTemplate,
     onDeleteService: deleteService,
     onError: addLayerError,
+    onAddProjectionDef: addProjectionDef,
     onFocusServicesList: focusServicesList,
     onAddBackground: backgroundAdded,
     onFormatOptionsFetch: formatOptionsFetch,
