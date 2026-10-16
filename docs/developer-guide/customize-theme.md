@@ -269,7 +269,7 @@ Note: These three styles are an example on how is possible to approach on the ma
 
 ### Structure of .less files
 
-Each less file that represent a MapStore plugin or component is composed by two sections:
+Each .less file that represent a MapStore plugin or component consists of two sections:
 
 - **Theme section** includes all the styles and classes that should change based on css variables. All the new declared selector must be included in a special function called `#ms-components-theme`. The `#ms-components-theme` function provide access to all the available variables of the theme via the `@theme-vars` argument.
 

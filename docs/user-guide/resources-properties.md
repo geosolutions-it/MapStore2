@@ -34,7 +34,7 @@ By clicking the **Edit properties** <img src="../img/button/edit_properties.jpg"
 
 * From the **About** tab, add **Details**
 
-When the user save the changes made by using the **Save** <img src="../img/button/save_changes_button.jpg" class="ms-docbutton"/> button, the *Properties* panel shows the creation and the last modification dates. An example in the image below:
+When the user saves the changes made by using the **Save** <img src="../img/button/save_changes_button.jpg" class="ms-docbutton"/> button, the *Properties* panel shows the creation and the last modification dates. An example in the image below:
 
 <img src="../img/resource-properties/resource_data.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
