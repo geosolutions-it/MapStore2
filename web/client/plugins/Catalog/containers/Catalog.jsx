@@ -83,7 +83,7 @@ import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import API from '../../../api/catalog';
 import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
-// import { getMiscSetting } from '../../../utils/ConfigUtils';
+import { getMiscSetting } from '../../../utils/ConfigUtils';
 import ProjectionRegistry from '../../../utils/ProjectionRegistry';
 import { getProjectionDef } from '../../../api/GeoServerProjections';
 import { addProjectionDef } from '../../../actions/projections';
@@ -189,9 +189,7 @@ const Catalog = ({
 
     const loadRecordCRS = (record) => {
         const recordCrs = record?.sourceMetadata?.crs;
-        // TODO: fallback if needed to miscSettings.projectionDefsEndpoint, uncomment also the import of getMiscSetting below
-        // const endpoint = projectionDefsEndpoint ?? getMiscSetting('projectionDefsEndpoint');
-        const endpoint = projectionDefsEndpoint;
+        const endpoint = projectionDefsEndpoint ?? getMiscSetting('projectionDefsEndpoint');
         if (record?.serviceType !== 'cog' || !recordCrs || isSRSAllowed(recordCrs) || !endpoint) {
             return Promise.resolve(record);
         }
