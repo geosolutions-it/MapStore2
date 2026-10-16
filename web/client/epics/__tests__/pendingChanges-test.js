@@ -44,7 +44,8 @@ describe('comparePendingChanges', () => {
                 type: "wms",
                 url: "",
                 visibility: true,
-                catalogURL: "url"
+                catalogURL: "url",
+                autoRefreshInterval: -1
             }
         ],
         backgroundSelector: {
@@ -78,7 +79,8 @@ describe('comparePendingChanges', () => {
                         "hidden": false,
                         "params": {},
                         "expanded": false,
-                        "cropToProjectionExtent": undefined
+                        "cropToProjectionExtent": undefined,
+                        autoRefreshInterval: -1
                     }
                 ],
                 "groups": [],

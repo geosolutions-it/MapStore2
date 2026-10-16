@@ -53,6 +53,17 @@
       "descriptionAdmin": "Por favor, póngase en contacto con el administrador"
     },
     "autorefresh": {
+      "selector": "Establecer intervalo de actualización automática de capas",
+      "label": {
+        "default": "Activar actualización automática",
+        "lastUpdated": "Última actualización",
+        "addLayer": "Agregar capa",
+        "addLayerPlaceholder": "Seleccionar...",
+        "removeLayer": "Eliminar capa",
+        "layersSummary": "Capas actualizadas automáticamente",
+        "noLayers": "No se encontraron",
+        "informations": "Qué capas están configuradas"
+      },
       "of": "de",
       "updating": "actualizando...",
       "layers": "capas"
@@ -2730,7 +2741,6 @@
         "tickAngleTooltip": "Define el ángulo de rotación de la etiqueta de marca en grados.",
         "fillTickValuesTooltip": "Rellenar con valores de filtro disponibles",
         "fillTickLabelsTooltip": "Autorrellenar las etiquetas correspondientes a los valores de marca",
-
         "defaultFilter": "Filtro predeterminado",
         "defaultFilterInfo": "Define un filtro para aplicar cuando no hay nada seleccionado. Sugerencia: si desea no mostrar nada cuando no hay nada seleccionado, cree un filtro que no devuelva ninguna característica",
         "noSelectionMode": "Modo sin selección",
@@ -4055,6 +4065,10 @@
       "Isochrone": {
         "description": "Este complemento permite calcular isócrones e isodistancias",
         "title": "Isochrone"
+      },
+      "AutoRefresh": {
+        "description": "Este complemento permite configurar un intervalo de tiempo para la actualización automática de las capas",
+        "title": "Auto Refresh"
       }
     },
     "contextCreator": {
