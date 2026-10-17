@@ -53,6 +53,7 @@ class Cookie extends React.Component {
     renderAcceptButton = () => {
         return (
             <Button
+                data-ms-id="cookie-accept-button"
                 className="cookie-button"
                 id="accept-cookie"
                 bsStyle="primary"
@@ -64,10 +65,11 @@ class Cookie extends React.Component {
     renderMoreDetails = () => {
         return this.props.externalCookieUrl ?
             (
-                <a style={{cursor: "pointer"}}
+                <a data-ms-id="cookie-privacy-link" style={{cursor: "pointer"}}
                     id="accept-cookie"
                     href={this.props.externalCookieUrl}>
                     <Button
+                        data-ms-id="cookie-privacy-text"
                         className="cookie-button"
                         id="decline-cookie"
                         bsStyle="primary" >
@@ -99,14 +101,14 @@ class Cookie extends React.Component {
             return null;
         }
         const content = (
-            <div className={this.props.seeMore ? "mapstore-cookie-panel see-more" : "mapstore-cookie-panel not-see-more"}>
+            <div data-ms-id="cookie-overlay" className={this.props.seeMore ? "mapstore-cookie-panel see-more" : "mapstore-cookie-panel not-see-more"}>
                 <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
                     {this.props.seeMore ? <Glyphicon className="cookie-close-btn" glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
                 </div>
                 <div role="body" className="cookie-body-container">
                     {!this.props.externalCookieUrl && this.props.seeMore ? (
                         <MoreDetails html={this.props.html}/>
-                    ) : (<div className="cookie-message">
+                    ) : (<div data-ms-id="cookie-banner-maintext" className="cookie-message">
                         <Message msgId="cookie.info"/>
                     </div>) }
                     <br/>

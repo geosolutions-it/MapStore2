@@ -102,6 +102,7 @@ const TOCItemSettings = (props) => {
                                     <NavItemT
                                         key={'ms-tab-settings-' + tab.id}
                                         tooltip={<Message msgId={tab.tooltipId}/> }
+                                        data-ms-id={`toc-settings-tab-${tab.id}`}
                                         eventKey={tab.id}
                                         onClick={() => {
                                             onSetTab(tab.id);

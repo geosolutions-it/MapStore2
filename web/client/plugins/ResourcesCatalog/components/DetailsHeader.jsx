@@ -64,6 +64,7 @@ function DetailsHeader({
                             onClick={onClose}
                             square
                             borderTransparent
+                            data-ms-id="resource-details-close"
                         >
                             <Glyphicon glyph="1-close" />
                         </Button>
@@ -83,7 +84,7 @@ function DetailsHeader({
             <div ref={titleNodeRef}></div>
             <FlexBox className="ms-details-header-info" gap="sm" classNames={['_padding-md']}>
                 <FlexBox.Fill>
-                    <Text fontSize="lg">
+                    <Text fontSize="lg" data-ms-id="resource-details-title">
                         {!loading ? <Glyphicon {...icon} /> : <Spinner />}{' '}
                         {title}
                     </Text>

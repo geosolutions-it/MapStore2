@@ -63,6 +63,7 @@ const DrawerButton = connect(state => ({
 }) =>
     <Button
         id={id}
+        data-ms-id="drawer-menu-toggle"
         style={menuButtonStyle}
         bsStyle={buttonStyle}
         key="menu-button"

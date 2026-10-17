@@ -64,6 +64,7 @@ const ResourcesContainer = (props) => {
                         return (
                             <li
                                 key={`${idx}:${resource?.id}`}
+                                data-ms-id={`resource-card-${resource?.id}`}
                             >
                                 <ResourceCard
                                     component={cardComponent}
