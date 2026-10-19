@@ -291,8 +291,29 @@ const Catalog = ({
             setLoadingLayers(allowed.map(record => record.identifier));
             return processRecords(allowed, buildLayerOptions(), locales)
                 .then(({ layers = [], groups = [] } = {}) => {
-                    groups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
-                    layers.filter(Boolean).forEach(layer => onLayerAdd(layer, { zoomToLayer }));
+                    // Create outer groups first, then descendants in layer stacking order.
+                    const pendingGroups = groups.filter(_group => {
+                        if (groups.some(parent => parent.options?.id === _group.parent)) {
+                            return true;
+                        }
+                        onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst);
+                        return false;
+                    });
+                    const addPendingGroup = groupId => {
+                        const index = pendingGroups.findIndex(_group => _group.options?.id === groupId);
+                        if (index === -1) {
+                            return;
+                        }
+                        const [_group] = pendingGroups.splice(index, 1);
+                        addPendingGroup(_group.parent);
+                        onAddGroup(_group.title, _group.parent, _group.options, true);
+                    };
+                    layers.filter(Boolean).forEach(layer => {
+                        addPendingGroup(layer.group);
+                        onLayerAdd(layer, { zoomToLayer });
+                    });
+                    // Preserve groups that have no layers.
+                    pendingGroups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
                     if (clearSelected) {
                         clearSelection();
                     }
