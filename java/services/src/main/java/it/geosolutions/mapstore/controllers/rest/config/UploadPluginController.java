@@ -69,11 +69,11 @@ public class UploadPluginController extends BaseMapStoreController {
     @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "/uploadPlugin", method = RequestMethod.POST, headers = "Accept=application/json")
     public @ResponseBody String uploadPlugin(InputStream dataStream) throws IOException {
+        Map<File, String> tempFilesToRelativeTargets = new HashMap<>(); // File -> relative path under extensions root (POSIX)
         try (ZipInputStream zip = new ZipInputStream(dataStream)) {
             ZipEntry entry = zip.getNextEntry();
             String pluginName = null;
             String bundleEntryName = null; // as found inside the zip (normalized, POSIX)
-            Map<File, String> tempFilesToRelativeTargets = new HashMap<>(); // File -> relative path under extensions root (POSIX)
             JsonNode plugin = null;
             boolean addTranslations = false;
 
@@ -83,12 +83,18 @@ public class UploadPluginController extends BaseMapStoreController {
                     final String normalizedEntry = normalizeZipEntryName(entry.getName());
                     final String lower = normalizedEntry.toLowerCase(Locale.ROOT);
 
+                    // Assets are served from the webapp when no data directory is configured.
+                    for (String segment : lower.split("/")) {
+                        if (segment.matches(".*\\.(jsp|jspx|jspf)(;.*)?")) {
+                            throw new SecurityException("Server-side extension is not allowed");
+                        }
+                    }
+
                     if (lower.endsWith("index.js")) {
                         bundleEntryName = normalizedEntry;
                         File tempBundle = File.createTempFile("mapstore-bundle", ".js");
-                        storeAsset(zip, tempBundle);
-                        // We'll resolve final relative target after we know pluginName
                         tempFilesToRelativeTargets.put(tempBundle, "__BUNDLE__");
+                        storeAsset(zip, tempBundle);
                     } else if (lower.equals("index.json")) {
                         JsonNode json = readJSON(zip);
                         JsonNode plugins = json.get("plugins");
@@ -101,23 +107,17 @@ public class UploadPluginController extends BaseMapStoreController {
 
                         pluginName = plugin.get("name").asText();
                         validatePluginName(pluginName); // SECURITY: ensure folder-safe name
-
-                        if (shouldStorePluginsConfigAsPatch()) {
-                            addPluginConfigurationAsPatch(plugin);
-                        } else {
-                            addPluginConfiguration(plugin);
-                        }
                     } else if (lower.startsWith("translations/")) {
                         File tempAsset = File.createTempFile("mapstore-asset-translations", ".json");
-                        storeAsset(zip, tempAsset);
                         // Target relative to extensions root: <pluginName>/<translations/...>
                         tempFilesToRelativeTargets.put(tempAsset, PLUGIN_PATH_PREFIX + normalizedEntry);
+                        storeAsset(zip, tempAsset);
                         addTranslations = true;
                     } else if (lower.startsWith("assets/")) {
                         File tempAsset = File.createTempFile("mapstore-asset", ".tmp");
-                        storeAsset(zip, tempAsset);
                         // Target relative to extensions root: <pluginName>/<assets/...>
                         tempFilesToRelativeTargets.put(tempAsset, PLUGIN_PATH_PREFIX + normalizedEntry);
+                        storeAsset(zip, tempAsset);
                     }
                 }
                 entry = zip.getNextEntry();
@@ -128,6 +128,12 @@ public class UploadPluginController extends BaseMapStoreController {
             }
             if (bundleEntryName == null) {
                 throw new IOException("Invalid bundle: index.js missing");
+            }
+
+            if (shouldStorePluginsConfigAsPatch()) {
+                addPluginConfigurationAsPatch(plugin);
+            } else {
+                addPluginConfiguration(plugin);
             }
 
             // Build pluginBundle path (relative to extensions root) SAFELY in POSIX form:
@@ -159,11 +165,16 @@ public class UploadPluginController extends BaseMapStoreController {
             }
 
             return plugin.toString();
+        } finally {
+            for (File tempFile : tempFilesToRelativeTargets.keySet()) {
+                FileUtils.deleteQuietly(tempFile);
+            }
         }
     }
 
     private static void validatePluginName(String pluginName) {
-        if (pluginName == null || pluginName.isEmpty() || !pluginName.matches("^[A-Za-z0-9._-]+$")) {
+        if (pluginName == null || pluginName.isEmpty() || pluginName.equals(".")
+                || pluginName.equals("..") || !pluginName.matches("^[A-Za-z0-9._-]+$")) {
             throw new IllegalArgumentException("Invalid plugin name.");
         }
     }
