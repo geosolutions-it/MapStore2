@@ -172,6 +172,7 @@ nav:
       - Filters: 'developer-guide/LayerFilter.md'
       - Styles: 'developer-guide/vector-style.md'
     - Database Setup: 'developer-guide/database-setup.md'
+    - Initial Administrator Password: 'developer-guide/initial-admin-password.md'
     - Integrations:
       - Users:
         - LDAP: 'developer-guide/integrations/users/ldap.md'

@@ -22,6 +22,27 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Default users removed: initial administrator password
+
+MapStore does not create the sample users `admin`/`admin` and `user`/`user` anymore (the `sample_users.xml` file is no longer shipped with the bundled GeoStore). On the first start with an empty database the `admin` user is created with the password taken from the `INITIAL_ADMIN_PASSWORD` environment variable; if the variable is not set, no administrator is created and start-up continues with a warning in the log. On a database that still contains an `admin` using the former default password, setting `INITIAL_ADMIN_PASSWORD` resets it to that value. See [Initial Administrator Password](initial-admin-password.md) for the details.
+
+**Existing installations**: users already present in the database are not changed. At every start MapStore logs a critical security error if users with default credentials (e.g. `admin`/`admin`, `user`/`user`) are still present: change their passwords as soon as possible.
+
+**New installations**: make sure that `INITIAL_ADMIN_PASSWORD` is set before the first start, otherwise no administrator is created.
+
+**MapStore projects**: remove the `userListInitFile` property referencing `classpath:sample_users.xml` from the `geostoreInitializer` bean in `web/src/main/resources/applicationContext.xml`, otherwise the application fails to start because the file does not exist anymore.
+
+```diff
+     <bean id="geostoreInitializer" class="it.geosolutions.geostore.init.GeoStoreInit" lazy-init="false">
+-        <!-- Site specific initialization. Please specify a path in the ovr file-->
+-        <!--<property name="userListInitFile"><null/></property>-->
+-        <property name="userListInitFile" value="classpath:sample_users.xml"/>
++        <!-- Site specific initialization. Please specify a path in the ovr file-->
++        <!--<property name="userListInitFile" value="file:///path/to/your/users.xml"/>-->
+```
+
+Also remove any `geostoreInitializer.userListInitFile=classpath:sample_users.xml` entry from your `geostore-datasource-ovr.properties` files.
+
 ### Resources Catalog layout styles: `list` renamed to `table`
 
 In the `ResourcesGrid` plugin configuration, the tabular column-based layout style previously named `list` has been renamed to `table`.
