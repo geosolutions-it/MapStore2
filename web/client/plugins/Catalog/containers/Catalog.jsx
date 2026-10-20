@@ -292,13 +292,10 @@ const Catalog = ({
             return processRecords(allowed, buildLayerOptions(), locales)
                 .then(({ layers = [], groups = [] } = {}) => {
                     // Create outer groups first, then descendants in layer stacking order.
-                    const pendingGroups = groups.filter(_group => {
-                        if (groups.some(parent => parent.options?.id === _group.parent)) {
-                            return true;
-                        }
-                        onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst);
-                        return false;
-                    });
+                    const isNested = _group => groups.some(parent => parent.options?.id === _group.parent);
+                    groups.filter(_group => !isNested(_group))
+                        .forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
+                    const pendingGroups = groups.filter(isNested);
                     const addPendingGroup = groupId => {
                         const index = pendingGroups.findIndex(_group => _group.options?.id === groupId);
                         if (index === -1) {
