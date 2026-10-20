@@ -166,3 +166,21 @@ export const objectToAttributes = (obj = {}, xmlns) => keys(obj).filter(key => o
 }));
 
 export const assignNamespace = (nodes, xmlns) => nodes.filter(node => !!node).map(node => ({...node, xmlns}));
+const XML_ESCAPES = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&apos;'
+};
+
+/**
+ * Escapes the XML special characters (& < > " ') of a value
+ * so it can be safely interpolated in XML text or attribute values.
+ * @param {any} value the value to escape. `null`/`undefined` become an empty string
+ * @returns {string} the escaped string
+ */
+export const xmlEscape = (value) =>
+    value === null || value === undefined
+        ? ''
+        : String(value).replace(/[&<>"']/g, (ch) => XML_ESCAPES[ch]);
