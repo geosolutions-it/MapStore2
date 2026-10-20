@@ -9,8 +9,8 @@ Instead, the administrator account is created from the `INITIAL_ADMIN_PASSWORD` 
 At every start-up GeoStore checks whether an account named `admin` exists:
 
 - **The `admin` account does not exist** (new database, or it was renamed or deleted):
-    - if `INITIAL_ADMIN_PASSWORD` is set, the `admin` account is created with that password;
-    - if `INITIAL_ADMIN_PASSWORD` is **not** set, **no account is created**. Start-up continues and the log reports that the variable is missing. In this state nobody can log in until an `admin` is created (set the variable and restart, or create a user another way).
+  - if `INITIAL_ADMIN_PASSWORD` is set, the `admin` account is created with that password;
+  - if `INITIAL_ADMIN_PASSWORD` is **not** set, **no account is created**. Start-up continues and the log reports that the variable is missing. In this state nobody can log in until an `admin` is created (set the variable and restart, or create a user another way).
 - **The `admin` account already exists**: it is left untouched, with one exception — if it still uses a former default password (`admin`) and `INITIAL_ADMIN_PASSWORD` is set, its password is **reset** to the value of the variable (a security warning is logged).
 
 There is **no** random password and **no** generated password file: the only source of the initial password is the `INITIAL_ADMIN_PASSWORD` environment variable.
