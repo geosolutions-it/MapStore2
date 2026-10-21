@@ -570,7 +570,7 @@ Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.c
 
 Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](navigation-toolbar.md#identify-tool):
 
-<img src="../img/layer-settings/feature-info-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-settings/featureInfo.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 In particular, the user can choose between:
 
@@ -583,6 +583,8 @@ In particular, the user can choose between:
 * **Properties**
 
 * **Template**
+
+* **External Data**
 
 !!!note
     Without selecting any format here, the [Identify Tool](navigation-toolbar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Side Toolbar](mapstore-toolbars.md#side-toolbar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
@@ -643,3 +645,21 @@ In this case, by clicking on the map, the [Identify Tool](navigation-toolbar.md#
 <img src="../img/layer-settings/GFI_template_ex1.jpg" class="ms-docimage"/>
 
 Using the `${properties.NAME_OF_THE_FIELD}` syntax, MapStore is able to parse the response to the [Identify Tool](navigation-toolbar.md#identify-tool) request by matching the configured placeholder.
+
+
+### External Data
+
+The **External Data** format shows records from a different WFS layer that are related to the clicked feature. The related records are found with a CQL filter built from the attributes of the clicked feature.
+
+<img src="../img/layer-settings/externalData.jpg" class="ms-docimage"/>
+
+Selecting **EXTERNAL DATA** the user must fill in:
+
+* **WFS URL**: the address of the WFS service containing the related data. Click the refresh button next to the field to load the available layers.
+* **Layer name**: the layer of the WFS service to query, chosen from the list
+* **CQL filter template**: the filter used to find the related records. Attributes of the clicked feature can be inserted with the `${properties['attribute_name']}` syntax. 
+
+Click **Validate** to check the configuration.
+
+!!! note
+    All the fields are mandatory. If the configuration is not complete, the view is highlighted in red and a warning icon appears next to it.
