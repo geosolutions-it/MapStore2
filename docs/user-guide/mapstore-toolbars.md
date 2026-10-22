@@ -179,9 +179,9 @@ In particular, with these options it is possible to:
 
 * Perform a [Measure](measure.md) on the map by clicking the <img src="../img/button/measurament.jpg" class="ms-docbutton"/> button
 
-* Access the map **Settings** by clicking the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, where the user can change the current **Language** and select the [Identify](navigation-toolbar.md#identify-tool) options
+* The **Settings** panel lets the user configure general map options. **Combine WMS requests (coalesce)** loads adjacent WMS layers from the same service with a single request instead of one per layer, which speeds up map loading; **Information sheet format** sets the format of the [Identify](identify.md) results (*TEXT*, *HTML* or *PROPERTIES*), and **Trigger event for the display of the information sheet** sets whether Identify runs on mouse *Click* or *Hover*.
 
-<img src="../img/menu-bar/settings-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
+<img src="../img/menu-bar/coalesceMap.jpg" class="ms-docimage" style="max-width:600px;"/>
 
 !!!Note
     When the [3D navigation](navigation-toolbar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*.
