@@ -19,8 +19,8 @@
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
-        <spring.version>7.0.8</spring.version>
-        <spring.security.version>7.1.0</spring.security.version>
+        <spring.version>7.0.9</spring.version>
+        <spring.security.version>7.1.1</spring.security.version>
 
         <!-- other dependencies (aligned where applicable) -->
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
