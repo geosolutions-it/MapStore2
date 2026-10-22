@@ -121,6 +121,9 @@ const loadFunction = (options, headers) => function(image, src) {
                     console.error(errorMessage);  // show ogc exception in console for debugging
                 });
         } else {
+            img.addEventListener('error', () => {
+                failTiles.add(src);
+            }, { once: true });
             img.src = newSrc;
         }
     }
