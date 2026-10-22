@@ -11,13 +11,20 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
 
     * For aggregate operations, `chart` and `counter` widgets need the WPS process `gs:Aggregate` available in GeoServer to work.
 
+
 ## Add a Widget
 
-Once at least one layer is present in the map (see [Catalog](catalog.md#catalog-services) section for more information about adding layers), it is possible to create a widget by selecting that layer in the [TOC](toc.md#table-of-contents) and by clicking on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button from the [Layer Toolbar](toc.md#toolbar-options) or from the [Attribute Table](attributes-table.md#attribute-table). Performing these operations the *Widget* panel appears:
+Once at least one layer is present in the map (see [Catalog](catalog.md#catalog-services) section for more information about adding layers), it is possible to create a widget through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button, always available in the [TOC](toc.md#table-of-contents) toolbar. To create a widget, the user can:
 
-<img src="../img/widgets/map-widgets-panel.jpg" class="ms-docimage" style="max-width:450px;"/>
+- Click on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button in the TOC
+- Choose the type of widget to create
+- Select the layer to use for the widget, among the ones available in the map
 
-From here the user can choose between four different types of widget:
+Performing these operations the *Widget* panel appears:
+
+<img src="../img/widgets/map-widgets-panel.jpg" class="ms-docimage"/>
+
+From here the user can choose between five different types of widget:
 
 * *Chart*
 * *Text*
@@ -564,9 +571,11 @@ In this tab, the user can customize the filter layout and preview it in real tim
 
 Once the user chooses to enable the **Title**, it can be customized with the following options:
 
-<img src="../img/widgets/title-layout.jpg" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/titleLayout.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 * Add a **Label**
+
+* Add a short **Description** of the filter, to help end users understand what the filter does or how to use it. The description is displayed to end users as a tooltip in the widget
 
 * Change the filter **Icon** displayed next to the label
 
@@ -600,6 +609,15 @@ From the **Items**, the user can perform the following actions:
 
 * Enable/Disable the **Force Selection** option, ensuring that at least one filter item must be selected.
 
+* Enable/Disable the **Default expanded** option to choose whether the filter is displayed expanded or collapsed when the widget is opened. This option is enabled by default.
+
+<img src="../img/widgets/defaultExpanded.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* Enable/Disable the **Show connected layers** option to display, in the widget, the list of layers the filter is connected to. This option is enabled by default.
+
+<img src="../img/widgets/connectedLayers.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+
 #### Interactions
 
 In the Interactions tab, it is possible to connect the newly created filter to the layers and widgets present on the map.
@@ -613,6 +631,28 @@ The filter can be connected to the layer it is derived from data source or to a 
 The filter can also be connected to other layers and widgets that do not share the same data source but are present on the map. To do this, first click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, enable the check to confirm that the filter may be applied to this data source even if it is different from the original, and then connect the filter by clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button.
 
 <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/connection-different-data-source.mp4"/></video>
+
+From the **Zoom to** section of the *Interactions* tab, the user can configure the filter to zoom the map to the extent of the filtered features of the connected layers.
+
+<img src="../img/widgets/zoomto.jpg" class="ms-docimage" style="max-width:350px;"/>
+
+The *Map* becomes available in the *Zoom to* section only once the filter is connected, through the *Apply Filter* section, to at least one layer of that map. Then, the user can enable the zoom by clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button next to the *Map*.
+
+Through the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, the user can also enable the **Auto zoom** option. Depending on this option, the zoom works in two different ways:
+
+- When *Auto zoom* is **disabled**, the <img src="../img/button/zoomto.jpg" class="ms-docbutton"/> button is displayed in the widget, and the user can click it to zoom the map to the filtered features.
+- When *Auto zoom* is **enabled**, the map automatically zooms to the filtered features every time the filter selection changes.
+
+If the filter is connected to more than one layer, the map zooms to an extent that includes the filtered features of all the connected layers. The zoom also takes into account the widgets displayed on the map, so that the filtered features stay visible.
+
+!!! note
+    In a dashboard, each map widget is listed separately in the *Zoom to* section, so the zoom can be enabled and configured for each map.
+
+
+
+
+
+
 
 #### Configure Filter Selector Info
 
@@ -672,6 +712,17 @@ Example of the elevation attribute applied to the filter selector slider:
 
 <video class="ms-docimage" controls><source src="../img/widgets/elevation-dimension.mp4"/></video>
 
+
+#### Filtered layers in the TOC
+
+When a layer is filtered through a **Filter Selector** widget, the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon is displayed next to the layer title in the [TOC](toc.md#table-of-contents). 
+
+From the TOC, the user can:
+
+* Move the mouse over the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to display a tooltip with the name of the widget (or widgets) applying the filter to the layer.
+* Click the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to disable the filter on the layer, and click it again to enable it.
+
+
 ## Manage existing widgets
 
 Once widgets have been created, they will be placed on the bottom right of the map viewer and the *Widgets Tray* appears:
@@ -705,6 +756,11 @@ Through the buttons available on each widget the user can  perform the followin
 * Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+When a *Filter Selector* widget is currently applying a filter to the connected layers or widgets, a green dot is displayed on its button <img src="../img/button/activatedWidget.jpg" class="ms-docbutton"/>, so the user can quickly identify the active filters, even if the widget is collapsed.
+
+!!! Note
+    The green dot is displayed when at least one filter of the widget is connected and has a selected value. It disappears when the filter selection is cleared or the filter is disconnected.
 
 ### Access widgets menu
 
