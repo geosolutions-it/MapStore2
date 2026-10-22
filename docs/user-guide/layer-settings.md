@@ -663,3 +663,13 @@ Click **Validate** to check the configuration.
 
 !!! note
     All the fields are mandatory. If the configuration is not complete, the view is highlighted in red and a warning icon appears next to it.
+
+### Feature count and Buffer
+
+For `WMS` layers, the Feature Info section also allows to configure how the [Identify Tool](navigation-toolbar.md#identify-tool) queries the layer:
+
+<img src="../img/layer-settings/featureInfoWMS.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+* **Feature count**: sets the maximum number of features returned by the server for each identify request on the layer (default `10`)
+* **Buffer (px)**: sets the search radius, in pixels, around the clicked point within which features are identified, making it easier to select points and lines on the map. It uses the GeoServer `BUFFER` vendor parameter, so it is available only for layers served by GeoServer
+
