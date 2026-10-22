@@ -32,7 +32,7 @@
         <!-- MapStore‑specific -->
         <mapstore-services.version>1.12-SNAPSHOT</mapstore-services.version>
         <geostore-webapp.version>1.6-SNAPSHOT</geostore-webapp.version>
-        <http_proxy.version>2.6.2</http_proxy.version>
+        <http_proxy.version>1.6.0</http_proxy.version>
         <print-lib.version>2.3.5</print-lib.version>
     </properties>
 
