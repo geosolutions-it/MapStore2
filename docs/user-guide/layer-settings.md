@@ -28,7 +28,7 @@ The layer settings panel is composed of four sections:
 
 By default, as soon as the user opens the layer settings panel the General information section appears:
 
-<img src="../img/layer-settings/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-settings/URLTypeName.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 In this page it is possible to:
 
@@ -51,6 +51,8 @@ In this page it is possible to:
 Setting a tooltip that shows the Title and the Description on the Right, for example, it can be similar to the following:
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
+
+* Enable/disable the WFS linked service, which associates the layer with a WFS service used by the vector-based tools. When enabled, the user can view and edit the WFS service URL and the TypeName of the corresponding feature type.
 
 * **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
 
