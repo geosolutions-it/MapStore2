@@ -554,7 +554,11 @@
       "noExtensions": "No hay ninguna extensión instalada",
       "noExtensionsDescription": "Instale una extensión para añadir sus herramientas a MapStore",
       "loadError": "No se pudo cargar la lista de las extensiones instaladas",
-      "menuTitle": "Gestionar extensiones"
+      "menuTitle": "Gestionar extensiones",
+      "install": "Instalar extensión",
+      "replacesVersion": "Sustituye la versión instalada {current} por la versión {next}",
+      "installedMessage": "Las extensiones están disponibles en la aplicación",
+      "updatedMessage": "Recargue la página para usar las extensiones actualizadas"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",

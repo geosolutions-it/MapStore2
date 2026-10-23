@@ -5,35 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import { Alert } from 'react-bootstrap';
-
 import { createPlugin } from '../../utils/PluginsUtils';
-import FlexBox from '../../components/layout/FlexBox';
-import Spinner from '../../components/layout/Spinner';
-import Message from '../../components/I18N/Message';
-import ExtensionsList from './components/ExtensionsList';
-import useInstalledExtensions from './hooks/useInstalledExtensions';
+import ExtensionsManagerTool from './containers/ExtensionsManagerTool';
+import extensionsManager from './reducers/extensionsManager';
 import { MANAGER_TOOL_NAME, MANAGER_TOOL_GLYPH } from './constants';
 
-function ExtensionsManagerTool() {
-    const { extensions, loading, error } = useInstalledExtensions();
-    return (
-        <FlexBox classNames={['ms-extensions-manager', '_relative', 'ms-main-colors']} column>
-            <FlexBox gap="sm" centerChildrenVertically classNames={['_padding-sm']}>
-                <FlexBox.Fill>{loading ? <Spinner /> : null}</FlexBox.Fill>
-            </FlexBox>
-            {error ? <Alert bsStyle="danger"><Message msgId="extensionsManager.loadError" /></Alert> : null}
-            <ExtensionsList extensions={extensions} />
-        </FlexBox>
-    );
-}
-
 /**
- * Adds an Extensions tab to the manager, where administrators see the installed extensions.
+ * Adds an Extensions tab to the manager, where administrators see, install and update extensions.
  * The list is read from the plugins catalog: title, description and version of an extension
  * come from the plugin entry of the `index.json` of its zip. The catalog is the one of the
  * context creator, `contextPluginsConfiguration` in `localConfig.json`.
+ * A zip with the plugin name of an installed extension replaces it: the new version is used after
+ * the page is reloaded.
  * @name ExtensionsManager
  * @memberof plugins
  * @class
@@ -44,6 +27,7 @@ function ExtensionsManagerTool() {
  */
 export default createPlugin('ExtensionsManager', {
     component: () => null,
+    reducers: { extensionsManager },
     containers: {
         Manager: {
             name: MANAGER_TOOL_NAME,

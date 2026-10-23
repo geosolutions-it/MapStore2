@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from "expect";
-import {checkZipBundle, ERROR} from "../ExtensionsUtils";
+import JSZip from "jszip";
+import {checkZipBundle, checkUploads, ERROR, UPLOAD_ERROR_MESSAGE_IDS} from "../ExtensionsUtils";
 import axios from '../../libs/ajax';
 
 describe('checkZipBundle', () => {
@@ -66,5 +67,39 @@ describe('checkZipBundle', () => {
                 done();
             });
         });
+    });
+});
+
+const zipOf = (index, name = 'extension.zip') => {
+    const zip = new JSZip();
+    zip.file('index.js', 'window.Extension = {};');
+    zip.file('index.json', JSON.stringify(index));
+    return zip.generateAsync({ type: 'blob' }).then(blob => new File([blob], name));
+};
+const INDEX = { plugins: [{ name: 'PrivacySettings', title: 'Privacy settings', version: '1.1.0' }] };
+
+describe('checkUploads', () => {
+    it('returns name, title and version of the plugin of each valid file', (done) => {
+        Promise.all([zipOf(INDEX, 'a.zip'), zipOf({ plugins: [{ name: 'Sample' }] }, 'b.zip')])
+            .then(files => checkUploads(files, [], id => id).then(checked => {
+                expect(checked.map(({ name, title, version, file }) => ({ name, title, version, file: file.name }))).toEqual([
+                    { name: 'PrivacySettings', title: 'Privacy settings', version: '1.1.0', file: 'a.zip' },
+                    { name: 'Sample', title: undefined, version: undefined, file: 'b.zip' }
+                ]);
+                expect(checked.every(entry => !entry.error)).toBe(true);
+            }))
+            .then(() => done()).catch(done);
+    });
+    it('gives the error of an invalid file to every file, with the text of its message', (done) => {
+        Promise.all([zipOf(INDEX, 'a.zip'), zipOf(INDEX, 'b.zip')])
+            .then(files => checkUploads(files, ['PrivacySettings'], id => `text of ${id}`).then(checked => {
+                expect(checked.length).toBe(2);
+                expect(checked.map(entry => entry.name)).toEqual(['a.zip', 'b.zip']);
+                expect(checked.map(entry => entry.error.message)).toEqual([
+                    `text of ${UPLOAD_ERROR_MESSAGE_IDS[ERROR.ALREADY_INSTALLED]}`,
+                    `text of ${UPLOAD_ERROR_MESSAGE_IDS[ERROR.ALREADY_INSTALLED]}`
+                ]);
+            }))
+            .then(() => done()).catch(done);
     });
 });

@@ -22,11 +22,11 @@ const parseIndex = (json, plugins) => {
     try {
         const index = JSON.parse(json);
         if (index.plugins && index.plugins.length && index.plugins[0].name) {
-            const name = index.plugins[0].name;
+            const { name, title, version } = index.plugins[0];
             if (plugins.indexOf(name) !== -1) {
                 return {error: ERROR.ALREADY_INSTALLED};
             }
-            return { name };
+            return { name, title, version };
         }
         return {error: ERROR.MISSING_PLUGIN};
     } catch (e) {
@@ -61,3 +61,27 @@ export const checkZipBundle = (file, plugins = []) => {
 
     });
 };
+
+export const UPLOAD_ERROR_MESSAGE_IDS = {
+    [ERROR.WRONG_FORMAT]: "contextCreator.configurePlugins.uploadWrongFileFormatError",
+    [ERROR.MISSING_INDEX]: "contextCreator.configurePlugins.uploadMissingIndexError",
+    [ERROR.MALFORMED_INDEX]: "contextCreator.configurePlugins.uploadParseError",
+    [ERROR.MISSING_PLUGIN]: "contextCreator.configurePlugins.uploadMissingPluginError",
+    [ERROR.MISSING_BUNDLE]: "contextCreator.configurePlugins.uploadMissingBundleError",
+    [ERROR.TOO_MANY_BUNDLES]: "contextCreator.configurePlugins.uploadTooManyBundlesError",
+    [ERROR.ALREADY_INSTALLED]: "contextCreator.configurePlugins.uploadAlreadyInstalledError"
+};
+
+/**
+ * Checks the zip files of extensions before uploading them.
+ * When a file is not valid, every file of the list gets its error.
+ * @param {File[]} files zip files to check
+ * @param {string[]} plugins names of the plugins that cannot be installed again
+ * @param {function} getMessage returns the text of a message id
+ * @returns {Promise} resolves with `[{ name, title, version, file }]`, or `[{ name, file, error }]`
+ */
+export const checkUploads = (files, plugins, getMessage) => Promise.all(files.map(file =>
+    checkZipBundle(file, plugins).catch(e => {
+        throw new Error(getMessage(UPLOAD_ERROR_MESSAGE_IDS[e]));
+    })
+)).catch(e => files.map(f => ({ name: f.name, file: f, error: e })));

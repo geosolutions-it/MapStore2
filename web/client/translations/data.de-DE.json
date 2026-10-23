@@ -541,7 +541,11 @@
           "noExtensions": "Keine Erweiterung installiert",
           "noExtensionsDescription": "Installieren Sie eine Erweiterung, um ihre Werkzeuge zu MapStore hinzuzufügen",
           "loadError": "Die Liste der installierten Erweiterungen konnte nicht geladen werden",
-          "menuTitle": "Erweiterungen verwalten"
+          "menuTitle": "Erweiterungen verwalten",
+          "install": "Erweiterung installieren",
+          "replacesVersion": "Ersetzt die installierte Version {current} durch die Version {next}",
+          "installedMessage": "Die Erweiterungen sind in der Anwendung verfügbar",
+          "updatedMessage": "Laden Sie die Seite neu, um die aktualisierten Erweiterungen zu verwenden"
         },
         "mouseposition": {
           "html": "<h3>Maus Position</h3><p>Kundenspezifische Beispiele</p>"

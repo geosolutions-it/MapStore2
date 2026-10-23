@@ -554,7 +554,11 @@
       "noExtensions": "Nessuna estensione installata",
       "noExtensionsDescription": "Installa un'estensione per aggiungere i suoi strumenti a MapStore",
       "loadError": "Non è stato possibile caricare l'elenco delle estensioni installate",
-      "menuTitle": "Gestisci estensioni"
+      "menuTitle": "Gestisci estensioni",
+      "install": "Installa estensione",
+      "replacesVersion": "Sostituisce la versione installata {current} con la versione {next}",
+      "installedMessage": "Le estensioni sono disponibili nell'applicazione",
+      "updatedMessage": "Ricarica la pagina per usare le estensioni aggiornate"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
