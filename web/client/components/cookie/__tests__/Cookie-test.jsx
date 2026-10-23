@@ -10,10 +10,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Cookie from '../Cookie';
 import expect from 'expect';
-import { setApi, getApi, getItemKey } from '../../../api/userPersistedStorage';
+import { setApi, getApi, getItemKey, addApi } from '../../../api/userPersistedStorage';
 import ReactTestUtils from 'react-dom/test-utils';
 import { privacyNoticeKey } from '../../../utils/CookieNoticeUtils';
-import { privacyChoiceKey } from '../../../utils/PrivacyChoices';
+import { privacyChoiceKey, makePrivacyChoice } from '../../../utils/PrivacyChoices';
+import { consentManager } from '../../../utils/ConsentManager';
+import Localized from '../../I18N/Localized';
+
+const messages = {privacySettings: {unused: 'Not used', cookie: 'Cookie Policy', privacy: 'Privacy Policy', terms: 'Terms of Use'}};
+const renderLocalized = (element, locale = 'en-US') => ReactDOM.render(
+    <Localized locale={locale} messages={messages}>{element}</Localized>, document.getElementById('container'));
 
 describe('Test for Cookie component', () => {
     beforeEach((done) => {
@@ -71,7 +77,7 @@ describe('Test for Cookie component', () => {
     });
 
     it('shows necessary tools and unused categories without requesting fictitious consent', () => {
-        ReactDOM.render(<Cookie privacy={{enabled: true, categories: []}} locale="en-US" show/>, document.getElementById('container'));
+        renderLocalized(<Cookie privacy={{enabled: true, categories: []}} locale="en-US" show/>);
         expect(document.querySelector('#privacy-accept')).toNotExist();
         expect(document.querySelectorAll('input[type=checkbox]').length).toBe(0);
         expect(document.querySelector('.mapstore-privacy-panel').textContent).toInclude('Not used');
@@ -128,5 +134,76 @@ describe('Test for Cookie component', () => {
         expect(document.querySelector('[role=alert]')).toExist();
         getApi().setAccessDenied(false);
         setApi('localStorage');
+    });
+    it('keeps a refusal in force when it cannot be saved over an older consent', () => {
+        const privacy = {enabled: true, policyVersion: 'read-only', categories: [{id: 'functional'}]};
+        const stored = {[privacyChoiceKey()]: JSON.stringify(makePrivacyChoice(privacy, {functional: true}))};
+        addApi('readOnlyStorage', {
+            getItem: key => stored[key] ?? null,
+            setItem: () => { throw new Error('denied'); },
+            removeItem: () => { throw new Error('denied'); }
+        });
+        setApi('readOnlyStorage');
+        const onPrivacyChoice = expect.createSpy();
+        const visibility = expect.createSpy();
+        ReactTestUtils.act(() => {
+            ReactDOM.render(<Cookie privacy={privacy} show locale="en-US" onPrivacyChoice={onPrivacyChoice}
+                onSetCookieVisibility={visibility}/>, document.getElementById('container'));
+        });
+        expect(consentManager.isAllowed('functional')).toBe(true);
+        ReactTestUtils.Simulate.click(document.querySelector('#privacy-reject'));
+        expect(onPrivacyChoice.calls[onPrivacyChoice.calls.length - 1].arguments).toEqual([null]);
+        expect(consentManager.isAllowed('functional')).toBe(false);
+        expect(visibility.calls.some(call => call.arguments[0] === false)).toBe(false);
+        expect(document.querySelector('[role=alert]')).toExist();
+        window.dispatchEvent(new Event('focus'));
+        expect(consentManager.isAllowed('functional')).toBe(false);
+        expect(onPrivacyChoice.calls[onPrivacyChoice.calls.length - 1].arguments).toEqual([null]);
+        setApi('localStorage');
+    });
+    it('removes an older consent when the new choice cannot be written', () => {
+        const privacy = {enabled: true, policyVersion: 'quota', categories: [{id: 'functional'}]};
+        const stored = {[privacyChoiceKey()]: JSON.stringify(makePrivacyChoice(privacy, {functional: true}))};
+        addApi('fullStorage', {
+            getItem: key => stored[key] ?? null,
+            setItem: () => { throw new Error('quota'); },
+            removeItem: key => { delete stored[key]; }
+        });
+        setApi('fullStorage');
+        ReactTestUtils.act(() => {
+            ReactDOM.render(<Cookie privacy={privacy} show locale="en-US"/>, document.getElementById('container'));
+        });
+        ReactTestUtils.Simulate.click(document.querySelector('#privacy-reject'));
+        expect(stored[privacyChoiceKey()]).toBe(undefined);
+        expect(consentManager.isAllowed('functional')).toBe(false);
+        setApi('localStorage');
+    });
+    it('shows the leave button only when declineUrl is configured', () => {
+        ReactDOM.render(<Cookie show/>, document.getElementById('container'));
+        expect(document.querySelectorAll('.mapstore-cookie-panel a').length).toBe(0);
+        ReactDOM.render(<Cookie show declineUrl="https://example.com/"/>, document.getElementById('container'));
+        const links = [...document.querySelectorAll('.mapstore-cookie-panel a')].map(a => a.getAttribute('href'));
+        expect(links).toEqual(['https://example.com/']);
+    });
+    it('links the policy pages of the current locale, falling back to the first one', () => {
+        const privacy = {enabled: true, policyVersion: 'links', categories: [], links: {
+            cookie: {'en-US': 'cookie.html', 'it-IT': 'cookie.it-IT.html'},
+            privacy: {'de-DE': 'privacy.de-DE.html'},
+            terms: 'terms.html'
+        }};
+        renderLocalized(<Cookie privacy={privacy} locale="it-IT" show/>, 'it-IT');
+        const links = [...document.querySelectorAll('.mapstore-privacy-links a')].map(a => [a.getAttribute('href'), a.textContent]);
+        expect(links).toEqual([
+            ['cookie.it-IT.html', 'Cookie Policy'],
+            ['privacy.de-DE.html', 'Privacy Policy'],
+            ['terms.html', 'Terms of Use']
+        ]);
+    });
+    it('warns in the console when no policy page is configured', () => {
+        const warn = expect.spyOn(console, 'warn');
+        ReactDOM.render(<Cookie privacy={{enabled: true, policyVersion: 'nolinks', categories: []}}/>, document.getElementById('container'));
+        expect(warn.calls.length).toBe(1);
+        expect(warn.calls[0].arguments[0]).toInclude('privacy.links');
+        warn.restore();
     });
 });

@@ -13,6 +13,7 @@ import { SET_MORE_DETAILS_VISIBILITY, setCookieVisibility, setDetailsCookieHtml 
 import { CHANGE_LOCALE } from '../actions/locale';
 import axios from '../libs/ajax';
 import { isCookieNoticeAcknowledged } from '../utils/CookieNoticeUtils';
+import { privacyConfigSelector } from '../utils/PrivacyChoices';
 
 /**
  * Show the cookie policy notification
@@ -21,17 +22,17 @@ import { isCookieNoticeAcknowledged } from '../utils/CookieNoticeUtils';
  * @memberof epics.cookies
  * @return {external:Observable} the steam of actions to trigger to display the noitification.
  */
-export const cookiePolicyChecker = (action$) =>
+export const cookiePolicyChecker = (action$, store) =>
     action$.ofType(LOCATION_CHANGE )
         .take(1)
-        .filter(() => !isCookieNoticeAcknowledged())
+        .filter(() => !isCookieNoticeAcknowledged(privacyConfigSelector(store.getState())))
         .switchMap(() =>
             Rx.Observable.of(setCookieVisibility(true))
         );
 
 export const loadCookieDetailsPage = (action$, store) =>
     action$.ofType(SET_MORE_DETAILS_VISIBILITY, CHANGE_LOCALE )
-        .filter( () => !isCookieNoticeAcknowledged() && store.getState().cookie.seeMore && !store.getState().cookie.html[store.getState().locale.current])
+        .filter( () => !isCookieNoticeAcknowledged(privacyConfigSelector(store.getState())) && store.getState().cookie.seeMore && !store.getState().cookie.html[store.getState().locale.current])
         .switchMap(() => Rx.Observable.fromPromise(
             axios.get("translations/fragments/cookie/cookieDetails-" + store.getState().locale.current + ".html", null, {
                 timeout: 60000,

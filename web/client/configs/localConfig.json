@@ -24,12 +24,7 @@
     "enabled": true,
     "policyVersion": "vanilla-2026.03-consent-1",
     "retentionDays": 180,
-    "categories": [],
-    "links": {
-      "cookie": "product/assets/privacy/cookie-demo.html",
-      "privacy": "product/assets/privacy/privacy-demo.html",
-      "terms": "product/assets/privacy/terms-demo.html"
-    }
+    "categories": []
   },
   "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
   "printUrl": "pdf/info.json",
@@ -392,8 +387,7 @@
       {
         "name": "Cookie",
         "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "./"
+          "externalCookieUrl": ""
         }
       },
       "FeedbackMask",
@@ -639,8 +633,7 @@
       {
         "name": "Cookie",
         "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "./"
+          "externalCookieUrl": ""
         }
       },
       "OmniBar",
@@ -954,8 +947,7 @@
       {
         "name": "Cookie",
         "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "./"
+          "externalCookieUrl": ""
         }
       }
     ],

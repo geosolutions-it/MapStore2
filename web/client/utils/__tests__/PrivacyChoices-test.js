@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-import { normalizeChoice, makePrivacyChoice, readPrivacyChoice, persistPrivacyChoice, privacyChoiceKey } from '../PrivacyChoices';
+import { normalizeChoice, makePrivacyChoice, readPrivacyChoice, persistPrivacyChoice, privacyChoiceKey, getPolicyLink, hasPrivacyLinks, privacyConfigSelector } from '../PrivacyChoices';
+import ConfigUtils from '../ConfigUtils';
 import { createConsentManager } from '../ConsentManager';
 import { setApi, getApi, getItemKey, addApi } from '../../api/userPersistedStorage';
 import { privacyNoticeKey, acknowledgePrivacyNotice, isPrivacyNoticeAcknowledged, isCookieNoticeAcknowledged } from '../CookieNoticeUtils';
@@ -176,5 +177,69 @@ describe('Selective privacy storage migration', () => {
         expect(readPrivacyChoice(config)).toBe(null);
         expect(isCookieNoticeAcknowledged(config)).toBe(false);
         setApi('memoryStorage');
+    });
+});
+
+describe('Policy links', () => {
+    it('getPolicyLink returns the url of the locale, the first url as fallback, or undefined', () => {
+        const links = {cookie: {'en-US': 'en.html', 'it-IT': 'it.html'}, privacy: 'privacy.html', terms: {}};
+        expect(getPolicyLink({links}, 'cookie', 'it-IT')).toBe('it.html');
+        expect(getPolicyLink({links}, 'cookie', 'fr-FR')).toBe('en.html');
+        expect(getPolicyLink({links}, 'privacy', 'fr-FR')).toBe('privacy.html');
+        expect(getPolicyLink({links}, 'terms', 'fr-FR')).toBe(undefined);
+        expect(getPolicyLink({}, 'cookie', 'en-US')).toBe(undefined);
+    });
+    it('hasPrivacyLinks is true only when at least one page is configured', () => {
+        expect(hasPrivacyLinks({links: {terms: 'terms.html'}})).toBe(true);
+        expect(hasPrivacyLinks({links: {cookie: {}, privacy: ''}})).toBe(false);
+        expect(hasPrivacyLinks({})).toBe(false);
+    });
+});
+
+describe('privacyConfigSelector', () => {
+    const defaults = {policyVersion: 'extension-1', links: {cookie: 'extensions/PrivacySettings/assets/cookie.html'}};
+    afterEach(() => {
+        ConfigUtils.removeConfigProp('privacy');
+    });
+    it('uses pages and version set at runtime when localConfig has no links', () => {
+        ConfigUtils.setConfigProp('privacy', {enabled: true, policyVersion: 'vanilla', categories: []});
+        expect(privacyConfigSelector({controls: {privacy: {defaults}}})).toEqual({
+            enabled: true, policyVersion: 'extension-1', categories: [],
+            links: {cookie: 'extensions/PrivacySettings/assets/cookie.html'}
+        });
+    });
+    it('keeps the localConfig version when the runtime defaults have none', () => {
+        ConfigUtils.setConfigProp('privacy', {enabled: true, policyVersion: 'vanilla'});
+        expect(privacyConfigSelector({controls: {privacy: {defaults: {links: defaults.links}}}}).policyVersion).toBe('vanilla');
+    });
+    it('ignores runtime defaults when localConfig configures links', () => {
+        const localConfig = {enabled: true, policyVersion: 'operator', links: {privacy: 'https://example.com/privacy'}};
+        ConfigUtils.setConfigProp('privacy', localConfig);
+        expect(privacyConfigSelector({controls: {privacy: {defaults}}})).toBe(localConfig);
+    });
+    it('returns the localConfig configuration without runtime defaults, and null without any privacy configuration', () => {
+        const localConfig = {enabled: true, policyVersion: 'vanilla'};
+        ConfigUtils.setConfigProp('privacy', localConfig);
+        expect(privacyConfigSelector({})).toBe(localConfig);
+        ConfigUtils.removeConfigProp('privacy');
+        expect(privacyConfigSelector({})).toBe(null);
+    });
+    it('replaces retention and categories of localConfig with the runtime ones', () => {
+        ConfigUtils.setConfigProp('privacy', {enabled: true, policyVersion: 'vanilla', retentionDays: 180, categories: [{id: 'statistics'}]});
+        const runtime = {...defaults, retentionDays: 90, categories: [{id: 'functional', description: {'en-US': 'Saved searches'}}]};
+        expect(privacyConfigSelector({controls: {privacy: {defaults: runtime}}})).toEqual({
+            enabled: true, policyVersion: 'extension-1', retentionDays: 90,
+            categories: [{id: 'functional', description: {'en-US': 'Saved searches'}}],
+            links: {cookie: 'extensions/PrivacySettings/assets/cookie.html'}
+        });
+    });
+    it('uses the runtime enabled only when localConfig has no privacy section', () => {
+        const runtime = {...defaults, enabled: true};
+        ConfigUtils.setConfigProp('privacy', {enabled: false, policyVersion: 'vanilla'});
+        expect(privacyConfigSelector({controls: {privacy: {defaults: runtime}}}).enabled).toBe(false);
+        ConfigUtils.removeConfigProp('privacy');
+        expect(privacyConfigSelector({controls: {privacy: {defaults: runtime}}})).toEqual({
+            enabled: true, policyVersion: 'extension-1', links: {cookie: 'extensions/PrivacySettings/assets/cookie.html'}
+        });
     });
 });

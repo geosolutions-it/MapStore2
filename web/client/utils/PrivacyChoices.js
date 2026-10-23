@@ -4,6 +4,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { createSelector } from 'reselect';
 import ConfigUtils from './ConfigUtils';
 import { getApi, getItemKey } from '../api/userPersistedStorage';
 
@@ -53,3 +54,43 @@ export const persistPrivacyChoice = choice => {
         return true;
     } catch (e) { return false; }
 };
+export const policyLinkKeys = ['cookie', 'privacy', 'terms'];
+/**
+ * Returns the url of a policy page for the current locale.
+ * A link can be a single url or an object of urls by locale; when the locale is missing
+ * the first configured url is used.
+ * @param {object} config privacy configuration
+ * @param {string} key one of `cookie`, `privacy`, `terms`
+ * @param {string} locale current locale, e.g. `it-IT`
+ * @returns {string} the url, or undefined when not configured
+ */
+export const getPolicyLink = (config, key, locale) => {
+    const link = config?.links?.[key];
+    if (!link || typeof link === 'string') return link || undefined;
+    return link[locale] || Object.values(link).find(Boolean);
+};
+export const hasPrivacyLinks = config => policyLinkKeys.some(key => !!getPolicyLink(config, key));
+// Keys of the privacy configuration that can be provided at runtime.
+const runtimePrivacyKeys = ['enabled', 'policyVersion', 'retentionDays', 'categories', 'links'];
+/**
+ * Returns the privacy configuration in use.
+ * When `localConfig.json` does not configure `privacy.links`, the configuration can be provided
+ * at runtime, for example by an extension, with `setControlProperty('privacy', 'defaults', config)`.
+ * The runtime keys `policyVersion`, `retentionDays`, `categories` and `links` replace the ones of
+ * `localConfig.json`; `enabled` is used only when `localConfig.json` has no `privacy` section.
+ * Every reader of the privacy configuration must use this selector, so that the stored choices
+ * are always checked against the same policy version.
+ * @param {object} state application state
+ * @returns {object} the privacy configuration, or null when not configured
+ */
+export const privacyConfigSelector = createSelector(
+    () => privacyConfig(),
+    state => state?.controls?.privacy?.defaults,
+    (config, defaults) => {
+        if (!defaults || hasPrivacyLinks(config)) return config;
+        const runtime = Object.fromEntries(runtimePrivacyKeys
+            .filter(key => defaults[key] !== undefined && (key !== 'enabled' || !config))
+            .map(key => [key, defaults[key]]));
+        return {...config, ...runtime};
+    }
+);
