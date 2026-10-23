@@ -564,7 +564,9 @@
       "uninstallTitle": "¿Desinstalar {title}?",
       "uninstallDescription": "Se eliminan la extensión y sus archivos. Los contextos que usan su plugin dejarán de mostrarlo.",
       "uninstallError": "No se pudo desinstalar la extensión",
-      "uninstalledMessage": "{title} se ha desinstalado"
+      "uninstalledMessage": "{title} se ha desinstalado",
+      "listedInContextCreator": "Visible en el creador de contextos",
+      "hiddenInContextCreator": "Oculta en el creador de contextos"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",

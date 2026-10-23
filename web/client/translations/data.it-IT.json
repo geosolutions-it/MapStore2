@@ -564,7 +564,9 @@
       "uninstallTitle": "Disinstallare {title}?",
       "uninstallDescription": "L'estensione e i suoi file vengono rimossi. I contesti che usano il suo plugin non lo mostreranno più.",
       "uninstallError": "Non è stato possibile disinstallare l'estensione",
-      "uninstalledMessage": "{title} è stata disinstallata"
+      "uninstalledMessage": "{title} è stata disinstallata",
+      "listedInContextCreator": "Visibile nel context creator",
+      "hiddenInContextCreator": "Nascosta nel context creator"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",

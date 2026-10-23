@@ -167,9 +167,26 @@ The `index.json file should contain all the information about the extension:
 
 `plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager)
 
+Only the first entry of `plugins` is stored in the plugins catalog when the extension is installed: the context creator and the [Extensions Manager](../user-guide/managing-extensions.md#managing-extensions) read `title`, `description` and `version` from it, so set them in the entry of the plugin too. An extension whose plugin adds nothing to a context, for example one that only provides pages or configuration to the whole application, sets `"hidden": true` in that entry: the context creator does not list it, and it is managed from the Extensions Manager.
+
+```json
+{
+    "id": "PrivacySettings",
+    "version": "1.0.0",
+    "plugins": [{
+         "name": "PrivacySettings",
+         "title": "Privacy settings",
+         "description": "Policy pages and privacy configuration",
+         "version": "1.0.0",
+         "hidden": true,
+         "defaultConfig": {}
+    }]
+}
+```
+
 ### Installing Extensions
 
-Extensions can be uploaded using the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle is managed by a dedicated MapStore backend service, the ***Upload Service***.
+Extensions can be uploaded from the [Extensions Manager](../user-guide/managing-extensions.md#managing-extensions) or from the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle is managed by a dedicated MapStore backend service, the ***Upload Service***.
 The Upload Service is responsible for unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
 
 * `extensions.json` (the extensions registry)
@@ -177,7 +194,7 @@ The Upload Service is responsible for unzipping the bundle, storing javascript a
 
 ### Updating Extensions
 
-Please refer to the [How to update extensions](../../user-guide/application-context/#how-to-update-extensions) section of user guide to get more information about extensions update workflow.
+Please refer to the [How to update extensions](../../user-guide/application-context/#how-to-update-extensions) section of user guide to get more information about extensions update workflow. The [Extensions Manager](../user-guide/managing-extensions.md#update-an-extension) installs the new version of an extension over the installed one: the new version is used after the page is reloaded, and files that are not in the new zip stay in the extensions folder.
 
 ### Extensions and datadir
 

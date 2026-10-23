@@ -46,4 +46,10 @@ describe('ExtensionsList component', () => {
             document.getElementById('container'));
         expect(textsOf('button.tool')).toEqual(['A', 'B']);
     });
+    it('shows whether the context creator lists each extension', () => {
+        const extensions = [{ name: 'PrivacySettings', title: 'Privacy settings', hidden: true }, { name: 'Sample', title: 'Sample', hidden: false }];
+        ReactDOM.render(<ExtensionsList extensions={extensions} />, document.getElementById('container'));
+        expect(textsOf('.ms-extensions-list-entry .ms-extension-hidden, .ms-extensions-list-entry .ms-extension-listed'))
+            .toEqual(['extensionsManager.hiddenInContextCreator', 'extensionsManager.listedInContextCreator']);
+    });
 });

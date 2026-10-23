@@ -12,7 +12,8 @@ The page shows one row for each installed extension, with:
 
 * the title of the extension and, below it, its name;
 * its description;
-* its version, when the extension declares one.
+* its version, when the extension declares one;
+* whether the extension is listed in the context creator. Extensions that only provide pages or configuration to the whole application are hidden there, because they add no tool to a context: this page is where they are managed.
 
 ## Install an extension
 

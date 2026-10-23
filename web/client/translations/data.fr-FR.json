@@ -564,7 +564,9 @@
       "uninstallTitle": "Désinstaller {title} ?",
       "uninstallDescription": "L'extension et ses fichiers sont supprimés. Les contextes qui utilisent son plugin ne l'afficheront plus.",
       "uninstallError": "L'extension n'a pas pu être désinstallée",
-      "uninstalledMessage": "{title} a été désinstallée"
+      "uninstalledMessage": "{title} a été désinstallée",
+      "listedInContextCreator": "Affichée dans le créateur de contextes",
+      "hiddenInContextCreator": "Masquée dans le créateur de contextes"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",

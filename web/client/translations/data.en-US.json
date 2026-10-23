@@ -564,7 +564,9 @@
       "uninstallTitle": "Uninstall {title}?",
       "uninstallDescription": "The extension and its files are removed. Contexts that use its plugin will not show it any more.",
       "uninstallError": "The extension could not be uninstalled",
-      "uninstalledMessage": "{title} has been uninstalled"
+      "uninstalledMessage": "{title} has been uninstalled",
+      "listedInContextCreator": "Listed in the context creator",
+      "hiddenInContextCreator": "Hidden in the context creator"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",
