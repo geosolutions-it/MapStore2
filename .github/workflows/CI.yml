@@ -121,6 +121,9 @@ jobs:
       ##############
       - name: java
         run: mvn --batch-mode --update-snapshots verify -Pprintingbundle
+      # The printing bundle is unpacked over the WAR, so the two are checked together.
+      - name: "checking duplicated libraries"
+        run: python3 utility/build/check_duplicate_jars.py product/target/mapstore.war java/printing/target/mapstore-printing.zip
   build:
     runs-on: ubuntu-latest
     strategy:
