@@ -24,7 +24,7 @@ describe('Test for DownloadDialog component', () => {
         setTimeout(done);
     });
 
-    it('render download options', () => {
+    it('render download options', (done) => {
         const selectedLayer =
         {
             type: 'wfs',
@@ -37,10 +37,17 @@ describe('Test for DownloadDialog component', () => {
         ReactDOM.render(<DownloadDialog enabled service="wps" mapLayer={selectedLayer} />, document.getElementById("container"));
         const dialog = document.getElementById('mapstore-export');
         expect(dialog).toBeTruthy();
-        expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+        setTimeout(() => {
+            try {
+                expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 0);
     });
 
-    it('render download options with only "wps" available', () => {
+    it('render download options with only "wps" available', (done) => {
         const selectedLayer =
         {
             type: 'wms',
@@ -50,9 +57,16 @@ describe('Test for DownloadDialog component', () => {
         ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable mapLayer={selectedLayer} />, document.getElementById("container"));
         const dialog = document.getElementById('mapstore-export');
         expect(dialog).toBeTruthy();
-        expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+        setTimeout(() => {
+            try {
+                expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 0);
     });
-    it('should not render service selector with true hideServiceSelector prop', () => {
+    it('should not render service selector with true hideServiceSelector prop', (done) => {
         const selectedLayer = {
             type: 'wms',
             visibility: true,
@@ -64,9 +78,16 @@ describe('Test for DownloadDialog component', () => {
         ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable mapLayer={selectedLayer} hideServiceSelector />, document.getElementById("container"));
         const dialog = document.getElementById('mapstore-export');
         expect(dialog).toBeTruthy();
-        expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
-        const selectors = dialog.querySelectorAll('.Select');
-        expect(selectors.length).toBe(1);
+        setTimeout(() => {
+            try {
+                expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+                const selectors = dialog.querySelectorAll('.Select');
+                expect(selectors.length).toBe(1);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 0);
     });
     it('should render serviceNotAvailable', (done) => {
         const selectedLayer = {
@@ -82,6 +103,39 @@ describe('Test for DownloadDialog component', () => {
             const button = document.querySelector('.download-button');
             expect(button).toBeFalsy();
             done();
+        }, 0);
+    });
+    it('render download options for raster layer with time dimension and range mode', (done) => {
+        const selectedLayer = {
+            type: 'wms',
+            visibility: true,
+            id: 'mapstore:raster__1',
+            dimensions: [{ name: 'time' }]
+        };
+        const wpsFormats = [
+            { name: 'geotiff', label: 'GeoTIFF' },
+            { name: 'application/x-netcdf', label: 'NetCDF' }
+        ];
+        ReactDOM.render(
+            <DownloadDialog
+                enabled
+                service="wps"
+                wpsAvailable
+                mapLayer={selectedLayer}
+                wpsFormats={wpsFormats}
+                isRangeEnabled
+            />,
+            document.getElementById("container")
+        );
+        const dialog = document.getElementById('mapstore-export');
+        expect(dialog).toBeTruthy();
+        setTimeout(() => {
+            try {
+                expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+                done();
+            } catch (e) {
+                done(e);
+            }
         }, 0);
     });
 });

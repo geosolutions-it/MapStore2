@@ -24,15 +24,17 @@ export const RESET_MAP_SAVE_ERROR = 'MAP:RESET_MAP_SAVE_ERROR';
  * @param {object} conf map config
  * @param {number} mapId map resource id
  * @param {boolean} zoomToExtent if provided, zooms to this extent after the map is configured
+ * @param {boolean} isNew true if the map is a new, not yet saved, resource
  * @memberof actions.config
  */
-export function configureMap(conf, mapId, zoomToExtent) {
+export function configureMap(conf, mapId, zoomToExtent, isNew) {
     return {
         type: MAP_CONFIG_LOADED,
         config: conf,
         legacy: !!mapId,
         mapId: mapId,
-        zoomToExtent
+        zoomToExtent,
+        isNew
     };
 }
 
@@ -59,16 +61,18 @@ export function loadNewMap(configName, contextId) {
  * @param {object} config full config, overrides configName if not null or undefined
  * @param {object} mapInfo map info override
  * @param {object} overrideConfig config override, to provide overrides to apply to the configuration. Use an empty object`{}` to skip session loading.
+ * @param {boolean} isNew true if the map is a new, not yet saved, resource
  * @memberof actions.config
  */
-export function loadMapConfig(configName, mapId, config, mapInfo, overrideConfig) {
+export function loadMapConfig(configName, mapId, config, mapInfo, overrideConfig, isNew) {
     return {
         type: LOAD_MAP_CONFIG,
         configName,
         mapId,
         config,
         mapInfo,
-        overrideConfig
+        overrideConfig,
+        isNew
     };
 }
 export function mapInfoLoaded(info, mapId, merge = false) {

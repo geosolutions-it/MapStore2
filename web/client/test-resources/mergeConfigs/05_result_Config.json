@@ -2,9 +2,9 @@
     "proxyUrl": {
         "url": "proxy/?url=",
         "useCORS": [
-            "http://demo.geo-solutions.it/geoserver",
-            "https://demo.geo-solutions.it:443/geoserver",
-            "https://demo.geo-solutions.it/geoserver",
+            "http://gs-stable.geosolutionsgroup.com/geoserver",
+            "https://gs-stable.geosolutionsgroup.com:443/geoserver",
+            "https://gs-stable.geosolutionsgroup.com/geoserver",
             "https://nominatim.openstreetmap.org"
         ]
     },
@@ -89,19 +89,19 @@
                 "autoload": true
               },
               "Demo CSW Service": {
-                "url": "https://demo.geo-solutions.it/geoserver/csw",
+                "url": "https://gs-stable.geosolutionsgroup.com/geoserver/csw",
                 "type": "csw",
                 "title": "Demo CSW Service",
                 "autoload": true
               },
               "Demo WMS Service": {
-                "url": "https://demo.geo-solutions.it/geoserver/wms",
+                "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
                 "type": "wms",
                 "title": "Demo WMS Service",
                 "autoload": false
               },
               "Demo WMTS Service": {
-                "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+                "url": "https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts",
                 "type": "wmts",
                 "title": "Demo WMTS Service",
                 "autoload": false

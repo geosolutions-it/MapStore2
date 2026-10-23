@@ -22,6 +22,35 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Default users removed: initial administrator password
+
+MapStore does not create the sample users `admin`/`admin` and `user`/`user` anymore (the `sample_users.xml` file is no longer shipped with the bundled GeoStore). On the first start with an empty database the `admin` user is created with the password taken from the `INITIAL_ADMIN_PASSWORD` environment variable; if the variable is not set, no administrator is created and start-up continues with a warning in the log. On a database that still contains an `admin` using the former default password, setting `INITIAL_ADMIN_PASSWORD` resets it to that value. See [Initial Administrator Password](initial-admin-password.md) for the details.
+
+**Existing installations**: users already present in the database are not changed. At every start MapStore logs a critical security error if users with default credentials (e.g. `admin`/`admin`, `user`/`user`) are still present: change their passwords as soon as possible.
+
+**New installations**: make sure that `INITIAL_ADMIN_PASSWORD` is set before the first start, otherwise no administrator is created.
+
+**MapStore projects**: remove the `userListInitFile` property referencing `classpath:sample_users.xml` from the `geostoreInitializer` bean in `web/src/main/resources/applicationContext.xml`, otherwise the application fails to start because the file does not exist anymore.
+
+```diff
+     <bean id="geostoreInitializer" class="it.geosolutions.geostore.init.GeoStoreInit" lazy-init="false">
+-        <!-- Site specific initialization. Please specify a path in the ovr file-->
+-        <!--<property name="userListInitFile"><null/></property>-->
+-        <property name="userListInitFile" value="classpath:sample_users.xml"/>
++        <!-- Site specific initialization. Please specify a path in the ovr file-->
++        <!--<property name="userListInitFile" value="file:///path/to/your/users.xml"/>-->
+```
+
+Also remove any `geostoreInitializer.userListInitFile=classpath:sample_users.xml` entry from your `geostore-datasource-ovr.properties` files.
+
+### Resources Catalog layout styles: `list` renamed to `table`
+
+In the `ResourcesGrid` plugin configuration, the tabular column-based layout style previously named `list` has been renamed to `table`.
+
+Any custom configuration (for example in `localConfig.json`) using `cardLayoutStyle: "list"` or `metadata: { "list": [...] }` must be updated to `cardLayoutStyle: "table"` or `metadata: { "table": [...] }`.
+
+A new `list` layout style has been added representing full resource cards displayed in a vertical list format. The supported layout styles are now `grid`, `list`, and `table`.
+
 ### Identify supports multiple views per layer
 
 The `featureInfo` of a layer describes a list of views instead of a single format. The identify panel renders one tab per view.
@@ -71,8 +100,8 @@ The following changes must be applied to your project (see the updated [project 
          <!-- Spring Framework & Security (aligned) -->
 -        <spring.version>5.3.39</spring.version>
 -        <spring.security.version>5.7.13</spring.security.version>
-+        <spring.version>7.0.8</spring.version>
-+        <spring.security.version>7.1.0</spring.security.version>
++        <spring.version>7.0.9</spring.version>
++        <spring.security.version>7.1.1</spring.security.version>
 -        <commons-pool.version>1.5.4</commons-pool.version>
 -        <ehcache-web.version>2.0.4</ehcache-web.version>
 -        <httpclient.version>4.5.13</httpclient.version>
@@ -580,6 +609,12 @@ The entries that you can remove because are available by default are documented 
 
 ## Migration from 2025.02.02 to 2026.01.00
 
+### Theme update
+
+if you have a custom theme, make sure to include also this line in your main theme.less file
+
+.get-root-css-variables(@ms-theme-vars);
+
 ### Database update
 
 This version of MapStore ships with **GeoStore 2.5.0**, which introduces a structural change to the `gs_user_favorites` table. Unlike other GeoStore upgrades, this change **cannot be handled automatically** by `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` and **requires applying the manual migration script** described below.
@@ -750,7 +785,7 @@ As part of improving the authentication rules to make dynamic request configurat
 #### Method Mapping
 
 | Old Method | New Configuration |
-|------------|------------------|
+| ------------ | ------------------ |
 | `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
 | `authkey` | `params: { "authkey": "${securityToken}" }` |
 | `header` | `headers: { ... }` |

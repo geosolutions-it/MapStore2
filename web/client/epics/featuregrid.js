@@ -1059,7 +1059,7 @@ export const onOpenAdvancedSearch = (action$, store) =>
             );
     });
 export const onFeatureGridZoomAll = (action$, store) =>
-    action$.ofType(ZOOM_ALL).filter(() => !get(store.getState(), "featuregird.virtualScroll", false)).switchMap(() =>
+    action$.ofType(ZOOM_ALL).filter(() => !get(store.getState(), "featuregrid.virtualScroll", false)).switchMap(() =>
         Rx.Observable.of(zoomToExtent(bbox(featureCollectionResultSelector(store.getState())), "EPSG:4326"))
 
     );

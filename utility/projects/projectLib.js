@@ -7,6 +7,7 @@ const readFile = denodeify(fs.readFile);
 const stat = denodeify(fs.stat);
 
 const ncp = denodeify(require('ncp').ncp);
+const { simpleGit } = require('simple-git');
 
 const createPackageJSON = (options, outFolder) => {
     process.stdout.write('Creating package.json...\n');
@@ -18,7 +19,7 @@ const createPackageJSON = (options, outFolder) => {
 const initGit = (outFolder) => {
     process.stdout.write('Creating git repo...\n');
 
-    const git = require('simple-git')(outFolder);
+    const git = simpleGit(outFolder);
     return new Promise((resolve, reject) => {
         git.init(() => {
             process.stdout.write('initializing git repo...\n');
@@ -42,7 +43,7 @@ const initGit = (outFolder) => {
 const createFirstCommit = (outFolder) => {
     process.stdout.write('Creating first commit...\n');
 
-    const git = require('simple-git')(outFolder);
+    const git = simpleGit(outFolder);
     return new Promise((resolve, reject) => {
         git.add(["*"], () => {
             git.commit('First Commit', (err) => {
@@ -64,8 +65,8 @@ const createFirstCommit = (outFolder) => {
  * @return {Promise} the promise to continue the flow of project creation
  */
 const updateSubmoduleBranch = (outFolder, branch) => {
-    const git = require('simple-git')();
-    const gitProjectMs2 = require('simple-git')(`${outFolder}/MapStore2`);
+    const git = simpleGit();
+    const gitProjectMs2 = simpleGit(`${outFolder}/MapStore2`);
 
     const stableBranch = branch || "2023.01.xx";
 

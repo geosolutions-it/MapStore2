@@ -3,14 +3,14 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-root</artifactId>
-        <version>1.13-SNAPSHOT</version>
+        <version>1.14-SNAPSHOT</version>
     </parent>
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-binary</artifactId>
     <packaging>pom</packaging>
     <name>MapStore 2 Binary Module</name>
     <description>Project to create the binary package</description>
-    <url>http://www.geo-solutions.it</url>
+    <url>http://www.geosolutionsgroup.com</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tomcat.version>11.0.25</tomcat.version>

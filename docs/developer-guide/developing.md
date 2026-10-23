@@ -195,14 +195,18 @@ npm start # or npm run be:start
     },
     ```
 
-### Defaults Users and Database
+### Initial User and Database
 
-Running MapStore backend locally, on start-up you will find the following users:
+Running MapStore backend locally, on the first start-up (empty database) the `admin` user, with ADMIN role, is created with the password set in the `INITIAL_ADMIN_PASSWORD` environment variable. If the variable is not set, no `admin` account is created and you cannot log in.
 
-* `admin`, with ADMIN role and password `admin`
-* `user` with USER role with password `user`
+For instance:
 
-You can login as `admin` to set-up new users and access to all the features reserved to `ADMIN` users.
+```sh
+export INITIAL_ADMIN_PASSWORD='<your-dev-password>'
+npm start
+```
+
+You can login as `admin` to set-up new users and access to all the features reserved to `ADMIN` users. See [Initial Administrator Password](initial-admin-password.md) for details.
 
 The database used by default in this mode is H2 on disk. You can find the files of the database in the directory `webapps/mapstore/` starting from your execution context. Check how to set-up database in the dedicated section of the documentation.
 

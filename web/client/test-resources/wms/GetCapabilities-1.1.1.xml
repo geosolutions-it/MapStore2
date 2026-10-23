@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE WMT_MS_Capabilities SYSTEM "http://demo.geo-solutions.it:80/geoserver/schemas/wms/1.1.1/WMS_MS_Capabilities.dtd">
+<!DOCTYPE WMT_MS_Capabilities SYSTEM "http://gs-stable.geosolutionsgroup.com:80/geoserver/schemas/wms/1.1.1/WMS_MS_Capabilities.dtd">
 <WMT_MS_Capabilities version="1.1.1" updateSequence="476">
     <Service>
         <Name>OGC:WMS</Name>
@@ -39,10 +39,10 @@
                 <DCPType>
                     <HTTP>
                         <Get>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Get>
                         <Post>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Post>
                     </HTTP>
                 </DCPType>
@@ -93,7 +93,7 @@
                 <DCPType>
                     <HTTP>
                         <Get>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Get>
                     </HTTP>
                 </DCPType>
@@ -109,10 +109,10 @@
                 <DCPType>
                     <HTTP>
                         <Get>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Get>
                         <Post>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Post>
                     </HTTP>
                 </DCPType>
@@ -122,7 +122,7 @@
                 <DCPType>
                     <HTTP>
                         <Get>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Get>
                     </HTTP>
                 </DCPType>
@@ -134,7 +134,7 @@
                 <DCPType>
                     <HTTP>
                         <Get>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Get>
                     </HTTP>
                 </DCPType>
@@ -144,7 +144,7 @@
                 <DCPType>
                     <HTTP>
                         <Get>
-                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?SERVICE=WMS&amp;"/>
+                            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?SERVICE=WMS&amp;"/>
                         </Get>
                     </HTTP>
                 </DCPType>
@@ -212,7 +212,7 @@
                     <Title>Rain distribution</Title>
                     <LegendURL width="27" height="121">
                         <Format>image/png</Format>
-                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=nurc%3AArc_Sample"/>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=nurc%3AArc_Sample"/>
                     </LegendURL>
                 </Style>
                 <Style>
@@ -221,7 +221,7 @@
                     <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
                     <LegendURL width="604" height="294">
                         <Format>image/png</Format>
-                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
                     </LegendURL>
                 </Style>
             </Layer>
@@ -243,7 +243,7 @@
                     <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
                     <LegendURL width="604" height="294">
                         <Format>image/png</Format>
-                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
                     </LegendURL>
                 </Style>
             </Layer>
@@ -265,7 +265,7 @@
                     <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
                     <LegendURL width="604" height="294">
                         <Format>image/png</Format>
-                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
                     </LegendURL>
                 </Style>
             </Layer>
@@ -287,7 +287,7 @@
                     <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
                     <LegendURL width="604" height="294">
                         <Format>image/png</Format>
-                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://demo.geo-solutions.it:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geosolutionsgroup.com:80/geoserver/styles/http://docs.geoserver.org/latest/en/user/_images/colormap3.png"/>
                     </LegendURL>
                 </Style>
             </Layer>

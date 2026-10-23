@@ -105,6 +105,36 @@ describe('Share Plugin', () => {
         });
     });
 
+    it('shows Share menu entries for maps with id or loaded from a static configuration', () => {
+        const { containers } = getPluginForTest(SharePlugin, {}, {
+            ToolbarPlugin: {},
+            BurgerMenuPlugin: {},
+            SidebarMenuPlugin: {}
+        });
+        [
+            { map: { mapId: 10 }, mapInitialConfig: { mapId: 10 } },
+            { map: { mapId: null, isNew: false } }
+        ].forEach((state) => {
+            ['Toolbar', 'BurgerMenu', 'SidebarMenu'].forEach((container) => {
+                expect(containers[container].selector(state)).toEqual({ style: {} });
+            });
+        });
+    });
+
+    it('hides Share menu entries for new maps', () => {
+        const { containers } = getPluginForTest(SharePlugin, {}, {
+            ToolbarPlugin: {},
+            BurgerMenuPlugin: {},
+            SidebarMenuPlugin: {}
+        });
+        const state = { map: { mapId: null, isNew: true } };
+        ['Toolbar', 'BurgerMenu', 'SidebarMenu'].forEach((container) => {
+            expect(containers[container].selector(state)).toEqual({
+                style: { display: 'none' }
+            });
+        });
+    });
+
     it('test Share plugin on close', (done) => {
         const controls = {
             share: {

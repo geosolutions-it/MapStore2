@@ -1,7 +1,7 @@
 {
   "proxyUrl": "/mapstore/proxy/?url=",
   "geoStoreUrl": "/mapstore/rest/geostore/",
-  "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
+  "printUrl": "https://mapstore.geosolutionsgroup.com/mapstore/pdf/info.json",
   "initialMapFilter": "MS2",
   "plugins": {
     "mobile": [
@@ -171,7 +171,7 @@
         "cfg": {
           "wrap": true,
           "chooseCatalogUrl": false,
-          "initialCatalogURL": "https://demo.geo-solutions.it/geoserver/csw"
+          "initialCatalogURL": "https://gs-stable.geosolutionsgroup.com/geoserver/csw"
         }
       },
       {

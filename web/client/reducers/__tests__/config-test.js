@@ -22,6 +22,14 @@ describe('Test the mapConfig reducer', () => {
         expect(state.layers).toExist();
     });
 
+    it('stores the isNew flag of the loaded map', () => {
+        const config = { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [] }};
+        expect(mapConfig({}, {type: 'MAP_CONFIG_LOADED', config, isNew: true}).map.isNew).toBe(true);
+        expect(mapConfig({}, {type: 'MAP_CONFIG_LOADED', config}).map.isNew).toBe(false);
+        const reloaded = mapConfig({ map: { mapId: null, isNew: true } }, {type: 'MAP_CONFIG_LOADED', config});
+        expect(reloaded.map.isNew).toBe(false);
+    });
+
     it('creates a configuration object from legacy config', () => {
         var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: [1361886.8627049, 5723464.1181097], zoom: 11, layers: [] }}});
         expect(state.map).toExist();

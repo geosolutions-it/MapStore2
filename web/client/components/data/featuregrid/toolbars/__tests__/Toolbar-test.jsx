@@ -129,6 +129,12 @@ describe('Featuregrid toolbar component', () => {
         editButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(editButton)).toBe(false);
     });
+    it('hides the zoom-all button when showZoomAll is false', () => {
+        ReactDOM.render(<Toolbar mode="VIEW" showZoomAll={false}/>, document.getElementById("container"));
+        expect(document.getElementById("fg-zoom-all")).toNotExist();
+        ReactDOM.render(<Toolbar mode="VIEW" showZoomAll/>, document.getElementById("container"));
+        expect(document.getElementById("fg-zoom-all")).toExist();
+    });
     it('check back-view button', () => {
         const events = {
             switchViewMode: () => {}

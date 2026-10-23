@@ -25,6 +25,7 @@ import {
     transformLineToArcs,
     calculateAzimuth
 } from './CoordinatesUtils';
+import { getMessageById } from './LocaleUtils';
 
 export const MEASURE_TYPE = 'Measure';
 export const MEASURE_CESIUM_TARGET_ID = 'measure-cesium-wrapper';
@@ -541,9 +542,30 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
 };
 
 
+const RULE_NAMES_PREFIX = 'measureComponent.styleRules.';
+const DEFAULT_RULE_NAMES = {
+    geodesicMeasurement: 'Geodesic measurement',
+    linearMeasurement: 'Linear measurement',
+    angleMeasurement: 'Angle measurement',
+    slopeMeasurement: 'Slope measurement',
+    areaMeasurement: 'Area measurement',
+    startPosition: 'Start position',
+    endPosition: 'End position',
+    centerPosition: 'Center position',
+    segmentLabels: 'Segment labels',
+    measurementLabel: 'Measurement label'
+};
+
+// falls back to the english name when messages are not available
+const getRuleName = (name, messages) => {
+    const msgId = RULE_NAMES_PREFIX + name;
+    const message = getMessageById(messages, msgId);
+    return message === msgId ? DEFAULT_RULE_NAMES[name] : message;
+};
+
 const maintainOriginalGeom = (measureType) => measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA;
 
-export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom) => {
+export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom, messages) => {
 
     const { features } = convertMeasureToFeatureCollection(geometricFeatures, textLabels, uom);
     const measureTypes = uniq(features.map(feature => feature?.properties?.measureType).filter(measureType => !!measureType));
@@ -581,10 +603,10 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
             format: 'geostyler',
             body: {
                 name: MEASURE_TYPE,
-                rules: [
+                rules: ([
                     ...(measureTypes.some(measureType => [MeasureTypes.LENGTH].includes(measureType)) ? [{
                         ruleId: uuidv1(),
-                        name: 'Geodesic measurement',
+                        name: 'geodesicMeasurement',
                         filter: ['||', ['==', 'geodesic', true]],
                         symbolizers: [
                             {
@@ -604,7 +626,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     }] : []),
                     ...(measureTypes.some(measureType => [MeasureTypes.POLYLINE_DISTANCE_3D, MeasureTypes.HEIGHT_FROM_TERRAIN].includes(measureType)) ? [{
                         ruleId: uuidv1(),
-                        name: 'Linear measurement',
+                        name: 'linearMeasurement',
                         filter: ['||',
                             ['==', 'measureType', MeasureTypes.POLYLINE_DISTANCE_3D],
                             ['==', 'measureType', MeasureTypes.HEIGHT_FROM_TERRAIN]
@@ -624,7 +646,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     }] : []),
                     ...(measureTypes.some(measureType => [MeasureTypes.BEARING, MeasureTypes.ANGLE_3D].includes(measureType)) ? [{
                         ruleId: uuidv1(),
-                        name: 'Angle measurement',
+                        name: 'angleMeasurement',
                         filter: ['||',
                             ['==', 'measureType', MeasureTypes.BEARING],
                             ['==', 'measureType', MeasureTypes.ANGLE_3D]
@@ -644,7 +666,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     }] : []),
                     ...(measureTypes.some(measureType => [MeasureTypes.SLOPE].includes(measureType)) ? [{
                         ruleId: uuidv1(),
-                        name: 'Slope measurement',
+                        name: 'slopeMeasurement',
                         filter: ['||',
                             ['==', 'measureType', MeasureTypes.SLOPE]
                         ],
@@ -664,7 +686,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     }] : []),
                     ...(measureTypes.some(measureType => [MeasureTypes.AREA, MeasureTypes.AREA_3D].includes(measureType)) ? [{
                         ruleId: uuidv1(),
-                        name: 'Area measurement',
+                        name: 'areaMeasurement',
                         filter: ['||',
                             ['==', 'measureType', MeasureTypes.AREA],
                             ['==', 'measureType', MeasureTypes.AREA_3D]
@@ -685,7 +707,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     }] : []),
                     ...(measureTypes.some(measureType => ![MeasureTypes.POINT_COORDINATES].includes(measureType)) ? [{
                         ruleId: uuidv1(),
-                        name: 'Start position',
+                        name: 'startPosition',
                         filter: ['||', ['==', 'type', 'measurement']],
                         symbolizers: [
                             {
@@ -706,7 +728,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     }] : []),
                     ...(measureTypes.some(measureType => ![MeasureTypes.POINT_COORDINATES].includes(measureType)) ? [{
                         ruleId: uuidv1(),
-                        name: 'End position',
+                        name: 'endPosition',
                         filter: ['||', ['==', 'type', 'measurement']],
                         symbolizers: [
                             {
@@ -727,7 +749,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     }] : []),
                     {
                         ruleId: uuidv1(),
-                        name: 'Center position',
+                        name: 'centerPosition',
                         filter: ['||', ['==', 'type', 'measurement'], ['==', 'type', 'position']],
                         symbolizers: [
                             {
@@ -748,7 +770,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     },
                     {
                         ruleId: uuidv1(),
-                        name: 'Segment labels',
+                        name: 'segmentLabels',
                         filter: ['||', ['==', 'type', 'segment']],
                         symbolizers: [
                             {
@@ -772,7 +794,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                     },
                     {
                         ruleId: uuidv1(),
-                        name: 'Measurement label',
+                        name: 'measurementLabel',
                         filter: ['||', ['==', 'type', 'measurement'], ['==', 'type', 'position']],
                         symbolizers: [
                             {
@@ -794,7 +816,10 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                             }
                         ]
                     }
-                ]
+                ]).map(rule => ({
+                    ...rule,
+                    name: getRuleName(rule.name, messages)
+                }))
             }
         }
     };

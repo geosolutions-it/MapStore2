@@ -263,13 +263,13 @@ Inside defaultState you can set default catalog services adding the following ke
     "selectedService": "Demo CSW Service",
     "services": {
       "Demo CSW Service": {
-        "url": "https://demo.geo-solutions.it/geoserver/csw",
+        "url": "https://gs-stable.geosolutionsgroup.com/geoserver/csw",
         "type": "csw",
         "title": "A title for Demo CSW Service",
         "autoload": true
       },
       "Demo WMS Service": {
-        "url": "https://demo.geo-solutions.it/geoserver/wms",
+        "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
         "layerOptions": {
           "tileSize": 512
           },
@@ -279,7 +279,7 @@ Inside defaultState you can set default catalog services adding the following ke
         "autoload": false
       },
       "Demo WMTS Service": {
-        "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+        "url": "https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts",
         "type": "wmts",
         "title": "A title for Demo WMTS Service",
         "autoload": false

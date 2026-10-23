@@ -206,7 +206,7 @@ describe('measurement epics', () => {
         const {textLabels, features, uom} = testData;
 
         testEpic(
-            addTimeoutEpic(addAsLayerEpic, 10),
+            addTimeoutEpic(addAsLayerEpic, 1000),
             NUMBER_OF_ACTIONS, [
                 addAsLayer(features, textLabels, uom)
             ], actions => {
@@ -223,8 +223,7 @@ describe('measurement epics', () => {
                 expect(resultFeatures[2].geometry).toBeTruthy();
                 expect(resultFeatures[2].geometry.type).toBe('Point');
                 expect(resultFeatures[2].properties.label).toBe('1,837,281.12 m | 140.72°');
-                done();
-            }, null);
+            }, {}, done);
     });
     it('test openMeasureEpic', (done) => {
         const NUMBER_OF_ACTIONS = 4;

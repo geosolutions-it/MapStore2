@@ -221,7 +221,7 @@ export const deepChange = (nodes, findValue, propName, propValue) => {
 };
 
 export const updateAvailableTileMatrixSetsOptions = ({ tileMatrixSet, matrixIds,  ...layer }) => {
-    if (!layer.availableTileMatrixSets && tileMatrixSet && matrixIds) {
+    if (!layer.availableTileMatrixSets && isArray(tileMatrixSet) && matrixIds) {
         const matrixIdsKeys = isArray(matrixIds) ? matrixIds : Object.keys(matrixIds);
         const availableTileMatrixSets = matrixIdsKeys
             .reduce((acc, key) => {
@@ -316,7 +316,7 @@ export const extractTileMatrixSetFromLayers = (groupedLayersByUrl, sources = {})
                 const { availableTileMatrixSets } = updateAvailableTileMatrixSetsOptions(layer);
                 return {
                     ...layerAcc,
-                    ...Object.keys(availableTileMatrixSets).reduce((tileMatrixSetAcc, tileMatrixSetId) => ({
+                    ...Object.keys(availableTileMatrixSets || {}).reduce((tileMatrixSetAcc, tileMatrixSetId) => ({
                         ...tileMatrixSetAcc,
                         [tileMatrixSetId]: availableTileMatrixSets[tileMatrixSetId].tileMatrixSet
                     }), {})

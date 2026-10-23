@@ -192,6 +192,30 @@ jobs:
       ##############
       - name: java
         run: mvn --batch-mode --update-snapshots verify
+      ################
+      # DOCKER CHECKS
+      ##############
+      # The image uses the WAR built above (product/target/mapstore.war) and runs on JDK 17,
+      # so it is built only once, on the matching java version.
+      # --pull always uses the latest base image, to catch upstream breaking changes.
+      - name: "building Docker image"
+        if: matrix.java-version == '17.x'
+        run: docker build --pull --tag mapstore2:ci .
+      - name: "testing Docker image"
+        if: matrix.java-version == '17.x'
+        run: |
+          docker run --detach --name mapstore2-ci --publish 8080:8080 mapstore2:ci
+          for i in $(seq 1 36); do
+            if curl --silent --fail --output /dev/null http://localhost:8080/mapstore/ \
+              && curl --silent --fail --output /dev/null http://localhost:8080/mapstore/rest/geostore/categories; then
+              echo "MapStore is up"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "MapStore did not start in time"
+          docker logs mapstore2-ci
+          exit 1
   build-publish:
     runs-on: ubuntu-latest
     if: |

@@ -58,6 +58,21 @@ describe('GeoNodeUtils', () => {
             expect(newLayer.opacity).toBe(0.8);
         });
 
+        it('should not override generated id and bbox with the persisted layer settings', () => {
+            const newLayer = resourceToLayerConfig({
+                alternate: 'geonode:layer_name',
+                links: [{ link_type: 'OGC:WMS', url: '/geoserver/wms' }],
+                title: 'Layer title',
+                perms: [],
+                pk: 1,
+                extent: { coords: [10, 20, 30, 40] },
+                data: { layerSettings: { id: 'geonode-id', opacity: 0.5 } }
+            });
+            expect(newLayer.id).toBeTruthy();
+            expect(newLayer.id).toNotBe('geonode-id');  // generate new id
+            expect(newLayer.opacity).toBe(0.5);
+        });
+
         it('should parse arcgis dataset', () => {
             const newLayer = resourceToLayerConfig({
                 alternate: 'remoteWorkspace:1',

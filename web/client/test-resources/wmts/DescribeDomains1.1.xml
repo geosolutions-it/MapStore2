@@ -1,4 +1,4 @@
-<Domains xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd"
+<Domains xmlns="http://gs-stable.geosolutionsgroup.com/share/wmts-multidim/wmts_multi_dimensional.xsd"
     xmlns:ows="http://www.opengis.net/ows/1.1" version="1.1">
     <SpaceDomain>
         <BoundingBox CRS="EPSG:4326" maxx="179.875" maxy="89.9375" minx="-180.125" miny="-90.125"/>

@@ -53,7 +53,7 @@ const namespaces = {
         prefix: 'ol'
     },
     ms: {
-        ns: 'http://geo-solutions.it/mapstore/context',
+        ns: 'https://mapstore.geosolutionsgroup.com/mapstore/context',
         prefix: 'ms'
     }
 };

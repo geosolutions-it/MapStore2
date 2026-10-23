@@ -30,6 +30,8 @@ import {
 } from '../actions/controls';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {createControlEnabledSelector, measureSelector} from '../selectors/controls';
+import { currentMessagesSelector } from '../selectors/locale';
+import { getMessageById } from '../utils/LocaleUtils';
 import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
 import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../actions/map';
 import {
@@ -71,12 +73,15 @@ export const addAnnotationFromMeasureEpic = (action$, store) =>
             );
         });
 
-export const addAsLayerEpic = (action$) =>
+export const addAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
         .switchMap(({ features, uom, textLabels }) => {
             return Rx.Observable.defer(() => import('@turf/bbox').then(mod => mod.default))
                 .switchMap((turfBbox) => {
-                    const collection = convertMeasuresToGeoJSON(features, textLabels, uom);
+                    const messages = currentMessagesSelector(store.getState());
+                    const collection = convertMeasuresToGeoJSON(features, textLabels, uom, messages);
+                    const titleId = 'measureComponent.measurementsLayerTitle';
+                    const localizedTitle = getMessageById(messages, titleId);
                     const bbox = turfBbox(collection);
                     const [minx, miny, maxx, maxy] = bbox || [-180, -90, 180, 90];
                     return Rx.Observable.of(
@@ -84,7 +89,7 @@ export const addAsLayerEpic = (action$) =>
                             type: 'vector',
                             id: uuidv1(),
                             name: 'measurements',
-                            title: 'Measurements',
+                            title: localizedTitle === titleId ? 'Measurements' : localizedTitle,
                             hideLoading: true,
                             features: collection?.features || [],
                             visibility: true,

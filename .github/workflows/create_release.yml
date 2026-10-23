@@ -65,17 +65,12 @@ jobs:
             mapstore-${{ runner.os }}-maven-
       - name: Build
         id: "build"
-        run: "./build.sh ${{ github.event.inputs.version }} binary,printingbundle"
+        run: "./build.sh ${{ github.event.inputs.version }} printingbundle"
       - name: "Upload war"
         uses: actions/upload-artifact@v4
         with:
           name: release-war
           path: product/target/mapstore.war
-      - name: "Upload binary"
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-binary
-          path: "binary/target/mapstore2-${{ github.event.inputs.version }}-bin.zip"
       - name: "Upload printing"
         uses: actions/upload-artifact@v4
         with:
@@ -134,16 +129,6 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: artifacts/mapstore.war
           asset_name: mapstore.war
-          asset_content_type: application/zip
-      - name: Upload Release binary
-        id: upload-release-binary
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: "artifacts/mapstore2-${{github.event.inputs.version}}-bin.zip"
-          asset_name: "mapstore2-${{github.event.inputs.version}}-bin.zip"
           asset_content_type: application/zip
       - name: Upload Release printing
         id: upload-release-printing

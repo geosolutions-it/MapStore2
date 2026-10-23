@@ -16,7 +16,7 @@ export default compose(
                 const map = maps[0]; // only 1 map is allowed
                 if (map) {
                     // also handles maps without zoom or center
-                    const { zoom, center, mapId } = currentMap;
+                    const { zoom, center, mapId, isNew } = currentMap;
                     const { fileName } = map;
                     loadMap({
                         ...map,
@@ -25,7 +25,7 @@ export default compose(
                             zoom: map.map.zoom || zoom,
                             center: map.map.center || center
                         }
-                    }, mapId ? mapId : null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}));
+                    }, mapId ? mapId : null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}), isNew);
                     // keeps mapinfo of pre-existing map if present (to keep save map overwrite)
                     if (mapId && fileName) {
                         loadMapInfo(mapId);

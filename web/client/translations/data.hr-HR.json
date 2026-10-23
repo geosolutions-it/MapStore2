@@ -602,7 +602,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Mjerenja",
+      "styleRules": {
+        "geodesicMeasurement": "Geodetsko mjerenje",
+        "linearMeasurement": "Linearno mjerenje",
+        "angleMeasurement": "Mjerenje kuta",
+        "slopeMeasurement": "Mjerenje nagiba",
+        "areaMeasurement": "Mjerenje površine",
+        "startPosition": "Početni položaj",
+        "endPosition": "Završni položaj",
+        "centerPosition": "Središnji položaj",
+        "segmentLabels": "Oznake segmenata",
+        "measurementLabel": "Oznaka mjerenja"
+      }
     },
     "search": {
       "decimal": "Decimalne",

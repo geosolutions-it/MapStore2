@@ -59,10 +59,10 @@ function resetLConfig() {
                 "ptype": "gxp_olsource"
             },
             "demo": {
-                "url": "https://demo.geo-solutions.it/geoserver/wms"
+                "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms"
             },
             "demo2": {
-                "url": "https://demo.geo-solutions.it/geoserver/wms?params"
+                "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms?params"
             }
         },
         "map": {
@@ -144,7 +144,7 @@ describe('ConfigUtils', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);
         const layers = config.layers.filter((layer) => layer.name === "nurc:Arc_Sample2");
         expect(layers.length).toBe(1);
-        expect(layers[0].url).toBe("https://demo.geo-solutions.it/geoserver/wms");
+        expect(layers[0].url).toBe("https://gs-stable.geosolutionsgroup.com/geoserver/wms");
     });
     it('check sources default values assigned', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);

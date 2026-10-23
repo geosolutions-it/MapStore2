@@ -979,7 +979,20 @@
       "altitude": "Højde",
       "latitude": "Breddegrad",
       "longitude": "Længdegrad",
-      "lengthMeasure": "Mål geodetisk afstand i 3D-rum, som beregnes på ellipsoiden, men vises hvor du klikker"
+      "lengthMeasure": "Mål geodetisk afstand i 3D-rum, som beregnes på ellipsoiden, men vises hvor du klikker",
+      "measurementsLayerTitle": "Målinger",
+      "styleRules": {
+        "geodesicMeasurement": "Geodætisk måling",
+        "linearMeasurement": "Lineær måling",
+        "angleMeasurement": "Vinkelmåling",
+        "slopeMeasurement": "Hældningsmåling",
+        "areaMeasurement": "Arealmåling",
+        "startPosition": "Startposition",
+        "endPosition": "Slutposition",
+        "centerPosition": "Midterposition",
+        "segmentLabels": "Segmentetiketter",
+        "measurementLabel": "Måleetiket"
+      }
     },
     "search": {
       "layerMustBeVisible": "Laget er inaktivt",

@@ -28,7 +28,7 @@ describe('useFiles enhancer', () => {
     it('useFiles rendering with map', (done) => {
 
         const actions = {
-            loadMap: (conf, mapId, zoomToExtent ) => {
+            loadMap: (conf, mapId, zoomToExtent, isNew) => {
                 expect(conf).toExist();
                 expect(conf.map).toExist();
                 expect(conf.map.bbox).toExist();
@@ -36,6 +36,7 @@ describe('useFiles enhancer', () => {
                 expect(conf.map.zoom).toExist();
                 expect(mapId).toBe(null);
                 expect(zoomToExtent).toBe(false);
+                expect(isNew).toBe(true);
                 done();
             },
             onClose: () => {},
@@ -54,7 +55,7 @@ describe('useFiles enhancer', () => {
         });
         const EnhancedSink = useFiles(sink);
         ReactDOM.render(<EnhancedSink maps={[ {map: {zoom: 4, center: { x: 1, y: 1 }, bbox: { x: 1, y: 1 }, maxExtent: "TEST"}} ]}
-            loadAnnotations={actions.loadAnnotations} setLayers={actions.setLayers} loadMap={actions.loadMap} onClose={actions.onClose} currentMap={{zoom: 4, center: { x: 1, y: 1 }}} />, document.getElementById("container"));
+            loadAnnotations={actions.loadAnnotations} setLayers={actions.setLayers} loadMap={actions.loadMap} onClose={actions.onClose} currentMap={{zoom: 4, center: { x: 1, y: 1 }, isNew: true}} />, document.getElementById("container"));
         expect(spyOnClose).toHaveBeenCalled();
         expect(spyLoadAnnotations).toNotHaveBeenCalled();
         expect(spySetLayers).toNotHaveBeenCalled();

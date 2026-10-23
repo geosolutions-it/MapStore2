@@ -4,7 +4,7 @@
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-root</artifactId>
     <packaging>pom</packaging>
-    <version>1.13-SNAPSHOT</version>
+    <version>1.14-SNAPSHOT</version>
     <name>MapStore Root</name>
 
     <properties>
@@ -14,15 +14,15 @@
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
         <tomcat.version>10.1.55</tomcat.version>
-        <jackson.version>2.22.2</jackson.version>
+        <jackson.version>2.22.3</jackson.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
-        <spring.version>7.0.8</spring.version>
-        <spring.security.version>7.1.0</spring.security.version>
+        <spring.version>7.0.9</spring.version>
+        <spring.security.version>7.1.1</spring.security.version>
 
         <!-- other dependencies (aligned where applicable) -->
         <commons-collections.version>3.2.2</commons-collections.version>
@@ -40,9 +40,9 @@
         <cargo.version>1.10.27</cargo.version>
 
         <!-- MapStore‑specific -->
-        <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
+        <geostore-webapp.version>2.8-SNAPSHOT</geostore-webapp.version>
         <print-lib.version>2.5-SNAPSHOT</print-lib.version>
-        <http_proxy.version>1.7-SNAPSHOT</http_proxy.version>
+        <http_proxy.version>1.8-SNAPSHOT</http_proxy.version>
 
         <!-- Commons extras -->
         <commons-lang3.version>3.20.0</commons-lang3.version>

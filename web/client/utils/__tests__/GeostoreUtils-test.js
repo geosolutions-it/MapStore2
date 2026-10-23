@@ -29,6 +29,17 @@ describe('GeostoreUtils', () => {
         expect(parseNODATA('NODATA')).toBe('');
         expect(parseNODATA('/resource/1')).toBe('/resource/1');
     });
+    it('parseEncodedURI', () => {
+        expect(getGeostoreResourceTypesInfo({
+            id: '1',
+            name: 'Test map',
+            category: { name: 'MAP' },
+            attributes: {
+                thumbnail:
+                    'rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri'
+            }
+        }).thumbnailUrl).toBe('rest/geostore/data/2/raw?decode=datauri');
+    });
     it('getGeostoreResourceTypesInfo', () => {
         expect(getGeostoreResourceTypesInfo({
             id: '1',

@@ -3,7 +3,7 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-java</artifactId>
-        <version>1.13-SNAPSHOT</version>
+        <version>1.14-SNAPSHOT</version>
     </parent>
 
     <groupId>it.geosolutions.mapstore</groupId>
@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>MapStore 2 - Backend Services</name>
-    <url>http://www.geo-solutions.it</url>
+    <url>http://www.geosolutionsgroup.com</url>
 
     <dependencies>
 

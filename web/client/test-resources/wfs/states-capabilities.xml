@@ -1,4 +1,4 @@
-<wfs:WFS_Capabilities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wfs" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:topp="http://www.openplans.org/topp" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/wfs https://demo.geo-solutions.it:443/geoserver/schemas/wfs/1.1.0/wfs.xsd" updateSequence="856">
+<wfs:WFS_Capabilities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wfs" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:topp="http://www.openplans.org/topp" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/wfs https://gs-stable.geosolutionsgroup.com:443/geoserver/schemas/wfs/1.1.0/wfs.xsd" updateSequence="856">
 <ows:ServiceIdentification>
 <ows:Title>GeoServer Web Feature Service</ows:Title>
 <ows:Abstract>
@@ -39,8 +39,8 @@ This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WF
 <ows:Operation name="GetCapabilities">
 <ows:DCP>
 <ows:HTTP>
-<ows:Get xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
-<ows:Post xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
+<ows:Get xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
+<ows:Post xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
 </ows:HTTP>
 </ows:DCP>
 <ows:Parameter name="AcceptVersions">
@@ -54,8 +54,8 @@ This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WF
 <ows:Operation name="DescribeFeatureType">
 <ows:DCP>
 <ows:HTTP>
-<ows:Get xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
-<ows:Post xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
+<ows:Get xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
+<ows:Post xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
 </ows:HTTP>
 </ows:DCP>
 <ows:Parameter name="outputFormat">
@@ -65,8 +65,8 @@ This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WF
 <ows:Operation name="GetFeature">
 <ows:DCP>
 <ows:HTTP>
-<ows:Get xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
-<ows:Post xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
+<ows:Get xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
+<ows:Post xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
 </ows:HTTP>
 </ows:DCP>
 <ows:Parameter name="resultType">
@@ -106,16 +106,16 @@ This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WF
 <ows:Operation name="GetGmlObject">
 <ows:DCP>
 <ows:HTTP>
-<ows:Get xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
-<ows:Post xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
+<ows:Get xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
+<ows:Post xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
 </ows:HTTP>
 </ows:DCP>
 </ows:Operation>
 <ows:Operation name="Transaction">
 <ows:DCP>
 <ows:HTTP>
-<ows:Get xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
-<ows:Post xlink:href="https://demo.geo-solutions.it:443/geoserver/topp/states/wfs"/>
+<ows:Get xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
+<ows:Post xlink:href="https://gs-stable.geosolutionsgroup.com:443/geoserver/topp/states/wfs"/>
 </ows:HTTP>
 </ows:DCP>
 <ows:Parameter name="inputFormat">

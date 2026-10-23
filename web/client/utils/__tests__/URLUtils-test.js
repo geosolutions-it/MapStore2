@@ -9,13 +9,13 @@ import expect from 'expect';
 
 import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate, getDefaultUrl, updateUrlParams, getSafeHref } from '../URLUtils';
 
-const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
-const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
+const url1 = "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs";
+const url2 = "https://gs-stable.geosolutionsgroup.com/geoserver/wfs";
 const url3 = "/geoserver/wfs";
 const url4 = (location && location.origin || "FAIL") + "/geoserver/wfs";
 const urlPartsResult1 = {
     protocol: "https:",
-    domain: "demo.geo-solutions.it",
+    domain: "gs-stable.geosolutionsgroup.com",
     port: "443",
     rootPath: "/geoserver/wfs",
     applicationRootPath: 'geoserver'
@@ -65,20 +65,20 @@ describe('URLUtils', () => {
     });
     it('test isSameUrl with clean and dirty absolute url', () => {
         expect(isSameUrl(
-            "https://demo.geo-solutions.it:443/geoserver/wfs",
-            "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(true);
+            "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs",
+            "https://gs-stable.geosolutionsgroup.com/geoserver/wfs?")).toBe(true);
         expect(isSameUrl(
-            "https://demo.geo-solutions.it:443/geoserver/wfs",
-            "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(true);
+            "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs",
+            "https://gs-stable.geosolutionsgroup.com/geoserver/wfs?")).toBe(true);
         expect(isSameUrl(
-            "https://demo.geo-solutions.it/geoserver/wfs?",
-            "https://demo.geo-solutions.it/geoserver/wfs?param1=true&param2=false")).toBe(false);
+            "https://gs-stable.geosolutionsgroup.com/geoserver/wfs?",
+            "https://gs-stable.geosolutionsgroup.com/geoserver/wfs?param1=true&param2=false")).toBe(false);
         expect(isSameUrl(
-            "https://demo.geo-solutions.it/path/geoserver/wfs?",
-            "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(false);
+            "https://gs-stable.geosolutionsgroup.com/path/geoserver/wfs?",
+            "https://gs-stable.geosolutionsgroup.com/geoserver/wfs?")).toBe(false);
         // check avoid parsing exceptions
         expect(isSameUrl(
-            "https://demo.geo-solutions.it/path/geoserver/wfs?",
+            "https://gs-stable.geosolutionsgroup.com/path/geoserver/wfs?",
             1
         )).toBe(false);
     });

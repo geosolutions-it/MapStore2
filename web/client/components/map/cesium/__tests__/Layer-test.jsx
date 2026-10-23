@@ -129,7 +129,7 @@ describe('Cesium layer', () => {
         };
         var source = {
             "ptype": "FAKE",
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://gs-stable.geosolutionsgroup.com/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -281,7 +281,7 @@ describe('Cesium layer', () => {
             "visibility": true,
             "name": 'osm:vector_tile',
             "group": 'Vector',
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://gs-stable.geosolutionsgroup.com/geoserver/wms"
         };
 
         let layer = ReactDOM.render(<CesiumLayer
@@ -556,7 +556,7 @@ describe('Cesium layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "url": "http://demo.geo-solutions.it/geoserver/wms",
+            "url": "http://gs-stable.geosolutionsgroup.com/geoserver/wms",
             "singleTile": true
         };
         // create layers
@@ -569,7 +569,7 @@ describe('Cesium layer', () => {
         waitFor(() => {
             return expect(map.imageryLayers.length).toBe(1);
         }).then(() => {
-            expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe("http://demo.geo-solutions.it/geoserver/wms");
+            expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe("http://gs-stable.geosolutionsgroup.com/geoserver/wms");
             expect(map.imageryLayers._layers[0]._imageryProvider._resource._queryParameters.service).toBe("WMS");
             done();
         }).catch(done);
@@ -582,7 +582,7 @@ describe('Cesium layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "url": ["http://demo.geo-solutions.it/geoserver/wms", "http://demo.geo-solutions.it/geoserver/wms"]
+            "url": ["http://gs-stable.geosolutionsgroup.com/geoserver/wms", "http://gs-stable.geosolutionsgroup.com/geoserver/wms"]
         };
         // create layers
         var layer = ReactDOM.render(
@@ -626,7 +626,7 @@ describe('Cesium layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "opacity": 1.0,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://gs-stable.geosolutionsgroup.com/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -675,7 +675,7 @@ describe('Cesium layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "opacity": 1.0,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://gs-stable.geosolutionsgroup.com/geoserver/wms"
         };
         const options2 = {
             "type": "wms",

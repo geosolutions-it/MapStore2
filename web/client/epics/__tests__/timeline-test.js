@@ -1036,7 +1036,7 @@ describe('timeline Epics', () => {
 
         // function to test time snap
         function createDomainResponse(times) {
-            return `<?xml version="1.0" encoding="UTF-8"?><DomainValues xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1">
+            return `<?xml version="1.0" encoding="UTF-8"?><DomainValues xmlns="http://gs-stable.geosolutionsgroup.com/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1">
                 <ows:Identifier>time</ows:Identifier>
                 <Limit>2</Limit>
                 <Sort>asc</Sort>

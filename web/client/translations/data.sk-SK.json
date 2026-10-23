@@ -760,7 +760,20 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "measurementsLayerTitle": "Merania",
+      "styleRules": {
+        "geodesicMeasurement": "Geodetické meranie",
+        "linearMeasurement": "Lineárne meranie",
+        "angleMeasurement": "Meranie uhla",
+        "slopeMeasurement": "Meranie sklonu",
+        "areaMeasurement": "Meranie plochy",
+        "startPosition": "Počiatočná poloha",
+        "endPosition": "Koncová poloha",
+        "centerPosition": "Stredová poloha",
+        "segmentLabels": "Popisky segmentov",
+        "measurementLabel": "Popisok merania"
+      }
     },
     "search": {
       "layerMustBeVisible": "Cieľová vrstva je neaktívna",

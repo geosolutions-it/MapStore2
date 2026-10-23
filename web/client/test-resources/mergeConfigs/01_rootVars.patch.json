@@ -2,9 +2,9 @@
   {
     "op": "replace", "jsonpath": "$.proxyUrl.useCORS",
     "value": [
-      "http://demo.geo-solutions.it/geoserver",
-      "https://demo.geo-solutions.it:443/geoserver",
-      "https://demo.geo-solutions.it/geoserver",
+      "http://gs-stable.geosolutionsgroup.com/geoserver",
+      "https://gs-stable.geosolutionsgroup.com:443/geoserver",
+      "https://gs-stable.geosolutionsgroup.com/geoserver",
       "https://nominatim.openstreetmap.org"
 
     ]

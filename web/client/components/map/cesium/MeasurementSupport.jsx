@@ -192,7 +192,7 @@ function MeasurementSupport({
                             tooltipId="measureComponent.exportToGeoJSON"
                             disabled={(measurement?.features?.length || 0) === 0}
                             onClick={() => download(
-                                JSON.stringify(convertMeasuresToGeoJSON(measurement.features)),
+                                JSON.stringify(convertMeasuresToGeoJSON(measurement.features, [], undefined, messages)),
                                 'measurements.json',
                                 'application/geo+json'
                             )}

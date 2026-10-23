@@ -486,7 +486,7 @@ describe('Test layers selectors', () => {
                 id: 'topp:states__6',
                 format: 'image/png8',
                 search: {
-                    url: 'https://demo.geo-solutions.it:443/geoserver/wfs',
+                    url: 'https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs',
                     type: 'wfs'
                 },
                 name: 'topp:states',
@@ -494,7 +494,7 @@ describe('Test layers selectors', () => {
                 description: 'This is some census data on the states.',
                 title: 'USA Population',
                 type: 'wms',
-                url: 'https://demo.geo-solutions.it:443/geoserver/wms',
+                url: 'https://gs-stable.geosolutionsgroup.com:443/geoserver/wms',
                 bbox: {
                     crs: 'EPSG:4326',
                     bounds: {
@@ -510,7 +510,7 @@ describe('Test layers selectors', () => {
                 dimensions: [],
                 hideLoading: false,
                 handleClickOnLayer: false,
-                catalogURL: 'https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states',
+                catalogURL: 'https://gs-stable.geosolutionsgroup.com/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states',
                 useForElevation: false,
                 hidden: false,
                 params: {
@@ -570,7 +570,7 @@ describe('Test layers selectors', () => {
                             "id": "topp:states__6",
                             "format": "image/png8",
                             "search": {
-                                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                                "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs",
                                 "type": "wfs"
                             },
                             "name": "topp:states",
@@ -578,7 +578,7 @@ describe('Test layers selectors', () => {
                             "description": "This is some census data on the states.",
                             "title": "USA Population",
                             "type": "wms",
-                            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+                            "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
                             "bbox": {
                                 "crs": "EPSG:4326",
                                 "bounds": {
@@ -594,7 +594,7 @@ describe('Test layers selectors', () => {
                             "dimensions": [],
                             "hideLoading": false,
                             "handleClickOnLayer": false,
-                            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+                            "catalogURL": "https://gs-stable.geosolutionsgroup.com/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
                             "useForElevation": false,
                             "hidden": false,
                             "params": {
@@ -638,7 +638,7 @@ describe('Test layers selectors', () => {
             "id": "topp:states__6",
             "format": "image/png8",
             "search": {
-                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wfs",
                 "type": "wfs"
             },
             "name": "topp:states",
@@ -646,7 +646,7 @@ describe('Test layers selectors', () => {
             "description": "This is some census data on the states.",
             "title": "USA Population",
             "type": "wms",
-            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "url": "https://gs-stable.geosolutionsgroup.com:443/geoserver/wms",
             "bbox": {
                 "crs": "EPSG:4326",
                 "bounds": {
@@ -662,7 +662,7 @@ describe('Test layers selectors', () => {
             "dimensions": [],
             "hideLoading": false,
             "handleClickOnLayer": false,
-            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+            "catalogURL": "https://gs-stable.geosolutionsgroup.com/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
             "useForElevation": false,
             "hidden": false,
             "params": {

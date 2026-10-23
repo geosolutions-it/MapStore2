@@ -1198,7 +1198,14 @@ describe('featuregrid Epics', () => {
                 }
             });
             done();
-        }, {...state, featuregrid: {features}});
+        }, {...state, featuregrid: {features, virtualScroll: false}});
+    });
+
+    it('ignores zoomAll when virtual scrolling is enabled', (done) => {
+        testEpic(addTimeoutEpic(onFeatureGridZoomAll, 10), 1, zoomAll(), actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TEST_TIMEOUT);
+        }, {...state, featuregrid: {features, virtualScroll: true}}, done);
     });
 
     it('test resetControlsOnEnterInEditMode', (done) => {
