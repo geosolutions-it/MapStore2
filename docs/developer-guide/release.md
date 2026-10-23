@@ -29,7 +29,7 @@ Here below some details about changelog generation and naming conventions.
 
 The github actions are configured to automate the release process.
 
-In particular the process is composed by 4 steps:
+In particular the process consists of 4 steps:
 
 - **Cut Release Branch** creates a new branch from master with the name of the stable branch
 - **Prepare Release** updates the version of the packages and creates the changelog
