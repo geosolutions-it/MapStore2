@@ -8,6 +8,7 @@
 
 import {
     SET_COOKIE_VISIBILITY,
+    SET_PRIVACY_CHOICE,
     SET_MORE_DETAILS_VISIBILITY,
     SET_DETAILS_COOKIE_HTML
 } from '../actions/cookie';
@@ -24,6 +25,9 @@ function cookie(state = {
     }
     case SET_DETAILS_COOKIE_HTML: {
         return Object.assign({}, state, {html: { ...state.html, [action.lang]: action.html}});
+    }
+    case SET_PRIVACY_CHOICE: {
+        return {...state, privacyChoice: action.choice};
     }
     default:
         return state;

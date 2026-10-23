@@ -71,6 +71,7 @@ nav:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
+    - Privacy Settings: 'user-guide/privacy-settings.md'
     - Managing Tags: 'user-guide/tags.md'
     - Managing IP Ranges: 'user-guide/ip-ranges.md'
     - Managing Access Rules: 'user-guide/rule-manager.md'
@@ -164,6 +165,7 @@ nav:
     - Configuration:
       - Configuration Files: 'developer-guide/configuration-files.md'
       - Application Configuration: 'developer-guide/local-config.md'
+      - Privacy and Consent: 'developer-guide/privacy-settings.md'
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Configuration Expressions: 'developer-guide/expressions.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'

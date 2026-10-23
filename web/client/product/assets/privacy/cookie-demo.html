@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Cookie Policy · MapStore Vanilla</title>
+        <link rel="stylesheet" href="privacy-docs.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="header-inner">
+                <a class="brand" href="../../../#/" aria-label="MapStore home"
+                    ><img src="../img/logo.png" alt="MapStore 2"
+                /></a>
+                <nav class="site-nav" aria-label="Policies">
+                    <a href="./cookie-demo.html" aria-current="page"
+                        >Cookie Policy</a
+                    ><a href="./privacy-demo.html">Privacy Policy</a
+                    ><a href="./terms-demo.html">Terms of Use</a>
+                </nav>
+            </div>
+        </header>
+        <main class="document">
+            <p class="eyebrow">MapStore Vanilla · 2026.03</p>
+            <h1>Cookie Policy</h1>
+            <aside class="template-note">
+                <strong>Vanilla working baseline.</strong>The installation
+                operator must verify and update this notice and, where relevant,
+                its inventory and consent configuration for its MapStore
+                version, plugins, services, authentication and infrastructure.
+                Complete the highlighted fields before publishing.
+            </aside>
+            <p>
+                <strong>Operator:</strong>
+                <span class="placeholder"
+                    >[OPERATOR LEGAL NAME AND CONTACT]</span
+                >
+                · <strong>Effective date:</strong>
+                <span class="placeholder">[DATE / NOTICE VERSION]</span>.
+            </p>
+            <h2>About cookies and browser storage</h2>
+            <p>
+                Cookies are small files stored by a browser. LocalStorage and
+                SessionStorage are separate browser storage mechanisms. This
+                template describes the tools identified in the supplied MapStore
+                Vanilla configuration, including conditional features. No
+                analytics or advertising tools are configured in this baseline.
+                <span class="placeholder"
+                    >[OPERATOR: VERIFY THE LIST, HOSTNAMES, PURPOSES AND
+                    DURATIONS FOR YOUR INSTALLATION; ADD OR REMOVE ENTRIES AS
+                    NEEDED]</span
+                >.
+            </p>
+            <p>
+                <strong>Inventory baseline:</strong> MapStore Vanilla 2026.03,
+                code snapshot
+                <code>49eabb968f9652b4e3b0bbca4452de16db075ce6</code>, with this
+                privacy implementation, local GeoStore sign-in, OSM Bright and
+                no optional categories in <code>configs/localConfig.json</code>.
+                First-party application storage and external demo-service
+                cookies are listed separately below. Operator-added plugins and
+                services require their own assessment.
+            </p>
+            <h2>Your choices</h2>
+            <p>
+                The same privacy panel opens on a first visit to the home page
+                or a direct map, Dashboard, GeoStory or embed. In necessary-only
+                Vanilla it provides information and a Close action: these
+                necessary technical tools do not require consent. Closing the
+                panel records dismissal separately and does not express consent.
+                You can reopen settings from the bottom bar on every supported
+                route. <strong>Necessary:</strong> always active for the
+                requested operations described below.
+                <strong>Optional functional, statistics and marketing:</strong>
+                not used by this configuration, so no consent switch is shown.
+                Opening or closing the settings does not mean accepting Terms or
+                consenting to data processing. If optional services are added,
+                the operator must describe them here and provide the
+                corresponding choices before activating them. You can refuse
+                optional tools, save a selection or withdraw consent from
+                Privacy settings. Refusal keeps optional tools inactive. Closing
+                an initial optional-choice panel also keeps them off.
+                <span class="placeholder"
+                    >[ADD ANY OPTIONAL SERVICES, PURPOSES AND PROVIDER NOTICES,
+                    OR REMOVE THIS INSTRUCTION IF NONE ARE USED]</span
+                >.
+            </p>
+            <h2>Cookie and browser storage inventory</h2>
+            <p>
+                Conditional entries are used only when the relevant feature is
+                active. LocalStorage is scoped to the application origin;
+                cookies follow their domain and path scope. Browser session
+                restoration can extend session cookies. “No explicit expiry”
+                means that an application or browser action is needed to remove
+                the value.
+            </p>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name / origin</th>
+                            <th>Purpose and use</th>
+                            <th>Duration and removal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <code>mapstore.persistence.security</code
+                                ><br />LocalStorage; installation origin
+                            </td>
+                            <td>
+                                Necessary for sign-in/session continuity. Key
+                                may exist anonymously with no authenticated
+                                user. Holds authentication state after local
+                                GeoStore login.
+                            </td>
+                            <td>
+                                The storage entry has no fixed expiry. Access
+                                and refresh tokens have separate validity set by
+                                the authentication service; the local baseline
+                                returns a 24-hour access token. Logout clears
+                                user and token values; an empty security entry
+                                may remain.
+                                <span class="placeholder"
+                                    >[VERIFY YOUR AUTHENTICATION PROVIDER]</span
+                                >.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code>mapstore.privacy.choices</code
+                                ><br />LocalStorage; installation origin
+                            </td>
+                            <td>
+                                Necessary to remember an optional consent
+                                decision, including refusal. Not written merely
+                                by opening settings in necessary-only Vanilla.
+                            </td>
+                            <td>
+                                180 days from an explicit choice in this
+                                baseline; schema/policy version changes
+                                invalidate the record. Expired, malformed or
+                                superseded records are removed on the next read
+                                when storage access permits. No optional choice
+                                is retained when no optional categories are
+                                configured.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code>mapstore.privacy.notice</code
+                                ><br />LocalStorage; installation origin
+                            </td>
+                            <td>
+                                Necessary to remember dismissal of the
+                                first-visit privacy information when only
+                                necessary tools are configured. This is not a
+                                consent record, grants no optional category and
+                                contains no user identifier.
+                            </td>
+                            <td>
+                                Written only when closing the information panel;
+                                180-day logical validity in this configuration.
+                                A changed policy version or expiry shows the
+                                information again. Expired, malformed or
+                                superseded records are removed on the next read
+                                when storage access permits. If storage is
+                                unavailable the notice can reappear on another
+                                visit.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code
+                                    >mapstore.cookie.approved;
+                                    cookies-policy-approved</code
+                                ><br />LocalStorage; installation origin
+                            </td>
+                            <td>
+                                Old notice acknowledgement, never optional
+                                consent. Removed when the new privacy panel is
+                                enabled; not converted into a new consent or
+                                dismissal.
+                            </td>
+                            <td>
+                                No expiry in older versions; removed on the next
+                                privacy-state check when browser storage
+                                permits.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code
+                                    >mapstore.usersession.&lt;host_path&gt;.&lt;name&gt;</code
+                                ><br />LocalStorage; installation origin
+                            </td>
+                            <td>
+                                Conditional editing-session recovery; inactive
+                                in this standard configuration.
+                                <span class="placeholder"
+                                    >[IF ENABLED, ASSESS ITS PURPOSE, CHOICE
+                                    MECHANISM AND RETENTION BEFORE USE]</span
+                                >.
+                            </td>
+                            <td>
+                                No explicit expiry; removed by the
+                                session-management feature or browser clearing.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code
+                                    >mapstore.plugin.tutorial.&lt;id&gt;.disabled</code
+                                ><br />LocalStorage; installation origin
+                            </td>
+                            <td>
+                                Remembers an explicit request not to show a
+                                tutorial again, when that feature is used.
+                            </td>
+                            <td>No explicit expiry.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code>credentialStorage</code
+                                ><br />SessionStorage; installation origin
+                            </td>
+                            <td>
+                                Necessary when the user supplies credentials for
+                                a protected service. Separate from local
+                                GeoStore login.
+                            </td>
+                            <td>Tab session; application/browser clearing.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code>queryParams; queryParams-&lt;id&gt;</code
+                                ><br />SessionStorage; installation origin
+                            </td>
+                            <td>
+                                Necessary handoff of user-requested POST/embed
+                                parameters, consumed and removed as parameters
+                                are read.
+                            </td>
+                            <td>
+                                Consumed entries removed; otherwise tab session.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code>mapstore.loginRedirectHash</code
+                                ><br />SessionStorage; installation origin
+                            </td>
+                            <td>
+                                Conditional return route for an external sign-in
+                                flow. See actual constant in source; no SSO
+                                provider is configured here.
+                            </td>
+                            <td>
+                                Removed when consumed; otherwise tab session.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code>exportDataResults_&lt;id&gt;</code
+                                ><br />First-party JavaScript cookie; current
+                                application path
+                            </td>
+                            <td>
+                                Necessary handoff of results for an explicitly
+                                requested layer export; used only by that
+                                workflow.
+                            </td>
+                            <td>
+                                No Max-Age/Expires in writer: session cookie.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code>GS_FLOW_CONTROL</code><br />Third-party
+                                Set-Cookie; maps1…maps6.geosolutionsgroup.com,
+                                path /geoserver
+                            </td>
+                            <td>
+                                Technical request concurrency/load control and
+                                abuse protection for the requested map service;
+                                not classified as statistics or marketing.
+                                Distinct from product-origin storage.
+                            </td>
+                            <td>
+                                Session in observed headers: no Max-Age/Expires.
+                                No Domain, Secure, HttpOnly or SameSite
+                                attributes observed. Browser policy may block
+                                it.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h2>External requests and cookie handling</h2>
+            <p>
+                OSM Bright is served by six GeoSolutions WMS hosts. It is
+                distinct from <code>tile.openstreetmap.org</code>, which is used
+                only when that basemap is selected. A request to a map service
+                is not evidence of an optional tracking purpose. The WMS emits
+                <code>GS_FLOW_CONTROL</code> even if a browser blocks its
+                storage; a blocked cookie is still an emitted cookie. Whether
+                the browser stores or sends it also depends on browser settings.
+                MapStore cannot delete cookies belonging to another domain.
+            </p>
+            <p>
+                Map imagery, geocoding searches and catalogue operations send
+                connection metadata and requested coordinates, text or resources
+                to their destination. The baseline checks did not observe
+                cookies from the separate public OSM tile service, the Nominatim
+                search service or the configured catalogue and added WMS layer.
+                <span class="placeholder"
+                    >[VERIFY ACTUAL PROVIDERS AND LINK THEIR NOTICES]</span
+                >. Information about recipients and personal-data processing
+                belongs in the <a href="./privacy-demo.html">Privacy Policy</a>.
+            </p>
+
+            <h2>Retention and withdrawal limits</h2>
+            <p>
+                The preference record uses a configured 180-day lifetime,
+                distinct from provider cookie lifetimes and from any in-memory
+                concurrency timeout in GeoServer. Read access, consent updates,
+                focus and periodic checks validate it. Withdrawal prevents
+                further work by registered integrations and requests
+                cancellation where supported. Requests already transmitted,
+                browser caches, remote logs and cookies controlled by other
+                domains cannot be erased by MapStore. Use browser privacy
+                controls for third-party storage.
+            </p>
+            <p class="fineprint">
+                Further information:
+                <a href="https://www.garanteprivacy.it/faq/Cookie"
+                    >Garante: cookies and other tracking tools</a
+                >.
+            </p>
+            <p><a href="../../../#/viewer/new">Back to MapStore</a></p>
+        </main>
+        <footer>
+            Installation template · complete and review before publication
+        </footer>
+    </body>
+</html>

@@ -11,7 +11,7 @@ import { testEpic, TEST_TIMEOUT, addTimeoutEpic} from './epicTestUtils';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { cookiePolicyChecker } from '../cookies';
 import { SET_COOKIE_VISIBILITY } from '../../actions/cookie';
-import { setApi, getApi } from '../../api/userPersistedStorage';
+import { setApi, getApi, getItemKey } from '../../api/userPersistedStorage';
 
 
 describe('Cookies epics', () => {
@@ -25,15 +25,36 @@ describe('Cookies epics', () => {
             done();
         }, {});
     });
-    it('test cookiePolicyChecker and trigger error for accessing localStorage', done => {
+    it('shows the notice when storage access fails', done => {
         setApi("memoryStorage");
         getApi().setAccessDenied(true);
         const NUM_ACTIONS = 1;
-        testEpic(addTimeoutEpic(cookiePolicyChecker, 40), NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
+        testEpic(cookiePolicyChecker, NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const [action] = actions;
-            expect(action.type).toBe(TEST_TIMEOUT);
+            expect(action.type).toBe(SET_COOKIE_VISIBILITY);
+            expect(action.status).toBe(true);
             getApi().setAccessDenied(false);
+            setApi("localStorage");
+            done();
+        }, {});
+    });
+    it('does not treat a stored string false as approval', done => {
+        setApi("memoryStorage");
+        getApi().setItem(getItemKey('cookie', 'approved'), 'false');
+        testEpic(cookiePolicyChecker, 1, {type: LOCATION_CHANGE}, (actions) => {
+            expect(actions[0].status).toBe(true);
+            getApi().removeItem(getItemKey('cookie', 'approved'));
+            setApi("localStorage");
+            done();
+        }, {});
+    });
+    it('recognizes an existing string true approval', done => {
+        setApi("memoryStorage");
+        getApi().setItem(getItemKey('cookie', 'approved'), 'true');
+        testEpic(addTimeoutEpic(cookiePolicyChecker, 40), 1, {type: LOCATION_CHANGE}, (actions) => {
+            expect(actions[0].type).toBe(TEST_TIMEOUT);
+            getApi().removeItem(getItemKey('cookie', 'approved'));
             setApi("localStorage");
             done();
         }, {});
