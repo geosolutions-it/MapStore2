@@ -22,6 +22,24 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Privacy settings and standard sharing
+
+Vanilla enables the common privacy panel of the `Cookie` plugin. Legacy cookie acknowledgements are not converted into optional consent.
+
+The default configuration links no policy page, and the plugin writes a warning in the browser console until they are configured. To complete the migration:
+
+- Provide the policy pages of the installation: a Cookie Policy, a Privacy Policy when personal data are processed, and optionally Terms of Use. See [Which pages to provide](privacy-settings.md#which-pages-to-provide).
+- Link them: in a project, in `privacy.links` of `localConfig.json`, from the project assets or as external urls; in a product installation, upload a privacy settings extension, created from the [mapstore-privacy-settings-extension](https://github.com/geosolutions-it/mapstore-privacy-settings-extension) template, which sets the links by itself. See [Policy pages](privacy-settings.md#policy-pages).
+- Configure optional categories only for the optional tools actually used, and register their integrations before enabling them.
+
+Other changes:
+
+- The standard Social sharing tab and counters are removed; custom clients relying on them must adapt. Link and embed sharing retain their existing resource permissions.
+- The `Cookie` plugin shows the Leave button of the legacy notice only when `declineUrl` is configured.
+- Projects should replace the Bowser script and the Google Fonts links in their HTML templates with the inline Internet Explorer check of the standard templates.
+
+See [Privacy and Consent Configuration](privacy-settings.md#privacy-and-consent-configuration) for storage migration, configuration and adapter requirements.
+
 ### Default users removed: initial administrator password
 
 MapStore does not create the sample users `admin`/`admin` and `user`/`user` anymore (the `sample_users.xml` file is no longer shipped with the bundled GeoStore). On the first start with an empty database the `admin` user is created with the password taken from the `INITIAL_ADMIN_PASSWORD` environment variable; if the variable is not set, no administrator is created and start-up continues with a warning in the log. On a database that still contains an `admin` using the former default password, setting `INITIAL_ADMIN_PASSWORD` resets it to that value. See [Initial Administrator Password](initial-admin-password.md) for the details.

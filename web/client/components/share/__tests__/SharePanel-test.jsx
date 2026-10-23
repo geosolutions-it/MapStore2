@@ -66,6 +66,12 @@ describe("The SharePanel component", () => {
         codeEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code");
         expect(codeEmbed.length).toBe(2);
     });
+    it('removes the Social tab and falls back to direct link for a legacy social selection', () => {
+        ReactDOM.render(<SharePanel selectedTab="social" isVisible/>, document.getElementById('container'));
+        expect(document.getElementById('sharePanel-tabs-tab-2')).toNotExist();
+        expect(document.getElementById('sharePanel-tabs-tab-1')).toExist();
+        expect(document.querySelector('iframe')).toNotExist();
+    });
     it('test hide embedPanel option remove the panel', () => {
         let panel = ReactDOM.render(<SharePanel showAPI={false} getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
         const thirdTab = document.getElementById('sharePanel-tabs-tab-3');
@@ -73,7 +79,7 @@ describe("The SharePanel component", () => {
         expect(panel.state.eventKey).toBe(3);
         let liTags = document.querySelectorAll('li');
 
-        expect(liTags.length).toBe(3);
+        expect(liTags.length).toBe(2);
         expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
 
         panel = ReactDOM.render(<SharePanel embedPanel={false} showAPI={false} getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
@@ -103,7 +109,7 @@ describe("The SharePanel component", () => {
         };
         let panel = ReactDOM.render(<SharePanel showAPI={false} advancedSettings={advancedSettings} getCount={() => 2} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
         let liTags = document.querySelectorAll('li');
-        expect(liTags.length).toBe(3);
+        expect(liTags.length).toBe(2);
         expect(panel.state.eventKey).toBe(1);
         expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.directLinkTitle</span>");
 

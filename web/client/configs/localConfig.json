@@ -20,6 +20,12 @@
     ]
   },
   "geoStoreUrl": "rest/geostore/",
+  "privacy": {
+    "enabled": true,
+    "policyVersion": "vanilla-2026.03-consent-1",
+    "retentionDays": 180,
+    "categories": []
+  },
   "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
   "printUrl": "pdf/info.json",
   "mapquestApiKey": "__API_KEY_MAPQUEST__",
@@ -381,8 +387,7 @@
       {
         "name": "Cookie",
         "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "http://www.google.com"
+          "externalCookieUrl": ""
         }
       },
       "FeedbackMask",
@@ -628,8 +633,7 @@
       {
         "name": "Cookie",
         "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "http://www.google.com"
+          "externalCookieUrl": ""
         }
       },
       "OmniBar",
@@ -759,7 +763,12 @@
         }
       },
       "AddGroup",
-      "MapFooter",
+      {
+        "name": "MapFooter",
+        "cfg": {
+          "containerPosition": "footer"
+        }
+      },
       {
         "name": "Settings",
         "cfg": {
@@ -938,12 +947,11 @@
       {
         "name": "Cookie",
         "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "http://www.google.com"
+          "externalCookieUrl": ""
         }
       }
     ],
-    "permalink": ["Permalink", "FeedbackMask"],
+    "permalink": ["Permalink", "Cookie", "FeedbackMask"],
     "dashboard": [
       {
         "name": "LayerDownload",
@@ -1103,6 +1111,7 @@
           "preset": "dashboard_tutorial"
         }
       },
+      "Cookie",
       {
         "name": "FeedbackMask",
         "cfg": {
@@ -1113,6 +1122,7 @@
     "geostory-embedded": [
       "GeoStory",
       { "name": "SecurityPopup" },
+      "Cookie",
       {
         "name": "GeoStoryNavigation",
         "cfg": {
@@ -1134,6 +1144,7 @@
         }
       },
       { "name": "SecurityPopup" },
+      "Cookie",
       { "name": "FeedbackMask" }
     ],
     "geostory": [
@@ -1219,6 +1230,7 @@
           }
         }
       },
+      "Cookie",
       "Permalink"
     ],
     "context-creator": [
@@ -1250,6 +1262,7 @@
       "ContextImport",
       "ContextExport",
       "Notifications",
+      "Cookie",
       {
         "name": "FeedbackMask",
         "cfg": {
@@ -1266,6 +1279,7 @@
       "TagsManager",
       "IPManager",
       "Footer",
+      "Cookie",
       {
         "name": "About",
         "cfg": {

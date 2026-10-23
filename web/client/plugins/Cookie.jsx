@@ -8,15 +8,18 @@
 
 import { connect } from 'react-redux';
 
-import { setCookieVisibility, setMoreDetailsVisibility } from '../actions/cookie';
+import { setCookieVisibility, setMoreDetailsVisibility, setPrivacyChoice } from '../actions/cookie';
 import CookieComp from '../components/cookie/Cookie';
 import cookies from '../epics/cookies';
 import cookie from '../reducers/cookie';
+import { privacyConfigSelector } from '../utils/PrivacyChoices';
+import { MapFooterPrivacyAccess, FooterPrivacyAccess } from '../components/cookie/PrivacyAccessButton';
 
 /**
-  * Plugin for cookie policy.
-  * By default it links to MapStore's cookie information page, but you can customize the
-  * links to point to your own cookie information page.
+  * Provides privacy information and optional consent management when the top-level
+  * privacy configuration is enabled. Contributes access to Footer and MapFooter,
+  * with a bottom bar on routes without a native footer.
+  * With privacy disabled, retains the legacy cookie information panel.
   * @name Cookie
   * @memberof plugins
   * @class
@@ -27,14 +30,27 @@ import cookie from '../reducers/cookie';
 const Cookie = connect((state) => ({
     show: state.cookie && state.cookie.showCookiePanel,
     html: state.cookie && state.cookie.html && state.cookie.html[state.locale && state.locale.current],
-    seeMore: state.cookie && state.cookie.seeMore
+    seeMore: state.cookie && state.cookie.seeMore,
+    privacyChoice: state.cookie && state.cookie.privacyChoice,
+    privacy: privacyConfigSelector(state),
+    locale: state.locale && state.locale.current
 }), {
     onSetCookieVisibility: setCookieVisibility,
-    onMoreDetails: setMoreDetailsVisibility
+    onMoreDetails: setMoreDetailsVisibility,
+    onPrivacyChoice: setPrivacyChoice
 })(CookieComp);
 
 export default {
-    CookiePlugin: Cookie,
+    CookiePlugin: Object.assign(Cookie, {
+        MapFooter: {
+            name: 'privacyAccess', target: 'right-footer', position: 10,
+            Component: MapFooterPrivacyAccess
+        },
+        Footer: {
+            name: 'privacyAccess', target: 'menu', position: 10,
+            Component: FooterPrivacyAccess
+        }
+    }),
     reducers: {cookie: cookie},
     epics: cookies
 };

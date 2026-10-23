@@ -9,7 +9,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import ShareSocials from './ShareSocials';
 import ShareLink from './ShareLink';
 import ShareEmbed from './ShareEmbed';
 import ShareApi from './ShareApi';
@@ -39,7 +38,6 @@ import Portal from '../misc/Portal';
 
 /**
  * SharePanel allow to share the current map in some different ways.
- * You can share it on socials networks(facebook,twitter,google+,linkedin)
  * copying the direct link
  * copying the embedded code
  * using the QR code with mobile apps
@@ -55,7 +53,6 @@ import Portal from '../misc/Portal';
  * @prop {string} [shareApiUrl] url for share API part
  * @prop {string} [shareConfigUrl] the url of the config to use for shareAPI
  * @prop {function} [onClose] function to call on close window event.
- * @prop {getCount} [getCount] function used to get the count for social links.
  * @prop {object} [advancedSettings] object with properties/settings for bbox, coordinates, zoom, marker, hideInTab
  */
 class SharePanel extends React.Component {
@@ -75,7 +72,6 @@ class SharePanel extends React.Component {
         embedOptions: PropTypes.object,
         showAPI: PropTypes.bool,
         onClose: PropTypes.func,
-        getCount: PropTypes.func,
         closeGlyph: PropTypes.string,
         version: PropTypes.string,
         bbox: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
@@ -153,7 +149,7 @@ class SharePanel extends React.Component {
         const coordinate = this.getCoordinates(this.props);
         this.setState({
             bbox,
-            eventKey: SHARE_TABS[this.props.selectedTab] || 1,
+            eventKey: this.props.selectedTab === 'social' ? 1 : SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
             coordinate,
             ...this.processOrientation(this.props)
@@ -261,7 +257,8 @@ class SharePanel extends React.Component {
     getCurrenTab = (itemTabs = []) => {
         const embedEventKey = this.getEmbedEventKey(itemTabs);
         return (
-            (!this.props.embedPanel && this.state.eventKey === embedEventKey)
+            this.state.eventKey === 2
+            || (!this.props.embedPanel && this.state.eventKey === embedEventKey)
             || (isEmpty(itemTabs) && this.state.eventKey > (this.props.embedPanel ? 3 : 2))
         ) ? 1 : this.state.eventKey; // fallback to tab link if embed is disabled and selected at the same time
     }
@@ -280,7 +277,6 @@ class SharePanel extends React.Component {
         const embedEventKey = this.getEmbedEventKey(itemTabs);
         const currentTab = this.getCurrenTab(itemTabs);
         const shareApiUrl = this.props.shareApiUrl || cleanShareUrl || location.href;
-        const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = <div><ShareLink shareUrl={shareUrl} bbox={this.props.bbox}/><ShareQRCode shareUrl={shareUrl}/></div>;
         const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
             {this.props.showAPI ? <ShareApi baseUrl={shareApiUrl} shareUrl={shareUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
@@ -288,7 +284,6 @@ class SharePanel extends React.Component {
         const SHARE_TABS_UPDATED = this.getShareTabs(itemTabs);
         const tabs = (<Tabs defaultActiveKey={currentTab} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
             <Tab eventKey={1} title={<Message msgId="share.direct" />}>{currentTab === 1 && direct}</Tab>
-            <Tab eventKey={2} title={<Message msgId="share.social" />}>{currentTab === 2 && social}</Tab>
             {!isEmpty(itemTabs)
                 ? itemTabs.map(({title, component: Component}, index) => {
                     const eventKey = 2 + (index + 1);

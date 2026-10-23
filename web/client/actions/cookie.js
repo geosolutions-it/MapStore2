@@ -29,3 +29,6 @@ export function setDetailsCookieHtml(html, lang) {
         lang
     };
 }
+
+export const SET_PRIVACY_CHOICE = 'SET_PRIVACY_CHOICE';
+export const setPrivacyChoice = choice => ({type: SET_PRIVACY_CHOICE, choice});

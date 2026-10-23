@@ -14,8 +14,6 @@ From the *Share panel* the user is allowed to share a resource in different ways
 
 * With a **Direct Link**
 
-* Through a **Social Network**
-
 * Through a **Permalink** to shares current user session (only available from the [Side Toolbar](mapstore-toolbars.md#side-toolbar))
 
 * With **Embedded code** or **APIs** (only available for *maps*)
@@ -27,12 +25,6 @@ As soon as the *Share panel* opens, the **Link** section is the one visible by d
 <img src="../img/share/share_window.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 Here, the user can copy the resource **URL link** or share it through the **QR code**.
-
-## Social
-
-The **Social** section allows the user to share the resource on the most common social networks like **Facebook**, **Twitter** and **LinkedIn** simply by clicking on the social icon.
-
-<img src="../img/share/social.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 ## Permalink
 
