@@ -14,6 +14,10 @@ import Button from '../misc/Button';
 import Message from '../../components/I18N/Message';
 import MoreDetails from './MoreDetails';
 import { getApi, getItemKey } from '../../api/userPersistedStorage';
+import { isCookieNoticeAcknowledged, acknowledgePrivacyNotice, isPrivacyNoticeAcknowledged, privacyNoticeKey } from '../../utils/CookieNoticeUtils';
+import { readPrivacyChoice, makePrivacyChoice, persistPrivacyChoice, privacyChoiceKey, categoryIds } from '../../utils/PrivacyChoices';
+import PrivacyPanel from './PrivacyPanel';
+import { consentManager } from '../../utils/ConsentManager';
 
 /**
   * Component used to show a panel with the information about cookies
@@ -30,6 +34,7 @@ import { getApi, getItemKey } from '../../api/userPersistedStorage';
   */
 
 class Cookie extends React.Component {
+    state = { privacyStorageError: false };
     static propTypes = {
         declineUrl: PropTypes.string,
         externalCookieUrl: PropTypes.string,
@@ -37,18 +42,64 @@ class Cookie extends React.Component {
         onMoreDetails: PropTypes.func,
         onSetCookieVisibility: PropTypes.func,
         seeMore: PropTypes.bool,
-        show: PropTypes.bool
+        show: PropTypes.bool,
+        privacy: PropTypes.object,
+        privacyChoice: PropTypes.object,
+        onPrivacyChoice: PropTypes.func
     };
     static contextTypes = {
         messages: PropTypes.object
     };
     static defaultProps = {
-        declineUrl: "http://www.google.com",
+        declineUrl: "./",
+        onPrivacyChoice: () => {},
         onMoreDetails: () => {},
         onSetCookieVisibility: () => {},
         seeMore: false,
         show: false
     };
+
+    handlePrivacyStorageChange = event => {
+        if (this.props.privacy?.enabled && event.key === privacyNoticeKey() && !categoryIds(this.props.privacy).length) {
+            if (isPrivacyNoticeAcknowledged(this.props.privacy)) this.props.onSetCookieVisibility(false);
+            return;
+        }
+        if (!this.props.privacy?.enabled || (event.key !== null && event.key !== privacyChoiceKey())) return;
+        const choice = readPrivacyChoice(this.props.privacy);
+        consentManager.update(this.props.privacy, choice);
+        this.props.onPrivacyChoice(choice);
+        if (!choice && this.props.privacy.categories?.length) this.props.onSetCookieVisibility(true);
+    };
+
+    componentDidMount() {
+        if (this.props.privacy?.enabled) {
+            const choice = readPrivacyChoice(this.props.privacy);
+            consentManager.update(this.props.privacy, choice);
+            this.props.onPrivacyChoice(choice);
+            window.addEventListener('storage', this.handlePrivacyStorageChange);
+            this.recheckConsent = () => this.handlePrivacyStorageChange({key: null});
+            window.addEventListener('focus', this.recheckConsent);
+            this.expiryCheck = setInterval(this.recheckConsent, 30000);
+            // The bridge exists only in an explicitly configured loopback test lab.
+            if (this.props.privacy.testFixture && ['127.0.0.1', 'localhost', '[::1]'].includes(window.location.hostname)) {
+                window.MapStoreConsent = {register: consentManager.register, isAllowed: consentManager.isAllowed};
+                window.dispatchEvent(new Event('mapstore:consent-ready'));
+            }
+        }
+        // Dynamically loaded plugins can miss the first LOCATION_CHANGE event.
+        // Check on mount so a fresh visit still displays the notice.
+        if (!this.props.show && !isCookieNoticeAcknowledged(this.props.privacy)) {
+            this.props.onSetCookieVisibility(true);
+        }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('storage', this.handlePrivacyStorageChange);
+        window.removeEventListener('focus', this.recheckConsent);
+        clearInterval(this.expiryCheck);
+        consentManager.stop();
+        delete window.MapStoreConsent;
+    }
 
     renderAcceptButton = () => {
         return (
@@ -95,6 +146,34 @@ class Cookie extends React.Component {
         </a>);
     }
     render() {
+        if (this.props.privacy?.enabled) {
+            return (<PrivacyPanel
+                config={this.props.privacy}
+                locale={this.props.locale}
+                choice={this.props.privacyChoice}
+                show={this.props.show}
+                storageError={this.state.privacyStorageError}
+                onShow={show => {
+                    if (!show && !categoryIds(this.props.privacy).length) acknowledgePrivacyNotice(this.props.privacy);
+                    this.props.onSetCookieVisibility(show);
+                }}
+                onSave={selected => {
+                    const choice = makePrivacyChoice(this.props.privacy, selected);
+                    const persisted = persistPrivacyChoice(choice);
+                    const requestedOptional = Object.values(choice.categories).some(Boolean);
+                    if (!persisted && requestedOptional) {
+                        consentManager.update(this.props.privacy, null);
+                        this.props.onPrivacyChoice(null);
+                        this.setState({privacyStorageError: true});
+                        return false;
+                    }
+                    consentManager.update(this.props.privacy, persisted ? choice : null);
+                    this.setState({privacyStorageError: !persisted});
+                    this.props.onPrivacyChoice(persisted ? choice : null);
+                    this.props.onSetCookieVisibility(false);
+                    return true;
+                }} />);
+        }
         if (!this.props.show) {
             return null;
         }

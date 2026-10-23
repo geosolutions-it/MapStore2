@@ -22,6 +22,10 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Privacy settings and standard sharing
+
+Vanilla enables the common privacy panel. Legacy cookie acknowledgements are not converted into optional consent. Review and complete the policy templates, configure actual optional categories and register their integrations before enabling them. The standard Social sharing tab and counters are removed; custom clients relying on them must adapt. Link and embed sharing retain their existing resource permissions. See [Privacy and Consent Configuration](privacy-settings.md#privacy-and-consent-configuration) for storage migration, configuration and adapter requirements.
+
 ### Default users removed: initial administrator password
 
 MapStore does not create the sample users `admin`/`admin` and `user`/`user` anymore (the `sample_users.xml` file is no longer shipped with the bundled GeoStore). On the first start with an empty database the `admin` user is created with the password taken from the `INITIAL_ADMIN_PASSWORD` environment variable; if the variable is not set, no administrator is created and start-up continues with a warning in the log. On a database that still contains an `admin` using the former default password, setting `INITIAL_ADMIN_PASSWORD` resets it to that value. See [Initial Administrator Password](initial-admin-password.md) for the details.

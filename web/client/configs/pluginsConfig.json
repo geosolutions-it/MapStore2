@@ -383,7 +383,7 @@
       "hidden": true,
       "defaultConfig": {
         "externalCookieUrl": "",
-        "declineUrl": "http://www.google.com"
+        "declineUrl": "./"
       }
     },
     {
