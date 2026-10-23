@@ -286,6 +286,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
