@@ -53,6 +53,17 @@
       "descriptionAdmin": "Per favore contatta l'amministratore"
     },
     "autorefresh": {
+      "selector": "Imposta l'intervallo di aggiornamento automatico dei livelli",
+      "label": {
+        "default": "Attiva aggiornamento automatico",
+        "lastUpdated": "Ultimo aggiornamento",
+        "addLayer": "Aggiungi livello",
+        "addLayerPlaceholder": "Seleziona...",
+        "removeLayer": "Rimuovi livello",
+        "layersSummary": "Livelli aggiornati automaticamente",
+        "noLayers": "Nessuno trovato",
+        "informations": "Quali livelli sono configurati"
+      },
       "of": "di",
       "updating": "In aggiornamento...",
       "layers": "layers"
@@ -4059,6 +4070,10 @@
       "Isochrone": {
         "description": "Questo plugin consente di calcolare isocroni e isodistanze",
         "title": "Isochrone"
+      },
+      "AutoRefresh": {
+        "description": "Questo plugin consente di impostare un intervallo di aggiornamento automatico sui livelli",
+        "title": "Auto Refresh"
       }
     },
     "contextCreator": {
