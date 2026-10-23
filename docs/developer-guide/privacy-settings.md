@@ -12,15 +12,12 @@ The top-level `privacy` object in `configs/localConfig.json` controls the panel:
     "enabled": true,
     "policyVersion": "vanilla-2026.03-consent-1",
     "retentionDays": 180,
-    "categories": [],
-    "links": {
-      "cookie": "product/assets/privacy/cookie-demo.html",
-      "privacy": "product/assets/privacy/privacy-demo.html",
-      "terms": "product/assets/privacy/terms-demo.html"
-    }
+    "categories": []
   }
 }
 ```
+
+The default configuration does not link any policy page, because the pages depend on the installation. Until `privacy.links` is configured, the plugin writes a warning in the browser console. See [Policy pages](#policy-pages).
 
 An empty category list means that no optional tools are configured. The first-visit panel is informational, with a Close action. Its dismissal is distinct from consent. Do not add optional categories merely because the application requests a remote map service.
 
@@ -44,7 +41,7 @@ Supported optional IDs are `functional`, `statistics` and `marketing`. Configure
 }
 ```
 
-This object belongs inside `privacy`. Categories are off before a valid choice. Adding a category does not automatically control a plugin, script, iframe or service: its implementation must use the consent lifecycle.
+This object belongs inside `privacy`. Categories are off before a valid choice. Adding a category does not automatically control a plugin, script, iframe or service: its implementation must use the consent lifecycle, with `registerConsentIntegration` in MapStore code or with the `SET_PRIVACY_CHOICE` action in an extension (see [Optional integrations in an extension](#optional-integrations-in-an-extension)).
 
 ## Register an optional integration
 
@@ -82,27 +79,142 @@ Storage keys use MapStore's application namespace:
 
 The baseline validity is 180 days. Invalid, expired or superseded privacy records are removed on their next read when storage permits. Optional records are removed when no optional categories are configured. Valid applicable choices and necessary-only dismissals are retained. Cleanup compares the stored value before removal to avoid deleting a newer decision from another tab.
 
-Storage read or write failures do not enable optional tools. A storage-removal failure also leaves an invalid record inactive. The migration does not clear authentication or unrelated application storage.
+Storage read or write failures do not enable optional tools. When a choice cannot be saved, the panel stays open with the error and optional tools stay off on the page, even if an older consent can still be read; MapStore also tries to remove that older record. A storage-removal failure also leaves an invalid record inactive. The migration does not clear authentication or unrelated application storage.
 
 Update `policyVersion` when the purposes, integrations or material notice conditions change. Review the configured retention and the choice mechanism for the actual deployment. Setting `privacy.enabled` to `false` retains the legacy cookie notice behavior; its acknowledgement is not a replacement for optional consent management.
 
-## Policy templates and service inventory
+## Policy pages
 
-The three English templates under `web/client/product/assets/privacy/` use the existing MapStore logo:
+The panel links up to three pages, configured in `privacy.links`. MapStore does not ship them: each installation provides its own pages, because their content depends on who operates it and on the services it uses.
 
-- `cookie-demo.html`: prefilled cookie and browser-storage inventory for the inspected Vanilla baseline, including conditional features and external demo services.
-- `privacy-demo.html`: personal-data processing information, with operator-specific fields for purposes, legal bases, recipients, transfers, retention and rights.
-- `terms-demo.html`: installation-specific service conditions, separate from privacy information and optional consent.
+### Which pages to provide
 
-Complete the highlighted fields and verify all providers, plugins, authentication, server logs and infrastructure before publication. The software vendor is not automatically the data controller. Browser-storage durations do not establish server or provider retention policies.
+| Key | Page | When it is needed |
+| --- | --- | --- |
+| `cookie` | Cookie Policy: cookies and browser storage used by the installation, their purpose and duration | Every installation, because MapStore always uses technical browser storage (authentication, privacy choices, user settings). |
+| `privacy` | Privacy Policy: personal data processed by the operator, purposes, legal bases, recipients, retention and rights | When the installation processes personal data, for example user accounts, saved content or server logs. Usually it is needed. |
+| `terms` | Terms of Use: conditions of the service | Optional. Leave it out when the installation has no specific conditions. |
+
+Every link is optional: the panel shows only the links that are configured, and a missing key does not break the panel. A page can also be a single document that covers more topics, for example one page for both the Cookie Policy and the Privacy Policy: link the same url, or link it only once. The content of the pages is the responsibility of the operator of the installation; the templates are a starting point, not legal advice.
+
+### Configure the links
+
+Each link is a url, relative to the MapStore application or absolute. It can be a single url, or an object of urls by locale for pages translated in more languages. When the current locale has no url, the panel uses the first one configured, so a page in one language is enough.
+
+```json
+{
+  "privacy": {
+    "links": {
+      "cookie": {
+        "en-US": "extensions/PrivacySettings/assets/en-US/cookie.html",
+        "it-IT": "extensions/PrivacySettings/assets/it-IT/cookie.html"
+      },
+      "privacy": "https://www.example.com/privacy-policy",
+      "terms": "extensions/PrivacySettings/assets/en-US/terms.html"
+    }
+  }
+}
+```
+
+### Where to keep the pages
+
+- **External pages**: when the operator already publishes its policies, for example on its corporate website, link their absolute urls. No file is added to MapStore.
+- **MapStore project**: version the pages in the project assets, for example `assets/privacy/cookie.html`, and link them in the project `localConfig.json`.
+- **MapStore product installation**: publish the pages with the privacy settings extension and upload it from the context creator. No configuration file needs to change, and the pages are kept when MapStore is upgraded, because extensions are stored in the [data directory](externalized-configuration.md).
+
+### Privacy settings extension
+
+The [mapstore-privacy-settings-extension](https://github.com/geosolutions-it/mapstore-privacy-settings-extension) repository is a template of the extension. Create a repository from it for each operator: it contains the pages to complete, a `privacy.config.json` with the privacy configuration and a build that checks them and creates the zip to upload. Its pages can also be copied into the assets of a project.
+
+The pages of the template are in English, in `assets/en-US`, with the MapStore logo in `assets/logo.png`:
+
+- `cookie.html`: prefilled cookie and browser-storage inventory for the inspected Vanilla baseline, including conditional features and external demo services.
+- `privacy.html`: personal-data processing information, with operator-specific fields for purposes, legal bases, recipients, transfers, retention and rights.
+- `terms.html`: installation-specific service conditions, separate from privacy information and optional consent.
+
+Complete the highlighted fields and verify all providers, plugins, authentication, server logs and infrastructure before publication: the build refuses pages that still contain them. The software vendor is not automatically the data controller. Browser-storage durations do not establish server or provider retention policies.
 
 GeoSolutions OSM Bright is distinct from `tile.openstreetmap.org`. The observed GeoServer `GS_FLOW_CONTROL` cookie supports technical request/load control; it is not described as statistics. Browser blocking does not mean that a service did not emit a cookie. Review actual headers and purposes for the deployed services.
+
+### Configuration from an extension
+
+MapStore loads every installed extension when the application starts, before the first render. An extension can set the privacy configuration by dispatching, at that moment:
+
+```javascript
+setControlProperty('privacy', 'defaults', {
+    enabled: true,
+    policyVersion: 'operator-1',
+    retentionDays: 180,
+    categories: [],
+    links: {
+        cookie: {'en-US': 'extensions/PrivacySettings/assets/en-US/cookie.html'},
+        privacy: {'en-US': 'extensions/PrivacySettings/assets/en-US/privacy.html'},
+        terms: {'en-US': 'extensions/PrivacySettings/assets/en-US/terms.html'}
+    }
+});
+```
+
+The `Cookie` plugin uses this configuration only when `localConfig.json` does not configure `privacy.links`: when it does, the operator manages the privacy configuration in `localConfig.json` and the extension is ignored. Otherwise:
+
+| Key | Effect |
+| --- | --- |
+| `links`, `policyVersion`, `retentionDays`, `categories` | Replace the values of `localConfig.json`. |
+| `enabled` | Used only when `localConfig.json` has no `privacy` section. |
+
+Change `policyVersion` every time the content of the pages changes, so that users are asked for their choices again. Removing the extension restores the configuration of `localConfig.json`.
+
+To link other pages without changing the extension, add `privacy.links` to the `localConfig.json.patch` of the data directory:
+
+```json
+[{
+  "op": "add",
+  "path": "/privacy/links",
+  "value": {
+    "cookie": "extensions/PrivacySettings/assets/en-US/cookie.html",
+    "privacy": "https://www.example.com/privacy-policy"
+  }
+}]
+```
+
+### Optional integrations in an extension
+
+`registerConsentIntegration` is not available to extensions, which do not share the modules of MapStore. An extension follows the consent of the user through the `SET_PRIVACY_CHOICE` action instead: MapStore dispatches it every time the choice changes (start, save, withdrawal, another tab, expiry, new policy version), with the validated choice or `null`, and keeps the last one in `state.cookie.privacyChoice`.
+
+```javascript
+// epic of an extension: starts the integration with the consent to "statistics", stops it otherwise
+action$.ofType('SET_PRIVACY_CHOICE')
+    .map(({choice}) => choice?.categories?.statistics === true)
+    .distinctUntilChanged()
+    .do(allowed => allowed ? start() : stop())
+    .filter(() => false);
+```
+
+The template of the privacy settings extension implements this in its `src/integrations.js`.
+
+### Texts of the panel
+
+The texts of the panel are the `privacySettings` messages of the MapStore translation files. An extension can replace them with a `translations` folder containing `data.<locale>.json` files with only the messages to change, for example:
+
+```json
+{
+  "locale": "en-US",
+  "messages": {
+    "privacySettings": {
+      "required": "Authentication, security and your privacy settings. See the Cookie Policy for details."
+    }
+  }
+}
+```
+
+The messages of extensions are applied after the ones of MapStore. Languages without a file keep the MapStore texts.
 
 ## Sharing and build changes
 
 The standard Share panel no longer mounts Social sharing or automatic counters. Link copy, QR code, permalink and embed options remain subject to their existing configuration and resource permissions. A legacy Social-tab selection falls back to Link; custom clients relying on Social must adapt.
 
-Browser detection is served from the local Bowser asset, with its license included. Initial external font requests are removed. A scoped webpack replacement removes `dxf-parser`'s persistent diagnostic level while retaining parsing and in-memory logging. Custom builds should retain the replacement and package the local vendor assets and policy stylesheet. Docker and Helm files do not change for this feature.
+The pages do not load external resources before the bundle: the Google Fonts requests are removed and the browser check is an inline script that redirects Internet Explorer to `unsupportedBrowser.html`, without loading Bowser from unpkg. Other browsers are not blocked any more by name, so Opera, Samsung Internet, Vivaldi and other Chromium browsers can open MapStore.
+
+`dxf-parser` is loaded only when a DXF file is read. On load it saves its log level in the browser (`loglevel` in localStorage, or a cookie): MapStore restores the previous browser storage right after loading. Docker and Helm files do not change for this feature.
 
 ## Verification
 

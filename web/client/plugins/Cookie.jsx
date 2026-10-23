@@ -12,7 +12,7 @@ import { setCookieVisibility, setMoreDetailsVisibility, setPrivacyChoice } from 
 import CookieComp from '../components/cookie/Cookie';
 import cookies from '../epics/cookies';
 import cookie from '../reducers/cookie';
-import ConfigUtils from '../utils/ConfigUtils';
+import { privacyConfigSelector } from '../utils/PrivacyChoices';
 import { MapFooterPrivacyAccess, FooterPrivacyAccess } from '../components/cookie/PrivacyAccessButton';
 
 /**
@@ -32,7 +32,7 @@ const Cookie = connect((state) => ({
     html: state.cookie && state.cookie.html && state.cookie.html[state.locale && state.locale.current],
     seeMore: state.cookie && state.cookie.seeMore,
     privacyChoice: state.cookie && state.cookie.privacyChoice,
-    privacy: ConfigUtils.getConfigProp('privacy'),
+    privacy: privacyConfigSelector(state),
     locale: state.locale && state.locale.current
 }), {
     onSetCookieVisibility: setCookieVisibility,

@@ -382,8 +382,7 @@
       "mandatory": true,
       "hidden": true,
       "defaultConfig": {
-        "externalCookieUrl": "",
-        "declineUrl": "./"
+        "externalCookieUrl": ""
       }
     },
     {

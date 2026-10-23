@@ -15,7 +15,7 @@ import Message from '../../components/I18N/Message';
 import MoreDetails from './MoreDetails';
 import { getApi, getItemKey } from '../../api/userPersistedStorage';
 import { isCookieNoticeAcknowledged, acknowledgePrivacyNotice, isPrivacyNoticeAcknowledged, privacyNoticeKey } from '../../utils/CookieNoticeUtils';
-import { readPrivacyChoice, makePrivacyChoice, persistPrivacyChoice, privacyChoiceKey, categoryIds } from '../../utils/PrivacyChoices';
+import { readPrivacyChoice, makePrivacyChoice, persistPrivacyChoice, privacyChoiceKey, categoryIds, removePrivacyStorageItem, hasPrivacyLinks } from '../../utils/PrivacyChoices';
 import PrivacyPanel from './PrivacyPanel';
 import { consentManager } from '../../utils/ConsentManager';
 
@@ -23,7 +23,7 @@ import { consentManager } from '../../utils/ConsentManager';
   * Component used to show a panel with the information about cookies
   * @class Cookies
   * @memberof components
-  * @prop {string} declineUrl The url associated with the leave button
+  * @prop {string} declineUrl The url associated with the leave button. Without it the leave button is not shown
   * @prop {string} locale the language used, default browser's one
   * @prop {string} externalCookieUrl if provided then it link to that url otherwise it will opens a section with more details.
   * @prop {function} onSetCookieVisibility to change the visibility of the cookie panel
@@ -51,7 +51,6 @@ class Cookie extends React.Component {
         messages: PropTypes.object
     };
     static defaultProps = {
-        declineUrl: "./",
         onPrivacyChoice: () => {},
         onMoreDetails: () => {},
         onSetCookieVisibility: () => {},
@@ -65,6 +64,13 @@ class Cookie extends React.Component {
             return;
         }
         if (!this.props.privacy?.enabled || (event.key !== null && event.key !== privacyChoiceKey())) return;
+        if (this.unsavedChoice) {
+            // A choice that could not be saved stays in force on this page; the stored
+            // record may be an older consent. Only another tab writing a new record replaces it.
+            if (event.key === null) return;
+            this.unsavedChoice = false;
+            this.setState({privacyStorageError: false});
+        }
         const choice = readPrivacyChoice(this.props.privacy);
         consentManager.update(this.props.privacy, choice);
         this.props.onPrivacyChoice(choice);
@@ -73,6 +79,10 @@ class Cookie extends React.Component {
 
     componentDidMount() {
         if (this.props.privacy?.enabled) {
+            if (!hasPrivacyLinks(this.props.privacy)) {
+                console.warn('Privacy settings: no policy page is configured in "privacy.links". '
+                    + 'See https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/privacy-settings/');
+            }
             const choice = readPrivacyChoice(this.props.privacy);
             consentManager.update(this.props.privacy, choice);
             this.props.onPrivacyChoice(choice);
@@ -136,6 +146,9 @@ class Cookie extends React.Component {
             );
     }
     renderLeaveButton = () => {
+        if (!this.props.declineUrl) {
+            return null;
+        }
         return (<a href={this.props.declineUrl} target="_self" style={{cursor: "pointer"}}>
             <Button
                 className="cookie-button"
@@ -159,17 +172,22 @@ class Cookie extends React.Component {
                 }}
                 onSave={selected => {
                     const choice = makePrivacyChoice(this.props.privacy, selected);
-                    const persisted = persistPrivacyChoice(choice);
-                    const requestedOptional = Object.values(choice.categories).some(Boolean);
-                    if (!persisted && requestedOptional) {
+                    if (!persistPrivacyChoice(choice)) {
+                        // Optional tools stay off and the panel stays open with the error.
+                        // Removing the stored record keeps an older consent from coming back.
+                        try {
+                            removePrivacyStorageItem(privacyChoiceKey(), getApi().getItem(privacyChoiceKey()));
+                        } catch (e) { /* Storage may be unavailable. */ }
+                        this.unsavedChoice = true;
                         consentManager.update(this.props.privacy, null);
                         this.props.onPrivacyChoice(null);
                         this.setState({privacyStorageError: true});
                         return false;
                     }
-                    consentManager.update(this.props.privacy, persisted ? choice : null);
-                    this.setState({privacyStorageError: !persisted});
-                    this.props.onPrivacyChoice(persisted ? choice : null);
+                    this.unsavedChoice = false;
+                    consentManager.update(this.props.privacy, choice);
+                    this.setState({privacyStorageError: false});
+                    this.props.onPrivacyChoice(choice);
                     this.props.onSetCookieVisibility(false);
                     return true;
                 }} />);
@@ -198,9 +216,9 @@ class Cookie extends React.Component {
                             <Col xs={6} sm={4} className="action-button">
                                 {this.renderMoreDetails()}
                             </Col>
-                            <Col xs={6} sm={4} className="action-button">
+                            {this.props.declineUrl ? <Col xs={6} sm={4} className="action-button">
                                 {this.renderLeaveButton()}
-                            </Col>
+                            </Col> : null}
                             <Col xs={12}>
                                 <br></br>
                             </Col>

@@ -6,26 +6,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import Button from '../layout/Button';
-import ConfigUtils from '../../utils/ConfigUtils';
+import { privacyConfigSelector } from '../../utils/PrivacyChoices';
 import { setCookieVisibility } from '../../actions/cookie';
+import { getMessageById } from '../../utils/LocaleUtils';
 
-const labels = {'it-IT': 'Impostazioni privacy', 'en-US': 'Privacy settings'};
-
-function PrivacyAccessButton({locale, enabled, onOpen}) {
+function PrivacyAccessButton({enabled, onOpen}, context) {
     if (!enabled) return null;
-    const label = labels[locale] || labels['en-US'];
+    const label = getMessageById(context.messages, 'privacySettings.settings');
     return (<Button id="privacy-settings" type="button" className="mapstore-privacy-open"
         title={label} aria-label={label} onClick={onOpen}>
         <Glyphicon glyph="lock" aria-hidden="true" /> <span>{label}</span>
     </Button>);
 }
 
+PrivacyAccessButton.contextTypes = {
+    messages: PropTypes.object
+};
+
+// locale makes the connected button render again when the language changes
 export const MapFooterPrivacyAccess = connect(state => ({
     locale: state.locale?.current,
-    enabled: ConfigUtils.getConfigProp('privacy')?.enabled
+    enabled: privacyConfigSelector(state)?.enabled
 }), {onOpen: () => setCookieVisibility(true)})(PrivacyAccessButton);
 
 export const FooterPrivacyAccess = props => <li><MapFooterPrivacyAccess {...props}/></li>;
