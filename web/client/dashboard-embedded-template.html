@@ -93,15 +93,17 @@
                 height: 100%;
             }
         </style>
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
         <!--script src="https://maps.google.com/maps/api/js?v=3"></script-->
-        <script src="https://unpkg.com/bowser@2.7.0/es5.js"
-            async integrity="sha384-CWiXbo5RNu6nv9tiCWA2y1DQKjEQDDH+yFQga1FytuIZjOTcVr+4ojw2S2lShj/d" crossorigin="anonymous"
-            onload="checkBrowser()"></script>
+
         <script type="text/javascript">
+        var browserCheckScript = document.createElement('script');
+        browserCheckScript.src = 'dist/vendor/bowser-2.7.0.js';
+        browserCheckScript.async = true;
+        browserCheckScript.onload = checkBrowser;
+        document.head.appendChild(browserCheckScript);
             function checkBrowser() {
-                var browserInfo = bowser.getParser(window.navigator.userAgent);
+                if (!window.bowser || !window.bowser.getParser) { return; }
+                var browserInfo = window.bowser.getParser(window.navigator.userAgent);
                 var isValidBrowser = browserInfo.satisfies({
                     "edge": ">1",
                     "chrome": ">1",
@@ -109,8 +111,7 @@
                     "firefox": ">1"
                 });
                 if (!isValidBrowser) {
-                    window.location.href = "unsupportedBrowser.html"
-                    document.querySelector("container").style.display = "none";
+                    window.location.replace("unsupportedBrowser.html");
                 }
             }
         </script>

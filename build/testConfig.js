@@ -160,6 +160,7 @@ module.exports = ({browsers = [ 'ChromeHeadlessWebGL' ], files, path, testFile, 
             extensions: ['.js', '.json', '.jsx']
         },
         plugins: [
+            require('./nonPersistentDxfLoggerPlugin')(),
             new ProvidePlugin({
                 Buffer: ['buffer', 'Buffer']
             }),
