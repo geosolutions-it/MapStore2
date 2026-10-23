@@ -156,11 +156,16 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         chunkFilename: prod ? (paths.chunks || "") + "[name].[hash].chunk.js" : (paths.chunks || "") + "[name].js"
     },
     plugins: [
+        require('./nonPersistentDxfLoggerPlugin')(),
         new CopyWebpackPlugin([
             { from: path.join(paths.base, 'node_modules', 'bootstrap', 'less'), to: path.join(paths.dist, "bootstrap", "less") }
         ]),
         new CopyWebpackPlugin([
             { from: path.join(paths.base, 'node_modules', 'react-nouislider', 'example'), to: path.join(paths.dist, "react-nouislider", "example") }
+        ]),
+        new CopyWebpackPlugin([
+            { from: path.join(__dirname, '..', 'vendor', 'bowser-2.7.0', 'es5.js'), to: path.join(paths.dist, 'vendor', 'bowser-2.7.0.js') },
+            { from: path.join(__dirname, '..', 'vendor', 'bowser-2.7.0', 'LICENSE'), to: path.join(paths.dist, 'vendor', 'BOWSER-LICENSE') }
         ]),
         new LoaderOptionsPlugin({
             debug: !prod,
