@@ -43,7 +43,6 @@ import { dashboardResource } from '../selectors/dashboard';
  * @prop {boolean} [embedOptions.showTOCToggle] true by default, set to false to hide the "show TOC" toggle.
  * @prop {boolean} [showAPI] default true, if false, hides the API entry of embed.
  * @prop {function} [onClose] function to call on close window event.
- * @prop {function} [getCount] function used to get the count for social links.
  * @prop {object} [cfg.advancedSettings] show advanced settings (bbox param, centerAndZoom param or home button) f.e {bbox: true, homeButton: true, centerAndZoom: true}
  * @prop {boolean} [cfg.advancedSettings.bbox] if true, the share url is generated with the bbox param
  * @prop {boolean} [cfg.advancedSettings.centerAndZoom] if true, the share url is generated with the center and zoom params

@@ -38,4 +38,13 @@ describe("The ShareSocials component", () => {
 
     });
 
+    it('renders sharing buttons without automatic social count requests', () => {
+        const cmp = ReactDOM.render(<ShareSocials shareUrl="https://example.org/synthetic-map"/>, document.getElementById("container"));
+        const node = ReactDOM.findDOMNode(cmp);
+        expect(node.querySelector('.share-facebook')).toExist();
+        expect(node.querySelector('.share-linkedin')).toExist();
+        expect(node.querySelector('.share-facebook-count')).toNotExist();
+        expect(node.querySelector('.share-linkedin-count')).toNotExist();
+    });
+
 });
