@@ -45,7 +45,7 @@ Once a valid context name is specified in *General settings*, it is possible to 
 
 To create the context viewer, the map configuration like the one described [here](exploring-maps.md#exploring-maps) opens so that the user can set the initial state of the context map.
 
-<img src="../img/application-context/steptwo_part.jpg" class="ms-docimage"/>
+<img src="../img/application-context/settings.jpg" class="ms-docimage"/>
 
 In particular the user can configure the context map using the following MapStore tools:
 
@@ -53,7 +53,9 @@ In particular the user can configure the context map using the following MapStor
 
 * [Import](import.md#import-files), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to import map files and import [vector file](import.md#import-vector-files).
 
-* [Annotations](annotations.md#add-new-annotation), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" /> button, to add annotations to the map.
+* [Export](import.md#import-files), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to export map files and export [vector file](import.md#import-vector-files).
+
+* [Settings](mapstore-toolbars.md#side-toolbar), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to view the settings of the map.
 
 * [Table of Contents](toc.md#table-of-contents), through the <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> button where the user can use all the available functionalities to manage context layers.
 
