@@ -100,8 +100,8 @@ The following changes must be applied to your project (see the updated [project 
          <!-- Spring Framework & Security (aligned) -->
 -        <spring.version>5.3.39</spring.version>
 -        <spring.security.version>5.7.13</spring.security.version>
-+        <spring.version>7.0.8</spring.version>
-+        <spring.security.version>7.1.0</spring.security.version>
++        <spring.version>7.0.9</spring.version>
++        <spring.security.version>7.1.1</spring.security.version>
 -        <commons-pool.version>1.5.4</commons-pool.version>
 -        <ehcache-web.version>2.0.4</ehcache-web.version>
 -        <httpclient.version>4.5.13</httpclient.version>
