@@ -58,7 +58,7 @@ jobs:
           echo "Java packages versions updated from $OLD_JAVA_VERSION to $NEXT_JAVA_VERSION"
           ### increase dependency of project to new version
           echo "Updating project dependency to new version"
-          mvn versions:set-property -f project/standard/templates/web/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$NEXT_JAVA_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          mvn versions:set-property -f project/standard/templates/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$NEXT_JAVA_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           # Increase release minor version
           echo "Updating project version to new version in package.json"
           npm version minor --git-tag-version=false

@@ -206,6 +206,8 @@ export INITIAL_ADMIN_PASSWORD='<your-dev-password>'
 npm start
 ```
 
+On Windows use `set INITIAL_ADMIN_PASSWORD=<your-dev-password>` (`cmd`) or `$env:INITIAL_ADMIN_PASSWORD='<your-dev-password>'` (PowerShell) instead of `export`.
+
 You can login as `admin` to set-up new users and access to all the features reserved to `ADMIN` users. See [Initial Administrator Password](initial-admin-password.md) for details.
 
 The database used by default in this mode is H2 on disk. You can find the files of the database in the directory `webapps/mapstore/` starting from your execution context. Check how to set-up database in the dedicated section of the documentation.
