@@ -86,23 +86,9 @@
         <!--script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.10/proj4.js"></script-->
 
         <script type="text/javascript">
-        var browserCheckScript = document.createElement('script');
-        browserCheckScript.src = 'dist/vendor/bowser-2.7.0.js';
-        browserCheckScript.async = true;
-        browserCheckScript.onload = checkBrowser;
-        document.head.appendChild(browserCheckScript);
-            function checkBrowser() {
-                if (!window.bowser || !window.bowser.getParser) { return; }
-                var browserInfo = window.bowser.getParser(window.navigator.userAgent);
-                var isValidBrowser = browserInfo.satisfies({
-                    "edge": ">1",
-                    "chrome": ">1",
-                    "safari": ">1",
-                    "firefox": ">1"
-                });
-                if (!isValidBrowser) {
-                    window.location.replace("unsupportedBrowser.html");
-                }
+            // MapStore does not run on Internet Explorer
+            if (/MSIE |Trident\//.test(window.navigator.userAgent)) {
+                window.location.replace("unsupportedBrowser.html");
             }
         </script>
     </head>
