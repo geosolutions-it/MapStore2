@@ -558,7 +558,13 @@
       "install": "Installa estensione",
       "replacesVersion": "Sostituisce la versione installata {current} con la versione {next}",
       "installedMessage": "Le estensioni sono disponibili nell'applicazione",
-      "updatedMessage": "Ricarica la pagina per usare le estensioni aggiornate"
+      "updatedMessage": "Ricarica la pagina per usare le estensioni aggiornate",
+      "uninstall": "Disinstalla",
+      "cancel": "Annulla",
+      "uninstallTitle": "Disinstallare {title}?",
+      "uninstallDescription": "L'estensione e i suoi file vengono rimossi. I contesti che usano il suo plugin non lo mostreranno più.",
+      "uninstallError": "Non è stato possibile disinstallare l'estensione",
+      "uninstalledMessage": "{title} è stata disinstallata"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",

@@ -15,9 +15,10 @@ import FlexBox from '../../../components/layout/FlexBox';
 import Spinner from '../../../components/layout/Spinner';
 import Button from '../../../components/layout/Button';
 import Message from '../../../components/I18N/Message';
+import ConfirmDialog from '../../../components/layout/ConfirmDialog';
 import UploadExtensionsDialog from '../../../components/extensions/UploadExtensionsDialog';
-import { upload } from '../../../api/plugins';
-import { loadExtensions } from '../../../actions/contextcreator';
+import { upload, uninstall } from '../../../api/plugins';
+import { loadExtensions, pluginUninstalled } from '../../../actions/contextcreator';
 import { checkUploads } from '../../../utils/ExtensionsUtils';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import { showResult } from '../actions/extensionsManager';
@@ -39,13 +40,17 @@ const markReplaced = (checked, extensions) => checked.map(entry => {
  * @prop {object} result result of the last action `{ msgId, params }`
  * @prop {function} onShowResult shows the result of an action, null hides it
  * @prop {function} onLoadExtensions loads the installed extensions in the application
+ * @prop {function} onUninstalled removes an uninstalled extension from the application
  */
-function ExtensionsManagerTool({ result, onShowResult, onLoadExtensions }, { messages }) {
+function ExtensionsManagerTool({ result, onShowResult, onLoadExtensions, onUninstalled }, { messages }) {
     const { extensions, loading, error, reload } = useInstalledExtensions();
     const [showUpload, setShowUpload] = useState(false);
     const [toUpload, setToUpload] = useState([]);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState(null);
+    const [toUninstall, setToUninstall] = useState(null);
+    const [uninstalling, setUninstalling] = useState(false);
+    const [uninstallError, setUninstallError] = useState(false);
 
     const closeUpload = () => {
         setShowUpload(false);
@@ -71,6 +76,26 @@ function ExtensionsManagerTool({ result, onShowResult, onLoadExtensions }, { mes
             });
     };
 
+    const closeUninstall = () => {
+        setToUninstall(null);
+        setUninstallError(false);
+    };
+    const confirmUninstall = () => {
+        setUninstalling(true);
+        return uninstall(toUninstall.name)
+            .then(cfg => {
+                setUninstalling(false);
+                onUninstalled(toUninstall.name, cfg);
+                onShowResult({ msgId: 'extensionsManager.uninstalledMessage', params: { title: toUninstall.title } });
+                closeUninstall();
+                return reload();
+            })
+            .catch(() => {
+                setUninstalling(false);
+                setUninstallError(true);
+            });
+    };
+
     return (
         <FlexBox classNames={['ms-extensions-manager', '_relative', 'ms-main-colors']} column>
             <FlexBox gap="sm" centerChildrenVertically classNames={['_padding-sm']}>
@@ -83,7 +108,28 @@ function ExtensionsManagerTool({ result, onShowResult, onLoadExtensions }, { mes
             {result ? <Alert bsStyle="success" className="ms-extensions-result" onDismiss={() => onShowResult(null)}>
                 <Message msgId={result.msgId} msgParams={result.params} />
             </Alert> : null}
-            <ExtensionsList extensions={extensions} />
+            <ExtensionsList
+                extensions={extensions}
+                renderTools={extension => (
+                    <Button variant="danger" className="ms-extension-uninstall" onClick={() => { onShowResult(null); setToUninstall(extension); }}>
+                        <Message msgId="extensionsManager.uninstall" />
+                    </Button>
+                )}
+            />
+            <ConfirmDialog
+                show={!!toUninstall}
+                preventHide
+                onCancel={closeUninstall}
+                onConfirm={confirmUninstall}
+                loading={uninstalling}
+                titleId="extensionsManager.uninstallTitle"
+                titleParams={{ title: toUninstall?.title }}
+                descriptionId="extensionsManager.uninstallDescription"
+                errorId={uninstallError ? 'extensionsManager.uninstallError' : undefined}
+                cancelId="extensionsManager.cancel"
+                confirmId="extensionsManager.uninstall"
+                variant="danger"
+            />
             {showUpload ? <UploadExtensionsDialog
                 toUpload={toUpload}
                 onDrop={checkFiles}
@@ -100,7 +146,8 @@ function ExtensionsManagerTool({ result, onShowResult, onLoadExtensions }, { mes
 ExtensionsManagerTool.propTypes = {
     result: PropTypes.object,
     onShowResult: PropTypes.func,
-    onLoadExtensions: PropTypes.func
+    onLoadExtensions: PropTypes.func,
+    onUninstalled: PropTypes.func
 };
 
 ExtensionsManagerTool.contextTypes = {
@@ -109,12 +156,14 @@ ExtensionsManagerTool.contextTypes = {
 
 ExtensionsManagerTool.defaultProps = {
     onShowResult: () => {},
-    onLoadExtensions: () => {}
+    onLoadExtensions: () => {},
+    onUninstalled: () => {}
 };
 
 export default connect(createStructuredSelector({
     result: resultSelector
 }), {
     onShowResult: showResult,
-    onLoadExtensions: loadExtensions
+    onLoadExtensions: loadExtensions,
+    onUninstalled: pluginUninstalled
 })(ExtensionsManagerTool);

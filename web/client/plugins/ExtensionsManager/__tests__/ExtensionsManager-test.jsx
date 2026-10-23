@@ -15,10 +15,11 @@ import MockAdapter from 'axios-mock-adapter';
 
 import axios from '../../../libs/ajax';
 import ExtensionsManager from '../ExtensionsManager';
+import contextcreator from '../../../reducers/contextcreator';
 import { getPluginForTest } from '../../__tests__/pluginsTestUtils';
 import { MANAGER_TOOL_NAME } from '../constants';
 import { SHOW_RESULT } from '../actions/extensionsManager';
-import { LOAD_EXTENSIONS } from '../../../actions/contextcreator';
+import { LOAD_EXTENSIONS, PLUGIN_UNINSTALLED } from '../../../actions/contextcreator';
 
 const CATALOG_URL = 'configs/pluginsConfig.json';
 const CATALOG = {
@@ -43,7 +44,8 @@ const waitFor = (check, done, attempts = 50) => {
 };
 
 const renderTool = () => {
-    const { containers, store, actions } = getPluginForTest(ExtensionsManager, {}, { ManagerPlugin: {} });
+    // the application store has the context creator reducer, which handles the uninstall too
+    const { containers, store, actions } = getPluginForTest(ExtensionsManager, {}, { ManagerPlugin: {} }, [], { contextcreator });
     const Tool = containers.Manager.Component;
     ReactDOM.render(<Provider store={store}><Tool active /></Provider>, document.getElementById('container'));
     return { containers, store, actions };
@@ -160,6 +162,63 @@ describe('ExtensionsManager plugin', () => {
                     }, done);
                 });
             }).catch(done);
+        });
+    });
+    describe('uninstall', () => {
+        const confirmButton = () => [...document.querySelectorAll('.modal button')].find(button => button.textContent.trim() === 'extensionsManager.uninstall');
+        const cancelButton = () => [...document.querySelectorAll('.modal button')].find(button => button.textContent.trim() === 'extensionsManager.cancel');
+        const openUninstall = (index, done, next) => waitFor(() => expect(document.querySelectorAll('.ms-extension-uninstall').length).toBe(2), () => {
+            ReactTestUtils.Simulate.click(document.querySelectorAll('.ms-extension-uninstall')[index]);
+            next();
+        });
+        it('removes the confirmed extension from the server, the application and the list', (done) => {
+            let catalog = CATALOG;
+            mockAxios.onGet(CATALOG_URL).reply(() => [200, catalog]);
+            mockAxios.onDelete('rest/config/uninstallPlugin/PrivacySettings').reply(() => {
+                catalog = { plugins: CATALOG.plugins.filter(plugin => plugin.name !== 'PrivacySettings') };
+                return [200, { bundle: 'PrivacySettings/index.js', translations: 'PrivacySettings/translations' }];
+            });
+            const { actions } = renderTool();
+            openUninstall(0, done, () => {
+                expect(document.querySelector('.modal').textContent).toContain('extensionsManager.uninstallDescription');
+                ReactTestUtils.Simulate.click(confirmButton());
+                waitFor(() => {
+                    expect(mockAxios.history.delete.length).toBe(1);
+                    expect(actions.map(action => action.type)).toEqual([SHOW_RESULT, PLUGIN_UNINSTALLED, SHOW_RESULT]);
+                    expect(actions[1].plugin).toBe('PrivacySettings');
+                    expect(actions[1].cfg).toEqual({ bundle: 'PrivacySettings/index.js', translations: 'PrivacySettings/translations' });
+                    expect(actions[2].result).toEqual({ msgId: 'extensionsManager.uninstalledMessage', params: { title: 'Privacy settings' } });
+                    expect(document.querySelector('.ms-extensions-result').textContent).toContain('extensionsManager.uninstalledMessage');
+                    expect(document.querySelector('.modal')).toNotExist();
+                    expect([...document.querySelectorAll('.ms-extension-title')].map(node => node.textContent)).toEqual(['Sample']);
+                }, done);
+            });
+        });
+        it('does nothing when the uninstall is cancelled', (done) => {
+            mockAxios.onGet(CATALOG_URL).reply(200, CATALOG);
+            const { actions } = renderTool();
+            openUninstall(1, done, () => {
+                ReactTestUtils.Simulate.click(cancelButton());
+                waitFor(() => {
+                    expect(document.querySelector('.modal')).toNotExist();
+                    expect(mockAxios.history.delete.length).toBe(0);
+                    expect(actions.map(action => action.type)).toEqual([SHOW_RESULT]);
+                    expect(document.querySelectorAll('.ms-extension-title').length).toBe(2);
+                }, done);
+            });
+        });
+        it('keeps the dialog open with the error when the uninstall fails', (done) => {
+            mockAxios.onGet(CATALOG_URL).reply(200, CATALOG);
+            mockAxios.onDelete('rest/config/uninstallPlugin/Sample').reply(500);
+            const { actions } = renderTool();
+            openUninstall(1, done, () => {
+                ReactTestUtils.Simulate.click(confirmButton());
+                waitFor(() => {
+                    expect(document.querySelector('.modal .alert-danger').textContent).toBe('extensionsManager.uninstallError');
+                    expect(actions.map(action => action.type)).toEqual([SHOW_RESULT]);
+                    expect(document.querySelectorAll('.ms-extension-title').length).toBe(2);
+                }, done);
+            });
         });
     });
 });

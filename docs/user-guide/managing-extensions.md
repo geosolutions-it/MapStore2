@@ -25,3 +25,11 @@ The new extension is available in the application without reloading the page, an
 To update an extension, install the zip file of its new version. When the file contains an extension that is already installed, the window shows the installed version and the version that replaces it.
 
 After the update, reload the page to use the new version.
+
+## Uninstall an extension
+
+Click **Uninstall** on the row of the extension and confirm. The extension and its files are removed, and the extension is removed from the application without reloading the page.
+
+!!! warning
+
+    The [Application Contexts](application-context.md#application-context) that use the plugin of the extension do not show it any more.

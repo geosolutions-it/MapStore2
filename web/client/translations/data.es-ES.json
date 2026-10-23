@@ -558,7 +558,13 @@
       "install": "Instalar extensión",
       "replacesVersion": "Sustituye la versión instalada {current} por la versión {next}",
       "installedMessage": "Las extensiones están disponibles en la aplicación",
-      "updatedMessage": "Recargue la página para usar las extensiones actualizadas"
+      "updatedMessage": "Recargue la página para usar las extensiones actualizadas",
+      "uninstall": "Desinstalar",
+      "cancel": "Cancelar",
+      "uninstallTitle": "¿Desinstalar {title}?",
+      "uninstallDescription": "Se eliminan la extensión y sus archivos. Los contextos que usan su plugin dejarán de mostrarlo.",
+      "uninstallError": "No se pudo desinstalar la extensión",
+      "uninstalledMessage": "{title} se ha desinstalado"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",

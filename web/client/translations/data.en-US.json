@@ -558,7 +558,13 @@
       "install": "Install extension",
       "replacesVersion": "Replaces the installed version {current} with version {next}",
       "installedMessage": "The extensions are available in the application",
-      "updatedMessage": "Reload the page to use the updated extensions"
+      "updatedMessage": "Reload the page to use the updated extensions",
+      "uninstall": "Uninstall",
+      "cancel": "Cancel",
+      "uninstallTitle": "Uninstall {title}?",
+      "uninstallDescription": "The extension and its files are removed. Contexts that use its plugin will not show it any more.",
+      "uninstallError": "The extension could not be uninstalled",
+      "uninstalledMessage": "{title} has been uninstalled"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",

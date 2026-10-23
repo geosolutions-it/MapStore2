@@ -203,7 +203,8 @@ export default (state = {}, action) => {
     case PLUGIN_UNINSTALLED: {
         return {
             ...state,
-            plugins: state.plugins.filter(p => p.name !== action.plugin),
+            // the extensions manager uninstalls extensions while the context creator is not loaded
+            plugins: (state.plugins ?? []).filter(p => p.name !== action.plugin),
             uploadedPlugins: (state.uploadedPlugins ?? []).filter(p => p !== action.plugin)
         };
     }

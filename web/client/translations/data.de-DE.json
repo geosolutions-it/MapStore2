@@ -545,7 +545,13 @@
           "install": "Erweiterung installieren",
           "replacesVersion": "Ersetzt die installierte Version {current} durch die Version {next}",
           "installedMessage": "Die Erweiterungen sind in der Anwendung verfügbar",
-          "updatedMessage": "Laden Sie die Seite neu, um die aktualisierten Erweiterungen zu verwenden"
+          "updatedMessage": "Laden Sie die Seite neu, um die aktualisierten Erweiterungen zu verwenden",
+          "uninstall": "Deinstallieren",
+          "cancel": "Abbrechen",
+          "uninstallTitle": "{title} deinstallieren?",
+          "uninstallDescription": "Die Erweiterung und ihre Dateien werden entfernt. Kontexte, die ihr Plugin verwenden, zeigen es nicht mehr an.",
+          "uninstallError": "Die Erweiterung konnte nicht deinstalliert werden",
+          "uninstalledMessage": "{title} wurde deinstalliert"
         },
         "mouseposition": {
           "html": "<h3>Maus Position</h3><p>Kundenspezifische Beispiele</p>"
