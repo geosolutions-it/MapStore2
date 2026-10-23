@@ -232,6 +232,13 @@ LoginPlugin.defaultProps = {
             position: 4
         },
         {
+            name: 'extensionsManager.menuTitle',
+            msgId: 'extensionsManager.menuTitle',
+            glyph: 'plug',
+            path: '/manager/extensionsmanager',
+            position: 4
+        },
+        {
             name: 'rulesmanager.menutitle',
             msgId: 'rulesmanager.menutitle',
             glyph: 'admin-geofence',

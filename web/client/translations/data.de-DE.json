@@ -537,6 +537,12 @@
         "manager": {
           "html": "<h3>Manager</h3><p>MapStore Karten durchsuchen</p>"
         },
+        "extensionsManager": {
+          "noExtensions": "Keine Erweiterung installiert",
+          "noExtensionsDescription": "Installieren Sie eine Erweiterung, um ihre Werkzeuge zu MapStore hinzuzufügen",
+          "loadError": "Die Liste der installierten Erweiterungen konnte nicht geladen werden",
+          "menuTitle": "Erweiterungen verwalten"
+        },
         "mouseposition": {
           "html": "<h3>Maus Position</h3><p>Kundenspezifische Beispiele</p>"
         },
@@ -585,7 +591,8 @@
       "groupmanagerTab": "Gruppen",
       "usermanagerTab": "Benutzer",
       "tagsmanagerTab": "Schlagwörter",
-      "ipmanagerTab": "IP-Bereiche"
+      "ipmanagerTab": "IP-Bereiche",
+      "extensionsmanagerTab": "Erweiterungen"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",

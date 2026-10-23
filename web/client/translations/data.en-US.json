@@ -547,7 +547,14 @@
       "groupmanagerTab": "Groups",
       "usermanagerTab": "Users",
       "tagsmanagerTab": "Tags",
-      "ipmanagerTab": "IP Ranges"
+      "ipmanagerTab": "IP Ranges",
+      "extensionsmanagerTab": "Extensions"
+    },
+    "extensionsManager": {
+      "noExtensions": "No extension installed",
+      "noExtensionsDescription": "Install an extension to add its tools to MapStore",
+      "loadError": "The list of the installed extensions could not be loaded",
+      "menuTitle": "Manage Extensions"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",

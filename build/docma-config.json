@@ -248,6 +248,7 @@
                 "web/client/plugins/DrawerMenu.jsx",
                 "web/client/plugins/DynamicLegend/DynamicLegend.jsx",
                 "web/client/plugins/Expander.jsx",
+                "web/client/plugins/ExtensionsManager/ExtensionsManager.jsx",
                 "web/client/plugins/FeatureEditor.jsx",
                 "web/client/plugins/FeedbackMask.jsx",
                 "web/client/plugins/FilterLayer/index.jsx",

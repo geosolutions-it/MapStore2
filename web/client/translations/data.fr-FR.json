@@ -547,7 +547,14 @@
       "groupmanagerTab": "Groupes",
       "usermanagerTab": "Utilisateurs",
       "tagsmanagerTab": "Balises",
-      "ipmanagerTab": "Plages IP"
+      "ipmanagerTab": "Plages IP",
+      "extensionsmanagerTab": "Extensions"
+    },
+    "extensionsManager": {
+      "noExtensions": "Aucune extension installée",
+      "noExtensionsDescription": "Installez une extension pour ajouter ses outils à MapStore",
+      "loadError": "La liste des extensions installées n'a pas pu être chargée",
+      "menuTitle": "Gérer les extensions"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
