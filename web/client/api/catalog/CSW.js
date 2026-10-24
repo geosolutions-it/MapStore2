@@ -90,7 +90,7 @@ function getThumbnailFromDc(dc, options) {
     const URI = dc?.URI && castArray(dc.URI);
     let thumbURL;
     if (URI) {
-        const thumb = head(URI.filter(uri => uri.name === 'thumbnail')) || head(URI.filter(uri => !uri.name && uri.protocol?.indexOf('image/') > -1));
+        const thumb = head(URI.filter(uri => uri.name === 'thumbnail')) || head(URI.filter(uri => uri.protocol?.indexOf('image/') > -1));
         thumbURL = thumb ? thumb.value : null;
     }
     if (!thumbURL && dc && dc.references) {
