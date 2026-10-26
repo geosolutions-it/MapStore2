@@ -568,54 +568,76 @@ Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.c
 
 ## Feature Info Form
 
-Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](navigation-toolbar.md#identify-tool):
+The **Feature Info** section of the layer settings panel allows you to configure the information displayed when querying a layer with the [Identify Tool](navigation-toolbar.md#identify-tool).
 
-<img src="../img/layer-settings/featureInfo.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-settings/featureInfo.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-In particular, the user can choose between:
+For each layer, you can configure one or more **Identify Views**, combining different formats to display feature attributes, custom content, and related records from an external WFS service.
 
-* **Disable Identify** to disable the Identify for the layer
+Select **Disable Identify** to prevent the Identify Tool from querying the layer.
 
-* **Text**
+<img src="../img/layer-settings/disable-featureInfo.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* **HTML**
+### Manage Identify Views
 
-* **Properties**
+The user can click on <img src="../img/button/add-new-identify-view.jpg" class="ms-docbutton"/> button to add a view. For each view, the user can:
 
-* **Template**
+<img src="../img/layer-settings/manage-identify-view.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* **External Data**
+* Set a **Title**, which is used as the tab label in the [Identify](navigation-toolbar.md#identify-tool) results
 
-!!!note
-    Without selecting any format here, the [Identify Tool](navigation-toolbar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Side Toolbar](mapstore-toolbars.md#side-toolbar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
+* Select a format: `TEXT`, `HTML`, `PROPERTIES`, `TEMPLATE`, or `EXTERNAL DATA`
 
-!!!note
-    From the Layer Settings panel, MapStore allows users to choose the *Information format* for `WMS` and `WFS` layer types.
-    The **Text** option is only available for `WMS` layers, while the **HTML** option for `WFS` layers is available only with GeoServer and if the [`wfs-freemarker`](https://docs.geoserver.org/main/en/user/community/wfs-freemarker/index.html) extension is installed on the GeoServer side.
+* Use the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button to configure `PROPERTIES`, `TEMPLATE`, and `EXTERNAL DATA` views
 
-### Text
+* Remove a view thought the <img src="../img/button/remove-button.jpg" class="ms-docbutton"/> button
 
-An example of layer information in text format can be:
+!!! note
+    When multiple views are configured, the [Identify Tool](navigation-toolbar.md#identify-tool) displays them as tabs for the selected layer. The user can click a tab to switch between the available views.
 
-<img src="../img/layer-settings/GFI_text.jpg" class="ms-docimage"  style="max-width:600px;"/>
+!!! note
+    If no *Identify View* is configured for the layer, the Identify Tool uses the format selected in **Map Settings**, available from the [Side Toolbar](mapstore-toolbars.md#side-toolbar). Settings configured for an individual layer take precedence over the map settings for that layer.
 
-### HTML
+### Text and HTML format
 
-An example of layer information in HTML format can be:
+The `TEXT` format displays the information returned by the server as text.
 
-<img src="../img/layer-settings/GFI_html.jpg" class="ms-docimage"/>
+<img src="../img/layer-settings/GFI_text.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-### Properties
+The `HTML` format displays the HTML content returned by the server.
 
-An example of layer information in properties format can be:
+<img src="../img/layer-settings/GFI_html.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-<img src="../img/layer-settings/GFI_properties.jpg" class="ms-docimage"  style="max-width:600px;"/>
+!!! note
+    Feature Info settings are available for `WMS` and `WFS` layers. The `TEXT` format is available only for `WMS` layers. For `WFS` layers, the `HTML` format requires GeoServer with the [`wfs-freemarker`](https://docs.geoserver.org/main/en/user/community/wfs-freemarker/index.html) extension installed.
 
-### Templates
+### Properties format
 
-In this case the user can customize the information format:
+The `PROPERTIES` format displays the *Attributes* of the identified feature. Th user can customized the attribute though the<img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button.
 
-<img src="../img/layer-settings/GFI_template.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-settings/edit-properties-format.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+For each attribute, the user can:
+
+* Select or clear its checkbox to show or hide it in the view
+
+* Enter an **Alias** to use as its display label
+
+!!! note
+    An alias configured for an individual Properties view takes precedence over the alias configured in the layer's [Fields](layer-settings.md#fields) settings. If the view alias is empty, the layer alias is used; if neither is configured, the original attribute name is displayed.
+
+* Choose a **Feature info display type** to display its value as a link or media content, as described on [Attribute display types](layer-settings.md#attribute-display-types) section below.
+
+!!! note
+    Attributes without a configured display type retain their default rendering.
+
+An example of Identify results in `PROPERTIES` format with a media content is shown below:
+
+<img src="../img/layer-settings/GFI_properties.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+### Templates format
+
+The `TEMPLATE` format allows you to create custom content using text, formatting, images, and values from the identified feature.
 
 In particular, by clicking on the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button, the following text editor appears:
 
@@ -646,30 +668,83 @@ In this case, by clicking on the map, the [Identify Tool](navigation-toolbar.md#
 
 Using the `${properties.NAME_OF_THE_FIELD}` syntax, MapStore is able to parse the response to the [Identify Tool](navigation-toolbar.md#identify-tool) request by matching the configured placeholder.
 
+### External Data format
 
-### External Data
+The `EXTERNAL DATA` format displays records from a separate WFS layer or table that are related to the identified feature.
 
-The **External Data** format shows records from a different WFS layer that are related to the clicked feature. The related records are found with a CQL filter built from the attributes of the clicked feature.
+The relationship is defined through a **CQL filter template**, which uses attribute values from the identified feature to query the external source. The external data can contain spatial or non-spatial records.
 
 <img src="../img/layer-settings/externalData.jpg" class="ms-docimage"/>
 
 Selecting **EXTERNAL DATA** the user must fill in:
 
-* **WFS URL**: the address of the WFS service containing the related data. Click the refresh button next to the field to load the available layers.
-* **Layer name**: the layer of the WFS service to query, chosen from the list
-* **CQL filter template**: the filter used to find the related records. Attributes of the clicked feature can be inserted with the `${properties['attribute_name']}` syntax. 
+* Enter the **WFS URL** containing the related data and check the available layers though the <img src="../img/button/refresh_button.jpg" class="ms-docbutton"/>
 
-Click **Validate** to check the configuration.
+* Select the **Layer name** of the WFS service to query
+
+* Enter the  **CQL filter template** using attributes from the identified feature. Attributes of the clicked feature can be inserted with the `${properties['attribute_name']}` syntax.
+
+Then the user can click **Validate** to check the configuration.
 
 !!! note
     All the fields are mandatory. If the configuration is not complete, the view is highlighted in red and a warning icon appears next to it.
 
+Let's make an example: suppose the identified feature has a `ref_id` attribute and the external table stores the corresponding identifier in a string attribute named `STATE_FIPS`. The filter template can be:
+
+```text
+ref_id = '${properties['STATE_FIPS']}'
+```
+
+Here, `ref_id` belongs to the external table, while `STATE_FIPS` belongs to the identified feature. Use quotation marks appropriate to the data type of the external attribute.
+
+<img src="../img/layer-settings/GFI_external_data.jpg" class="ms-docimage"/>
+
+In the **Attributes** section, the user can also show or hide returned attributes, assign aliases, and configure their **Feature info display type**, as described on [Attribute display types](layer-settings.md#attribute-display-types) section below.
+
+Open the External Data tab in the Identify results to view the related records.
+
+<img src="../img/layer-settings/GFI_external_data1.jpg" class="ms-docimage"/>
+
+!!! warning
+    **WFS URL**, **Layer name**, and **CQL filter template** are mandatory. An incomplete view is marked as invalid and is not displayed as a tab in the Identify results until the required configuration is completed.
+
+### Attribute display types
+
+Both `PROPERTIES` and `EXTERNAL DATA` views support the following **Feature info display type** options:
+
+| Display type | Displayed content |
+| --- | --- |
+| **Image** | An image referenced by the attribute value. |
+| **Video** | A video player for the referenced resource. |
+| **Audio** | An audio player for the referenced resource. |
+| **Panorama Image** | An interactive panoramic image. |
+| **PDF** | A viewer for the referenced PDF document. |
+| **URL** | A clickable link. |
+| **Iframe** | Embedded content from the referenced URL. |
+| **Media** | Media content whose type is determined using another attribute. |
+
+Choose a display type that matches the resource referenced by the attribute. For example, select **Image** for an attribute containing image URLs or **PDF** for an attribute containing links to PDF documents.
+
+When you select **Media**, an additional **Media type attribute** selector appears. Use it to select the attribute containing the resource's media type.
+
+For example, a record can contain:
+
+* `resource_url`: the URL of the resource.
+* `resource_type`: its MIME type, such as `image/jpeg`, `video/mp4`, `audio/mpeg`, or `application/pdf`.
+
+Set the display type of `resource_url` to **Media**, then select `resource_type` as the **Media type attribute**. This allows the same attribute to display different kinds of media across records.
+
+!!! note
+    For a `PROPERTIES` view, these attributes belong to the identified layer. For an `EXTERNAL DATA` view, they belong to the external WFS layer or table.
+
 ### Feature count and Buffer
 
-For `WMS` layers, the Feature Info section also allows to configure how the [Identify Tool](navigation-toolbar.md#identify-tool) queries the layer:
+For `WMS` layers, the Feature Info section also provides settings that control how the [Identify Tool](navigation-toolbar.md#identify-tool) queries the layer:
 
-<img src="../img/layer-settings/featureInfoWMS.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-settings/featureInfoWMS.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* **Feature count**: sets the maximum number of features returned by the server for each identify request on the layer (default `10`)
-* **Buffer (px)**: sets the search radius, in pixels, around the clicked point within which features are identified, making it easier to select points and lines on the map. It uses the GeoServer `BUFFER` vendor parameter, so it is available only for layers served by GeoServer
+* **Feature count**: the maximum number of features requested from the server for each Identify request on the layer. The default value is `10`.
+* **Buffer (px)**: the search radius, in pixels, around the clicked point. Increasing the buffer makes it easier to identify points and lines.
 
+!!! note
+    **Buffer (px)** uses the GeoServer `BUFFER` vendor parameter and is available only for layers served by GeoServer.
