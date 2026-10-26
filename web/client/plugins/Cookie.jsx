@@ -8,7 +8,7 @@
 
 import { connect } from 'react-redux';
 
-import { setCookieVisibility, setMoreDetailsVisibility, setPrivacyChoice } from '../actions/cookie';
+import { setCookieVisibility, setPrivacyChoice } from '../actions/cookie';
 import CookieComp from '../components/cookie/Cookie';
 import cookies from '../epics/cookies';
 import cookie from '../reducers/cookie';
@@ -19,24 +19,20 @@ import { MapFooterPrivacyAccess, FooterPrivacyAccess } from '../components/cooki
   * Provides privacy information and optional consent management when the top-level
   * privacy configuration is enabled. Contributes access to Footer and MapFooter,
   * with a bottom bar on routes without a native footer.
-  * With privacy disabled, retains the legacy cookie information panel.
+  * With privacy disabled, or without a privacy configuration, it shows nothing.
+  * See the privacy settings section of the developer guide for the configuration.
   * @name Cookie
   * @memberof plugins
   * @class
   * @classdesc
-  * @prop {string} externalCookieUrl if provided then it link to that url otherwise it will opens a section with more details.
-  * @prop {string} declineUrl The url associated with the leave button
   */
 const Cookie = connect((state) => ({
     show: state.cookie && state.cookie.showCookiePanel,
-    html: state.cookie && state.cookie.html && state.cookie.html[state.locale && state.locale.current],
-    seeMore: state.cookie && state.cookie.seeMore,
     privacyChoice: state.cookie && state.cookie.privacyChoice,
     privacy: privacyConfigSelector(state),
     locale: state.locale && state.locale.current
 }), {
     onSetCookieVisibility: setCookieVisibility,
-    onMoreDetails: setMoreDetailsVisibility,
     onPrivacyChoice: setPrivacyChoice
 })(CookieComp);
 

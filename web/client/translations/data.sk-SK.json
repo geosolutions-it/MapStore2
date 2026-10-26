@@ -179,12 +179,6 @@
       "tooltipDeactivate": "Opustiť 3D mód",
       "tooltipActivate": "Vstúpiť do 3D módu"
     },
-    "cookie": {
-      "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
-      "moreDetailsButton": "Viac informácií",
-      "leave": "Odísť",
-      "accept": "Potvrdiť"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

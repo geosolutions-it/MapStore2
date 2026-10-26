@@ -8,40 +8,28 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { createPortal } from 'react-dom';
-import { Glyphicon, Col } from 'react-bootstrap';
-import Button from '../misc/Button';
-import Message from '../../components/I18N/Message';
-import MoreDetails from './MoreDetails';
-import { getApi, getItemKey } from '../../api/userPersistedStorage';
+import { getApi } from '../../api/userPersistedStorage';
 import { isCookieNoticeAcknowledged, acknowledgePrivacyNotice, isPrivacyNoticeAcknowledged, privacyNoticeKey } from '../../utils/CookieNoticeUtils';
 import { readPrivacyChoice, makePrivacyChoice, persistPrivacyChoice, privacyChoiceKey, categoryIds, removePrivacyStorageItem, usesTemplatePolicyLinks, policyPagesDocsUrl } from '../../utils/PrivacyChoices';
 import PrivacyPanel from './PrivacyPanel';
 import { consentManager } from '../../utils/ConsentManager';
 
 /**
-  * Component used to show a panel with the information about cookies
+  * Component used to show the privacy panel. It renders nothing when the privacy configuration is disabled.
   * @class Cookies
   * @memberof components
-  * @prop {string} declineUrl The url associated with the leave button. Without it the leave button is not shown
   * @prop {string} locale the language used, default browser's one
-  * @prop {string} externalCookieUrl if provided then it link to that url otherwise it will opens a section with more details.
-  * @prop {function} onSetCookieVisibility to change the visibility of the cookie panel
-  * @prop {function} onMoreDetails to toggle the more details section
-  * @prop {bool} seeMore if true the more details section is visible
-  * @prop {bool} show if true the cookie panel is visible
+  * @prop {function} onSetCookieVisibility to change the visibility of the privacy panel
+  * @prop {bool} show if true the privacy panel is visible
+  * @prop {object} privacy the privacy configuration in use
   *
   */
 
 class Cookie extends React.Component {
     state = { privacyStorageError: false };
     static propTypes = {
-        declineUrl: PropTypes.string,
-        externalCookieUrl: PropTypes.string,
         locale: PropTypes.string,
-        onMoreDetails: PropTypes.func,
         onSetCookieVisibility: PropTypes.func,
-        seeMore: PropTypes.bool,
         show: PropTypes.bool,
         privacy: PropTypes.object,
         privacyChoice: PropTypes.object,
@@ -52,9 +40,7 @@ class Cookie extends React.Component {
     };
     static defaultProps = {
         onPrivacyChoice: () => {},
-        onMoreDetails: () => {},
         onSetCookieVisibility: () => {},
-        seeMore: false,
         show: false
     };
 
@@ -110,133 +96,41 @@ class Cookie extends React.Component {
         delete window.MapStoreConsent;
     }
 
-    renderAcceptButton = () => {
-        return (
-            <Button
-                className="cookie-button"
-                id="accept-cookie"
-                bsStyle="primary"
-                onClick={() => this.accept(true)} >
-                <Message msgId="cookie.accept"/>
-            </Button>);
-    }
-
-    renderMoreDetails = () => {
-        return this.props.externalCookieUrl ?
-            (
-                <a style={{cursor: "pointer"}}
-                    id="accept-cookie"
-                    href={this.props.externalCookieUrl}>
-                    <Button
-                        className="cookie-button"
-                        id="decline-cookie"
-                        bsStyle="primary" >
-                        <Message msgId="cookie.moreDetailsButton"/>
-                    </Button>
-                </a>
-            ) : (
-                <Button
-                    onClick={() => this.moreDetails()}
-                    className="cookie-button"
-                    id="decline-cookie"
-                    bsStyle="primary" >
-                    <Message msgId="cookie.moreDetailsButton"/>
-                </Button>
-            );
-    }
-    renderLeaveButton = () => {
-        if (!this.props.declineUrl) {
-            return null;
-        }
-        return (<a href={this.props.declineUrl} target="_self" style={{cursor: "pointer"}}>
-            <Button
-                className="cookie-button"
-                id="decline-cookie"
-                bsStyle="primary" >
-                <Message msgId="cookie.leave"/>
-            </Button>
-        </a>);
-    }
     render() {
-        if (this.props.privacy?.enabled) {
-            return (<PrivacyPanel
-                config={this.props.privacy}
-                locale={this.props.locale}
-                choice={this.props.privacyChoice}
-                show={this.props.show}
-                storageError={this.state.privacyStorageError}
-                onShow={show => {
-                    if (!show && !categoryIds(this.props.privacy).length) acknowledgePrivacyNotice(this.props.privacy);
-                    this.props.onSetCookieVisibility(show);
-                }}
-                onSave={selected => {
-                    const choice = makePrivacyChoice(this.props.privacy, selected);
-                    if (!persistPrivacyChoice(choice)) {
-                        // Optional tools stay off and the panel stays open with the error.
-                        // Removing the stored record keeps an older consent from coming back.
-                        try {
-                            removePrivacyStorageItem(privacyChoiceKey(), getApi().getItem(privacyChoiceKey()));
-                        } catch (e) { /* Storage may be unavailable. */ }
-                        this.unsavedChoice = true;
-                        consentManager.update(this.props.privacy, null);
-                        this.props.onPrivacyChoice(null);
-                        this.setState({privacyStorageError: true});
-                        return false;
-                    }
-                    this.unsavedChoice = false;
-                    consentManager.update(this.props.privacy, choice);
-                    this.setState({privacyStorageError: false});
-                    this.props.onPrivacyChoice(choice);
-                    this.props.onSetCookieVisibility(false);
-                    return true;
-                }} />);
-        }
-        if (!this.props.show) {
+        if (!this.props.privacy?.enabled) {
             return null;
         }
-        const content = (
-            <div className={this.props.seeMore ? "mapstore-cookie-panel see-more" : "mapstore-cookie-panel not-see-more"}>
-                <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
-                    {this.props.seeMore ? <Glyphicon className="cookie-close-btn" glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
-                </div>
-                <div role="body" className="cookie-body-container">
-                    {!this.props.externalCookieUrl && this.props.seeMore ? (
-                        <MoreDetails html={this.props.html}/>
-                    ) : (<div className="cookie-message">
-                        <Message msgId="cookie.info"/>
-                    </div>) }
-                    <br/>
-                    {!this.props.seeMore ?
-                        (<div className="cookie-action">
-
-                            <Col xs={6} sm={4} className="action-button">
-                                {this.renderAcceptButton()}
-                            </Col>
-                            <Col xs={6} sm={4} className="action-button">
-                                {this.renderMoreDetails()}
-                            </Col>
-                            {this.props.declineUrl ? <Col xs={6} sm={4} className="action-button">
-                                {this.renderLeaveButton()}
-                            </Col> : null}
-                            <Col xs={12}>
-                                <br></br>
-                            </Col>
-                        </div>) : null }
-                </div>
-            </div>
-        );
-        return createPortal(content, document.body);
-    }
-    moreDetails = () => {
-        this.props.onMoreDetails(!this.props.seeMore);
-    }
-    accept = () => {
-        try {
-            getApi().setItem(getItemKey('cookie', 'approved'), true);
-        } catch (e) {
-            console.error(e);
-        }
-        this.props.onSetCookieVisibility(false);
+        return (<PrivacyPanel
+            config={this.props.privacy}
+            locale={this.props.locale}
+            choice={this.props.privacyChoice}
+            show={this.props.show}
+            storageError={this.state.privacyStorageError}
+            onShow={show => {
+                if (!show && !categoryIds(this.props.privacy).length) acknowledgePrivacyNotice(this.props.privacy);
+                this.props.onSetCookieVisibility(show);
+            }}
+            onSave={selected => {
+                const choice = makePrivacyChoice(this.props.privacy, selected);
+                if (!persistPrivacyChoice(choice)) {
+                    // Optional tools stay off and the panel stays open with the error.
+                    // Removing the stored record keeps an older consent from coming back.
+                    try {
+                        removePrivacyStorageItem(privacyChoiceKey(), getApi().getItem(privacyChoiceKey()));
+                    } catch (e) { /* Storage may be unavailable. */ }
+                    this.unsavedChoice = true;
+                    consentManager.update(this.props.privacy, null);
+                    this.props.onPrivacyChoice(null);
+                    this.setState({privacyStorageError: true});
+                    return false;
+                }
+                this.unsavedChoice = false;
+                consentManager.update(this.props.privacy, choice);
+                this.setState({privacyStorageError: false});
+                this.props.onPrivacyChoice(choice);
+                this.props.onSetCookieVisibility(false);
+                return true;
+            }} />);
     }
 }
 export default Cookie;

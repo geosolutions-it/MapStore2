@@ -109,9 +109,10 @@ describe('Selective privacy storage migration', () => {
         expect(getApi().getItem(privacyNoticeKey())).toBe(null);
         expect(getApi().getItem(security)).toBe(original);
     });
-    it('retains legacy behavior when the new privacy configuration is disabled', () => {
+    it('has nothing to show and leaves the storage untouched when privacy is disabled or missing', () => {
         getApi().setItem(legacy()[0], 'true');
         expect(isCookieNoticeAcknowledged({enabled: false})).toBe(true);
+        expect(isCookieNoticeAcknowledged(null)).toBe(true);
         expect(getApi().getItem(legacy()[0])).toBe('true');
     });
     it('preserves valid optional acceptance and refusal exactly as saved', () => {

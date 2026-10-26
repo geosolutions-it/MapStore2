@@ -12,7 +12,7 @@ import Cookie from '../Cookie';
 import expect from 'expect';
 import { setApi, getApi, getItemKey, addApi } from '../../../api/userPersistedStorage';
 import ReactTestUtils from 'react-dom/test-utils';
-import { privacyNoticeKey } from '../../../utils/CookieNoticeUtils';
+import { privacyNoticeKey, acknowledgePrivacyNotice } from '../../../utils/CookieNoticeUtils';
 import { privacyChoiceKey, makePrivacyChoice, templatePolicyLinks } from '../../../utils/PrivacyChoices';
 import { consentManager } from '../../../utils/ConsentManager';
 import Localized from '../../I18N/Localized';
@@ -34,50 +34,32 @@ describe('Test for Cookie component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    // test DEFAULTS
-    it('render with defaults', () => {
-        const cmp = ReactDOM.render(<Cookie/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(document.body.querySelector('.mapstore-cookie-panel')).toNotExist();
-    });
-
-    it('render with show = true', () => {
-        const cmp = ReactDOM.render(<Cookie show externalCookieUrl=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        const panel = document.body.querySelector('.mapstore-cookie-panel');
-        expect(panel).toExist();
-        expect(panel.classList.contains('not-see-more')).toBe(true);
-    });
-
-    it('renders cookie panel into document.body via portal', () => {
-        ReactDOM.render(<Cookie show/>, document.getElementById("container"));
-        const panel = document.body.querySelector('.mapstore-cookie-panel');
-        expect(panel).toExist();
-        expect(panel.parentNode).toBe(document.body);
-    });
-
-    it('requests the notice on first mount without waiting for a route change', () => {
-        setApi('memoryStorage');
-        const key = getItemKey('cookie', 'approved');
-        getApi().removeItem(key);
-        getApi().removeItem('cookies-policy-approved');
+    it('renders nothing and requests nothing when privacy is disabled or missing', () => {
         const onSetCookieVisibility = expect.createSpy();
-        ReactDOM.render(<Cookie onSetCookieVisibility={onSetCookieVisibility}/>, document.getElementById('container'));
-        expect(onSetCookieVisibility).toHaveBeenCalledWith(true);
-        setApi('localStorage');
-    });
-
-    it('does not reopen an acknowledged notice on mount', () => {
-        setApi('memoryStorage');
-        const key = getItemKey('cookie', 'approved');
-        getApi().setItem(key, 'true');
-        const onSetCookieVisibility = expect.createSpy();
-        ReactDOM.render(<Cookie onSetCookieVisibility={onSetCookieVisibility}/>, document.getElementById('container'));
+        [undefined, {enabled: false, policyVersion: 'off', categories: []}].forEach(privacy => {
+            ReactDOM.render(<Cookie show privacy={privacy} onSetCookieVisibility={onSetCookieVisibility}/>, document.getElementById('container'));
+            expect(document.getElementById('container').innerHTML).toBe('');
+            expect(document.querySelector('.mapstore-privacy-panel')).toNotExist();
+            ReactDOM.unmountComponentAtNode(document.getElementById('container'));
+        });
         expect(onSetCookieVisibility).toNotHaveBeenCalled();
-        getApi().removeItem(key);
+    });
+    it('requests the privacy panel on first mount without waiting for a route change', () => {
+        setApi('memoryStorage');
+        const onSetCookieVisibility = expect.createSpy();
+        ReactDOM.render(<Cookie privacy={{enabled: true, policyVersion: 'mount', categories: []}} onSetCookieVisibility={onSetCookieVisibility}/>, document.getElementById('container'));
+        expect(onSetCookieVisibility.calls.map(call => call.arguments)).toEqual([[true]]);
         setApi('localStorage');
     });
-
+    it('does not reopen a dismissed privacy panel on mount', () => {
+        setApi('memoryStorage');
+        const privacy = {enabled: true, policyVersion: 'dismissed', categories: []};
+        acknowledgePrivacyNotice(privacy);
+        const onSetCookieVisibility = expect.createSpy();
+        ReactDOM.render(<Cookie privacy={privacy} onSetCookieVisibility={onSetCookieVisibility}/>, document.getElementById('container'));
+        expect(onSetCookieVisibility).toNotHaveBeenCalled();
+        setApi('localStorage');
+    });
     it('shows necessary tools and unused categories without requesting fictitious consent', () => {
         renderLocalized(<Cookie privacy={{enabled: true, categories: []}} locale="en-US" show/>);
         expect(document.querySelector('#privacy-accept')).toNotExist();
@@ -179,13 +161,6 @@ describe('Test for Cookie component', () => {
         expect(stored[privacyChoiceKey()]).toBe(undefined);
         expect(consentManager.isAllowed('functional')).toBe(false);
         setApi('localStorage');
-    });
-    it('shows the leave button only when declineUrl is configured', () => {
-        ReactDOM.render(<Cookie show/>, document.getElementById('container'));
-        expect(document.querySelectorAll('.mapstore-cookie-panel a').length).toBe(0);
-        ReactDOM.render(<Cookie show declineUrl="https://example.com/"/>, document.getElementById('container'));
-        const links = [...document.querySelectorAll('.mapstore-cookie-panel a')].map(a => a.getAttribute('href'));
-        expect(links).toEqual(['https://example.com/']);
     });
     it('links the policy pages of the current locale, falling back to the first one', () => {
         const privacy = {enabled: true, policyVersion: 'links', categories: [], links: {

@@ -128,12 +128,6 @@
       "tooltipDeactivate": "Poistu 3D-tilasta",
       "tooltipActivate": "Siirry 3D-tilaan"
     },
-    "cookie": {
-      "info": "Tämä verkkosivusto käyttää evästeitä käyttökokemuksen parantamiseksi. Oletamme, että tämä käy, mutta voit halutessasi poistua sivulta.",
-      "moreDetailsButton": "Lisätietoja",
-      "leave": "Jätä",
-      "accept": "Hyväksy"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

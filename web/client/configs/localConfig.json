@@ -384,12 +384,7 @@
       "BurgerMenu",
       "Expander",
       "GlobeViewSwitcher",
-      {
-        "name": "Cookie",
-        "cfg": {
-          "externalCookieUrl": ""
-        }
-      },
+      "Cookie",
       "FeedbackMask",
       { "name": "Widgets" },
       { "name": "WidgetsTray" }
@@ -630,12 +625,7 @@
           }
         }
       },
-      {
-        "name": "Cookie",
-        "cfg": {
-          "externalCookieUrl": ""
-        }
-      },
+      "Cookie",
       "OmniBar",
       "Login",
       { "name": "ResourceDetails", "cfg": { "resourceType": "MAP" } },
@@ -944,12 +934,7 @@
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
-      {
-        "name": "Cookie",
-        "cfg": {
-          "externalCookieUrl": ""
-        }
-      }
+      "Cookie"
     ],
     "permalink": ["Permalink", "Cookie", "FeedbackMask"],
     "dashboard": [

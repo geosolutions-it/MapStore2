@@ -129,12 +129,6 @@
       "tooltipDeactivate": "退出3D模式",
       "tooltipActivate": "进入3D模式"
     },
-    "cookie": {
-      "info": "本网站使用cookies来改善您的体验。 我们假设你没有问题，但是你可以选择退出。",
-      "moreDetailsButton": "更多详细信息",
-      "leave": "离开",
-      "accept": "接受"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

@@ -295,12 +295,6 @@
       "tooltipDeactivate": "Avsluta 3D-läge",
       "tooltipActivate": "Öppna 3D-läge"
     },
-    "cookie": {
-      "info": "Den här webbplatsen använder cookies för att förbättra din upplevelse. Vi antar att du är ok med detta, men du kan välja bort det om du vill.",
-      "moreDetailsButton": "Fler detaljer",
-      "leave": "Lämna",
-      "accept": "Acceptera"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

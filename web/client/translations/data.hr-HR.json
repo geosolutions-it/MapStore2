@@ -127,12 +127,6 @@
       "tooltipDeactivate": "Napusti 3D prikaz",
       "tooltipActivate": "Uđi u 3D prikaz"
     },
-    "cookie": {
-      "info": "Ova stranica koristi kolačiće za pružanje boljeg korisničkog iskustva i funkcionalnosti. Postavke kolačića mogu se kontrolirati i prilagoditi u vašem web pregledniku.",
-      "moreDetailsButton": "Više detalja",
-      "leave": "Napusti",
-      "accept": "Prihvati"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

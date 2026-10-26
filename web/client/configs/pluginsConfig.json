@@ -387,10 +387,7 @@
     {
       "name": "Cookie",
       "mandatory": true,
-      "hidden": true,
-      "defaultConfig": {
-        "externalCookieUrl": ""
-      }
+      "hidden": true
     },
     {
       "name": "Toolbar",

@@ -285,12 +285,6 @@
       "tooltipDeactivate": "Sortiu del mode 3D",
       "tooltipActivate": "Introdu\u00efu el mode 3D"
     },
-    "cookie": {
-      "info": "Aquest lloc web utilitza cookies per millorar la vostra experi\u00e8ncia. Suposem que esteu b\u00e9 amb aix\u00f2,per\u00f2 podeu desactivar-lo si voleu.",
-      "moreDetailsButton": "M\u00e9s detalls",
-      "leave": "Deixar",
-      "accept": "Acceptar"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

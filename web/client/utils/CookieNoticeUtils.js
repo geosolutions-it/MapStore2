@@ -9,10 +9,6 @@
 import { getApi, getItemKey } from '../api/userPersistedStorage';
 import { privacyConfig, readPrivacyChoice, categoryIds, removePrivacyStorageItem } from './PrivacyChoices';
 
-// localStorage stores strings; the in-memory adapter can retain booleans.
-// A legacy "false" or an unavailable storage API is never acknowledgement.
-const isApproved = value => value === true || value === 'true';
-
 export const privacyNoticeKey = () => getItemKey('privacy', 'notice');
 
 // Dismissing necessary-only information is distinct from granting consent.
@@ -41,22 +37,20 @@ export const acknowledgePrivacyNotice = (config, now = Date.now()) => {
     } catch (e) { return false; }
 };
 
+/**
+ * Tells whether the privacy panel can stay closed on the first visit.
+ * With the privacy configuration disabled there is nothing to show.
+ * @param {object} config privacy configuration
+ * @returns {boolean} true when the panel does not need to open
+ */
 export const isCookieNoticeAcknowledged = (config = privacyConfig()) => {
+    if (!config?.enabled) return true;
     // A previous "Accept" only acknowledged the old notice; it never grants
     // consent to a newly configured optional resource or a new policy version.
-    if (config?.enabled) {
-        [getItemKey('cookie', 'approved'), 'cookies-policy-approved'].forEach(key => {
-            try { removePrivacyStorageItem(key, getApi().getItem(key)); } catch (e) { /* Storage may be unavailable. */ }
-        });
-        const choice = readPrivacyChoice(config);
-        const notice = isPrivacyNoticeAcknowledged(config);
-        return categoryIds(config).length ? !!choice : notice;
-    }
-    try {
-        return isApproved(getApi().getItem(getItemKey('cookie', 'approved')))
-            || isApproved(getApi().getItem('cookies-policy-approved'));
-    } catch (e) {
-        console.warn('Cannot read cookie notice state', e);
-        return false;
-    }
+    [getItemKey('cookie', 'approved'), 'cookies-policy-approved'].forEach(key => {
+        try { removePrivacyStorageItem(key, getApi().getItem(key)); } catch (e) { /* Storage may be unavailable. */ }
+    });
+    const choice = readPrivacyChoice(config);
+    const notice = isPrivacyNoticeAcknowledged(config);
+    return categoryIds(config).length ? !!choice : notice;
 };

@@ -220,12 +220,6 @@
     },
     "confirm": "Xác nhận",
     "confirmTitle": "Bạn có xác nhận không?",
-    "cookie": {
-      "accept": "Chấp nhận",
-      "info": "Trang web này sử dụng cookie để cải thiện trải nghiệm của bạn. Chúng tôi cho rằng bạn đồng ý, nhưng bạn có thể từ chối nếu muốn.",
-      "leave": "Rời khỏi",
-      "moreDetailsButton": "Thêm chi tiết"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

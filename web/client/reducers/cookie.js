@@ -8,23 +8,13 @@
 
 import {
     SET_COOKIE_VISIBILITY,
-    SET_PRIVACY_CHOICE,
-    SET_MORE_DETAILS_VISIBILITY,
-    SET_DETAILS_COOKIE_HTML
+    SET_PRIVACY_CHOICE
 } from '../actions/cookie';
 
-function cookie(state = {
-    html: {}
-}, action) {
+function cookie(state = {}, action) {
     switch (action.type) {
     case SET_COOKIE_VISIBILITY: {
         return Object.assign({}, state, {showCookiePanel: action.status});
-    }
-    case SET_MORE_DETAILS_VISIBILITY: {
-        return Object.assign({}, state, {seeMore: action.status});
-    }
-    case SET_DETAILS_COOKIE_HTML: {
-        return Object.assign({}, state, {html: { ...state.html, [action.lang]: action.html}});
     }
     case SET_PRIVACY_CHOICE: {
         return {...state, privacyChoice: action.choice};

@@ -28,7 +28,7 @@ Vanilla enables the common privacy panel of the `Cookie` plugin. Legacy cookie a
 
 Until the installation configures its own policy pages, the panel links the template pages shipped with MapStore in `product/assets/privacy`, shows a warning visible to every user, and writes a warning in the browser console. The template pages are not the policy of the installation. To remove the warning, do one of the following:
 
-- Disable the privacy panel with `"privacy": {"enabled": false}`, for example outside the European Union or when a custom plugin manages consent.
+- Disable the privacy panel with `"privacy": {"enabled": false}`, for example outside the European Union or when a custom plugin manages consent. MapStore then shows no cookie or privacy notice.
 - Install a privacy settings extension.
 - Configure `privacy.links`, also to copies of the template pages edited for the installation.
 
@@ -66,7 +66,7 @@ To complete the migration:
 Other changes:
 
 - The standard Social sharing tab and counters are removed; custom clients relying on them must adapt. Link and embed sharing retain their existing resource permissions.
-- The `Cookie` plugin shows the Leave button of the legacy notice only when `declineUrl` is configured.
+- The old cookie notice (Accept, More details and Leave) is removed, with its `externalCookieUrl` and `declineUrl` options and the `translations/fragments/cookie` pages. Remove these options from custom configurations. A `localConfig.json` without the `privacy` section shows no notice: copy the `privacy` section of the standard `localConfig.json` to show the privacy panel.
 - Projects should replace the Bowser script and the Google Fonts links in their HTML templates with the inline Internet Explorer check of the standard templates.
 
 See [Privacy and Consent Configuration](privacy-settings.md#privacy-and-consent-configuration) for storage migration, configuration and adapter requirements.

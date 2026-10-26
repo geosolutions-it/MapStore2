@@ -9,9 +9,7 @@
 import { LOCATION_CHANGE } from 'connected-react-router';
 import Rx from 'rxjs';
 
-import { SET_MORE_DETAILS_VISIBILITY, setCookieVisibility, setDetailsCookieHtml } from '../actions/cookie';
-import { CHANGE_LOCALE } from '../actions/locale';
-import axios from '../libs/ajax';
+import { setCookieVisibility } from '../actions/cookie';
 import { isCookieNoticeAcknowledged } from '../utils/CookieNoticeUtils';
 import { privacyConfigSelector } from '../utils/PrivacyChoices';
 
@@ -30,23 +28,11 @@ export const cookiePolicyChecker = (action$, store) =>
             Rx.Observable.of(setCookieVisibility(true))
         );
 
-export const loadCookieDetailsPage = (action$, store) =>
-    action$.ofType(SET_MORE_DETAILS_VISIBILITY, CHANGE_LOCALE )
-        .filter( () => !isCookieNoticeAcknowledged(privacyConfigSelector(store.getState())) && store.getState().cookie.seeMore && !store.getState().cookie.html[store.getState().locale.current])
-        .switchMap(() => Rx.Observable.fromPromise(
-            axios.get("translations/fragments/cookie/cookieDetails-" + store.getState().locale.current + ".html", null, {
-                timeout: 60000,
-                headers: {'Accept': 'text/html', 'Content-Type': 'text/html'}
-            }).then(res => res.data)
-        ))
-        .switchMap(html => Rx.Observable.of(setDetailsCookieHtml(html, store.getState().locale.current )));
-
 /**
  * Epics for cookies policy informations
  * @name epics.cookies
  * @type {Object}
  */
 export default {
-    cookiePolicyChecker,
-    loadCookieDetailsPage
+    cookiePolicyChecker
 };

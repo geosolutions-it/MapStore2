@@ -350,12 +350,6 @@
       "tooltipDeactivate": "Forlad 3D-visning",
       "tooltipActivate": "Skift til 3D-visning"
     },
-    "cookie": {
-      "info": "Denne hjemmeside bruger cookies for at forbedre din oplevelse. Vi antager, at du accepterer dette, men du kan fravælge det, hvis du ønsker det.",
-      "moreDetailsButton": "Flere detaljer",
-      "leave": "Forlad",
-      "accept": "Acceptér"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

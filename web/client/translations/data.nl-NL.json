@@ -300,12 +300,6 @@
       "tooltipDeactivate": "Verlaat de 3D-modus",
       "tooltipActivate": "Ga naar de 3D-modus"
     },
-    "cookie": {
-      "info": "Deze website maakt gebruik van cookies om uw ervaring te verbeteren. We gaan ervan uit dat je hiermee akkoord gaat, maar je kunt er van afzien als je dat wilt.",
-      "moreDetailsButton": "Meer details",
-      "leave": "Verlaten",
-      "accept": "Aanvaarden"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",

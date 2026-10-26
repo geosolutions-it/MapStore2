@@ -380,12 +380,6 @@
       "tooltipDeactivate": "Sortir du mode 3D",
       "tooltipActivate": "Entrer en mode 3D"
     },
-    "cookie": {
-      "info": "Ce site utilise des cookies pour améliorer votre expérience. Nous supposons que vous êtes d'accord, mais vous êtes libre de les refuser.",
-      "moreDetailsButton": "Plus de détails",
-      "leave": "Quitter",
-      "accept": "Accepter"
-    },
     "privacySettings": {
       "title": "Paramètres de confidentialité",
       "settings": "Paramètres de confidentialité",

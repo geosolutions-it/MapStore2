@@ -311,12 +311,6 @@
       "tooltipDeactivate": "Sair modo 3D",
       "tooltipActivate": "Activar modo 3D"
     },
-    "cookie": {
-      "info": "Este website utiliza cookies para melhorar a sua experiências. Vamos assumir que concorda com isto, mas poderá sempre reverter se desejar.",
-      "moreDetailsButton": "Mais detalhes",
-      "leave": "Sair",
-      "accept": "Aceito"
-    },
     "privacySettings": {
       "title": "Privacy settings",
       "settings": "Privacy settings",
