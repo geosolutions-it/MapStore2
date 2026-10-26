@@ -20,6 +20,7 @@ import Button from '../misc/Button';
 class InlineDateTimeSelector extends React.Component {
     static propTypes = {
         date: PropTypes.string,
+        isValidDate: PropTypes.func,
         clickable: PropTypes.bool,
         onUpdate: PropTypes.func,
         onIconClick: PropTypes.func,
@@ -33,6 +34,7 @@ class InlineDateTimeSelector extends React.Component {
 
     static defaultProps = {
         date: '',
+        isValidDate: () => true,
         onIconClick: () => {},
         clickable: false,
         onUpdate: () => {},
@@ -42,24 +44,69 @@ class InlineDateTimeSelector extends React.Component {
         tooltip: ''
     };
 
+    state = {
+        values: {},
+        invalid: false
+    };
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.date !== this.props.date) {
+            this.reset();
+        }
+    }
+
+    reset = () => this.setState({ values: {}, invalid: false });
+
     onUpdate = (key, add) => {
         const currentTime = moment(this.props.date).utc();
         const newTime = add ? moment(currentTime).add(1, key) : moment(currentTime).subtract(1, key);
         // check validity of date. this can become NaN when time exceeds max time (+/-864e13 milliseconds -- from Apr 20 -271821 to 13 Sep 275760)
-        if (newTime.isValid() && !isNaN(newTime.toDate().getTime())) {
+        if (newTime.isValid() && !isNaN(newTime.toDate().getTime()) && this.props.isValidDate(newTime.toISOString())) {
+            this.reset();
             this.props.onUpdate(newTime.toISOString());
         }
     };
 
-    onChange = (key, value, parseValue = val => val) => {
-        if (value !== "") {
-            const currentTime = moment(this.props.date).utc();
-            const newTime = currentTime[key === "day" ? "date" : key]
-                && moment(currentTime)[key === "day" ? "date" : key](parseValue(value));
-            // check validity of date. this can become NaN when time exceeds max time (+/-864e13 milliseconds -- from Apr 20 -271821 to 13 Sep 275760)
-            if (newTime.isValid() && !isNaN(newTime.toDate().getTime())) {
-                this.props.onUpdate(newTime.toISOString());
-            }
+    onChange = (key, value) => {
+        this.setState(({ values }) => ({
+            values: { ...values, [key]: value },
+            invalid: false
+        }));
+    };
+
+    commit = () => {
+        if (Object.keys(this.state.values).length === 0) {
+            return;
+        }
+        const fields = this.getForm().filter(({ type, readOnly }) => !type && !readOnly);
+        const values = fields.reduce((acc, { name, value }) => ({
+            ...acc,
+            [name]: this.state.values[name] ?? value
+        }), {});
+        if (Object.values(values).some(value => !/^-?\d+$/.test(String(value)))) {
+            this.setState({ invalid: true });
+            return;
+        }
+        const currentTime = moment(this.props.date).utc();
+        const newTime = moment.utc([
+            Number(values.year), currentTime.month(), Number(values.day),
+            Number(values.hours), Number(values.minutes), Number(values.seconds), currentTime.milliseconds()
+        ]);
+        if (newTime.isValid() && !isNaN(newTime.toDate().getTime()) && this.props.isValidDate(newTime.toISOString())) {
+            this.reset();
+            this.props.onUpdate(newTime.toISOString());
+        } else {
+            this.setState({ invalid: true });
+        }
+    };
+
+    onKeyDown = event => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            this.commit();
+        } else if (event.key === 'Escape') {
+            event.preventDefault();
+            this.reset();
         }
     };
 
@@ -83,8 +130,7 @@ class InlineDateTimeSelector extends React.Component {
                 placeholder: 'MM',
                 readOnly: true,
                 value: currentTime && currentTime.month(),
-                format: value => !isNil(value) && value !== '' && moment.monthsShort(value),
-                parseValue: value => value - 1
+                format: value => !isNil(value) && value !== '' && moment.monthsShort(value)
             },
             {
                 name: 'year',
@@ -134,7 +180,7 @@ class InlineDateTimeSelector extends React.Component {
         const formStructure = this.getForm();
         return (
             <Form className={`ms-inline-datetime ${this.props.className}`} style={this.props.style}>
-                <FormGroup controlId="inlineDateTime">
+                <FormGroup controlId="inlineDateTime" validationState={this.state.invalid ? 'error' : null}>
                     {this.props.glyph &&
                         <div style={this.props.clickable ? { "cursor": "pointer" } : {}} onClick={() => this.props.clickable && this.props.onIconClick(this.props.date, this.props.glyph) }>
                             <Glyphicon
@@ -169,8 +215,11 @@ class InlineDateTimeSelector extends React.Component {
                                 readOnly={el.readOnly}
                                 placeholder={el.placeholder || el.name}
                                 disabled={!this.props.date}
-                                value={el.format && el.format(el.value) || el.value}
-                                onChange={event => this.onChange(el.name, event.target.value, el.parseValue)}/>
+                                value={this.state.values[el.name] ?? (el.format && el.format(el.value) || el.value)}
+                                aria-invalid={this.state.invalid}
+                                onChange={event => this.onChange(el.name, event.target.value)}
+                                onBlur={this.commit}
+                                onKeyDown={this.onKeyDown}/>
                             {this.props.showButtons && <Button
                                 bsSize="xs"
                                 disabled={!this.props.date}

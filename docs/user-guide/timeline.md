@@ -45,6 +45,8 @@ In order to observe the layers in a finite fixed time interval the user can set 
 
 <img src="../img/timeline/timeline-current-time-range.jpg" class="ms-docimage"/>
 
+When editing a date or time cell, press **Enter** or move focus out of the cell to apply the value. Empty or invalid values remain editable and are highlighted when you try to apply them. The start of a time range must be before its end. Press **Escape** to discard edits and restore the selected date.
+
 ### Reset timeline
 
 Based on the timeline configuration, the reset button <img src="../img/button/reset.jpg" class="ms-docbutton"/> can be made visible on the timeline toolbar. It allows the user to reset the time data based on the current mode of the timeline

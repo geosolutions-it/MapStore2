@@ -262,6 +262,7 @@ const TimelinePlugin = compose(
                         tooltip={<Message msgId="timeline.rangeStart"/>}
                         showButtons
                         date={currentTime || currentTimeRange && currentTimeRange.start}
+                        isValidDate={start => !currentTimeRange || isValidOffset(start, currentTimeRange.end)}
                         onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
                     />}
                 {offsetEnabled && currentTimeRange
@@ -272,6 +273,7 @@ const TimelinePlugin = compose(
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                         tooltip={<Message msgId="timeline.rangeEnd"/>}
                         date={currentTimeRange.end}
+                        isValidDate={end => isValidOffset(currentTime, end)}
                         showButtons
                         onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
@@ -282,6 +284,7 @@ const TimelinePlugin = compose(
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange)}
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
+                        isValidDate={start => !currentTimeRange || isValidOffset(start, currentTimeRange.end)}
                         onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)} />}
                 <div className="timeline-plugin-btn-group">
                     <Toolbar
