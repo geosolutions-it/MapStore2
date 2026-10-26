@@ -124,7 +124,7 @@ The following changes must be applied to your project (see the updated [project 
 -        <tomcat.version>9.0.116</tomcat.version>
 -        <jackson.version>2.16.1</jackson.version>
 +        <tomcat.version>10.1.55</tomcat.version>
-+        <jackson.version>2.19.4</jackson.version>
++        <jackson.version>2.22.3</jackson.version>
          <!-- Spring Framework & Security (aligned) -->
 -        <spring.version>5.3.39</spring.version>
 -        <spring.security.version>5.7.13</spring.security.version>
@@ -235,6 +235,178 @@ Copy the `logging.properties` file from the MapStore repository (`product/cargo/
 **Custom Java code**: any custom backend code must be migrated from the `javax.*` to the `jakarta.*` namespace (e.g. `javax.servlet.http.HttpServletRequest` → `jakarta.servlet.http.HttpServletRequest`) and compiled with source/target 17.
 
 **CI/CD**: update your build infrastructure to use JDK 17 as the build JDK.
+
+### Duplicated libraries in the WAR
+
+The GeoStore and http-proxy WARs are added to your project as *overlays*: their `WEB-INF/lib` folder is copied as it is into your WAR. Some of those libraries (Jackson, Log4j, SLF4J, Micrometer, commons-io, ...) are also brought by MapStore, often in a different version, so the final WAR contains two versions of the same library, and which one is loaded depends on the servlet container.
+
+The steps below remove the duplicates. They change only two files of your project: `pom.xml` and `web/pom.xml`. The [project templates](https://github.com/geosolutions-it/MapStore2/tree/master/project/standard/templates) contain the final result, if you want to compare.
+
+#### 1. `pom.xml` (in the root folder of your project)
+
+**1.1** In the `<properties>` section, add these two lines right after the `jackson.version` line (updated to `2.22.3` in the previous section):
+
+```diff
+         <jackson.version>2.22.3</jackson.version>
++        <guava.version>32.0.0-jre</guava.version>
++        <jsr305.version>3.0.2</jsr305.version>
+```
+
+**1.2** In the `<dependencyManagement>` section, find the `jackson-bom` dependency and add the two dependencies below right after it (after its closing `</dependency>` tag):
+
+```diff
+             <dependency>
+                 <groupId>com.fasterxml.jackson</groupId>
+                 <artifactId>jackson-bom</artifactId>
+                 <version>${jackson.version}</version>
+                 <type>pom</type>
+                 <scope>import</scope>
+             </dependency>
++            <dependency>
++                <groupId>com.google.guava</groupId>
++                <artifactId>guava</artifactId>
++                <version>${guava.version}</version>
++            </dependency>
++            <dependency>
++                <groupId>com.google.code.findbugs</groupId>
++                <artifactId>jsr305</artifactId>
++                <version>${jsr305.version}</version>
++            </dependency>
+```
+
+#### 2. `web/pom.xml`
+
+**2.1** The servlet API is provided by Tomcat and must not be packaged in the WAR. In the main `<dependencies>` section (at the top of the file), find the `jakarta.servlet-api` dependency and add the `<scope>` line:
+
+```diff
+     <dependency>
+         <groupId>jakarta.servlet</groupId>
+         <artifactId>jakarta.servlet-api</artifactId>
+         <version>${jakarta.servlet-api.version}</version>
++        <scope>provided</scope>
+     </dependency>
+```
+
+**2.2** Find the `maven-war-plugin` plugin. Inside its `<configuration>`, delete the whole `<packagingExcludes>` block: it lists versions that are not used anymore.
+
+```diff
+             <configuration>
+-                <packagingExcludes>
+-                    WEB-INF/lib/*spring*5.3.18*.jar,
+-                    WEB-INF/lib/json-lib-2.4-jdk15.jar,
+-                    WEB-INF/lib/msg-simple-1.1.jar,
+-                    WEB-INF/lib/btf-1.2.jar,
+-                    WEB-INF/lib/commons-io-2.1.jar,
+-                    WEB-INF/lib/commons-beanutils-1.8.0.jar,
+-                    WEB-INF/lib/commons-logging-1.1.1.jar,
+-                    WEB-INF/lib/jackson-coreutils-1.6.jar,
+-                    WEB-INF/lib/stax-ex-1.8.jar
+-                </packagingExcludes>
+                 <overlays>
+```
+
+**2.3** In the same `<configuration>`, inside `<overlays>`, add an `<excludes>` block to each of the two overlays, right after their `<artifactId>` line. If an overlay already has an `<excludes>` block, keep the `<exclude>` lines it has and add the new ones to it.
+
+```diff
+                 <overlays>
+                     <overlay>
+                         <groupId>it.geosolutions.geostore</groupId>
+                         <artifactId>geostore-webapp</artifactId>
++                        <excludes>
++                            <exclude>WEB-INF/lib/commons-io-*.jar</exclude>
++                            <exclude>WEB-INF/lib/jackson-annotations-*.jar</exclude>
++                            <exclude>WEB-INF/lib/jackson-core-*.jar</exclude>
++                            <exclude>WEB-INF/lib/jackson-databind-*.jar</exclude>
++                            <exclude>WEB-INF/lib/log4j-api-*.jar</exclude>
++                            <exclude>WEB-INF/lib/log4j-core-*.jar</exclude>
++                            <exclude>WEB-INF/lib/log4j-slf4j-impl-*.jar</exclude>
++                            <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
++                            <exclude>WEB-INF/lib/micrometer-commons-*.jar</exclude>
++                            <exclude>WEB-INF/lib/micrometer-observation-*.jar</exclude>
++                            <exclude>WEB-INF/lib/asm-2.*.jar</exclude>
++                        </excludes>
+                     </overlay>
+                     <overlay>
+                         <groupId>proxy</groupId>
+                         <artifactId>http_proxy</artifactId>
++                        <excludes>
++                            <exclude>WEB-INF/lib/commons-io-*.jar</exclude>
++                            <exclude>WEB-INF/lib/log4j-api-*.jar</exclude>
++                            <exclude>WEB-INF/lib/log4j-core-*.jar</exclude>
++                            <exclude>WEB-INF/lib/log4j-slf4j2-impl-*.jar</exclude>
++                            <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
++                            <exclude>WEB-INF/lib/commons-codec-*.jar</exclude>
++                            <exclude>WEB-INF/lib/jetty-*.jar</exclude>
++                        </excludes>
+                     </overlay>
+                 </overlays>
+```
+
+**2.4** Find the `<profile>` with `<id>printing</id>` (near the end of the file). Inside it there is a `<dependencyManagement>` section with another `jakarta.servlet-api` dependency: add the same `<scope>` line as in step 2.1.
+
+```diff
+                     <dependency>
+                         <groupId>jakarta.servlet</groupId>
+                         <artifactId>jakarta.servlet-api</artifactId>
+                         <version>${jakarta.servlet-api.version}</version>
++                        <scope>provided</scope>
+                     </dependency>
+```
+
+**2.5** In the same `printing` profile, find the `print-lib` dependency. In its `<exclusions>`:
+
+- delete the `commons-codec` exclusion:
+
+```diff
+-                        <exclusion>
+-                            <groupId>commons-codec</groupId>
+-                            <artifactId>commons-codec</artifactId>
+-                        </exclusion>
+```
+
+- add these five exclusions before the closing `</exclusions>` tag (JAXB is already shipped by GeoStore, HTTP Client 5 by http-proxy):
+
+```diff
++                        <exclusion>
++                            <groupId>org.glassfish.jaxb</groupId>
++                            <artifactId>jaxb-runtime</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>jakarta.xml.bind</groupId>
++                            <artifactId>jakarta.xml.bind-api</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents.client5</groupId>
++                            <artifactId>httpclient5</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents.core5</groupId>
++                            <artifactId>httpcore5</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents.core5</groupId>
++                            <artifactId>httpcore5-h2</artifactId>
++                        </exclusion>
+                     </exclusions>
+```
+
+#### 3. Check the result
+
+From the root folder of your project, build the WAR and run the check script shipped with MapStore (Python 3 is required):
+
+```bash
+mvn clean install
+python3 MapStore2/utility/build/check_duplicate_jars.py web/target/*.war
+```
+
+If you use the printing module, repeat the check with the `printing` profile:
+
+```bash
+mvn clean install -Pprinting
+python3 MapStore2/utility/build/check_duplicate_jars.py web/target/*.war
+```
+
+The script must print `No duplicated libraries`. Otherwise it lists the libraries found in more than one version: if they come from a dependency you added to your project, exclude the older version.
 
 ### New `viewFramingFilter` in `web.xml`
 
