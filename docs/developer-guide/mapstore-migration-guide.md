@@ -43,6 +43,34 @@ MapStore does not create the sample users `admin`/`admin` and `user`/`user` anym
 
 Also remove any `geostoreInitializer.userListInitFile=classpath:sample_users.xml` entry from your `geostore-datasource-ovr.properties` files.
 
+### Proxy disabled by default
+
+The internal proxy (`/proxy/?url=`) is now disabled in the `proxy.properties` shipped with MapStore and has new options to control the destinations it reaches. See [Proxy Configuration](proxy-configuration.md) for the full list.
+
+- `hostnameWhitelist = none.invalid`: no host is allowed. Services listed in `useCORS` in `localConfig.json` are called directly and keep working; any other service that needs the proxy (for example a catalog without CORS support) answers `403` until its host is added to `hostnameWhitelist`.
+- Non-public destinations (private networks, `localhost`) are refused, even when their host is in `hostnameWhitelist`. Add internal services with `allowedPrivateHosts` or `allowedPrivateNetworks`.
+- `allowForwardProxy = false`: when MapStore uses a corporate proxy (`http.proxyHost` / `https.proxyHost`), requests to hosts outside `http.nonProxyHosts` are refused. Set it to `true` to send them through the corporate proxy.
+- The browser cookies are not sent to the remote hosts and the `Set-Cookie` headers of the remote hosts are not passed back to the browser (defaults of `requestHeaderBlacklist` and `responseHeaderBlacklist`).
+
+**Existing installations**: if you rely on the proxy, list the hosts of your services in the `proxy.properties` of the [data directory](externalized-configuration.md#externalized-configuration), so the setting is kept across updates:
+
+```properties
+hostnameWhitelist = demo.example.com,maps.example.org
+# only for services on the internal network
+allowedPrivateHosts = geoserver.intranet.local
+```
+
+**MapStore projects**: update `web/src/main/resources/proxy.properties` with the new entries:
+
+```diff
+-#hostnameWhitelist = localhost,demo1.geo-solutions.it,gs-stable.geosolutionsgroup.com
++#hostnameWhitelist = demo1.geo-solutions.it,gs-stable.geosolutionsgroup.com
++hostnameWhitelist = none.invalid
++allowForwardProxy = false
+```
+
+then set `hostnameWhitelist` (and, if needed, `allowedPrivateHosts`, `allowedPrivateNetworks`, `allowForwardProxy`) for the services your project uses.
+
 ### Resources Catalog layout styles: `list` renamed to `table`
 
 In the `ResourcesGrid` plugin configuration, the tabular column-based layout style previously named `list` has been renamed to `table`.

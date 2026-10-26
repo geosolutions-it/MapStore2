@@ -17,7 +17,7 @@ In source code they are located in `java/web/src/main/resources`. In the `MapSto
 
 The following are the main configuration files for the backend:
 
-* `proxy.properties`: configuration for the internal proxy (for cross-origin requests). More information [here](https://github.com/geosolutions-it/http-proxy/wiki/Configuring-Http-Proxy).
+* `proxy.properties`: configuration for the internal proxy (for cross-origin requests). The proxy is disabled by default, see [Proxy Configuration](proxy-configuration.md) to enable it.
 * `geostore-datasource-ovr.properties`: provides settings for the database.
 * `log4j2.properties`: configuration for back-end logging
 * `sample-categories.xml`: initial set of categories for back-end resources (MAP, DASHBOARD, GEOSTORY...)
@@ -152,6 +152,8 @@ In case of corporate proxy, some services may require the use of an HTTP proxy t
 * `http.proxyHost`: specifies the HTTP proxy host.
 * `http.proxyPort`: specifies the HTTP proxy port.
 * `http.nonProxyHosts`: specifies a list of hosts that should not use the HTTP proxy.
+
+The internal MapStore proxy sends requests through the corporate proxy only when `allowForwardProxy` is `true` in `proxy.properties` (see [Proxy Configuration](proxy-configuration.md#outbound-proxy)).
 
 For more information, refer to the [official HTTP proxy documentation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/doc-files/net-properties.html) corresponding to the java version in use (see [requirements](./requirements.md)).
 
