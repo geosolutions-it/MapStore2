@@ -409,6 +409,8 @@
       "status": "Puoi cambiare o revocare il consenso dalla barra inferiore. La revoca interrompe le integrazioni registrate; non ritira dati già inviati né elimina cookie di terzi.",
       "storageError": "La scelta non è stata salvata. Gli opzionali restano spenti. Controlla lo storage del browser e riprova.",
       "fixture": "FIXTURE DI TEST LOCALE: strumenti opzionali sintetici, esclusi da Vanilla.",
+      "templateWarning": "Le informative sono i modelli di MapStore: il gestore di questa installazione non ha ancora configurato le proprie pagine.",
+      "templateWarningLink": "Come configurarle",
       "policies": "Informative",
       "cookie": "Cookie Policy",
       "privacy": "Informativa privacy",

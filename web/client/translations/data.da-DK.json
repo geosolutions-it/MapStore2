@@ -379,6 +379,8 @@
       "status": "Change or withdraw consent at any time from the bottom bar. Withdrawal stops registered integrations; it cannot undo data already sent or remove third-party cookies.",
       "storageError": "Your choice could not be saved. Optional tools remain off. Check browser storage and try again.",
       "fixture": "LOCAL TEST FIXTURE: synthetic optional tools, not included in Vanilla.",
+      "templateWarning": "The policy pages are the MapStore templates: the operator of this installation has not configured its own pages yet.",
+      "templateWarningLink": "How to configure them",
       "policies": "Policies",
       "cookie": "Cookie Policy",
       "privacy": "Privacy Policy",

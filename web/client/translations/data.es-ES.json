@@ -409,6 +409,8 @@
       "status": "Puede cambiar o retirar el consentimiento en cualquier momento desde la barra inferior. La retirada detiene las integraciones registradas; no recupera datos ya enviados ni elimina cookies de terceros.",
       "storageError": "No se pudo guardar su elección. Las herramientas opcionales siguen desactivadas. Compruebe el almacenamiento del navegador e inténtelo de nuevo.",
       "fixture": "ENTORNO DE PRUEBA LOCAL: herramientas opcionales sintéticas, no incluidas en Vanilla.",
+      "templateWarning": "Las políticas son las plantillas de MapStore: el operador de esta instalación todavía no ha configurado sus propias páginas.",
+      "templateWarningLink": "Cómo configurarlas",
       "policies": "Políticas",
       "cookie": "Política de cookies",
       "privacy": "Política de privacidad",

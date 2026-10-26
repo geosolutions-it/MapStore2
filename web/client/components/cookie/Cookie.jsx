@@ -15,7 +15,7 @@ import Message from '../../components/I18N/Message';
 import MoreDetails from './MoreDetails';
 import { getApi, getItemKey } from '../../api/userPersistedStorage';
 import { isCookieNoticeAcknowledged, acknowledgePrivacyNotice, isPrivacyNoticeAcknowledged, privacyNoticeKey } from '../../utils/CookieNoticeUtils';
-import { readPrivacyChoice, makePrivacyChoice, persistPrivacyChoice, privacyChoiceKey, categoryIds, removePrivacyStorageItem, hasPrivacyLinks } from '../../utils/PrivacyChoices';
+import { readPrivacyChoice, makePrivacyChoice, persistPrivacyChoice, privacyChoiceKey, categoryIds, removePrivacyStorageItem, usesTemplatePolicyLinks, policyPagesDocsUrl } from '../../utils/PrivacyChoices';
 import PrivacyPanel from './PrivacyPanel';
 import { consentManager } from '../../utils/ConsentManager';
 
@@ -79,9 +79,8 @@ class Cookie extends React.Component {
 
     componentDidMount() {
         if (this.props.privacy?.enabled) {
-            if (!hasPrivacyLinks(this.props.privacy)) {
-                console.warn('Privacy settings: no policy page is configured in "privacy.links". '
-                    + 'See https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/privacy-settings/');
+            if (usesTemplatePolicyLinks(this.props.privacy)) {
+                console.warn(`Privacy settings: the policy pages are the MapStore templates. See ${policyPagesDocsUrl}`);
             }
             const choice = readPrivacyChoice(this.props.privacy);
             consentManager.update(this.props.privacy, choice);

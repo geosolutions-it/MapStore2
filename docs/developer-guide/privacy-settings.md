@@ -17,7 +17,7 @@ The top-level `privacy` object in `configs/localConfig.json` controls the panel:
 }
 ```
 
-The default configuration does not link any policy page, because the pages depend on the installation. Until `privacy.links` is configured, the plugin writes a warning in the browser console. See [Policy pages](#policy-pages).
+The default configuration does not configure `privacy.links`, so the panel links the template pages shipped with MapStore. Each template page says that it is not the policy of the installation. The panel shows a warning to every user, with a link to this documentation, and the plugin writes a warning in the browser console. The warning disappears when the installation configures its own pages or disables the panel with `"enabled": false`. Replace them with the pages of the installation, as described in [Policy pages](#policy-pages).
 
 An empty category list means that no optional tools are configured. The first-visit panel is informational, with a Close action. Its dismissal is distinct from consent. Do not add optional categories merely because the application requests a remote map service.
 
@@ -85,7 +85,13 @@ Update `policyVersion` when the purposes, integrations or material notice condit
 
 ## Policy pages
 
-The panel links up to three pages, configured in `privacy.links`. MapStore does not ship them: each installation provides its own pages, because their content depends on who operates it and on the services it uses.
+The panel links up to three pages: Cookie Policy, Privacy Policy and Terms of Use. Each installation provides its own pages, because their content depends on who operates it and on the services it uses.
+
+The panel takes the links from the first of these sources that configures at least one page:
+
+1. `privacy.links` in `localConfig.json`, see [Configure the links](#configure-the-links).
+2. An installed privacy settings extension, see [Privacy settings extension](#privacy-settings-extension).
+3. The template pages shipped with MapStore, in `product/assets/privacy`. They are in English and describe the cookies and browser storage of MapStore with the default configuration. A notice at the top of each page says that it is a template and links this section. Use them as a starting point, never as the published policy.
 
 ### Which pages to provide
 
@@ -99,7 +105,7 @@ Every link is optional: the panel shows only the links that are configured, and 
 
 ### Configure the links
 
-Each link is a url, relative to the MapStore application or absolute. It can be a single url, or an object of urls by locale for pages translated in more languages. When the current locale has no url, the panel uses the first one configured, so a page in one language is enough.
+Each link is a url, relative to the MapStore application or absolute. It can be a single url, used for every language, or an object of urls by locale for pages translated in more languages. The keys of the object are the locale codes of MapStore, for example `en-US` and `it-IT`. When the current locale has no url, the panel uses the first one configured, so a page in one language is enough.
 
 ```json
 {
@@ -131,6 +137,15 @@ The pages of the template are in English, in `assets/en-US`, with the MapStore l
 - `cookie.html`: prefilled cookie and browser-storage inventory for the inspected Vanilla baseline, including conditional features and external demo services.
 - `privacy.html`: personal-data processing information, with operator-specific fields for purposes, legal bases, recipients, transfers, retention and rights.
 - `terms.html`: installation-specific service conditions, separate from privacy information and optional consent.
+
+To publish the pages in more languages, list the locales in `locales` of `privacy.config.json` and add one folder for each locale in `assets`, with the same pages, for example `assets/it-IT/cookie.html`. The build checks that every locale has all the pages. The extension links the page of the current language of MapStore, and the page of the first locale of the list when that language has no pages.
+
+```json
+{
+  "locales": ["en-US", "it-IT"],
+  "pages": ["cookie", "privacy", "terms"]
+}
+```
 
 Complete the highlighted fields and verify all providers, plugins, authentication, server logs and infrastructure before publication: the build refuses pages that still contain them. The software vendor is not automatically the data controller. Browser-storage durations do not establish server or provider retention policies.
 
@@ -193,7 +208,7 @@ The template of the privacy settings extension implements this in its `src/integ
 
 ### Texts of the panel
 
-The texts of the panel are the `privacySettings` messages of the MapStore translation files. An extension can replace them with a `translations` folder containing `data.<locale>.json` files with only the messages to change, for example:
+The texts of the panel are the `privacySettings` messages of the MapStore translation files. They can be replaced from the extension or from the configuration, with `data.<locale>.json` files that contain only the messages to change, for example:
 
 ```json
 {
@@ -206,7 +221,20 @@ The texts of the panel are the `privacySettings` messages of the MapStore transl
 }
 ```
 
-The messages of extensions are applied after the ones of MapStore. Languages without a file keep the MapStore texts.
+- **Extension**: put the files in the `translations` folder of the extension. The messages of extensions are applied after the ones of MapStore.
+- **Configuration**: put the files in a folder of the [data directory](externalized-configuration.md), for example `extensions/customizations/translations`, and add the folder to `translationsPath` with the `localConfig.json.patch` of the data directory. The folders are read in order, so the messages of the last one replace the previous ones.
+
+```json
+[{
+  "op": "add",
+  "path": "/translationsPath",
+  "value": ["translations", "extensions/customizations/translations"]
+}]
+```
+
+In a MapStore project, add the folder of the project to `translationsPath` in the same way, as described in [Customize configuration, assets and translations](advanced-project-customization.md#customize-configuration-assets-and-translations).
+
+In both cases, languages without a file keep the MapStore texts.
 
 ## Sharing and build changes
 

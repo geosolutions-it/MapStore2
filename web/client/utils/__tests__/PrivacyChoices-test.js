@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-import { normalizeChoice, makePrivacyChoice, readPrivacyChoice, persistPrivacyChoice, privacyChoiceKey, getPolicyLink, hasPrivacyLinks, privacyConfigSelector } from '../PrivacyChoices';
+import { normalizeChoice, makePrivacyChoice, readPrivacyChoice, persistPrivacyChoice, privacyChoiceKey, getPolicyLink, hasPrivacyLinks, privacyConfigSelector, templatePolicyLinks } from '../PrivacyChoices';
 import ConfigUtils from '../ConfigUtils';
 import { createConsentManager } from '../ConsentManager';
 import { setApi, getApi, getItemKey, addApi } from '../../api/userPersistedStorage';
@@ -218,11 +218,30 @@ describe('privacyConfigSelector', () => {
         expect(privacyConfigSelector({controls: {privacy: {defaults}}})).toBe(localConfig);
     });
     it('returns the localConfig configuration without runtime defaults, and null without any privacy configuration', () => {
-        const localConfig = {enabled: true, policyVersion: 'vanilla'};
+        const localConfig = {enabled: true, policyVersion: 'vanilla', links: {cookie: 'cookie.html'}};
         ConfigUtils.setConfigProp('privacy', localConfig);
         expect(privacyConfigSelector({})).toBe(localConfig);
         ConfigUtils.removeConfigProp('privacy');
         expect(privacyConfigSelector({})).toBe(null);
+    });
+    it('links the template pages when neither localConfig nor the runtime defaults configure a page', () => {
+        ConfigUtils.setConfigProp('privacy', {enabled: true, policyVersion: 'vanilla', categories: []});
+        expect(privacyConfigSelector({})).toEqual({
+            enabled: true, policyVersion: 'vanilla', categories: [], links: templatePolicyLinks
+        });
+        expect(privacyConfigSelector({controls: {privacy: {defaults: {policyVersion: 'extension-1'}}}})).toEqual({
+            enabled: true, policyVersion: 'extension-1', categories: [], links: templatePolicyLinks
+        });
+        expect(templatePolicyLinks).toEqual({
+            cookie: 'product/assets/privacy/cookie.html',
+            privacy: 'product/assets/privacy/privacy.html',
+            terms: 'product/assets/privacy/terms.html'
+        });
+    });
+    it('does not link the template pages when privacy is disabled', () => {
+        const localConfig = {enabled: false, policyVersion: 'vanilla'};
+        ConfigUtils.setConfigProp('privacy', localConfig);
+        expect(privacyConfigSelector({})).toBe(localConfig);
     });
     it('replaces retention and categories of localConfig with the runtime ones', () => {
         ConfigUtils.setConfigProp('privacy', {enabled: true, policyVersion: 'vanilla', retentionDays: 180, categories: [{id: 'statistics'}]});

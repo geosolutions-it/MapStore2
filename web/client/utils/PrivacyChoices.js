@@ -70,6 +70,20 @@ export const getPolicyLink = (config, key, locale) => {
     return link[locale] || Object.values(link).find(Boolean);
 };
 export const hasPrivacyLinks = config => policyLinkKeys.some(key => !!getPolicyLink(config, key));
+/**
+ * Example policy pages shipped with MapStore. They are linked only when no page is configured,
+ * and each page tells the operator how to replace it.
+ */
+export const templatePolicyLinks = {
+    cookie: 'product/assets/privacy/cookie.html',
+    privacy: 'product/assets/privacy/privacy.html',
+    terms: 'product/assets/privacy/terms.html'
+};
+export const policyPagesDocsUrl = 'https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/privacy-settings/#policy-pages';
+export const usesTemplatePolicyLinks = config => config?.links === templatePolicyLinks;
+const withTemplateLinks = config => config?.enabled && !hasPrivacyLinks(config)
+    ? {...config, links: templatePolicyLinks}
+    : config;
 // Keys of the privacy configuration that can be provided at runtime.
 const runtimePrivacyKeys = ['enabled', 'policyVersion', 'retentionDays', 'categories', 'links'];
 /**
@@ -78,6 +92,7 @@ const runtimePrivacyKeys = ['enabled', 'policyVersion', 'retentionDays', 'catego
  * at runtime, for example by an extension, with `setControlProperty('privacy', 'defaults', config)`.
  * The runtime keys `policyVersion`, `retentionDays`, `categories` and `links` replace the ones of
  * `localConfig.json`; `enabled` is used only when `localConfig.json` has no `privacy` section.
+ * When neither configures a page, the links point to the template pages (`templatePolicyLinks`).
  * Every reader of the privacy configuration must use this selector, so that the stored choices
  * are always checked against the same policy version.
  * @param {object} state application state
@@ -87,10 +102,10 @@ export const privacyConfigSelector = createSelector(
     () => privacyConfig(),
     state => state?.controls?.privacy?.defaults,
     (config, defaults) => {
-        if (!defaults || hasPrivacyLinks(config)) return config;
+        if (!defaults || hasPrivacyLinks(config)) return withTemplateLinks(config);
         const runtime = Object.fromEntries(runtimePrivacyKeys
             .filter(key => defaults[key] !== undefined && (key !== 'enabled' || !config))
             .map(key => [key, defaults[key]]));
-        return {...config, ...runtime};
+        return withTemplateLinks({...config, ...runtime});
     }
 );

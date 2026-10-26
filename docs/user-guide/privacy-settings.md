@@ -4,7 +4,7 @@
 
 ## First visit
 
-The common panel opens on the first visit, including when a resource is opened directly. It links to the installation's Cookie Policy, Privacy Policy and Terms of Use, when the installation configures them.
+The common panel opens on the first visit, including when a resource is opened directly. It links to the installation's Cookie Policy, Privacy Policy and Terms of Use. Until the installation configures its own pages, the links open the MapStore template pages, and the panel shows a warning that they are templates.
 
 The standard Vanilla configuration uses necessary tools only. The panel provides information and a **Close** action. Closing this information does not express consent or accept the Terms of Use. MapStore remembers the dismissal separately from optional consent choices.
 

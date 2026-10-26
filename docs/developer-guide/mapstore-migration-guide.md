@@ -26,11 +26,42 @@ This is a list of things to check if you want to update from a previous version 
 
 Vanilla enables the common privacy panel of the `Cookie` plugin. Legacy cookie acknowledgements are not converted into optional consent.
 
-The default configuration links no policy page, and the plugin writes a warning in the browser console until they are configured. To complete the migration:
+Until the installation configures its own policy pages, the panel links the template pages shipped with MapStore in `product/assets/privacy`, shows a warning visible to every user, and writes a warning in the browser console. The template pages are not the policy of the installation. To remove the warning, do one of the following:
+
+- Disable the privacy panel with `"privacy": {"enabled": false}`, for example outside the European Union or when a custom plugin manages consent.
+- Install a privacy settings extension.
+- Configure `privacy.links`, also to copies of the template pages edited for the installation.
+
+To complete the migration:
 
 - Provide the policy pages of the installation: a Cookie Policy, a Privacy Policy when personal data are processed, and optionally Terms of Use. See [Which pages to provide](privacy-settings.md#which-pages-to-provide).
 - Link them: in a project, in `privacy.links` of `localConfig.json`, from the project assets or as external urls; in a product installation, upload a privacy settings extension, created from the [mapstore-privacy-settings-extension](https://github.com/geosolutions-it/mapstore-privacy-settings-extension) template, which sets the links by itself. See [Policy pages](privacy-settings.md#policy-pages).
 - Configure optional categories only for the optional tools actually used, and register their integrations before enabling them.
+
+**MapStore projects**: the template pages are part of the MapStore submodule, so the project WAR must copy them, otherwise the default links return 404 until `privacy.links` is configured. Add this execution to the `maven-resources-plugin` of `web/pom.xml`, after the `config files` one:
+
+```xml
+<execution>
+    <id>privacy template pages</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/mapstore/product/assets</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../MapStore2/web/client/product/assets</directory>
+                <includes>
+                    <include>privacy/*</include>
+                    <include>img/logo.png</include>
+                </includes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+```
 
 Other changes:
 

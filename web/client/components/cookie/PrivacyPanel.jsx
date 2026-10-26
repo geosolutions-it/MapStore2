@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom';
 import { Glyphicon } from 'react-bootstrap';
 import Button from '../layout/Button';
 import { getMessageById } from '../../utils/LocaleUtils';
-import { getPolicyLink, policyLinkKeys } from '../../utils/PrivacyChoices';
+import { getPolicyLink, policyLinkKeys, policyPagesDocsUrl, usesTemplatePolicyLinks } from '../../utils/PrivacyChoices';
 
 export default function PrivacyPanel({ config, locale, choice, show, storageError, onShow, onSave }, context) {
     const t = id => getMessageById(context.messages, `privacySettings.${id}`);
@@ -51,6 +51,9 @@ export default function PrivacyPanel({ config, locale, choice, show, storageErro
             onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); close(); } }}>
             <h2 id="privacy-title" ref={titleRef} tabIndex="-1">{t('title')}</h2>
             {config.testFixture && <p className="mapstore-privacy-warning">{t('fixture')}</p>}
+            {usesTemplatePolicyLinks(config) && <p className="mapstore-privacy-warning mapstore-privacy-template-warning">
+                {t('templateWarning')} <a href={policyPagesDocsUrl} target="_blank" rel="noopener noreferrer">{t('templateWarningLink')}</a>
+            </p>}
             <p>{categories.length ? t('optional') : t('baseline')}</p>
             <div className="mapstore-privacy-category"><strong>{t('necessary')}</strong><span>{t('always')}</span><p>{t('required')}</p></div>
             {['functional', 'statistics', 'marketing'].map(id => {

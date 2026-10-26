@@ -409,6 +409,8 @@
       "status": "Sie können Ihre Einwilligung jederzeit über die untere Leiste ändern oder widerrufen. Der Widerruf beendet registrierte Integrationen; bereits gesendete Daten oder Cookies Dritter werden dadurch nicht entfernt.",
       "storageError": "Ihre Auswahl konnte nicht gespeichert werden. Optionale Mittel bleiben deaktiviert. Prüfen Sie den Browserspeicher und versuchen Sie es erneut.",
       "fixture": "LOKALE TESTUMGEBUNG: synthetische optionale Mittel, nicht in Vanilla enthalten.",
+      "templateWarning": "Die Richtlinienseiten sind die Vorlagen von MapStore: Der Betreiber dieser Installation hat noch keine eigenen Seiten konfiguriert.",
+      "templateWarningLink": "So werden sie konfiguriert",
       "policies": "Richtlinien",
       "cookie": "Cookie-Richtlinie",
       "privacy": "Datenschutzerklärung",

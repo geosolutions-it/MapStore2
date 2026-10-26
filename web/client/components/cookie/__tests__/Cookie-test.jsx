@@ -13,11 +13,13 @@ import expect from 'expect';
 import { setApi, getApi, getItemKey, addApi } from '../../../api/userPersistedStorage';
 import ReactTestUtils from 'react-dom/test-utils';
 import { privacyNoticeKey } from '../../../utils/CookieNoticeUtils';
-import { privacyChoiceKey, makePrivacyChoice } from '../../../utils/PrivacyChoices';
+import { privacyChoiceKey, makePrivacyChoice, templatePolicyLinks } from '../../../utils/PrivacyChoices';
 import { consentManager } from '../../../utils/ConsentManager';
 import Localized from '../../I18N/Localized';
 
-const messages = {privacySettings: {unused: 'Not used', cookie: 'Cookie Policy', privacy: 'Privacy Policy', terms: 'Terms of Use'}};
+const messages = {privacySettings: {unused: 'Not used', cookie: 'Cookie Policy', privacy: 'Privacy Policy', terms: 'Terms of Use',
+    templateWarning: 'The policy pages are the MapStore templates: the operator of this installation has not configured its own pages yet.',
+    templateWarningLink: 'How to configure them'}};
 const renderLocalized = (element, locale = 'en-US') => ReactDOM.render(
     <Localized locale={locale} messages={messages}>{element}</Localized>, document.getElementById('container'));
 
@@ -199,11 +201,39 @@ describe('Test for Cookie component', () => {
             ['terms.html', 'Terms of Use']
         ]);
     });
-    it('warns in the console when no policy page is configured', () => {
+    it('shows a warning with the documentation link in the panel when the policy pages are the templates', () => {
+        const privacy = {enabled: true, policyVersion: 'template', categories: [], links: templatePolicyLinks};
+        renderLocalized(<Cookie privacy={privacy} locale="en-US" show/>);
+        const warning = document.querySelector('.mapstore-privacy-template-warning');
+        expect(warning.textContent).toBe('The policy pages are the MapStore templates: the operator of this installation '
+            + 'has not configured its own pages yet. How to configure them');
+        expect(warning.querySelector('a').getAttribute('href'))
+            .toBe('https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/privacy-settings/#policy-pages');
+        const links = [...document.querySelectorAll('.mapstore-privacy-links a')].map(a => a.getAttribute('href'));
+        expect(links).toEqual([
+            'product/assets/privacy/cookie.html',
+            'product/assets/privacy/privacy.html',
+            'product/assets/privacy/terms.html'
+        ]);
+    });
+    it('does not show the template warning when the installation configures its own policy pages', () => {
+        const privacy = {enabled: true, policyVersion: 'operator', categories: [], links: {cookie: 'cookie.html'}};
+        renderLocalized(<Cookie privacy={privacy} locale="en-US" show/>);
+        expect(document.querySelector('.mapstore-privacy-panel')).toExist();
+        expect(document.querySelector('.mapstore-privacy-template-warning')).toNotExist();
+    });
+    it('warns in the console when the policy pages are the templates', () => {
         const warn = expect.spyOn(console, 'warn');
-        ReactDOM.render(<Cookie privacy={{enabled: true, policyVersion: 'nolinks', categories: []}}/>, document.getElementById('container'));
+        ReactDOM.render(<Cookie privacy={{enabled: true, policyVersion: 'template', categories: [], links: templatePolicyLinks}}/>, document.getElementById('container'));
         expect(warn.calls.length).toBe(1);
-        expect(warn.calls[0].arguments[0]).toInclude('privacy.links');
+        expect(warn.calls[0].arguments[0]).toBe('Privacy settings: the policy pages are the MapStore templates. '
+            + 'See https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/privacy-settings/#policy-pages');
+        warn.restore();
+    });
+    it('does not warn when the installation configures its own policy pages', () => {
+        const warn = expect.spyOn(console, 'warn');
+        ReactDOM.render(<Cookie privacy={{enabled: true, policyVersion: 'operator', categories: [], links: {cookie: 'cookie.html'}}}/>, document.getElementById('container'));
+        expect(warn.calls.length).toBe(0);
         warn.restore();
     });
 });
