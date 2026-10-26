@@ -5113,7 +5113,7 @@
       "direction": "Direzione",
       "reset": "Ripristina",
       "run": "Esegui",
-      "buckets": "Secchi",
+      "buckets": "Intervalli",
       "exportAsGeoJSON": "Esporta come GeoJSON",
       "addAsLayer": "Aggiungi come layer",
       "deleteResult": "Elimina risultato",
@@ -5126,8 +5126,8 @@
         "infoLayerAdded": "Layer isochrone aggiunto"
       },
       "colors": "Colori",
-      "rampTooltip": "Scegli la palette di colori per i secchi",
-      "colorTooltip": "Scegli il colore per il secchio",
+      "rampTooltip": "Scegli la palette di colori per gli intervalli",
+      "colorTooltip": "Scegli il colore per l'intervallo",
       "confirmDialog": {
         "title": "Chiudi il pannello Isochrone",
         "description": "Hai dati Isochrone esistenti. Chiudere il pannello cancellerà tutti i dati dell'esecuzione corrente. Sei sicuro di voler continuare?",
