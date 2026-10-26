@@ -3307,6 +3307,10 @@
         "tooltip": "Cliquez ici pour la développer à nouveau"
       },
       "errors": {
+        "invalidDateTitle": "Date ou heure invalide",
+        "invalidDateMessage": "Saisissez une date et une heure complètes et valides.",
+        "invalidStartDate": "La date de début doit être antérieure à la date de fin.",
+        "invalidEndDate": "La date de fin doit être postérieure à la date de début.",
         "multidim_error_title": "Le service principal ne répond pas",
         "multidim_error_message": "Les services requis pour le support multidimensionnel ne répondent pas. Veuillez réessayer plus tard ou contactez l'administrateur"
       }

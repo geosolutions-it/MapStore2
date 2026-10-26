@@ -23,6 +23,7 @@ class InlineDateTimeSelector extends React.Component {
         isValidDate: PropTypes.func,
         clickable: PropTypes.bool,
         onUpdate: PropTypes.func,
+        onInvalid: PropTypes.func,
         onIconClick: PropTypes.func,
         glyph: PropTypes.string,
         style: PropTypes.object,
@@ -38,6 +39,7 @@ class InlineDateTimeSelector extends React.Component {
         onIconClick: () => {},
         clickable: false,
         onUpdate: () => {},
+        onInvalid: () => {},
         glyph: 'time',
         style: {},
         className: '',
@@ -74,6 +76,13 @@ class InlineDateTimeSelector extends React.Component {
         }));
     };
 
+    setInvalid = reason => {
+        if (!this.state.invalid) {
+            this.props.onInvalid(reason);
+        }
+        this.setState({ invalid: true });
+    };
+
     commit = () => {
         if (Object.keys(this.state.values).length === 0) {
             return;
@@ -84,7 +93,7 @@ class InlineDateTimeSelector extends React.Component {
             [name]: this.state.values[name] ?? value
         }), {});
         if (Object.values(values).some(value => !/^-?\d+$/.test(String(value)))) {
-            this.setState({ invalid: true });
+            this.setInvalid('date');
             return;
         }
         const currentTime = moment(this.props.date).utc();
@@ -92,12 +101,16 @@ class InlineDateTimeSelector extends React.Component {
             Number(values.year), currentTime.month(), Number(values.day),
             Number(values.hours), Number(values.minutes), Number(values.seconds), currentTime.milliseconds()
         ]);
-        if (newTime.isValid() && !isNaN(newTime.toDate().getTime()) && this.props.isValidDate(newTime.toISOString())) {
-            this.reset();
-            this.props.onUpdate(newTime.toISOString());
-        } else {
-            this.setState({ invalid: true });
+        if (!newTime.isValid() || isNaN(newTime.toDate().getTime())) {
+            this.setInvalid('date');
+            return;
         }
+        if (!this.props.isValidDate(newTime.toISOString())) {
+            this.setInvalid('range');
+            return;
+        }
+        this.reset();
+        this.props.onUpdate(newTime.toISOString());
     };
 
     onKeyDown = event => {

@@ -24,6 +24,7 @@ import {
 import { createSelector } from 'reselect';
 
 import { setCurrentOffset } from '../actions/dimension';
+import { warning } from '../actions/notifications';
 import { selectPlaybackRange } from '../actions/playback';
 import {
     enableOffset,
@@ -125,6 +126,7 @@ const TimelinePlugin = compose(
             setCurrentTime: selectTime,
             onOffsetEnabled: enableOffset,
             setOffset: setCurrentOffset,
+            onWarning: warning,
             setPlaybackRange: selectPlaybackRange,
             moveRangeTo: onRangeChanged,
             onInit: initTimeline,
@@ -191,6 +193,7 @@ const TimelinePlugin = compose(
         onOffsetEnabled,
         currentTimeRange,
         setOffset,
+        onWarning,
         status,
         viewRange,
         moveRangeTo,
@@ -218,6 +221,12 @@ const TimelinePlugin = compose(
 
         const playbackItem = head(items && items.filter(item => item.name === 'playback'));
         const Playback = playbackItem && playbackItem.plugin;
+
+        const notifyInvalidDate = (reason, rangeMessage = 'timeline.errors.invalidDateMessage') => onWarning({
+            title: 'timeline.errors.invalidDateTitle',
+            message: reason === 'range' ? rangeMessage : 'timeline.errors.invalidDateMessage',
+            autoDismiss: 6
+        });
 
         const zoomToCurrent = (time, type, view, offsetRange ) => {
             const shift = moment(view.end).diff(view.start) / 2;
@@ -263,6 +272,7 @@ const TimelinePlugin = compose(
                         showButtons
                         date={currentTime || currentTimeRange && currentTimeRange.start}
                         isValidDate={start => !currentTimeRange || isValidOffset(start, currentTimeRange.end)}
+                        onInvalid={reason => notifyInvalidDate(reason, 'timeline.errors.invalidStartDate')}
                         onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
                     />}
                 {offsetEnabled && currentTimeRange
@@ -274,6 +284,7 @@ const TimelinePlugin = compose(
                         tooltip={<Message msgId="timeline.rangeEnd"/>}
                         date={currentTimeRange.end}
                         isValidDate={end => isValidOffset(currentTime, end)}
+                        onInvalid={reason => notifyInvalidDate(reason, 'timeline.errors.invalidEndDate')}
                         showButtons
                         onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
@@ -285,6 +296,7 @@ const TimelinePlugin = compose(
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
                         isValidDate={start => !currentTimeRange || isValidOffset(start, currentTimeRange.end)}
+                        onInvalid={notifyInvalidDate}
                         onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)} />}
                 <div className="timeline-plugin-btn-group">
                     <Toolbar

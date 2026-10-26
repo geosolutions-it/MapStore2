@@ -115,6 +115,48 @@ describe('InlineDateTimeSelector component', () => {
         expect(onUpdate.calls.length).toBe(1);
         expect(onUpdate.calls[0].arguments[0]).toBe('2018-12-21T15:00:25.123Z');
     });
+    it('reports invalid input on commit without repeating feedback for the same draft', () => {
+        const onInvalid = expect.createSpy();
+        const onUpdate = expect.createSpy();
+        ReactDOM.render(<InlineDateTimeSelector
+            date="1981-03-06T01:36:05.000Z"
+            onInvalid={onInvalid}
+            onUpdate={onUpdate}/>, document.getElementById('container'));
+        const year = document.querySelector('.ms-dt-year input');
+        TestUtils.Simulate.change(year, { target: { value: '' } });
+        expect(onInvalid).toNotHaveBeenCalled();
+        TestUtils.Simulate.keyDown(year, { key: 'Enter' });
+        TestUtils.Simulate.blur(year);
+        TestUtils.Simulate.keyDown(year, { key: 'Enter' });
+        expect(onInvalid.calls.length).toBe(1);
+        expect(onInvalid.calls[0].arguments[0]).toBe('date');
+        expect(year.value).toBe('');
+        expect(onUpdate).toNotHaveBeenCalled();
+        TestUtils.Simulate.change(year, { target: { value: 'abc' } });
+        TestUtils.Simulate.blur(year);
+        expect(onInvalid.calls.length).toBe(2);
+        TestUtils.Simulate.keyDown(year, { key: 'Escape' });
+        expect(year.value).toBe('1981');
+        expect(onInvalid.calls.length).toBe(2);
+    });
+    it('reports range validation separately and allows a valid correction', () => {
+        const onInvalid = expect.createSpy();
+        const onUpdate = expect.createSpy();
+        ReactDOM.render(<InlineDateTimeSelector
+            date="1981-03-06T01:36:05.000Z"
+            isValidDate={date => moment(date).isAfter('1583-01-01T00:00:00.000Z')}
+            onInvalid={onInvalid}
+            onUpdate={onUpdate}/>, document.getElementById('container'));
+        const year = document.querySelector('.ms-dt-year input');
+        TestUtils.Simulate.change(year, { target: { value: '198' } });
+        TestUtils.Simulate.blur(year);
+        expect(onInvalid.calls[0].arguments[0]).toBe('range');
+        expect(onUpdate).toNotHaveBeenCalled();
+        TestUtils.Simulate.change(year, { target: { value: '1980' } });
+        TestUtils.Simulate.keyDown(year, { key: 'Enter' });
+        expect(onInvalid.calls.length).toBe(1);
+        expect(onUpdate.calls[0].arguments[0]).toBe('1980-03-06T01:36:05.000Z');
+    });
     it('restores the committed date on Escape', () => {
         const onUpdate = expect.createSpy();
         ReactDOM.render(<InlineDateTimeSelector date="2018-12-21T15:00:00.000Z" onUpdate={onUpdate}/>, document.getElementById('container'));
