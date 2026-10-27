@@ -45,10 +45,30 @@ The variable must be available in the environment of the Java process running Ma
           INITIAL_ADMIN_PASSWORD: "${INITIAL_ADMIN_PASSWORD}"
     ```
 
-- Local development (`npm start` runs the backend too, which inherits the shell environment):
+- Tomcat on Windows (e.g. in `bin\setenv.bat`):
+
+    ```bat
+    set INITIAL_ADMIN_PASSWORD=<your-strong-password>
+    ```
+
+- Local development (`npm start` runs the backend too, which inherits the shell environment). The same applies to MapStore projects created with the [project creation script](project-creation-script.md):
 
     ```sh
     export INITIAL_ADMIN_PASSWORD='<your-dev-password>'
+    npm start
+    ```
+
+    On Windows, set the variable in the same terminal before running `npm start`. In `cmd`:
+
+    ```bat
+    set INITIAL_ADMIN_PASSWORD=<your-dev-password>
+    npm start
+    ```
+
+    In PowerShell:
+
+    ```powershell
+    $env:INITIAL_ADMIN_PASSWORD='<your-dev-password>'
     npm start
     ```
 

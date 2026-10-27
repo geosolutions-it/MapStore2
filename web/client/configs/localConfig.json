@@ -286,6 +286,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -554,6 +555,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -926,7 +928,13 @@
         }
       },
       { "name": "Footer" },
-      { "name": "About" },
+      {
+        "name": "About",
+        "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
+          "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+        }
+      },
       {
         "name": "Cookie",
         "cfg": {
@@ -975,6 +983,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -1155,6 +1164,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -1218,7 +1228,13 @@
           "containerPosition": "header"
         }
       },
-      { "name": "About" },
+      {
+        "name": "About",
+        "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
+          "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+        }
+      },
       "Redirect",
       "Login",
       "Language",
@@ -1250,7 +1266,13 @@
       "TagsManager",
       "IPManager",
       "Footer",
-      { "name": "About" }
+      {
+        "name": "About",
+        "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
+          "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+        }
+      }
     ]
   }
 }
