@@ -67,7 +67,7 @@ unregister();
 
 Withdrawal cannot undo transmitted requests, remote logs or browser caches, and cannot remove cookies owned by another domain. An integration that cannot stop cleanly needs an explicit implementation and documented limits before it is enabled.
 
-## Storage and migration
+## Browser storage
 
 Storage keys use MapStore's application namespace:
 
