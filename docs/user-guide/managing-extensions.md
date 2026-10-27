@@ -13,6 +13,7 @@ The page shows one row for each installed extension, with:
 * the title of the extension and, below it, its name;
 * its description;
 * its version, when the extension declares one;
+* the plugins that the extension adds to MapStore, each one with its version;
 * whether the extension is listed in the context creator. Extensions that only provide pages or configuration to the whole application are hidden there, because they add no tool to a context: this page is where they are managed.
 
 ## Install an extension
@@ -23,7 +24,7 @@ The new extension is available in the application without reloading the page, an
 
 ## Update an extension
 
-To update an extension, install the zip file of its new version. When the file contains an extension that is already installed, the window shows the installed version and the version that replaces it.
+To update an extension, install the zip file of its new version. When the file contains an extension that is already installed, the window shows the installed version of the extension and the version that replaces it.
 
 After the update, reload the page to use the new version.
 

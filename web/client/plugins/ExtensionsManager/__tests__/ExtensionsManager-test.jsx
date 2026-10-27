@@ -87,6 +87,27 @@ describe('ExtensionsManager plugin', () => {
             expect([...document.querySelectorAll('.ms-extension-version')].map(node => node.textContent)).toEqual(['1.0.0', '']);
         }, done);
     });
+    it('shows the extension version and the version of each plugin of the extension', (done) => {
+        const extensionInfo = {
+            title: 'Statistics tools',
+            description: 'Charts and tables',
+            version: '3.0.0',
+            plugins: [{ name: 'Statistics', title: 'Statistics', version: '2.0.0' }, { name: 'StatisticsTable' }]
+        };
+        mockAxios.onGet(CATALOG_URL).reply(200, {
+            plugins: [...CATALOG.plugins, { name: 'Statistics', title: 'Statistics', version: '2.0.0', extension: true, extensionInfo }]
+        });
+        renderTool();
+        waitFor(() => {
+            expect([...document.querySelectorAll('.ms-extension-title')].map(node => node.textContent)).toEqual(['Privacy settings', 'Sample', 'Statistics tools']);
+            expect([...document.querySelectorAll('.ms-extension-description')].map(node => node.textContent)).toEqual(['Policy pages', '', 'Charts and tables']);
+            expect([...document.querySelectorAll('.ms-extension-version')].map(node => node.textContent)).toEqual(['1.0.0', '', '3.0.0']);
+            const entries = document.querySelectorAll('.ms-extensions-list-entry');
+            expect([...entries[0].querySelectorAll('.ms-extension-plugin')].map(node => node.textContent)).toEqual(['Privacy settings 1.0.0']);
+            expect([...entries[1].querySelectorAll('.ms-extension-plugin')].map(node => node.textContent)).toEqual(['Sample -']);
+            expect([...entries[2].querySelectorAll('.ms-extension-plugin')].map(node => node.textContent)).toEqual(['Statistics 2.0.0', 'StatisticsTable -']);
+        }, done);
+    });
     it('shows an error when the catalog cannot be loaded', (done) => {
         mockAxios.onGet(CATALOG_URL).reply(500);
         renderTool();

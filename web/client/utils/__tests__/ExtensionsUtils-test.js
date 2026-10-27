@@ -7,7 +7,7 @@
 */
 import expect from "expect";
 import JSZip from "jszip";
-import {checkZipBundle, checkUploads, ERROR, UPLOAD_ERROR_MESSAGE_IDS} from "../ExtensionsUtils";
+import {checkZipBundle, checkUploads, getExtensionInfo, ERROR, UPLOAD_ERROR_MESSAGE_IDS} from "../ExtensionsUtils";
 import axios from '../../libs/ajax';
 
 describe('checkZipBundle', () => {
@@ -99,6 +99,50 @@ describe('checkUploads', () => {
                     `text of ${UPLOAD_ERROR_MESSAGE_IDS[ERROR.ALREADY_INSTALLED]}`,
                     `text of ${UPLOAD_ERROR_MESSAGE_IDS[ERROR.ALREADY_INSTALLED]}`
                 ]);
+            }))
+            .then(() => done()).catch(done);
+    });
+});
+
+describe('getExtensionInfo', () => {
+    it('reads title, description and version from the top level of index.json, and the plugins', () => {
+        expect(getExtensionInfo({
+            title: 'Statistics tools',
+            description: 'Charts and tables',
+            version: '3.0.0',
+            plugins: [{ name: 'Statistics', title: 'Charts', description: 'Charts of a layer', version: '2.0.0', dependencies: ['Toolbar'] }, { name: 'StatisticsTable', version: '1.0.0' }]
+        })).toEqual({
+            title: 'Statistics tools',
+            description: 'Charts and tables',
+            version: '3.0.0',
+            plugins: [{ name: 'Statistics', title: 'Charts', version: '2.0.0' }, { name: 'StatisticsTable', title: undefined, version: '1.0.0' }]
+        });
+    });
+    it('takes the fields missing at the top level from the first plugin', () => {
+        expect(getExtensionInfo({
+            version: '3.0.0',
+            plugins: [{ name: 'Statistics', title: 'Charts', description: 'Charts of a layer', version: '2.0.0' }]
+        })).toEqual({
+            title: 'Charts',
+            description: 'Charts of a layer',
+            version: '3.0.0',
+            plugins: [{ name: 'Statistics', title: 'Charts', version: '2.0.0' }]
+        });
+    });
+    it('returns empty fields for an index without plugins', () => {
+        expect(getExtensionInfo({})).toEqual({ title: undefined, description: undefined, version: undefined, plugins: [] });
+    });
+});
+
+describe('checkUploads with the extension version', () => {
+    it('returns the version of the extension, not the one of its first plugin', (done) => {
+        zipOf({ version: '3.0.0', plugins: [{ name: 'Statistics', version: '2.0.0' }, { name: 'StatisticsTable', version: '1.0.0' }] }, 'statistics.zip')
+            .then(file => checkUploads([file], [], id => id).then(checked => {
+                expect(checked.length).toBe(1);
+                expect(checked[0].error).toNotExist();
+                expect(checked[0].name).toBe('Statistics');
+                expect(checked[0].version).toBe('3.0.0');
+                expect(checked[0].plugins).toEqual([{ name: 'Statistics', title: undefined, version: '2.0.0' }, { name: 'StatisticsTable', title: undefined, version: '1.0.0' }]);
             }))
             .then(() => done()).catch(done);
     });

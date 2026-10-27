@@ -40,6 +40,18 @@ describe('ExtensionsList component', () => {
         expect(textsOf('.ms-extension-description')).toEqual(['Policy pages', '']);
         expect(textsOf('.ms-extension-version')).toEqual(['1.0.0', '']);
     });
+    it('shows name or title and version of the plugins of each extension', () => {
+        const extensions = [
+            { name: 'Statistics', title: 'Statistics tools', plugins: [{ name: 'Statistics', title: 'Charts', version: '2.0.0' }, { name: 'StatisticsTable' }] },
+            { name: 'Sample', title: 'Sample', plugins: [] }
+        ];
+        ReactDOM.render(<ExtensionsList extensions={extensions} />, document.getElementById('container'));
+        const entries = document.querySelectorAll('.ms-extensions-list-entry');
+        expect(entries.length).toBe(2);
+        expect([...entries[0].querySelectorAll('.ms-extension-plugin-name')].map(node => node.textContent)).toEqual(['Charts', 'StatisticsTable']);
+        expect([...entries[0].querySelectorAll('.ms-extension-plugin-version')].map(node => node.textContent)).toEqual(['2.0.0', '-']);
+        expect(entries[1].querySelector('.ms-extension-plugins')).toNotExist();
+    });
     it('renders the tools of each extension', () => {
         const extensions = [{ name: 'A', title: 'A' }, { name: 'B', title: 'B' }];
         ReactDOM.render(<ExtensionsList extensions={extensions} renderTools={extension => <button className="tool">{extension.name}</button>} />,

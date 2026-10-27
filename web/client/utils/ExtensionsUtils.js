@@ -18,15 +18,32 @@ export const ERROR = {
     ALREADY_INSTALLED: 'ALREADY_INSTALLED'
 };
 
+/**
+ * Returns the description of an extension from its index.json, as the backend stores it in the plugins catalog.
+ * A field missing at the top level of index.json is taken from the first plugin.
+ * @param {object} index content of index.json
+ * @returns {object} `{ title, description, version, plugins: [{ name, title, version }] }`
+ */
+export const getExtensionInfo = (index) => {
+    const plugins = index.plugins || [];
+    const first = plugins[0] || {};
+    return {
+        title: index.title || first.title,
+        description: index.description || first.description,
+        version: index.version || first.version,
+        plugins: plugins.map(({ name, title, version }) => ({ name, title, version }))
+    };
+};
+
 const parseIndex = (json, plugins) => {
     try {
         const index = JSON.parse(json);
         if (index.plugins && index.plugins.length && index.plugins[0].name) {
-            const { name, title, version } = index.plugins[0];
+            const { name } = index.plugins[0];
             if (plugins.indexOf(name) !== -1) {
                 return {error: ERROR.ALREADY_INSTALLED};
             }
-            return { name, title, version };
+            return { name, ...getExtensionInfo(index) };
         }
         return {error: ERROR.MISSING_PLUGIN};
     } catch (e) {
@@ -78,7 +95,7 @@ export const UPLOAD_ERROR_MESSAGE_IDS = {
  * @param {File[]} files zip files to check
  * @param {string[]} plugins names of the plugins that cannot be installed again
  * @param {function} getMessage returns the text of a message id
- * @returns {Promise} resolves with `[{ name, title, version, file }]`, or `[{ name, file, error }]`
+ * @returns {Promise} resolves with `[{ name, title, description, version, plugins, file }]`, or `[{ name, file, error }]`
  */
 export const checkUploads = (files, plugins, getMessage) => Promise.all(files.map(file =>
     checkZipBundle(file, plugins).catch(e => {

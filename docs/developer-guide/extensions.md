@@ -144,7 +144,7 @@ my-extension.zip
 The `index.json file should contain all the information about the extension:
 
 * An `id` that identifies the extension
-* A `version` to show in UI. Semantic versioning is suggested.+
+* A `version` to show in UI. Semantic versioning is suggested.
 
 * `title` and `description` to display in UI, mnemonic hints for the administrator
 * `plugins` the list of plugins that it adds to the application, with all the data useful for the context manager. Format of the JSON object for plugins is suggested [here](https://github.com/georchestra/mapstore2-georchestra/issues/15#issuecomment-564974270)
@@ -167,12 +167,16 @@ The `index.json file should contain all the information about the extension:
 
 `plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager)
 
-Only the first entry of `plugins` is stored in the plugins catalog when the extension is installed: the context creator and the [Extensions Manager](../user-guide/managing-extensions.md#managing-extensions) read `title`, `description` and `version` from it, so set them in the entry of the plugin too. An extension whose plugin adds nothing to a context, for example one that only provides pages or configuration to the whole application, sets `"hidden": true` in that entry: the context creator does not list it, and it is managed from the Extensions Manager.
+When the extension is installed, the first entry of `plugins` is stored in the plugins catalog, with an `extensionInfo` object. It holds `title`, `description` and `version` of the top level of `index.json`, and `name`, `title` and `version` of every entry of `plugins`. A field missing at the top level is taken from the first entry of `plugins`. The [Extensions Manager](../user-guide/managing-extensions.md#managing-extensions) shows the version of the extension and the version of each of its plugins. The context creator reads `title`, `description` and `version` of the first entry of `plugins`, so set them there too.
+
+An extension whose plugin adds nothing to a context, for example one that only provides pages or configuration to the whole application, sets `"hidden": true` in the first entry of `plugins`: the context creator does not list it, and it is managed from the Extensions Manager.
 
 ```json
 {
     "id": "PrivacySettings",
     "version": "1.0.0",
+    "title": "Privacy settings",
+    "description": "Policy pages and privacy configuration",
     "plugins": [{
          "name": "PrivacySettings",
          "title": "Privacy settings",

@@ -9,15 +9,21 @@ import { useCallback, useEffect, useState } from 'react';
 
 import getPluginsConfig from '../../../observables/config/getPluginsConfig';
 import useIsMounted from '../../../hooks/useIsMounted';
+import { getExtensionInfo } from '../../../utils/ExtensionsUtils';
 
-// The plugins catalog lists every uploaded extension with the plugin entry of its index.json.
-const toExtension = ({ name, title, description, version, hidden }) => ({
-    name,
-    title: title || name,
-    description: description || '',
-    version: version || '',
-    hidden: !!hidden
-});
+// The plugins catalog lists every uploaded extension with the first plugin entry of its index.json.
+// Extensions installed by older versions have no `extensionInfo`: their plugin entry describes them.
+const toExtension = (plugin) => {
+    const info = plugin.extensionInfo || getExtensionInfo({ plugins: [plugin] });
+    return {
+        name: plugin.name,
+        title: info.title || plugin.name,
+        description: info.description || '',
+        version: info.version || '',
+        plugins: info.plugins || [],
+        hidden: !!plugin.hidden
+    };
+};
 
 /**
  * Reads the installed extensions from the plugins catalog of the context creator.

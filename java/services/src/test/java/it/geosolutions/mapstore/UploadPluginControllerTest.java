@@ -7,6 +7,8 @@
  */
 package it.geosolutions.mapstore;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.geosolutions.mapstore.controllers.rest.config.UploadPluginController;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -220,7 +222,7 @@ public class UploadPluginControllerTest {
                 });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
-        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
+        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true,\"extensionInfo\":{\"plugins\":[{\"name\":\"My\"}]}}", result);
         String extensions = TestUtils.getContent(tempExtensions);
         assertEquals("{\"My\":{\"bundle\":\"My/index.js\",\"translations\":\"My/translations\"}}", extensions);
         tempConfig.delete();
@@ -244,7 +246,7 @@ public class UploadPluginControllerTest {
                 });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
-        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
+        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true,\"extensionInfo\":{\"plugins\":[{\"name\":\"My\"}]}}", result);
         String extensions = TestUtils.getContent(tempExtensions);
         assertEquals("{\"My\":{\"bundle\":\"My/index.js\",\"translations\":\"My/translations\"}}", extensions);
         tempConfig.delete();
@@ -272,9 +274,9 @@ public class UploadPluginControllerTest {
                 });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
-        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
+        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true,\"extensionInfo\":{\"plugins\":[{\"name\":\"My\"}]}}", result);
         String pluginsPatch = TestUtils.getContent(new File(tempDir.getAbsolutePath() + File.separator + "configs" + File.separator + "pluginsConfig.json.patch"));
-        assertEquals("[{\"op\":\"add\",\"path\":\"/plugins/-\",\"value\":{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}}]", pluginsPatch);
+        assertEquals("[{\"op\":\"add\",\"path\":\"/plugins/-\",\"value\":{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true,\"extensionInfo\":{\"plugins\":[{\"name\":\"My\"}]}}}]", pluginsPatch);
         tempConfig.delete();
         tempExtensions.delete();
     }
@@ -566,7 +568,7 @@ public class UploadPluginControllerTest {
 
         InputStream zip = makePluginZip("My", "index.js", extras);
         String result = controller.uploadPlugin(zip);
-        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
+        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true,\"extensionInfo\":{\"plugins\":[{\"name\":\"My\"}]}}", result);
 
         // Accept any of the legitimate destinations
         File expected1 = new File(tempDist, "My" + File.separator + "assets" + File.separator + "i18n" + File.separator + "it.json");
@@ -584,19 +586,63 @@ public class UploadPluginControllerTest {
         if (expected3.exists()) expected3.delete();
     }
 
+    @Test
+    public void testUploadStoresExtensionInfo() throws IOException {
+        String index = "{\"title\":\"Tools\",\"description\":\"Some tools\",\"version\":\"2.1.0\","
+                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"version\":\"1.4.0\"},"
+                + "{\"name\":\"Other\",\"version\":\"0.9.0\"}]}";
+        String expectedInfo = "{\"title\":\"Tools\",\"description\":\"Some tools\",\"version\":\"2.1.0\","
+                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"version\":\"1.4.0\"},"
+                + "{\"name\":\"Other\",\"version\":\"0.9.0\"}]}";
+        assertStoredExtensionInfo(index, expectedInfo);
+    }
+
+    @Test
+    public void testUploadTakesMissingExtensionInfoFromFirstPlugin() throws IOException {
+        String index = "{\"version\":\"2.1.0\","
+                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"description\":\"A tool\",\"version\":\"1.4.0\"}]}";
+        String expectedInfo = "{\"title\":\"My tool\",\"description\":\"A tool\",\"version\":\"2.1.0\","
+                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"version\":\"1.4.0\"}]}";
+        assertStoredExtensionInfo(index, expectedInfo);
+    }
+
+    private void assertStoredExtensionInfo(String index, String expectedInfo) throws IOException {
+        File dataDir = TestUtils.getDataDir();
+        controller.setDataDir(dataDir.getAbsolutePath());
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(dataDir);
+        File tempConfig = TestUtils.copyTo(UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"), dataDir, "/configs/pluginsConfig.json");
+        File tempExtensions = TestUtils.copyTo(UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir, "/extensions/extensions.json");
+
+        String result = controller.uploadPlugin(makeZip(index, "index.js", null));
+
+        ObjectMapper mapper = new ObjectMapper();
+        assertEquals(mapper.readTree(expectedInfo), mapper.readTree(result).get("extensionInfo"));
+        JsonNode stored = mapper.readTree(TestUtils.getContent(tempConfig)).get("plugins");
+        assertEquals(1, stored.size());
+        assertEquals("My", stored.get(0).get("name").asText());
+        assertEquals(mapper.readTree(expectedInfo), stored.get(0).get("extensionInfo"));
+        tempConfig.delete();
+        tempExtensions.delete();
+    }
+
     // ------------------------------
     // Helpers for in-memory ZIP data
     // ------------------------------
 
     private static InputStream makePluginZip(String pluginName, String bundleEntryName, Map<String, byte[]> extras) throws IOException {
+        String json = "{\"plugins\":[{\"name\":\"" + pluginName + "\",\"dependencies\":[\"Toolbar\"]}]}";
+        return makeZip(json, bundleEntryName, extras);
+    }
+
+    private static InputStream makeZip(String indexJson, String bundleEntryName, Map<String, byte[]> extras) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (ZipOutputStream zos = new ZipOutputStream(bos)) {
             // index.js (bundle) – can be in subfolders per the provided name
             putZipEntry(zos, bundleEntryName, "console.log('ok');".getBytes(StandardCharsets.UTF_8));
 
-            // index.json
-            String json = "{\"plugins\":[{\"name\":\"" + pluginName + "\",\"dependencies\":[\"Toolbar\"]}]}";
-            putZipEntry(zos, "index.json", json.getBytes(StandardCharsets.UTF_8));
+            putZipEntry(zos, "index.json", indexJson.getBytes(StandardCharsets.UTF_8));
 
             // extras
             if (extras != null) {

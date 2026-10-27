@@ -21,6 +21,18 @@ const ContextCreatorVisibility = ({ hidden }) => (
     </Text>
 );
 
+const ExtensionPlugins = ({ plugins }) => (
+    <Text fontSize="sm" component="ul" className="ms-extension-plugins">
+        {plugins.map(plugin => (
+            <li key={plugin.name} className="ms-extension-plugin">
+                <span className="ms-extension-plugin-name">{plugin.title || plugin.name}</span>
+                {' '}
+                <span className="ms-extension-plugin-version">{plugin.version || '-'}</span>
+            </li>
+        ))}
+    </Text>
+);
+
 const EmptyList = () => (
     <FlexBox.Fill flexBox centerChildren classNames={['_padding-tb-lg']}>
         <div>
@@ -33,7 +45,8 @@ const EmptyList = () => (
 
 /**
  * List of the installed extensions.
- * @prop {object[]} extensions installed extensions `[{ name, title, description, version, hidden }]`
+ * @prop {object[]} extensions installed extensions `[{ name, title, description, version, plugins, hidden }]`,
+ * where `plugins` lists name, title and version of each plugin of the extension
  * @prop {function} renderTools returns the tools of an extension (e.g. uninstall), optional
  */
 function ExtensionsList({ extensions, renderTools }) {
@@ -49,6 +62,7 @@ function ExtensionsList({ extensions, renderTools }) {
                         <Text fontSize="md" strong className="ms-extension-title">{extension.title}</Text>
                         <Text fontSize="sm" className="ms-extension-name">{extension.name}</Text>
                         <Text fontSize="sm" className="ms-extension-description">{extension.description}</Text>
+                        {extension.plugins?.length ? <ExtensionPlugins plugins={extension.plugins} /> : null}
                     </FlexBox.Fill>
                     <Text fontSize="sm" className="ms-extension-version">{extension.version}</Text>
                     <ContextCreatorVisibility hidden={extension.hidden} />
