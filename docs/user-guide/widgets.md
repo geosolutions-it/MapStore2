@@ -608,7 +608,7 @@ From the **Items**, the user can perform the following actions:
 
 - Enable/Disable the **Force Selection** option, ensuring that at least one filter item must be selected.
 
-- Enable/Disable the **Default expanded** option to choose whether the filter is displayed expanded or collapsed when the widget is opened. This option is enabled by default.
+- Enable/Disable the **Default expanded** option to choose whether the filter is displayed expanded or collapsed when the widget is opened. This option is enabled by defaugit lt.
 
 - Enable/Disable the **Show connected layers** option to display, in the widget, the list of layers the filter is connected to. This option is enabled by default.
 
