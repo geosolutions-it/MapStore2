@@ -3315,6 +3315,10 @@
         "tooltip": "Click here to expand it again"
       },
       "errors": {
+        "invalidDateTitle": "Invalid date or time",
+        "invalidDateMessage": "Enter a complete, valid date and time.",
+        "invalidStartDate": "The start date must be earlier than the end date.",
+        "invalidEndDate": "The end date must be later than the start date.",
         "multidim_error_title": "Backend service is not responding",
         "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."
       }
