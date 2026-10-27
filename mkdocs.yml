@@ -168,6 +168,7 @@ nav:
       - Configuration Expressions: 'developer-guide/expressions.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
+      - Proxy Configuration: 'developer-guide/proxy-configuration.md'
       - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
       - Filters: 'developer-guide/LayerFilter.md'
       - Styles: 'developer-guide/vector-style.md'
