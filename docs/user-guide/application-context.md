@@ -53,7 +53,7 @@ In particular the user can configure the context map using the following MapStor
 
 * [Import](import.md#import-files), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to import map files and import [vector file](import.md#import-vector-files).
 
-* [Export](import.md#import-files), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to export map files and export [vector file](import.md#import-vector-files).
+* [Export](import.md#import-files), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to export the current map configuration.
 
 * [Settings](mapstore-toolbars.md#side-toolbar), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to view the settings of the map.
 
