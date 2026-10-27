@@ -79,7 +79,7 @@ Storage keys use MapStore's application namespace:
 
 The baseline validity is 180 days. Invalid, expired or superseded privacy records are removed on their next read when storage permits. Optional records are removed when no optional categories are configured. Valid applicable choices and necessary-only dismissals are retained. Cleanup compares the stored value before removal to avoid deleting a newer decision from another tab.
 
-Storage read or write failures do not enable optional tools. When a choice cannot be saved, the panel stays open with the error and optional tools stay off on the page, even if an older consent can still be read; MapStore also tries to remove that older record. A storage-removal failure also leaves an invalid record inactive. The migration does not clear authentication or unrelated application storage.
+Storage read or write failures do not enable optional tools. When a choice cannot be saved, the panel stays open with the error and optional tools stay off on the page, even if an older consent can still be read; MapStore also tries to remove that older record. A storage-removal failure also leaves an invalid record inactive.
 
 Update `policyVersion` when the purposes, integrations or material notice conditions change. Review the configured retention and the choice mechanism for the actual deployment. Setting `privacy.enabled` to `false` hides the panel and its footer entry: MapStore shows no cookie or privacy notice. Without the `privacy` section the panel is hidden too, unless an installed extension enables it.
 
