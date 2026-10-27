@@ -57,6 +57,29 @@ describe('layerFilter Epics', () => {
 
         }, state);
     });
+    it("preserves Filter Selector filters when the primary layer filter is cleared", (done) => {
+        const widgetFilter = { id: "selector", appliedFromWidget: "filter-widget-1" };
+        const legendFilter = { id: "interactiveLegend", filters: [{ format: "cql", body: "LAND_KM > 100" }] };
+        const existingFilters = [widgetFilter, legendFilter];
+        const state = {layers: {
+            flat: [{
+                id: "topp:states__5",
+                name: "topp:states",
+                search: {url: "searchUrl"},
+                layerFilter: {
+                    filterFields: [{ attribute: "STATE_NAME", value: "Arizona" }],
+                    filters: existingFilters
+                }
+            }],
+            selected: ["topp:states__5"]
+        }};
+        testEpic(handleLayerFilterPanel, 6, [openQueryBuilder(), {type: QUERY_FORM_SEARCH, filterObj: {}}], (actions) => {
+            expect(actions[5].type).toBe("CHANGE_LAYER_PROPERTIES");
+            expect(actions[5].newProperties.layerFilter.filterFields).toEqual([]);
+            expect(actions[5].newProperties.layerFilter.filters).toEqual(existingFilters);
+            done();
+        }, state);
+    });
     it('handleLayerFilterPanel with fields', () => {
 
     });

@@ -72,6 +72,20 @@ export const handleLayerFilterPanel = (action$, {getState}) =>
                 action$.ofType(QUERY_FORM_SEARCH)
                     .switchMap( ({filterObj}) => {
                         let newFilter = isNotEmptyFilter(filterObj) ? {...get(getState(), "queryform", {})} : undefined;
+                        if (!newFilter) {
+                            // Clearing the query builder filter must not remove other filters
+                            const currentLayer = getSelectedLayer(getState()) || layer;
+                            const existingFilters = currentLayer?.layerFilter?.filters || [];
+                            if (existingFilters.length) {
+                                newFilter = {
+                                    ...currentLayer.layerFilter,
+                                    filterFields: [],
+                                    spatialField: null,
+                                    crossLayerFilter: null,
+                                    filters: existingFilters
+                                };
+                            }
+                        }
                         if (newFilter) {
                             newFilter.filterFields = newFilter.attributePanelExpanded && newFilter.filterFields || [];
                             newFilter.spatialField = newFilter.spatialPanelExpanded && newFilter.spatialField || null;
