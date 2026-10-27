@@ -75,7 +75,6 @@ Storage keys use MapStore's application namespace:
 | --- | --- |
 | `mapstore.privacy.choices` | Schema 2: policy version, decision time, expiry and boolean category choices. Written after an optional choice, including refusal. |
 | `mapstore.privacy.notice` | Schema 1: policy version, dismissal time and expiry for necessary-only information. It grants no optional consent. |
-| `mapstore.cookie.approved`, `cookies-policy-approved` | Legacy acknowledgements. Removed when the new privacy configuration is enabled, without conversion to consent or a new dismissal. |
 
 The baseline validity is 180 days. Invalid, expired or superseded privacy records are removed on their next read when storage permits. Optional records are removed when no optional categories are configured. Valid applicable choices and necessary-only dismissals are retained. Cleanup compares the stored value before removal to avoid deleting a newer decision from another tab.
 

@@ -24,7 +24,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ### Privacy settings and standard sharing
 
-Vanilla enables the common privacy panel of the `Cookie` plugin. Legacy cookie acknowledgements are not converted into optional consent.
+Vanilla enables the common privacy panel of the `Cookie` plugin.
 
 Until the installation configures its own policy pages, the panel links the template pages shipped with MapStore in `product/assets/privacy`, shows a warning visible to every user, and writes a warning in the browser console. The template pages are not the policy of the installation. To remove the warning, do one of the following:
 
@@ -69,7 +69,7 @@ Other changes:
 - The old cookie notice (Accept, More details and Leave) is removed, with its `externalCookieUrl` and `declineUrl` options and the `translations/fragments/cookie` pages. Remove these options from custom configurations. A `localConfig.json` without the `privacy` section shows no notice: copy the `privacy` section of the standard `localConfig.json` to show the privacy panel.
 - Projects should replace the Bowser script and the Google Fonts links in their HTML templates with the inline Internet Explorer check of the standard templates.
 
-See [Privacy and Consent Configuration](privacy-settings.md#privacy-and-consent-configuration) for storage migration, configuration and adapter requirements.
+See [Privacy and Consent Configuration](privacy-settings.md#privacy-and-consent-configuration) for browser storage, configuration and adapter requirements.
 
 ### Default users removed: initial administrator password
 
