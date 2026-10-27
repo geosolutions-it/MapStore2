@@ -65,7 +65,7 @@ To complete the migration:
 
 Other changes:
 
-- The standard Social sharing tab and counters are removed; custom clients relying on them must adapt. Link and embed sharing retain their existing resource permissions.
+- The Social tab of the `Share` plugin is deprecated and disabled by default, and it no longer shows share counters. To show it again, set `"socialPanel": true` in the `cfg` of the `Share` plugin. Link and embed sharing retain their existing resource permissions.
 - The old cookie notice (Accept, More details and Leave) is removed, with its `externalCookieUrl` and `declineUrl` options and the `translations/fragments/cookie` pages. Remove these options from custom configurations. A `localConfig.json` without the `privacy` section shows no notice: copy the `privacy` section of the standard `localConfig.json` to show the privacy panel.
 - Projects should replace the Bowser script and the Google Fonts links in their HTML templates with the inline Internet Explorer check of the standard templates.
 

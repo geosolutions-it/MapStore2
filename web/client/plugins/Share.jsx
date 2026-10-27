@@ -30,13 +30,13 @@ import { mapTypeSelector } from "../selectors/maptype";
 import { dashboardResource } from '../selectors/dashboard';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
- * You can share it on socials networks(facebook,twitter,google+,linkedIn)
  * copying the direct link
  * copying the embedded code
  * using the QR code with mobile apps
  * @class
  * @memberof plugins
  * @prop {node|string} [title] the title of the page
+ * @prop {boolean} [socialPanel] deprecated. If true, shows the social tab, with links to share on social networks. Default false
  * @prop {boolean} [embedPanel] if false, hide the embed tab. Default true
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe

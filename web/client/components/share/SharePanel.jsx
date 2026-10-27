@@ -9,6 +9,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import ShareSocials from './ShareSocials';
 import ShareLink from './ShareLink';
 import ShareEmbed from './ShareEmbed';
 import ShareApi from './ShareApi';
@@ -48,6 +49,7 @@ import Portal from '../misc/Portal';
  * @prop {string} [shareUrl] the url to use for share. by default location.href
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
+ * @prop {boolean} [socialPanel=false] deprecated. If true, shows the social tab, with links to share on social networks.
  * @prop {boolean} [embedPanel=true] if false, hide the embed tab.
  * @prop {object} [embedOptions] options to pass to the embed tab.(`showTOCToggle` - if false hides the 'show TOC' checkbox (used only by map))
  * @prop {string} [shareApiUrl] url for share API part
@@ -60,6 +62,7 @@ class SharePanel extends React.Component {
         items: PropTypes.array,
         isVisible: PropTypes.bool,
         title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+        socialPanel: PropTypes.bool,
         modal: PropTypes.bool,
         draggable: PropTypes.bool,
         sharedTitle: PropTypes.string,
@@ -101,6 +104,7 @@ class SharePanel extends React.Component {
 
     static defaultProps = {
         title: "share.title",
+        socialPanel: false,
         modal: false,
         draggable: true,
         onClose: () => {},
@@ -151,7 +155,7 @@ class SharePanel extends React.Component {
         const tabsMap = this.getShareTabs(itemTabs);
         this.setState({
             bbox,
-            eventKey: this.props.selectedTab === 'social' ? 1 : tabsMap[this.props.selectedTab] || SHARE_TABS[this.props.selectedTab] || 1,
+            eventKey: this.props.selectedTab === 'social' && !this.props.socialPanel ? 1 : tabsMap[this.props.selectedTab] || SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
             coordinate,
             ...this.processOrientation(this.props)
@@ -249,6 +253,17 @@ class SharePanel extends React.Component {
                     </div>
                 ),
                 hide: false
+            },
+            {
+                key: 'social',
+                title: <Message msgId="share.social" />,
+                content: () => (
+                    <ShareSocials
+                        sharedTitle={this.props.sharedTitle}
+                        shareUrl={shareUrl}
+                    />
+                ),
+                hide: !this.props.socialPanel
             },
             ...itemTabs.map(({ title, component: Component, tabName } = {}) => ({
                 key: tabName,
