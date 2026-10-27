@@ -11,7 +11,6 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
 
     * For aggregate operations, `chart` and `counter` widgets need the WPS process `gs:Aggregate` available in GeoServer to work.
 
-
 ## Add a Widget
 
 Once at least one layer is present in the map (see [Catalog](catalog.md#catalog-services) section for more information about adding layers), it is possible to create a widget through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button, always available in the [TOC](toc.md#table-of-contents) toolbar. To create a widget, the user can:
@@ -26,11 +25,11 @@ Performing these operations the *Widget* panel appears:
 
 From here the user can choose between five different types of widget:
 
-* *Chart*
-* *Text*
-* *Table*
-* *Counter*
-* *Filter Selector*
+- *Chart*
+- *Text*
+- *Table*
+- *Counter*
+- *Filter Selector*
 
 ### Chart
 
@@ -44,19 +43,19 @@ Selecting a *Layer* or *Layers*, the following *Chart* options is presented to u
 
 From the top toolbar of this panel the user is allowed to:
 
-* Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section.
+- Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section
 
-* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
+- Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
 
-* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
+- Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
 
 From the chart configuration page, the user can first perform the following operation:
 
-* *Edit* the *Chart Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+- *Edit* the *Chart Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* *Add new chart* to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+- *Add new chart* to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* *Delete* the selected chart and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+- *Delete* the selected chart and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
 #### Traces
 
@@ -64,21 +63,21 @@ For each chart [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) al
 
 <img src="../img/widgets/traces_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* Choose between **Bar Chart**, **Pie Chart** or **Line Chart**. By default, the *Bar Chart* is selected.
+- Choose between **Bar Chart**, **Pie Chart** or **Line Chart**. By default, the *Bar Chart* is selected.
 
-* *Edit* the current *Trace Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+- *Edit* the current *Trace Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* *Add new trace* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+- *Add new trace* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* *Delete* the current trace through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+- *Delete* the current trace through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
 Once the chart type is chosen, it is possible to set up the trace with the following options:
 
-* **Trace data**
-* **Trace style**
-* **Trace axes**
-* **Trace value formatting**
-* **Null Value Handling**
+- **Trace data**
+- **Trace style**
+- **Trace axes**
+- **Trace value formatting**
+- **Null Value Handling**
 
 ##### Trace Data
 
@@ -88,15 +87,15 @@ The *Trace data* is displayed as follows:
 
 In this section the user can:
 
-* Change the trace layer through the <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> button (by default the layer is automatically the same of the first trace defined)
+- Change the trace layer through the <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> button (by default the layer is automatically the same of the first trace defined)
 
-* Open the [*Query Panel*](filtering-layers.md#query-panel) to configure a **Layer Filter** for the selected layer through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
+- Open the [*Query Panel*](filtering-layers.md#query-panel) to configure a **Layer Filter** for the selected layer through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
 
-* Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
+- Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
 
-* Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
+- Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
 
-* Define the aggregate **Operation** to perform for the selected attribute choosing between `No Operation`, `COUNT`, `SUM`, `AVG`, `STDDEV`, `MIN` and `MAX`
+- Define the aggregate **Operation** to perform for the selected attribute choosing between `No Operation`, `COUNT`, `SUM`, `AVG`, `STDDEV`, `MIN` and `MAX`
 
 !!! Note
     The *No operation* option is used when the aggregation method is not needed for the chart. If *No Operation* is selected, no aggregation will be carried out for the chart and the WFS service will be used to generate the chart without using the WPS process `gs:Aggregate` in GeoServer.
@@ -122,18 +121,18 @@ With the **Simple style**, the editor is allowed to customize the `Fill color`, 
 From the **Color Ramp** option, the user can select the *Custom colors* option and open the **Custom Colors Settings** modal through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button.
 Inside this modal, the user is allowed to:
 
-* Change the default **Color** of bars or slices (depending on the chart type) through the *Color Picker*. This color will be applied for all values for which a *Class Color* has not been configured.
+- Change the default **Color** of bars or slices (depending on the chart type) through the *Color Picker*. This color will be applied for all values for which a *Class Color* has not been configured.
 
 <video class="ms-docimage" controls><source src="../img/widgets/custom_colors.mp4"/></video>
 
-* Enter a **Default Class Label** to be used in the legend for all values that will not be specifically classified in the following list.
+- Enter a **Default Class Label** to be used in the legend for all values that will not be specifically classified in the following list.
 
 <img src="../img/widgets/default_class_label.jpg" class="ms-docimage"/>
 
 !!! Note
     For both *Default Class Label* and  *Class Label* '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
 
-* Classify *Classification Attribute* values to assign a specific color in the chart along with its *Class Label* to use for the chart legend. Only values of type **String** or **Number** are currently supported.
+- Classify *Classification Attribute* values to assign a specific color in the chart along with its *Class Label* to use for the chart legend. Only values of type **String** or **Number** are currently supported.
 
 ###### Classification Attribute of type String
 
@@ -141,11 +140,11 @@ When the values of a classification attribute are of type String, the user can:
 
 <img src="../img/widgets/alphanumeric.jpg" class="ms-docimage"/>
 
-* Change the **Class Color** through the *Color Picker*.
+- Change the **Class Color** through the *Color Picker*.
 
-* Change the value of the *Classification attribute* through the dropdown menu **Class Value**
+- Change the value of the *Classification attribute* through the dropdown menu **Class Value**
 
-* Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
+- Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
 
 !!! Note
     For *Class Label*,  '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
@@ -158,13 +157,13 @@ When the values of a classification attribute are numbers, the user can configur
 
 <img src="../img/widgets/numeric.jpg" class="ms-docimage"/>
 
-* Change the **Class Color** through the *Color Picker*
+- Change the **Class Color** through the *Color Picker*
 
-* Change the **Min value** of the *Classification attribute*
+- Change the **Min value** of the *Classification attribute*
 
-* Change the **Max value** of the *Classification attribute*
+- Change the **Max value** of the *Classification attribute*
 
-* Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
+- Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
 
 !!! Note
     For *Class Label* two placeholders can be used in this case: ${minValue}, can be used as a placeholder for **Min Value** and  ${maxValue}, can be used as a placeholder for Max Value; the ${legendValue} can be used in the same way as specified above.
@@ -182,7 +181,7 @@ The user can customize trace value tooltips by adding a *Prefix* (e.g. `~`), a c
 <img src="../img/widgets/trace_value_formatting.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 !!! Note
-    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
+    More information about the syntax options allowed for **Format**, see the [D3 formatting syntax documentation](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula**, see the [Filtrex expression syntax documentation](https://github.com/m93a/filtrex#expressions) in the online documentation.
 
 An example of a custom trace value tooltip can be the following:
 
@@ -194,11 +193,11 @@ The user can customize how **Null Value** are handled for the `X Attribute` fiel
 
 <img src="../img/widgets/trace_null_value.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* **Ignore** to keep the *Null* values unchanged in the data.
+- **Ignore** to keep the *Null* values unchanged in the data.
 
-* **Exclude** to remove all records where the value is *Null*
+- **Exclude** to remove all records where the value is *Null*
 
-* **Use Placeholder** to replace *Null* values with a custom value provided by the user
+- **Use Placeholder** to replace *Null* values with a custom value provided by the user
 
 ##### Trace legend options
 
@@ -208,7 +207,7 @@ For the *Pie Charts*, the *Trace legend options* is available and it is displaye
 
 The user can:
 
-* Show/Hide the percentages in legend with the **Include percentages in legend** control. An example with the percentages in legend can be the following:
+- Show/Hide the percentages in legend with the **Include percentages in legend** control. An example with the percentages in legend can be the following:
 
 <img src="../img/widgets/percentages_in_legend.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -220,13 +219,13 @@ The user can:
 
 Through this section, for each axis, the user is allowed to:
 
-* *Edit* the current **Axis Title** through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+- *Edit* the current **Axis Title** through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* If there is more than one [Trace](#traces), *Add new axis* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+- If there is more than one [Trace](#traces), *Add new axis* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* If there is more than one [Trace](#traces), *Delete* the current axis through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+- If there is more than one [Trace](#traces), *Delete* the current axis through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
-* Choose the **Type** (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at the data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting).
+- Choose the **Type** (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at the data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting).
 
 !!! Note
     If **`Date`** is selected in the *Type* option, the **Highlight selected time** setting becomes available in the *Axes* panel, allowing you to highlight the current date in the chart.
@@ -238,33 +237,33 @@ Through this section, for each axis, the user is allowed to:
     * **Size**: set the line thickness in `px`.
     * **Style**: select the line style from `Solid`, `Dot`, `Dash`, `LongDash` or `DashDot`
 
-* Change the **Color** through the color picker
+- Change the **Color** through the color picker
 
-* Change the **Font size**
+- Change the **Font size**
 
-* Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`)
+- Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`)
 
-* Customize *Y axis* label by adding a **Prefix** (e.g. `~`), a custom **Format** (e.g. `0%: rounded percentage, '12%'` or more) or a **Suffix** (e.g. `Km`).
+- Customize *Y axis* label by adding a **Prefix** (e.g. `~`), a custom **Format** (e.g. `0%: rounded percentage, '12%'` or more) or a **Suffix** (e.g. `Km`).
 
 !!! Note
-    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) in the online documentation.
+    More information about the syntax options allowed for **Format**, see the [D3 formatting syntax documentation](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) in the online documentation.
 
-* Add **Axis Tick Values**, as comma-separated values, to force the axis to display only these specific points.
+- Add **Axis Tick Values**, as comma-separated values, to force the axis to display only these specific points.
 
-* Add **Axis Tick Text**, as custom labels, to replace the text at the positions defined in Axis Tick Values. The alignment is strictly positional (matched by index, one label per value).
+- Add **Axis Tick Text**, as custom labels, to replace the text at the positions defined in Axis Tick Values. The alignment is strictly positional (matched by index, one label per value).
 
-* Choose the **Side** of the chart on which to display the axis labels (between `Left` or `Right`)
+- Choose the **Side** of the chart on which to display the axis labels (between `Left` or `Right`)
 
-* Choose how to **Anchor** the axis labels (between `Axis` or `Free`)
+- Choose how to **Anchor** the axis labels (between `Axis` or `Free`)
 
-* Tune the rendering of tick labels by enabling the **Never skip labels** (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size)
+- Tune the rendering of tick labels by enabling the **Never skip labels** (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size)
 
 !!! Warning
     The *Never skip label* option is available only for the *X axis* and the tick labels available by enabling the option cannot be more than 200 in order to provide a clear chart and for performance reasons.
 
-* Enable **Label rotation** to better adapt axis tick labels on the charts depending on the needs.
+- Enable **Label rotation** to better adapt axis tick labels on the charts depending on the needs.
 
-* Choose to completely hide labels through the **Hide labels** control.
+- Choose to completely hide labels through the **Hide labels** control.
 
 #### Layout
 
@@ -274,17 +273,17 @@ Through the *Layout* tab, the user can also customize the **Layout** of the char
 
 Here the user can:
 
-* Show/Hide the chart's grid in background with the **Hide Grid** control (only for the *Bar Charts* and the *Line Charts*)
+- Show/Hide the chart's grid in background with the **Hide Grid** control (only for the *Bar Charts* and the *Line Charts*)
 
-* Enable the chart's legend by activating **Display Legend**
+- Enable the chart's legend by activating **Display Legend**
 
-* Select the **Tooltip Mode**, choosing how the tooltip on the chart will be shown, between *Unified X tooltip*, *Unified Y tooltip*, *X tooltip*, *Y tooltip*, *Individual tooltip* and *No tooltip*.
+- Select the **Tooltip Mode**, choosing how the tooltip on the chart will be shown, between *Unified X tooltip*, *Unified Y tooltip*, *X tooltip*, *Y tooltip*, *Individual tooltip* and *No tooltip*.
 
-* Choose the **Color** for all chart texts through the color picker (only for the *Bar Charts* and the *Line Charts*)
+- Choose the **Color** for all chart texts through the color picker (only for the *Bar Charts* and the *Line Charts*)
 
-* Change the **Font size** for all chart texts
+- Change the **Font size** for all chart texts
 
-* Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) for all chart texts
+- Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) for all chart texts
 
 If the *Classification attribute* is added to the *Bar Chart*, in the [Trace Style](#trace-style),  the **Bar Chart Type** option is displayed.
 
@@ -292,11 +291,11 @@ If the *Classification attribute* is added to the *Bar Chart*, in the [Trace Sty
 
 The user can customize the bars by choosing between:
 
-* **Grouped**. An example can be the following:
+- **Grouped**. An example can be the following:
 
 <img src="../img/widgets/grouped_chart.jpg" class="ms-docimage" style="max-width:450px;"/>
 
-* **Stacked**. An example can be the following:
+- **Stacked**. An example can be the following:
 
 <img src="../img/widgets/stacked-chart.jpg" class="ms-docimage" style="max-width:450px;"/>
 
@@ -311,15 +310,15 @@ Once the settings are done, the next step of the chart widget creation/configura
 
 The user can:
 
-* Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+- Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
-* Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
+- Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
 
 Just below the chart's preview, the user is allowed to set:
 
-* The widget **Title**
+- The widget **Title**
 
-* The widget **Description**
+- The widget **Description**
 
 !!! Note
     None of these fields are mandatory, it is possible to save/add the widget to the map without filling them.
@@ -332,21 +331,21 @@ The **Chart toolbar**, displayed in the right corner of the chart allows the use
 
 <img src="../img/widgets/bar_charts.jpg" class="ms-docimage"/>
 
-* **Download** the chart as a `png` through the <img src="../img/button/download_png.jpg" class="ms-docbutton"/> button.
+- **Download** the chart as a `png` through the <img src="../img/button/download_png.jpg" class="ms-docbutton"/> button.
 
-* **Zoom** the chart through the <img src="../img/button/zoom_chart.jpg" class="ms-docbutton"/> button.
+- **Zoom** the chart through the <img src="../img/button/zoom_chart.jpg" class="ms-docbutton"/> button.
 
-* **Pan** the chart through the <img src="../img/button/pan_chart.jpg" class="ms-docbutton"/> button.
+- **Pan** the chart through the <img src="../img/button/pan_chart.jpg" class="ms-docbutton"/> button.
 
-* **Zoom in** the chart through the <img src="../img/button/zoom_in_chart.jpg" class="ms-docbutton"/> button.
+- **Zoom in** the chart through the <img src="../img/button/zoom_in_chart.jpg" class="ms-docbutton"/> button.
 
-* **Zoom out** the chart through the <img src="../img/button/zoom_out_chart.jpg" class="ms-docbutton"/> button.
+- **Zoom out** the chart through the <img src="../img/button/zoom_out_chart.jpg" class="ms-docbutton"/> button.
 
-* **Autoscale** to autoscale the axes to fit the plotted data automatically through the <img src="../img/button/autoscale_chart.jpg" class="ms-docbutton"/> button.
+- **Autoscale** to autoscale the axes to fit the plotted data automatically through the <img src="../img/button/autoscale_chart.jpg" class="ms-docbutton"/> button.
 
-* **Reset axes** to return the chart to its initial state through the <img src="../img/button/reset_axes_chart.jpg" class="ms-docbutton"/> button.
+- **Reset axes** to return the chart to its initial state through the <img src="../img/button/reset_axes_chart.jpg" class="ms-docbutton"/> button.
 
-* **Toggle Spike Lines** to show dashed lines for X and Y values by hovering the mouse over the chart. This is useful to better see domain values on both axis in case of complex charts. It is possible to activate that option through the <img src="../img/button/toggle_lines_chart.jpg" class="ms-docbutton"/> button.
+- **Toggle Spike Lines** to show dashed lines for X and Y values by hovering the mouse over the chart. This is useful to better see domain values on both axis in case of complex charts. It is possible to activate that option through the <img src="../img/button/toggle_lines_chart.jpg" class="ms-docbutton"/> button.
 
 ### Text
 
@@ -356,17 +355,17 @@ Creating a new text widget the following window opens:
 
 Through the toolbar it is possible to:
 
-* Go back to the widget type selection with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+- Go back to the widget type selection with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
-* Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
+- Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
 
 Here the user can:
 
-* Write the title of the widget
+- Write the title of the widget
 
-* Write the text of the widget
+- Write the text of the widget
 
-* Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
+- Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
 
 !!! note
     From the *Text Editor Toolbar* the user can also add the following:
@@ -392,28 +391,28 @@ Adding a table widget to the map, a panel like the following opens:
 
 From the top toolbar of this panel the user is allowed to:
 
-* Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section.
+- Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section.
 
-* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
+- Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
 
-* Open the [*Query Panel*](filtering-layers.md#query-panel) to configure a **Layer Filter** for the selected layer through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
+- Open the [*Query Panel*](filtering-layers.md#query-panel) to configure a **Layer Filter** for the selected layer through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
 
-* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
+- Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
 
 In the *Table Widget* the user can:
 
-* **Enable/Disable** the layer fields that will be displayed in the widget as columns.
+- **Enable/Disable** the layer fields that will be displayed in the widget as columns.
 
 <video class="ms-docimage" controls><source src="../img/widgets/table-attribute.mp4"/></video>
 
 !!!warning
     At least one field must be selected in order to move to the next configuration step.
 
-* Enter a **Title** for each column to be displayed as the table header in place of the *Name* of the layer field
+- Enter a **Title** for each column to be displayed as the table header in place of the *Name* of the layer field
 
 <video class="ms-docimage" controls><source src="../img/widgets/table-title.mp4"/></video>
 
-* Enter a **Description** for each field to be displayed as a tooltip, visible moving the mouse on the column header.
+- Enter a **Description** for each field to be displayed as a tooltip, visible moving the mouse on the column header.
 
 <video class="ms-docimage" controls><source src="../img/widgets/table-description.mp4"/></video>
 
@@ -438,22 +437,22 @@ Selecting the counter option, the following window opens:
 The top toolbar of this panel is similar to the one present in [Table section](#table). <br>
 Here the user is allowed to:
 
-* Select the attribute to **Use**
+- Select the attribute to **Use**
 
-* Select the **Operation** to perform
+- Select the **Operation** to perform
 
 From the **Trace value formatting** section, the user is allowed to:
 
-* Customize the labels by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`).
+- Customize the labels by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`).
 
-* Configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more).
+- Configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more).
 
 !!! Note
-    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
+    More information about the syntax options allowed for **Format**, see the [D3 formatting syntax documentation](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/).and the allowed expression to be used as **Formula**, see the [Filtrex expression syntax documentation](https://github.com/m93a/filtrex#expressions). in the online documentation.
 
-* Choose the *Color* of the Counter text using the color picker
+- Choose the *Color* of the Counter text using the color picker
 
-* Select the *Font family* (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) of the Counter text
+- Select the *Font family* (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) of the Counter text
 
 !!! warning
     In order to move forward to the next step, only the **Use** and the **Operation** are considered as mandatory fields.
@@ -473,11 +472,11 @@ The **Filter Selector** is an interactive tool designed to help the user explore
 
 Its main features include:
 
-* *Dynamic synchronization with other components*:  once configured, the widget acts as a central hub. Every user selection (e.g. choosing a category from a dropdown menu or entering a numerical value) is instantly propagated to all connected map layers as well as other widgets/tools, such as charts, tables, and counters.
+- *Dynamic synchronization with other components*:  once configured, the widget acts as a central hub. Every user selection (e.g. choosing a category from a dropdown menu or entering a numerical value) is instantly propagated to all connected map layers as well as other widgets/tools, such as charts, tables, and counters.
 
-* *Filter multiple data at once*: it enables simultaneous querying of multiple layers based on their attributes. This simplifies complex queries that would otherwise require more advanced user interaction and complex setups.
+- *Filter multiple data at once*: it enables simultaneous querying of multiple layers based on their attributes. This simplifies complex queries that would otherwise require more advanced user interaction and complex setups.
 
-* *User experience optimized*: this tool reduces the workload for end users, who can analyze specific subsets of data without having to navigate complex layer configuration panels, thus maintaining focus on the map and its metrics.
+- *User experience optimized*: this tool reduces the workload for end users, who can analyze specific subsets of data without having to navigate complex layer configuration panels, thus maintaining focus on the map and its metrics.
 
 Once the user selects a layer from the *Filter Selector* panel, the following options are available to the user:
 
@@ -485,18 +484,18 @@ Once the user selects a layer from the *Filter Selector* panel, the following op
 
 From the filter configuration page, the user can first perform the following operation:
 
-* **Edit** the *Filter Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+- **Edit** the *Filter Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* **Add New Filter** to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+- **Add New Filter** to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* **Delete** the selected filter and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+- **Delete** the selected filter and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
 #### Data
 
 For each filter [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows users to define the data source. In particular, it is possible to choose between two different **Data Source** modes to select the filter data:
 
-* **Features**
-* **User Defined**
+- **Features**
+- **User Defined**
 
 ##### Features
 
@@ -504,19 +503,19 @@ By selecting Features, the user can retrieve information from an underlying feat
 
 <img src="../img/widgets/features-data_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* Filter the Layer by clicking the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
+- Filter the Layer by clicking the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
 
-* Select the number of **Values** choosing between `Unique Attribute` or `Attributes`
+- Select the number of **Values** choosing between `Unique Attribute` or `Attributes`
 
-* Choose the **Values Attribute** from the available *Features* of the selected layer
+- Choose the **Values Attribute** from the available *Features* of the selected layer
 
-* Select which attribute to use for sorting the filter and specify whether the values should be in **Ascending** or **Descending** order
+- Select which attribute to use for sorting the filter and specify whether the values should be in **Ascending** or **Descending** order
 
-* Enter the **Max Number** of features to display
+- Enter the **Max Number** of features to display
 
-* Select the **Filter Composition**, choosing between `Match Any Filter(OR)` or `Match All Filter(AND)`
+- Select the **Filter Composition**, choosing between `Match Any Filter(OR)` or `Match All Filter(AND)`
 
-* Add a **Default Filter** to define a filter that will be applied when no selection is made, using the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
+- Add a **Default Filter** to define a filter that will be applied when no selection is made, using the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
 
 !!!warning
     If the user wants the filter to display nothing when no items are selected, create a Default Filter that always returns no features.
@@ -525,9 +524,9 @@ By selecting Features, the user can retrieve information from an underlying feat
 
 By selecting **User Defined** as the *Data Source*, the user can:
 
-* Create a **List of Filters** to use as items in the dynamic filter widget.
+- Create a **List of Filters** to use as items in the dynamic filter widget.
 
-* Create a **List of Styles** to add a list of available styles ready to be selected for the connected source layer, as explained in the next [Interactions](widgets.md#interactions) section.
+- Create a **List of Styles** to add a list of available styles ready to be selected for the connected source layer, as explained in the next [Interactions](widgets.md#interactions) section.
 
 <img src="../img/widgets/user-define_data_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -539,11 +538,11 @@ In the filter list, the user can:
 
 <img src="../img/widgets/filter-list.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* Rename an item by clicking on its *Label*.
+- Rename an item by clicking on its *Label*.
 
-* Customize the filter using the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button, which opens the [Query Panel](filtering-layers.md#query-panel)
+- Customize the filter using the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button, which opens the [Query Panel](filtering-layers.md#query-panel)
 
-* *Delete* an item using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button.
+- *Delete* an item using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button.
 
 If **Style List** is selected in the *Type* option, the user can add as many styles as needed by clicking the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button.
 
@@ -553,13 +552,13 @@ In the style list, the user can:
 
 <img src="../img/widgets/style-list.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* Rename a style by clicking on its *Label*.
+- Rename a style by clicking on its *Label*.
 
-* Select the layer style from the available options in the dropdown list.
+- Select the layer style from the available options in the dropdown list.
 
 <img src="../img/widgets/styles.jpg" class="ms-docimage" style="max-width:450px;"/>
 
-* *Delete* a style using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button.
+- *Delete* a style using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button.
 
 If the target layer differs from the original source layer, the user must confirm that the style name is compatible (i.e., has the same name) in the other source in order to enforce the operation.
 
@@ -573,21 +572,21 @@ Once the user chooses to enable the **Title**, it can be customized with the fol
 
 <img src="../img/widgets/titleLayout.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* Add a **Label**
+- Add a **Label**
 
-* Add a short **Description** of the filter, to help end users understand what the filter does or how to use it. The description is displayed to end users as a tooltip in the widget
+- Add a short **Description** of the filter, to help end users understand what the filter does or how to use it. The description is displayed to end users as a tooltip in the widget
 
-* Change the filter **Icon** displayed next to the label
+- Change the filter **Icon** displayed next to the label
 
-* Adjust the **Font Size**
+- Adjust the **Font Size**
 
-* Select the **Font Weight** and **Font Style**
+- Select the **Font Weight** and **Font Style**
 
-* Change the title **Color** using the color picker
+- Change the title **Color** using the color picker
 
 From the **Items**, the user can perform the following actions:
 
-* Modify the type of user interaction with the items by selecting from the dropdown menu: `Checkbox`, `Button`, `Dropdown`, `Switch` or `Slider`.
+- Modify the type of user interaction with the items by selecting from the dropdown menu: `Checkbox`, `Button`, `Dropdown`, `Switch` or `Slider`.
 
 !!! Warning
     In order to apply the **Slider**, the *Selection Mode* should be on `Single`.
@@ -597,26 +596,21 @@ From the **Items**, the user can perform the following actions:
 
 <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/variant-items.mp4"/></video>
 
-* Choose the **Selection Mode** for the items: `Single` or `Multiple`.
+- Choose the **Selection Mode** for the items: `Single` or `Multiple`.
 
-* Select the **Direction** of the items: `Vertical` or `Horizontal`.
+- Select the **Direction** of the items: `Vertical` or `Horizontal`.
 
-* Set the **Max Height** of the filter box.
+- Set the **Max Height** of the filter box.
 
-* Enable/Disable the **Show Select All/Clear** option in the filter.
+- Enable/Disable the **Show Select All/Clear** option in the filter.
 
-* Enable/Disable the **Target Message** to indicate whether the filter is connected to layers or widgets.
+- Enable/Disable the **Target Message** to indicate whether the filter is connected to layers or widgets.
 
-* Enable/Disable the **Force Selection** option, ensuring that at least one filter item must be selected.
+- Enable/Disable the **Force Selection** option, ensuring that at least one filter item must be selected.
 
-* Enable/Disable the **Default expanded** option to choose whether the filter is displayed expanded or collapsed when the widget is opened. This option is enabled by default.
+- Enable/Disable the **Default expanded** option to choose whether the filter is displayed expanded or collapsed when the widget is opened. This option is enabled by default.
 
-<img src="../img/widgets/defaultExpanded.jpg" class="ms-docimage"  style="max-width:450px;"/>
-
-* Enable/Disable the **Show connected layers** option to display, in the widget, the list of layers the filter is connected to. This option is enabled by default.
-
-<img src="../img/widgets/connectedLayers.jpg" class="ms-docimage"  style="max-width:450px;"/>
-
+- Enable/Disable the **Show connected layers** option to display, in the widget, the list of layers the filter is connected to. This option is enabled by default.
 
 #### Interactions
 
@@ -638,21 +632,20 @@ From the **Zoom to** section of the *Interactions* tab, the user can configure t
 
 The *Map* becomes available in the *Zoom to* section only once the filter is connected, through the *Apply Filter* section, to at least one layer of that map. Then, the user can enable the zoom by clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button next to the *Map*.
 
-Through the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, the user can also enable the **Auto zoom** option. Depending on this option, the zoom works in two different ways:
+Once the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button is enable for the *Map*, the user can also enable the **Auto zoom** option. Depending on this option, the zoom works in two different ways:
 
-- When *Auto zoom* is **disabled**, the <img src="../img/button/zoomto.jpg" class="ms-docbutton"/> button is displayed in the widget, and the user can click it to zoom the map to the filtered features.
+- When *Auto zoom* is **disabled**, the <img src="../img/button/auto-zoom.jpg" class="ms-docbutton"/> button is displayed in the widget, and the user can click it to zoom the map to the filtered features.
+
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/widgets/auto-zoom-disable.mp4"/></video>
+
 - When *Auto zoom* is **enabled**, the map automatically zooms to the filtered features every time the filter selection changes.
+
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/widgets/auto-zoom-enable.mp4"/></video>
 
 If the filter is connected to more than one layer, the map zooms to an extent that includes the filtered features of all the connected layers. The zoom also takes into account the widgets displayed on the map, so that the filtered features stay visible.
 
 !!! note
     In a dashboard, each map widget is listed separately in the *Zoom to* section, so the zoom can be enabled and configured for each map.
-
-
-
-
-
-
 
 #### Configure Filter Selector Info
 
@@ -662,13 +655,13 @@ Once the desired settings are done, a click on the <img src="../img/button/next.
 
 The user can:
 
-* Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+- Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
-* Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
+- Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
 
-* Add widget **Title**
+- Add widget **Title**
 
-* Add widget **Description**
+- Add widget **Description**
 
 !!! Note
     None of these fields are mandatory, it is possible to save/add the widget to the map without filling them.
@@ -685,19 +678,19 @@ A valid target is either a WMS layer exposing a `time` or `elevation` dimension,
 
 To enable the **Apply Dimension** option in a filter, follow these steps:
 
-* In the [Data](widgets.md#data) tab, set the *Values From* option to **Attributes** and select a `datetime` or `number` attribute in the *Value Attribute* field.
+- In the [Data](widgets.md#data) tab, set the *Values From* option to **Attributes** and select a `datetime` or `number` attribute in the *Value Attribute* field.
 
 <img src="../img/widgets/time-attribute.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* In the [Interactions](widgets.md#interactions) tab, click the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button and select the **Apply Dimension** option.
+- In the [Interactions](widgets.md#interactions) tab, click the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button and select the **Apply Dimension** option.
 
 <img src="../img/widgets/apply-dimension-option.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* Connect the filter to the layer by clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button.
+- Connect the filter to the layer by clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button.
 
 <img src="../img/widgets/connect-dimension.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-* To connect the filter to the map timeline, first click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, then enable the **2-way synchronization**.
+- To connect the filter to the map timeline, first click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, then enable the **2-way synchronization**.
 
 <img src="../img/widgets/connect-timeline.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -712,16 +705,14 @@ Example of the elevation attribute applied to the filter selector slider:
 
 <video class="ms-docimage" controls><source src="../img/widgets/elevation-dimension.mp4"/></video>
 
-
 #### Filtered layers in the TOC
 
-When a layer is filtered through a **Filter Selector** widget, the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon is displayed next to the layer title in the [TOC](toc.md#table-of-contents). 
+When a layer is filtered through a **Filter Selector** widget, the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon is displayed next to the layer title in the [TOC](toc.md#table-of-contents).
 
 From the TOC, the user can:
 
-* Move the mouse over the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to display a tooltip with the name of the widget (or widgets) applying the filter to the layer.
-* Click the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to disable the filter on the layer, and click it again to enable it.
-
+- Move the mouse over the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to display a tooltip with the name of the widget (or widgets) applying the filter to the layer.
+- Click the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to disable the filter on the layer, and click it again to enable it.
 
 ## Manage existing widgets
 
@@ -733,13 +724,13 @@ Through the buttons available on each widget the user can  perform the followin
 
 <img src="../img/widgets/widget-button.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Drag and drop the widget to move it within the map area of the viewer and **resize** it through the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
+- Drag and drop the widget to move it within the map area of the viewer and **resize** it through the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/ded-widgets.mp4"/></video>
 
-* **Pin** the position and the dimension of the widget through the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
+- **Pin** the position and the dimension of the widget through the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
 
-* **Collapse** the widget through the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
+- **Collapse** the widget through the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
 
 <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/collapse-widgets.mp4"/></video>
 
@@ -749,18 +740,16 @@ Through the buttons available on each widget the user can  perform the followin
 !!!warning
     When both **[Timeline](timeline.md#timeline)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
-* Make the widget **Full screen** through the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
+!!!note
+    When a [Filter Selector](widgets.md#filter-selector) widget applies a filter to connected layers or widgets, a green dot <img src="../img/button/activatedWidget.jpg" class="ms-docbutton"/>, is displayed on the widget's button. This allows users to quickly identify the presence of active filters, even when the widget is collapsed.
+
+- Make the widget **Full screen** through the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/maximize-widgets.mp4"/></video>
 
-* Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
+- Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
-
-When a *Filter Selector* widget is currently applying a filter to the connected layers or widgets, a green dot is displayed on its button <img src="../img/button/activatedWidget.jpg" class="ms-docbutton"/>, so the user can quickly identify the active filters, even if the widget is collapsed.
-
-!!! Note
-    The green dot is displayed when at least one filter of the widget is connected and has a selected value. It disappears when the filter selection is cleared or the filter is disconnected.
 
 ### Access widgets menu
 
@@ -770,9 +759,9 @@ Once a widget is added to the map, it is possible to access its **Menu** through
 
 From here the user can:
 
-* **Edit** the widget
+- **Edit** the widget
 
-* **Delete** the widget
+- **Delete** the widget
 
 Only for *Charts*, the menu is like the following:
 
@@ -780,8 +769,8 @@ Only for *Charts*, the menu is like the following:
 
 In particular, the user can also:
 
-* **Show chart data** in tabular representation
+- **Show chart data** in tabular representation
 
-* **Download data** in .csv format
+- **Download data** in .csv format
 
-* **Export Image** in .jpg format
+- **Export Image** in .jpg format
