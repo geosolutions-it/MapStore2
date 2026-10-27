@@ -40,7 +40,6 @@ In this page it is possible to:
 
 * View or edit the **Name** of the layer.
 
-The *Name* option is supported for all the following layer types: *ArcGIS*, *WFS* and *WMS*.
 
 * Edit the layer's **Description**
 
