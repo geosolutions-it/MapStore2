@@ -38,7 +38,10 @@ In this page it is possible to:
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/lacalize-layer-title.mp4"/></video>
 
-* Take a look at the **Name** of the layer
+* View or edit the **Name** of the layer.
+
+!!! note
+The *Name* option is supported for all the following layer types: *ArcGIS*, *WFS* and *WMS*.
 
 * Edit the layer's **Description**
 
