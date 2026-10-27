@@ -55,7 +55,7 @@ In particular the user can configure the context map using the following MapStor
 
 * [Export](import.md#import-files), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to export the current map configuration.
 
-* [Settings](mapstore-toolbars.md#side-toolbar), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to view the settings of the map.
+* [Settings](mapstore-toolbars.md#side-toolbar), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to view the [Settings](mapstore-toolbars.md#side-toolbar) of the map.
 
 * [Table of Contents](toc.md#table-of-contents), through the <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> button where the user can use all the available functionalities to manage context layers.
 
