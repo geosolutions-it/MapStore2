@@ -231,7 +231,7 @@ class InlineDateTimeSelector extends React.Component {
                                 value={this.state.values[el.name] ?? (el.format && el.format(el.value) || el.value)}
                                 aria-invalid={this.state.invalid}
                                 onChange={event => this.onChange(el.name, event.target.value)}
-                                onBlur={this.commit}
+                                onBlur={this.onApply}
                                 onKeyDown={this.onKeyDown}/>
                             {this.props.showButtons && <Button
                                 bsSize="xs"
