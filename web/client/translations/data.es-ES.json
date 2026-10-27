@@ -3303,6 +3303,10 @@
         "tooltip": "Haga clic aquí para ampliarlo de nuevo."
       },
       "errors": {
+        "invalidDateTitle": "Fecha u hora no válida",
+        "invalidDateMessage": "Introduzca una fecha y una hora completas y válidas.",
+        "invalidStartDate": "La fecha de inicio debe ser anterior a la fecha de fin.",
+        "invalidEndDate": "La fecha de fin debe ser posterior a la fecha de inicio.",
         "multidim_error_title": "El servicio de backend no responde",
         "multidim_error_message": "Los servicios requeridos para soporte multidinensional no están respondiendo. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
       }
