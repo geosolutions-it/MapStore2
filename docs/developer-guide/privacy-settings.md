@@ -1,6 +1,6 @@
 # Privacy and Consent Configuration
 
-The `Cookie` plugin supports shared privacy settings and an optional-integration lifecycle. Vanilla enables the privacy panel on the home page, map viewers, Dashboards, GeoStories and embeds. Custom applications must include the plugin in each relevant plugin registry and route configuration.
+The `Cookie` plugin supports shared privacy settings and an optional-integration lifecycle. Vanilla enables the privacy panel on the home page, Maps, Dashboards, GeoStories and embedded resources. Custom applications must include the plugin in each relevant plugin registry and route configuration.
 
 ## Default configuration
 
@@ -41,7 +41,7 @@ Supported optional IDs are `functional`, `statistics` and `marketing`. Configure
 }
 ```
 
-This object belongs inside `privacy`. Categories are off before a valid choice. Adding a category does not automatically control a plugin, script, iframe or service: its implementation must use the consent lifecycle, with `registerConsentIntegration` in MapStore code or with the `SET_PRIVACY_CHOICE` action in an extension (see [Optional integrations in an extension](#optional-integrations-in-an-extension)).
+This object belongs to `privacy`. Categories are off before a valid choice. Adding a category does not automatically control a plugin, script, iframe or service: its implementation must use the consent lifecycle, with `registerConsentIntegration` in MapStore code or with the `SET_PRIVACY_CHOICE` action in an extension (see [Optional integrations in an extension](#optional-integrations-in-an-extension)).
 
 ## Register an optional integration
 
@@ -85,7 +85,7 @@ Update `policyVersion` when the purposes, integrations or material notice condit
 
 ## Policy pages
 
-The panel links up to three pages: Cookie Policy, Privacy Policy and Terms of Use. Each installation provides its own pages, because their content depends on who operates it and on the services it uses.
+The panel links up to three pages: Cookie Policy, Privacy Policy and Terms of Use. Each installation must provide its own pages, because their content depends on who operates it and on the services it uses.
 
 The panel takes the links from the first of these sources that configures at least one page:
 

@@ -1,6 +1,6 @@
 # Privacy Settings
 
-**Privacy settings** are available from the footer on the MapStore home page, map viewers, Dashboards, GeoStories and embedded resources. On routes without a native footer, MapStore provides a bottom bar with the same entry point.
+**Privacy settings** are available from the footer on the MapStore home page, Maps, Dashboards, GeoStories and embedded resources. On routes without a native footer, MapStore provides a bottom bar with the same entry point.
 
 ## First visit
 
