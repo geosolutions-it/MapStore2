@@ -3307,6 +3307,10 @@
         "tooltip": "Clicca qui per espanderla di nuovo"
       },
       "errors": {
+        "invalidDateTitle": "Data o ora non valida",
+        "invalidDateMessage": "Inserisci una data e un'ora complete e valide.",
+        "invalidStartDate": "La data di inizio deve precedere la data di fine.",
+        "invalidEndDate": "La data di fine deve essere successiva alla data di inizio.",
         "multidim_error_title": "Il servizio di backend non risponde",
         "multidim_error_message": "I servizi richiesti per il supporto multidimensionale non rispondono. Si prega di riprovare più tardi o contattare l'amministratore."
       }
@@ -5113,7 +5117,7 @@
       "direction": "Direzione",
       "reset": "Ripristina",
       "run": "Esegui",
-      "buckets": "Secchi",
+      "buckets": "Intervalli",
       "exportAsGeoJSON": "Esporta come GeoJSON",
       "addAsLayer": "Aggiungi come layer",
       "deleteResult": "Elimina risultato",
@@ -5126,8 +5130,8 @@
         "infoLayerAdded": "Layer isochrone aggiunto"
       },
       "colors": "Colori",
-      "rampTooltip": "Scegli la palette di colori per i secchi",
-      "colorTooltip": "Scegli il colore per il secchio",
+      "rampTooltip": "Scegli la palette di colori per gli intervalli",
+      "colorTooltip": "Scegli il colore per l'intervallo",
       "confirmDialog": {
         "title": "Chiudi il pannello Isochrone",
         "description": "Hai dati Isochrone esistenti. Chiudere il pannello cancellerà tutti i dati dell'esecuzione corrente. Sei sicuro di voler continuare?",

@@ -3977,6 +3977,30 @@ describe('Openlayers layer', () => {
         expect(loadCount).toBe(1);
     });
 
+    it('does not track feature load events for vector layers', () => {
+        const options = {
+            id: 'vector-load-events',
+            type: 'vector',
+            features: [],
+            visibility: false
+        };
+        let loadingCount = 0;
+        let loadCount = 0;
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options}
+                onLayerLoading={() => { loadingCount++; }}
+                onLayerLoad={() => { loadCount++; }}
+                map={map}/>, document.getElementById("container"));
+        const source = layer.layer.getSource();
+        source.dispatchEvent('featuresloadstart');
+        source.dispatchEvent('featuresloadend');
+        source.dispatchEvent('featuresloadstart');
+        source.dispatchEvent('featuresloaderror');
+        expect(loadingCount).toBe(0);
+        expect(loadCount).toBe(0);
+    });
+
     describe('COG', () => {
         const cogOptions = {
             id: 'cog-layer',
