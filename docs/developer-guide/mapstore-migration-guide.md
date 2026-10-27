@@ -65,7 +65,7 @@ To complete the migration:
 
 Other changes:
 
-- The Social tab of the `Share` plugin is deprecated and disabled by default, and it no longer shows share counters. To show it again, set `"socialPanel": true` in the `cfg` of the `Share` plugin. Link and embed sharing retain their existing resource permissions.
+- The Social tab of the `Share` plugin is deprecated and disabled by default, and it no longer shows share counters. It will be removed in the 2027.01 series. To show it again, set `"socialPanel": true` in the `cfg` of the `Share` plugin, and update the Cookie Policy of the installation accordingly. Link and embed sharing retain their existing resource permissions.
 - The old cookie notice (Accept, More details and Leave) is removed, with its `externalCookieUrl` and `declineUrl` options and the `translations/fragments/cookie` pages. Remove these options from custom configurations. A `localConfig.json` without the `privacy` section shows no notice: copy the `privacy` section of the standard `localConfig.json` to show the privacy panel.
 - The default theme includes the Noto Sans font, so the pages no longer download it from Google Fonts. Projects should remove the Google Fonts links from their HTML templates and replace the Bowser script with the inline Internet Explorer check of the standard templates. Custom themes that do not import the default theme must import `themes/default/fonts.less` to keep the same font.
 

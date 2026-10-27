@@ -14,6 +14,8 @@ From the *Share panel* the user is allowed to share a resource in different ways
 
 * With a **Direct Link**
 
+* Through a **Social Network** (deprecated, disabled by default)
+
 * Through a **Permalink** to shares current user session (only available from the [Side Toolbar](mapstore-toolbars.md#side-toolbar))
 
 * With **Embedded code** or **APIs** (only available for *maps*)
@@ -25,6 +27,15 @@ As soon as the *Share panel* opens, the **Link** section is the one visible by d
 <img src="../img/share/share_window.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 Here, the user can copy the resource **URL link** or share it through the **QR code**.
+
+## Social
+
+The **Social** section allows the user to share the resource on the most common social networks like **Facebook**, **Twitter** and **LinkedIn** simply by clicking on the social icon.
+
+<img src="../img/share/social.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+!!! Warning
+    The **Social** section is deprecated and will be removed in the 2027.01 series. It is disabled by default because sharing on a social network sends the resource link to that service, which can set its own cookies. An administrator who enables it with the `socialPanel` option of the `Share` plugin must update the Cookie Policy of the installation accordingly.
 
 ## Permalink
 
