@@ -8,8 +8,11 @@
 package it.geosolutions.mapstore;
 
 import it.geosolutions.mapstore.controllers.rest.config.UploadPluginController;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
@@ -20,8 +23,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -34,10 +43,23 @@ import static org.junit.Assert.fail;
 public class UploadPluginControllerTest {
     UploadPluginController controller;
 
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    File servletTempDir;
+
     @Before
     public void setUp() {
         controller = new UploadPluginController();
         controller.setPluginsConfigAsPatch(false);
+    }
+
+    private ServletContext mockContextWithTempDir() throws IOException {
+        servletTempDir = temporaryFolder.newFolder();
+        ServletContext context = Mockito.mock(ServletContext.class);
+        Mockito.when(context.getAttribute(ServletContext.TEMPDIR)).thenReturn(servletTempDir);
+        controller.setContext(context);
+        return context;
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -48,6 +70,105 @@ public class UploadPluginControllerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testUninstallPluginWithBackslashInName() throws IOException {
         controller.uninstallPlugin("some\\invalidplugin");
+    }
+
+    @Test
+    public void testUploadRejectsDotPluginName() throws IOException {
+        assertUploadRejectsSpecialPluginName(".");
+    }
+
+    @Test
+    public void testUploadRejectsDotDotPluginName() throws IOException {
+        assertUploadRejectsSpecialPluginName("..");
+    }
+
+    private void assertUploadRejectsSpecialPluginName(String pluginName) throws IOException {
+        mockContextWithTempDir();
+        File dataDir = temporaryFolder.newFolder();
+        controller.setDataDir(dataDir.getAbsolutePath());
+        Map<String, byte[]> assets = new HashMap<>();
+        assets.put("assets/marker.txt", "canary".getBytes(StandardCharsets.UTF_8));
+
+        try {
+            controller.uploadPlugin(makePluginZip(pluginName, "index.js", assets));
+            fail("Special plugin name should be rejected: " + pluginName);
+        } catch (IllegalArgumentException expected) {
+            assertFalse(new File(dataDir, "assets/marker.txt").exists());
+        }
+    }
+
+    @Test
+    public void testUploadRejectsServerSideAsset() throws IOException {
+        mockContextWithTempDir();
+        File dataDir = temporaryFolder.newFolder();
+        controller.setDataDir(dataDir.getAbsolutePath());
+        Map<String, byte[]> assets = new HashMap<>();
+        assets.put("assets/marker.JSP", "canary".getBytes(StandardCharsets.UTF_8));
+
+        try {
+            controller.uploadPlugin(makePluginZip("Canary", "index.js", assets));
+            fail("Server-side asset should be rejected");
+        } catch (SecurityException expected) {
+            assertFalse(new File(dataDir, "extensions/Canary/assets/marker.JSP").exists());
+            assertFalse(new File(dataDir, "configs/pluginsConfig.json").exists());
+        }
+    }
+
+    @Test
+    public void testUploadRejectsServerSideAssetWithoutDataDir() throws IOException {
+        File webRoot = temporaryFolder.newFolder();
+        ServletContext context = mockContextWithTempDir();
+        Mockito.when(context.getRealPath(Mockito.anyString())).thenAnswer(
+                (Answer<String>) invocation -> new File(webRoot, (String) invocation.getArguments()[0]).getAbsolutePath());
+        Map<String, byte[]> assets = new HashMap<>();
+        assets.put("assets/marker.jsp", "canary".getBytes(StandardCharsets.UTF_8));
+
+        try {
+            controller.uploadPlugin(makePluginZip("Canary", "index.js", assets));
+            fail("Server-side asset should be rejected outside a data directory");
+        } catch (SecurityException expected) {
+            assertFalse(new File(webRoot, "extensions/Canary/assets/marker.jsp").exists());
+            assertFalse(new File(webRoot, "configs/pluginsConfig.json").exists());
+        }
+    }
+
+    @Test
+    public void testRejectedUploadDeletesTemporaryFiles() throws IOException {
+        mockContextWithTempDir();
+        controller.setDataDir(temporaryFolder.newFolder().getAbsolutePath());
+        Set<String> before = temporaryUploadFiles();
+        Map<String, byte[]> assets = new HashMap<>();
+        assets.put("assets/marker.jsp", "canary".getBytes(StandardCharsets.UTF_8));
+
+        try {
+            controller.uploadPlugin(makePluginZip("Canary", "index.js", assets));
+            fail("Server-side asset should be rejected");
+        } catch (SecurityException expected) {
+            assertEquals(before, temporaryUploadFiles());
+        }
+    }
+
+    @Test
+    public void testFailedReadDeletesTemporaryFiles() throws IOException {
+        mockContextWithTempDir();
+        controller.setDataDir(temporaryFolder.newFolder().getAbsolutePath());
+        Set<String> before = temporaryUploadFiles();
+        byte[] zip = IOUtils.toByteArray(makePluginZip("Canary", "index.js", null));
+
+        try {
+            // cut inside the compressed data of the first entry (index.js)
+            controller.uploadPlugin(new ByteArrayInputStream(Arrays.copyOf(zip, 42)));
+            fail("Truncated upload should fail");
+        } catch (IOException expected) {
+            assertEquals(before, temporaryUploadFiles());
+        }
+    }
+
+    private Set<String> temporaryUploadFiles() throws IOException {
+        try (Stream<Path> files = Files.list(servletTempDir.toPath())) {
+            return files.map(path -> path.getFileName().toString())
+                    .collect(Collectors.toSet());
+        }
     }
 
     @Test

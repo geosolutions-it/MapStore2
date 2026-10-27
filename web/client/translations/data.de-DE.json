@@ -3346,6 +3346,10 @@
         "tooltip": "Klicken Sie hier, um es erneut zu erweitern"
       },
       "errors": {
+        "invalidDateTitle": "Ungültiges Datum oder ungültige Uhrzeit",
+        "invalidDateMessage": "Geben Sie ein vollständiges, gültiges Datum und eine vollständige, gültige Uhrzeit ein.",
+        "invalidStartDate": "Das Startdatum muss vor dem Enddatum liegen.",
+        "invalidEndDate": "Das Enddatum muss nach dem Startdatum liegen.",
         "multidim_error_title": "Der Backend-Service reagiert nicht",
         "multidim_error_message": "Die erforderlichen Dienste für die mehrdimensionale Unterstützung reagieren nicht. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator."
       }

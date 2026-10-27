@@ -291,8 +291,26 @@ const Catalog = ({
             setLoadingLayers(allowed.map(record => record.identifier));
             return processRecords(allowed, buildLayerOptions(), locales)
                 .then(({ layers = [], groups = [] } = {}) => {
-                    groups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
-                    layers.filter(Boolean).forEach(layer => onLayerAdd(layer, { zoomToLayer }));
+                    // Create outer groups first, then descendants in layer stacking order.
+                    const isNested = _group => groups.some(parent => parent.options?.id === _group.parent);
+                    groups.filter(_group => !isNested(_group))
+                        .forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
+                    const pendingGroups = groups.filter(isNested);
+                    const addPendingGroup = groupId => {
+                        const index = pendingGroups.findIndex(_group => _group.options?.id === groupId);
+                        if (index === -1) {
+                            return;
+                        }
+                        const [_group] = pendingGroups.splice(index, 1);
+                        addPendingGroup(_group.parent);
+                        onAddGroup(_group.title, _group.parent, _group.options, true);
+                    };
+                    layers.filter(Boolean).forEach(layer => {
+                        addPendingGroup(layer.group);
+                        onLayerAdd(layer, { zoomToLayer });
+                    });
+                    // Preserve groups that have no layers.
+                    pendingGroups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
                     if (clearSelected) {
                         clearSelection();
                     }
