@@ -101,7 +101,7 @@ The panel takes the links from the first of these sources that configures at lea
 | `privacy` | Privacy Policy: personal data processed by the operator, purposes, legal bases, recipients, retention and rights | When the installation processes personal data, for example user accounts, saved content or server logs. Usually it is needed. |
 | `terms` | Terms of Use: conditions of the service | Optional. Leave it out when the installation has no specific conditions. |
 
-Every link is optional: the panel shows only the links that are configured, and a missing key does not break the panel. A page can also be a single document that covers more topics, for example one page for both the Cookie Policy and the Privacy Policy: link the same url, or link it only once. The content of the pages is the responsibility of the operator of the installation; the templates are a starting point, not legal advice.
+Every link is optional: the panel shows only the links that are configured, and a missing key does not break the panel. A page can also be a single document that covers more topics, for example one page for both the Cookie Policy and the Privacy Policy: link the same url, or link it only once. The content of the pages is the responsibility of the operator of the installation; **the templates are a starting point, not legal advice**.
 
 ### Configure the links
 
@@ -130,7 +130,7 @@ Each link is a url, relative to the MapStore application or absolute. It can be 
 
 ### Privacy settings extension
 
-The [mapstore-privacy-settings-extension](https://github.com/geosolutions-it/mapstore-privacy-settings-extension) repository is a template of the extension. Create a repository from it for each operator: it contains the pages to complete, a `privacy.config.json` with the privacy configuration and a build that checks them and creates the zip to upload. Its pages can also be copied into the assets of a project.
+The [mapstore-privacy-settings-extension](https://github.com/geosolutions-it/mapstore-privacy-settings-extension) repository is an extension template for privacy settings. Create a repository from it for each operator: it contains the pages to complete a `privacy.config.json` with the privacy configuration and a build that checks them and creates the zip to upload. Its pages can also be copied into the assets of a project.
 
 The pages of the template are in English, in `assets/en-US`, with the MapStore logo in `assets/logo.png`:
 
@@ -153,7 +153,7 @@ GeoSolutions OSM Bright is distinct from `tile.openstreetmap.org`. The observed 
 
 ### Configuration from an extension
 
-MapStore loads every installed extension when the application starts, before the first render. An extension can set the privacy configuration by dispatching, at that moment:
+MapStore loads every installed extension when the application starts, before the first render. An extension can set the privacy configuration by dispatching at that moment:
 
 ```javascript
 setControlProperty('privacy', 'defaults', {
