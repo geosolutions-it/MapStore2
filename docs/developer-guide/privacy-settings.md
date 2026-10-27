@@ -236,14 +236,6 @@ In a MapStore project, add the folder of the project to `translationsPath` in th
 
 In both cases, languages without a file keep the MapStore texts.
 
-## Sharing and build changes
-
-The standard Share panel no longer mounts Social sharing or automatic counters. Link copy, QR code, permalink and embed options remain subject to their existing configuration and resource permissions. A legacy Social-tab selection falls back to Link; custom clients relying on Social must adapt.
-
-The pages do not load external resources before the bundle: the Google Fonts requests are removed and the browser check is an inline script that redirects Internet Explorer to `unsupportedBrowser.html`, without loading Bowser from unpkg. Other browsers are not blocked any more by name, so Opera, Samsung Internet, Vivaldi and other Chromium browsers can open MapStore.
-
-`dxf-parser` is loaded only when a DXF file is read. On load it saves its log level in the browser (`loglevel` in localStorage, or a cookie): MapStore restores the previous browser storage right after loading. Docker and Helm files do not change for this feature.
-
 ## Verification
 
 Run `npm test`, `npm run i18n`, `npm run jsdoc:build` and `npm run fe:build` using the repository's supported environment. Tests cover consent activation and teardown, migration, expiry, storage failures, sharing and embedded plugin registration.
