@@ -83,7 +83,7 @@ class InlineDateTimeSelector extends React.Component {
         this.setState({ invalid: true });
     };
 
-    commit = () => {
+    onApply = () => {
         if (Object.keys(this.state.values).length === 0) {
             return;
         }
