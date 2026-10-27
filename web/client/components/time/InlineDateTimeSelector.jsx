@@ -116,7 +116,7 @@ class InlineDateTimeSelector extends React.Component {
     onKeyDown = event => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            this.commit();
+            this.onApply();
         } else if (event.key === 'Escape') {
             event.preventDefault();
             this.reset();
