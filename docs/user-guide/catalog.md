@@ -243,14 +243,13 @@ Enabling that option, all layers added to the map from this catalog source will 
 * *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser.
 
 * Server Type: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other. Depending on the selected server type, the following **Feature Info** options are available for the [Identify](identify.md) requests (GetFeatureInfo) performed on layers added from this source:
-    * Feature count (available for both `Geoserver` and `No Vendor`): sets the maximum number of features returned by the server for each identify request (default `10`)
+* Feature count (available for both `Geoserver` and `No Vendor`): sets the maximum number of features returned by the server for each identify request (default `10`)
 
-    * Buffer (px) (available only for `Geoserver`): sets the search radius, in pixels, around the clicked point within which features are identified. It uses the GeoServer `BUFFER` vendor parameter, so it is useful to make it easier to select points and lines on the map
+* Buffer (px) (available only for `Geoserver`): sets the search radius, in pixels, around the clicked point within which features are identified. It uses the GeoServer `BUFFER` vendor parameter, so it is useful to make it easier to select points and lines on the map
 
-<img src="../img/catalog/AdvancedsettingsNoVendor.jpg" class="ms-docimage"  style="max-width:500px;" />   
+<img src="../img/catalog/AdvancedsettingsNoVendor.jpg" class="ms-docimage"  style="max-width:500px;" />
 
 <img src="../img/catalog/AdvancedsettingsGeoserver.jpg" class="ms-docimage"  style="max-width:500px;" />
-
 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
