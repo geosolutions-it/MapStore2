@@ -66,19 +66,26 @@ describe("The SharePanel component", () => {
         codeEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code");
         expect(codeEmbed.length).toBe(2);
     });
+    it('hides the Social tab by default and falls back to direct link for a social selection', () => {
+        const panel = ReactDOM.render(<SharePanel selectedTab="social" isVisible/>, document.getElementById('container'));
+        const tabTitles = [...document.querySelectorAll('#sharePanel-tabs li')].map(li => li.textContent);
+        expect(tabTitles).toEqual(['share.direct', 'share.code']);
+        expect(panel.state.eventKey).toBe(1);
+        expect(document.querySelector('iframe')).toNotExist();
+    });
     it('test hide embedPanel option remove the panel', () => {
         let panel = ReactDOM.render(<SharePanel showAPI={false} getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
-        const thirdTab = document.getElementById('sharePanel-tabs-tab-3');
-        ReactTestUtils.Simulate.click(thirdTab);
-        expect(panel.state.eventKey).toBe(3);
+        const embedTab = document.getElementById('sharePanel-tabs-tab-2');
+        ReactTestUtils.Simulate.click(embedTab);
+        expect(panel.state.eventKey).toBe(2);
         let liTags = document.querySelectorAll('li');
 
-        expect(liTags.length).toBe(3);
+        expect(liTags.length).toBe(2);
         expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
 
         panel = ReactDOM.render(<SharePanel embedPanel={false} showAPI={false} getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
-        expect(document.getElementById('sharePanel-tabs-tab-3')).toNotExist();
-        expect(panel.state.eventKey).toBe(3);
+        expect(document.getElementById('sharePanel-tabs-tab-2')).toNotExist();
+        expect(panel.state.eventKey).toBe(2);
         liTags = document.querySelectorAll('li');
         expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.directLinkTitle</span>");
 
@@ -103,16 +110,16 @@ describe("The SharePanel component", () => {
         };
         let panel = ReactDOM.render(<SharePanel showAPI={false} advancedSettings={advancedSettings} getCount={() => 2} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
         let liTags = document.querySelectorAll('li');
-        expect(liTags.length).toBe(3);
+        expect(liTags.length).toBe(2);
         expect(panel.state.eventKey).toBe(1);
         expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.directLinkTitle</span>");
 
         let advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
         expect(advancedSettingsPanel).toBeTruthy();
 
-        const embedTab = document.getElementById('sharePanel-tabs-tab-3');
+        const embedTab = document.getElementById('sharePanel-tabs-tab-2');
         ReactTestUtils.Simulate.click(embedTab);
-        expect(panel.state.eventKey).toBe(3);
+        expect(panel.state.eventKey).toBe(2);
         expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
         advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
         expect(advancedSettingsPanel).toBeFalsy();
@@ -164,13 +171,13 @@ describe("The SharePanel component", () => {
         const panel = ReactDOM.render(
             <SharePanel settings={{markerEnabled: false}} items={[{target: "tabs", title: <div>test</div>, component: () => <div id="permalink">Permalink</div>}]} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
         expect(panel).toBeTruthy();
-        const thirdTab = document.getElementById('sharePanel-tabs-tab-3');
-        ReactTestUtils.Simulate.click(thirdTab);
-        expect(panel.state.eventKey).toBe(3);
+        const secondTab = document.getElementById('sharePanel-tabs-tab-2');
+        ReactTestUtils.Simulate.click(secondTab);
+        expect(panel.state.eventKey).toBe(2);
         expect(document.getElementById('permalink')).toBeTruthy();
     });
-    it('test hide social option removes the social panel', () => {
-        let panel = ReactDOM.render(<SharePanel showAPI={false} socialPanel={false} getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
+    it('shows the link and embed tabs, without a social tab', () => {
+        let panel = ReactDOM.render(<SharePanel showAPI={false} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
         let liTags = document.querySelectorAll('li');
         expect(liTags.length).toBe(2);
         const secondTab = document.getElementById('sharePanel-tabs-tab-2');
@@ -178,6 +185,14 @@ describe("The SharePanel component", () => {
         ReactTestUtils.Simulate.click(secondTab);
         expect(panel.state.eventKey).toBe(2);
         expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
+    });
+    it('shows the Social tab with socialPanel and opens it for a social selection', () => {
+        const panel = ReactDOM.render(<SharePanel socialPanel selectedTab="social" showAPI={false} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));
+        const tabTitles = [...document.querySelectorAll('#sharePanel-tabs li')].map(li => li.textContent);
+        expect(tabTitles).toEqual(['share.direct', 'share.social', 'share.code']);
+        expect(panel.state.eventKey).toBe(2);
+        expect(document.querySelector('.social-links .share-facebook')).toBeTruthy();
+        expect(document.querySelector('.share-facebook-count')).toBeFalsy();
     });
     it('test custom panel title configuration', () => {
         const panel = ReactDOM.render(<SharePanel title="Custom Share Title" getCount={() => 0} shareUrl="www.geosolutionsgroup.com" isVisible />, document.getElementById("container"));

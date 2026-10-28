@@ -166,6 +166,7 @@
                                         <include>**/*.json</include>
                                         <include>**/img/*</include>
                                         <include>product/assets/symbols/*</include>
+                                        <include>product/assets/privacy/*</include>
                                         <include>**/*.less</include>
                                     </includes>
                                     <excludes>
