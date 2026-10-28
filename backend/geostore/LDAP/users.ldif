@@ -1,0 +1,19 @@
+# Users Definition
+dn: uid=user,ou=people,dc=geosolutions,dc=it
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: user
+givenName: user
+mail: user@geo-solutions.it
+sn: user
+uid: user
+userPassword: user
+
+# Groups and Members
+dn: cn=user,ou=groups,dc=geosolutions,dc=it
+objectClass: top
+objectClass: groupOfNames
+cn: user
+member: uid=user,ou=people,dc=geosolutions,dc=it

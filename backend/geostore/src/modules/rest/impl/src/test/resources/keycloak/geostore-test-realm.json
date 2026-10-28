@@ -1,0 +1,115 @@
+{
+  "realm": "geostore-test",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": false,
+  "roles": {
+    "realm": [
+      {
+        "name": "USER",
+        "composite": false,
+        "clientRole": false
+      },
+      {
+        "name": "ADMIN",
+        "composite": false,
+        "clientRole": false
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "analysts",
+      "path": "/analysts"
+    },
+    {
+      "name": "editors",
+      "path": "/editors"
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "geostore-client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "geostore-test-secret",
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "fullScopeAllowed": true,
+      "protocolMappers": [
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "group-membership",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "full.path": "false",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "groups"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "enabled": true,
+      "email": "testuser@geostore.test",
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "testuser123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USER"],
+      "groups": ["/analysts"]
+    },
+    {
+      "username": "testadmin",
+      "enabled": true,
+      "email": "testadmin@geostore.test",
+      "firstName": "Test",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "testadmin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN"],
+      "groups": ["/analysts", "/editors"]
+    }
+  ]
+}

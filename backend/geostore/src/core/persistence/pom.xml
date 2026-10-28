@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) 2007 - 2010 GeoSolutions S.A.S.
+ http://www.geo-solutions.it
+
+ GPLv3 + Classpath exception
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses />.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>it.geosolutions.geostore</groupId>
+        <artifactId>geostore-core</artifactId>
+        <version>2.8-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>geostore-persistence</artifactId>
+    <packaging>jar</packaging>
+    <name>GeoStore - Core - Persistence</name>
+
+    <dependencies>
+
+        <!-- ================================================================-->
+        <!-- GeoStore -->
+        <!-- ================================================================-->
+        <dependency>
+            <groupId>it.geosolutions.geostore</groupId>
+            <artifactId>geostore-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.geosolutions.geostore</groupId>
+            <artifactId>geostore-security</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.persistence</groupId>
+          <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+
+
+        <!-- ================================================================-->
+        <!-- APACHE COMMONS -->
+        <!-- ================================================================-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>
+
+        <!-- ================================================================-->
+        <!-- 4J UTILS -->
+        <!-- ================================================================-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
+        <!-- ================================================================-->
+        <!-- Spring -->
+        <!-- ================================================================-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+
+        <!-- HIBERNATE-GENERIC-DAO -->
+        <dependency>
+            <groupId>com.googlecode.genericdao</groupId>
+            <artifactId>dao-hibernate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.genericdao</groupId>
+            <artifactId>search-jpa-hibernate</artifactId>
+        </dependency>
+
+        <!-- H2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+        <!-- HIBERNATE -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm-attrs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- CGLIB -->
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+        </dependency>
+
+        <!-- JUnit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- if you want to create a new profile for support, another DB create a profile including -->
+    <!-- JDBC dependency and right exclusion/inclusion rule for a load the right override file -->
+    <!-- Profile for supporting Postgres -->
+    <profiles>
+        <profile>
+            <id>postgres</id>
+            <dependencies>
+                <!-- POSTGRESQL database driver -->
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>oracle</id>
+            <dependencies>
+                <!-- ORACLE database driver -->
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>ojdbc6</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>hibernate3-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>hbm2ddl</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <components>
+                        <component>
+                            <name>hbm2ddl</name>
+                            <implementation>annotationconfiguration</implementation>
+                            <outputDirectory>target/classes</outputDirectory>
+                        </component>
+                        <component>
+                            <name>hbmdoc</name>
+                        </component>
+                    </components>
+                    <componentProperties>
+                        <configurationfile>/src/test/resources/hibernate.cfg.xml</configurationfile>
+                        <outputfilename>geostore.ddl</outputfilename>
+
+                        <drop>false</drop> <!-- -->
+                        <create>true</create>
+                        <export>false</export>
+                        <format>true</format>
+                    </componentProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>

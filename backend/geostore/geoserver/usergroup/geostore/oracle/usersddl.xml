@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>DDL statements for user database using GeoStore Database</comment>
+	<entry key="check.table">user_props</entry>
+	<entry key="users.create">
+		create table gs_user (
+			id number(19) not null constraint gs_user_pk primary key, 
+			name varchar2(20) not null, 
+			user_password varchar2(255), 
+			user_role varchar2(255) not null, group_id number(19), 
+			enabled char(1) default 'Y' not null
+		)
+	</entry>
+	<entry key="user.indexcreate1">
+		create unique index gs_user_name_uindex on gs_user (name)
+	</entry>
+	<entry key="userprops.create">
+		create table gs_user_attribute
+		(
+			id      number(19) constraint gs_user_attribute_pk primary key,
+			name    varchar2(255)      not null,
+			string  varchar2(255 char) not null,
+			user_id number(19)
+		)
+	</entry>
+	<entry key="userprops.uindexcreate1">
+		create unique index gs_user_attribute_name_user_id_uindex on gs_user_attribute (name, user_id);
+	</entry>
+	<entry key="groups.create">
+		create table gs_usergroup (
+			id number(19,0) constraint gs_usergroup_pk
+					primary key,
+			group_name varchar2(20 char) not null,
+			description varchar2(200 char),
+			enabled char(1) DEFAULT 'Y' NOT NULL
+		)
+	</entry>
+	<entry key="groups.uindexcreate1">
+		create unique index gs_usergroup_group_name_uindex on gs_usergroup (group_name);
+	</entry>
+	<entry key="groupmembers.create">
+		create table gs_usergroup_members
+		(
+			user_id  number(19),
+			group_id number(19),
+			constraint gs_usergroup_members_pk
+				primary key (user_id, group_id)
+		)
+	</entry>
+
+	<!-- use this to create sequence for autoincrement -->
+	<entry key="groupmembers.indexcreate">
+		CREATE SEQUENCE hibernate_sequence
+	  </entry> 
+
+	  <entry key="users.drop">drop table gs_user</entry>
+	  <entry key="userprops.drop">drop table gs_user_attribute</entry>
+	  <entry key="groups.drop">drop table gs_usergroup</entry>
+	  <entry key="groupmembers.drop">drop table gs_usergroup_members</entry>
+
+	  <!-- since GeoServer version 2.3.0 -->  
+	  <entry key="userprops.indexcreate1">
+		create index idx_user_attribute_name on GS_USER_ATTRIBUTE (NAME)
+	  </entry>  
+		<entry key="userprops.indexcreate2">
+		CREATE INDEX idx_user_attribute_text ON gs_user_attribute (string)
+	  </entry>
+  <!--  end GeoServer version 2.3.0 -->  	  
+</properties>

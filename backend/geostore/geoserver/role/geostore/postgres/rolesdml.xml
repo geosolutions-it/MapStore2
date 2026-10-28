@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>DML statements for role database</comment>
+  <!-- roles are the groups + GEOSTORE + geostore roles -->
+  <entry key="roles.count">
+    SELECT sum(c) FROM (SELECT count(*)+1  AS c  FROM gs_usergroup UNION SELECT count(distinct user_role) AS c FROM gs_user )AS b  </entry>
+  <entry key="roles.all">
+	SELECT replace(groupname, ' ', '_'),'GEOSTORE' as parent from gs_usergroup UNION SELECT 'GEOSTORE',NULL UNION SELECT DISTINCT user_role,NULL from gs_user
+  </entry>
+  <entry key="roles.keyed">
+	SELECT CASE WHEN ? IN (SELECT replace(groupname, ' ', '_') FROM gs_usergroup) THEN 'GEOSTORE' ELSE NULL END
+  </entry>
+  <entry key="roles.insert">
+	insert into gs_usergroup (id,groupname) values (nextval('hibernate_sequence'),?)
+  </entry>
+  <!-- nothing to update at the moment, use dummy statement -->
+  <entry key="roles.update">
+	update gs_usergroup set groupname=groupname where groupname = ?
+  </entry>  
+  <entry key="roles.parentUpdate">
+	update gs_usergroup set groupname=groupname where groupname = ?
+  </entry>
+  <entry key="roles.deleteParent">
+	update gs_usergroup set groupname=groupname where groupname = ?
+  </entry>
+  <entry key="roles.delete">
+	delete from gs_usergroup where groupname = ?
+  </entry>
+  <entry key="roles.deleteAll">
+	delete from gs_usergroup 
+  </entry>
+  
+  <!-- not implemented -->
+  <entry key="roleprops.all">
+	select 1,1,1
+  </entry>
+  <entry key="roleprops.selectForRole">
+	select NULL,NULL from  gs_usergroup where groupname = ?
+  </entry>
+  <entry key="roleprops.selectForUser">
+	select NULL,NULL,NULL from  gs_usergroup p,gs_user u where p.id = u.id and u.name = ?
+  </entry>
+  <entry key="roleprops.selectForGroup">
+	select NULL,NULL,NULL from  gs_usergroup p,gs_user u where p.id = u.id and u.name = ?
+  </entry>    
+  <entry key="roleprops.deleteForRole">
+	Select 1
+  </entry>
+  <entry key="roleprops.insert">
+	Select 1 where ? = ? AND ? = '1'
+  </entry>
+  <entry key="roleprops.deleteAll">
+	Select 1
+  </entry>
+   <!-- not implemented -->
+   <!-- Mapping of GeoStore groups as roles in GeoServer -->
+  <entry key="userroles.rolesForUser">
+    SELECT user_role,NULL FROM gs_user WHERE name = ?
+  </entry>
+  <entry key="userroles.usersForRole">
+	SELECT u.name FROM  gs_user where role = ?
+  </entry>
+  <entry key="userroles.insert">
+	select NULL from gs_user where name = ?
+  </entry>
+  <entry key="userroles.delete">
+	select NULL from gs_user where name = ?
+  </entry>
+  <entry key="userroles.deleteRole">
+	select NULL from gs_user where name = ?
+  </entry>
+  <entry key="userroles.deleteUser">
+	select NULL from gs_user where name = ?
+  </entry>
+  <entry key="userroles.deleteAll">
+	select NULL ;
+  </entry>
+
+
+
+  <entry key="grouproles.rolesForGroup">
+	SELECT DISTINCT replace(g.groupname, ' ', '_'),'GEOSTORE' as parent  FROM gs_user u JOIN gs_usergroup_members m ON u.id = m.user_id JOIN  gs_usergroup g on m.group_id = g.id WHERE g.groupname = ? 
+  </entry>
+  <!-- The group roles don't distinguish between spaces and underscores -->
+  <entry key="grouproles.groupsForRole">
+	select groupname for gs_usergroup where groupname like (?,'_','%')
+  </entry>
+  <entry key="grouproles.insert">
+	SELECT NULL where name=? AND name =?
+  </entry>
+  <entry key="grouproles.delete">
+	SELECT NULL where name=? AND name =?
+  </entry>
+  <entry key="grouproles.deleteRole">
+	SELECT NULL where name=?
+  </entry>
+  <entry key="grouproles.deleteGroup">
+	SELECT NULL where name=?
+  </entry>
+    <entry key="grouproles.deleteAll">
+	SELECT NULL where name=?
+  </entry>
+  
+	  
+</properties>

@@ -1,0 +1,21 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryObjects",
+  "@odata.nextLink": "NEXT_LINK_PLACEHOLDER",
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.group",
+      "displayName": "GIS Analysts",
+      "id": "a1b2c3d4-0001-0001-0001-000000000001"
+    },
+    {
+      "@odata.type": "#microsoft.graph.group",
+      "displayName": "Map Editors",
+      "id": "a1b2c3d4-0001-0001-0001-000000000002"
+    },
+    {
+      "@odata.type": "#microsoft.graph.servicePrincipal",
+      "displayName": "Some Service Principal",
+      "id": "a1b2c3d4-0001-0001-0001-000000000099"
+    }
+  ]
+}

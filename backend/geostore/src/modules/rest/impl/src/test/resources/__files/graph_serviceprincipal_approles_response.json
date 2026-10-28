@@ -1,0 +1,23 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#servicePrincipals('sp-guid-001')/appRoles",
+  "value": [
+    {
+      "id": "role-guid-001",
+      "displayName": "Administrator",
+      "value": "Admin",
+      "isEnabled": true
+    },
+    {
+      "id": "role-guid-002",
+      "displayName": "Viewer",
+      "value": "Viewer",
+      "isEnabled": true
+    },
+    {
+      "id": "role-guid-003",
+      "displayName": "Editor",
+      "value": "Editor",
+      "isEnabled": true
+    }
+  ]
+}

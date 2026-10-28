@@ -1,0 +1,17 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#appRoleAssignments",
+  "value": [
+    {
+      "id": "assignment-001",
+      "appRoleId": "role-guid-001",
+      "resourceId": "sp-guid-001",
+      "resourceDisplayName": "GeoStore App"
+    },
+    {
+      "id": "assignment-002",
+      "appRoleId": "role-guid-002",
+      "resourceId": "sp-guid-001",
+      "resourceDisplayName": "GeoStore App"
+    }
+  ]
+}

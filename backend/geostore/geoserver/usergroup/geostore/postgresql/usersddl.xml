@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>DDL statements for user database using GeoStore Database</comment>
+  <entry key="check.table">user_props</entry>
+  <entry key="users.create">
+	CREATE TABLE gs_user (
+    id bigint NOT NULL,
+    name character varying(20) NOT NULL,
+    user_password character varying(255),
+    user_role character varying(255) NOT NULL
+)
+  </entry>
+  <entry key="userprops.create">
+	CREATE TABLE gs_user_attribute (
+        id bigint NOT NULL,
+        name character varying(255) NOT NULL,
+        string character varying(255),
+        user_id bigint NOT NULL
+    );
+  </entry>
+
+  <entry key="groups.create">
+	CREATE TABLE gs_usergroup (
+        id bigint NOT NULL,
+        groupname character varying(20) NOT NULL
+    );
+  </entry>
+  <entry key="groupmembers.create">
+        CREATE TABLE gs_usergroup_members (
+        user_id bigint NOT NULL,
+        group_id bigint NOT NULL
+    );
+  </entry>
+  <!-- use this to create sequence for autoincrement -->
+  <entry key="groupmembers.indexcreate">
+	CREATE SEQUENCE hibernate_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+    ALTER TABLE gs_user ADD COLUMN enabled  char(1)  NOT NULL DEFAULT 'Y';
+    ALTER TABLE gs_usergroup ADD COLUMN enabled  char(1)  NOT NULL DEFAULT 'Y';
+
+  </entry>
+
+  <entry key="users.drop">drop table gs_user</entry>
+  <entry key="userprops.drop">drop table gs_user_attribute</entry>
+  <entry key="groups.drop">drop table gs_usergroup</entry>
+  <entry key="groupmembers.drop">drop table gs_usergroup_members</entry>
+
+  <!-- since GeoServer version 2.3.0 -->  
+  <entry key="userprops.indexcreate1">
+	CREATE INDEX idx_user_attribute_name ON gs_user_attribute USING btree (name)
+  </entry>  
+    <entry key="userprops.indexcreate2">
+	CREATE INDEX idx_user_attribute_text ON gs_user_attribute USING btree (string)
+  </entry>
+  <!--  end GeoServer version 2.3.0 -->  
+  
+  
+	  
+</properties>

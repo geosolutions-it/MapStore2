@@ -1,0 +1,56 @@
+<!--
+ Copyright (C) 2007 - 2015 GeoSolutions S.A.S.
+ http://www.geo-solutions.it
+
+ GPLv3 + Classpath exception
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses />.
+ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://cxf.apache.org/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+    <bean id="auditingOutput" class="it.geosolutions.geostore.services.rest.auditing.AuditingOutput"/>
+
+    <bean id="auditingInterceptorReceive"
+          class="it.geosolutions.geostore.services.rest.auditing.AuditingInterceptorReceive"/>
+
+    <bean id="auditingInterceptorPostMarshall"
+          class="it.geosolutions.geostore.services.rest.auditing.AuditingInterceptorPostMarshall"/>
+
+    <bean id="auditingInterceptorSendEnding"
+          class="it.geosolutions.geostore.services.rest.auditing.AuditingInterceptorSendEnding">
+        <constructor-arg ref="auditingOutput"/>
+    </bean>
+
+    <bean id="auditingInterceptorFault"
+          class="it.geosolutions.geostore.services.rest.auditing.AuditingInterceptorFault">
+        <constructor-arg ref="auditingOutput"/>
+    </bean>
+
+    <cxf:bus>
+        <cxf:inInterceptors>
+            <ref bean="auditingInterceptorReceive"/>
+        </cxf:inInterceptors>
+        <cxf:outInterceptors>
+            <ref bean="auditingInterceptorPostMarshall"/>
+            <ref bean="auditingInterceptorSendEnding"/>
+        </cxf:outInterceptors>
+        <cxf:outFaultInterceptors>
+            <ref bean="auditingInterceptorFault"/>
+        </cxf:outFaultInterceptors>
+    </cxf:bus>
+</beans>

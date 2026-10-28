@@ -1,0 +1,115 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+
+	xmlns:security="http://www.springframework.org/schema/security"
+
+	xmlns:cxf="http://cxf.apache.org/core" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://cxf.apache.org/jaxws                     http://cxf.apache.org/schemas/jaxws.xsd
+            http://cxf.apache.org/jaxrs                     http://cxf.apache.org/schemas/jaxrs.xsd
+            http://cxf.apache.org/core                      http://cxf.apache.org/schemas/core.xsd
+            http://www.springframework.org/schema/security  http://www.springframework.org/schema/security/spring-security.xsd
+            http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context.xsd"
+	default-autowire="byName">
+
+	<!-- ==================================================================== -->
+	<!-- === REST Security ================================================== -->
+	<!-- ==================================================================== -->
+	<security:method-security secured-enabled="true" jsr250-enabled="true" >
+
+<!-- 		<security:protect-pointcut expression="execution(* it.geosolutions.geostore.services.rest.RESTCategoryService.update(*))" access="ROLE_USER, ROLE_ADMIN" /> -->
+<!-- 		<security:protect-pointcut expression="execution(* it.geosolutions.geostore.services.rest.RESTCategoryService.delete(*))" access="ROLE_USER, ROLE_ADMIN" /> -->
+<!-- 		<security:protect-pointcut expression="execution(* it.geosolutions.geostore.services.rest.RESTCategoryService.get(*))" access="ROLE_USER, ROLE_ADMIN, ROLE_ANONYMOUS" /> -->
+
+	</security:method-security>
+
+	<security:http auto-config="true">
+		<security:http-basic />
+
+		<!-- security:intercept-url pattern="/secure/extreme/**" access="ROLE_SUPERVISOR" / -->
+		<!-- security:intercept-url pattern="/secure/**" access="IS_AUTHENTICATED_REMEMBERED" / -->
+		<!-- security:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" / -->
+
+		<security:form-login />
+		<security:anonymous />
+		<security:logout />
+	</security:http>
+
+	<bean id="geoStoreUserServiceAuthenticationProvider"
+		class="it.geosolutions.geostore.services.rest.security.UserServiceAuthenticationProvider">
+		<!-- property name="userService" ref="userService" / -->
+	</bean>
+
+	<!-- GeoStore Auth Provider -->
+	<!-- security:authentication-manager>
+		<security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
+	</security:authentication-manager -->
+
+	<!-- Simple Auth Provider -->
+	<!-- security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="bob" password="bobspassword" authorities="ROLE_USER" />
+				<security:user name="fred" password="fredspassword" authorities="ROLE_USER, ROLE_ADMIN" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager -->
+
+	<!-- LDAP Auth Provider -->
+	<!-- Simple namespace-based configuration -->
+
+	<!-- Starts an internal LDAP server -->
+	<security:ldap-server ldif="classpath*:users.ldif" port="33389" root="dc=geosolutions,dc=it"/>
+
+	<security:authentication-manager>
+		<security:ldap-authentication-provider
+			user-search-filter="(uid={0})" 
+			user-search-base="ou=people"
+			group-search-filter="(member={0})" 
+			group-search-base="ou=groups"
+			group-role-attribute="cn" 
+			role-prefix="ROLE_">
+		</security:ldap-authentication-provider>
+		<security:authentication-provider ref="geostoreLdapProvider" />
+	</security:authentication-manager>
+
+	<!-- Traditional Bean version of the same configuration -->
+
+	<!-- This bean points at the embedded directory server created by the ldap-server element above -->
+	<bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+		<constructor-arg value="ldap://localhost:33389/dc=geosolutions,dc=it" />
+	</bean>
+
+	<bean id="geostoreLdapProvider"
+		class="it.geosolutions.geostore.services.rest.security.UserLdapAuthenticationProvider">
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.authentication.BindAuthenticator">
+				<constructor-arg ref="contextSource" />
+				<property name="userSearch">
+					<bean id="userSearch"
+						class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+						<constructor-arg index="0" value="ou=people" />
+						<constructor-arg index="1" value="(uid={0})" />
+						<constructor-arg index="2" ref="contextSource" />
+					</bean>
+				</property>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+				<constructor-arg ref="contextSource" />
+				<constructor-arg value="ou=groups" />
+				<property name="groupSearchFilter" value="(member={0})" />
+				<property name="rolePrefix" value="" />
+				<property name="searchSubtree" value="true" />
+				<property name="convertToUpperCase" value="true" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+</beans>

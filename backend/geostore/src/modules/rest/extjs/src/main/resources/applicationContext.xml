@@ -1,0 +1,51 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://cxf.apache.org/core"
+
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns="http://www.springframework.org/schema/beans"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans.xsd
+
+            http://cxf.apache.org/jaxrs                     http://cxf.apache.org/schemas/jaxrs.xsd
+            http://cxf.apache.org/core                      http://cxf.apache.org/schemas/core.xsd"
+       default-autowire="byName">
+
+    <!-- === CXF ======================================================== -->
+
+    <!-- Load CXF modules from cxf.jar -->
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+    <!--import resource="classpath:META-INF/cxf/cxf-extension-jaxrs-binding.xml" /-->
+
+    <!-- ====================================================================-->
+    <!-- === Service providers ==============================================-->
+    <!-- ====================================================================-->
+
+    <bean id="restExtJsService" class="it.geosolutions.geostore.services.rest.impl.RESTExtJsServiceImpl">
+    </bean>
+
+    <!-- ====================================================================-->
+    <!-- === REST Services ==================================================-->
+    <!-- ====================================================================-->
+
+    <jaxrs:server id="geoStoreRESTExtJs" address="/extjs">
+        <jaxrs:serviceBeans>
+            <ref bean="restExtJsService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <ref bean="jaxbContextResolver"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+
+    </jaxrs:server>
+
+</beans>

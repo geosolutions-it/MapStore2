@@ -1,0 +1,30 @@
+OUTFILE=gitignore
+
+cat >$OUTFILE <<EOF
+##
+## This file has been automatically generated.
+## Any edit to this file will be lost on next update.
+## If you need to add static paths to the ignore list, please edit the createGitIgnore script.
+##
+## - ETj
+
+nb*.xml
+.classpath
+.project
+.settings
+*~
+catalog.xml
+
+EOF
+
+for pom in $(find -name "pom.xml" | sort)
+do 
+	path=${pom%*pom.xml}
+	path=${path#\./*}
+	echo ${path}target >>$OUTFILE
+done
+
+echo New file $OUTFILE has been created. You may now want to replace your original .gitignore file.
+echo mv $OUTFILE .gitignore
+echo
+

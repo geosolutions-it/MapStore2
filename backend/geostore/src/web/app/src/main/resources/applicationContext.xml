@@ -1,0 +1,32 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+	   xmlns:cxf="http://cxf.apache.org/core"
+	   xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://cxf.apache.org/jaxws                     http://cxf.apache.org/schemas/jaxws.xsd
+            http://cxf.apache.org/jaxrs                     http://cxf.apache.org/schemas/jaxrs.xsd
+            http://cxf.apache.org/core                      http://cxf.apache.org/schemas/core.xsd
+            http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context.xsd"
+       default-autowire="byName">
+
+    <context:annotation-config />
+
+    <bean id="geostoreInitializer" class="it.geosolutions.geostore.init.GeoStoreInit" lazy-init="false">
+        <!-- When no 'admin' account exists at startup it is created with the password in the
+             INITIAL_ADMIN_PASSWORD environment variable; without the variable none is created.
+             Set userListInitFile in the ovr file only to seed a site-specific user list. -->
+        <!-- Site specific initialization. Please specify a path in the ovr file-->
+        <property name="categoryListInitFile" value="classpath:sample_categories.xml" />
+
+        <!-- Site specific initialization. Please specify a path in the ovr file-->
+        <property name="userGroupListInitFile" value="classpath:sample_groups.xml" />
+        <!-- The default password encoder -->
+        <property name="passwordEncoder" ref="${passwordEncoderUsed}"></property>	
+    </bean>
+
+</beans>

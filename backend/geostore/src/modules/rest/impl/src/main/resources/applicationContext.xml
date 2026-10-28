@@ -1,0 +1,391 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://cxf.apache.org/core"
+
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+
+       xmlns="http://www.springframework.org/schema/beans"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans.xsd
+
+            http://cxf.apache.org/jaxrs                     http://cxf.apache.org/schemas/jaxrs.xsd
+            http://cxf.apache.org/core                      http://cxf.apache.org/schemas/core.xsd"
+       default-autowire="byName">
+
+    <!-- === SEC ======================================================== -->
+    <import resource="classpath*:geostore-spring-security.xml"/>
+
+    <!-- === CXF ======================================================== -->
+
+    <!-- Load CXF modules from cxf.jar -->
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath*:META-INF/cxf/cxf-*.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+    <!-- import resource="classpath:META-INF/cxf/cxf-extension-jaxrs-binding.xml" /> -->
+
+
+    <bean id="geostoreContext" class="it.geosolutions.geostore.services.rest.utils.GeoStoreContext"/>
+
+    <!-- Interceptors -->
+    <bean id="noCacheInterceptor" class="it.geosolutions.geostore.services.rest.utils.FixedCacheControlOutInterceptor"/>
+
+    <!-- ==================================================================== -->
+    <!-- === Service providers ============================================== -->
+    <!-- ==================================================================== -->
+    <bean id="restStoredDataService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTStoredDataServiceImpl">
+        <property name="publicRawCategories" value="${publicRawCategories}"/>
+    </bean>
+
+    <bean id="restResourceService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTResourceServiceImpl">
+    </bean>
+
+    <bean id="restCategoryService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTCategoryServiceImpl">
+    </bean>
+
+    <bean id="restUserService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTUserServiceImpl">
+    </bean>
+
+    <bean id="restMiscService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTMiscServiceImpl">
+    </bean>
+
+    <bean id="restBackupService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTBackupServiceImpl">
+    </bean>
+
+    <bean id="restUserGroupService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTUserGroupServiceImpl">
+    </bean>
+
+    <bean id="restSessionService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTSessionServiceImpl">
+        <property name="sessionTimeout" value="86400"/>
+    </bean>
+
+    <bean id="restTagService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTTagServiceImpl">
+    </bean>
+
+    <bean id="restFavoriteService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTFavoriteServiceImpl">
+    </bean>
+
+    <bean id="restIPRangeService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTIPRangeServiceImpl">
+    </bean>
+
+    <bean id="sessionServiceDelegate"
+          class="it.geosolutions.geostore.services.rest.impl.SessionServiceDelegateImpl">
+        <constructor-arg ref="restSessionService"/>
+<!--        <constructor-arg ref="userService"/>-->
+    </bean>
+
+    <bean id="oidcSessionServiceDelegate"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSessionServiceDelegate">
+        <constructor-arg ref="restSessionService"/>
+        <constructor-arg ref="userService"/>
+    </bean>
+
+    <bean id="idpLoginRest"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.IdPLoginRestImpl">
+    </bean>
+
+    <bean id="tokenStorage"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.InMemoryTokenStorage">
+    </bean>
+
+    <bean id="oidcLoginService"
+          class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectLoginService">
+        <constructor-arg ref="idpLoginRest"/>
+    </bean>
+
+    <bean id="restDiagnosticsService"
+          class="it.geosolutions.geostore.services.rest.impl.RESTDiagnosticsServiceImpl">
+    </bean>
+
+    <!-- ==================================================================== -->
+    <!-- === REST Services ================================================== -->
+    <!-- ==================================================================== -->
+    <jaxrs:server id="geoStoreRESTStoredData" address="/data">
+        <jaxrs:serviceBeans>
+            <ref bean="restStoredDataService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <bean class="it.geosolutions.geostore.services.providers.StringTextProvider"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTResource" address="/resources">
+        <jaxrs:serviceBeans>
+            <ref bean="restResourceService"/>
+            <ref bean="restTagService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <ref bean="jaxbContextResolver"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTCategory" address="/categories">
+        <jaxrs:serviceBeans>
+            <ref bean="restCategoryService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTUser" address="/users">
+        <jaxrs:serviceBeans>
+            <ref bean="restUserService"/>
+            <ref bean="restFavoriteService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+        <!-- Auto-creation interceptor for direct REST API calls (e.g. /users requests).
+             Uncomment to enable, and set autoCreateUsersInterceptor.autoCreateUsers=true
+             in geostore-ovr.properties. -->
+        <!-- 		<jaxrs:inInterceptors> -->
+        <!-- 			<ref bean="autoCreateUsersInterceptor"/> -->
+        <!-- 		</jaxrs:inInterceptors> -->
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTUserGroup" address="/usergroups">
+        <jaxrs:serviceBeans>
+            <ref bean="restUserGroupService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTIPRange" address="/ipranges">
+        <jaxrs:serviceBeans>
+            <ref bean="restIPRangeService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTMisc" address="/misc">
+        <jaxrs:serviceBeans>
+            <ref bean="restMiscService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTBackup" address="/backup">
+        <jaxrs:serviceBeans>
+            <ref bean="restBackupService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <ref bean="jaxbContextResolver"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+
+    <jaxrs:server id="geoStoreRESTSessionService" address="/session">
+        <jaxrs:serviceBeans>
+            <ref bean="restSessionService"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <!--bean class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
+                <property name="dropRootElement" value="true"/>
+          </bean-->
+            <ref bean="jaxbContextResolver"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTDiagnostics" address="/diagnostics">
+        <jaxrs:serviceBeans>
+            <ref bean="restDiagnosticsService"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+        <jaxrs:providers>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+
+    <jaxrs:server id="geoStoreRESTOAuthLoginService" address="/openid">
+        <jaxrs:serviceBeans>
+            <ref bean="idpLoginRest"/>
+        </jaxrs:serviceBeans>
+
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+            <!--bean class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
+                <property name="dropRootElement" value="true"/>
+          </bean-->
+            <ref bean="jaxbContextResolver"/>
+            <bean class="it.geosolutions.geostore.services.rest.security.SecurityExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <ref bean="noCacheInterceptor"/>
+        </jaxrs:outInterceptors>
+    </jaxrs:server>
+    <!-- ====================================================================-->
+    <!-- === REST Services ==================================================-->
+    <!-- ====================================================================-->
+
+    <!-- <jaxrs:server id="geoStoreRESTExtJs" address="/extjs">
+        <jaxrs:serviceBeans>
+            <ref bean="restExtJsService"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:features>
+            <bean class="org.apache.cxf.ext.logging.LoggingFeature"/>
+        </jaxrs:features>
+        <jaxrs:providers>
+            <ref bean="jaxbXmlProvider"/>
+            <ref bean="jsonProvider"/>
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+            <ref bean="geostoreAuthInterceptor"/>
+            <bean class="org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor">
+                <property name="securedObject" ref="restExtJsService"/>
+            </bean>
+        </jaxrs:inInterceptors>
+    </jaxrs:server> -->
+
+    <!-- ==================================================================== -->
+    <!-- === CXF Providers ================================================== -->
+    <!-- ==================================================================== -->
+    <bean id="jaxbXmlProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+    <bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider"/>
+    <bean id="jaxbContextResolver"
+          class="it.geosolutions.geostore.services.rest.utils.JAXBContextResolver"/>
+
+    <bean
+            class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreInvalidKeys" value="true"/>
+        <property name="order" value="5"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:geostore-ovr.properties</value>
+                <value>classpath*:${ovrdir}/geostore-ovr.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Is the following interceptor still needed to allow autocreation of auth users???
+     anyway the autocreation of auth users must be modified to work with spring security -->
+    <!-- Auto create users interceptor, check also  -->
+    <!-- 	<bean id="autoCreateUsersInterceptor" -->
+    <!-- 		class="it.geosolutions.geostore.services.rest.utils.AutoUserCreateGeostoreAuthenticationInterceptor"> -->
+    <!-- 		<property name="autoCreateUsers" value="true" /> -->
+    <!-- 		<property name="newUsersRole" value="USER" /> -->
+    <!-- 		<property name="newUsersPassword" value="NONE" /> -->
+    <!-- 		<property name="newUsersPasswordHeader" value="" /> -->
+    <!-- 		<property name="userService" ref="userService" /> -->
+    <!-- 	</bean> -->
+
+</beans>

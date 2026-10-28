@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:sec="http://www.springframework.org/schema/security"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+
+  
+   <!-- this allows to set the password file path, and if it is encrypted or not -->
+  <bean id="passwordProvider" class="it.geosolutions.geostore.core.security.password.URLMasterPasswordProvider">
+  </bean>
+  <!-- This allows to set the keystore position on the filesystem -->
+  <bean id="keyStoreProvider" class="it.geosolutions.geostore.core.security.password.KeyStoreProviderImpl">
+  	<property name="masterPasswordProvider" ref="passwordProvider" />
+  </bean>
+  
+  
+  <bean id="pbePasswordEncoder"    
+    class="it.geosolutions.geostore.core.security.password.GeoStorePBEPasswordEncoder" scope="prototype">
+    <property name="prefix" value="crypt1" />
+    <property name="algorithm" value="PBEWITHMD5ANDDES" />
+    <property name="keyAliasInKeyStore" value="ug:geostore:key"></property>
+    <property name="keystoreProvider" ><ref bean="keyStoreProvider"/></property>
+  </bean>
+  <!--  Only with Strong Cryptography available -->
+  <bean id="strongPbePasswordEncoder"    
+    class="it.geosolutions.geostore.core.security.password.GeoStorePBEPasswordEncoder" scope="prototype">
+    <property name="prefix" value="crypt2" />
+    <property name="providerName" value="BC" />
+    <property name="algorithm" value="PBEWITHSHA256AND256BITAES-CBC-BC" />
+    <property name="availableWithoutStrongCryptogaphy" value="false" />
+    <property name="keystoreProvider" ><ref bean="keyStoreProvider"/></property>
+  </bean>  
+  <bean id="digestPasswordEncoder"    
+    class="it.geosolutions.geostore.core.security.password.GeoStoreDigestPasswordEncoder" scope="prototype">
+    <property name="prefix" value="digest1" />    
+  </bean> 
+  <bean id="geostoreEncoder" class="it.geosolutions.geostore.core.security.password.GeoStoreAESEncoder"></bean>
+  
+ </beans>

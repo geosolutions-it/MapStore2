@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <!-- This file is only needed to create the DDL file -->
+  <!-- When adding/removing classes, please also keep aligned the main
+         persistence file src/main/resources/META-INF/persistence.xml -->
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+
+    <mapping class="it.geosolutions.geostore.core.model.Attribute"/>
+    <mapping class="it.geosolutions.geostore.core.model.Category"/>
+    <mapping class="it.geosolutions.geostore.core.model.Resource"/>
+    <mapping class="it.geosolutions.geostore.core.model.SecurityRule"/>
+    <mapping class="it.geosolutions.geostore.core.model.StoredData"/>
+    <mapping class="it.geosolutions.geostore.core.model.User"/>
+    <mapping class="it.geosolutions.geostore.core.model.UserAttribute"/>
+    <mapping class="it.geosolutions.geostore.core.model.UserGroup"/>
+    <mapping class="it.geosolutions.geostore.core.model.UserGroupAttribute"/>
+  </session-factory>
+</hibernate-configuration>

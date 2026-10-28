@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       default-autowire="byName">
+
+    <bean id="storedDataService" class="it.geosolutions.geostore.services.StoredDataServiceImpl"/>
+
+    <bean id="resourceService" class="it.geosolutions.geostore.services.ResourceServiceImpl"/>
+
+    <bean id="categoryService" class="it.geosolutions.geostore.services.CategoryServiceImpl"/>
+
+    <bean id="userService" class="it.geosolutions.geostore.services.UserServiceImpl"/>
+
+    <bean id="userGroupService" class="it.geosolutions.geostore.services.UserGroupServiceImpl"/>
+
+    <bean id="userSessionService" class="it.geosolutions.geostore.services.InMemoryUserSessionServiceImpl"/>
+
+    <bean id="tagService" class="it.geosolutions.geostore.services.TagServiceImpl"/>
+
+    <bean id="favoriteService" class="it.geosolutions.geostore.services.FavoriteServiceImpl"/>
+
+    <bean id="ipRangeService" class="it.geosolutions.geostore.services.IPRangeServiceImpl"/>
+
+    <bean id="resourcePermissionService" class="it.geosolutions.geostore.services.ResourcePermissionServiceImpl"/>
+
+</beans>

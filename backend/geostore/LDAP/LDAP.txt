@@ -1,0 +1,17 @@
+#1. Modify C:\apps\OpenLDAP\slapd.conf as follows
+
+	# bdb doesn't seem to work
+	#database	ldbm
+	database	bdb
+	suffix		"dc=geosolutions,dc=it"
+	rootdn		"cn=Manager,dc=geosolutions,dc=it"
+	# Cleartext passwords, especially for the rootdn, should
+
+
+#2. Execute the following command
+	
+	C:\apps\OpenLDAP\ClientTools>ldapmodify.exe -a -x -D "cn=Manager,dc=geosolutions,dc=it" -W -f C:\work\geostore\LDAP\base.ldif
+
+#3. Add more users
+
+	C:\apps\OpenLDAP\ClientTools>ldapmodify.exe -a -x -D "cn=Manager,dc=geosolutions,dc=it" -W -f C:\work\geostore\LDAP\users.ldif

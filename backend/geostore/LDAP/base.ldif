@@ -1,0 +1,56 @@
+# Root Schema
+dn: dc=geosolutions,dc=it
+objectClass: organization
+objectClass: dcObject
+objectClass: top
+dc: geosolutions
+description: GeoSolutions S.A.S.
+o: GeoSolutions
+
+dn: ou=groups,dc=geosolutions,dc=it
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+
+dn: ou=people,dc=geosolutions,dc=it
+objectClass: top
+objectClass: organizationalUnit
+ou: people
+
+# Users Definition
+dn: uid=admin,ou=people,dc=geosolutions,dc=it
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: admin
+givenName: admin
+mail: admin@geo-solutions.it
+sn: admin
+uid: admin
+userPassword: admin
+
+dn: uid=user,ou=people,dc=geosolutions,dc=it
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: user
+givenName: user
+mail: user@geo-solutions.it
+sn: user
+uid: user
+userPassword: user
+
+# Groups and Members
+dn: cn=admin,ou=groups,dc=geosolutions,dc=it
+objectClass: top
+objectClass: groupOfNames
+cn: admin
+member: uid=admin,ou=people,dc=geosolutions,dc=it
+
+dn: cn=user,ou=groups,dc=geosolutions,dc=it
+objectClass: top
+objectClass: groupOfNames
+cn: user
+member: uid=user,ou=people,dc=geosolutions,dc=it

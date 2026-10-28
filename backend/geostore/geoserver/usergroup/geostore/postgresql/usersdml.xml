@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>DML statements for GeoStore Database</comment>
+
+  <entry key="users.count">
+	select count(*) from gs_user 
+  </entry>
+
+  <entry key="users.all">
+	select name,  user_password, enabled from gs_user
+  </entry>
+  <entry key="users.keyed">
+	select user_password ,enabled from gs_user where name = ?
+  </entry>
+  <entry key="users.insert">
+	insert into  gs_user(id, name ,user_password,user_role,enabled) values (nextval('hibernate_sequence'),?, ?,'USER',?)
+  </entry>
+  <entry key="users.update">
+	update gs_user set user_password =  ? ,enabled = ? where name = ?
+  </entry>
+  <entry key="users.delete">
+	delete from  gs_user where name = ?
+  </entry>
+  
+  <entry key="users.deleteAll">
+	delete from gs_user 
+  </entry>
+  
+
+  <entry key="userprops.all">
+	select us.name, att.name, att.string from gs_user_attribute as att, gs_user as us where us.id = att.user_id
+  </entry>
+  <entry key="userprops.selectForUser">
+	select att.name, att.string from  gs_user_attribute att,gs_user u  where u.name = ? AND  u.id = att.user_id
+  </entry>
+  <entry key="userprops.userPropsForGroup">
+		SELECT  u.name,att.name, att.string  FROM gs_user u JOIN gs_usergroup_members m ON u.id = m.user_id JOIN  gs_usergroup g ON m.group_id = g.id JOIN gs_user_attribute as att on u.id = att.user_id WHERE g.groupname= ? 
+  </entry>  
+  <entry key="userprops.deleteForUser">
+	delete from  gs_user_attribute where gs_user_attribute.user_id IN ( SELECT gs_user.id from gs_user where gs_user.name = ?)
+  </entry>
+  <entry key="userprops.insert">
+		INSERT INTO gs_user_attribute(user_id,name,string,id) values ((SELECT gs_user.id from gs_user where gs_user.name= ?) ,?,?,nextval('hibernate_sequence'))
+  </entry>
+  <entry key="userprops.deleteAll">
+	delete from gs_user_attribute 		
+  </entry>
+  
+    <!-- since GeoServer version 2.3.0 -->  
+  <entry key="user.usersHavingProperty">
+    select u.name,u.user_password,u.enabled from gs_user u ,gs_user_attribute p where u.id=p.user_id and p.name = ?
+  </entry>
+    <entry key="userprops.usersHavingProperty">
+    select u.name,att.name as propname,att.string as propvalue from gs_user u , gs_user_attribute att where u.id=att.user_id and exists (SELECT a.id FROM gs_user u ,gs_user_attribute a WHERE u.id=a.user_id AND  a.name = ?) 
+  </entry> 
+  <entry key="userprops.userCountHavingProperty">
+    select count(*) from gs_user_attribute p where  p.name = ? 
+  </entry>
+
+  <entry key="user.usersNotHavingProperty">
+    select u.name,u.user_password,u.enabled from gs_user u  where not exists (select p.user_id from gs_user_attribute p where u.id=p.user_id and p.name = ?) 
+  </entry>
+  <entry key="userprops.usersNotHavingProperty">
+    select p.name,p.name,p.string from gs_user_attribute p  where not exists (select p1.user_id from gs_user_attribute p1 where p.id=p1.user_id and p1.name = ?) 
+  </entry>  
+  <entry key="userprops.userCountNotHavingProperty">
+    select count(*) from gs_user u where not exists (select p.user_id from gs_user_attribute p where u.id=p.user_id and p.name = ?) 
+  </entry>
+      
+   <entry key="user.usersHavingPropertyValue">
+    select u.name,u.user_password,u.enabled from gs_user u ,gs_user_attribute p where u.id=p.user_id and p.name=? and p.string=? 
+  </entry>
+  <entry key="userprops.usersHavingPropertyValue">
+    select u.name,p.name as propname,p.string as propvalue from gs_user_attribute p join gs_user u on u.id=p.user_id where exists (select p1.user_id from gs_user_attribute p1 where p.user_id=p1.user_id and p1.name = ? and p1.string=?) 
+  </entry>    
+  <entry key="userprops.userCountHavingPropertyValue">
+    select count(*) from gs_user_attribute p where  p.name = ? and p.string = ? 
+  </entry>      
+  <!--  end GeoServer version 2.3.0 -->  
+  
+  
+  <entry key="groups.count">
+	select count(*) from gs_usergroup
+  </entry>
+  <entry key="groups.all">
+	select groupname,enabled  from gs_usergroup
+  </entry>
+  <entry key="groups.keyed">
+	select enabled from gs_usergroup where groupname = ?
+  </entry>
+  <entry key="groups.insert">
+	insert into  gs_usergroup(id,groupname,enabled) values (nextval('hibernate_sequence'),?,?)
+  </entry>
+  <entry key="groups.update">
+     update gs_usergroup set enabled = ? where groupname = ?
+  </entry>
+  <entry key="groups.delete">
+	delete from gs_usergroup where groupname = ?
+  </entry>
+  <entry key="groups.deleteAll">
+	delete from gs_usergroup 
+  </entry>
+  
+  
+
+  <entry key="groupmembers.groupsForUser">
+	SELECT  g.groupname,g.enabled  FROM gs_user u JOIN gs_usergroup_members m ON u.id = m.user_id JOIN  gs_usergroup g on m.group_id = g.id WHERE u.name= ? 
+  </entry>
+  <entry key="groupmembers.usersForGroup">
+	SELECT  u.name,u.user_password,u.enabled FROM gs_user u JOIN gs_usergroup_members m ON u.id = m.user_id JOIN  gs_usergroup g ON m.group_id = g.id WHERE g.groupname= ? 
+  </entry>
+  <entry key="groupmembers.insert">
+	insert into gs_usergroup_members(group_id,user_id) values ((select id from gs_usergroup where groupname = ?),(select id from gs_user where name = ?))
+  </entry>
+  <entry key="groupmembers.delete">
+	delete from gs_usergroup_members where group_id in (select id from gs_usergroup where groupname = ?) and user_id = (select id from gs_user where name = ?)
+  </entry>
+  <entry key="groupmembers.deleteGroup">
+	delete from group_members where id = (select id from gs_usergroup where groupname = ?)
+  </entry>
+  <entry key="groupmembers.deleteUser">
+	delete from gs_usergroup_members where user_id = (SELECT id from gs_user WHERE name = ?)
+  </entry>
+  <entry key="groupmembers.deleteAll">
+	delete from gs_usergroup_members 
+  </entry>
+	  
+</properties>

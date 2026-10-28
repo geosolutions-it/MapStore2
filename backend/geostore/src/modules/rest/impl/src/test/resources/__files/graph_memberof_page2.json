@@ -1,0 +1,10 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryObjects",
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.group",
+      "displayName": "Data Reviewers",
+      "id": "a1b2c3d4-0001-0001-0001-000000000003"
+    }
+  ]
+}

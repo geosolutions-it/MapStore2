@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>  
+  <comment>DDL statements for role database</comment>
+  <entry key="check.table">gs_role_props</entry>
+  <entry key="roleprops.create">
+	create table gs_role_props(
+		rolename varchar2(64 char) not null,
+		propname varchar2(64 char) not null,
+		constraint gs_role_props_members_pk
+			primary key (rolename, propname)
+		propvalue varchar2(2048 char))
+  </entry>
+  <entry key="userroles.create">
+	create table gs_user_roles(
+		username varchar2(128 char) not null, 
+		rolename varchar2(64 char) not null,  
+		constraint gs_user_roles_pk
+			primary key (username, rolename))
+  </entry>
+  <entry key="userroles.indexcreate">
+	create index user_roles_idx on gs_user_roles(rolename,username)
+  </entry>
+  <entry key="roles.create">
+	create table gs_role(
+		name varchar2(64 char) constraint gs_role_pk primary key,
+		parent varchar2(64 char))
+  </entry>  
+  <entry key="grouproles.create">
+	create table gs_group_roles(
+		groupname varchar2(128 char) not null, 
+		rolename varchar2(64 char) not null,
+		constraint gs_group_roles_pk
+			primary key (groupname,rolename))
+  </entry>
+  <entry key="grouproles.indexcreate">
+	create index group_roles_idx on gs_group_roles(rolename,groupname)
+  </entry>
+  
+  <entry key="roles.drop">drop table gs_role</entry>
+  <entry key="roleprops.drop">drop table gs_role_props</entry>
+  <entry key="userroles.drop">drop table gs_user_roles</entry>
+  <entry key="grouproles.drop">drop table gs_group_roles</entry>	  
+</properties>

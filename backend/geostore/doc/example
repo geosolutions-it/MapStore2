@@ -1,0 +1,23 @@
+Search everything, no paging requested
+ curl -XGET  'http://localhost:9191/geostore/rest/data/search/%25'
+
+Search everything, only with page param (no entries), should return an error
+ curl -XGET  'http://localhost:9191/geostore/rest/data/search/%25?page=21'
+
+Search everything, paged access
+ curl -XGET  'http://localhost:9191/geostore/rest/data/search/%25?page=2&entries=20'
+
+Get everything, json format
+ curl -XGET -H 'Accept: application/json' http://localhost:9191/geostore/rest/data/
+
+Get everything, xml format
+ curl -XGET -H 'Accept: text/xml' http://localhost:9191/geostore/rest/data/
+
+Create new entry
+ curl -XPOST -H 'Content-type: text/xml'  -d "<StoredData><name>n2</name><data>data2</data></StoredData>"  http://localhost:9191/geostore/rest/data
+
+Get entry with id#24 in xml format
+curl -XGET -H 'Accept: text/xml' http://localhost:9191/geostore/rest/data/24 
+
+Delete entry with id#24 
+curl -XDELETE  http://localhost:9191/geostore/rest/data/24
