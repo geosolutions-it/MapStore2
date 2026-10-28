@@ -19,7 +19,7 @@ libraries that share an artifactId but not their packages, such as Jackson 2
 Usage example:
   python utility/build/check_duplicate_jars.py \\
       product/target/mapstore.war \\
-      java/printing/target/mapstore-printing.zip
+      backend/printing/target/mapstore-printing.zip
 
 Exit status: 0 when no library is duplicated, 1 otherwise.
 """

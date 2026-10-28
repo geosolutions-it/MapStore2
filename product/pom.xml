@@ -240,7 +240,7 @@
                             <encoding>UTF-8</encoding>
                             <resources>
                                 <resource>
-                                    <directory>../java/printing/resources/geoserver/print</directory>
+                                    <directory>../backend/printing/resources/geoserver/print</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -341,7 +341,7 @@
                                 </goals>
                                 <configuration>
                                     <overWrite>true</overWrite>
-                                    <sourceFile>../java/printing/webapp/applicationContext-print.xml</sourceFile>
+                                    <sourceFile>../backend/printing/webapp/applicationContext-print.xml</sourceFile>
                                     <destinationFile>target/mapstore/WEB-INF/classes/applicationContext-print.xml
                                     </destinationFile>
                                 </configuration>

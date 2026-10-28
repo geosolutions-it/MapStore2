@@ -123,7 +123,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify -Pprintingbundle
       # The printing bundle is unpacked over the WAR, so the two are checked together.
       - name: "checking duplicated libraries"
-        run: python3 utility/build/check_duplicate_jars.py product/target/mapstore.war java/printing/target/mapstore-printing.zip
+        run: python3 utility/build/check_duplicate_jars.py product/target/mapstore.war backend/printing/target/mapstore-printing.zip
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -260,7 +260,7 @@ jobs:
           # add geo-solutions.it to known hosts to avoid prompts
           ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
           # deploys java packages
-          mvn clean install deploy -f java/pom.xml
+          mvn clean install deploy -f backend/pom.xml
           # deploys also the root module, needed for dependencies
           mvn deploy --non-recursive
         env:

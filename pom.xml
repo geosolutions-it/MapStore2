@@ -51,7 +51,7 @@
     </properties>
 
     <modules>
-        <module>java</module>
+        <module>backend</module>
         <module>product</module>
     </modules>
 
@@ -258,7 +258,7 @@
             </dependency>
 
             <!-- GeoStore Webapp: a WAR overlay brings its WEB-INF/lib as files, so dependency
-                 exclusions have no effect here; the overlay excludes live in java/web/pom.xml -->
+                 exclusions have no effect here; the overlay excludes live in backend/web/pom.xml -->
             <dependency>
                 <groupId>it.geosolutions.geostore</groupId>
                 <artifactId>geostore-webapp</artifactId>
@@ -398,7 +398,7 @@
                 <property><name>binary</name></property>
             </activation>
             <modules>
-                <module>java</module>
+                <module>backend</module>
                 <module>product</module>
                 <module>binary</module>
             </modules>

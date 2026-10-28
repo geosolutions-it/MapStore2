@@ -21,7 +21,7 @@ MapStore projects also allow to use the `printing` profile to include this modul
 
 ### Adding to an existing MapStore
 
-If you have an existing and deployed instance of MapStore and you want to add the printing module, you can build only the printing extension as a zip running `mvn clean install -Pprintingbundle` from the [official Mapstore project](https://github.com/geosolutions-it/MapStore2). The zip bundle will created in `java/printing/target/mapstore-printing.zip`.
+If you have an existing and deployed instance of MapStore and you want to add the printing module, you can build only the printing extension as a zip running `mvn clean install -Pprintingbundle` from the [official Mapstore project](https://github.com/geosolutions-it/MapStore2). The zip bundle will created in `backend/printing/target/mapstore-printing.zip`.
 
 You can copy the content of this zip bundle into the root of mapstore application (`<app_root>`, for instance `webapps/mapstore` in Tomcat):
 
@@ -30,7 +30,7 @@ You can copy the content of this zip bundle into the root of mapstore applicatio
 
 for the printing configuration files (if they are missing)
 
-- [these files](https://github.com/geosolutions-it/MapStore2/tree/master/java/printing/resources/geoserver/print) must be placed in `<app_root>/printing`
+- [these files](https://github.com/geosolutions-it/MapStore2/tree/master/backend/printing/resources/geoserver/print) must be placed in `<app_root>/printing`
 
 Then restart your java container.
 

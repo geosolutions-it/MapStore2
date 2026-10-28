@@ -2,7 +2,7 @@
 
 MapStore includes a small HTTP proxy, available at `/proxy/?url=`, that the front-end uses to reach services that do not support CORS. The front-end decides when to use it through the `proxyUrl` entry of `localConfig.json` (see [Application Configuration](local-config.md)): services listed in `useCORS` are called directly, every other request goes through the proxy.
 
-The proxy is configured with the `proxy.properties` file. In source code it is located in `java/web/src/main/resources` (in a MapStore project, `web/src/main/resources`); in the `mapstore.war` it is under `/WEB-INF/classes`. A `proxy.properties` file placed in the [data directory](externalized-configuration.md#externalized-configuration) is read after the one in the package, so its values take precedence: use it to keep your settings across updates.
+The proxy is configured with the `proxy.properties` file. In source code it is located in `backend/web/src/main/resources` (in a MapStore project, `web/src/main/resources`); in the `mapstore.war` it is under `/WEB-INF/classes`. A `proxy.properties` file placed in the [data directory](externalized-configuration.md#externalized-configuration) is read after the one in the package, so its values take precedence: use it to keep your settings across updates.
 
 ## Enabling the proxy
 

@@ -59,4 +59,4 @@ jobs:
             name: MapStore-Artifacts${{ github.sha }}
             path: |
                 product/target/mapstore.war
-                printing/target/mapstore-printing.zip
+                backend/printing/target/mapstore-printing.zip

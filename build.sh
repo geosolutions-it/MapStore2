@@ -48,18 +48,18 @@ echo "Building final WAR package"
 date
 if [ $# -eq 0 ]
   then
-    cd java
+    cd backend
     mvn clean install
     cd ..
     mvn clean install
   elif [ $# -eq 1 ]
     then
-        cd java
+        cd backend
         mvn clean install
         cd ..
         mvn clean install -Dmapstore2.version="$1"
     else
-        cd java
+        cd backend
         mvn clean install -Dmapstore2.version="$1" -P"$2"
         cd ..
         mvn clean install -Dmapstore2.version="$1" -P"$2"

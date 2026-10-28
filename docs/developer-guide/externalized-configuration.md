@@ -88,7 +88,7 @@ For a generated MapStore project that always uses the same custom print configur
 ```diff
 <resources>
     <resource>
--        <directory>${basedir}/../MapStore2/java/printing/resources/geoserver/print</directory>
+-        <directory>${basedir}/../MapStore2/backend/printing/resources/geoserver/print</directory>
 +        <directory>${basedir}/printing</directory>
         <includes><include>*</include></includes>
     </resource>

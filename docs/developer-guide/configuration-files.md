@@ -13,7 +13,7 @@ In this document we will describe the configuration files for both the [back-end
 ## Back-end Configuration Files
 
 They are `.properties` files or `.xml` files, and they allow to configure the various parts of the back-end.
-In source code they are located in `java/web/src/main/resources`. In the `MapStore.war` they are under the directory `/WEB-INF/classes`.
+In source code they are located in `backend/web/src/main/resources`. In the `MapStore.war` they are under the directory `/WEB-INF/classes`.
 
 The following are the main configuration files for the backend:
 
