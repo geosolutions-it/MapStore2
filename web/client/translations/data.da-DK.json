@@ -3132,7 +3132,7 @@
       "msExtrudedHeight": "Ekstruderet højde",
       "msExtrusionColor": "Ekstruderingsfarve",
       "msExtrusionType": "Ekstruderingstype",
-      "msExtrusionOutlineColor": "Ekstruderingskonturfærge",
+      "msExtrusionOutlineColor": "Ekstruderingskonturfarve",
       "msExtrusionOutlineWidth": "Ekstruderingskonturbredde",
       "wall": "Væg",
       "enableBanding": "Båndstyling",
@@ -4672,7 +4672,7 @@
         "layerNotSupported": "Det valgte lag understøttes ikke. Vælg venligst WMS, WFS eller vektorlag.",
         "noFeatureInPoint": "Linjefunktion blev ikke fundet på det valgte punkt.",
         "noLineFeatureFound": "Linjefunktion blev ikke fundet i den importerede fil.",
-        "fallbackToProjection": "Referencen \"{defaultReferential}\"  understøttes ikke. Skifter til referensen \"{referential}\" med projektionen \"{projection}\"."
+        "fallbackToProjection": "Referencen \"{defaultReferential}\" understøttes ikke. Skifter til referencen \"{referential}\" med projektionen \"{projection}\"."
       },
       "errors": {
         "outsideCoverage": "Den angivne linje er uden for profilens dækning",
