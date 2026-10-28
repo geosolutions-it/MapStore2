@@ -28,7 +28,7 @@ The layer settings panel is composed of four sections:
 
 By default, as soon as the user opens the layer settings panel the General information section appears:
 
-<img src="../img/layer-settings/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-setting/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 In this page it is possible to:
 
@@ -52,7 +52,12 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
+* Enable/disable the **WFS linked service** associated with the WMS layer, allowing tools such as [Attribute Table](attributes-table.md) and [Layer Filter](filtering-layers.md) to access its vector features. When enabled, users can configure the *WFS service URL* and the *TypeName* of the corresponding feature type when they differ from the ones of the WMS layer.
+
+!!!Warning
+    The *WFS linked service* option is available only for WMS layers.
+
+* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the [Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
 
 !!! note
     The ability to change layer Title and Name is available for supported ArcGIS, WFS and WMS layers.
@@ -323,7 +328,7 @@ Once a symbolizer has been added and customized, you can:
 
 <img src="../img/layer-settings/style_options.jpg" class="ms-docimage"  style="max-width:500px;">
 
-* **Filter** the style rule, as explained in the [Attribute filtering documentation](filtering-layers.md#attribute-filter), in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button
+* **Filter** the style rule, as explained in the [Attribute Filter](filtering-layers.md#attribute-filter) section, in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
 
 * Add a **Scale denominator filter** (`max` and `min` scale) to visualize the style rule only within certain scale limits. This is possible by clicking the <img src="../img/button/scale_denominator_button.jpg" class="ms-docbutton"/> button.
 
@@ -415,7 +420,7 @@ With the *Pattern mark style* it is possible to represent *Line* or *Fill*  styl
 
 <img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The style editor can configure a *Mark* as explained on the [Mark](#mark) section along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
+The style editor can configure a *Mark* as explained in the [Mark](#mark) section along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
 
 <img src="../img/layer-settings/classify_mark_ex.jpg" class="ms-docimage">
 
