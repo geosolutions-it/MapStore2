@@ -68,6 +68,8 @@
     line-height: 1.45;
     text-align: left;
     h2 { font-size: 18px; margin: 0 0 8px; }
+    // the title gets the focus only from code, when the panel opens, so that screen readers announce it
+    h2:focus { outline: none; }
     p { margin: 7px 0; }
     a { text-decoration: underline; }
     button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #d99419; outline-offset: 2px; }
