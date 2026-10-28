@@ -10,7 +10,7 @@ import { compose, withState, mapPropsStream, withHandlers } from 'recompose';
 
 import axios from '../../../../../../libs/ajax';
 import ConfigUtils from '../../../../../../utils/ConfigUtils';
-import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../../../../../utils/LayersUtils';
+import { excludeGoogleBackground, addTileMatrixFromSourcesToLayers } from '../../../../../../utils/LayersUtils';
 import { EMPTY_MAP } from "../../../../../../utils/MapUtils";
 import { is3DVisualizationMode } from "../../../../../../utils/MapTypeUtils";
 import { getResource } from '../../../../../../api/persistence';
@@ -47,10 +47,7 @@ const handleMapSelect = compose(
                         };
                     }).then(res => {
                         // Extract tileMatrix from source and update layers
-                        res.layers = res.sources ? res.layers.map(l => {
-                            const tileMatrix = extractTileMatrixFromSources(res.sources, l);
-                            return {...l, ...tileMatrix};
-                        }) : res.layers;
+                        res.layers = addTileMatrixFromSourcesToLayers(res.sources, res.layers);
                         // enable identify tool on map widgets only for 2D maps
                         return {...res, mapInfoControl: !is3DVisualizationMode(res) };
                     }))
