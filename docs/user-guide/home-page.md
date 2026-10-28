@@ -30,7 +30,7 @@ The anonymous user is allowed to:
 
 * Navigate through the **Featured** and **Contents** sections
 
-* Change the way the resources on *Contents* section is displayed. Enable the list view of resources using the <img src="../img/button/list-view.jpg" class="ms-docbutton"/>, switch back to the card view of resources using the <img src="../img/button/card_view.jpg" class="ms-docbutton"/> button or enable the table view of resources using the <img src="../img/button/table.jpg" class="ms-docbutton"/> button. 
+* Change the way the resources on *Contents* section is displayed. Enable the list view of resources using the <img src="../img/button/list-view.jpg" class="ms-docbutton"/>, switch back to the card view of resources using the <img src="../img/button/card_view.jpg" class="ms-docbutton"/> button or enable the table view of resources using the <img src="../img/button/table.jpg" class="ms-docbutton"/> button.
 
 * Change the display order of resources in the *Contents* section by choosing from the following options: *Most recent*, *Less recent*, *A-Z*, or *Z-A*.
 
