@@ -28,7 +28,7 @@ The layer settings panel is composed of four sections:
 
 By default, as soon as the user opens the layer settings panel the General information section appears:
 
-<img src="../img/layer-settings/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-setting/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 In this page it is possible to:
 
@@ -38,7 +38,7 @@ In this page it is possible to:
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/lacalize-layer-title.mp4"/></video>
 
-* Take a look at the **Name** of the layer
+* View or edit the **Name** of the layer
 
 * Edit the layer's **Description**
 
@@ -52,13 +52,21 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
+* Enable/disable the **WFS linked service** associated with the WMS layer, allowing tools such as [Attribute Table](attributes-table.md) and [Layer Filter](filtering-layers.md) to access its vector features. When enabled, users can configure the *WFS service URL* and the *TypeName* of the corresponding feature type when they differ from the ones of the WMS layer.
+
+!!!Warning
+    The *WFS linked service* option is available only for WMS layers.
+
+* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the [Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
+
+!!! note
+    The ability to change layer Title and Name is available for supported ArcGIS, WFS and WMS layers.
 
 ## Display
 
 Through the second section of the layer settings panel it is possible to change the display settings:
 
-<img src="../img/layer-settings/display.jpg" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/layer-settings/coalesceLayer.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 In particular, the user is allowed to:
 
@@ -88,6 +96,8 @@ In particular, the user is allowed to:
 
 * Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
 When the *Use cache options* is enabled, more controls are enabled so that it is possible for the user to check if the current map settings match any GWC ***standard*** Gridset defined on the server side for the given WMS layer (**Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/>). At the same time, it is also possible to change the setting strategy (based on the WMTS service response) to strictly adapt layer settings on the client side to the ones matching any remote ***custom*** Gridset defined for the current map settings (**Use remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> button).
+
+* Enable/disable the **Exclude from combined requests option**. If checked, the layer is always loaded with its own separate request, even when the [Combine WMS requests (coalesce)](mapstore-toolbars.md#side-toolbar) option is enabled in the map Settings, where adjacent WMS layers from the same service are combined into a single request.
 
 !!!note
 
