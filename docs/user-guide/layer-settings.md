@@ -613,7 +613,7 @@ The `HTML` format displays the HTML content returned by the server. The image be
 
 ### Properties format
 
-The `PROPERTIES` format displays the *Attributes* of the identified feature. Th user can customized the attribute though the<img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button.
+The `PROPERTIES` format displays the *Attributes* of the identified feature. The user can customize the attributes though the<img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button.
 
 <img src="../img/layer-settings/edit-properties-format.jpg" class="ms-docimage" style="max-width:600px;"/>
 
