@@ -8,7 +8,6 @@
 
 import FileSaver from 'file-saver';
 
-import { DxfParser } from 'dxf-parser';
 import toBlob from 'canvas-to-blob';
 import shp from 'shpjs';
 import tj from '@mapbox/togeojson';
@@ -135,8 +134,42 @@ export const readGeoJson = function(file, warnings = false) {
         reader.readAsText(file);
     });
 };
+const LOG_LEVEL_KEY = 'loglevel';
+let dxfParserLoader;
+/**
+ * Loads dxf-parser on demand. When its module is evaluated, dxf-parser saves its log level
+ * in the browser (localStorage `loglevel`, or a cookie when localStorage is not available).
+ * The parser does not need it, so the previous browser storage is restored after loading.
+ * @returns {Promise} resolves with the `DxfParser` class
+ */
+const loadDxfParser = () => {
+    if (!dxfParserLoader) {
+        let previousLevel = null;
+        try {
+            previousLevel = window.localStorage.getItem(LOG_LEVEL_KEY);
+        } catch (e) { /* Storage may be unavailable. */ }
+        const hadCookie = document.cookie.split(/;\s*/).some(cookie => cookie.indexOf(LOG_LEVEL_KEY + '=') === 0);
+        dxfParserLoader = import('dxf-parser').then(({ DxfParser }) => {
+            try {
+                if (previousLevel === null) {
+                    window.localStorage.removeItem(LOG_LEVEL_KEY);
+                } else {
+                    window.localStorage.setItem(LOG_LEVEL_KEY, previousLevel);
+                }
+            } catch (e) { /* Storage may be unavailable. */ }
+            if (!hadCookie) {
+                document.cookie = LOG_LEVEL_KEY + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            }
+            return DxfParser;
+        }).catch(e => {
+            dxfParserLoader = null;
+            throw e;
+        });
+    }
+    return dxfParserLoader;
+};
 export const readDxf = function(file) {
-    return new Promise((resolve, reject) => {
+    return loadDxfParser().then(DxfParser => new Promise((resolve, reject) => {
         let reader = new FileReader();
         reader.onload = function() {
             try {
@@ -151,7 +184,7 @@ export const readDxf = function(file) {
             reject(reader.error.name);
         };
         reader.readAsText(file);
-    });
+    }));
 };
 export const readWMC = function(file) {
     return new Promise((resolve, reject) => {

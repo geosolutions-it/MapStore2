@@ -44,7 +44,7 @@ Once the **Measure Area** button is selected <img src="../img/button/measure-are
 
 In this case the available units of measure are:
 
-<img src="../img/measure/area-uom.jpg" class="ms-docimage" style="max-width:300px;"/>
+<img src="../img/measure/ha.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 !!! note
     Each side's length of the polygon is reported in map along with its perimeter and the area.

@@ -39,7 +39,6 @@ import Portal from '../misc/Portal';
 
 /**
  * SharePanel allow to share the current map in some different ways.
- * You can share it on socials networks(facebook,twitter,google+,linkedin)
  * copying the direct link
  * copying the embedded code
  * using the QR code with mobile apps
@@ -50,13 +49,12 @@ import Portal from '../misc/Portal';
  * @prop {string} [shareUrl] the url to use for share. by default location.href
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
- * @prop {boolean} [socialPanel=true] if false, hide the social tab.
+ * @prop {boolean} [socialPanel=false] deprecated. If true, shows the social tab, with links to share on social networks.
  * @prop {boolean} [embedPanel=true] if false, hide the embed tab.
  * @prop {object} [embedOptions] options to pass to the embed tab.(`showTOCToggle` - if false hides the 'show TOC' checkbox (used only by map))
  * @prop {string} [shareApiUrl] url for share API part
  * @prop {string} [shareConfigUrl] the url of the config to use for shareAPI
  * @prop {function} [onClose] function to call on close window event.
- * @prop {getCount} [getCount] function used to get the count for social links.
  * @prop {object} [advancedSettings] object with properties/settings for bbox, coordinates, zoom, marker, hideInTab
  */
 class SharePanel extends React.Component {
@@ -77,7 +75,6 @@ class SharePanel extends React.Component {
         embedOptions: PropTypes.object,
         showAPI: PropTypes.bool,
         onClose: PropTypes.func,
-        getCount: PropTypes.func,
         closeGlyph: PropTypes.string,
         version: PropTypes.string,
         bbox: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
@@ -107,7 +104,7 @@ class SharePanel extends React.Component {
 
     static defaultProps = {
         title: "share.title",
-        socialPanel: true,
+        socialPanel: false,
         modal: false,
         draggable: true,
         onClose: () => {},
@@ -158,7 +155,7 @@ class SharePanel extends React.Component {
         const tabsMap = this.getShareTabs(itemTabs);
         this.setState({
             bbox,
-            eventKey: tabsMap[this.props.selectedTab] || SHARE_TABS[this.props.selectedTab] || 1,
+            eventKey: this.props.selectedTab === 'social' && !this.props.socialPanel ? 1 : tabsMap[this.props.selectedTab] || SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
             coordinate,
             ...this.processOrientation(this.props)
@@ -264,7 +261,6 @@ class SharePanel extends React.Component {
                     <ShareSocials
                         sharedTitle={this.props.sharedTitle}
                         shareUrl={shareUrl}
-                        getCount={this.props.getCount}
                     />
                 ),
                 hide: !this.props.socialPanel

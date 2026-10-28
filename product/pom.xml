@@ -166,6 +166,7 @@
                                         <include>**/*.json</include>
                                         <include>**/img/*</include>
                                         <include>product/assets/symbols/*</include>
+                                        <include>product/assets/privacy/*</include>
                                         <include>**/*.less</include>
                                     </includes>
                                     <excludes>
@@ -251,17 +252,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
-                    <packagingExcludes>
-                        WEB-INF/lib/*spring*5.3.18*.jar,
-                        WEB-INF/lib/json-lib-2.4-jdk15.jar,
-                        WEB-INF/lib/msg-simple-1.1.jar,
-                        WEB-INF/lib/btf-1.2.jar,
-                        WEB-INF/lib/commons-io-2.1.jar,
-                        WEB-INF/lib/commons-beanutils-1.8.0.jar,
-                        WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/jackson-coreutils-1.6.jar,
-                        WEB-INF/lib/stax-ex-1.8.jar
-                    </packagingExcludes>
                     <overlays>
                         <overlay>
                             <groupId>it.geosolutions.mapstore</groupId>
@@ -362,15 +352,11 @@
             </build>
 
             <dependencies>
-                <!-- mapfish-print -->
+                <!-- mapfish-print (more exclusions in the root dependencyManagement) -->
                 <dependency>
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
                     <exclusions>
-                        <exclusion>
-                            <groupId>commons-codec</groupId>
-                            <artifactId>commons-codec</artifactId>
-                        </exclusion>
                         <exclusion>
                             <groupId>com.fasterxml.jackson.core</groupId>
                             <artifactId>jackson-annotations</artifactId>
@@ -390,15 +376,6 @@
                         <exclusion>
                             <groupId>org.springframework</groupId>
                             <artifactId>spring-context</artifactId>
-                        </exclusion>
-                        <!-- drop the HTTP Client and Core jar -->
-                        <exclusion>
-                            <groupId>org.apache.httpcomponents</groupId>
-                            <artifactId>httpclient</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.apache.httpcomponents</groupId>
-                            <artifactId>httpcore</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>

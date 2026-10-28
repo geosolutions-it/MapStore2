@@ -26,7 +26,7 @@ Pull the latest image from Docker Hub:
 
 ```sh
 docker pull geosolutionsit/mapstore2
-docker run --name mapstore -p 8080:8080  geosolutionsit/mapstore2
+docker run --name mapstore -p 8080:8080 -e INITIAL_ADMIN_PASSWORD='<your-strong-password>' geosolutionsit/mapstore2
 ```
 
 Then you can access MapStore at: [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
@@ -44,9 +44,11 @@ docker build \
   .
 ```
 
-### Default credentials
+### Login credentials
 
-Use the default credentials (**admin** / **admin**) to login and start creating your maps!
+MapStore has no default credentials. On the first start (empty database) it creates the user **admin** with the password set in the `INITIAL_ADMIN_PASSWORD` environment variable (see the `docker run` example above). If the variable is not set, no administrator is created and you cannot log in.
+
+Login as **admin** and change the password from the user menu to start creating your maps! See [Initial Administrator Password](developer-guide/initial-admin-password.md) for details.
 
 ## Production Deployment
 
@@ -94,7 +96,9 @@ The provided `docker-compose.yml` sets up a full production stack with:
     docker-compose up -d
     ```
 
-5. Access MapStore at your domain: `http://example.com/mapstore`
+5. Access MapStore at your domain: `http://example.com/mapstore` and login as **admin**, using the password set in `INITIAL_ADMIN_PASSWORD` for the `mapstore` service (set it before the first start).
+
+    Change it from the user menu after the first login. Alternatively, set your own initial password adding `INITIAL_ADMIN_PASSWORD` to the `environment` of the `mapstore` service, before the first start (see [Initial Administrator Password](developer-guide/initial-admin-password.md)).
 
 !!! note
     Due to proxy binding on host port 80, you may need to run docker-compose as root.

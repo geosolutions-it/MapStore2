@@ -103,6 +103,7 @@ cp docker/keycloak/realm-mapstore.sample.json docker/keycloak/realm-mapstore.jso
 
 Review `.env` before starting the stack. The most relevant variables are:
 
+- `INITIAL_ADMIN_PASSWORD`: password of the MapStore `admin` user, created on the first boot with an empty database. It is required: without it no administrator is created (see [Initial administrator password](../initial-admin-password.md)).
 - `KEYCLOAK_ADMIN` and `KEYCLOAK_ADMIN_PASSWORD`: credentials for the Keycloak admin console.
 - `KEYCLOAK_HOSTNAME`: public Keycloak URL used in redirects. The local default is `http://localhost/keycloak`.
 - `LDAP_ADMIN_PASSWORD`, `LDAP_CONFIG_PASSWORD` and `LDAP_READONLY_PASSWORD`: OpenLDAP administrative and read-only bind credentials.

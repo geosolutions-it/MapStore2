@@ -350,11 +350,35 @@
       "tooltipDeactivate": "Forlad 3D-visning",
       "tooltipActivate": "Skift til 3D-visning"
     },
-    "cookie": {
-      "info": "Denne hjemmeside bruger cookies for at forbedre din oplevelse. Vi antager, at du accepterer dette, men du kan fravælge det, hvis du ønsker det.",
-      "moreDetailsButton": "Flere detaljer",
-      "leave": "Forlad",
-      "accept": "Acceptér"
+    "privacySettings": {
+      "title": "Privacy settings",
+      "settings": "Privacy settings",
+      "necessary": "Functional and necessary",
+      "always": "Always active",
+      "functional": "Optional functional",
+      "statistics": "Statistics",
+      "marketing": "Marketing",
+      "unused": "Not used",
+      "on": "On",
+      "off": "Off",
+      "reject": "Reject optional",
+      "accept": "Accept optional",
+      "customize": "Customize",
+      "save": "Save choices",
+      "close": "Close",
+      "withdraw": "Withdraw all optional consent",
+      "baseline": "This configuration uses only necessary technical tools, which do not require consent. Closing this notice does not express consent.",
+      "optional": "Optional tools stay off until you choose. You can refuse them and continue using MapStore.",
+      "required": "Authentication when you sign in, security and remembering your privacy settings. See the Cookie Policy for purposes and duration.",
+      "status": "Change or withdraw consent at any time from the bottom bar. Withdrawal stops registered integrations; it cannot undo data already sent or remove third-party cookies.",
+      "storageError": "Your choice could not be saved. Optional tools remain off. Check browser storage and try again.",
+      "fixture": "LOCAL TEST FIXTURE: synthetic optional tools, not included in Vanilla.",
+      "templateWarning": "The policy pages still need to be configured! Current pages are still referring to the MapStore templates: the operator of this installation has not configured its own pages yet.",
+      "templateWarningLink": "How to configure them",
+      "policies": "Policies",
+      "cookie": "Cookie Policy",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use"
     },
     "background": "Baggrund",
     "language": "Sprog",
@@ -3132,7 +3156,7 @@
       "msExtrudedHeight": "Ekstruderet højde",
       "msExtrusionColor": "Ekstruderingsfarve",
       "msExtrusionType": "Ekstruderingstype",
-      "msExtrusionOutlineColor": "Ekstruderingskonturfærge",
+      "msExtrusionOutlineColor": "Ekstruderingskonturfarve",
       "msExtrusionOutlineWidth": "Ekstruderingskonturbredde",
       "wall": "Væg",
       "enableBanding": "Båndstyling",
@@ -4672,7 +4696,7 @@
         "layerNotSupported": "Det valgte lag understøttes ikke. Vælg venligst WMS, WFS eller vektorlag.",
         "noFeatureInPoint": "Linjefunktion blev ikke fundet på det valgte punkt.",
         "noLineFeatureFound": "Linjefunktion blev ikke fundet i den importerede fil.",
-        "fallbackToProjection": "Referencen \"{defaultReferential}\"  understøttes ikke. Skifter til referensen \"{referential}\" med projektionen \"{projection}\"."
+        "fallbackToProjection": "Referencen \"{defaultReferential}\" understøttes ikke. Skifter til referencen \"{referential}\" med projektionen \"{projection}\"."
       },
       "errors": {
         "outsideCoverage": "Den angivne linje er uden for profilens dækning",

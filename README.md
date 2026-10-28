@@ -52,14 +52,14 @@ Pull the latest image from Docker Hub:
 
 ```sh
 docker pull geosolutionsit/mapstore2
-docker run --name mapstore -p 8080:8080  geosolutionsit/mapstore2
+docker run --name mapstore -p 8080:8080 -e INITIAL_ADMIN_PASSWORD='<your-strong-password>' geosolutionsit/mapstore2
 ```
 
 Then you can access MapStore using the following URL:
 
 [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
-Use the default credentials (admin / admin) to login and start creating your maps!
+Login with the user `admin` and the password set in `INITIAL_ADMIN_PASSWORD` to start creating your maps! If you do not set `INITIAL_ADMIN_PASSWORD`, no administrator is created and you cannot log in. See [Initial Administrator Password](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/initial-admin-password/) for details.
 
 ### * Build your own image
 
@@ -94,7 +94,7 @@ If this argument is not provided, the build will automatically detect the WAR fi
 
   [http://localhost/mapstore](http://localhost/mapstore)
 
-- Use the default credentials (**admin** / **admin**) to login and start creating your maps!
+- Login with the user **admin** and the password set in the `INITIAL_ADMIN_PASSWORD` environment variable of the `mapstore` service (set it before the first start). See [Initial Administrator Password](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/initial-admin-password/) for details.
 - After finished the test you can stop the environment with the command:
 
     ```shell
@@ -117,7 +117,7 @@ Then you can access MapStore using the following URL (assuming the web container
 
 [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
-Use the default credentials (admin / admin) to login and start creating your maps!
+On the first start MapStore creates the user `admin` with the password set in the `INITIAL_ADMIN_PASSWORD` environment variable. If the variable is not set, no administrator is created and you cannot log in. See [Initial Administrator Password](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/initial-admin-password/) for details.
 
 ## Start developing your custom app
 

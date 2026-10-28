@@ -71,6 +71,7 @@ nav:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
+    - Privacy Settings: 'user-guide/privacy-settings.md'
     - Managing Tags: 'user-guide/tags.md'
     - Managing IP Ranges: 'user-guide/ip-ranges.md'
     - Managing Access Rules: 'user-guide/rule-manager.md'
@@ -164,14 +165,17 @@ nav:
     - Configuration:
       - Configuration Files: 'developer-guide/configuration-files.md'
       - Application Configuration: 'developer-guide/local-config.md'
+      - Privacy and Consent: 'developer-guide/privacy-settings.md'
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Configuration Expressions: 'developer-guide/expressions.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
+      - Proxy Configuration: 'developer-guide/proxy-configuration.md'
       - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
       - Filters: 'developer-guide/LayerFilter.md'
       - Styles: 'developer-guide/vector-style.md'
     - Database Setup: 'developer-guide/database-setup.md'
+    - Initial Administrator Password: 'developer-guide/initial-admin-password.md'
     - Integrations:
       - Users:
         - LDAP: 'developer-guide/integrations/users/ldap.md'
@@ -190,7 +194,7 @@ nav:
       - MapViewer query parameters: 'developer-guide/map-query-parameters.md'
 plugins:
   - search
-  # kroki is used to support mermaid charts in also in pdf.
+# kroki is used to support mermaid charts in also in pdf.
   # See https://kroki.io/.
   - kroki: # https://pypi.org/project/mkdocs-kroki-plugin/
       FencePrefix: ''
