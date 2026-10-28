@@ -59,6 +59,11 @@ module.exports = ({ prod = true, name, exposes, sharedLibrariesEager = true, ali
     module: {
         rules: [
             {
+                // react 16 has no exports map, so strict esm deps cannot resolve react/jsx-runtime
+                test: /\.m?js$/,
+                resolve: { fullySpecified: false }
+            },
+            {
                 test: /\.css$/,
                 use: [
                     prod ? MiniCssExtractPlugin.loader : "style-loader", // because HMR do not work with mini-css plugin
