@@ -68,7 +68,7 @@ The normal user, in addition to what the anonymous user can do, is allowed to:
 
 ## Administrator user
 
-Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) it's like the following:
+Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) looks like this:
 
 <img src="../img/home-page/homepage-admin.jpg" class="ms-docimage" />
 
