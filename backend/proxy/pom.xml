@@ -1,27 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>proxy</groupId>
+
+	<parent>
+		<groupId>it.geosolutions.mapstore</groupId>
+		<artifactId>mapstore-backend</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>it.geosolutions.proxy</groupId>
 	<artifactId>http_proxy</artifactId>
 	<packaging>war</packaging>
-	<version>1.8-SNAPSHOT</version>
-	<name>http_proxy</name>
-	<url>https://maven.apache.org</url>
+	<name>MapStore - HTTP Proxy</name>
 
-	<!-- The SCM -->
-	<scm>
-		<connection>scm:git:[fetch=]git@github.com:geosolutions-it/http-proxy.git[push=]git@github.com:geosolutions-it/http-proxy.git</connection>
-		<tag>master</tag>
-		<url>https://github.com/geosolutions-it/http-proxy</url>
-	</scm>
+	<licenses>
+		<license>
+			<name>GPL-3.0</name>
+			<url>https://opensource.org/licenses/GPL-3.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-	<distributionManagement>
-    <!--      GeoSolutions Repository     -->
-      <repository>
-        <uniqueVersion>false</uniqueVersion>
-        <id>geosolutions</id>
-        <url>sftp://maven.geo-solutions.it</url>
-      </repository>
-    </distributionManagement>
+
 
 	<build>
 		<plugins>
@@ -133,104 +132,7 @@
 			</plugin>
 
 		</plugins>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>3.5.3</version>
-			</extension>
-		</extensions>
 	</build>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<log4j-version>2.25.5</log4j-version>
-		<httpclient5-version>5.6.3</httpclient5-version>
-		<jetty-version>12.1.10</jetty-version>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-core</artifactId>
-				<version>${log4j-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-api</artifactId>
-				<version>${log4j-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-slf4j2-impl</artifactId>
-				<version>${log4j-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter</artifactId>
-				<version>5.11.4</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
-				<version>2.0.0-M5</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.httpcomponents.client5</groupId>
-				<artifactId>httpclient5</artifactId>
-				<version>${httpclient5-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.22.0</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.22.0</version>
-			</dependency>
-
-			<dependency>
-				<groupId>jakarta.servlet</groupId>
-				<artifactId>jakarta.servlet-api</artifactId>
-				<version>6.0.0</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.eclipse.jetty.ee10</groupId>
-				<artifactId>jetty-ee10-webapp</artifactId>
-				<version>${jetty-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>5.23.0</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-junit-jupiter</artifactId>
-				<version>5.23.0</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.wiremock</groupId>
-				<artifactId>wiremock-standalone</artifactId>
-				<version>3.10.0</version>
-				<scope>test</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<!-- JUnit 5 dependencies -->
@@ -314,7 +216,6 @@
 				<dependency>
 					<groupId>jakarta.servlet</groupId>
 					<artifactId>jakarta.servlet-api</artifactId>
-					<version>6.0.0</version>
 					<scope>compile</scope>
 				</dependency>
 			</dependencies>
@@ -349,47 +250,8 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>owasp</id>
-			<activation>
-				<property>
-					<name>owasp</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.owasp</groupId>
-						<artifactId>dependency-check-maven</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+
 	</profiles>
 
-	<repositories>
-
-        <!-- central is assumed -->
-
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>osgeo</id>
-			<name>OSGeo Nexus Release Repository</name>
-			<url>https://repo.osgeo.org/repository/release/</url>
-		</repository>
-
-	</repositories>
 
 </project>

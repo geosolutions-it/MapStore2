@@ -2,8 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
-        <artifactId>mapstore-java</artifactId>
-        <version>1.14-SNAPSHOT</version>
+        <artifactId>mapstore-backend</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>it.geosolutions.mapstore</groupId>

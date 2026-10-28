@@ -2,9 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>it.geosolutions.mapstore</groupId>
+        <artifactId>mapstore-backend</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>it.geosolutions</groupId>
     <artifactId>geostore</artifactId>
-    <version>2.8-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -13,7 +18,6 @@
         GeoStore is an open source Java enterprise application for storing, searching and retrieving data on the fly.
     </description>
 
-    <url>https://github.com/geosolutions-it/geostore</url>
     <inceptionYear>2011</inceptionYear>
 
     <organization>
@@ -55,144 +59,40 @@
         </license>
     </licenses>
 
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/geosolutions-it/geostore/issues</url>
-    </issueManagement>
 
-    <scm>
-        <url>https://github.com/geosolutions-it/geostore</url>
-        <connection>scm:git:git@github.com:geosolutions-it/geostore.git</connection>
-        <tag>HEAD</tag>
-    </scm>
 
     <properties>
-        <!-- GeoStore core -->
+        <!--
+            Dependency versions are managed in MapStore's root pom. These are GeoStore's own
+            build settings, which apply to its modules only.
+        -->
         <main-prefix>geostore</main-prefix>
-        <cxf-version>4.2.2</cxf-version>
+        <!--
+            GeoStore's root, where the qa/ rules used by the PMD and SpotBugs checks live.
+            maven.multiModuleProjectDirectory is MapStore's root, marked by its .mvn directory,
+            wherever Maven is launched from.
+        -->
+        <geostore.basedir>${maven.multiModuleProjectDirectory}/backend/geostore</geostore.basedir>
+        <maven-compiler-plugin.source>17</maven-compiler-plugin.source>
+        <maven-compiler-plugin.target>17</maven-compiler-plugin.target>
 
-        <!-- Spring Framework & Security (aligned) -->
-        <spring-version>7.0.9</spring-version>
-        <spring-security-version>7.1.1</spring-security-version>
-
-        <!-- etc. -->
-        <javax-mail-version>1.4</javax-mail-version>
-        <javax-annotation-version>1.0</javax-annotation-version>
-        <xalan-version>2.7.0</xalan-version>
-        <xercesImpl-version>2.8.1</xercesImpl-version>
-        <xml-apis-version>1.3.03</xml-apis-version>
-        <jaxws-version>4.0.3</jaxws-version>
-
-        <!-- Logging & commons (aligned) -->
-        <log4j.version>2.26.0</log4j.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <commons-lang-version>3.20.0</commons-lang-version>
-        <commons-collections-version>3.2.2</commons-collections-version>
-        <commons-beanutils-version>1.11.0</commons-beanutils-version>
-        <commons-dbcp-version>2.14.0</commons-dbcp-version>
-        <commons-codec-version>1.16.0</commons-codec-version>
-
-        <!-- JAXB/JPA/Hibernate (kept as GeoStore had) -->
-        <geronimo-specs-version>1.1</geronimo-specs-version>
-        <dozer-version>4.0</dozer-version>
-        <jaxb-api-version>4.0.5</jaxb-api-version>
-        <jaxb-impl-version>4.0.7</jaxb-impl-version>
-        <persistence-version>1.0</persistence-version>
-        <hibernate-version>7.3.2.Final</hibernate-version>
-
-        <!-- AOP, ASM, CGLIB? -->
-        <asm-version>2.2.3</asm-version>
-        <cglib-version>2.1_3</cglib-version>
-
-        <!-- Guava & friends (aligned) -->
-        <guava-version>32.0.0-jre</guava-version>
-        <mockito-version>5.23.0</mockito-version>
-        <javassist-version>3.8.0.GA</javassist-version>
-
-        <!-- GeoTools, Jackson (aligned) -->
-        <geoapi-version>2.3-M1</geoapi-version>
-        <gt-version>31.3</gt-version>
-        <jackson-version>2.22.3</jackson-version>
-
-        <!-- Additional tooling -->
-        <gson.version>2.9.0</gson.version>
-        <jdom.version>2.0.6.1</jdom.version>
-
-        <!-- HTTP, JSON, testing (aligned) -->
-        <httpclient.version>4.5.13</httpclient.version>
-        <commons-io.version>2.14.0</commons-io.version>
-        <hibernate-jpa-2.1-api.version>1.0.2.Final</hibernate-jpa-2.1-api.version>
-        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-        <junit.version>4.13.2</junit.version>
-
-        <!-- GeoStore-specific persistence bits -->
-        <dao-hibernate.version>geosolutions-2.0.0</dao-hibernate.version>
-        <jsr-275.version>1.0-beta-2</jsr-275.version>
-        <jt-utils.version>1.1.1</jt-utils.version>
-        <jai_imageio.version>1.1</jai_imageio.version>
-        <jai_codec.version>1.1.3</jai_codec.version>
-        <postgis-jdbc.version>1.3.3</postgis-jdbc.version>
-        <postgresql.version>42.7.11</postgresql.version>
-        <jts.version>1.10</jts.version>
-        <jstl.version>1.2</jstl.version>
-        <h2.version>2.4.240</h2.version>
-
-        <!-- More integrations -->
-        <ojdbc6.version>11.2.0</ojdbc6.version>
-        <java-jwt.version>4.5.2</java-jwt.version>
-        <json-path.version>2.9.0</json-path.version>
-        <nimbus-jose-jwt.version>9.37.3</nimbus-jose-jwt.version>
-        <jasypt.version>1.9.3</jasypt.version>
-        <wiremock-standalone.version>2.1.12</wiremock-standalone.version>
-        <testcontainers.version>1.20.2</testcontainers.version>
-        <testcontainers-keycloak.version>3.7.0</testcontainers-keycloak.version>
-        <hamcrest-core.version>1.3</hamcrest-core.version>
-        <freemarker.version>2.3.35</freemarker.version>
-        <apacheds-all.version>1.5.5</apacheds-all.version>
-        <shared-ldap.version>0.9.16</shared-ldap.version>
-        <jetty.version>6.1.23</jetty.version>
-        <jettison-version>1.5.4</jettison-version>
         <!-- Build plugins -->
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <fmt-maven-plugin.version>2.29</fmt-maven-plugin.version>
-        <directory-maven-plugin.version>0.3.1</directory-maven-plugin.version>
-        <wagon-ssh.version>3.5.3</wagon-ssh.version>
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
         <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <spotbugs-maven-plugin>4.9.8.3</spotbugs-maven-plugin>
         <pmd.version>6.55.0</pmd.version>
         <maven-pmd-plugin.version>3.21.2</maven-pmd-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven-compiler-plugin.source>17</maven-compiler-plugin.source>
-        <maven-compiler-plugin.target>17</maven-compiler-plugin.target>
     </properties>
 
-    <ciManagement>
-        <system>jenkins</system>
-        <url>http://build.geo-solutions.it/jenkins/view/GeoStore/</url>
-    </ciManagement>
 
-    <distributionManagement>
-        <!-- use the following if you're not using a snapshot version. -->
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>geosolutions</id>
-            <url>sftp://maven.geo-solutions.it/</url>
-        </repository>
-        <!-- use the following if you ARE using a snapshot version. -->
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>geosolutions</id>
-            <url>sftp://maven.geo-solutions.it/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -330,32 +230,8 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.commonjava.maven.plugins</groupId>
-                <artifactId>directory-maven-plugin</artifactId>
-                <version>${directory-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>directories</id>
-                        <goals>
-                            <goal>highest-basedir</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                        <configuration>
-                            <property>geostore.basedir</property>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
 
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>${wagon-ssh.version}</version>
-            </extension>
-        </extensions>
 
     </build>
 
@@ -375,31 +251,6 @@
         </plugins>
     </reporting>
 
-    <profiles>
-        <profile>
-            <id>owasp</id>
-            <activation>
-                <property>
-                    <name>owasp</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <modules>
         <module>src</module>

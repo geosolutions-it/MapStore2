@@ -31,10 +31,8 @@
         <mockito-core.version>4.0.0</mockito-core.version>
         <cargo.version>1.10.27</cargo.version>
 
-        <!-- MapStore‑specific -->
-        <mapstore-services.version>1.14-SNAPSHOT</mapstore-services.version>
-        <geostore-webapp.version>2.8-SNAPSHOT</geostore-webapp.version>
-        <http_proxy.version>1.8-SNAPSHOT</http_proxy.version>
+        <!-- MapStore‑specific: mapstore-services, geostore-webapp and http_proxy share MapStore's version -->
+        <mapstore.version>3.0.0-SNAPSHOT</mapstore.version>
         <print-lib.version>2.5-SNAPSHOT</print-lib.version>
     </properties>
 
