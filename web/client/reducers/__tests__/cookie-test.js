@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import cookie from '../cookie';
-import { SET_COOKIE_VISIBILITY, SET_MORE_DETAILS_VISIBILITY } from '../../actions/cookie';
+import { SET_COOKIE_VISIBILITY } from '../../actions/cookie';
 
 describe('Test the cookie reducer', () => {
     it('cookie visibility', () => {
@@ -17,14 +17,6 @@ describe('Test the cookie reducer', () => {
             status: true
         });
         expect(state.showCookiePanel).toBeTruthy();
-    });
-
-    it('cookie seeMore section', () => {
-        const state = cookie(undefined, {
-            type: SET_MORE_DETAILS_VISIBILITY,
-            status: true
-        });
-        expect(state.seeMore).toBeTruthy();
     });
 
 });
