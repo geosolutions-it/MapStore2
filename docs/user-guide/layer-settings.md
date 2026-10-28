@@ -670,7 +670,7 @@ Using the `${properties.NAME_OF_THE_FIELD}` syntax, MapStore is able to parse th
 
 ### External Data format
 
-The `EXTERNAL DATA` format displays records from a separate WFS layer or table that are related to the identified feature.
+The `EXTERNAL DATA` format displays records from a separate WFS layer that is related to the identified feature.
 
 The relationship is defined through a **CQL filter template**, which uses attribute values from the identified feature to query the external source. The external data can contain spatial or non-spatial records.
 
