@@ -192,7 +192,7 @@ nav:
       - MapViewer query parameters: 'developer-guide/map-query-parameters.md'
 plugins:
   - search
-  # kroki is used to support mermaid charts in also in pdf.
+# kroki is used to support mermaid charts in also in pdf.
   # See https://kroki.io/.
   - kroki: # https://pypi.org/project/mkdocs-kroki-plugin/
       FencePrefix: ''
