@@ -7,8 +7,6 @@
 */
 
 export const SET_COOKIE_VISIBILITY = 'SET_COOKIE_VISIBILITY';
-export const SET_MORE_DETAILS_VISIBILITY = 'SET_MORE_DETAILS_VISIBILITY';
-export const SET_DETAILS_COOKIE_HTML = 'SET_DETAILS_COOKIE_HTML';
 
 export function setCookieVisibility(status) {
     return {
@@ -16,16 +14,6 @@ export function setCookieVisibility(status) {
         status
     };
 }
-export function setMoreDetailsVisibility(status) {
-    return {
-        type: SET_MORE_DETAILS_VISIBILITY,
-        status
-    };
-}
-export function setDetailsCookieHtml(html, lang) {
-    return {
-        type: SET_DETAILS_COOKIE_HTML,
-        html,
-        lang
-    };
-}
+
+export const SET_PRIVACY_CHOICE = 'SET_PRIVACY_CHOICE';
+export const setPrivacyChoice = choice => ({type: SET_PRIVACY_CHOICE, choice});

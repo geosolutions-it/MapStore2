@@ -22,6 +22,55 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Privacy settings and standard sharing
+
+Vanilla enables the common privacy panel of the `Cookie` plugin.
+
+Until the installation configures its own policy pages, the panel links the template pages shipped with MapStore in `product/assets/privacy`, shows a warning visible to every user, and writes a warning in the browser console. The template pages are not the policy of the installation. To remove the warning, do one of the following:
+
+- Disable the privacy panel with `"privacy": {"enabled": false}`, for example outside the European Union or when a custom plugin manages consent. MapStore then shows no cookie or privacy notice.
+- Install a privacy settings extension.
+- Configure `privacy.links`, also to copies of the template pages edited for the installation.
+
+To complete the migration:
+
+- Provide the policy pages of the installation: a Cookie Policy, a Privacy Policy when personal data are processed, and optionally Terms of Use. See [Which pages to provide](privacy-settings.md#which-pages-to-provide).
+- Link them: in a project, in `privacy.links` of `localConfig.json`, from the project assets or as external urls; in a product installation, upload a privacy settings extension, created from the [mapstore-privacy-settings-extension](https://github.com/geosolutions-it/mapstore-privacy-settings-extension) template, which sets the links by itself. See [Policy pages](privacy-settings.md#policy-pages).
+- Configure optional categories only for the optional tools actually used, and register their integrations before enabling them.
+
+**MapStore projects**: the template pages are part of the MapStore submodule, so the project WAR must copy them, otherwise the default links return 404 until `privacy.links` is configured. Add this execution to the `maven-resources-plugin` of `web/pom.xml`, after the `config files` one:
+
+```xml
+<execution>
+    <id>privacy template pages</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/mapstore/product/assets</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../MapStore2/web/client/product/assets</directory>
+                <includes>
+                    <include>privacy/*</include>
+                    <include>img/logo.png</include>
+                </includes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+```
+
+Other changes:
+
+- The Social tab of the `Share` plugin is deprecated and disabled by default, and it no longer shows share counters. It will be removed in the 2027.01 series. To show it again, set `"socialPanel": true` in the `cfg` of the `Share` plugin, and update the Cookie Policy of the installation accordingly. Link and embed sharing retain their existing resource permissions.
+- The old cookie notice (Accept, More details and Leave) is removed, with its `externalCookieUrl` and `declineUrl` options and the `translations/fragments/cookie` pages. Remove these options from custom configurations. A `localConfig.json` without the `privacy` section shows no notice: copy the `privacy` section of the standard `localConfig.json` to show the privacy panel.
+- The default theme includes the Noto Sans font, so the pages no longer download it from Google Fonts. Projects should remove the Google Fonts links from their HTML templates and replace the Bowser script with the inline Internet Explorer check of the standard templates. Custom themes that do not import the default theme must import `themes/default/fonts.less` to keep the same font.
+
+See [Privacy and Consent Configuration](privacy-settings.md#privacy-and-consent-configuration) for browser storage, configuration and adapter requirements.
+
 ### Default users removed: initial administrator password
 
 MapStore does not create the sample users `admin`/`admin` and `user`/`user` anymore (the `sample_users.xml` file is no longer shipped with the bundled GeoStore). On the first start with an empty database the `admin` user is created with the password taken from the `INITIAL_ADMIN_PASSWORD` environment variable; if the variable is not set, no administrator is created and start-up continues with a warning in the log. On a database that still contains an `admin` using the former default password, setting `INITIAL_ADMIN_PASSWORD` resets it to that value. See [Initial Administrator Password](initial-admin-password.md) for the details.
