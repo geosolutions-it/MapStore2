@@ -190,29 +190,29 @@ nav:
       - MapViewer query parameters: 'developer-guide/map-query-parameters.md'
 plugins:
   - search
-  # kroki is used to support mermaid charts in also in pdf.
+# kroki is used to support mermaid charts in also in pdf.
   # See https://kroki.io/.
-  # - kroki: # https://pypi.org/project/mkdocs-kroki-plugin/
-  #     FencePrefix: ''
-  #     # HttpMethod set to POST pre-loads the images.
-  #     # USing GET the charts will be generated on the fly, so the rendering will be slower, but
-  #     # when not visualizing the charts, no request will be made to the kroki server.
-  #     HttpMethod: 'POST'
-  #     FileTypeOverrides:
-  #       mermaid: png
-  # - with-pdf: # https://pypi.org/project/mkdocs-with-pdf/
-  #     author: GeoSolutionsGroup
-  #     copyright: 'MapStore©'
-  #     #
-  #     #cover: false
-  #     #back_cover: true
-  #     cover_logo: 'img/mapstore2-logo.png'
-  #     cover_title: MapStore Documentation
-  #     cover_subtitle: User Guide and Developer Guide
-  #     toc_level: 3
-  #     output_path: pdf/mapstore_documentation.pdf
-  #     enabled_if_env: ENABLE_PDF_EXPORT
-  #     debug_html: false # set to true to log the html content of the pdf on the console on build
-  #     show_anchors: true
-  #     verbose: false    # set to true to log the pdf generation steps in detail
-  #     custom_template_path: 'docs/print_template' # includes custom styles.scss for pdf
+  - kroki: # https://pypi.org/project/mkdocs-kroki-plugin/
+      FencePrefix: ''
+      # HttpMethod set to POST pre-loads the images.
+      # USing GET the charts will be generated on the fly, so the rendering will be slower, but
+      # when not visualizing the charts, no request will be made to the kroki server.
+      HttpMethod: 'POST'
+      FileTypeOverrides:
+        mermaid: png
+  - with-pdf: # https://pypi.org/project/mkdocs-with-pdf/
+      author: GeoSolutionsGroup
+      copyright: 'MapStore©'
+      #
+      #cover: false
+      #back_cover: true
+      cover_logo: 'img/mapstore2-logo.png'
+      cover_title: MapStore Documentation
+      cover_subtitle: User Guide and Developer Guide
+      toc_level: 3
+      output_path: pdf/mapstore_documentation.pdf
+      enabled_if_env: ENABLE_PDF_EXPORT
+      debug_html: false # set to true to log the html content of the pdf on the console on build
+      show_anchors: true
+      verbose: false    # set to true to log the pdf generation steps in detail
+      custom_template_path: 'docs/print_template' # includes custom styles.scss for pdf
