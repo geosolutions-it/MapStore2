@@ -711,7 +711,7 @@ When a layer is filtered through a **Filter Selector** widget, the <img src="../
 
 From the TOC, the user can:
 
-- Move the mouse over the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to display a tooltip with the name of the widget (or widgets) applying the filter to the layer.
+- Move the mouse over the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to display a tooltip reporting the current status of the filter (to understand if it is applied or not).
 - Click the <img src="../img/button/filtericonTOC.jpg" class="ms-docbutton"/> icon to disable the filter on the layer, and click it again to enable it.
 
 ## Manage existing widgets
