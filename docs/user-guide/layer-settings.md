@@ -604,7 +604,7 @@ The `TEXT` format displays the information returned by the server as text. The i
 
 <img src="../img/layer-settings/GFI_text.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-The `HTML` format displays the HTML content returned by the server.
+The `HTML` format displays the HTML content returned by the server. The image below provides an example of the typical default output from a GeoServer.
 
 <img src="../img/layer-settings/GFI_html.jpg" class="ms-docimage" style="max-width:600px;"/>
 
