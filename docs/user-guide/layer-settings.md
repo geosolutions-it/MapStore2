@@ -676,7 +676,7 @@ The relationship is defined through a **CQL filter template**, which uses attrib
 
 <img src="../img/layer-settings/externalData.jpg" class="ms-docimage"/>
 
-Selecting **EXTERNAL DATA** the user must fill in:
+Selecting **EXTERNAL DATA** the user needs to:
 
 * Enter the **WFS URL** containing the related data and check the available layers though the <img src="../img/button/refresh_button.jpg" class="ms-docbutton"/>
 
