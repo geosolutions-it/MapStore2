@@ -25,7 +25,7 @@ import {
 } from '../actions/layerFilter';
 
 import { featureTypeSelected, toggleLayerFilter, initQueryPanel } from '../actions/wfsquery';
-import { getSelectedLayer } from '../selectors/layers';
+import { getLayerFromId, getSelectedLayer } from '../selectors/layers';
 import { changeDrawingStatus } from '../actions/draw';
 import {setupCrossLayerFilterDefaults} from '../utils/FilterUtils';
 import { getSearchUrl, getWFSLayerName } from '../utils/LayersUtils';
@@ -71,21 +71,11 @@ export const handleLayerFilterPanel = (action$, {getState}) =>
                 Rx.Observable.of(toggleLayerFilter()).filter(() => !get(getState(), "query.isLayerFilter")),
                 action$.ofType(QUERY_FORM_SEARCH)
                     .switchMap( ({filterObj}) => {
-                        let newFilter = isNotEmptyFilter(filterObj) ? {...get(getState(), "queryform", {})} : undefined;
-                        if (!newFilter) {
-                            // Clearing the query builder filter must not remove other filters
-                            const currentLayer = getSelectedLayer(getState()) || layer;
-                            const existingFilters = currentLayer?.layerFilter?.filters || [];
-                            if (existingFilters.length) {
-                                newFilter = {
-                                    ...currentLayer.layerFilter,
-                                    filterFields: [],
-                                    spatialField: null,
-                                    crossLayerFilter: null,
-                                    filters: existingFilters
-                                };
-                            }
-                        }
+                        // Keep filters managed by other tools from the layer being edited.
+                        const filters = getLayerFromId(getState(), layer.id)?.layerFilter?.filters ?? [];
+                        let newFilter = isNotEmptyFilter({...filterObj, filters})
+                            ? {...get(getState(), "queryform", {}), filters}
+                            : undefined;
                         if (newFilter) {
                             newFilter.filterFields = newFilter.attributePanelExpanded && newFilter.filterFields || [];
                             newFilter.spatialField = newFilter.spatialPanelExpanded && newFilter.spatialField || null;

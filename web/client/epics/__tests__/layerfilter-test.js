@@ -9,7 +9,8 @@
 import expect from 'expect';
 
 import { openQueryBuilder, discardCurrentFilter, applyFilter } from '../../actions/layerFilter';
-import { QUERY_FORM_SEARCH } from '../../actions/queryform';
+import { QUERY_FORM_SEARCH, loadFilter as loadQueryFilter, reset } from '../../actions/queryform';
+import queryformReducer from '../../reducers/queryform';
 import { testEpic } from './epicTestUtils';
 import { handleLayerFilterPanel, restoreSavedFilter, onApplyFilter } from '../layerfilter';
 
@@ -57,7 +58,7 @@ describe('layerFilter Epics', () => {
 
         }, state);
     });
-    it("preserves Filter Selector filters when the primary layer filter is cleared", (done) => {
+    it("preserves other filters when the primary layer filter is cleared", (done) => {
         const widgetFilter = { id: "selector", appliedFromWidget: "filter-widget-1" };
         const legendFilter = { id: "interactiveLegend", filters: [{ format: "cql", body: "LAND_KM > 100" }] };
         const existingFilters = [widgetFilter, legendFilter];
@@ -79,6 +80,59 @@ describe('layerFilter Epics', () => {
             expect(actions[5].newProperties.layerFilter.filters).toEqual(existingFilters);
             done();
         }, state);
+    });
+    it("preserves other filters after reset and applying a new primary filter", (done) => {
+        const filters = [
+            { id: "selector", format: "logic", version: "1.0.0", logic: "OR", filters: [{ format: "cql", version: "1.0.0", body: "SUB_REGION = 'Mtn'" }], appliedFromWidget: "filter-widget-1" },
+            { id: "interactiveLegend", format: "logic", version: "1.0.0", logic: "OR", filters: [{ format: "cql", version: "1.0.0", body: "LAND_KM > 100000" }] }
+        ];
+        const layer = {
+            id: "states",
+            name: "topp:states",
+            search: { url: "searchUrl" },
+            layerFilter: { filterFields: [], filters }
+        };
+        const state = {
+            layers: { flat: [layer], selected: [layer.id] },
+            queryform: queryformReducer(undefined, loadQueryFilter(layer.layerFilter))
+        };
+        const store = testEpic(handleLayerFilterPanel, 7, openQueryBuilder(), (actions) => {
+            expect(actions[5].newProperties.layerFilter.filters).toEqual(filters);
+            const result = actions[6].newProperties.layerFilter;
+            expect(result.filters).toEqual(filters);
+            expect(result.filterFields[0].attribute).toBe("PERSONS");
+            expect(result.filterFields[0].operator).toBe(">");
+            expect(result.filterFields[0].value).toBe(2000000);
+        }, () => state, done);
+        state.queryform = queryformReducer(state.queryform, reset());
+        store.dispatch({ type: QUERY_FORM_SEARCH, filterObj: {} });
+        state.queryform = {
+            ...state.queryform,
+            filterFields: [{ rowId: 1, groupId: 1, attribute: "PERSONS", operator: ">", value: 2000000, type: "number" }]
+        };
+        store.dispatch({ type: QUERY_FORM_SEARCH, filterObj: state.queryform });
+    });
+    it("clears the layer filter when reset leaves no other filters", (done) => {
+        const layer = { id: "states", name: "topp:states", search: { url: "searchUrl" }, layerFilter: { filterFields: [{ value: "Arizona" }] } };
+        const state = { layers: { flat: [layer], selected: [layer.id] } };
+        testEpic(handleLayerFilterPanel, 6, [openQueryBuilder(), { type: QUERY_FORM_SEARCH, filterObj: {} }], (actions) => {
+            expect(actions[5].newProperties.layerFilter).toBe(undefined);
+        }, state, done);
+    });
+    it("preserves the edited layer's filters when selection changes before reset", (done) => {
+        const editedFilter = { id: "edited-filter" };
+        const selectedFilter = { id: "other-filter" };
+        const layers = [
+            { id: "edited", name: "edited", search: { url: "searchUrl" }, layerFilter: { filters: [editedFilter] } },
+            { id: "other", name: "other", layerFilter: { filters: [selectedFilter] } }
+        ];
+        let state = { layers: { flat: layers, selected: ["edited"] } };
+        const store = testEpic(handleLayerFilterPanel, 6, openQueryBuilder(), (actions) => {
+            expect(actions[5].layer).toBe("edited");
+            expect(actions[5].newProperties.layerFilter.filters).toEqual([editedFilter]);
+        }, () => state, done);
+        state = { ...state, layers: { ...state.layers, selected: ["other"] } };
+        store.dispatch({ type: QUERY_FORM_SEARCH, filterObj: {} });
     });
     it('handleLayerFilterPanel with fields', () => {
 
