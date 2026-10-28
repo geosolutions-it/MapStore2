@@ -36,7 +36,9 @@ import { dashboardResource } from '../selectors/dashboard';
  * using the QR code with mobile apps
  * @class
  * @memberof plugins
- * @prop {node} [title] the title of the page
+ * @prop {node|string} [title] the title of the page
+ * @prop {boolean} [socialPanel] if false, hide the social tab. Default true
+ * @prop {boolean} [embedPanel] if false, hide the embed tab. Default true
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
  * @prop {object} [embedOptions] options for the iframe version of embedded share options
