@@ -12,11 +12,8 @@ This steps have to be followed always when preparing a new release.
 
 - [x] Create an issue with this checklist in the release milestone, named "Release YYYY.XX.mm".
 - [ ] Create the milestone if it doesn't exist. (Name YYYY.XX.mm).
-- [ ] Verify if it is needed to release a new version of `http_proxy`, `mapfish-print` or `geostore`, and do it if necessary accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars).
-  - [ ] for `geostore`, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/geostore) file of the project.
-  - [ ] for `http_proxy`, check if [here](https://maven.geo-solutions.it/proxy/http_proxy/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/http-proxy) file of the project.
-  - [ ] for `mapfish-print` check if [here](https://maven.geo-solutions.it/proxy/http_proxy/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/mapfish-print) file of the project.
-- [ ] Check if dependencies of MapStore libraries and geostore libraries are the same (compare `src/pom.xml` in geostore e `pom.xml` in MapStore).
+- [ ] Verify if it is needed to release a new version of `mapfish-print`, and do it if necessary accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars). GeoStore and `http_proxy` are part of MapStore (`backend/`) and are released with it.
+  - [ ] for `mapfish-print` check if [here](https://maven.geo-solutions.it/org/mapfish/print/print-lib/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/mapfish-print) file of the project.
 - [ ] Check if dependencies of the **template projects** are aligned
   - [ ] `project/standard/templates/pom.xml` are aligned as the ones in `pom.xml` of MapStore
   - [ ] `project/standard/templates/web/pom.xml` are aligned as the ones in `product/pom.xml` of MapStore.
@@ -45,7 +42,7 @@ This steps have to be followed always when preparing a new release.
 
 - [ ] Check `pom.xml` dependencies are all in fixed stable versions ( no `-SNAPSHOT` usage release). If not, You use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStore2/actions/workflows/update_dependencies_versions.yml) to fix them, setting:
   - [ ] the branch to `YYYY.XX.xx`
-  - [ ] the of geostore, http_proxy and mapfish-print versions accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
+  - [ ] the mapfish-print version accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
 - [ ] Merge the PR created after the action avove has been finshed
 - [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working.
 - [ ] Run the [Submodule Update](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/submodules_update.yml) of [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) to generate the `SampleExtension.zip` to use for testing.
@@ -69,10 +66,10 @@ This steps have to be followed always when preparing a new release.
   - Use workflow from `branch` **YYYY.XX.xx** (the release branch)
   - Version to release **YYYY.XX.mm** (the effective number of the release)
   - MapStore version for changelog generation **YYYY.XX.mm** (the effective number of the previous release)
-  - version to fix for the java module, accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) (e.g. `1.7.0`)
+  - version to fix for the Maven modules and `package.json`, accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) (e.g. `3.1.0`)
   - use the default value for the other parameters
 - [ ] Wait for the process to complete. At the end:
-  - a new commit will be added to the release branch tagged as `vYYYY.XX.mm`. This commit will contain the changelog and the updated version of the java modules.
+  - a new commit will be added to the release branch tagged as `vYYYY.XX.mm`. This commit will contain the changelog and the updated version of the Maven modules and `package.json`.
   - a pull request will be created on master with the changelog updates
 - [ ] Merge the incoming PR created by the workflow for updating changelog on Master
 - [ ] Run [`Submodules Update`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/submodules_update.yml) on MapStoreExtension:
@@ -132,10 +129,10 @@ When the processes are finished, the release is ready to be published on github 
 
 - [ ] Run the [`Post Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/post_release.yml) workflow on github with the following parameters:
   - Use workflow from branch `YYYY.XX.xx` (the release branch)
-  - Version of Java Packages to restore accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) with `-SNAPSHOT` E.g. `1.7-SNAPSHOT`
-- [ ] Use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStore2/actions/workflows/update_dependencies_versions.yml) to restore the `-SNAPSHOT` version of GeoStore, setting:
+  - Version of the Maven modules and `package.json` to restore accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) with `-SNAPSHOT` E.g. `3.1.1-SNAPSHOT`
+- [ ] If needed, use the action [`Update dependencies versions`](https://github.com/geosolutions-it/MapStore2/actions/workflows/update_dependencies_versions.yml) to restore the `-SNAPSHOT` version of mapfish-print, setting:
   - [ ] the branch to `YYYY.XX.xx`
-  - [ ] the of geostore, http_proxy and mapfish-print versions accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) and use `-SNAPSHOT` version of geostore.
+  - [ ] the mapfish-print version accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars).
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Optional - prepare a PR for updating release procedure, if needed
 - [ ] Close this issue

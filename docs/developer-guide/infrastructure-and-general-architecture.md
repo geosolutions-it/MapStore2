@@ -22,8 +22,8 @@ It allows plugging different mapping libraries (with **Leaflet** and **OpenLayer
 
 Backend services include at least (but not only) these ones:
 
-* Generic, configurable, **HTTP-Proxy** to avoid CORS issues when the frontend tries to communicate with external services, based on the GeoSolutions [http-proxy](https://github.com/geosolutions-it/http-proxy) project.
-* Internal **storage** for non structured resources (json, XML, etc.) based  on the GeoSolutions [GeoStore](https://github.com/geosolutions-it/geostore) project.
+* Generic, configurable, **HTTP-Proxy** to avoid CORS issues when the frontend tries to communicate with external services, based on the GeoSolutions [http-proxy](https://github.com/geosolutions-it/MapStore2/tree/master/backend/proxy) project, part of MapStore (`backend/proxy`).
+* Internal **storage** for non structured resources (json, XML, etc.) based  on the GeoSolutions [GeoStore](https://github.com/geosolutions-it/MapStore2/tree/master/backend/geostore) project, part of MapStore (`backend/geostore`).
 * **Configuration** services, to allow full application(s) and services configurability
 * **Security** with the ability to configure authentication using an internal or external service, and a flexible authorization policy for services and resources access.
 

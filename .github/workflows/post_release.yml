@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       snapshot:
-        description: 'Version of Java packages to restore. e.g. 2.1-SNAPSHOT'
+        description: 'Version of the Maven modules and package.json to restore. e.g. 3.1.1-SNAPSHOT'
         required: true
 jobs:
   set-versions:
@@ -45,8 +45,9 @@ jobs:
         echo
         echo "Restoring snapshot version tp $SNAPSHOT_VERSION"
         mvn versions:set -DnewVersion=$SNAPSHOT_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle
-        mvn versions:set-property -f project/standard/templates/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$SNAPSHOT_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-        npm version patch --git-tag-version=false
+        mvn versions:set-property -f project/standard/templates/pom.xml -Dproperty=mapstore.version -DnewVersion=$SNAPSHOT_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+        # package.json shares the version of the Maven modules
+        npm version $SNAPSHOT_VERSION --git-tag-version=false --allow-same-version
         echo "Committing changes"
         find . -name 'pom.xml' | xargs git add
         git add package.json

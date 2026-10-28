@@ -63,7 +63,7 @@ On the first start with the empty database, MapStore creates only the `admin` us
 
 ## GeoServer Setup
 
-Follow [this guide](https://github.com/geosolutions-it/geostore/tree/master/geoserver)
+Follow [this guide](https://github.com/geosolutions-it/MapStore2/tree/master/backend/geostore/geoserver)
 
 Create the empty GeoStore database using scripts as described in [GeoStore WIKI](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support).
 
@@ -71,7 +71,7 @@ The following procedure will make GeoServer accessible to users stored in the Ma
 
 ### User Groups and Roles
 
-Steps below reference user, group and role service configuration files, as needed download the files from [the geostore repository](https://github.com/geosolutions-it/geostore/tree/master/geoserver).
+Steps below reference user, group and role service configuration files, as needed download the files from [the geostore directory](https://github.com/geosolutions-it/MapStore2/tree/master/backend/geostore/geoserver).
 
 #### Setup User Group Service
 

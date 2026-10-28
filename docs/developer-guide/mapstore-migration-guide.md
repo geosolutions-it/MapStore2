@@ -20,6 +20,79 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.03.00 to 2027.01.00
+
+### GeoStore and the HTTP proxy are part of MapStore
+
+GeoStore and the HTTP proxy, formerly in the [geostore](https://github.com/geosolutions-it/geostore) and [http-proxy](https://github.com/geosolutions-it/http-proxy) repositories, are now part of the MapStore repository, and are built, versioned and released with it. Their former repositories keep their history and the maintenance branches of the earlier releases.
+
+- The `java` directory is now `backend`. It contains MapStore's modules (`services`, `web`, `printing`) and also `geostore` and `proxy`.
+- All the Maven modules and `package.json` share one version, starting from `3.0.0-SNAPSHOT` (`3.0.0` at release, then `3.1.0` for the next release cut from `master`, `3.1.1` for a fix release on a stable branch). The MapStore release number (`YYYY.MM.mm`) does not change.
+- Dependency versions are managed in one place, the root `pom.xml`, for MapStore, GeoStore and the proxy alike. Where they used different versions of the same library, the newest is now used everywhere: `commons-io` 2.22.0, `commons-codec` 1.22.0, Log4j 2.26.1, `jackson-annotations` 2.22.
+- Maven coordinates that changed:
+
+| Before | After |
+|---|---|
+| `proxy:http_proxy` | `it.geosolutions.proxy:http_proxy` |
+| `it.geosolutions.mapstore:mapstore-java` | `it.geosolutions.mapstore:mapstore-backend` |
+| `it.geosolutions.geostore:geostore-webapp:2.x` | `it.geosolutions.geostore:geostore-webapp:3.0.0-SNAPSHOT` (same version as MapStore) |
+
+- The PostgreSQL driver is declared by `mapstore-webapp`. It used to come with the published `geostore-webapp`; the WAR contains it as before.
+- GeoStore and the HTTP proxy keep their GPL-3.0 license, while the rest of MapStore is BSD-2-Clause: see the `LICENSE` files in `backend/geostore` and `backend/proxy`.
+
+#### Update a MapStore project
+
+In the root `pom.xml` of the project, replace the three version properties with a single one:
+
+```diff
+-        <mapstore-services.version>1.14-SNAPSHOT</mapstore-services.version>
+-        <geostore-webapp.version>2.8-SNAPSHOT</geostore-webapp.version>
+-        <http_proxy.version>1.8-SNAPSHOT</http_proxy.version>
++        <mapstore.version>3.0.0-SNAPSHOT</mapstore.version>
+```
+
+In `web/pom.xml`, use it for the three dependencies, and change the proxy's `groupId` both in the dependency and in its WAR overlay:
+
+```diff
+     <dependency>
+         <groupId>it.geosolutions.mapstore</groupId>
+         <artifactId>mapstore-services</artifactId>
+-        <version>${mapstore-services.version}</version>
++        <version>${mapstore.version}</version>
+     </dependency>
+     <dependency>
+       <groupId>it.geosolutions.geostore</groupId>
+       <artifactId>geostore-webapp</artifactId>
+-      <version>${geostore-webapp.version}</version>
++      <version>${mapstore.version}</version>
+       <type>war</type>
+       <scope>runtime</scope>
+     </dependency>
+     <dependency>
+-      <groupId>proxy</groupId>
++      <groupId>it.geosolutions.proxy</groupId>
+       <artifactId>http_proxy</artifactId>
+-      <version>${http_proxy.version}</version>
++      <version>${mapstore.version}</version>
+       <type>war</type>
+       <scope>runtime</scope>
+     </dependency>
+```
+
+```diff
+                     <overlay>
+-                        <groupId>proxy</groupId>
++                        <groupId>it.geosolutions.proxy</groupId>
+                         <artifactId>http_proxy</artifactId>
+```
+
+Paths to MapStore's sources change from `MapStore2/java/...` to `MapStore2/backend/...`, for instance the printing resources copied by `web/pom.xml`:
+
+```diff
+-                                <directory>${basedir}/../MapStore2/java/printing/resources/geoserver/print</directory>
++                                <directory>${basedir}/../MapStore2/backend/printing/resources/geoserver/print</directory>
+```
+
 ## Migration from 2026.02.02 to 2026.03.00
 
 ### Privacy settings and standard sharing

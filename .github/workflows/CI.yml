@@ -253,14 +253,17 @@ jobs:
           server-password: MAVEN_PASSWORD
       - name: Publish maven packages
         # Here it deploys only java modules and root, needed for MS project builds.
-        # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped
+        # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped.
+        # GeoStore and the HTTP proxy are published from here too, at MapStore's version.
         run: |
           # Setup SSH keys for SFTP
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           # add geo-solutions.it to known hosts to avoid prompts
           ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
-          # deploys java packages
-          mvn clean install deploy -f backend/pom.xml
+          # deploys the backend packages (MapStore, GeoStore, HTTP proxy).
+          # -Ppostgres: the published geostore-webapp includes the PostgreSQL driver and
+          # datasource, as it did when GeoStore was released on its own (MapStore projects use it).
+          mvn clean install deploy -f backend/pom.xml -Ppostgres
           # deploys also the root module, needed for dependencies
           mvn deploy --non-recursive
         env:

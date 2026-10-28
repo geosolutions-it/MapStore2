@@ -4,7 +4,7 @@ The purpose of this guide is to explain how to configure MapStore to use an LDAP
 
 ## Overview
 
-By default the MapStore backend users service (also known as [GeoStore](https://github.com/geosolutions-it/geostore)), uses a relational database to store and fetch users details, implement authentication and assign resource access rights to users and groups (for maps, dashboards, etc.).
+By default the MapStore backend users service (also known as [GeoStore](https://github.com/geosolutions-it/MapStore2/tree/master/backend/geostore)), uses a relational database to store and fetch users details, implement authentication and assign resource access rights to users and groups (for maps, dashboards, etc.).
 
 If you want users to log in using their LDAP/AD credentials, you can configure MapStore to connect to your LDAP/AD service. In this setup, the relational database will only store resources and accessory data (permissions, attributes, etc.) related to the users from your LDAP/AD service.
 
@@ -276,6 +276,6 @@ logger.trg1.level=INFO
 
 LDAP and Active Directory provide a lot of use cases that may not be covered by the default configuration. In this case, in a MapStore custom project, you can customize the LDAP configuration in the `geostore-spring-security.xml` file, introducing custom beans and properties.
 
-More information about the MapStore backend storage and security service, GeoStore, is available [here](https://github.com/geosolutions-it/geostore).
+More information about the MapStore backend storage and security service, GeoStore, is available [here](https://github.com/geosolutions-it/MapStore2/tree/master/backend/geostore).
 
 In particular, more information about LDAP usage with GeoStore is in the following [Wiki page](https://github.com/geosolutions-it/geostore/wiki/LDAP-Authentication).

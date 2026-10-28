@@ -53,15 +53,19 @@ jobs:
           git checkout "$MAIN_BRANCH"
           OLD_JAVA_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "Incrementing java packages versions"
-          mvn -B release:update-versions -DautoVersionSubmodules=true -Pprinting,binary,printingbundle
-          NEXT_JAVA_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          # MAJOR.MINOR.PATCH-SNAPSHOT: the next release cut from the main branch is the next minor
+          # (release:update-versions would increment the patch instead)
+          BASE_VERSION="${OLD_JAVA_VERSION%-SNAPSHOT}"
+          IFS=. read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
+          NEXT_JAVA_VERSION="${MAJOR}.$((MINOR + 1)).0-SNAPSHOT"
+          mvn -B versions:set -DnewVersion=$NEXT_JAVA_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle
           echo "Java packages versions updated from $OLD_JAVA_VERSION to $NEXT_JAVA_VERSION"
           ### increase dependency of project to new version
           echo "Updating project dependency to new version"
-          mvn versions:set-property -f project/standard/templates/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$NEXT_JAVA_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-          # Increase release minor version
+          mvn versions:set-property -f project/standard/templates/pom.xml -Dproperty=mapstore.version -DnewVersion=$NEXT_JAVA_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          # package.json shares the version of the Maven modules
           echo "Updating project version to new version in package.json"
-          npm version minor --git-tag-version=false
+          npm version $NEXT_JAVA_VERSION --git-tag-version=false --allow-same-version
           pr_branch_name="bump-${release-branch}-${RUN_ID}"
           echo "Creating a temp PR on branch: ${pr_branch_name}"
           git checkout -b "${pr_branch_name}"

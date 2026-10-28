@@ -23,6 +23,8 @@ You can find more documentation about how to build, install or develop with MapS
 
 MapStore is Free and Open Source software, it is based on OpenLayers, Cesium, Leaflet and <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>, and is licensed under the Simplified BSD License.
 
+The backend includes [GeoStore](backend/geostore) and the [HTTP proxy](backend/proxy), which are licensed under the GNU GPL v3: see their `LICENSE` files.
+
 ## Demo Instances
 
 We have the following instances:

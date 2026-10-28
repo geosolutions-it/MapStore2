@@ -1,70 +1,37 @@
-![Build Status](https://github.com/geosolutions-it/geostore/actions/workflows/CI.yml/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/geosolutions-it/geostore/badge.svg?branch=master)](https://coveralls.io/github/geosolutions-it/geostore?branch=master)
+# GeoStore
 
-[GeoStore](https://github.com/geosolutions-it/geostore) is an open source Java enterprise application for storing, searching and retrieving data on the fly.
+GeoStore is an open source Java enterprise application for storing, searching and retrieving data on the fly. In MapStore it is the backend that stores maps, dashboards, stories and the other resources, and manages users, groups and permissions.
 
-GeoStore performs authentication internally (auth framework shall be pluggable), and internal authorization rules grant permissions on single Resources or whole Categories.
+GeoStore performs authentication internally (the auth framework is pluggable), and internal authorization rules grant permissions on single Resources or whole Categories.
 
-A comprehensive [REST API](https://github.com/geosolutions-it/geostore/wiki/REST-API) allows an easy handling of internal resources, so that client side applications can easily query the store, while remote server side application can integrate with GeoStore using the GeoStoreClient, an utility java class that hides the REST communications complexities.
+A comprehensive [REST API](https://github.com/geosolutions-it/geostore/wiki/REST-API) allows an easy handling of internal resources, so that client side applications can easily query the store, while remote server side applications can integrate with GeoStore using the GeoStoreClient, a utility Java class that hides the REST communication complexities.
 
-# Documentation
+GeoStore used to live in its own repository, [geosolutions-it/geostore](https://github.com/geosolutions-it/geostore), which keeps its history and the maintenance branches of the releases before MapStore 2027.01.00. It is now part of MapStore, and built, versioned and released with it.
 
-For more information check the [GeoStore wiki](https://github.com/geosolutions-it/geostore/wiki/Documentation-index) .
+## Documentation
 
-## Release process
+For more information check the [GeoStore wiki](https://github.com/geosolutions-it/geostore/wiki/Documentation-index).
 
-The release procedure is essentially made of 2 steps:
+## Build
 
-- **Cut major branch**
-- Effective **Release**
+GeoStore is a module of MapStore's Maven reactor: dependency versions are managed in MapStore's root `pom.xml`. From the root of the MapStore repository:
 
-The project is developed on the main (master) branch, containing the latest `-SNAPSHOT` version of the modules of the project. When a major release starts the validation process, a new *release branch* is created (see [Cut-Release](#cut-release-branch), named `<major-version>.xx`.
-After this on the main (master) branch the `-SNAPSHOT` version of the modules is increased and from this point the main branch will include commits for the next major version of the project.
+```bash
+# the whole backend, GeoStore included
+mvn clean install -f backend/pom.xml
 
-When the validation process is completed and all the fixes have been applied to the *release branch*, the version of the java modules is fixed, commit is tagged with the number of the release and the Github *release* is published. See [Release](#release).
+# GeoStore only (its parent poms are taken from the repository itself)
+mvn clean install -f backend/geostore/pom.xml
+```
 
-After this on the *release brach* the `-SNAPSHOT` version of the modules is restored so that it is possible to continue applying fixes and minor improvements, creating more releases on it with the same procedure, until end of maintainance.
+Database profiles of the webapp (`backend/geostore/src/web/app`): `postgres`, `oracle` and `h2_disk` add the driver and the matching `geostore-datasource-ovr.properties`; `auditing` adds the auditing module. The published `geostore-webapp` is built with `-Ppostgres`.
 
-Here the steps to follow for executing the 2 procedures :
+The PMD and SpotBugs checks run by default and use the rules in `qa/`; disable them with `-Dqa=false`. The REST integration tests run in MapStore's `GeoStore integration tests` workflow.
 
-### Cut-Release branch
+## License
 
-1. Run the workflow [Cut Release branch](../../actions/workflows/cut-major-branch.yml) passing
-    - Branch Master
-    - current version
-    - next version
-    - main branch (keep `master`)
-    - other options (can be left as default)
-2. Merge the PR that is generated, if not merged automatically
+GeoStore is free and Open Source software, released under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) license (see [LICENSE.txt](LICENSE.txt)). Note that the rest of MapStore is released under the BSD 2-Clause license.
 
-### Release
+## Professional Support
 
-1. Run the workflow [Release](../../actions/workflows/release.yml) with the folling parameters:
-    - select the branch to use (e.g. `2.1.x`)
-    - version to release (e.g. `2.1.0`)
-    - base version (e.g. `2.1`)
-
-The release will be automatically published on GitHub. Packages will be automatically deployed on maven repository.
-
-## Relevant Workflows
-
-- [CI](../../actions/workflows/CI.yml): Automatically does tests for pull request or commits on `master`. For commits on the main repo (e.g. when PR are merged on `master` or stable branches, the workflow publish also the artifacts on [GeoSolutions Maven Repository](https://maven.geo-solutions.it)
-- **[Cut release branch](../../actions/workflows/cut-major-branch.yml)**: (`cut-major-branch.yml`): Manually triggered workflow that allows to create a stable branch named `<current-version>.x` and create a pull request for updating `master` branch `-SNAPSHOT` version with the new data.
-- **[Release](../../actions/workflows/release.yml)**: (`cut-major-branch.yml`): Manually triggered workflow to apply to the stable branch that fixes the maven modules versions, tags the commit, build and deploy artifacts, restores snapshot versions and publish a Github release on the tagged commit.
-
-# License
-
-**GeoStore** core modules are free and Open Source software, released under the [GPL v3](http://www.gnu.org/licenses/gpl.html) license.
-
-# Professional Support
-
-GeoStore is being developed by [GeoSolutions](http://www.geo-solutions.it/) hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it (see section below).
-
-# Contributing
-
-We welcome contributions in any form:
-
-- pull requests for new features
-- pull requests for bug fixes
-- pull requests for documentation
-- funding for any combination of the above
+GeoStore is developed by [GeoSolutions](https://www.geosolutionsgroup.com/), hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it, through the [MapStore repository](https://github.com/geosolutions-it/MapStore2).

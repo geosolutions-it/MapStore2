@@ -1,48 +1,19 @@
-![Build Status](https://github.com/geosolutions-it/http-proxy/actions/workflows/CI.yml/badge.svg)
+# HTTP proxy
 
-http-proxy is a simple Java based HTTP Proxy that can be used to make cross origin calls from JavaScript based web applications.
+http-proxy is a simple Java based HTTP proxy that can be used to make cross origin calls from JavaScript based web applications. In MapStore it serves the `/proxy` endpoint; see the [proxy configuration](../../docs/developer-guide/proxy-configuration.md) page of the developer guide.
 
-It is free and Open Source, for information on the license please see the LICENSE file.
+It used to live in its own repository, [geosolutions-it/http-proxy](https://github.com/geosolutions-it/http-proxy), which keeps its history and the maintenance branches of the releases before MapStore 2027.01.00. It is now part of MapStore, and built, versioned and released with it. Its Maven coordinates are `it.geosolutions.proxy:http_proxy` (formerly `proxy:http_proxy`).
 
-## Release process 
+## Build
 
-The release procedure is essentially made of 2 steps: 
-- **Cut major branch**
-- Effective **Release**
+The proxy is a module of MapStore's Maven reactor: dependency versions are managed in MapStore's root `pom.xml`. From the root of the MapStore repository:
 
-The project is developed on the main (master) branch, containing the latest `-SNAPSHOT` version of the modules of the project. When a major release starts the validation process, a new *release branch* is created (see [Cut-Release](#cut-Release-branch), named `<major-version>.xx`. 
-After this on the main (master) branch the `-SNAPSHOT` version of the modules is increased and from this point the main branch will include commits for the next major version of the project.
+```bash
+mvn clean install -f backend/proxy/pom.xml
+```
 
-When the validation process is completed and all the fixes have been applied to the *release branch*, the version of the java modules is fixed, commit is tagged with the number of the release and the Github *release* is published. See [Release](#release).
+It produces the `http_proxy` WAR, used as an overlay by MapStore's webapp, and a jar with the same coordinates.
 
-After this on the release brach the -SNAPSHOT version of the modules is restored so that it is possible to continue applying fixes and minor improvements, creating more releases on it with the same procedure, until end of maintainance.
+## License
 
-Here the steps to follow for executing the 2 procedures :
-
-### Cut-Release branch
-
-1. Run the workflow [Cut Release branch](../../actions/workflows/cut-major-branch.yml) passing 
-  - Branch Master
-  - current version  
-  - next version 
-  - main branch (keep `master`)
-  - other options (can be left as default)
-2. Merge the PR that is generated, if not merged automatically
-
-### Release
-
-1. Run the workflow [Release](../../actions/workflows/release.yml) with the folling parameters: 
- - select the branch to use (e.g. `2.1.x`)
- - version to release (e.g. `2.1.0`)
- - base version (e.g. `2.1`)
-
-The release will be automatically published on GitHub. Packages will be automatically deployed on maven repository.
-
-
-## Relevant Workflows
-
-- [CI](../../actions/workflows/CI.yml): Automatically does tests for pull request or commits on `master`. For commits on the main repo (e.g. when PR are merged on `master` or stable branches, the workflow publish also the artifacts on [GeoSolutions Maven Repository](https://maven.geo-solutions.it)
-- **[Cut release branch](../../actions/workflows/cut-major-branch.yml)**: (`cut-major-branch.yml`): Manually triggered workflow that allows to create a stable branch named `<current-version>.x` and create a pull request for updating `master` branch `-SNAPSHOT` version with the new data. 
-- **[Release](../../actions/workflows/release.yml)**: (`cut-major-branch.yml`): Manually triggered workflow to apply to the stable branch that fixes the maven modules versions, tags the commit, build and deploy artifacts, restores snapshot versions and publish a Github release on the tagged commit.
-   
-   
+The HTTP proxy is free and Open Source software, released under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) license (see [LICENSE](LICENSE)). Note that the rest of MapStore is released under the BSD 2-Clause license.

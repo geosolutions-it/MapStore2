@@ -1,0 +1,156 @@
+name: GeoStore integration tests
+
+# Runs the GeoStore REST integration suite (.github/scripts/geostore/run-integration-tests.ps1)
+# against a standalone jetty:run backend on port 9191. This suite covers the
+# non-OIDC REST API surface. The OIDC/OAuth2 stack is exercised end-to-end
+# against a real Keycloak by KeycloakLifecycleTest (Testcontainers), which runs
+# with the other unit tests in the CI workflow.
+# Ported from the former geostore repository; it runs only when GeoStore changes.
+
+on:
+  push:
+    branches:
+      - master
+      - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
+      - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
+    paths:
+      - 'backend/geostore/**'
+      - 'pom.xml'
+      - 'backend/pom.xml'
+      - '.github/scripts/geostore/**'
+      - '.github/workflows/geostore-integration-tests.yml'
+  pull_request:
+    branches:
+      - master
+      - '[cC][0-9][0-9][0-9]-+**'
+      - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx'
+    paths:
+      - 'backend/geostore/**'
+      - 'pom.xml'
+      - 'backend/pom.xml'
+      - '.github/scripts/geostore/**'
+      - '.github/workflows/geostore-integration-tests.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: geostore-integration-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration-tests:
+    name: REST integration tests (standalone jetty)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Cache Maven local repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            mapstore-${{ runner.os }}-maven-
+
+      - name: Verify no static default users are seeded
+        run: |
+          set -euo pipefail
+          ctx=backend/geostore/src/web/app/src/main/resources/applicationContext.xml
+          if grep -Eq '<property name="userListInitFile" value="classpath:sample_users.xml"/>' "$ctx"; then
+            echo "ERROR: the default webapp must not seed a static user list"
+            grep -n 'userListInitFile' "$ctx" || true
+            exit 1
+          fi
+          if [ -f backend/geostore/src/web/app/src/main/resources/sample_users.xml ]; then
+            echo "ERROR: sample_users.xml must not ship with the webapp"
+            exit 1
+          fi
+
+      - name: Build webapp + dependencies
+        run: |
+          set -euo pipefail
+          # the parent poms first: jetty:run below resolves the installed GeoStore modules,
+          # whose parents are mapstore-backend and mapstore-root
+          mvn -B -ntp -N install
+          mvn -B -ntp -N install -f backend/pom.xml
+          mvn -B -ntp -f backend/geostore/pom.xml -pl src/web/app -am -DskipTests install
+
+      - name: Choose the admin password for the disposable test instance
+        run: |
+          set -euo pipefail
+          admin="ci-$(openssl rand -hex 16)"
+          echo "::add-mask::$admin"
+          echo "GEOSTORE_TEST_ADMIN_PASSWORD=$admin" >> "$GITHUB_ENV"
+
+      - name: Start GeoStore (jetty:run on :9191)
+        run: |
+          set -euo pipefail
+          # Run jetty:run from inside the webapp module so the reactor is rooted there.
+          cd backend/geostore/src/web/app
+          nohup env INITIAL_ADMIN_PASSWORD="$GEOSTORE_TEST_ADMIN_PASSWORD" mvn -B -ntp jetty:run > "$GITHUB_WORKSPACE/jetty.log" 2>&1 &
+          echo "JETTY_PID=$!" >> "$GITHUB_ENV"
+          echo "Started jetty PID $! from $(pwd); log at $GITHUB_WORKSPACE/jetty.log"
+
+      - name: Wait for backend to become ready
+        timeout-minutes: 5
+        run: |
+          set +e
+          for i in $(seq 1 90); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:9191/geostore/ || echo "000")
+            case "$code" in
+              200|301|302|401|403|404)
+                echo "Backend responded with HTTP $code after $((i*2))s"
+                exit 0
+                ;;
+            esac
+            sleep 2
+          done
+          echo "Backend did not become ready in time. Last 200 lines of jetty.log:"
+          tail -n 200 jetty.log || true
+          exit 1
+
+      - name: Run integration tests
+        shell: pwsh
+        run: |
+          ./.github/scripts/geostore/run-integration-tests.ps1 `
+            -BaseUrl    'http://localhost:9191/geostore/rest' `
+            -LandingUrl 'http://localhost:9191/geostore/' `
+            -FrontEnd   'http://localhost:9191/geostore' `
+            -Category   'cat1' `
+            -ResultsCsv 'integration-test-results.csv'
+
+      - name: Stop jetty
+        if: always()
+        run: |
+          set +e
+          if [ -n "${JETTY_PID:-}" ]; then
+            kill "$JETTY_PID" 2>/dev/null || true
+            sleep 2
+            kill -9 "$JETTY_PID" 2>/dev/null || true
+          fi
+          # Belt-and-braces: kill anything still listening on 9191
+          fuser -k 9191/tcp 2>/dev/null || true
+
+      - name: Upload jetty log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: geostore-jetty-log
+          path: jetty.log
+          if-no-files-found: warn
+
+      - name: Upload test results CSV
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: geostore-integration-test-results
+          path: integration-test-results.csv
+          if-no-files-found: warn

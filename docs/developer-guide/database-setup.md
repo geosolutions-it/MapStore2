@@ -48,7 +48,7 @@ geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=validate
 > - `create`: creates the schema, destroying previous data.
 > - `create-drop`: drop the schema when the SessionFactory is closed explicitly, typically when the > application is stopped.
 
-In this case it is necessary to manually create the required tables using the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc) for the needed DBMS.
+In this case it is necessary to manually create the required tables using the scripts available [here](https://github.com/geosolutions-it/MapStore2/tree/master/backend/geostore/doc) for the needed DBMS.
 
 The `update` mode is the recommended approach for most installations: it automatically applies schema changes on startup whenever a new GeoStore version introduces new tables or columns, avoiding the need to run migration scripts manually. It is particularly useful when following the standard MapStore upgrade path.
 
@@ -89,7 +89,7 @@ Create users and schemas:
 psql geostore < 001_setup_db.sql
 ```
 
-Here below the required part of the file `001_setup_db.sql`, available [here](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/001_setup_db.sql) (creation of test user and schema for `geostore_test` in the original file is not strictly required for MapStore)
+Here below the required part of the file `001_setup_db.sql`, available [here](https://github.com/geosolutions-it/MapStore2/blob/master/backend/geostore/doc/sql/001_setup_db.sql) (creation of test user and schema for `geostore_test` in the original file is not strictly required for MapStore)
 
 > Write the password you prefer instead of 'geostore'
 
@@ -105,7 +105,7 @@ GRANT ALL ON SCHEMA geostore TO geostore ;
 alter user geostore set search_path to geostore , public;
 ```
 
-If you need to create the database schema manually (validate mode), you have also [this script](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/002_create_schema_postgres.sql).
+If you need to create the database schema manually (validate mode), you have also [this script](https://github.com/geosolutions-it/MapStore2/blob/master/backend/geostore/doc/sql/002_create_schema_postgres.sql).
 
 At the end, **make you sure that the user** `geostore` **has access to the database** from the address of MapStore application. You can give permission by editing [pg_hba.conf](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html)
 
@@ -146,7 +146,7 @@ More information on the migration tool is available in the [GeoStore CLI documen
 
 Create a database geostore, a schema called GEOSTORE and a user `geostore` that has write access to them.
 
-Use [this SQL script](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/002_create_schema_oracle.sql) to create the DB schema.
+Use [this SQL script](https://github.com/geosolutions-it/MapStore2/blob/master/backend/geostore/doc/sql/002_create_schema_oracle.sql) to create the DB schema.
 
 ### Connection to the Database
 
