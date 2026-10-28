@@ -155,6 +155,12 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
 		</dependency>
+		<!-- log4j-slf4j2-impl needs SLF4J 2: the explicit version wins over the 1.7 managed in the root pom for MapStore -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j2.version}</version>
+		</dependency>
 
 		<!-- Commons -->
 		<dependency>

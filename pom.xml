@@ -126,6 +126,10 @@
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <parsson.version>1.1.7</parsson.version>
         <wiremock.version>3.10.0</wiremock.version>
+        <!-- versions GeoStore and the proxy shipped before the merge, kept on purpose (see the managed entries) -->
+        <checker-qual.version>3.33.0</checker-qual.version>
+        <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
+        <slf4j2.version>2.0.17</slf4j2.version>
     </properties>
 
     <modules>
@@ -1027,6 +1031,18 @@
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>${caffeine.version}</version>
+            </dependency>
+            <!-- Guava's own version (32.0.0-jre): Guava excludes it above, so without this Caffeine would bring an older one -->
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${checker-qual.version}</version>
+            </dependency>
+            <!-- excluded from jakarta.xml.ws-api above; GeoStore's rest-api declares it directly to keep shipping it -->
+            <dependency>
+                <groupId>jakarta.xml.soap</groupId>
+                <artifactId>jakarta.xml.soap-api</artifactId>
+                <version>${jakarta.xml.soap-api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

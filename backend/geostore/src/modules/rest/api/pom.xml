@@ -111,6 +111,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- jakarta.xml.ws-api brings it, but the shared managed entry excludes it: declared to keep it in the WAR -->
+        <dependency>
+            <groupId>jakarta.xml.soap</groupId>
+            <artifactId>jakarta.xml.soap-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>jakarta.servlet</groupId>
