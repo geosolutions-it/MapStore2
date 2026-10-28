@@ -379,11 +379,7 @@
     {
       "name": "Cookie",
       "mandatory": true,
-      "hidden": true,
-      "defaultConfig": {
-        "externalCookieUrl": "",
-        "declineUrl": "http://www.google.com"
-      }
+      "hidden": true
     },
     {
       "name": "Toolbar",
