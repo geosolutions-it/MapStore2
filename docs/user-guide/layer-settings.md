@@ -600,7 +600,7 @@ The user can click on <img src="../img/button/add-new-identify-view.jpg" class="
 
 ### Text and HTML format
 
-The `TEXT` format displays the information returned by the server as text.
+The `TEXT` format displays the information returned by the server as text. The image below provides an example of the typical default output from a GeoServer.
 
 <img src="../img/layer-settings/GFI_text.jpg" class="ms-docimage" style="max-width:600px;"/>
 
