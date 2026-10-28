@@ -320,7 +320,7 @@ Once a symbolizer has been added and customized, you can:
 
 <img src="../img/layer-settings/style_options.jpg" class="ms-docimage"  style="max-width:500px;">
 
-* **Filter** the style rule, as explained [here](filtering-layers.md#attribute-filter), in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
+* **Filter** the style rule, as explained in the [Attribute Filter](filtering-layers.md#attribute-filter) section, in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
 
 * Add a **Scale denominator filter** (`max` and `min` scale) to visualize the style rule only within certain scale limits. This is possible by clicking the <img src="../img/button/scale_denominator_button.jpg" class="ms-docbutton"/> button.
 
@@ -412,7 +412,7 @@ With the *Pattern mark style* it is possible to represent *Line* or *Fill*  styl
 
 <img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The style editor can configure a *Mark* as explained [here](#mark) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
+The style editor can configure a *Mark* as explained in the [Mark](#mark) section along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
 
 <img src="../img/layer-settings/classify_mark_ex.jpg" class="ms-docimage">
 
@@ -422,7 +422,7 @@ With the *Pattern icon style*  it is possible to represent *Line* or *Fill* styl
 
 <img src="../img/layer-settings/classify_icon_style_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The style editor can configure the *Icon* as explained [here](#icon) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
+The style editor can configure the *Icon* as explained in the [Icon](#icon) section along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
