@@ -52,8 +52,10 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-* Enable/disable the WFS linked service, which associates the layer with a WFS service used by the vector-based tools. When enabled, the user can view and edit the WFS service URL and the TypeName of the corresponding feature type.
+* Enable/disable the **WFS linked service** associated with the WMS layer, allowing tools such as [Attribute Table](attributes-table.md) and [Layer Filter](filtering-layers.md) to access its vector features. When enabled, users can configure the *WFS service URL* and the *TypeName* of the corresponding feature type when they differ from the ones of the WMS layer. 
 
+!!!Warning
+    The *WFS linked service* option is available only for WMS layers.
 * **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
 
 ## Display
