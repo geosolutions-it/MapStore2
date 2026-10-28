@@ -9,7 +9,7 @@ You can download a java web container like *Apache Tomcat* from and *Java JRE*
 | Tool   | Link                                               | Minimum          | Recommended | Maximum |
 |--------|----------------------------------------------------|------------------|-------------|---------|
 | Java   | [link](https://jdk.java.net/archive/)              | 17<sup>1</sup>   | 17          | 21      |
-| Tomcat | [link](https://tomcat.apache.org/download-10.cgi)  | 10.1<sup>2</sup> | 10.1        | 11      |
+| Tomcat | [link](https://tomcat.apache.org/download-10.cgi)  | 10.1<sup>2</sup> | 11          | 11      |
 
 ## Debug / Build
 
