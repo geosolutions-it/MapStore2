@@ -36,6 +36,9 @@ concurrency:
   group: geostore-integration-tests-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   integration-tests:
     name: REST integration tests (standalone jetty)
