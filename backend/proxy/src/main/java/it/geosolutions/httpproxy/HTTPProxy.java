@@ -407,6 +407,9 @@ public class HTTPProxy extends HttpServlet {
             }
 
             if (url != null) {
+                if (!isHostWhitelisted(url)) {
+                    throw new HttpErrorException(403, "Target host is not allowed");
+                }
 
                 onInit(httpServletRequest, httpServletResponse, url);
 
@@ -435,6 +438,16 @@ public class HTTPProxy extends HttpServlet {
         } finally {
             onFinish();
         }
+    }
+
+    private boolean isHostWhitelisted(URL url) {
+        if (url == null || url.getHost() == null) {
+            return false;
+        }
+        if (whiteListHosts == null || whiteListHosts.isEmpty()) {
+            return false;
+        }
+        return whiteListHosts.contains(url.getHost().trim().toLowerCase(Locale.ROOT));
     }
 
     protected HttpGet getGetMethod(URL url) {
