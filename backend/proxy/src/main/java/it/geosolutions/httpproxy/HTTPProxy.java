@@ -624,6 +624,9 @@ public class HTTPProxy extends HttpServlet {
             }
 
             if (url != null) {
+                if (!isUrlAllowed(url)) {
+                    throw new HttpErrorException(403, "Target URL is not allowed");
+                }
 
                 onInit(httpServletRequest, httpServletResponse, url);
 
@@ -1157,6 +1160,17 @@ public class HTTPProxy extends HttpServlet {
         }
 
         return proxyInfo;
+    }
+
+    private boolean isUrlAllowed(URL url) {
+        if (url == null || url.getHost() == null) {
+            return false;
+        }
+        if (whiteListHosts == null || whiteListHosts.isEmpty()) {
+            return false;
+        }
+        String host = url.getHost().trim().toLowerCase(Locale.ROOT);
+        return whiteListHosts.contains(host);
     }
 
     private Map<String, String> splitQuery(String query) {
