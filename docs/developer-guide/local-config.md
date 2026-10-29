@@ -523,6 +523,10 @@ Nominatim configuration:
 
 WFS configuration:
 
+Set WFS `options.srsName` to a registered CRS or `"map"` for the active map
+projection. If omitted, the request is unchanged and results are assumed to use
+EPSG:4326. Changing the map projection clears searches that use `"map"`.
+
 ```javascript
 "plugins": {
   ...

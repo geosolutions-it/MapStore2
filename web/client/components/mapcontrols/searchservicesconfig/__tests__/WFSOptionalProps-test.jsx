@@ -28,7 +28,21 @@ describe("test ResultProps component", () => {
         const wfsOptionalProps = ReactDOM.render(<WFSOptionalProps.Element/>, document.getElementById("container"));
         expect(wfsOptionalProps).toExist();
         const labels = TestUtils.scryRenderedDOMComponentsWithClass(wfsOptionalProps, "control-label");
-        expect(labels.length).toBe(5);
+        expect(labels.length).toBe(6);
+    });
+
+    it('defaults Request CRS to 4326 and saves map or fixed CRS without losing other options', () => {
+        const service = { type: 'wfs', options: { sortBy: 'name' } };
+        const changes = [];
+        ReactDOM.render(<WFSOptionalProps.Element service={service} onPropertyChange={(key, value) => changes.push(value)}/>, document.getElementById('container'));
+        const select = document.getElementById('wfs-search-request-crs');
+        expect(select.value).toBe('EPSG:4326');
+        ['map', 'EPSG:3857'].forEach(srsName => {
+            select.value = srsName;
+            TestUtils.Simulate.change(select);
+            expect(changes[changes.length - 1].options).toEqual({ sortBy: 'name', srsName });
+        });
+        expect(service.options).toEqual({ sortBy: 'name' });
     });
 
     it('test WFSOptionalProps with preconfigured service', () => {
@@ -45,14 +59,14 @@ describe("test ResultProps component", () => {
         let wfsOptionalProps = ReactDOM.render(<WFSOptionalProps.Element service={service}/>, document.getElementById("container"));
         expect(wfsOptionalProps).toExist();
         const labels = TestUtils.scryRenderedDOMComponentsWithClass(wfsOptionalProps, "control-label");
-        expect(labels.length).toBe(5);
+        expect(labels.length).toBe(6);
         expect(labels[0].innerText).toBe('search.s_sort');
         expect(labels[1].innerText).toBe('search.s_max_features');
         expect(labels[2].innerText).toBe('search.s_max_zoom');
         expect(labels[3].innerText).toBe('search.s_placeholder');
         expect(labels[4].innerText).toBe('search.s_tooltip');
         const inputs = TestUtils.scryRenderedDOMComponentsWithClass(wfsOptionalProps, 'form-control');
-        expect(inputs.length).toBe(3);
+        expect(inputs.length).toBe(4);
         expect(inputs[0].value).toBe('NAME');
         let sliders = TestUtils.scryRenderedDOMComponentsWithClass(wfsOptionalProps, 'slider-label');
         expect(sliders.length).toBe(2);
