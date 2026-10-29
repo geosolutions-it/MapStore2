@@ -463,7 +463,7 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
                     LOGGER.warn("Backoff delay interrupted", e);
                     Thread.currentThread().interrupt();
                 }
-                backoffDelay *= configuration.getBackoffMultiplier();
+                backoffDelay = (long) (backoffDelay * configuration.getBackoffMultiplier());
             }
         }
 
