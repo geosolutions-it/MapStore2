@@ -213,12 +213,25 @@ public class MicrosoftGraphClient {
      * @param accessToken the OAuth2 access token.
      * @return all {@code value} entries collected across pages.
      */
+    private boolean isAllowedGraphUrl(String candidateUrl) {
+        if (candidateUrl == null || candidateUrl.isEmpty() || graphEndpoint == null) {
+            return false;
+        }
+        String allowedPrefix = graphEndpoint.endsWith("/") ? graphEndpoint : graphEndpoint + "/";
+        return candidateUrl.startsWith(allowedPrefix);
+    }
+
     @SuppressWarnings("unchecked")
     List<Map<String, Object>> fetchAllPages(String url, String accessToken) {
         List<Map<String, Object>> allValues = new ArrayList<>();
         String currentUrl = url;
 
         while (currentUrl != null) {
+            if (!isAllowedGraphUrl(currentUrl)) {
+                LOGGER.warn("MS Graph: blocked pagination URL outside allowed endpoint: {}", currentUrl);
+                break;
+            }
+
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(accessToken);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
@@ -235,7 +248,15 @@ public class MicrosoftGraphClient {
             }
 
             Object nextLink = body.get("@odata.nextLink");
-            currentUrl = (nextLink instanceof String) ? (String) nextLink : null;
+            if (nextLink instanceof String) {
+                String next = (String) nextLink;
+                currentUrl = isAllowedGraphUrl(next) ? next : null;
+                if (currentUrl == null) {
+                    LOGGER.warn("MS Graph: blocked @odata.nextLink outside allowed endpoint: {}", next);
+                }
+            } else {
+                currentUrl = null;
+            }
         }
 
         return allValues;
