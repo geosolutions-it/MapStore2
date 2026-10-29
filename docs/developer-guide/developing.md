@@ -122,6 +122,12 @@ The repository also provides a Docker Compose test setup under the `tests` direc
 
 Before running the stack locally, make sure Docker Compose is available and that the MapStore WAR expected by the test override is present as `mapstore.war` in the repository root. You can build the WAR with `./build.sh` and copy or symlink `product/target/mapstore.war` to `mapstore.war`.
 
+Set `INITIAL_ADMIN_PASSWORD` to a non-default password before starting the stack. Compose passes it to MapStore and uses the same value for the authenticated endpoint tests. Current MapStore versions refuse the legacy `admin` / `admin` credentials.
+
+```sh
+export INITIAL_ADMIN_PASSWORD='<non-default local test password>'
+```
+
 The Compose files are layered deliberately:
 
 * `docker-compose.yml` defines the default MapStore, PostgreSQL and proxy services.
@@ -143,6 +149,8 @@ docker compose --profile test -f docker-compose.yml -f docker-compose-override.y
 ```
 
 The `base` profile starts the services required by the tests, including PostgreSQL, MapStore and the LDAP test container. The `test` profile enables the `sut` service; keep `--exit-code-from sut` so the command returns the result of `tests.py`.
+
+On ARM Docker hosts, if the pinned PostGIS image does not support the native platform, set `DOCKER_DEFAULT_PLATFORM=linux/amd64` before running both commands.
 
 When the local test run is complete, stop the Compose stack with:
 
