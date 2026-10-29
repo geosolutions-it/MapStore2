@@ -481,7 +481,7 @@ public class HTTPProxy extends HttpServlet {
                 } else if ("password".equals(key)) {
                     password = value;
                 } else if ("url".equals(key)) {
-                    url = Utils.buildURL(value);
+                    url = Utils.buildAndValidateURL(value);
                 }
             }
 
