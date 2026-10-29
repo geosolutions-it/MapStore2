@@ -716,8 +716,8 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
         callRemoteLogout(tokenValue, accessToken);
     }
 
-    private boolean isAllowedEndpointUrl(String candidateUrl, String trustedBaseUrl) {
-        if (candidateUrl == null || trustedBaseUrl == null) return false;
+    private String sanitizeEndpointUrl(String candidateUrl, String trustedBaseUrl) {
+        if (candidateUrl == null || trustedBaseUrl == null) return null;
         try {
             URI candidate = URI.create(candidateUrl);
             URI trusted = URI.create(trustedBaseUrl);
@@ -728,19 +728,40 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
                     || trustedScheme == null
                     || (!"http".equalsIgnoreCase(candidateScheme)
                             && !"https".equalsIgnoreCase(candidateScheme))) {
-                return false;
+                return null;
             }
 
-            if (!candidateScheme.equalsIgnoreCase(trustedScheme)) return false;
-            if (candidate.getHost() == null || trusted.getHost() == null) return false;
-            if (!candidate.getHost().equalsIgnoreCase(trusted.getHost())) return false;
+            if (!candidateScheme.equalsIgnoreCase(trustedScheme)) return null;
+            if (candidate.getHost() == null || trusted.getHost() == null) return null;
+            if (!candidate.getHost().equalsIgnoreCase(trusted.getHost())) return null;
 
-            int candidatePort = candidate.getPort() == -1 ? ("https".equalsIgnoreCase(candidateScheme) ? 443 : 80) : candidate.getPort();
-            int trustedPort = trusted.getPort() == -1 ? ("https".equalsIgnoreCase(trustedScheme) ? 443 : 80) : trusted.getPort();
+            int candidatePort =
+                    candidate.getPort() == -1
+                            ? ("https".equalsIgnoreCase(candidateScheme) ? 443 : 80)
+                            : candidate.getPort();
+            int trustedPort =
+                    trusted.getPort() == -1
+                            ? ("https".equalsIgnoreCase(trustedScheme) ? 443 : 80)
+                            : trusted.getPort();
+            if (candidatePort != trustedPort) return null;
 
-            return candidatePort == trustedPort;
-        } catch (IllegalArgumentException e) {
-            return false;
+            String candidatePath = candidate.getPath() == null ? "" : candidate.getPath();
+            String trustedPath = trusted.getPath() == null ? "" : trusted.getPath();
+            if (!candidatePath.equals(trustedPath)) return null;
+            if (candidate.getUserInfo() != null) return null;
+
+            URI sanitized =
+                    new URI(
+                            trusted.getScheme(),
+                            null,
+                            trusted.getHost(),
+                            trusted.getPort(),
+                            trustedPath,
+                            candidate.getRawQuery(),
+                            candidate.getRawFragment());
+            return sanitized.toString();
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -753,7 +774,9 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
                     configuration.buildRevokeEndpoint(accessToken, accessToken, configuration);
             if (revokeEndpoint != null) {
                 String revokeUrl = revokeEndpoint.getUrl();
-                if (!isAllowedEndpointUrl(revokeUrl, configuration.getRevokeEndpoint())) {
+                String sanitizedRevokeUrl =
+                        sanitizeEndpointUrl(revokeUrl, configuration.getRevokeEndpoint());
+                if (sanitizedRevokeUrl == null) {
                     LOGGER.warn("Blocked revoke call due to invalid/untrusted endpoint URL");
                     return;
                 }
@@ -761,7 +784,7 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
                 try {
                     ResponseEntity<String> responseEntity =
                             template.exchange(
-                                    revokeUrl,
+                                    sanitizedRevokeUrl,
                                     revokeEndpoint.getMethod(),
                                     revokeEndpoint.getRequestEntity(),
                                     String.class);
@@ -782,14 +805,16 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
                     configuration.buildLogoutEndpoint(token, accessToken, configuration);
             if (logoutEndpoint != null) {
                 String logoutUrl = logoutEndpoint.getUrl();
-                if (!isAllowedEndpointUrl(logoutUrl, configuration.getLogoutUri())) {
+                String sanitizedLogoutUrl =
+                        sanitizeEndpointUrl(logoutUrl, configuration.getLogoutUri());
+                if (sanitizedLogoutUrl == null) {
                     LOGGER.warn("Blocked remote logout call due to invalid/untrusted endpoint URL");
                     return;
                 }
                 RestTemplate template = protectedRestTemplate(configuration);
                 ResponseEntity<String> responseEntity =
                         template.exchange(
-                                logoutUrl,
+                                sanitizedLogoutUrl,
                                 logoutEndpoint.getMethod(),
                                 logoutEndpoint.getRequestEntity(),
                                 String.class);
