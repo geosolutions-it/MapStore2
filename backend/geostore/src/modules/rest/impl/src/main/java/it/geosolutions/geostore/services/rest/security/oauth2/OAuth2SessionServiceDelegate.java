@@ -68,6 +68,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
@@ -715,6 +716,34 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
         callRemoteLogout(tokenValue, accessToken);
     }
 
+    private boolean isAllowedEndpointUrl(String candidateUrl, String trustedBaseUrl) {
+        if (candidateUrl == null || trustedBaseUrl == null) return false;
+        try {
+            URI candidate = URI.create(candidateUrl);
+            URI trusted = URI.create(trustedBaseUrl);
+
+            String candidateScheme = candidate.getScheme();
+            String trustedScheme = trusted.getScheme();
+            if (candidateScheme == null
+                    || trustedScheme == null
+                    || (!"http".equalsIgnoreCase(candidateScheme)
+                            && !"https".equalsIgnoreCase(candidateScheme))) {
+                return false;
+            }
+
+            if (!candidateScheme.equalsIgnoreCase(trustedScheme)) return false;
+            if (candidate.getHost() == null || trusted.getHost() == null) return false;
+            if (!candidate.getHost().equalsIgnoreCase(trusted.getHost())) return false;
+
+            int candidatePort = candidate.getPort() == -1 ? ("https".equalsIgnoreCase(candidateScheme) ? 443 : 80) : candidate.getPort();
+            int trustedPort = trusted.getPort() == -1 ? ("https".equalsIgnoreCase(trustedScheme) ? 443 : 80) : trusted.getPort();
+
+            return candidatePort == trustedPort;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     protected void callRevokeEndpoint(String accessToken) {
         OAuth2Configuration configuration = configuration();
         if (configuration != null && configuration.isEnabled()) {
@@ -723,11 +752,16 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
             OAuth2Configuration.Endpoint revokeEndpoint =
                     configuration.buildRevokeEndpoint(accessToken, accessToken, configuration);
             if (revokeEndpoint != null) {
+                String revokeUrl = revokeEndpoint.getUrl();
+                if (!isAllowedEndpointUrl(revokeUrl, configuration.getRevokeEndpoint())) {
+                    LOGGER.warn("Blocked revoke call due to invalid/untrusted endpoint URL");
+                    return;
+                }
                 RestTemplate template = protectedRestTemplate(configuration);
                 try {
                     ResponseEntity<String> responseEntity =
                             template.exchange(
-                                    revokeEndpoint.getUrl(),
+                                    revokeUrl,
                                     revokeEndpoint.getMethod(),
                                     revokeEndpoint.getRequestEntity(),
                                     String.class);
@@ -747,10 +781,15 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
             OAuth2Configuration.Endpoint logoutEndpoint =
                     configuration.buildLogoutEndpoint(token, accessToken, configuration);
             if (logoutEndpoint != null) {
+                String logoutUrl = logoutEndpoint.getUrl();
+                if (!isAllowedEndpointUrl(logoutUrl, configuration.getLogoutUri())) {
+                    LOGGER.warn("Blocked remote logout call due to invalid/untrusted endpoint URL");
+                    return;
+                }
                 RestTemplate template = protectedRestTemplate(configuration);
                 ResponseEntity<String> responseEntity =
                         template.exchange(
-                                logoutEndpoint.getUrl(),
+                                logoutUrl,
                                 logoutEndpoint.getMethod(),
                                 logoutEndpoint.getRequestEntity(),
                                 String.class);
