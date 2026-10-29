@@ -899,6 +899,7 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
     protected void clearRefreshTokenCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie(REFRESH_TOKEN_PARAM, "");
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
