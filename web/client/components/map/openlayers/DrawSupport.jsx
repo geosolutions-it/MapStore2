@@ -94,8 +94,8 @@ export default class DrawSupport extends React.Component {
         style: PropTypes.object,
 
         snapping: PropTypes.bool,
-        snappingLayer: PropTypes.object,
-        snappingLayerInstance: PropTypes.object,
+        snappingLayer: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+        snappingLayerInstance: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
         isSnappingLoading: PropTypes.bool,
         snapConfig: PropTypes.object,
         onRefreshSnappingLayer: PropTypes.func,
