@@ -68,11 +68,19 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /** Abstract implementation of an OAuth2 SessionServiceDelegate. */
 public abstract class OAuth2SessionServiceDelegate implements SessionServiceDelegate {
@@ -780,12 +788,28 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
                 || c.getName().equalsIgnoreCase(REFRESH_TOKEN_PARAM);
     }
 
+    private static final String REFRESH_TOKEN_COOKIE_CRYPTO_ALGO = "AES/GCM/NoPadding";
+    private static final int REFRESH_TOKEN_COOKIE_GCM_TAG_BITS = 128;
+    private static final int REFRESH_TOKEN_COOKIE_IV_BYTES = 12;
+    private static final String REFRESH_TOKEN_COOKIE_KEY_ENV = "GEOSTORE_REFRESH_TOKEN_COOKIE_KEY";
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     protected String getRefreshTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (REFRESH_TOKEN_PARAM.equalsIgnoreCase(cookie.getName())) {
-                    return cookie.getValue();
+                    String cookieValue = cookie.getValue();
+                    if (cookieValue == null || cookieValue.isEmpty()) {
+                        return null;
+                    }
+                    try {
+                        return decryptRefreshToken(cookieValue);
+                    } catch (RuntimeException ex) {
+                        LOGGER.warn(
+                                "Refresh token cookie is not decryptable; falling back to legacy/plain value.");
+                        return cookieValue;
+                    }
                 }
             }
         }
@@ -794,12 +818,82 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
 
     protected void setRefreshTokenCookie(
             HttpServletResponse response, String refreshToken, boolean secure) {
-        Cookie cookie = new Cookie(REFRESH_TOKEN_PARAM, refreshToken);
+        String encryptedRefreshToken = encryptRefreshToken(refreshToken);
+        Cookie cookie = new Cookie(REFRESH_TOKEN_PARAM, encryptedRefreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(secure);
         cookie.setPath("/");
         cookie.setMaxAge(604800); // 7 days
         response.addCookie(cookie);
+        response.addHeader(
+                "Set-Cookie",
+                REFRESH_TOKEN_PARAM
+                        + "="
+                        + encryptedRefreshToken
+                        + "; Max-Age=604800; Path=/; HttpOnly"
+                        + (secure ? "; Secure" : "")
+                        + "; SameSite=Strict");
+    }
+
+    private String encryptRefreshToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            return refreshToken;
+        }
+        try {
+            byte[] iv = new byte[REFRESH_TOKEN_COOKIE_IV_BYTES];
+            SECURE_RANDOM.nextBytes(iv);
+            Cipher cipher = Cipher.getInstance(REFRESH_TOKEN_COOKIE_CRYPTO_ALGO);
+            cipher.init(
+                    Cipher.ENCRYPT_MODE,
+                    new SecretKeySpec(getRefreshTokenCookieKey(), "AES"),
+                    new GCMParameterSpec(REFRESH_TOKEN_COOKIE_GCM_TAG_BITS, iv));
+            byte[] ciphertext = cipher.doFinal(refreshToken.getBytes(StandardCharsets.UTF_8));
+            byte[] payload = new byte[iv.length + ciphertext.length];
+            System.arraycopy(iv, 0, payload, 0, iv.length);
+            System.arraycopy(ciphertext, 0, payload, iv.length, ciphertext.length);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(payload);
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException("Unable to encrypt refresh token cookie value", e);
+        }
+    }
+
+    private String decryptRefreshToken(String encryptedRefreshToken) {
+        try {
+            byte[] payload = Base64.getUrlDecoder().decode(encryptedRefreshToken);
+            if (payload.length <= REFRESH_TOKEN_COOKIE_IV_BYTES) {
+                throw new IllegalArgumentException("Invalid encrypted refresh token payload");
+            }
+            byte[] iv = Arrays.copyOfRange(payload, 0, REFRESH_TOKEN_COOKIE_IV_BYTES);
+            byte[] ciphertext = Arrays.copyOfRange(payload, REFRESH_TOKEN_COOKIE_IV_BYTES, payload.length);
+            Cipher cipher = Cipher.getInstance(REFRESH_TOKEN_COOKIE_CRYPTO_ALGO);
+            cipher.init(
+                    Cipher.DECRYPT_MODE,
+                    new SecretKeySpec(getRefreshTokenCookieKey(), "AES"),
+                    new GCMParameterSpec(REFRESH_TOKEN_COOKIE_GCM_TAG_BITS, iv));
+            byte[] plaintext = cipher.doFinal(ciphertext);
+            return new String(plaintext, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to decrypt refresh token cookie value", e);
+        }
+    }
+
+    private byte[] getRefreshTokenCookieKey() {
+        String keyMaterial =
+                Optional.ofNullable(System.getProperty(REFRESH_TOKEN_COOKIE_KEY_ENV))
+                        .orElse(System.getenv(REFRESH_TOKEN_COOKIE_KEY_ENV));
+        if (keyMaterial == null || keyMaterial.isEmpty()) {
+            throw new IllegalStateException(
+                    "Missing refresh token cookie key. Configure "
+                            + REFRESH_TOKEN_COOKIE_KEY_ENV
+                            + " as a Base64-encoded 128/192/256-bit AES key.");
+        }
+        byte[] key = Base64.getDecoder().decode(keyMaterial);
+        int length = key.length;
+        if (length != 16 && length != 24 && length != 32) {
+            throw new IllegalStateException(
+                    "Invalid refresh token cookie key length: " + (length * 8) + " bits.");
+        }
+        return key;
     }
 
     protected void clearRefreshTokenCookie(HttpServletResponse response) {
@@ -808,6 +902,8 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+        response.addHeader(
+                "Set-Cookie", REFRESH_TOKEN_PARAM + "=; Max-Age=0; Path=/; HttpOnly; SameSite=Strict");
     }
 
     protected TokenAuthenticationCache cache() {
