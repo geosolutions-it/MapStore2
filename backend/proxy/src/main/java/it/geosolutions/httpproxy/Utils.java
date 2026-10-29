@@ -25,6 +25,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -179,6 +180,32 @@ final class Utils {
                 }
                 return new URL(url.getProtocol(), url.getHost(), DEFAULT_HTTP_PORT, url.getFile());
             }
+        }
+
+        return url;
+    }
+
+    static URL buildAndValidateURL(String value) throws MalformedURLException {
+        URL url = buildURL(value);
+
+        String protocol = url.getProtocol() == null ? "" : url.getProtocol().toLowerCase(Locale.ROOT);
+        if (!"http".equals(protocol) && !"https".equals(protocol)) {
+            throw new MalformedURLException("Unsupported URL protocol");
+        }
+
+        String host = url.getHost();
+        if (host == null || host.trim().isEmpty()) {
+            throw new MalformedURLException("Missing URL host");
+        }
+
+        String normalizedHost = host.toLowerCase(Locale.ROOT);
+        if (whitelistHosts != null && !whitelistHosts.isEmpty() && !whitelistHosts.contains(normalizedHost)) {
+            throw new MalformedURLException("Host is not allowed");
+        }
+
+        String externalForm = url.toExternalForm();
+        if (whitelistURLs != null && !whitelistURLs.isEmpty() && !whitelistURLs.contains(externalForm)) {
+            throw new MalformedURLException("URL is not allowed");
         }
 
         return url;
