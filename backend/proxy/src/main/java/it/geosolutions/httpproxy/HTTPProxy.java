@@ -839,8 +839,7 @@ public class HTTPProxy extends HttpServlet {
                     // A path-relative Location keeps the scheme and host the browser used, which a
                     // TLS front end hides from us, and the upstream status keeps 307/308 requests
                     // from being repeated as GET.
-                    String selfPath = getServletContext().getContextPath()
-                            + httpServletRequest.getServletPath();
+                    String selfPath = getServletContext().getContextPath() + "/proxy";
                     if ("/".equals(httpServletRequest.getPathInfo())) {
                         selfPath += "/";
                     }
