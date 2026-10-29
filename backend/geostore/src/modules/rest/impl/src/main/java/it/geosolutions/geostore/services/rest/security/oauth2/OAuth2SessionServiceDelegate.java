@@ -821,7 +821,7 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
         String encryptedRefreshToken = encryptRefreshToken(refreshToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN_PARAM, encryptedRefreshToken);
         cookie.setHttpOnly(true);
-        cookie.setSecure(secure);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(604800); // 7 days
         response.addCookie(cookie);
@@ -831,7 +831,7 @@ public abstract class OAuth2SessionServiceDelegate implements SessionServiceDele
                         + "="
                         + encryptedRefreshToken
                         + "; Max-Age=604800; Path=/; HttpOnly"
-                        + (secure ? "; Secure" : "")
+                        + "; Secure"
                         + "; SameSite=Strict");
     }
 
