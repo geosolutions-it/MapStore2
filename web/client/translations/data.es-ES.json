@@ -391,11 +391,35 @@
       "tooltipDeactivate": "Salir del modo 3D",
       "tooltipActivate": "Entrar en el  modo 3D"
     },
-    "cookie": {
-      "info": "Esta sitio utiliza cookies para mejorar su experiencia. Asumiremos que está de acuerdo, si no puede optar por salir.",
-      "moreDetailsButton": "Más detalles",
-      "leave": "Abandonar",
-      "accept": "Aceptar"
+    "privacySettings": {
+      "title": "Configuración de privacidad",
+      "settings": "Configuración de privacidad",
+      "necessary": "Funcionales y necesarias",
+      "always": "Siempre activas",
+      "functional": "Funcionales opcionales",
+      "statistics": "Estadísticas",
+      "marketing": "Marketing",
+      "unused": "No utilizadas",
+      "on": "Activadas",
+      "off": "Desactivadas",
+      "reject": "Rechazar opcionales",
+      "accept": "Aceptar opcionales",
+      "customize": "Personalizar",
+      "save": "Guardar selección",
+      "close": "Cerrar",
+      "withdraw": "Retirar todos los consentimientos opcionales",
+      "baseline": "Esta configuración utiliza solo herramientas técnicas necesarias, que no requieren consentimiento. Cerrar este aviso no expresa consentimiento.",
+      "optional": "Las herramientas opcionales permanecen desactivadas hasta que usted elija. Puede rechazarlas y seguir usando MapStore.",
+      "required": "Autenticación al iniciar sesión, seguridad y memorización de su configuración de privacidad. Consulte la Política de cookies para conocer las finalidades y la duración.",
+      "status": "Puede cambiar o retirar el consentimiento en cualquier momento desde la barra inferior. La retirada detiene las integraciones registradas; no recupera datos ya enviados ni elimina cookies de terceros.",
+      "storageError": "No se pudo guardar su elección. Las herramientas opcionales siguen desactivadas. Compruebe el almacenamiento del navegador e inténtelo de nuevo.",
+      "fixture": "ENTORNO DE PRUEBA LOCAL: herramientas opcionales sintéticas, no incluidas en Vanilla.",
+      "templateWarning": "¡Las políticas todavía deben configurarse! Las páginas actuales siguen siendo las plantillas de MapStore: el operador de esta instalación todavía no ha configurado sus propias páginas.",
+      "templateWarningLink": "Cómo configurarlas",
+      "policies": "Políticas",
+      "cookie": "Política de cookies",
+      "privacy": "Política de privacidad",
+      "terms": "Condiciones de uso"
     },
     "background": "Fondo",
     "language": "Idioma",
@@ -3313,6 +3337,10 @@
         "tooltip": "Haga clic aquí para ampliarlo de nuevo."
       },
       "errors": {
+        "invalidDateTitle": "Fecha u hora no válida",
+        "invalidDateMessage": "Introduzca una fecha y una hora completas y válidas.",
+        "invalidStartDate": "La fecha de inicio debe ser anterior a la fecha de fin.",
+        "invalidEndDate": "La fecha de fin debe ser posterior a la fecha de inicio.",
         "multidim_error_title": "El servicio de backend no responde",
         "multidim_error_message": "Los servicios requeridos para soporte multidinensional no están respondiendo. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
       }

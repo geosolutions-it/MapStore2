@@ -13,7 +13,9 @@
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
         <tomcat.version>10.1.55</tomcat.version>
-        <jackson.version>2.19.4</jackson.version>
+        <jackson.version>2.22.3</jackson.version>
+        <guava.version>32.0.0-jre</guava.version>
+        <jsr305.version>3.0.2</jsr305.version>
         <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8989</backend.debug.args>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
@@ -30,7 +32,7 @@
         <cargo.version>1.10.27</cargo.version>
 
         <!-- MapStore‑specific -->
-        <mapstore-services.version>1.13-SNAPSHOT</mapstore-services.version>
+        <mapstore-services.version>1.14-SNAPSHOT</mapstore-services.version>
         <geostore-webapp.version>2.8-SNAPSHOT</geostore-webapp.version>
         <http_proxy.version>1.8-SNAPSHOT</http_proxy.version>
         <print-lib.version>2.5-SNAPSHOT</print-lib.version>
@@ -47,6 +49,17 @@
                 <version>${jackson.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- same versions GeoStore ships, so print-lib and json-patch do not add a second one -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.version}</version>
             </dependency>
             </dependencies>
     </dependencyManagement>

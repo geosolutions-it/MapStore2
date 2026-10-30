@@ -28,7 +28,7 @@ The layer settings panel is composed of four sections:
 
 By default, as soon as the user opens the layer settings panel the General information section appears:
 
-<img src="../img/layer-settings/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-setting/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 In this page it is possible to:
 
@@ -38,7 +38,7 @@ In this page it is possible to:
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/lacalize-layer-title.mp4"/></video>
 
-* Take a look at the **Name** of the layer
+* View or edit the **Name** of the layer
 
 * Edit the layer's **Description**
 
@@ -52,13 +52,21 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
+* Enable/disable the **WFS linked service** associated with the WMS layer, allowing tools such as [Attribute Table](attributes-table.md) and [Layer Filter](filtering-layers.md) to access its vector features. When enabled, users can configure the *WFS service URL* and the *TypeName* of the corresponding feature type when they differ from the ones of the WMS layer.
+
+!!!Warning
+    The *WFS linked service* option is available only for WMS layers.
+
+* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the [Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
+
+!!! note
+    The ability to change layer Title and Name is available for supported ArcGIS, WFS and WMS layers.
 
 ## Display
 
 Through the second section of the layer settings panel it is possible to change the display settings:
 
-<img src="../img/layer-settings/display.jpg" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/layer-settings/coalesceLayer.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 In particular, the user is allowed to:
 
@@ -88,6 +96,8 @@ In particular, the user is allowed to:
 
 * Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
 When the *Use cache options* is enabled, more controls are enabled so that it is possible for the user to check if the current map settings match any GWC ***standard*** Gridset defined on the server side for the given WMS layer (**Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/>). At the same time, it is also possible to change the setting strategy (based on the WMTS service response) to strictly adapt layer settings on the client side to the ones matching any remote ***custom*** Gridset defined for the current map settings (**Use remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> button).
+
+* Enable/disable the **Exclude from combined requests option**. If checked, the layer is always loaded with its own separate request, even when the [Combine WMS requests (coalesce)](mapstore-toolbars.md#side-toolbar) option is enabled in the map Settings, where adjacent WMS layers from the same service are combined into a single request.
 
 !!!note
 
@@ -320,7 +330,7 @@ Once a symbolizer has been added and customized, you can:
 
 <img src="../img/layer-settings/style_options.jpg" class="ms-docimage"  style="max-width:500px;">
 
-* **Filter** the style rule, as explained [here](filtering-layers.md#attribute-filter), in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
+* **Filter** the style rule, as explained in the [Attribute Filter](filtering-layers.md#attribute-filter) section, in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
 
 * Add a **Scale denominator filter** (`max` and `min` scale) to visualize the style rule only within certain scale limits. This is possible by clicking the <img src="../img/button/scale_denominator_button.jpg" class="ms-docbutton"/> button.
 
@@ -412,7 +422,7 @@ With the *Pattern mark style* it is possible to represent *Line* or *Fill*  styl
 
 <img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The style editor can configure a *Mark* as explained [here](#mark) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
+The style editor can configure a *Mark* as explained in the [Mark](#mark) section along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
 
 <img src="../img/layer-settings/classify_mark_ex.jpg" class="ms-docimage">
 
@@ -422,7 +432,7 @@ With the *Pattern icon style*  it is possible to represent *Line* or *Fill* styl
 
 <img src="../img/layer-settings/classify_icon_style_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The style editor can configure the *Icon* as explained [here](#icon) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
+The style editor can configure the *Icon* as explained in the [Icon](#icon) section along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
@@ -568,52 +578,76 @@ Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.c
 
 ## Feature Info Form
 
-Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](navigation-toolbar.md#identify-tool):
+The **Feature Info** section of the layer settings panel allows you to configure the information displayed when querying a layer with the [Identify Tool](navigation-toolbar.md#identify-tool).
 
-<img src="../img/layer-settings/feature-info-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-settings/featureInfo.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-In particular, the user can choose between:
+For each layer, you can configure one or more **Identify Views**, combining different formats to display feature attributes, custom content, and related records from an external WFS service.
 
-* **Disable Identify** to disable the Identify for the layer
+Select **Disable Identify** to prevent the Identify Tool from querying the layer.
 
-* **Text**
+<img src="../img/layer-settings/disable-featureInfo.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* **HTML**
+### Manage Identify Views
 
-* **Properties**
+The user can click on <img src="../img/button/add-new-identify-view.jpg" class="ms-docbutton"/> button to add a view. For each view, the user can:
 
-* **Template**
+<img src="../img/layer-settings/manage-identify-view.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-!!!note
-    Without selecting any format here, the [Identify Tool](navigation-toolbar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Side Toolbar](mapstore-toolbars.md#side-toolbar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
+* Set a **Title**, which is used as the tab label in the [Identify](navigation-toolbar.md#identify-tool) results
 
-!!!note
-    From the Layer Settings panel, MapStore allows users to choose the *Information format* for `WMS` and `WFS` layer types.
-    The **Text** option is only available for `WMS` layers, while the **HTML** option for `WFS` layers is available only with GeoServer and if the [`wfs-freemarker`](https://docs.geoserver.org/main/en/user/community/wfs-freemarker/index.html) extension is installed on the GeoServer side.
+* Select a format: `TEXT`, `HTML`, `PROPERTIES`, `TEMPLATE`, or `EXTERNAL DATA`
 
-### Text
+* Use the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button to configure `PROPERTIES`, `TEMPLATE`, and `EXTERNAL DATA` views
 
-An example of layer information in text format can be:
+* Remove a view thought the <img src="../img/button/remove-button.jpg" class="ms-docbutton"/> button
 
-<img src="../img/layer-settings/GFI_text.jpg" class="ms-docimage"  style="max-width:600px;"/>
+!!! note
+    When multiple views are configured, the [Identify Tool](navigation-toolbar.md#identify-tool) displays them as tabs for the selected layer. The user can click a tab to switch between the available views.
 
-### HTML
+!!! note
+    If no *Identify View* is configured for the layer, the Identify Tool uses the format selected in **Map Settings**, available from the [Side Toolbar](mapstore-toolbars.md#side-toolbar). Settings configured for an individual layer take precedence over the map settings for that layer.
 
-An example of layer information in HTML format can be:
+### Text and HTML format
 
-<img src="../img/layer-settings/GFI_html.jpg" class="ms-docimage"/>
+The `TEXT` format displays the information returned by the server as text. The image below provides an example of the typical default output from a GeoServer.
 
-### Properties
+<img src="../img/layer-settings/GFI_text.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-An example of layer information in properties format can be:
+The `HTML` format displays the HTML content returned by the server. The image below provides an example of the typical default output from a GeoServer.
 
-<img src="../img/layer-settings/GFI_properties.jpg" class="ms-docimage"  style="max-width:600px;"/>
+<img src="../img/layer-settings/GFI_html.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-### Templates
+!!! note
+    Feature Info settings are available for `WMS` and `WFS` layers. The `TEXT` format is available only for `WMS` layers. For `WFS` layers, the `HTML` format requires GeoServer with the [`wfs-freemarker`](https://docs.geoserver.org/main/en/user/community/wfs-freemarker/index.html) extension installed.
 
-In this case the user can customize the information format:
+### Properties format
 
-<img src="../img/layer-settings/GFI_template.jpg" class="ms-docimage"  style="max-width:500px;"/>
+The `PROPERTIES` format displays the *Attributes* of the identified feature. The user can customize the attributes though the<img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button.
+
+<img src="../img/layer-settings/edit-properties-format.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+For each attribute, the user can:
+
+* Select or clear its checkbox to show or hide it in the view
+
+* Enter an **Alias** to use as its display label
+
+!!! note
+    An alias configured for an individual Properties view takes precedence over the alias configured in the layer's [Fields](layer-settings.md#fields) settings. If the view alias is empty, the layer alias is used; if neither is configured, the original attribute name is displayed.
+
+* Choose a **Feature info display type** to display its value as a link or media content, as described on [Attribute display types](layer-settings.md#attribute-display-types) section below.
+
+!!! note
+    Attributes without a configured display type retain their default rendering.
+
+An example of Identify results in `PROPERTIES` format with a media content is shown below:
+
+<img src="../img/layer-settings/GFI_properties.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+### Templates format
+
+The `TEMPLATE` format allows you to create custom content using text, formatting, images, and values from the identified feature.
 
 In particular, by clicking on the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button, the following text editor appears:
 
@@ -643,3 +677,84 @@ In this case, by clicking on the map, the [Identify Tool](navigation-toolbar.md#
 <img src="../img/layer-settings/GFI_template_ex1.jpg" class="ms-docimage"/>
 
 Using the `${properties.NAME_OF_THE_FIELD}` syntax, MapStore is able to parse the response to the [Identify Tool](navigation-toolbar.md#identify-tool) request by matching the configured placeholder.
+
+### External Data format
+
+The `EXTERNAL DATA` format displays records from a separate WFS layer that is related to the identified feature.
+
+The relationship is defined through a **CQL filter template**, which uses attribute values from the identified feature to query the external source. The external data can contain spatial or non-spatial records.
+
+<img src="../img/layer-settings/externalData.jpg" class="ms-docimage"/>
+
+Selecting **EXTERNAL DATA** the user needs to:
+
+* Enter the **WFS URL** containing the related data and check the available layers though the <img src="../img/button/refresh_button.jpg" class="ms-docbutton"/>
+
+* Select the **Layer name** of the WFS service to query
+
+* Enter the  **CQL filter template** using attributes from the identified feature. Attributes of the clicked feature can be inserted with the `${properties['attribute_name']}` syntax.
+
+Then the user can click **Validate** to check the configuration.
+
+!!! note
+    All the fields are mandatory. If the configuration is not complete, the view is highlighted in red and a warning icon appears next to it.
+
+Let's make an example: suppose the identified feature has a `ref_id` attribute and the external table stores the corresponding identifier in a string attribute named `STATE_FIPS`. The filter template can be:
+
+```text
+ref_id = '${properties['STATE_FIPS']}'
+```
+
+Here, `ref_id` belongs to the external table, while `STATE_FIPS` belongs to the identified feature. Use quotation marks appropriate to the data type of the external attribute.
+
+<img src="../img/layer-settings/GFI_external_data.jpg" class="ms-docimage"/>
+
+In the **Attributes** section, the user can also show or hide returned attributes, assign aliases, and configure their **Feature info display type**, as described on [Attribute display types](layer-settings.md#attribute-display-types) section below.
+
+Open the External Data tab in the Identify results to view the related records.
+
+<img src="../img/layer-settings/GFI_external_data1.jpg" class="ms-docimage"/>
+
+!!! warning
+    **WFS URL**, **Layer name**, and **CQL filter template** are mandatory. An incomplete view is marked as invalid and is not displayed as a tab in the Identify results until the required configuration is completed.
+
+### Attribute display types
+
+Both `PROPERTIES` and `EXTERNAL DATA` views support the following **Feature info display type** options:
+
+| Display type | Displayed content |
+| --- | --- |
+| **Image** | An image referenced by the attribute value. |
+| **Video** | A video player for the referenced resource. |
+| **Audio** | An audio player for the referenced resource. |
+| **Panorama Image** | An interactive panoramic image. |
+| **PDF** | A viewer for the referenced PDF document. |
+| **URL** | A clickable link. |
+| **Iframe** | Embedded content from the referenced URL. |
+| **Media** | Media content whose type is determined using another attribute. |
+
+Choose a display type that matches the resource referenced by the attribute. For example, select **Image** for an attribute containing image URLs or **PDF** for an attribute containing links to PDF documents.
+
+When you select **Media**, an additional **Media type attribute** selector appears. Use it to select the attribute containing the resource's media type.
+
+For example, a record can contain:
+
+* `resource_url`: the URL of the resource.
+* `resource_type`: its MIME type, such as `image/jpeg`, `video/mp4`, `audio/mpeg`, or `application/pdf`.
+
+Set the display type of `resource_url` to **Media**, then select `resource_type` as the **Media type attribute**. This allows the same attribute to display different kinds of media across records.
+
+!!! note
+    For a `PROPERTIES` view, these attributes belong to the identified layer. For an `EXTERNAL DATA` view, they belong to the external WFS layer or table.
+
+### Feature count and Buffer
+
+For `WMS` layers, the Feature Info section also provides settings that control how the [Identify Tool](navigation-toolbar.md#identify-tool) queries the layer:
+
+<img src="../img/layer-settings/featureInfoWMS.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+* **Feature count**: the maximum number of features requested from the server for each Identify request on the layer. The default value is `10`.
+* **Buffer (px)**: the search radius, in pixels, around the clicked point. Increasing the buffer makes it easier to identify points and lines.
+
+!!! note
+    **Buffer (px)** uses the GeoServer `BUFFER` vendor parameter and is available only for layers served by GeoServer.

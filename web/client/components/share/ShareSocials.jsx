@@ -13,7 +13,6 @@ import Message from '../../components/I18N/Message';
 
 import {
     ShareButtons,
-    ShareCounts,
     generateShareIcon
 } from 'react-share';
 
@@ -23,12 +22,6 @@ const {
     LinkedinShareButton,
     TwitterShareButton
 } = ShareButtons;
-
-// counter for counting the number of map-sharing on a given social network
-const {
-    FacebookShareCount,
-    LinkedinShareCount
-} = ShareCounts;
 
 // icons of the social network
 const FacebookIcon = generateShareIcon('facebook');
@@ -45,7 +38,6 @@ const LinkedinIcon = generateShareIcon('linkedin');
 class ShareSocials extends React.Component {
     static propTypes = {
         shareUrl: PropTypes.string,
-        getCount: PropTypes.func,
         sharedTitle: PropTypes.string
     };
 
@@ -58,10 +50,6 @@ class ShareSocials extends React.Component {
     };
 
     render() {
-        let countProps = {};
-        if (this.props.getCount) {
-            countProps.getCount = this.props.getCount;
-        }
         const title = this.props.sharedTitle || getMessageById(this.context.messages, "share.sharedTitle");
 
         return (
@@ -79,12 +67,6 @@ class ShareSocials extends React.Component {
                                 size={32}
                                 round />
                         </FacebookShareButton>
-                        <FacebookShareCount
-                            url={this.props.shareUrl}
-                            {...countProps}
-                            className="share-facebook-count">
-                            {count => count}
-                        </FacebookShareCount>
                     </div>
                     <div className="social-box twitter">
                         <TwitterShareButton
@@ -95,23 +77,16 @@ class ShareSocials extends React.Component {
                                 size={32}
                                 round />
                         </TwitterShareButton>
-                        <div className="share-twitter-count">&nbsp;</div>
                     </div>
                     <div className="social-box linkedin">
                         <LinkedinShareButton
                             url={this.props.shareUrl}
                             title={title}
-                            className="share-linkedin-count">
+                            className="share-linkedin">
                             <LinkedinIcon
                                 size={32}
                                 round />
                         </LinkedinShareButton>
-                        <LinkedinShareCount
-                            url={this.props.shareUrl}
-                            {...countProps}
-                            className="share-linkedin-count">
-                            {count => count}
-                        </LinkedinShareCount>
                     </div>
                 </div>
             </div>
