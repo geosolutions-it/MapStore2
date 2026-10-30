@@ -22,6 +22,12 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Set minimum NodeJS version to 22
+
+NodeJS 20 reached its end of life in April 2026, so MapStore 2026.03.00 requires **NodeJS 22 as minimum version** to build and run the front-end tooling. NodeJS 24 is the recommended version, and NodeJS 26 is the latest tested.
+
+Please update your build and CI/CD infrastructures to use NodeJS 22 or later. The root `package.json` now declares `"engines": { "node": ">=22" }`, so `npm install` prints an `EBADENGINE` warning when run with an older version (or fails, if `engine-strict` is enabled).
+
 ### Privacy settings and standard sharing
 
 Vanilla enables the common privacy panel of the `Cookie` plugin.

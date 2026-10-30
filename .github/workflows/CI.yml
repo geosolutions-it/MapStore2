@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['20.x', '22.x', '24.x']
+        node-version: ['22.x', '24.x', '26.x']
       fail-fast: false
     steps:
       - name: "checking out"
@@ -128,17 +128,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['20.x', '22.x', '24.x']
+        node-version: ['22.x', '24.x', '26.x']
         java-version: ['17.x', '21.x']
         # Reduce the combinations to reduce the total number of jobs
         exclude:
-          - node-version: '20.x'
-            java-version: '17.x'
-          - node-version: '20.x'
-            java-version: '21.x'
           - node-version: '22.x'
             java-version: '21.x'
           - node-version: '24.x'
+            java-version: '17.x'
+          - node-version: '26.x'
             java-version: '17.x'
       fail-fast: false
     steps:
@@ -234,7 +232,7 @@ jobs:
       - name: "setting up npm"
         uses: actions/setup-node@v2
         with:
-            node-version: '20.x'
+            node-version: '24.x'
       - name: "setting up Java"
         uses: actions/setup-java@v3
         with:
