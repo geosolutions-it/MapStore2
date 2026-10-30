@@ -150,6 +150,27 @@ describe('Openlayers PopupSupport', () => {
     });
 
 
+    it('should configure autoPan options on overlay', () => {
+        const popups = [
+            {
+                id: 'test-autopan',
+                content: "popup text content",
+                position: { coordinates: [0, 0] },
+                autoPan: true,
+                autoPanMargin: 70
+            }
+        ];
+        const component = renderPopups({ popups });
+        expect(component).toExist();
+        expect(getOverlaysNum(map)).toBe(1);
+        const overlay = map.getOverlayById('test-autopan');
+        expect(overlay).toExist();
+        expect(overlay.autoPan).toEqual({
+            margin: 70,
+            animation: { duration: 200 }
+        });
+    });
+
     describe('sanitization', () => {
         it('removes script tags from the popup content', () => {
             window.__popupScript = undefined;
