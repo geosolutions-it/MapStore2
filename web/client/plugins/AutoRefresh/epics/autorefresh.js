@@ -11,7 +11,7 @@ import Rx from "rxjs";
 import { MAP_CONFIG_LOADED } from "../../../actions/config";
 import { ADD_LAYER, CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, refreshLayerVersion, REMOVE_NODE, UPDATE_NODE } from "../../../actions/layers";
 import { AUTOREFRESH_START, AUTOREFRESH_STOP, AUTOREFRESH_PAUSE } from "../actions/autorefresh";
-import { isActiveRefresh, isPaused, refreshableLayers } from "../selectors/autorefresh";
+import { isActiveRefreshSelector, isPausedSelector, refreshableLayersSelector } from "../selectors/autorefresh";
 
 const TRIGGERS = [
     CHANGE_LAYER_PROPERTIES,   // visibility toggle
@@ -35,9 +35,9 @@ const isEqual = (a, b) => {
 };
 
 export const layersAutoRefreshEpic = (action$, store) => {
-    const getLayersMap = () => isPaused(store.getState()) || !isActiveRefresh(store.getState()) ?
+    const getLayersMap = () => isPausedSelector(store.getState()) || !isActiveRefreshSelector(store.getState()) ?
         {} :
-        refreshableLayers(store.getState()).reduce((acc, l) => ({ ...acc, [l.id]: l.autoRefreshInterval }), {});
+        refreshableLayersSelector(store.getState()).reduce((acc, l) => ({ ...acc, [l.id]: l.autoRefreshInterval }), {});
 
     // this stream should emit refreshable layers map on every possible change,
     // but not when paused or refesh is not active (toggled on)

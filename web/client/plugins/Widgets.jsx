@@ -43,7 +43,7 @@ const RIGHT_MARGIN = 55;
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
-import { isActiveRefresh, refreshableLayers } from './AutoRefresh/selectors/autorefresh';
+import { isActiveRefreshSelector, refreshableLayersSelector } from './AutoRefresh/selectors/autorefresh';
 
 const WidgetsView =
 compose(
@@ -58,8 +58,8 @@ compose(
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
             getTblWidgetZoomLoader,
-            isActiveRefresh,
-            refreshableLayers,
+            isActiveRefreshSelector,
+            refreshableLayersSelector,
             (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading, autoRefreshActive, autoRefreshLayers) => ({
                 id,
                 widgets,

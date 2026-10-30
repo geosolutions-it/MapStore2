@@ -15,7 +15,7 @@ import { createPlugin } from '../../utils/PluginsUtils';
 import { userRoleSelector } from '../../selectors/security';
 import { updateNode } from '../../actions/layers';
 
-import { refreshableLayers, availableLayers, isActiveRefresh } from './selectors/autorefresh';
+import { refreshableLayersSelector, availableLayersSelector, isActiveRefreshSelector } from './selectors/autorefresh';
 import AutoRefreshContainer from './containers/AutoRefresh';
 import { createStructuredSelector } from 'reselect';
 import { CONTROL_NAME } from './constants';
@@ -65,9 +65,9 @@ const autoRefreshConnect = connect(
         userRoles: userRoleSelector,
         mapType: mapTypeSelector,
 
-        enabled: isActiveRefresh,
-        availableLayers: availableLayers,
-        activeLayers: refreshableLayers
+        enabled: isActiveRefreshSelector,
+        availableLayers: availableLayersSelector,
+        activeLayers: refreshableLayersSelector
     }), {
         onStart: autoRefreshStart,
         onStop: autoRefreshStop,
