@@ -219,7 +219,7 @@
     "react-draggable": "2.2.6",
     "react-dropzone": "3.13.1",
     "react-error-boundary": "1.2.5",
-    "react-grid-layout": "1.2.0",
+    "react-grid-layout": "2.2.4",
     "react-image-lightbox": "4.2.2",
     "react-intersection-observer": "8.24.1",
     "react-intl": "2.3.0",
