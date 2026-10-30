@@ -24,25 +24,36 @@
 // Layout
 // **************
 // The privacy profile is opt-in through localConfig. Keep controls available
-// after a choice so refusal and withdrawal remain possible. Pages without a footer
-// or a navbar get a small floating button, showing its label on hover and focus.
+// after a choice so refusal and withdrawal remain possible. Pages without a footer,
+// a user menu or a map footer get a small floating button, showing its label on hover and focus.
 .mapstore-privacy-access {
     position: fixed;
     z-index: 12;
     left: 8px;
     bottom: 8px;
     border: 1px solid;
-    border-radius: 16px;
-    box-shadow: 0 1px 4px #0003;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px #0003;
     .mapstore-privacy-open.btn {
-        min-width: 30px;
-        height: 30px;
-        border-radius: 15px;
-        padding: 4px 8px;
+        min-width: 22px;
+        height: 22px;
+        border-radius: 11px;
+        padding: 0 5px;
+        font-size: 11px;
+        > .glyphicon { font-size: 12px; }
         > span:not(.glyphicon) { display: none; }
         &:hover > span:not(.glyphicon),
         &:focus-visible > span:not(.glyphicon) { display: inline; }
     }
+}
+// icon among the attribution of the map footer
+.mapstore-map-footer .mapstore-privacy-open.btn {
+    padding: 0 4px;
+    > .glyphicon { font-size: 13px; }
+}
+.mapstore-privacy-open.btn > .glyphicon {
+    font-size: 16px;
+    vertical-align: middle;
 }
 .mapstore-privacy-open.btn {
     border: 0;
@@ -60,7 +71,7 @@
 }
 .mapstore-privacy-panel {
     position: fixed;
-    z-index: 9998;
+    z-index: 10000; // above open modals (9999), it can be opened from the login window
     left: 10px;
     bottom: 48px;
     width: min(92vw, 540px);

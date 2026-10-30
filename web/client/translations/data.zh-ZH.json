@@ -144,7 +144,7 @@
       "baseline": "This configuration uses only necessary technical tools, which do not require consent. Closing this notice does not express consent.",
       "optional": "Optional tools stay off until you choose. You can refuse them and continue using MapStore.",
       "required": "Authentication when you sign in, security and remembering your privacy settings. See the Cookie Policy for purposes and duration.",
-      "status": "Change or withdraw consent at any time with the privacy settings button (lock icon). Withdrawal stops registered integrations; it cannot undo data already sent or remove third-party cookies.",
+      "status": "Change or withdraw consent at any time from Privacy settings (icon of a shield with a user). Withdrawal stops registered integrations; it cannot undo data already sent or remove third-party cookies.",
       "storageError": "Your choice could not be saved. Optional tools remain off. Check browser storage and try again.",
       "fixture": "LOCAL TEST FIXTURE: synthetic optional tools, not included in Vanilla.",
       "templateWarning": "The policy pages still need to be configured! Current pages are still referring to the MapStore templates: the operator of this installation has not configured its own pages yet.",

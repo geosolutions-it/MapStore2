@@ -395,7 +395,7 @@
       "baseline": "Questa configurazione utilizza solo strumenti tecnici necessari, per i quali non è richiesto il consenso. Chiudere questo avviso non esprime un consenso.",
       "optional": "Gli strumenti opzionali restano spenti fino alla tua scelta. Puoi rifiutarli e continuare a usare MapStore.",
       "required": "Autenticazione quando accedi, sicurezza e memorizzazione delle impostazioni privacy. Finalità e durata sono nella Cookie Policy.",
-      "status": "Puoi cambiare o revocare il consenso in qualsiasi momento con il pulsante delle impostazioni privacy (icona del lucchetto). La revoca interrompe le integrazioni registrate; non ritira dati già inviati né elimina cookie di terzi.",
+      "status": "Puoi cambiare o revocare il consenso in qualsiasi momento dalle impostazioni privacy (icona di uno scudo con un utente). La revoca interrompe le integrazioni registrate; non ritira dati già inviati né elimina cookie di terzi.",
       "storageError": "La scelta non è stata salvata. Gli opzionali restano spenti. Controlla lo storage del browser e riprova.",
       "fixture": "FIXTURE DI TEST LOCALE: strumenti opzionali sintetici, esclusi da Vanilla.",
       "templateWarning": "Le informative devono ancora essere configurate! Le pagine attuali sono ancora i modelli di MapStore: il gestore di questa installazione non ha ancora configurato le proprie pagine.",

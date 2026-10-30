@@ -16,6 +16,11 @@ import { privacyNoticeKey, acknowledgePrivacyNotice } from '../../../utils/Cooki
 import { privacyChoiceKey, makePrivacyChoice, templatePolicyLinks } from '../../../utils/PrivacyChoices';
 import { consentManager } from '../../../utils/ConsentManager';
 import Localized from '../../I18N/Localized';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import { FooterPrivacyAccess } from '../PrivacyAccessButton';
+
+const mockStore = configureMockStore();
 
 const messages = {privacySettings: {unused: 'Not used', cookie: 'Cookie Policy', privacy: 'Privacy Policy', terms: 'Terms of Use',
     templateWarning: 'The policy pages are the MapStore templates: the operator of this installation has not configured its own pages yet.',
@@ -218,19 +223,40 @@ describe('Test for Cookie component', () => {
         expect(warn.calls.length).toBe(0);
         warn.restore();
     });
-    it('shows the floating privacy settings button only on pages without a footer or a navbar', () => {
+    it('shows the floating privacy settings button only without an access injected in the page', () => {
         const privacy = {enabled: true, policyVersion: 'access', categories: []};
-        ReactTestUtils.act(() => { renderLocalized(<Cookie privacy={privacy}/>); });
-        expect(document.querySelectorAll('.mapstore-privacy-access #privacy-settings').length).toBe(1);
-        ReactDOM.unmountComponentAtNode(document.getElementById('container'));
-        ['ms-brand-navbar', 'ms-footer', 'mapstore-map-footer'].forEach(id => {
-            const page = document.createElement('div');
-            page.id = id;
-            document.body.appendChild(page);
-            ReactTestUtils.act(() => { renderLocalized(<Cookie privacy={privacy}/>); });
-            expect(document.querySelector('.mapstore-privacy-access')).toNotExist();
-            ReactDOM.unmountComponentAtNode(document.getElementById('container'));
-            page.remove();
+        const store = mockStore({controls: {privacy: {defaults: privacy}}});
+        const render = footer => ReactTestUtils.act(() => {
+            ReactDOM.render(<Provider store={store}><Localized locale="en-US" messages={messages}>
+                <><Cookie privacy={privacy}/>{footer && <ul><FooterPrivacyAccess/></ul>}</>
+            </Localized></Provider>, document.getElementById('container'));
         });
+        render(false);
+        expect(document.querySelectorAll('.mapstore-privacy-access #privacy-settings .glyphicon-user-shield').length).toBe(1);
+        render(true);
+        expect(document.querySelector('.mapstore-privacy-access')).toNotExist();
+        expect(document.querySelectorAll('#privacy-settings').length).toBe(1);
+    });
+    it('keeps focus and Escape in the panel while a modal is open', () => {
+        const privacy = {enabled: true, policyVersion: 'modal', categories: []};
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+        const documentFocus = expect.createSpy();
+        const documentKeyDown = expect.createSpy();
+        document.addEventListener('focus', documentFocus, true);
+        document.addEventListener('keydown', documentKeyDown);
+        const onSetCookieVisibility = expect.createSpy();
+        ReactTestUtils.act(() => { renderLocalized(<Cookie privacy={privacy} show onSetCookieVisibility={onSetCookieVisibility}/>); });
+        const close = document.querySelector('#privacy-close');
+        close.focus();
+        expect(document.activeElement).toBe(close);
+        expect(documentFocus.calls.length).toBe(0);
+        close.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+        expect(documentKeyDown.calls.length).toBe(0);
+        expect(onSetCookieVisibility).toHaveBeenCalledWith(false);
+        document.removeEventListener('focus', documentFocus, true);
+        document.removeEventListener('keydown', documentKeyDown);
+        modal.remove();
     });
 });

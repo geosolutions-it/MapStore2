@@ -10,16 +10,36 @@ import { createPortal } from 'react-dom';
 import { Glyphicon } from 'react-bootstrap';
 import Button from '../layout/Button';
 import { getMessageById } from '../../utils/LocaleUtils';
-import { useElementPresent, FOOTER_SELECTOR, NAVBAR_SELECTOR } from './PrivacyAccessButton';
+import { useInjectedAccess, USER_MENU_SELECTOR, MODAL_SELECTOR, PRIVACY_GLYPH } from './PrivacyAccessButton';
 import { getPolicyLink, policyLinkKeys, policyPagesDocsUrl, usesTemplatePolicyLinks } from '../../utils/PrivacyChoices';
 
 export default function PrivacyPanel({ config, locale, choice, show, storageError, onShow, onSave }, context) {
     const t = id => getMessageById(context.messages, `privacySettings.${id}`);
     const categories = (config.categories || []).filter(c => ['functional', 'statistics', 'marketing'].includes(c.id));
-    const nativeAccess = useElementPresent(`${FOOTER_SELECTOR}, ${NAVBAR_SELECTOR}`);
+    const nativeAccess = useInjectedAccess();
+    const closeRef = useRef();
+    useEffect(() => {
+        // Bootstrap modals listen on the document to keep the focus in their dialog and to close on Escape.
+        // Window capture listeners run before them, so the privacy controls stay usable while a modal is open.
+        const onFocus = event => { if (event.target?.closest?.('.mapstore-privacy-panel') && document.querySelector(MODAL_SELECTOR)) event.stopPropagation(); };
+        const onKeyDown = event => {
+            if (event.key === 'Escape' && event.target?.closest?.('.mapstore-privacy-panel')) {
+                event.stopPropagation();
+                closeRef.current();
+            }
+        };
+        window.addEventListener('focus', onFocus, true);
+        window.addEventListener('keydown', onKeyDown, true);
+        return () => {
+            window.removeEventListener('focus', onFocus, true);
+            window.removeEventListener('keydown', onKeyDown, true);
+        };
+    }, []);
     const titleRef = useRef();
     useEffect(() => { if (show) titleRef.current?.focus(); }, [show]);
-    const returnFocus = () => requestAnimationFrame(() => document.querySelector('#privacy-settings')?.focus());
+    // a button inside an open modal comes first, the ones behind its backdrop cannot take the focus
+    const returnFocus = () => requestAnimationFrame(() =>
+        (document.querySelector(`${MODAL_SELECTOR} .mapstore-privacy-open`) || document.querySelector(`#privacy-settings, ${USER_MENU_SELECTOR}`))?.focus());
     const choose = selected => { if (onSave(selected) !== false) returnFocus(); };
     // each switch saves the choice at once and leaves the panel open
     const toggle = (id, enabled) => onSave({...choice?.categories, [id]: enabled}, {keepOpen: true});
@@ -28,15 +48,15 @@ export default function PrivacyPanel({ config, locale, choice, show, storageErro
         if (categories.length && !choice && !storageError) { choose({}); return; }
         onShow(false); returnFocus();
     };
+    closeRef.current = close;
     return createPortal(<>
         {!nativeAccess && <div className="mapstore-privacy-access" role="group" aria-label={t('settings')}>
             <Button type="button" id="privacy-settings" className="mapstore-privacy-open"
                 title={t('settings')} aria-label={t('settings')} onClick={() => onShow(true)}>
-                <Glyphicon glyph="lock" aria-hidden="true" /> <span>{t('settings')}</span>
+                <Glyphicon glyph={PRIVACY_GLYPH} aria-hidden="true" /> <span>{t('settings')}</span>
             </Button>
         </div>}
-        {show && <section className="mapstore-privacy-panel" role="dialog" aria-labelledby="privacy-title" aria-modal="false"
-            onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); close(); } }}>
+        {show && <section className="mapstore-privacy-panel" role="dialog" aria-labelledby="privacy-title" aria-modal="false">
             <div className="mapstore-privacy-header">
                 <h2 id="privacy-title" ref={titleRef} tabIndex="-1">{t('title')}</h2>
                 <Button type="button" id="privacy-close" square borderTransparent title={t('close')} aria-label={t('close')} onClick={close}>
