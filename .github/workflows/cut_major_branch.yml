@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "setting up npm"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
             node-version: '24.x'
 

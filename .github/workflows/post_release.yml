@@ -28,7 +28,7 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: "setting up npm"
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v6
       with:
           node-version: '24.x'
 
