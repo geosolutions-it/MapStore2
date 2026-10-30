@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>10.1.55</tomcat.version>
+        <tomcat.version>11.0.25</tomcat.version>
         <jackson.version>2.22.3</jackson.version>
         <guava.version>32.0.0-jre</guava.version>
         <jsr305.version>3.0.2</jsr305.version>
