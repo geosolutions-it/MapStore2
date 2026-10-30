@@ -9,6 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import DrawSupport from '../DrawSupport';
+import { calculateCircleSegments } from '../../../../utils/CoordinatesUtils';
 import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
 import {Map, View, Feature} from 'ol';
@@ -1327,7 +1328,7 @@ describe('Test DrawSupport', () => {
         const radius = 100;
         const coords = support.polygonCoordsFromCircle(center, radius);
 
-        expect(coords[0].length).toBe(101);
+        expect(coords[0].length).toBe(calculateCircleSegments(radius) + 1);
 
     });
 
@@ -1356,7 +1357,7 @@ describe('Test DrawSupport', () => {
         const radius = 123459;
         const coords = support.polygonCoordsFromCircle(center, radius);
 
-        expect(coords[0].length).toBe(101);
+        expect(coords[0].length).toBe(calculateCircleSegments(radius) + 1);
 
     });
     it('test createOLGeometry with type in properties', () => {
@@ -1398,7 +1399,7 @@ describe('Test DrawSupport', () => {
         const projection = 'EPSG:3857';
         const geometry = support.createOLGeometry({type, coordinates, radius, center, projection, options: { geodesic: true }});
         const geometryCoordinates = geometry.getCoordinates();
-        expect(geometryCoordinates[0].length).toBe(101);
+        expect(geometryCoordinates[0].length).toBe(calculateCircleSegments(radius) + 1);
         const geometryProperties = geometry.getProperties();
         const geodesicCenter = geometryProperties.geodesicCenter;
         expect(geodesicCenter).toEqual([0, 0]);

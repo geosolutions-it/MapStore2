@@ -38,8 +38,13 @@ import {
     resetLayerLegendFilter,
     updateLayerWFSVectorLegendFilter,
     createVectorFeatureFilter,
-    setupCrossLayerFilterDefaults
+    setupCrossLayerFilterDefaults,
+    getCQLGeometryElement,
+    processCQLSpatialFilter,
+    simplifyCircleRing,
+    CQL_CIRCLE_PRECISION_SAGITTA_RATIO
 } from '../FilterUtils';
+import { calculateCircleSegments, CIRCLE_SAGITTA_RATIO } from '../CoordinatesUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
 
@@ -2961,6 +2966,74 @@ describe('FilterUtils', () => {
         it('should return true if there are only widget filters', () => {
             expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }] })).toBe(true);
             expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }, { appliedFromWidget: 'w2' }] })).toBe(true);
+        });
+    });
+
+    describe('getCQLGeometryElement circle simplification', () => {
+        const createRing = (sides, radius = 1000, cx = 1000000, cy = 5000000) => {
+            const ring = Array.from({ length: sides }, (v, i) => {
+                const angle = 2 * Math.PI * i / sides;
+                return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+            });
+            return [...ring, ring[0]];
+        };
+        const closedRing = createRing(100);
+        const expectedVertices = calculateCircleSegments(1000) + 1;
+        const countVertices = (cql) => cql.substring(cql.indexOf('((') + 2, cql.indexOf('))')).split(', ');
+        it('should re-create a Circle ring with the number of sides given by the sagitta', () => {
+            const cql = getCQLGeometryElement([closedRing], 'Circle');
+            expect(cql.indexOf('Polygon((')).toBe(0);
+            const vertices = countVertices(cql);
+            expect(vertices.length).toBe(expectedVertices);
+            expect(vertices[0]).toBe(vertices[vertices.length - 1]);
+        });
+        it('should keep the vertices on the circle within the sagitta tolerance', () => {
+            const simplified = simplifyCircleRing(closedRing);
+            const sides = simplified.length - 1;
+            const step = 1000 * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO;
+            simplified.forEach(([x, y]) => {
+                expect(Math.abs(Math.hypot(Number(x) - 1000000, Number(y) - 5000000) - 1000)).toBeLessThanOrEqualTo(step);
+            });
+            expect(1000 * (1 - Math.cos(Math.PI / sides))).toBeLessThanOrEqualTo(1000 * CIRCLE_SAGITTA_RATIO);
+        });
+        it('should only round the coordinates of a Circle ring with fewer sides', () => {
+            const ring = createRing(32);
+            const simplified = simplifyCircleRing(ring);
+            expect(simplified.length).toBe(ring.length);
+            simplified.forEach(([x, y], i) => {
+                expect(Math.abs(Number(x) - ring[i][0])).toBeLessThanOrEqualTo(0.05);
+                expect(Math.abs(Number(y) - ring[i][1])).toBeLessThanOrEqualTo(0.05);
+            });
+        });
+        it('should round the coordinates of a Circle ring to a tenth of the sagitta', () => {
+            const decimalsOf = (value) => (value.split('.')[1] || '').length;
+            simplifyCircleRing(closedRing).forEach(([x, y]) => {
+                expect(decimalsOf(x)).toBeLessThanOrEqualTo(1);
+                expect(decimalsOf(y)).toBeLessThanOrEqualTo(1);
+            });
+            const degreesRing = createRing(100, 0.01, 0.0000001, 0.00000001);
+            simplifyCircleRing(degreesRing).forEach(([x, y]) => {
+                expect(decimalsOf(x)).toBeLessThanOrEqualTo(6);
+                expect(decimalsOf(y)).toBeLessThanOrEqualTo(6);
+                expect(x.indexOf('e')).toBe(-1);
+                expect(y.indexOf('e')).toBe(-1);
+            });
+        });
+        it('should not simplify a Polygon ring', () => {
+            const cql = getCQLGeometryElement([closedRing], 'Polygon');
+            expect(countVertices(cql).length).toBe(101);
+        });
+        it('should simplify the geometry of a Circle spatial filter', () => {
+            const cql = processCQLSpatialFilter({
+                spatialField: {
+                    method: 'Circle',
+                    operation: 'INTERSECTS',
+                    attribute: 'the_geom',
+                    geometry: { type: 'Polygon', projection: 'EPSG:3857', coordinates: [closedRing] }
+                }
+            });
+            expect(cql.indexOf('INTERSECTS("the_geom",SRID=3857;Polygon((')).toBe(0);
+            expect(countVertices(cql).length).toBe(expectedVertices);
         });
     });
 });
