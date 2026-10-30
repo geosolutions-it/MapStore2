@@ -21,7 +21,7 @@ import { ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators } from
 import { read } from './ogc/Filter/CQL/parser';
 import fromObject from './ogc/Filter/fromObject';
 import filterBuilder from './ogc/Filter/FilterBuilder';
-import { reprojectGeoJson, reproject, calculateCircleSegments } from './CoordinatesUtils';
+import { reprojectGeoJson, reproject, calculateCircleSegments, CIRCLE_SAGITTA_RATIO } from './CoordinatesUtils';
 
 export const cqlToOgc = (cqlFilter, fOpts) => {
     const fb = filterBuilder(fOpts);
@@ -805,6 +805,18 @@ export const processCQLFilterGroup = function(root, objFilter) {
     return cql;
 };
 
+/**
+ * the precision of coorinates for circle is calculated based on sagitta to reduce the cql_filtetr length
+ */
+export const CQL_CIRCLE_PRECISION_SAGITTA_RATIO = 0.1;
+
+const formatCircleCoordinate = (value, radius) => {
+    const step = radius * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO;
+    const decimals = Math.min(20, Math.max(0, Math.ceil(-Math.log10(step))));
+    const fixed = value.toFixed(decimals);
+    return fixed.indexOf('.') !== -1 ? fixed.replace(/0+$/, '').replace(/\.$/, '') : fixed;
+};
+
 export const simplifyCircleRing = function(ring) {
     const closed = closePolygon(ring);
     const open = closed.slice(0, -1);
@@ -814,17 +826,21 @@ export const simplifyCircleRing = function(ring) {
     const cx = open.reduce((sum, [x]) => sum + x, 0) / open.length;
     const cy = open.reduce((sum, [, y]) => sum + y, 0) / open.length;
     const radius = open.reduce((sum, [x, y]) => sum + Math.hypot(x - cx, y - cy), 0) / open.length;
-    const sides = calculateCircleSegments(radius);
-    if (open.length <= sides) {
+    if (!(radius > 0)) {
         return closed;
     }
-    const startAngle = Math.atan2(open[0][1] - cy, open[0][0] - cx);
-    const vertices = [];
-    for (let i = 0; i < sides; i++) {
-        const angle = startAngle + 2 * Math.PI * i / sides;
-        vertices.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
+    const sides = calculateCircleSegments(radius);
+    let vertices = open;
+    if (open.length > sides) {
+        const startAngle = Math.atan2(open[0][1] - cy, open[0][0] - cx);
+        vertices = [];
+        for (let i = 0; i < sides; i++) {
+            const angle = startAngle + 2 * Math.PI * i / sides;
+            vertices.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
+        }
     }
-    return [...vertices, vertices[0]];
+    const rounded = vertices.map(([x, y]) => [formatCircleCoordinate(x, radius), formatCircleCoordinate(y, radius)]);
+    return [...rounded, rounded[0]];
 };
 
 export const getCQLGeometryElement = function(coordinates, type) {

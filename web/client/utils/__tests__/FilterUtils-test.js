@@ -41,7 +41,8 @@ import {
     setupCrossLayerFilterDefaults,
     getCQLGeometryElement,
     processCQLSpatialFilter,
-    simplifyCircleRing
+    simplifyCircleRing,
+    CQL_CIRCLE_PRECISION_SAGITTA_RATIO
 } from '../FilterUtils';
 import { calculateCircleSegments, CIRCLE_SAGITTA_RATIO } from '../CoordinatesUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
@@ -2989,14 +2990,34 @@ describe('FilterUtils', () => {
         it('should keep the vertices on the circle within the sagitta tolerance', () => {
             const simplified = simplifyCircleRing(closedRing);
             const sides = simplified.length - 1;
+            const step = 1000 * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO;
             simplified.forEach(([x, y]) => {
-                expect(Math.abs(Math.hypot(x - 1000000, y - 5000000) - 1000)).toBeLessThan(1e-6);
+                expect(Math.abs(Math.hypot(Number(x) - 1000000, Number(y) - 5000000) - 1000)).toBeLessThanOrEqualTo(step);
             });
             expect(1000 * (1 - Math.cos(Math.PI / sides))).toBeLessThanOrEqualTo(1000 * CIRCLE_SAGITTA_RATIO);
         });
-        it('should not change a Circle ring with fewer sides', () => {
+        it('should only round the coordinates of a Circle ring with fewer sides', () => {
             const ring = createRing(32);
-            expect(simplifyCircleRing(ring)).toEqual(ring);
+            const simplified = simplifyCircleRing(ring);
+            expect(simplified.length).toBe(ring.length);
+            simplified.forEach(([x, y], i) => {
+                expect(Math.abs(Number(x) - ring[i][0])).toBeLessThanOrEqualTo(0.05);
+                expect(Math.abs(Number(y) - ring[i][1])).toBeLessThanOrEqualTo(0.05);
+            });
+        });
+        it('should round the coordinates of a Circle ring to a tenth of the sagitta', () => {
+            const decimalsOf = (value) => (value.split('.')[1] || '').length;
+            simplifyCircleRing(closedRing).forEach(([x, y]) => {
+                expect(decimalsOf(x)).toBeLessThanOrEqualTo(1);
+                expect(decimalsOf(y)).toBeLessThanOrEqualTo(1);
+            });
+            const degreesRing = createRing(100, 0.01, 0.0000001, 0.00000001);
+            simplifyCircleRing(degreesRing).forEach(([x, y]) => {
+                expect(decimalsOf(x)).toBeLessThanOrEqualTo(6);
+                expect(decimalsOf(y)).toBeLessThanOrEqualTo(6);
+                expect(x.indexOf('e')).toBe(-1);
+                expect(y.indexOf('e')).toBe(-1);
+            });
         });
         it('should not simplify a Polygon ring', () => {
             const cql = getCQLGeometryElement([closedRing], 'Polygon');
