@@ -110,7 +110,7 @@ class Cookie extends React.Component {
                 if (!show && !categoryIds(this.props.privacy).length) acknowledgePrivacyNotice(this.props.privacy);
                 this.props.onSetCookieVisibility(show);
             }}
-            onSave={selected => {
+            onSave={(selected, {keepOpen} = {}) => {
                 const choice = makePrivacyChoice(this.props.privacy, selected);
                 if (!persistPrivacyChoice(choice)) {
                     // Optional tools stay off and the panel stays open with the error.
@@ -128,7 +128,7 @@ class Cookie extends React.Component {
                 consentManager.update(this.props.privacy, choice);
                 this.setState({privacyStorageError: false});
                 this.props.onPrivacyChoice(choice);
-                this.props.onSetCookieVisibility(false);
+                if (!keepOpen) this.props.onSetCookieVisibility(false);
                 return true;
             }} />);
     }

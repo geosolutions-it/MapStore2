@@ -69,7 +69,8 @@ class LoginModal extends React.Component {
         closeGlyph: PropTypes.string,
         style: PropTypes.object,
         buttonSize: PropTypes.string,
-        includeCloseButton: PropTypes.bool
+        includeCloseButton: PropTypes.bool,
+        footerItems: PropTypes.array
     };
 
     static contextTypes = {
@@ -87,7 +88,8 @@ class LoginModal extends React.Component {
         closeGlyph: "",
         style: {},
         buttonSize: "large",
-        includeCloseButton: true
+        includeCloseButton: true,
+        footerItems: []
     };
 
     getForm = ({formProviders, openIdProviders}) => {
@@ -154,10 +156,11 @@ class LoginModal extends React.Component {
                 </>
             </Modal.Body>
             <Modal.Footer>
-                {this.props.includeCloseButton && openIdProviders.length > 0
+                {this.props.footerItems.length > 0 || this.props.includeCloseButton && openIdProviders.length > 0
                     ? (<FlexBox centerChildrenVertically  gap="sm">
                         <FlexBox.Fill />
-                        {this.getCloseButton()}
+                        {this.props.footerItems.map(({ name, Component }) => <Component key={name} />)}
+                        {this.props.includeCloseButton && openIdProviders.length > 0 ? this.getCloseButton() : null}
                     </FlexBox>)
                     : <span/>}
             </Modal.Footer>

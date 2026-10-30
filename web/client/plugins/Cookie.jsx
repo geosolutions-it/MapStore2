@@ -13,12 +13,13 @@ import CookieComp from '../components/cookie/Cookie';
 import cookies from '../epics/cookies';
 import cookie from '../reducers/cookie';
 import { privacyConfigSelector } from '../utils/PrivacyChoices';
-import { MapFooterPrivacyAccess, FooterPrivacyAccess } from '../components/cookie/PrivacyAccessButton';
+import { FooterPrivacyAccess, MapFooterPrivacyAccess, LoginPrivacyAccess, UserMenuPrivacyAccess } from '../components/cookie/PrivacyAccessButton';
 
 /**
   * Provides privacy information and optional consent management when the top-level
-  * privacy configuration is enabled. Contributes access to Footer and MapFooter,
-  * with a bottom bar on routes without a native footer.
+  * privacy configuration is enabled. Contributes access, in order of priority, to the Footer,
+  * to the user menu of Login and to the MapFooter, with a floating button on routes without any of
+  * them. The login window always shows its own button.
   * With privacy disabled, or without a privacy configuration, it shows nothing.
   * See the privacy settings section of the developer guide for the configuration.
   * @name Cookie
@@ -38,13 +39,22 @@ const Cookie = connect((state) => ({
 
 export default {
     CookiePlugin: Object.assign(Cookie, {
-        MapFooter: {
-            name: 'privacyAccess', target: 'right-footer', position: 10,
-            Component: MapFooterPrivacyAccess
-        },
+        // Only the available container with the highest priority shows the access to the privacy settings.
+        // doNotHide keeps the privacy panel, rendered by the plugin root, on every page.
         Footer: {
-            name: 'privacyAccess', target: 'menu', position: 10,
+            name: 'privacyAccess', target: 'menu', position: 10, priority: 3, doNotHide: true,
             Component: FooterPrivacyAccess
+        },
+        Login: [{
+            name: 'privacyAccessMenu', target: 'menu-end', position: 1, priority: 2, doNotHide: true,
+            Component: UserMenuPrivacyAccess
+        }, {
+            name: 'privacyAccess', target: 'login-footer', position: 1, alwaysRender: true, doNotHide: true,
+            Component: LoginPrivacyAccess
+        }],
+        MapFooter: {
+            name: 'privacyAccess', target: 'left-footer', position: 1, priority: 1, doNotHide: true,
+            Component: MapFooterPrivacyAccess
         }
     }),
     reducers: {cookie: cookie},

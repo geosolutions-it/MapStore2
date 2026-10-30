@@ -16,6 +16,11 @@ import { privacyNoticeKey, acknowledgePrivacyNotice } from '../../../utils/Cooki
 import { privacyChoiceKey, makePrivacyChoice, templatePolicyLinks } from '../../../utils/PrivacyChoices';
 import { consentManager } from '../../../utils/ConsentManager';
 import Localized from '../../I18N/Localized';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import { FooterPrivacyAccess } from '../PrivacyAccessButton';
+
+const mockStore = configureMockStore();
 
 const messages = {privacySettings: {unused: 'Not used', cookie: 'Cookie Policy', privacy: 'Privacy Policy', terms: 'Terms of Use',
     templateWarning: 'The policy pages are the MapStore templates: the operator of this installation has not configured its own pages yet.',
@@ -83,21 +88,28 @@ describe('Test for Cookie component', () => {
         expect(revisit).toNotHaveBeenCalled();
         getApi().removeItem(privacyNoticeKey());
     });
-    it('keeps optional categories unselected, saves a granular choice and permits refusal', () => {
+    it('keeps optional categories unselected, saves each switch at once and permits refusal', () => {
         const privacy = {enabled: true, policyVersion: 'test', categories: [{id: 'functional'}, {id: 'statistics'}]};
-        const onPrivacyChoice = expect.createSpy();
-        ReactTestUtils.act(() => { ReactDOM.render(<Cookie privacy={privacy} locale="en-US" show onPrivacyChoice={onPrivacyChoice}/>, document.getElementById('container')); });
-        ReactTestUtils.Simulate.click(document.querySelector('#privacy-customize'));
+        const visibility = expect.createSpy();
+        const render = privacyChoice => ReactTestUtils.act(() => {
+            ReactDOM.render(<Cookie privacy={privacy} privacyChoice={privacyChoice} locale="en-US" show
+                onSetCookieVisibility={visibility}/>, document.getElementById('container'));
+        });
+        const stored = () => JSON.parse(getApi().getItem(getItemKey('privacy', 'choices')));
+        render(null);
+        expect(document.querySelector('#privacy-customize')).toNotExist();
         const inputs = document.querySelectorAll('input[type=checkbox]');
-        expect(inputs.length).toBe(2);
-        expect(inputs[0].checked).toBe(false);
-        expect(inputs[1].checked).toBe(false);
+        expect([...inputs].map(input => [input.getAttribute('role'), input.checked])).toEqual([['switch', false], ['switch', false]]);
         ReactTestUtils.Simulate.change(inputs[0], {target: {checked: true}});
-        ReactTestUtils.Simulate.click(document.querySelector('#privacy-save'));
-        const choice = JSON.parse(getApi().getItem(getItemKey('privacy', 'choices')));
-        expect(choice.categories).toEqual({functional: true, statistics: false});
+        expect(stored().categories).toEqual({functional: true, statistics: false});
+        expect(visibility.calls.some(call => call.arguments[0] === false)).toBe(false);
+        render(stored());
+        expect([...document.querySelectorAll('input[role=switch]')].map(input => input.checked)).toEqual([true, false]);
+        ReactTestUtils.Simulate.change(document.querySelectorAll('input[role=switch]')[1], {target: {checked: true}});
+        expect(stored().categories).toEqual({functional: true, statistics: true});
         ReactTestUtils.Simulate.click(document.querySelector('#privacy-reject'));
-        expect(JSON.parse(getApi().getItem(getItemKey('privacy', 'choices'))).categories).toEqual({functional: false, statistics: false});
+        expect(stored().categories).toEqual({functional: false, statistics: false});
+        expect(visibility.calls[visibility.calls.length - 1].arguments).toEqual([false]);
         getApi().removeItem(getItemKey('privacy', 'choices'));
     });
     it('treats closing a first optional notice as refusal, so reload does not nag', () => {
@@ -210,5 +222,41 @@ describe('Test for Cookie component', () => {
         ReactDOM.render(<Cookie privacy={{enabled: true, policyVersion: 'operator', categories: [], links: {cookie: 'cookie.html'}}}/>, document.getElementById('container'));
         expect(warn.calls.length).toBe(0);
         warn.restore();
+    });
+    it('shows the floating privacy settings button only without an access injected in the page', () => {
+        const privacy = {enabled: true, policyVersion: 'access', categories: []};
+        const store = mockStore({controls: {privacy: {defaults: privacy}}});
+        const render = footer => ReactTestUtils.act(() => {
+            ReactDOM.render(<Provider store={store}><Localized locale="en-US" messages={messages}>
+                <><Cookie privacy={privacy}/>{footer && <ul><FooterPrivacyAccess/></ul>}</>
+            </Localized></Provider>, document.getElementById('container'));
+        });
+        render(false);
+        expect(document.querySelectorAll('.mapstore-privacy-access #privacy-settings .glyphicon-user-shield').length).toBe(1);
+        render(true);
+        expect(document.querySelector('.mapstore-privacy-access')).toNotExist();
+        expect(document.querySelectorAll('#privacy-settings').length).toBe(1);
+    });
+    it('keeps focus and Escape in the panel while a modal is open', () => {
+        const privacy = {enabled: true, policyVersion: 'modal', categories: []};
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+        const documentFocus = expect.createSpy();
+        const documentKeyDown = expect.createSpy();
+        document.addEventListener('focus', documentFocus, true);
+        document.addEventListener('keydown', documentKeyDown);
+        const onSetCookieVisibility = expect.createSpy();
+        ReactTestUtils.act(() => { renderLocalized(<Cookie privacy={privacy} show onSetCookieVisibility={onSetCookieVisibility}/>); });
+        const close = document.querySelector('#privacy-close');
+        close.focus();
+        expect(document.activeElement).toBe(close);
+        expect(documentFocus.calls.length).toBe(0);
+        close.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+        expect(documentKeyDown.calls.length).toBe(0);
+        expect(onSetCookieVisibility).toHaveBeenCalledWith(false);
+        document.removeEventListener('focus', documentFocus, true);
+        document.removeEventListener('keydown', documentKeyDown);
+        modal.remove();
     });
 });
