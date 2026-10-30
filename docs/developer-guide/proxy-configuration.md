@@ -14,7 +14,9 @@ To enable the proxy, replace `none.invalid` with the host names of the services 
 hostnameWhitelist = demo.example.com,maps.example.org
 ```
 
-Host names are compared exactly with the host of the requested URL (without port). An empty `hostnameWhitelist` lets the proxy reach any public host: this is not recommended, because anyone who can reach MapStore can then use it to download content from any host.
+Separate the host names with commas, without spaces: a space after a comma or at the end of the line becomes part of the entry, so with `demo.example.com, maps.example.org` the requests to `maps.example.org` are refused. Each entry is compared exactly with the host of the requested URL: the comparison is case-sensitive and ignores the port, so an entry allows every port of that host and an entry such as `demo.example.com:8080` never matches. An empty value (`hostnameWhitelist =`) refuses every host.
+
+The host check is off only when the `hostnameWhitelist` key is missing from every `proxy.properties` that is read. A `proxy.properties` in the data directory can change the value but cannot remove the key: the line has to be removed from the `proxy.properties` in the package, and in a deployed `mapstore.war` an update restores it. The proxy can then reach any public host, while non-public destinations are still refused unless they are allowed as described in [Destinations](#destinations). This is not recommended, because anyone who can reach MapStore can then use it to download content from any public host.
 
 ## Destinations
 
@@ -57,7 +59,7 @@ Every response of the proxy is served with `Content-Security-Policy: sandbox; de
 | `methodsWhitelist` | HTTP methods accepted, e.g. `GET,POST,PUT` |
 | `mimetypeWhitelist` | Content types accepted from the remote host, checked only when `checkResponseContentType` is `true` |
 | `checkResponseContentType` | `true` refuses remote responses whose content type is not in `mimetypeWhitelist`. Default `false`. Enable it only with a list that names every content type your services return |
-| `hostsWhitelist` | Client IP addresses allowed to use the proxy. Empty means every client |
+| `hostsWhitelist` | Client IP addresses allowed to use the proxy, comma-separated without spaces. Without the key every client is allowed; an empty value refuses every client |
 | `reqtypeWhitelist.<name>` | Regular expressions on the requested URL: when at least one is defined, the URL must match one of them |
 
 ## Connection settings
