@@ -83,21 +83,28 @@ describe('Test for Cookie component', () => {
         expect(revisit).toNotHaveBeenCalled();
         getApi().removeItem(privacyNoticeKey());
     });
-    it('keeps optional categories unselected, saves a granular choice and permits refusal', () => {
+    it('keeps optional categories unselected, saves each switch at once and permits refusal', () => {
         const privacy = {enabled: true, policyVersion: 'test', categories: [{id: 'functional'}, {id: 'statistics'}]};
-        const onPrivacyChoice = expect.createSpy();
-        ReactTestUtils.act(() => { ReactDOM.render(<Cookie privacy={privacy} locale="en-US" show onPrivacyChoice={onPrivacyChoice}/>, document.getElementById('container')); });
-        ReactTestUtils.Simulate.click(document.querySelector('#privacy-customize'));
+        const visibility = expect.createSpy();
+        const render = privacyChoice => ReactTestUtils.act(() => {
+            ReactDOM.render(<Cookie privacy={privacy} privacyChoice={privacyChoice} locale="en-US" show
+                onSetCookieVisibility={visibility}/>, document.getElementById('container'));
+        });
+        const stored = () => JSON.parse(getApi().getItem(getItemKey('privacy', 'choices')));
+        render(null);
+        expect(document.querySelector('#privacy-customize')).toNotExist();
         const inputs = document.querySelectorAll('input[type=checkbox]');
-        expect(inputs.length).toBe(2);
-        expect(inputs[0].checked).toBe(false);
-        expect(inputs[1].checked).toBe(false);
+        expect([...inputs].map(input => [input.getAttribute('role'), input.checked])).toEqual([['switch', false], ['switch', false]]);
         ReactTestUtils.Simulate.change(inputs[0], {target: {checked: true}});
-        ReactTestUtils.Simulate.click(document.querySelector('#privacy-save'));
-        const choice = JSON.parse(getApi().getItem(getItemKey('privacy', 'choices')));
-        expect(choice.categories).toEqual({functional: true, statistics: false});
+        expect(stored().categories).toEqual({functional: true, statistics: false});
+        expect(visibility.calls.some(call => call.arguments[0] === false)).toBe(false);
+        render(stored());
+        expect([...document.querySelectorAll('input[role=switch]')].map(input => input.checked)).toEqual([true, false]);
+        ReactTestUtils.Simulate.change(document.querySelectorAll('input[role=switch]')[1], {target: {checked: true}});
+        expect(stored().categories).toEqual({functional: true, statistics: true});
         ReactTestUtils.Simulate.click(document.querySelector('#privacy-reject'));
-        expect(JSON.parse(getApi().getItem(getItemKey('privacy', 'choices'))).categories).toEqual({functional: false, statistics: false});
+        expect(stored().categories).toEqual({functional: false, statistics: false});
+        expect(visibility.calls[visibility.calls.length - 1].arguments).toEqual([false]);
         getApi().removeItem(getItemKey('privacy', 'choices'));
     });
     it('treats closing a first optional notice as refusal, so reload does not nag', () => {
@@ -210,5 +217,20 @@ describe('Test for Cookie component', () => {
         ReactDOM.render(<Cookie privacy={{enabled: true, policyVersion: 'operator', categories: [], links: {cookie: 'cookie.html'}}}/>, document.getElementById('container'));
         expect(warn.calls.length).toBe(0);
         warn.restore();
+    });
+    it('shows the floating privacy settings button only on pages without a footer or a navbar', () => {
+        const privacy = {enabled: true, policyVersion: 'access', categories: []};
+        ReactTestUtils.act(() => { renderLocalized(<Cookie privacy={privacy}/>); });
+        expect(document.querySelectorAll('.mapstore-privacy-access #privacy-settings').length).toBe(1);
+        ReactDOM.unmountComponentAtNode(document.getElementById('container'));
+        ['ms-brand-navbar', 'ms-footer', 'mapstore-map-footer'].forEach(id => {
+            const page = document.createElement('div');
+            page.id = id;
+            document.body.appendChild(page);
+            ReactTestUtils.act(() => { renderLocalized(<Cookie privacy={privacy}/>); });
+            expect(document.querySelector('.mapstore-privacy-access')).toNotExist();
+            ReactDOM.unmountComponentAtNode(document.getElementById('container'));
+            page.remove();
+        });
     });
 });

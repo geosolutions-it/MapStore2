@@ -24,19 +24,25 @@
 // Layout
 // **************
 // The privacy profile is opt-in through localConfig. Keep controls available
-// after a choice so refusal and withdrawal remain possible.
+// after a choice so refusal and withdrawal remain possible. Pages without a footer
+// or a navbar get a small floating button, showing its label on hover and focus.
 .mapstore-privacy-access {
     position: fixed;
     z-index: 12;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    min-height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    border-top: 1px solid;
-    padding: 3px 12px;
+    left: 8px;
+    bottom: 8px;
+    border: 1px solid;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px #0003;
+    .mapstore-privacy-open.btn {
+        min-width: 30px;
+        height: 30px;
+        border-radius: 15px;
+        padding: 4px 8px;
+        > span:not(.glyphicon) { display: none; }
+        &:hover > span:not(.glyphicon),
+        &:focus-visible > span:not(.glyphicon) { display: inline; }
+    }
 }
 .mapstore-privacy-open.btn {
     border: 0;
@@ -67,7 +73,8 @@
     font-size: 13px;
     line-height: 1.45;
     text-align: left;
-    h2 { font-size: 18px; margin: 0 0 8px; }
+    h2 { font-size: 18px; margin: 0; }
+    .mapstore-privacy-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; }
     // the title gets the focus only from code, when the panel opens, so that screen readers announce it
     h2:focus { outline: none; }
     p { margin: 7px 0; }
@@ -81,7 +88,6 @@
 .mapstore-privacy-actions { display: flex; flex-wrap: wrap; gap: 7px; }
 .mapstore-privacy-actions button { font-weight: 600; }
 @media (max-width: 640px) {
-    .mapstore-privacy-access { padding-right: 8px; }
     .mapstore-privacy-panel { left: 4px; right: 4px; bottom: 44px; width: auto; max-height: calc(100vh - 52px); }
     .mapstore-privacy-actions button { flex: 1 1 40%; }
 }
@@ -89,6 +95,18 @@
     padding: 8px 0;
     border-bottom: 1px solid #ddd;
     > span { float: right; font-weight: normal; }
-    > label { display: flex; align-items: center; gap: 8px; margin: 0; cursor: pointer; }
+    > label { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0; cursor: pointer; }
+    // the switch keeps a real checkbox, transparent over the slider, so it stays reachable with the keyboard
+    .mapstore-switch-btn input {
+        display: block;
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .mapstore-switch-btn input:focus-visible + .m-slider { outline: 3px solid #d99419; outline-offset: 2px; }
     p { margin-bottom: 0; font-size: 12px; }
 }

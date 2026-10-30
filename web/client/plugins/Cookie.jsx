@@ -13,12 +13,12 @@ import CookieComp from '../components/cookie/Cookie';
 import cookies from '../epics/cookies';
 import cookie from '../reducers/cookie';
 import { privacyConfigSelector } from '../utils/PrivacyChoices';
-import { MapFooterPrivacyAccess, FooterPrivacyAccess } from '../components/cookie/PrivacyAccessButton';
+import { MapFooterPrivacyAccess, FooterPrivacyAccess, BrandNavbarPrivacyAccess } from '../components/cookie/PrivacyAccessButton';
 
 /**
   * Provides privacy information and optional consent management when the top-level
-  * privacy configuration is enabled. Contributes access to Footer and MapFooter,
-  * with a bottom bar on routes without a native footer.
+  * privacy configuration is enabled. Contributes access to Footer, MapFooter and BrandNavbar,
+  * with a floating button on routes without any of them.
   * With privacy disabled, or without a privacy configuration, it shows nothing.
   * See the privacy settings section of the developer guide for the configuration.
   * @name Cookie
@@ -45,6 +45,10 @@ export default {
         Footer: {
             name: 'privacyAccess', target: 'menu', position: 10,
             Component: FooterPrivacyAccess
+        },
+        BrandNavbar: {
+            name: 'privacyAccess', target: 'right-menu', position: 1,
+            Component: BrandNavbarPrivacyAccess
         }
     }),
     reducers: {cookie: cookie},

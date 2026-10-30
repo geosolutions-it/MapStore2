@@ -21,7 +21,7 @@ The default configuration does not configure `privacy.links`, so the panel links
 
 An empty category list means that no optional tools are configured. The first-visit panel is informational, with a Close action. Its dismissal is distinct from consent. Do not add optional categories merely because the application requests a remote map service.
 
-The plugin contributes an entry to `Footer` and `MapFooter`. Where neither footer exists, it provides a bottom bar. Embedded maps position `MapFooter` in the `footer` container so that its controls remain accessible above the map canvas.
+The plugin contributes an entry to `Footer` and `MapFooter`, and an icon to `BrandNavbar` next to About on pages without a footer. Where none of them exists, for example in embedded dashboards and GeoStories, it shows a small floating button in the bottom left corner. Embedded maps position `MapFooter` in the `footer` container so that its controls remain accessible above the map canvas.
 
 ## Configure optional categories
 
