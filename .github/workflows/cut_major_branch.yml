@@ -21,7 +21,12 @@ jobs:
         with:
           ref: ${{ github.event.inputs.main-branch }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+
+      - name: "setting up npm"
+        uses: actions/setup-node@v6
+        with:
+            node-version: '24.x'
+
       - name: Bot Details
         id: bot-details
         uses: raven-actions/bot-details@v1
