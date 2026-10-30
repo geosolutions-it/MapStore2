@@ -27,6 +27,10 @@ jobs:
         java-version: '17.x'
         distribution: 'adopt'
         cache: maven
+    - name: "setting up npm"
+      uses: actions/setup-node@v3
+      with:
+          node-version: '24.x'
 
     - name: Bot Details
       id: bot-details
