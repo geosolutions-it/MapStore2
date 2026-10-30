@@ -8,10 +8,14 @@
 
 import React from 'react';
 
-import { FormGroup, ControlLabel, FormControl, Label } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Label, Glyphicon } from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import Slider from 'react-nouislider';
 import PropTypes from 'prop-types';
+import { getAvailableCRS } from '../../../utils/CoordinatesUtils';
+import tooltip from '../../misc/enhancers/tooltip';
+
+const InfoIcon = tooltip(Glyphicon);
 
 function validate() {
     return true;
@@ -31,6 +35,8 @@ class WFSOptionalProps extends React.Component {
     render() {
         const {service} = this.props;
         const {options = {}} = service;
+        const projections = getAvailableCRS();
+        const srsName = options.srsName || 'EPSG:4326';
         return (
             <form>
                 <span className="wfs-required-props-title"><Message msgId="search.s_wfs_opt_props_label" /></span>
@@ -83,6 +89,31 @@ class WFSOptionalProps extends React.Component {
                         key="tooltip"
                         type="text"
                         onChange={this.updateProp.bind(null, "tooltip")}/>
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel htmlFor="wfs-search-request-crs">
+                        <Message msgId="search.s_request_crs" />
+                        &nbsp;
+                        <Message msgId="search.s_request_crs">{label => (
+                            <InfoIcon
+                                glyph="info-sign"
+                                tabIndex={0}
+                                aria-label={label}
+                                keyProp="wfs-search-request-crs-info"
+                                tooltipId="search.s_request_crs_info"
+                                tooltipTrigger={['hover', 'focus']}
+                                tooltipShowDelay={0}/>
+                        )}</Message>
+                    </ControlLabel>
+                    <FormControl
+                        id="wfs-search-request-crs"
+                        componentClass="select"
+                        value={srsName}
+                        onChange={this.updateProp.bind(null, "srsName")}>
+                        <Message msgId="search.s_map_crs">{label => <option value="map">{label}</option>}</Message>
+                        {srsName !== 'map' && !projections[srsName] && <option value={srsName}>{srsName}</option>}
+                        {Object.keys(projections).map(code => <option key={code} value={code}>{code}</option>)}
+                    </FormControl>
                 </FormGroup>
             </form>);
     }
