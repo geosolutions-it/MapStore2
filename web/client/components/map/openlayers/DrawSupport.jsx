@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import { v1 as uuid } from 'uuid';
 import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
-import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
+import {reprojectGeoJson, calculateDistance, reproject, calculateCircleSegments} from '../../../utils/CoordinatesUtils';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
 import {transformPolygonToCircle} from '../../../utils/openlayers/DrawSupportUtils';
 import {isCompletePolygon} from '../../../plugins/Annotations/utils/AnnotationsUtils';
@@ -55,20 +55,6 @@ import {getFeatureURL} from "../../../api/WFS";
 import { getSearchUrl, getWFSLayerName } from '../../../utils/LayersUtils';
 
 const geojsonFormat = new GeoJSON();
-
-/**
- * @type {number}
- * @description number of sides used by `olGeomFromType`, `polygonFromCircle` and `polygonCoordsFromCircle` to discretize a circle into a polygon when it is
- * re-created from center and radius (e.g. when the circle of a spatial filter is edited from GeometryDetails,
- * with `replace` / `endDrawing` drawing status). It only parametrizes the value previously hardcoded (100 sides, 101 vertices),
- * the drawing precision is unchanged.
- * Note: when the circle is first drawn, the geodesic `geometryFunction` uses the default of OL `circular` (32 sides, 33 vertices),
- * so the same circle grows from 33 to 101 vertices after an edit, and the resulting CQL_FILTER of GET requests
- * can exceed the maximum URL length. This is not handled here but when the CQL is built:
- * `getCQLGeometryElement` in `utils/FilterUtils.js` simplifies circle rings to `CQL_CIRCLE_MAX_VERTICES` (33).
- * More details in #12967
- */
-export const CIRCLE_POLYGON_SIDES = 100;
 
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
@@ -590,7 +576,7 @@ export default class DrawSupport extends React.Component {
                             return this.reprojectCoordinatesToWGS84(coordinate, projection);
                         });
                         radius = calculateDistance(wgs84Coordinates, 'haversine');
-                        coordinates = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
+                        coordinates = circular(wgs84Coordinates[0], radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection).getCoordinates();
                     } else {
                         radius = drawnGeom.getRadius();
                         center = drawnGeom.getCenter();
@@ -894,7 +880,7 @@ export default class DrawSupport extends React.Component {
                         return this.reprojectCoordinatesToWGS84(coordinate, projection);
                     });
                     let radius = calculateDistance(wgs84Coordinates, 'haversine');
-                    let coords = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
+                    let coords = circular(wgs84Coordinates[0], radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection).getCoordinates();
                     geom.setCoordinates(coords);
                     return geom;
                 };
@@ -1055,7 +1041,7 @@ export default class DrawSupport extends React.Component {
                         const wgs84Coordinates = [[...center]].map((coordinate) => {
                             return this.reprojectCoordinatesToWGS84(coordinate, projection);
                         });
-                        coords = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
+                        coords = circular(wgs84Coordinates[0], radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection).getCoordinates();
                     }
                     olFt = this.getNewFeature(newDrawMethod, coords);
                     // TODO verify center is projected in 4326 and is an array
@@ -1611,8 +1597,8 @@ export default class DrawSupport extends React.Component {
             // TODO simplify, too much use of elvis operator
             geometry = isCircle ?
                 options.geodesic ?
-                    circular(this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, CIRCLE_POLYGON_SIDES).clone().transform('EPSG:4326', projection)
-                    : fromCircle(new Circle([correctCenter.x, correctCenter.y], radius), CIRCLE_POLYGON_SIDES)
+                    circular(this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection)
+                    : fromCircle(new Circle([correctCenter.x, correctCenter.y], radius), calculateCircleSegments(radius))
                 : new Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
 
             // store geodesic center
@@ -1653,11 +1639,11 @@ export default class DrawSupport extends React.Component {
      * @param {number} npoints number of sides
      * @return {Polygon} the polygon which approximate the circle
     */
-    polygonFromCircle = (center, radius, npoints = CIRCLE_POLYGON_SIDES) => {
+    polygonFromCircle = (center, radius, npoints = calculateCircleSegments(radius)) => {
         return fromCircle(new Circle(center, radius), npoints);
     }
 
-    polygonCoordsFromCircle = (center, radius, npoints = CIRCLE_POLYGON_SIDES) => {
+    polygonCoordsFromCircle = (center, radius, npoints = calculateCircleSegments(radius)) => {
         return this.polygonFromCircle(center, radius, npoints).getCoordinates();
     }
     /**

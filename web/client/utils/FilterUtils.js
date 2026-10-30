@@ -21,7 +21,7 @@ import { ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators } from
 import { read } from './ogc/Filter/CQL/parser';
 import fromObject from './ogc/Filter/fromObject';
 import filterBuilder from './ogc/Filter/FilterBuilder';
-import { reprojectGeoJson, reproject } from './CoordinatesUtils';
+import { reprojectGeoJson, reproject, calculateCircleSegments } from './CoordinatesUtils';
 
 export const cqlToOgc = (cqlFilter, fOpts) => {
     const fb = filterBuilder(fOpts);
@@ -805,20 +805,24 @@ export const processCQLFilterGroup = function(root, objFilter) {
     return cql;
 };
 
-// matches the default discretization of OpenLayers circular() (32 sides + closing vertex) used when the circle is first drawn,
-// while DrawSupport re-creates it with 100 sides on edit, producing CQL filters that exceed the max URL length
-export const CQL_CIRCLE_MAX_VERTICES = 33;
-
-export const simplifyCircleRing = function(ring, maxVertices = CQL_CIRCLE_MAX_VERTICES) {
+export const simplifyCircleRing = function(ring) {
     const closed = closePolygon(ring);
-    if (closed.length <= maxVertices) {
+    const open = closed.slice(0, -1);
+    if (open.length < 3) {
         return closed;
     }
-    const open = closed.slice(0, -1);
-    const sides = maxVertices - 1;
+    const cx = open.reduce((sum, [x]) => sum + x, 0) / open.length;
+    const cy = open.reduce((sum, [, y]) => sum + y, 0) / open.length;
+    const radius = open.reduce((sum, [x, y]) => sum + Math.hypot(x - cx, y - cy), 0) / open.length;
+    const sides = calculateCircleSegments(radius);
+    if (open.length <= sides) {
+        return closed;
+    }
+    const startAngle = Math.atan2(open[0][1] - cy, open[0][0] - cx);
     const vertices = [];
     for (let i = 0; i < sides; i++) {
-        vertices.push(open[Math.round(i * open.length / sides) % open.length]);
+        const angle = startAngle + 2 * Math.PI * i / sides;
+        vertices.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
     }
     return [...vertices, vertices[0]];
 };
