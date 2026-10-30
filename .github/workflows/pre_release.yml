@@ -118,9 +118,9 @@ jobs:
         with:
           ref: ${{ inputs.main-branch }}
       - name: "setting up npm"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
-            node-version: '20.x'
+            node-version: '24.x'
       - name: Bot Details
         id: bot-details
         uses: raven-actions/bot-details@v1
