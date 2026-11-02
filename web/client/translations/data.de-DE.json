@@ -57,12 +57,21 @@
       "label": {
         "default": "Automatische Aktualisierung aktivieren",
         "lastUpdated": "Letzte Aktualisierung",
-        "addLayer": "Ebene hinzufügen",
+        "addLayer": "Automatische Aktualisierung - Ebenenkonfiguration",
         "addLayerPlaceholder": "Auswählen...",
         "removeLayer": "Ebene entfernen",
         "layersSummary": "Ebenen werden automatisch aktualisiert",
         "noLayers": "Keine gefunden",
-        "informations": "Welche Ebenen konfiguriert sind"
+        "informations": "Welche Ebenen konfiguriert sind",
+        "add": {
+          "clearValueText": "Wert löschen",
+          "noResultsText": "Keine Ebenen gefunden",
+          "placeholder": "Ebene auswählen..."
+        },
+        "filter": {
+          "placeholder": "Ebenen filtern...",
+          "clearFilter": "Filter löschen"
+        }
       },
       "of": "of",
       "updating": "Lade...",

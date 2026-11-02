@@ -57,12 +57,21 @@
       "label": {
         "default": "Activate AutoRefresh",
         "lastUpdated": "Last Refresh",
-        "addLayer": "Add layer",
+        "addLayer": "AutoRefresh - layer configuration",
         "addLayerPlaceholder": "Select...",
         "removeLayer": "Remove layer",
         "layersSummary": "Layers automatically refreshed",
         "noLayers": "None found",
-        "informations": "Which layers are configured"
+        "informations": "Which layers are configured",
+        "add": {
+          "clearValueText": "Clear value",
+          "noResultsText": "No layers found",
+          "placeholder": "Select a layer..."
+        },
+        "filter": {
+          "placeholder": "Filter layers...",
+          "clearFilter": "Clear filter"
+        }
       },
       "of": "of",
       "updating": "Updating...",

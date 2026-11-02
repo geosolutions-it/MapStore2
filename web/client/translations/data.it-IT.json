@@ -57,12 +57,21 @@
       "label": {
         "default": "Attiva aggiornamento automatico",
         "lastUpdated": "Ultimo aggiornamento",
-        "addLayer": "Aggiungi livello",
+        "addLayer": "Aggiornamento automatico - configurazione dei livelli",
         "addLayerPlaceholder": "Seleziona...",
         "removeLayer": "Rimuovi livello",
         "layersSummary": "Livelli aggiornati automaticamente",
         "noLayers": "Nessuno trovato",
-        "informations": "Quali livelli sono configurati"
+        "informations": "Quali livelli sono configurati",
+        "add": {
+          "clearValueText": "Cancella valore",
+          "noResultsText": "Nessun livello trovato",
+          "placeholder": "Seleziona un livello..."
+        },
+        "filter": {
+          "placeholder": "Filtra i livelli...",
+          "clearFilter": "Cancella filtro"
+        }
       },
       "of": "di",
       "updating": "In aggiornamento...",

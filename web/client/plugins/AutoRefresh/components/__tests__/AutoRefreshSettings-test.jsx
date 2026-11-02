@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
+import ReactSelect from 'react-select';
 
 import AutoRefreshSettings from '../AutoRefreshSettings';
 import { NodeTypes } from '../../../../utils/LayersUtils';
@@ -24,8 +25,15 @@ describe('AutoRefreshSettings component', () => {
         onUpdateNode: () => {}
     };
 
+    // function components return null from ReactDOM.render, so wrap to get an instance
+    class Wrapper extends React.Component {
+        render() {
+            return <AutoRefreshSettings {...this.props} />;
+        }
+    }
+
     const renderComponent = (props = {}) => ReactDOM.render(
-        <AutoRefreshSettings {...defaultProps} {...props} />,
+        <Wrapper {...defaultProps} {...props} />,
         container
     );
 
@@ -50,9 +58,8 @@ describe('AutoRefreshSettings component', () => {
         const onUpdateNode = expect.createSpy();
         renderComponent({ onUpdateNode });
 
-        const selector = container.querySelector('#autorefresh-settings-add-layer');
-        selector.value = 'available-layer';
-        TestUtils.Simulate.change(selector, { target: selector });
+        const select = TestUtils.findRenderedComponentWithType(renderComponent({ onUpdateNode }), ReactSelect);
+        select.props.onChange({ value: 'available-layer' });
 
         expect(onUpdateNode).toHaveBeenCalledWith(
             'available-layer',

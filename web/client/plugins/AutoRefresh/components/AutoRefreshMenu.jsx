@@ -18,7 +18,7 @@ const AutoRefreshMenu = React.forwardRef((props, ref) => {
                 right: 0,
                 padding: '10px',
                 minWidth: '200px',
-                maxHeight: "calc(100vh / 2)",
+                maxHeight: "calc(70vh)",
                 overflowY: "auto",
                 zIndex: 9999
             }}>

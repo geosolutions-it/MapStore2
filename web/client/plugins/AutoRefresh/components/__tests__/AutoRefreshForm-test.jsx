@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
+import ReactSelect from 'react-select';
 
 import AutoRefreshForm from '../AutoRefreshForm';
 
@@ -23,10 +24,19 @@ describe('AutoRefreshForm component', () => {
         handleIntervalChange: () => {}
     };
 
+    // function components return null from ReactDOM.render, so wrap to get an instance
+    class Wrapper extends React.Component {
+        render() {
+            return <AutoRefreshForm {...this.props} />;
+        }
+    }
+
     const renderComponent = (props = {}) => ReactDOM.render(
-        <AutoRefreshForm {...defaultProps} {...props} />,
+        <Wrapper {...defaultProps} {...props} />,
         container
     );
+
+    const getSelect = (instance) => TestUtils.findRenderedComponentWithType(instance, ReactSelect);
 
     beforeEach(() => {
         container = document.createElement('div');
@@ -39,12 +49,12 @@ describe('AutoRefreshForm component', () => {
     });
 
     it('renders the available layers and active layer controls', () => {
-        renderComponent({
-            availableLayers: [{ id: 'available-layer', title: 'Available layer' }],
-            activeLayers: [{ id: 'active-layer', title: 'Active layer', visibility: true, _v_: 1 }]
+        const instance = renderComponent({
+            availableLayers: [{ id: 'available-layer', title: 'Available layer', type: 'wms' }],
+            activeLayers: [{ id: 'active-layer', title: 'Active layer', type: 'wms', visibility: true, _v_: 1 }]
         });
 
-        expect(container.querySelector('option[value="available-layer"]').textContent).toBe('Available layer');
+        expect(getSelect(instance).props.options).toEqual([{ value: 'available-layer', label: 'Available layer' }]);
         expect(container.querySelector('.ms-autorefresh-form-group__title').textContent).toBe('Active layer');
         expect(container.querySelector('input[type="number"]').value).toBe('60');
         expect(container.querySelector('.ms-autorefresh-form-group__summary')).toBeTruthy();
@@ -52,25 +62,19 @@ describe('AutoRefreshForm component', () => {
 
     it('adds a selected layer at the default interval and resets the selector', () => {
         const handleAddLayer = expect.createSpy();
-        renderComponent({
-            availableLayers: [{ id: 'layer-1', title: 'Layer 1' }],
+        const instance = renderComponent({
+            availableLayers: [{ id: 'layer-1', title: 'Layer 1', type: 'wms' }],
             handleAddLayer
         });
 
-        const selector = container.querySelector('#autorefresh-settings-add-layer');
-        selector.value = 'layer-1';
-        TestUtils.Simulate.change(selector, { target: selector });
+        getSelect(instance).props.onChange({ value: 'layer-1' });
 
         expect(handleAddLayer).toHaveBeenCalledWith('layer-1', 60);
-        expect(selector.value).toBe('none');
     });
 
     it('does not add a layer when the placeholder option is selected', () => {
         const handleAddLayer = expect.createSpy();
-        renderComponent({ handleAddLayer });
-
-        const selector = container.querySelector('#autorefresh-settings-add-layer');
-        TestUtils.Simulate.change(selector, { target: { value: 'none' } });
+        getSelect(renderComponent({ handleAddLayer })).props.onChange({ value: 'none' });
 
         expect(handleAddLayer).toNotHaveBeenCalled();
     });

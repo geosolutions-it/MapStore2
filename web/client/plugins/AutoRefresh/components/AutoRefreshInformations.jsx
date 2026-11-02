@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useCallback } from 'react';
-import { Glyphicon, Dropdown, MenuItem } from 'react-bootstrap';
+import React from 'react';
+import { Glyphicon, Dropdown, MenuItem, Form, FormGroup, FormControl, InputGroup } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
+import { getMessageById } from "../../../utils/LocaleUtils";
+import AutoRefreshLayerRow from './AutoRefreshLayerRow';
 import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import ButtonRB from '../../../components/misc/Button';
-import { formatDate } from '../constants';
 
 const Button = tooltip(ButtonRB);
 
@@ -39,13 +41,12 @@ const AutoRefreshInformationsMenu = React.forwardRef((props, ref) => {
 
 const AutoRefreshInformations = ({
     layers = []
-}) => {
-    const getFullyQualifiedLayerTitle = useCallback((layer) => {
-        const title = layer.title;
-        const interval = `(${layer.autoRefreshInterval}s)`;
-        const lastUpdate = layer.visibility && layer._v_ ? formatDate(layer._v_) : '';
-        return `${title} ${interval} ${lastUpdate}`;
-    }, [layers]);
+}, {messages}) => {
+    const [filterText, setFilterText] = React.useState('');
+    const filteredLayers = React.useMemo(
+        () => layers.filter(l => l.title.toLowerCase().includes(filterText.toLowerCase())),
+        [filterText, layers]
+    );
 
     return (<div className="ms-autorefresh-informations">
         <Dropdown dropup>
@@ -58,20 +59,37 @@ const AutoRefreshInformations = ({
                 <Glyphicon glyph="info-sign" />
             </Button>
             <AutoRefreshInformationsMenu bsRole="menu" msgId="autorefresh.label.layersSummary">
+                <Form>
+                    <FormGroup>
+                        <InputGroup>
+                            <FormControl
+                                placeholder={getMessageById(messages, "autorefresh.label.filter.placeholder")}
+                                value={filterText}
+                                onChange={(event) => setFilterText(event?.target?.value)}
+                            />
+                            {filterText
+                                ? <InputGroup.Button>
+                                    <Button tooltipId="autorefresh.label.filter.clearFilter" onClick={() => setFilterText('')}><Glyphicon glyph="1-close"/></Button>
+                                </InputGroup.Button>
+                                : <InputGroup.Addon>
+                                    <Glyphicon glyph="filter"/>
+                                </InputGroup.Addon>}
+                        </InputGroup>
+                    </FormGroup>
+                </Form>
                 <div className="ms-autorefresh-layers-summary">
                     {layers.length === 0 && <Message msgId="autorefresh.label.noLayers"/>}
-                    {layers.length > 0 &&
-                        layers.map(l => (<div className={'ms-autorefresh-layer-summary__row ' + (l.visibility ? '' : 'ms-autorefresh-layer-summary__row-hidden ') + (l.visibility && l._v_ ? '' : 'ms-autorefresh-layer-summary__row-inactive')}
-                            key={`autorefresh-layer-summary-${l.id}`}
-                            title={getFullyQualifiedLayerTitle(l)}>
-                            <span className="ms-autorefresh-layer-summary__row__title">{l.title}</span>
-                            {l.visibility && l._v_ && <em>{formatDate(l._v_)}</em>}
-                            <span className="ms-autorefresh-layer-summary__row__interval badge badge-info">{l.autoRefreshInterval}s</span>
-                        </div>))}
+                    {filteredLayers.length > 0 &&
+                        filteredLayers.map(l => (<AutoRefreshLayerRow key={`autorefresh-layer-summary-${l.id}`} layer={l} />))}
                 </div>
             </AutoRefreshInformationsMenu>
         </Dropdown>
     </div>);
 };
+
+AutoRefreshInformations.contextTypes = {
+    messages: PropTypes.object
+};
+
 
 export default AutoRefreshInformations;

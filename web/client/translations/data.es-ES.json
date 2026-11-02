@@ -57,12 +57,21 @@
       "label": {
         "default": "Activar actualización automática",
         "lastUpdated": "Última actualización",
-        "addLayer": "Agregar capa",
+        "addLayer": "Actualización automática - configuración de capas",
         "addLayerPlaceholder": "Seleccionar...",
         "removeLayer": "Eliminar capa",
         "layersSummary": "Capas actualizadas automáticamente",
         "noLayers": "No se encontraron",
-        "informations": "Qué capas están configuradas"
+        "informations": "Qué capas están configuradas",
+        "add": {
+          "clearValueText": "Borrar valor",
+          "noResultsText": "No se encontraron capas",
+          "placeholder": "Seleccionar una capa..."
+        },
+        "filter": {
+          "placeholder": "Filtrar capas...",
+          "clearFilter": "Borrar filtro"
+        }
       },
       "of": "de",
       "updating": "actualizando...",

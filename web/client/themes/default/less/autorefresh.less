@@ -54,17 +54,44 @@
 }
 
 .ms-autorefresh-form-container{
-    min-width: 300px;
+    min-width: 600px;
+    min-height: 500px;
     overflow: hidden;
+
+    form {
+        &:first-of-type {
+            margin-bottom: 1ch;
+        }
+        &:last-of-type {
+            gap: 0.5ch;
+        }
+        .form-group {
+            margin: 0;
+        }
+    }
+
 
     .ms-autorefresh-form-group {
         display: grid;
         align-items: center;
         column-gap: 0.5ch;
         grid-template-areas:
-            "button title input"
-            "button summary input";
-        grid-template-columns: auto 1fr 100px;
+            "text input button"
+            "text input button";
+        grid-template-columns: 1fr 100px auto;
+
+        padding: 4px 8px;
+        transition: box-shadow, border 0.3s;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 4px;
+        border-color: var(--ms-main-border-color, #555555);
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+
+        &:hover {
+            border-color: var(--ms-focus-color);
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.12);
+        }
 
         &.ms-autorefresh-form-group-hidden {
             .ms-autorefresh-form-group__title,
@@ -74,32 +101,38 @@
             }
         }
 
-        &.ms-autorefresh-form-group-inactive {
-            .ms-autorefresh-form-group__title {
-                grid-row-end: summary;
-            }
-        }
-
         .ms-autorefresh-form-group__button {
             grid-area: button;
         }
-        .ms-autorefresh-form-group__title {
-            display: flex;
-            align-items: center;
-            grid-area: title;
-            font-size: 12px;
 
-            .glyphicon-eye-close {
-                margin-right: 0.5ch;
+        .ms-autorefresh-form-group__text {
+            grid-area: text;
+            transition: transform .2s;
+            display: flex;
+            flex-direction: column;
+
+            .glyphicon {
+                margin-right: 1ch;
+            }
+
+            .ms-autorefresh-form-group__title {
+                font-size: 12px;
+                white-space: nowrap;
+                max-width: 600px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                .glyphicon-eye-close {
+                    margin-right: 0.5ch;
+                }
+            }
+            .ms-autorefresh-form-group__summary {
+                font-size: 10px;
             }
         }
 
         .ms-autorefresh-form-group__input {
             grid-area: input;
-        }
-        .ms-autorefresh-form-group__summary {
-            grid-area: summary;
-            font-size: 10px;
         }
     }
 
@@ -126,32 +159,47 @@
     display: grid;
     flex-direction: column;
     gap: 0.5ch;
-    max-height: 50vh;
+    min-width: 600px;
+    max-height: 70vh;
     overflow-y: auto;
 
     .ms-autorefresh-layer-summary__row{
         display: grid;
         grid-template-areas:
         "title interval"
-        "summary interval";
+        "refreshed interval";
         grid-template-columns: 1fr 70px;
         column-gap: 1ch;
         align-items: center;
 
-        .glyphicon {
-            margin-right: 0;
+        padding: 4px 8px;
+        transition: box-shadow, border 0.3s;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 4px;
+        border-color: var(--ms-main-border-color, #555555);
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+
+        &:hover {
+            border-color: var(--ms-focus-color);
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.12);
         }
 
-        em {
-            font-size: 10px;
-            grid-area: summary;
+        .glyphicon {
+            margin-right: 1ch;
         }
 
         .ms-autorefresh-layer-summary__row__title {
+            max-width: 600px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             grid-area: title;
+        }
+
+        .ms-autorefresh-layer-summary__row__refreshed {
+            font-size: 12px;
+            grid-area: refreshed;
         }
 
         .ms-autorefresh-layer-summary__row__interval {
@@ -165,7 +213,7 @@
 
     .ms-autorefresh-layer-summary__row-inactive {
         .ms-autorefresh-layer-summary__row__title {
-            grid-row-end: summary;
+            grid-row-end: refreshed;
         }
     }
 }

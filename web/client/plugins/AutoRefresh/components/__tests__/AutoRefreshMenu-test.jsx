@@ -32,6 +32,6 @@ describe('AutoRefreshMenu component', () => {
         expect(menu.querySelector('.menu-content').textContent).toBe('Content');
         expect(menu.style.right).toBe('0px');
         expect(menu.style.overflowY).toBe('auto');
-        expect(menu.style.maxHeight).toBe('calc(50vh)');
+        expect(menu.style.maxHeight).toBe('calc(70vh)');
     });
 });

@@ -57,12 +57,21 @@
       "label": {
         "default": "Activer le rafraîchissement automatique",
         "lastUpdated": "Dernier rafraîchissement",
-        "addLayer": "Ajouter une couche",
+        "addLayer": "Actualisation - configuration des couches",
         "addLayerPlaceholder": "Sélectionner...",
         "removeLayer": "Supprimer la couche",
         "layersSummary": "Couches rafraîchies automatiquement",
         "noLayers": "Aucune trouvée",
-        "informations": "Quelles couches sont configurées"
+        "informations": "Quelles couches sont configurées",
+        "add": {
+          "clearValueText": "Effacer",
+          "noResultsText": "Aucune couche trouvée",
+          "placeholder": "Sélectionner une couche..."
+        },
+        "filter": {
+          "placeholder": "Filtrer les couches...",
+          "clearFilter": "Effacer le filtre"
+        }
       },
       "of": "de",
       "updating": "Rafraîchissement...",

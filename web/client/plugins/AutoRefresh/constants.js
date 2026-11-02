@@ -36,5 +36,5 @@ export const formatDate = (timestamp) => {
         second: "2-digit",
         timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone
     };
-    return `(${date.toLocaleString(navigator.language, options)})`;
+    return `${date.toLocaleString(navigator.language, options)}`;
 };
