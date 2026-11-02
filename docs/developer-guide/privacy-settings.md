@@ -21,7 +21,7 @@ The default configuration does not configure `privacy.links`, so the panel links
 
 An empty category list means that no optional tools are configured. The first-visit panel is informational, with a Close action. Its dismissal is distinct from consent. Do not add optional categories merely because the application requests a remote map service.
 
-The plugin contributes an entry to `Footer` and `MapFooter`. Where neither footer exists, it provides a bottom bar. Embedded maps position `MapFooter` in the `footer` container so that its controls remain accessible above the map canvas.
+The plugin gives access to the privacy settings from one container, chosen by priority among the ones of the page: the `Footer` (home page), then the last entry of the `Login` user menu (target `menu-end`), then an icon among the attribution of `MapFooter` (for example in embedded maps). Without any of them, for example in embedded dashboards and GeoStories, the plugin shows a small floating button in the bottom left corner. To change the order, set `override.<container>.priority` in the plugin configuration, for example `"override": {"MapFooter": {"priority": 4}}`. The login window, which covers the page when a private resource requires authentication, shows its own button (target `login-footer`).
 
 ## Configure optional categories
 
