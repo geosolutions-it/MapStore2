@@ -94,7 +94,8 @@ const update = (layer, newOptions, oldOptions) => {
     if (newOptions.name !== oldOptions.name
         || newOptions.forceProxy !== oldOptions.forceProxy
         || !isEqual(oldOptions.security, newOptions.security)
-        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+        || !isEqual(oldOptions._v_, newOptions._v_)) {
         return create(newOptions);
     }
     return null;

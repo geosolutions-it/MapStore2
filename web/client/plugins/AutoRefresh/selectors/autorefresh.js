@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const SUPPORTED_LAYER_TYPES = ['wms', 'wfs'];
+const SUPPORTED_LAYER_TYPES = ['wms', 'wfs', 'arcgis-feature', 'arcgis'];
 
 export const isPausedSelector = state => state?.autorefresh?.paused;
 export const isActiveRefreshSelector = state => state?.autorefresh?.enabled;
