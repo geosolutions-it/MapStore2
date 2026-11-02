@@ -8,7 +8,9 @@
 
 import {
     SET_COOKIE_VISIBILITY,
-    SET_PRIVACY_CHOICE
+    SET_PRIVACY_CHOICE,
+    ADD_PRIVACY_ACCESS,
+    REMOVE_PRIVACY_ACCESS
 } from '../actions/cookie';
 
 function cookie(state = {}, action) {
@@ -18,6 +20,13 @@ function cookie(state = {}, action) {
     }
     case SET_PRIVACY_CHOICE: {
         return {...state, privacyChoice: action.choice};
+    }
+    case ADD_PRIVACY_ACCESS: {
+        const accesses = state.privacyAccesses || [];
+        return accesses.includes(action.id) ? state : {...state, privacyAccesses: [...accesses, action.id]};
+    }
+    case REMOVE_PRIVACY_ACCESS: {
+        return {...state, privacyAccesses: (state.privacyAccesses || []).filter(id => id !== action.id)};
     }
     default:
         return state;
