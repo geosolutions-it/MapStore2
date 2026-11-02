@@ -22,6 +22,7 @@ import { consentManager } from '../../utils/ConsentManager';
   * @prop {function} onSetCookieVisibility to change the visibility of the privacy panel
   * @prop {bool} show if true the privacy panel is visible
   * @prop {object} privacy the privacy configuration in use
+  * @prop {bool} hasPrivacyAccess true when a container of the page shows an access to the privacy settings, which hides the floating one
   *
   */
 
@@ -33,6 +34,7 @@ class Cookie extends React.Component {
         show: PropTypes.bool,
         privacy: PropTypes.object,
         privacyChoice: PropTypes.object,
+        hasPrivacyAccess: PropTypes.bool,
         onPrivacyChoice: PropTypes.func
     };
     static contextTypes = {
@@ -106,11 +108,12 @@ class Cookie extends React.Component {
             choice={this.props.privacyChoice}
             show={this.props.show}
             storageError={this.state.privacyStorageError}
+            hasPrivacyAccess={this.props.hasPrivacyAccess}
             onShow={show => {
                 if (!show && !categoryIds(this.props.privacy).length) acknowledgePrivacyNotice(this.props.privacy);
                 this.props.onSetCookieVisibility(show);
             }}
-            onSave={selected => {
+            onSave={(selected, {keepOpen} = {}) => {
                 const choice = makePrivacyChoice(this.props.privacy, selected);
                 if (!persistPrivacyChoice(choice)) {
                     // Optional tools stay off and the panel stays open with the error.
@@ -128,7 +131,7 @@ class Cookie extends React.Component {
                 consentManager.update(this.props.privacy, choice);
                 this.setState({privacyStorageError: false});
                 this.props.onPrivacyChoice(choice);
-                this.props.onSetCookieVisibility(false);
+                if (!keepOpen) this.props.onSetCookieVisibility(false);
                 return true;
             }} />);
     }

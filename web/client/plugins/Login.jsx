@@ -86,7 +86,7 @@ const RULE_MANAGER_ID = 'rulesmanager';
   *  {
   *      containers: {
   *          Login: {
-  *              target: 'manager-menu', // or also "user-menu" if you want item for user(role is not admin) for admin role use "manager-menu",
+  *              target: 'manager-menu', // or also "user-menu" if you want item for user(role is not admin) for admin role use "manager-menu", "menu-end" for an item shown to every user after login/logout, "login-footer" for a component at the bottom of the login window
   *              name: "TOOLNAME", // a name for the current tool.
   *              Component: MyMenuItemComponent
   *          },
@@ -139,7 +139,8 @@ function LoginPlugin({
         ...(userItems.length ? [{ type: 'divider' }] : []),
         ...managerItems,
         ...(managerItems.length ? [{ type: 'divider' }] : []),
-        ...authItem
+        ...authItem,
+        ...configuredItems.filter(({ target }) => target === 'menu-end').sort((a, b) => a.position - b.position)
     ];
 
     return (
@@ -159,7 +160,7 @@ function LoginPlugin({
                 isUsingLDAP={isUsingLDAP}
                 hideGroupUserInfo={resolvedHideGroupUserInfo}
             />
-            <Login/>
+            <Login footerItems={configuredItems.filter(({ target }) => target === 'login-footer')}/>
         </>
 
     );
