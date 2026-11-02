@@ -58,10 +58,27 @@ describe('ExtensionsList component', () => {
             document.getElementById('container'));
         expect(textsOf('button.tool')).toEqual(['A', 'B']);
     });
-    it('shows whether the context creator lists each extension', () => {
-        const extensions = [{ name: 'PrivacySettings', title: 'Privacy settings', hidden: true }, { name: 'Sample', title: 'Sample', hidden: false }];
+    it('shows for each plugin whether it can be added to application contexts', () => {
+        const extensions = [{ name: 'Tools', title: 'Tools', plugins: [{ name: 'Charts', version: '1.0.0', inContexts: true }, { name: 'Settings', version: '2.0.0', inContexts: false }] }];
         ReactDOM.render(<ExtensionsList extensions={extensions} />, document.getElementById('container'));
-        expect(textsOf('.ms-extensions-list-entry .ms-extension-hidden, .ms-extensions-list-entry .ms-extension-listed'))
-            .toEqual(['extensionsManager.hiddenInContextCreator', 'extensionsManager.listedInContextCreator']);
+        expect(textsOf('.ms-extension-plugins > div:first-child')).toEqual(['extensionsManager.plugins']);
+        const plugins = document.querySelectorAll('.ms-extension-plugin');
+        expect(plugins.length).toBe(2);
+        expect(plugins[0].querySelector('.ms-extension-plugin-in-contexts').textContent.trim()).toBe('extensionsManager.pluginInContexts');
+        expect(plugins[0].querySelector('.ms-extension-plugin-not-in-contexts')).toNotExist();
+        expect(plugins[1].querySelector('.ms-extension-plugin-not-in-contexts').textContent.trim()).toBe('extensionsManager.pluginNotInContexts');
+        expect(plugins[1].querySelector('.ms-extension-plugin-in-contexts')).toNotExist();
+    });
+    it('shows the glyph of each plugin, or the default one', () => {
+        const extensions = [{ name: 'Tools', title: 'Tools', plugins: [{ name: 'Charts', glyph: 'stats', version: '1.0.0' }, { name: 'Settings', version: '2.0.0' }] }];
+        ReactDOM.render(<ExtensionsList extensions={extensions} />, document.getElementById('container'));
+        expect([...document.querySelectorAll('.ms-extension-plugin .mapstore-side-preview .glyphicon')].map(node => node.className))
+            .toEqual(['glyphicon glyphicon-stats', 'glyphicon glyphicon-plug']);
+    });
+    it('shows the glyph of the extension, or the default one', () => {
+        const extensions = [{ name: 'PrivacySettings', title: 'Privacy settings', glyph: 'lock' }, { name: 'Sample', title: 'Sample' }];
+        ReactDOM.render(<ExtensionsList extensions={extensions} />, document.getElementById('container'));
+        expect([...document.querySelectorAll('.ms-extensions-list-entry .ms-resource-card-img .glyphicon')].map(node => node.className))
+            .toEqual(['glyphicon glyphicon-lock', 'glyphicon glyphicon-plug']);
     });
 });

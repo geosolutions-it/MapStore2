@@ -110,27 +110,30 @@ describe('getExtensionInfo', () => {
             title: 'Statistics tools',
             description: 'Charts and tables',
             version: '3.0.0',
-            plugins: [{ name: 'Statistics', title: 'Charts', description: 'Charts of a layer', version: '2.0.0', dependencies: ['Toolbar'] }, { name: 'StatisticsTable', version: '1.0.0' }]
+            glyph: 'stats',
+            plugins: [{ name: 'Statistics', title: 'Charts', description: 'Charts of a layer', version: '2.0.0', glyph: 'th', dependencies: ['Toolbar'] }, { name: 'StatisticsTable', version: '1.0.0' }]
         })).toEqual({
             title: 'Statistics tools',
             description: 'Charts and tables',
             version: '3.0.0',
-            plugins: [{ name: 'Statistics', title: 'Charts', version: '2.0.0' }, { name: 'StatisticsTable', title: undefined, version: '1.0.0' }]
+            glyph: 'stats',
+            plugins: [{ name: 'Statistics', title: 'Charts', version: '2.0.0', glyph: 'th' }, { name: 'StatisticsTable', title: undefined, version: '1.0.0', glyph: undefined }]
         });
     });
     it('takes the fields missing at the top level from the first plugin', () => {
         expect(getExtensionInfo({
             version: '3.0.0',
-            plugins: [{ name: 'Statistics', title: 'Charts', description: 'Charts of a layer', version: '2.0.0' }]
+            plugins: [{ name: 'Statistics', title: 'Charts', description: 'Charts of a layer', version: '2.0.0', glyph: 'th' }]
         })).toEqual({
             title: 'Charts',
             description: 'Charts of a layer',
             version: '3.0.0',
-            plugins: [{ name: 'Statistics', title: 'Charts', version: '2.0.0' }]
+            glyph: 'th',
+            plugins: [{ name: 'Statistics', title: 'Charts', version: '2.0.0', glyph: 'th' }]
         });
     });
     it('returns empty fields for an index without plugins', () => {
-        expect(getExtensionInfo({})).toEqual({ title: undefined, description: undefined, version: undefined, plugins: [] });
+        expect(getExtensionInfo({})).toEqual({ title: undefined, description: undefined, version: undefined, glyph: undefined, plugins: [] });
     });
 });
 
@@ -142,7 +145,7 @@ describe('checkUploads with the extension version', () => {
                 expect(checked[0].error).toNotExist();
                 expect(checked[0].name).toBe('Statistics');
                 expect(checked[0].version).toBe('3.0.0');
-                expect(checked[0].plugins).toEqual([{ name: 'Statistics', title: undefined, version: '2.0.0' }, { name: 'StatisticsTable', title: undefined, version: '1.0.0' }]);
+                expect(checked[0].plugins).toEqual([{ name: 'Statistics', title: undefined, version: '2.0.0', glyph: undefined }, { name: 'StatisticsTable', title: undefined, version: '1.0.0', glyph: undefined }]);
             }))
             .then(() => done()).catch(done);
     });

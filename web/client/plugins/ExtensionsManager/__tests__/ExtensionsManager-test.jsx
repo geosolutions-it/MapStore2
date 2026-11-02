@@ -103,9 +103,14 @@ describe('ExtensionsManager plugin', () => {
             expect([...document.querySelectorAll('.ms-extension-description')].map(node => node.textContent)).toEqual(['Policy pages', '', 'Charts and tables']);
             expect([...document.querySelectorAll('.ms-extension-version')].map(node => node.textContent)).toEqual(['1.0.0', '', '3.0.0']);
             const entries = document.querySelectorAll('.ms-extensions-list-entry');
-            expect([...entries[0].querySelectorAll('.ms-extension-plugin')].map(node => node.textContent)).toEqual(['Privacy settings 1.0.0']);
-            expect([...entries[1].querySelectorAll('.ms-extension-plugin')].map(node => node.textContent)).toEqual(['Sample -']);
-            expect([...entries[2].querySelectorAll('.ms-extension-plugin')].map(node => node.textContent)).toEqual(['Statistics 2.0.0', 'StatisticsTable -']);
+            const pluginsOf = entry => [...entry.querySelectorAll('.ms-extension-plugin')].map(node => ({
+                plugin: `${node.querySelector('.ms-extension-plugin-name').textContent} ${node.querySelector('.ms-extension-plugin-version').textContent}`,
+                inContexts: !!node.querySelector('.ms-extension-plugin-in-contexts')
+            }));
+            // PrivacySettings is hidden, StatisticsTable is not in the catalog: contexts cannot use them
+            expect(pluginsOf(entries[0])).toEqual([{ plugin: 'Privacy settings 1.0.0', inContexts: false }]);
+            expect(pluginsOf(entries[1])).toEqual([{ plugin: 'Sample -', inContexts: true }]);
+            expect(pluginsOf(entries[2])).toEqual([{ plugin: 'Statistics 2.0.0', inContexts: true }, { plugin: 'StatisticsTable -', inContexts: false }]);
         }, done);
     });
     it('shows an error when the catalog cannot be loaded', (done) => {

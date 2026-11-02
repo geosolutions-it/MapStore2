@@ -22,7 +22,7 @@ export const ERROR = {
  * Returns the description of an extension from its index.json, as the backend stores it in the plugins catalog.
  * A field missing at the top level of index.json is taken from the first plugin.
  * @param {object} index content of index.json
- * @returns {object} `{ title, description, version, plugins: [{ name, title, version }] }`
+ * @returns {object} `{ title, description, version, glyph, plugins: [{ name, title, version, glyph }] }`
  */
 export const getExtensionInfo = (index) => {
     const plugins = index.plugins || [];
@@ -31,7 +31,8 @@ export const getExtensionInfo = (index) => {
         title: index.title || first.title,
         description: index.description || first.description,
         version: index.version || first.version,
-        plugins: plugins.map(({ name, title, version }) => ({ name, title, version }))
+        glyph: index.glyph || first.glyph,
+        plugins: plugins.map(({ name, title, version, glyph }) => ({ name, title, version, glyph }))
     };
 };
 

@@ -12,25 +12,33 @@ import { Glyphicon } from 'react-bootstrap';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Message from '../../../components/I18N/Message';
+import SideCard from '../../../components/misc/cardgrids/SideCard';
 import { MANAGER_TOOL_GLYPH } from '../constants';
 
-// Extensions with `hidden: true` add no tool to the contexts, so the context creator does not list them.
-const ContextCreatorVisibility = ({ hidden }) => (
-    <Text fontSize="sm" className={hidden ? 'ms-extension-hidden' : 'ms-extension-listed'}>
-        <Message msgId={hidden ? 'extensionsManager.hiddenInContextCreator' : 'extensionsManager.listedInContextCreator'} />
+// The context creator lists only the plugins of the catalog without `hidden: true`.
+const ContextsAvailability = ({ inContexts }) => (
+    <Text fontSize="sm" component="span" className={inContexts ? 'ms-extension-plugin-in-contexts' : 'ms-extension-plugin-not-in-contexts'}>
+        <Glyphicon glyph={inContexts ? 'ok' : 'minus'} />{' '}
+        <Message msgId={inContexts ? 'extensionsManager.pluginInContexts' : 'extensionsManager.pluginNotInContexts'} />
     </Text>
 );
 
+// Plugins are drawn with the cards that the context creator uses for its plugins.
 const ExtensionPlugins = ({ plugins }) => (
-    <Text fontSize="sm" component="ul" className="ms-extension-plugins">
+    <div className="ms-extension-plugins">
+        <Text fontSize="sm" strong><Message msgId="extensionsManager.plugins" /></Text>
         {plugins.map(plugin => (
-            <li key={plugin.name} className="ms-extension-plugin">
-                <span className="ms-extension-plugin-name">{plugin.title || plugin.name}</span>
-                {' '}
-                <span className="ms-extension-plugin-version">{plugin.version || '-'}</span>
-            </li>
+            <SideCard
+                key={plugin.name}
+                className="ms-extension-plugin"
+                size="sm"
+                preview={<Glyphicon glyph={plugin.glyph || MANAGER_TOOL_GLYPH} />}
+                title={<span className="ms-extension-plugin-name">{plugin.title || plugin.name}</span>}
+                description={<span className="ms-extension-plugin-version">{plugin.version || '-'}</span>}
+                caption={<ContextsAvailability inContexts={plugin.inContexts} />}
+            />
         ))}
-    </Text>
+    </div>
 );
 
 const EmptyList = () => (
@@ -44,9 +52,9 @@ const EmptyList = () => (
 );
 
 /**
- * List of the installed extensions.
- * @prop {object[]} extensions installed extensions `[{ name, title, description, version, plugins, hidden }]`,
- * where `plugins` lists name, title and version of each plugin of the extension
+ * List of the installed extensions, drawn as the resource cards of the catalog in list layout.
+ * @prop {object[]} extensions installed extensions `[{ name, title, description, version, glyph, plugins }]`,
+ * where `plugins` lists name, title, version and glyph of each plugin of the extension and whether contexts can use it
  * @prop {function} renderTools returns the tools of an extension (e.g. uninstall), optional
  */
 function ExtensionsList({ extensions, renderTools }) {
@@ -56,17 +64,23 @@ function ExtensionsList({ extensions, renderTools }) {
     return (
         <FlexBox component="ul" column gap="sm" classNames={['ms-extensions-list', '_padding-sm']}>
             {extensions.map(extension => (
-                <FlexBox component="li" key={extension.name} gap="md" centerChildrenVertically
-                    classNames={['ms-extensions-list-entry', 'ms-secondary-colors', '_padding-sm']}>
-                    <FlexBox.Fill>
-                        <Text fontSize="md" strong className="ms-extension-title">{extension.title}</Text>
+                <FlexBox component="li" key={extension.name}
+                    classNames={['ms-extensions-list-entry', 'ms-resource-card', 'ms-resource-card-type-list', 'ms-main-colors', '_interactive']}>
+                    <FlexBox centerChildren className="ms-resource-card-img ms-image-colors">
+                        <Text fontSize="xxl"><Glyphicon glyph={extension.glyph || MANAGER_TOOL_GLYPH} /></Text>
+                    </FlexBox>
+                    <FlexBox.Fill flexBox column gap="sm" classNames={['_padding-sm']}>
+                        <FlexBox gap="sm" centerChildrenVertically>
+                            <FlexBox.Fill>
+                                <Text fontSize="md" strong className="ms-extension-title">{extension.title}</Text>
+                            </FlexBox.Fill>
+                            <Text fontSize="sm" className="ms-extension-version">{extension.version}</Text>
+                            {renderTools ? renderTools(extension) : null}
+                        </FlexBox>
                         <Text fontSize="sm" className="ms-extension-name">{extension.name}</Text>
-                        <Text fontSize="sm" className="ms-extension-description">{extension.description}</Text>
+                        <Text fontSize="sm" className="ms-extension-description ms-resource-card-description">{extension.description}</Text>
                         {extension.plugins?.length ? <ExtensionPlugins plugins={extension.plugins} /> : null}
                     </FlexBox.Fill>
-                    <Text fontSize="sm" className="ms-extension-version">{extension.version}</Text>
-                    <ContextCreatorVisibility hidden={extension.hidden} />
-                    {renderTools ? renderTools(extension) : null}
                 </FlexBox>
             ))}
         </FlexBox>

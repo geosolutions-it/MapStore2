@@ -13,15 +13,19 @@ import { getExtensionInfo } from '../../../utils/ExtensionsUtils';
 
 // The plugins catalog lists every uploaded extension with the first plugin entry of its index.json.
 // Extensions installed by older versions have no `extensionInfo`: their plugin entry describes them.
-const toExtension = (plugin) => {
+// A plugin can be added to contexts only when the catalog lists it and does not hide it.
+const toExtension = (plugin, catalog) => {
     const info = plugin.extensionInfo || getExtensionInfo({ plugins: [plugin] });
     return {
         name: plugin.name,
         title: info.title || plugin.name,
         description: info.description || '',
         version: info.version || '',
-        plugins: info.plugins || [],
-        hidden: !!plugin.hidden
+        glyph: info.glyph,
+        plugins: (info.plugins || []).map(entry => {
+            const listed = catalog.find(({ name }) => name === entry.name);
+            return { ...entry, inContexts: !!listed && !listed.hidden };
+        })
     };
 };
 
@@ -40,7 +44,8 @@ const useInstalledExtensions = () => {
         setError(null);
         return getPluginsConfig()
             .then(config => isMounted(() => {
-                setExtensions((config?.plugins || []).filter(plugin => plugin.extension).map(toExtension));
+                const catalog = config?.plugins || [];
+                setExtensions(catalog.filter(plugin => plugin.extension).map(plugin => toExtension(plugin, catalog)));
                 setLoading(false);
             }))
             .catch(e => isMounted(() => {

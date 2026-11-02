@@ -59,8 +59,8 @@ public class UploadPluginController extends BaseMapStoreController {
 
     private static final String PLUGIN_PATH_PREFIX = "__PLUGIN__/";
     // Fields of index.json copied to the catalog, to describe the extension and its plugins.
-    private static final String[] EXTENSION_INFO_FIELDS = {"title", "description", "version"};
-    private static final String[] PLUGIN_INFO_FIELDS = {"name", "title", "version"};
+    private static final String[] EXTENSION_INFO_FIELDS = {"title", "description", "version", "glyph"};
+    private static final String[] PLUGIN_INFO_FIELDS = {"name", "title", "version", "glyph"};
 
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(false);
@@ -179,7 +179,7 @@ public class UploadPluginController extends BaseMapStoreController {
     }
 
     /**
-     * Returns the title, description and version of the extension, with the plugins it declares.
+     * Returns the title, description, version and glyph of the extension, with the plugins it declares.
      * A field missing at the top level of index.json is taken from the first plugin.
      */
     private ObjectNode getExtensionInfo(JsonNode index, JsonNode plugins) {

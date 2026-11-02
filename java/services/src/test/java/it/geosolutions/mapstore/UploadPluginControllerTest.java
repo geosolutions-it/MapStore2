@@ -588,21 +588,21 @@ public class UploadPluginControllerTest {
 
     @Test
     public void testUploadStoresExtensionInfo() throws IOException {
-        String index = "{\"title\":\"Tools\",\"description\":\"Some tools\",\"version\":\"2.1.0\","
+        String index = "{\"title\":\"Tools\",\"description\":\"Some tools\",\"version\":\"2.1.0\",\"glyph\":\"wrench\","
                 + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"version\":\"1.4.0\"},"
-                + "{\"name\":\"Other\",\"version\":\"0.9.0\"}]}";
-        String expectedInfo = "{\"title\":\"Tools\",\"description\":\"Some tools\",\"version\":\"2.1.0\","
+                + "{\"name\":\"Other\",\"version\":\"0.9.0\",\"glyph\":\"stats\"}]}";
+        String expectedInfo = "{\"title\":\"Tools\",\"description\":\"Some tools\",\"version\":\"2.1.0\",\"glyph\":\"wrench\","
                 + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"version\":\"1.4.0\"},"
-                + "{\"name\":\"Other\",\"version\":\"0.9.0\"}]}";
+                + "{\"name\":\"Other\",\"version\":\"0.9.0\",\"glyph\":\"stats\"}]}";
         assertStoredExtensionInfo(index, expectedInfo);
     }
 
     @Test
     public void testUploadTakesMissingExtensionInfoFromFirstPlugin() throws IOException {
         String index = "{\"version\":\"2.1.0\","
-                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"description\":\"A tool\",\"version\":\"1.4.0\"}]}";
-        String expectedInfo = "{\"title\":\"My tool\",\"description\":\"A tool\",\"version\":\"2.1.0\","
-                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"version\":\"1.4.0\"}]}";
+                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"description\":\"A tool\",\"version\":\"1.4.0\",\"glyph\":\"lock\"}]}";
+        String expectedInfo = "{\"title\":\"My tool\",\"description\":\"A tool\",\"version\":\"2.1.0\",\"glyph\":\"lock\","
+                + "\"plugins\":[{\"name\":\"My\",\"title\":\"My tool\",\"version\":\"1.4.0\",\"glyph\":\"lock\"}]}";
         assertStoredExtensionInfo(index, expectedInfo);
     }
 

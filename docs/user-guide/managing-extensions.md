@@ -8,13 +8,13 @@ As an admin user, it is possible to open the **Extensions Manager** by selecting
 
 ## Installed extensions
 
-The page shows one row for each installed extension, with:
+The page shows one card for each installed extension, with:
 
+* the icon of the extension, when it declares one;
 * the title of the extension and, below it, its name;
-* its description;
 * its version, when the extension declares one;
-* the plugins that the extension adds to MapStore, each one with its version;
-* whether the extension is listed in the context creator. Extensions that only provide pages or configuration to the whole application are hidden there, because they add no tool to a context: this page is where they are managed.
+* its description;
+* the plugins that the extension adds to MapStore, each one with its icon, its version and whether it can be added to an [Application Context](application-context.md#application-context). Plugins that only provide pages or configuration to the whole application cannot be added to a context, because they add no tool to it: this page is where their extension is managed.
 
 ## Install an extension
 
