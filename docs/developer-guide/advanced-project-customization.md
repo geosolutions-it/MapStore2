@@ -37,7 +37,7 @@ Find the entry for `cargo-maven3-plugin` and add the `systemProperties` tag with
                         <datadir.location>[local_path_to_your_datadir]/datadir/[customInstallationFolder]</datadir.location>
                     </systemProperties>
                     <zipUrlInstaller>
-                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/10.1.55/tomcat-10.1.55.zip</url>
+                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/11.0.27/tomcat-11.0.27.zip</url>
                     </zipUrlInstaller>
                 </container>
                 <configuration>

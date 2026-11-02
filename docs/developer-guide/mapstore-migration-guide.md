@@ -172,7 +172,7 @@ The following changes must be applied to your project (see the updated [project 
 ```diff
 -        <tomcat.version>9.0.116</tomcat.version>
 -        <jackson.version>2.16.1</jackson.version>
-+        <tomcat.version>11.0.25</tomcat.version>
++        <tomcat.version>11.0.27</tomcat.version>
 +        <jackson.version>2.22.3</jackson.version>
          <!-- Spring Framework & Security (aligned) -->
 -        <spring.version>5.3.39</spring.version>
