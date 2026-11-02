@@ -10,13 +10,12 @@ import { createPortal } from 'react-dom';
 import { Glyphicon } from 'react-bootstrap';
 import Button from '../layout/Button';
 import { getMessageById } from '../../utils/LocaleUtils';
-import { useInjectedAccess, USER_MENU_SELECTOR, MODAL_SELECTOR, PRIVACY_GLYPH } from './PrivacyAccessButton';
 import { getPolicyLink, policyLinkKeys, policyPagesDocsUrl, usesTemplatePolicyLinks } from '../../utils/PrivacyChoices';
+import { USER_MENU_SELECTOR, MODAL_SELECTOR, PRIVACY_GLYPH } from './constants';
 
-export default function PrivacyPanel({ config, locale, choice, show, storageError, onShow, onSave }, context) {
+export default function PrivacyPanel({ config, locale, choice, show, storageError, hasPrivacyAccess, onShow, onSave }, context) {
     const t = id => getMessageById(context.messages, `privacySettings.${id}`);
     const categories = (config.categories || []).filter(c => ['functional', 'statistics', 'marketing'].includes(c.id));
-    const nativeAccess = useInjectedAccess();
     const closeRef = useRef();
     useEffect(() => {
         // Bootstrap modals listen on the document to keep the focus in their dialog and to close on Escape.
@@ -50,7 +49,7 @@ export default function PrivacyPanel({ config, locale, choice, show, storageErro
     };
     closeRef.current = close;
     return createPortal(<>
-        {!nativeAccess && <div className="mapstore-privacy-access" role="group" aria-label={t('settings')}>
+        {!hasPrivacyAccess && <div className="mapstore-privacy-access" role="group" aria-label={t('settings')}>
             <Button type="button" id="privacy-settings" className="mapstore-privacy-open"
                 title={t('settings')} aria-label={t('settings')} onClick={() => onShow(true)}>
                 <Glyphicon glyph={PRIVACY_GLYPH} aria-hidden="true" /> <span>{t('settings')}</span>

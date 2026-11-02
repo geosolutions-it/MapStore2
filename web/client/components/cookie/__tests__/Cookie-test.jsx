@@ -16,11 +16,6 @@ import { privacyNoticeKey, acknowledgePrivacyNotice } from '../../../utils/Cooki
 import { privacyChoiceKey, makePrivacyChoice, templatePolicyLinks } from '../../../utils/PrivacyChoices';
 import { consentManager } from '../../../utils/ConsentManager';
 import Localized from '../../I18N/Localized';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
-import { FooterPrivacyAccess } from '../PrivacyAccessButton';
-
-const mockStore = configureMockStore();
 
 const messages = {privacySettings: {unused: 'Not used', cookie: 'Cookie Policy', privacy: 'Privacy Policy', terms: 'Terms of Use',
     templateWarning: 'The policy pages are the MapStore templates: the operator of this installation has not configured its own pages yet.',
@@ -223,19 +218,18 @@ describe('Test for Cookie component', () => {
         expect(warn.calls.length).toBe(0);
         warn.restore();
     });
-    it('shows the floating privacy settings button only without an access injected in the page', () => {
+    it('shows the floating privacy settings button only without an access in the page containers', () => {
         const privacy = {enabled: true, policyVersion: 'access', categories: []};
-        const store = mockStore({controls: {privacy: {defaults: privacy}}});
-        const render = footer => ReactTestUtils.act(() => {
-            ReactDOM.render(<Provider store={store}><Localized locale="en-US" messages={messages}>
-                <><Cookie privacy={privacy}/>{footer && <ul><FooterPrivacyAccess/></ul>}</>
-            </Localized></Provider>, document.getElementById('container'));
+        const render = hasPrivacyAccess => ReactTestUtils.act(() => {
+            ReactDOM.render(<Localized locale="en-US" messages={messages}>
+                <Cookie privacy={privacy} hasPrivacyAccess={hasPrivacyAccess}/>
+            </Localized>, document.getElementById('container'));
         });
         render(false);
         expect(document.querySelectorAll('.mapstore-privacy-access #privacy-settings .glyphicon-user-shield').length).toBe(1);
         render(true);
         expect(document.querySelector('.mapstore-privacy-access')).toNotExist();
-        expect(document.querySelectorAll('#privacy-settings').length).toBe(1);
+        expect(document.querySelector('#privacy-settings')).toNotExist();
     });
     it('keeps focus and Escape in the panel while a modal is open', () => {
         const privacy = {enabled: true, policyVersion: 'modal', categories: []};
