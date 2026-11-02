@@ -537,25 +537,6 @@
         "manager": {
           "html": "<h3>Manager</h3><p>MapStore Karten durchsuchen</p>"
         },
-        "extensionsManager": {
-          "noExtensions": "Keine Erweiterung installiert",
-          "noExtensionsDescription": "Installieren Sie eine Erweiterung, um ihre Werkzeuge zu MapStore hinzuzufügen",
-          "loadError": "Die Liste der installierten Erweiterungen konnte nicht geladen werden",
-          "menuTitle": "Erweiterungen verwalten",
-          "install": "Erweiterung installieren",
-          "replacesVersion": "Ersetzt die installierte Version {current} durch die Version {next}",
-          "installedMessage": "Die Erweiterungen sind in der Anwendung verfügbar",
-          "updatedMessage": "Laden Sie die Seite neu, um die aktualisierten Erweiterungen zu verwenden",
-          "uninstall": "Deinstallieren",
-          "cancel": "Abbrechen",
-          "uninstallTitle": "{title} deinstallieren?",
-          "uninstallDescription": "Die Erweiterung und ihre Dateien werden entfernt. Kontexte, die ihr Plugin verwenden, zeigen es nicht mehr an.",
-          "uninstallError": "Die Erweiterung konnte nicht deinstalliert werden",
-          "uninstalledMessage": "{title} wurde deinstalliert",
-          "plugins": "Plugins",
-          "pluginInContexts": "Kann Anwendungskontexten hinzugefügt werden",
-          "pluginNotInContexts": "Kann Anwendungskontexten nicht hinzugefügt werden"
-        },
         "mouseposition": {
           "html": "<h3>Maus Position</h3><p>Kundenspezifische Beispiele</p>"
         },
@@ -606,6 +587,25 @@
       "tagsmanagerTab": "Schlagwörter",
       "ipmanagerTab": "IP-Bereiche",
       "extensionsmanagerTab": "Erweiterungen"
+    },
+    "extensionsManager": {
+      "noExtensions": "Keine Erweiterung installiert",
+      "noExtensionsDescription": "Installieren Sie eine Erweiterung, um ihre Werkzeuge zu MapStore hinzuzufügen",
+      "loadError": "Die Liste der installierten Erweiterungen konnte nicht geladen werden",
+      "menuTitle": "Erweiterungen verwalten",
+      "install": "Erweiterung installieren",
+      "replacesVersion": "Ersetzt die installierte Version {current} durch die Version {next}",
+      "installedMessage": "Die Erweiterungen sind in der Anwendung verfügbar",
+      "updatedMessage": "Laden Sie die Seite neu, um die aktualisierten Erweiterungen zu verwenden",
+      "uninstall": "Deinstallieren",
+      "cancel": "Abbrechen",
+      "uninstallTitle": "{title} deinstallieren?",
+      "uninstallDescription": "Die Erweiterung und ihre Dateien werden entfernt. Kontexte, die ihr Plugin verwenden, zeigen es nicht mehr an.",
+      "uninstallError": "Die Erweiterung konnte nicht deinstalliert werden",
+      "uninstalledMessage": "{title} wurde deinstalliert",
+      "plugins": "Plugins",
+      "pluginInContexts": "Kann Anwendungskontexten hinzugefügt werden",
+      "pluginNotInContexts": "Kann Anwendungskontexten nicht hinzugefügt werden"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
