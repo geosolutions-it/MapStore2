@@ -94,16 +94,13 @@ These steps have to be followed always when preparing a new release.
 
 ## Create and Publish MapStoreExtension release
 
-- [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for [MapstoreExtension](https://github.com/geosolutions-it/MapStoreExtension) with the same name and tag
-  - target of the release is **stable branch** aligned to latest commit in stable branch of main mapstore repo
-  - tag is **vYYYY.XX.mm**
-- [ ] Upload the `SampleExtension.zip` to upload on release:
-  - [Open the page](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/checks.yml). You will see a process running for the stable branch, triggered by **"Update submodules"**. Wait for the end of this task.
-  - When the process is successfully finished **click** on the **"Update submodules"** last successful task. The task page will open.
-  - At the bottom of the page **click** on "**Artifacts**" to download.
-  - **Extract**  from the `artifacts.zip` the `SampleExtension.zip` file
-  - Upload the `SampleExtension.zip` to the draft release created.
-- [ ] Publish the MapStoreExtension release
+- [ ] Run [`Create Release`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/create_release.yml) on MapStoreExtension with the following parameters:
+  - Use workflow from branch `YYYY.XX.xx` (the release branch)
+  - Version to release **YYYY.XX.mm** (version **without** the `v` prefix)
+  - Draft checked (default)
+
+  The workflow stops if the `MapStore2` submodule does not include the tag `vYYYY.XX.mm` (in that case run `Submodules Update` on `YYYY.XX.xx` again). Otherwise it builds `SampleExtension.zip` and creates the draft release `vYYYY.XX.mm` with the zip attached and the release notes generated.
+- [ ] Check the draft and publish it from the [releases page](https://github.com/geosolutions-it/MapStoreExtension/releases)
 
 ## Create and Publish MapStore release
 
