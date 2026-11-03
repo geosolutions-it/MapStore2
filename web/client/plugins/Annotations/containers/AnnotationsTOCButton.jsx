@@ -9,7 +9,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { ANNOTATIONS, isAnnotationLayer } from '../utils/AnnotationsUtils';
+import {
+    ANNOTATIONS,
+    isAnnotationLayer
+} from '../../../utils/AnnotationsLayerUtils';
 import {
     download,
     newAnnotation,

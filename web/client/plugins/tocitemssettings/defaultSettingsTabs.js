@@ -17,7 +17,7 @@ import { defaultProps } from 'recompose';
 import { isCesium } from '../../selectors/maptype';
 
 import {getConfiguredPlugin as getConfiguredPluginUtil } from '../../utils/PluginsUtils';
-import { isAnnotationLayer } from '../Annotations/utils/AnnotationsUtils';
+import { isAnnotationLayer } from '../../utils/AnnotationsLayerUtils';
 import General from '../../components/TOC/fragments/settings/General';
 import Display from '../../components/TOC/fragments/settings/Display';
 

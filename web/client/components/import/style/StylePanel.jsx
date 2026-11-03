@@ -12,7 +12,7 @@ import { Grid, Row, Col, Alert, ButtonToolbar } from 'react-bootstrap';
 
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import { isAnnotation } from '../../../plugins/Annotations/utils/AnnotationsUtils';
+import { isAnnotation } from '../../../utils/AnnotationsLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../utils/StyleUtils';
 
 import Button from '../../misc/Button';

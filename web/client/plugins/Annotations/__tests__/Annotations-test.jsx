@@ -10,7 +10,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import AnnotationsPlugin from '../index';
-import { createAnnotationId, ANNOTATIONS } from '../utils/AnnotationsUtils';
+import {
+    createAnnotationId,
+    ANNOTATIONS
+} from '../../../utils/AnnotationsLayerUtils';
 import { getPluginForTest } from '../../__tests__/pluginsTestUtils';
 
 describe('Annotations Plugin', () => {

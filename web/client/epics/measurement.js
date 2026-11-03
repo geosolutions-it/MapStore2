@@ -41,7 +41,7 @@ import {
 import {updateDockPanelsList} from "../actions/maplayout";
 import { getSelectedAnnotationLayer } from '../plugins/Annotations/selectors/annotations';
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
-import { ANNOTATIONS } from '../plugins/Annotations/utils/AnnotationsUtils';
+import { ANNOTATIONS } from '../utils/AnnotationsLayerUtils';
 
 export const addAnnotationFromMeasureEpic = (action$, store) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)

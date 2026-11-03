@@ -18,7 +18,6 @@ import { MapLibraries } from '../../../utils/MapTypeUtils';
 import MSButton from '../../../components/misc/Button';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import {
-    ANNOTATIONS,
     annotationsSymbolizerDefaultProperties,
     createDefaultStyleSymbolizer,
     validateFeature,
@@ -26,6 +25,7 @@ import {
     parseUpdatedCoordinates,
     getFeatureIcon
 } from '../utils/AnnotationsUtils';
+import { ANNOTATIONS } from '../../../utils/AnnotationsLayerUtils';
 import { computeFeatureMeasurement } from '../../../utils/MeasurementUtils';
 import GeometryEditor from './GeometryEditor';
 import Message from '../../../components/I18N/Message';

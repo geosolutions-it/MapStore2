@@ -8,6 +8,7 @@
 
 import * as wfs from './wfs';
 import * as vector from './vector';
+import { isAnnotationLayer } from '../../utils/AnnotationsLayerUtils';
 
 /**
  * Registry of the services able to feed the attribute table.
@@ -47,7 +48,9 @@ export const getFeatureSourceByType = (type) => sources[type];
  */
 export const getFeatureSourceType = (layer = {}) => layer?.type === 'wms'
     ? layer?.search?.type ?? 'wms'
-    : layer?.type;
+    : isAnnotationLayer(layer)
+        ? undefined
+        : layer?.type;
 
 /**
  * Get the feature source of a layer
