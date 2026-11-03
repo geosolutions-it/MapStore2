@@ -61,4 +61,23 @@ describe('BurgerMenu plugin', () => {
         expect(submenuDiv).toExist();
         expect(submenuDiv.querySelectorAll('.burger-menu-submenu li').length).toBe(1);
     });
+    it('BurgerMenu items with links', () => {
+        const { Plugin } = getPluginForTest(BurgerMenu, {});
+        const items = [{
+            name: 'docs',
+            position: 1,
+            text: 'Docs',
+            action: () => ({ type: 'NO_ACTION' }),
+            selector: () => ({ href: 'https://mapstore.geosolutionsgroup.com/', target: '_blank' })
+        }, {
+            name: 'files',
+            position: 2,
+            text: 'Files',
+            action: () => ({ type: 'NO_ACTION' }),
+            selector: () => ({ href: 'ftp://files.example.com/', target: '_blank' })
+        }];
+        ReactDOM.render(<Plugin items={items}/>, document.getElementById("container"));
+        const hrefs = [...document.querySelectorAll('.dropdown-menu > li > a')].map(a => a.getAttribute('href'));
+        expect(hrefs).toEqual(['https://mapstore.geosolutionsgroup.com/', null]);
+    });
 });

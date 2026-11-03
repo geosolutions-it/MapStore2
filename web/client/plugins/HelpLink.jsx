@@ -11,6 +11,7 @@ import {Glyphicon} from 'react-bootstrap';
 import {get} from 'lodash';
 
 import { createPlugin } from '../utils/PluginsUtils';
+import { getSafeHref } from '../utils/URLUtils';
 import Message from '../components/I18N/Message';
 import help from '../reducers/help';
 
@@ -40,7 +41,7 @@ export default createPlugin('HelpLink', {
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),
             selector: (state, ownProps) => {
-                const docsUrl = get(ownProps, 'docsUrl', 'https://mapstore.readthedocs.io/en/latest/');
+                const docsUrl = getSafeHref(get(ownProps, 'docsUrl', 'https://mapstore.readthedocs.io/en/latest/')) || undefined;
                 return {href: docsUrl, target: 'blank'};
             },
             priority: 2,
@@ -54,7 +55,7 @@ export default createPlugin('HelpLink', {
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),
             selector: (state, ownProps) => {
-                const docsUrl = get(ownProps, 'docsUrl', 'https://mapstore.readthedocs.io/en/latest/');
+                const docsUrl = getSafeHref(get(ownProps, 'docsUrl', 'https://mapstore.readthedocs.io/en/latest/')) || undefined;
                 return { href: docsUrl, target: 'blank'};
             },
             priority: 1,
