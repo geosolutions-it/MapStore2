@@ -190,6 +190,12 @@ describe('Policy links', () => {
         expect(getPolicyLink({links}, 'terms', 'fr-FR')).toBe(undefined);
         expect(getPolicyLink({}, 'cookie', 'en-US')).toBe(undefined);
     });
+    it('getPolicyLink returns undefined for urls with an unsupported protocol', () => {
+        const links = {cookie: {'en-US': 'ftp://example.com/en.html'}, privacy: 'ftp://example.com/privacy.html', terms: 'https://example.com/terms.html'};
+        expect(getPolicyLink({links}, 'cookie', 'en-US')).toBe(undefined);
+        expect(getPolicyLink({links}, 'privacy', 'en-US')).toBe(undefined);
+        expect(getPolicyLink({links}, 'terms', 'en-US')).toBe('https://example.com/terms.html');
+    });
     it('hasPrivacyLinks is true only when at least one page is configured', () => {
         expect(hasPrivacyLinks({links: {terms: 'terms.html'}})).toBe(true);
         expect(hasPrivacyLinks({links: {cookie: {}, privacy: ''}})).toBe(false);
