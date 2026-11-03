@@ -22,6 +22,12 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2026.02.02 to 2026.03.00
 
+### Set minimum NodeJS version to 22
+
+NodeJS 20 reached its end of life in April 2026, so MapStore 2026.03.00 requires **NodeJS 22 as minimum version** to build and run the front-end tooling. NodeJS 24 is the recommended version, and NodeJS 26 is the latest tested.
+
+Please update your build and CI/CD infrastructures to use NodeJS 22 or later. The root `package.json` now declares `"engines": { "node": ">=22" }`, so `npm install` prints an `EBADENGINE` warning when run with an older version (or fails, if `engine-strict` is enabled).
+
 ### Privacy settings and standard sharing
 
 Vanilla enables the common privacy panel of the `Cookie` plugin.
@@ -161,7 +167,7 @@ MapStore has been upgraded to Spring Framework 7 and Spring Security 7, moving f
 #### New deployment requirements
 
 - **Java 17** is now the minimum supported version (Java 8/11 are no longer supported). The CI still tests on Java 17 and 21.
-- **Tomcat 10.1** (Jakarta Servlet API 6.0) is the new reference servlet container. The binary distribution ships Tomcat 11. **Tomcat 9 or older cannot run this version of MapStore**, since they are based on the `javax.*` servlet API.
+- **Tomcat 11** is the new reference servlet container, and the one shipped with the binary distribution. **Tomcat 10.1** (Jakarta Servlet API 6.0) is the minimum supported version. **Tomcat 9 or older cannot run this version of MapStore**, since they are based on the `javax.*` servlet API.
 
 #### Updating a MapStore project
 
@@ -172,7 +178,7 @@ The following changes must be applied to your project (see the updated [project 
 ```diff
 -        <tomcat.version>9.0.116</tomcat.version>
 -        <jackson.version>2.16.1</jackson.version>
-+        <tomcat.version>10.1.55</tomcat.version>
++        <tomcat.version>11.0.27</tomcat.version>
 +        <jackson.version>2.22.3</jackson.version>
          <!-- Spring Framework & Security (aligned) -->
 -        <spring.version>5.3.39</spring.version>
@@ -276,7 +282,7 @@ The following changes must be applied to your project (see the updated [project 
 
 ```diff
 -                    <containerId>tomcat9x</containerId>
-+                    <containerId>tomcat10x</containerId>
++                    <containerId>tomcat11x</containerId>
 ```
 
 Copy the `logging.properties` file from the MapStore repository (`product/cargo/logging.properties`) into the `web/cargo/` folder of your project and reference it in `cargo.jvmargs` with `-Djava.util.logging.config.file=${project.basedir}/cargo/logging.properties`. Note that `${project.basedir}` points to the `web` module, where the Cargo plugin runs. New projects created from the templates already include this file.
@@ -459,7 +465,7 @@ The script must print `No duplicated libraries`. Otherwise it lists the librarie
 
 ### New `viewFramingFilter` in `web.xml`
 
-Add the following filter to your project's `web/src/main/webapp/WEB-INF/web.xml`, mapped on `/index.html` (see the updated [project template](https://github.com/geosolutions-it/MapStore2/blob/master/project/standard/templates/web/src/main/webapp/WEB-INF/web.xml) for reference). It relies on `org.apache.catalina.filters.HttpHeaderSecurityFilter`, already available with the Tomcat 10.1 dependency required by the upgrade above:
+Add the following filter to your project's `web/src/main/webapp/WEB-INF/web.xml`, mapped on `/index.html` (see the updated [project template](https://github.com/geosolutions-it/MapStore2/blob/master/project/standard/templates/web/src/main/webapp/WEB-INF/web.xml) for reference). It relies on `org.apache.catalina.filters.HttpHeaderSecurityFilter`, already available with the Tomcat 11 dependency required by the upgrade above:
 
 ```xml
 <filter>

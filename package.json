@@ -4,6 +4,9 @@
   "description": "MapStore 2",
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
+  "engines": {
+    "node": ">=22"
+  },
   "eslintConfig": {
     "extends": [
       "@mapstore/eslint-config-mapstore"
