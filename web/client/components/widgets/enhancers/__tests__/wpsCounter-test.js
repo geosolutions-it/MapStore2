@@ -44,6 +44,35 @@ describe('wpsChart enhancer', () => {
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
+    it('wpsCounter refetches data when the layer _v_ changes', (done) => {
+        let loadCount = 0;
+        const Sink = wpsCounter(createSink(() => {}));
+        const props = {
+            layer: {
+                id: "test",
+                name: "test",
+                _v_: 1,
+                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
+            options: {
+                aggregateFunction: "Count",
+                aggregationAttribute: "test"
+            },
+            onLoad: () => {
+                loadCount++;
+                if (loadCount === 1) {
+                    setTimeout(() => {
+                        ReactDOM.render(<Sink {...props} layer={{...props.layer, _v_: 2}} />, document.getElementById("container"));
+                    });
+                } else {
+                    expect(loadCount).toBe(2);
+                    done();
+                }
+            }
+        };
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+    });
     it('wpsCounter error management', (done) => {
         const Sink = wpsCounter(createSink( ({error, loading} = {}) => {
             if (!loading && error) {

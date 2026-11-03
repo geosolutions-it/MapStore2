@@ -64,7 +64,8 @@ const dataStreamFactory = ($props) =>
                 return (newProps.layer
                     && getWpsUrl(layer) === getWpsUrl(newProps.layer)
                     && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
-                    && layer.loadingError === newProps.layer.loadingError)
+                    && layer.loadingError === newProps.layer.loadingError
+                    && layer._v_ === newProps.layer._v_)
                     && sameOptions(options, newProps.options)
                     && sameFilter(filter, newProps.filter);
             })
