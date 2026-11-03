@@ -302,6 +302,16 @@ export const extractTileMatrixFromSources = (sources, layer) => {
 };
 
 /**
+ * Restores inline tile matrix definitions for layers using the map sources.
+ * @param {object} sources sources from a saved map configuration
+ * @param {object[]} layers map layers
+ * @return {object[]} layers with tile matrix definitions, or the original layers when sources are absent
+ */
+export const addTileMatrixFromSourcesToLayers = (sources, layers) => sources && layers
+    ? layers.map(layer => ({ ...layer, ...extractTileMatrixFromSources(sources, { ...layer }) }))
+    : layers;
+
+/**
  * It extracts tile matrix set from layers and add them to sources map object
  *
  * @param  {object} groupedLayersByUrl layers grouped by url

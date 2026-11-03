@@ -13,7 +13,8 @@ import {
     denormalizeGroups,
     splitMapAndLayers,
     sortGroups,
-    changeNodeConfiguration
+    changeNodeConfiguration,
+    addTileMatrixFromSourcesToLayers
 } from '../../../utils/LayersUtils';
 import { selectedNodesIdsToObject } from '../utils/TOCUtils';
 import {
@@ -176,7 +177,8 @@ function TOC({
         const mapConfig = saveMapConfiguration(map, currentLayers || layers.flat, currentGroups || layers.groups, []);
         const newMap = {
             ...map,
-            layers: mapConfig?.map?.layers,
+            // The TOC emits renderable layers, while saved layers reference matrix definitions in sources.
+            layers: addTileMatrixFromSourcesToLayers(mapConfig?.map?.sources, mapConfig?.map?.layers),
             groups: mapConfig?.map?.groups
         };
         onChangeMap(newMap);
