@@ -35,7 +35,7 @@
         <mapstore-services.version>1.13-SNAPSHOT</mapstore-services.version>
         <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
         <http_proxy.version>1.7-SNAPSHOT</http_proxy.version>
-        <print-lib.version>2.5.2</print-lib.version>
+        <print-lib.version>2.5-SNAPSHOT</print-lib.version>
     </properties>
 
     <build>
