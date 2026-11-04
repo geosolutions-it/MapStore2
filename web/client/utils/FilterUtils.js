@@ -21,7 +21,7 @@ import { ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators } from
 import { read } from './ogc/Filter/CQL/parser';
 import fromObject from './ogc/Filter/fromObject';
 import filterBuilder from './ogc/Filter/FilterBuilder';
-import { reprojectGeoJson, reproject, calculateCircleSegments, CIRCLE_SAGITTA_RATIO } from './CoordinatesUtils';
+import { reprojectGeoJson, reproject, CIRCLE_SAGITTA_RATIO } from './CoordinatesUtils';
 
 export const cqlToOgc = (cqlFilter, fOpts) => {
     const fb = filterBuilder(fOpts);
@@ -829,17 +829,7 @@ export const simplifyCircleRing = function(ring) {
     if (!(radius > 0)) {
         return closed;
     }
-    const sides = calculateCircleSegments(radius);
-    let vertices = open;
-    if (open.length > sides) {
-        const startAngle = Math.atan2(open[0][1] - cy, open[0][0] - cx);
-        vertices = [];
-        for (let i = 0; i < sides; i++) {
-            const angle = startAngle + 2 * Math.PI * i / sides;
-            vertices.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
-        }
-    }
-    const rounded = vertices.map(([x, y]) => [formatCircleCoordinate(x, radius), formatCircleCoordinate(y, radius)]);
+    const rounded = open.map(([x, y]) => [formatCircleCoordinate(x, radius), formatCircleCoordinate(y, radius)]);
     return [...rounded, rounded[0]];
 };
 
