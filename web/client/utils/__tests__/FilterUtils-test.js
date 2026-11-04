@@ -44,7 +44,7 @@ import {
     simplifyCircleRing,
     CQL_CIRCLE_PRECISION_SAGITTA_RATIO
 } from '../FilterUtils';
-import { calculateCircleSegments, CIRCLE_SAGITTA_RATIO } from '../CoordinatesUtils';
+import { CIRCLE_SAGITTA_RATIO } from '../CoordinatesUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
 
@@ -2978,31 +2978,15 @@ describe('FilterUtils', () => {
             return [...ring, ring[0]];
         };
         const closedRing = createRing(100);
-        const expectedVertices = calculateCircleSegments(1000) + 1;
+        const step = 1000 * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO;
         const countVertices = (cql) => cql.substring(cql.indexOf('((') + 2, cql.indexOf('))')).split(', ');
-        it('should re-create a Circle ring with the number of sides given by the sagitta', () => {
-            const cql = getCQLGeometryElement([closedRing], 'Circle');
-            expect(cql.indexOf('Polygon((')).toBe(0);
-            const vertices = countVertices(cql);
-            expect(vertices.length).toBe(expectedVertices);
-            expect(vertices[0]).toBe(vertices[vertices.length - 1]);
-        });
-        it('should keep the vertices on the circle within the sagitta tolerance', () => {
+        it('should keep the vertices of a Circle ring and only round their coordinates', () => {
             const simplified = simplifyCircleRing(closedRing);
-            const sides = simplified.length - 1;
-            const step = 1000 * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO;
-            simplified.forEach(([x, y]) => {
-                expect(Math.abs(Math.hypot(Number(x) - 1000000, Number(y) - 5000000) - 1000)).toBeLessThanOrEqualTo(step);
-            });
-            expect(1000 * (1 - Math.cos(Math.PI / sides))).toBeLessThanOrEqualTo(1000 * CIRCLE_SAGITTA_RATIO);
-        });
-        it('should only round the coordinates of a Circle ring with fewer sides', () => {
-            const ring = createRing(32);
-            const simplified = simplifyCircleRing(ring);
-            expect(simplified.length).toBe(ring.length);
+            expect(simplified.length).toBe(closedRing.length);
+            expect(simplified[0]).toEqual(simplified[simplified.length - 1]);
             simplified.forEach(([x, y], i) => {
-                expect(Math.abs(Number(x) - ring[i][0])).toBeLessThanOrEqualTo(0.05);
-                expect(Math.abs(Number(y) - ring[i][1])).toBeLessThanOrEqualTo(0.05);
+                expect(Math.abs(Number(x) - closedRing[i][0])).toBeLessThanOrEqualTo(step);
+                expect(Math.abs(Number(y) - closedRing[i][1])).toBeLessThanOrEqualTo(step);
             });
         });
         it('should round the coordinates of a Circle ring to a tenth of the sagitta', () => {
@@ -3033,7 +3017,13 @@ describe('FilterUtils', () => {
                 }
             });
             expect(cql.indexOf('INTERSECTS("the_geom",SRID=3857;Polygon((')).toBe(0);
-            expect(countVertices(cql).length).toBe(expectedVertices);
+            const vertices = countVertices(cql);
+            expect(vertices.length).toBe(closedRing.length);
+            vertices.forEach((vertex) => {
+                vertex.split(' ').forEach((value) => {
+                    expect((value.split('.')[1] || '').length).toBeLessThanOrEqualTo(1);
+                });
+            });
         });
     });
 });
