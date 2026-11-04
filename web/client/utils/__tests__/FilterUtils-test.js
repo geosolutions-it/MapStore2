@@ -44,7 +44,9 @@ import {
     simplifyCircleRing,
     CQL_CIRCLE_PRECISION_SAGITTA_RATIO
 } from '../FilterUtils';
-import { CIRCLE_SAGITTA_RATIO } from '../CoordinatesUtils';
+import { CIRCLE_SAGITTA_RATIO, calculateCircleSegments } from '../CoordinatesUtils';
+import { circular } from 'ol/geom/Polygon';
+import { getDistance } from 'ol/sphere';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
 
@@ -3003,11 +3005,31 @@ describe('FilterUtils', () => {
                 expect(y.indexOf('e')).toBe(-1);
             });
         });
+        it('should round a geodesic circle ring in EPSG:4326 within a tenth of the sagitta', () => {
+            const radius = 1000;
+            const ring = circular([146.9, -41.4], radius, calculateCircleSegments(radius)).getCoordinates()[0];
+            const simplified = simplifyCircleRing(ring);
+            expect(simplified.length).toBe(ring.length);
+            simplified.forEach(([x, y], i) => {
+                expect((x.split('.')[1] || '').length).toBeLessThanOrEqualTo(6);
+                expect((y.split('.')[1] || '').length).toBeLessThanOrEqualTo(6);
+                expect(getDistance(ring[i], [Number(x), Number(y)])).toBeLessThanOrEqualTo(radius * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO);
+            });
+            const cql = processCQLSpatialFilter({
+                spatialField: {
+                    method: 'Circle',
+                    operation: 'INTERSECTS',
+                    attribute: 'the_geom',
+                    geometry: { type: 'Polygon', projection: 'EPSG:4326', coordinates: [ring] }
+                }
+            });
+            expect(cql.indexOf('INTERSECTS("the_geom",SRID=4326;Polygon((')).toBe(0);
+        });
         it('should not simplify a Polygon ring', () => {
             const cql = getCQLGeometryElement([closedRing], 'Polygon');
             expect(countVertices(cql).length).toBe(101);
         });
-        it('should simplify the geometry of a Circle spatial filter', () => {
+        it('should simplify the geometry of a Circle spatial filter in EPSG:3857', () => {
             const cql = processCQLSpatialFilter({
                 spatialField: {
                     method: 'Circle',
