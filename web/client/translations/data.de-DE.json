@@ -1907,6 +1907,7 @@
       "reset": "Zurücksetzen",
       "options": "Optionen",
       "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt",
+      "cog_crs_not_identified": "Das Koordinatenreferenzsystem der COG-Datei kann nicht identifiziert werden (EPSG-Code fehlt): Der Layer kann nicht hinzugefügt werden",
       "add": "Hinzufügen",
       "service": "Service",
       "servicePlaceholder": "Geben Sie einen Service ein",

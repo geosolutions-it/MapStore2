@@ -1868,6 +1868,7 @@
       "reset": "Reset",
       "options": "Opciones",
       "srs_not_allowed": "Este servicio no soporta el sistema de coordernadas geográficas del mapa",
+      "cog_crs_not_identified": "No se puede identificar el sistema de referencia de coordenadas del archivo COG (falta el código EPSG): la capa no se puede añadir",
       "add": "Añadir",
       "servicePlaceholder": "escribe un servicio",
       "service": "Servicio",

@@ -1201,6 +1201,7 @@
       "reset": "Očisti",
       "options": "Mogućnosti",
       "srs_not_allowed": "Projekcija karte nije podržane od strane ovoga servisa",
+      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified (missing EPSG code): the layer cannot be added",
       "add": "Dodaj",
       "service": "Servis",
       "servicePlaceholder": "unesi servis",
