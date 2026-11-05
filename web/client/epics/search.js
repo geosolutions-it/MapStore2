@@ -372,7 +372,9 @@ export const searchOnStartEpic = (action$, store) =>
                                     addPopup(uuid(), {
                                         component: IDENTIFY_POPUP,
                                         maxWidth: 600,
-                                        position: { coordinates: [x, y] }
+                                        position: { coordinates: [x, y] },
+                                        autoPan: true,
+                                        autoPanMargin: 70
                                     })
                                 );
                             } else {
