@@ -120,6 +120,7 @@ Layers.registerType('arcgis-feature', {
             || !isEqual(oldOptions.requestRuleRefreshHash, options.requestRuleRefreshHash)
             || oldOptions.strategy !== options.strategy
             || oldOptions.name !== options.name
+            || !isEqual(oldOptions._v_, options._v_)
         ) {
             source.setLoader(createLoader(source, {
                 ...options,
