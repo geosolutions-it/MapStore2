@@ -57,6 +57,8 @@
       "label": {
         "default": "Activer le rafraîchissement automatique",
         "lastUpdated": "Dernier rafraîchissement",
+        "refreshNow": "Actualiser maintenant",
+        "paused": "En pause pendant la modification",
         "addLayer": "Actualisation - configuration des couches",
         "addLayerPlaceholder": "Sélectionner...",
         "removeLayer": "Supprimer la couche",

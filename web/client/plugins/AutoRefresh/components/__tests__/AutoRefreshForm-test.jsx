@@ -11,8 +11,11 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
 import ReactSelect from 'react-select';
+import reactSelectStyles from '!!raw-loader!react-select/dist/react-select.css';
+import autoRefreshStyles from '!!raw-loader!less-loader!../../../../themes/default/less/autorefresh.less';
 
 import AutoRefreshForm from '../AutoRefreshForm';
+import AutoRefreshMenu from '../AutoRefreshMenu';
 
 describe('AutoRefreshForm component', () => {
     let container;
@@ -72,6 +75,36 @@ describe('AutoRefreshForm component', () => {
         expect(handleAddLayer).toHaveBeenCalledWith('layer-1', 60);
     });
 
+    it('opens the layer list above the footer selector without clipping or losing selection', () => {
+        const handleAddLayer = expect.createSpy();
+        const layers = Array.from({ length: 30 }, (_, index) => ({ id: `layer-${index}`, title: `Layer ${index}` }));
+        Object.assign(container.style, { position: 'fixed', bottom: '24px', right: '24px' });
+        // Mount styles with the fixture because other suites clear document.head.
+        ReactDOM.render(
+            <React.Fragment>
+                <style>{`${reactSelectStyles}\n${autoRefreshStyles}`}</style>
+                <AutoRefreshMenu>
+                    <AutoRefreshForm {...defaultProps} availableLayers={layers} activeLayers={layers} handleAddLayer={handleAddLayer} />
+                </AutoRefreshMenu>
+            </React.Fragment>,
+            container
+        );
+
+        const control = container.querySelector('.Select-control');
+        TestUtils.Simulate.mouseDown(control, { button: 0 });
+
+        const menu = container.querySelector('.Select-menu-outer');
+        const menuBounds = menu.getBoundingClientRect();
+        expect(menuBounds.height).toBeGreaterThan(0);
+        expect(menuBounds.bottom).toBeLessThanOrEqualTo(control.getBoundingClientRect().top);
+        expect(menu.contains(document.elementFromPoint(menuBounds.left + 10, menuBounds.top + 10))).toBe(true);
+        const selectedLayers = container.querySelector('.ms-autorefresh-selected-layers');
+        expect(selectedLayers.scrollHeight).toBeGreaterThan(selectedLayers.clientHeight);
+
+        TestUtils.Simulate.mouseDown(menu.querySelector('.Select-option'), { button: 0 });
+        expect(handleAddLayer).toHaveBeenCalledWith('layer-0', 60);
+    });
+
     it('does not add a layer when the placeholder option is selected', () => {
         const handleAddLayer = expect.createSpy();
         getSelect(renderComponent({ handleAddLayer })).props.onChange({ value: 'none' });
@@ -94,11 +127,11 @@ describe('AutoRefreshForm component', () => {
     it('reports numeric interval changes with the layer id', () => {
         const handleIntervalChange = expect.createSpy();
         renderComponent({
-            activeLayers: [{ id: 'layer-1', title: 'Layer 1', visibility: true, autoRefreshInterval: 45 }],
+            activeLayers: [{ id: 'layer-1', title: 'Layer 1', visibility: true, autoRefreshInterval: 45000 }],
             handleIntervalChange
         });
 
-        TestUtils.Simulate.change(container.querySelector('input[type="number"]'), { target: { value: '90' } });
+        TestUtils.Simulate.blur(container.querySelector('input[type="number"]'), { target: { value: '90' } });
 
         expect(handleIntervalChange).toHaveBeenCalledWith(90, 'layer-1');
     });
@@ -114,4 +147,14 @@ describe('AutoRefreshForm component', () => {
         expect(container.querySelectorAll('.ms-autorefresh-form-group-hidden').length).toBe(1);
         expect(container.querySelectorAll('.ms-autorefresh-form-group-inactive').length).toBe(2);
     });
+    it('restores the default when a cleared interval loses focus', () => {
+        const handleIntervalChange = expect.createSpy();
+        renderComponent({ activeLayers: [{ id: 'roads', title: 'Roads', autoRefreshInterval: 60000 }], handleIntervalChange });
+        const input = container.querySelector('input[type="number"]');
+        input.value = '';
+        TestUtils.Simulate.blur(input);
+        expect(input.value).toBe('60');
+        expect(handleIntervalChange).toHaveBeenCalledWith(60, 'roads');
+    });
+
 });

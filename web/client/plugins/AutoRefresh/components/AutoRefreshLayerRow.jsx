@@ -13,7 +13,7 @@ import { formatDate } from '../constants';
 const AutoRefreshLayerRow = ({layer}) => {
     const getFullyQualifiedLayerTitle = React.useCallback(() => {
         const title = layer.title;
-        const interval = `(${layer.autoRefreshInterval}s)`;
+        const interval = `(${layer.autoRefreshInterval / 1000}s)`;
         const lastUpdate = layer.visibility && layer._v_ ? formatDate(layer._v_) : '';
         return `${title} ${interval} ${lastUpdate}`;
     }, [layer]);
@@ -29,7 +29,7 @@ const AutoRefreshLayerRow = ({layer}) => {
             <span className="glyphicon glyphicon-refresh"/>
             <span>{formatDate(layer._v_)}</span>
         </div>}
-        <span className="ms-autorefresh-layer-summary__row__interval badge badge-info">{layer.autoRefreshInterval}s</span>
+        <span className="ms-autorefresh-layer-summary__row__interval badge badge-info">{layer.autoRefreshInterval / 1000}s</span>
     </div>);
 };
 

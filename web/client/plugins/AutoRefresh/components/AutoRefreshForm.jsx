@@ -15,7 +15,7 @@ import { getMessageById } from "../../../utils/LocaleUtils";
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import ButtonRB from '../../../components/misc/Button';
 import Message from '../../../components/I18N/Message';
-import { AUTOREFRESH_STEP_INTERVAL_IN_SECONDS, formatDate } from '../constants';
+import { AUTOREFRESH_STEP_INTERVAL_IN_SECONDS, AUTOREFRESH_MAXIMUM_REFRESH_INTERVAL, formatDate } from '../constants';
 
 const SelectSync = ReactSelect;
 const Button = tooltip(ButtonRB);
@@ -32,28 +32,29 @@ const AutoRefreshForm = ({
 
     const [filterText, setFilterText] = React.useState('');
     const filteredLayers = React.useMemo(
-        () => activeLayers.filter(layer => layer.title.toLowerCase().includes(filterText.toLowerCase())),
+        () => activeLayers.filter(layer => String(layer.title || layer.name || '').toLowerCase().includes(filterText.toLowerCase())),
         [filterText, activeLayers]
     );
 
     const onIntervalChange = (event, layer) => {
         const { value } = event.target || {};
         const numericValue = Number(value);
-
-        handleIntervalChange(numericValue, layer.id);
+        const interval = Number.isFinite(numericValue) && numericValue > 0 && numericValue <= AUTOREFRESH_MAXIMUM_REFRESH_INTERVAL / 1000
+            ? Math.max(minimumRefreshInterval || 0, numericValue) : defaultRefreshInterval;
+        event.target.value = interval;
+        handleIntervalChange(interval, layer.id);
     };
 
     const onAddLayer = (e) => {
-        if (e.value === "none") {
+        if (!e || e.value === "none") {
             return;
         }
 
         handleAddLayer(e.value, defaultRefreshInterval);
-        e.value = "none";
     };
 
     const getLayers = () => {
-        return availableLayers.filter(layer => layer.title.toLowerCase().includes(filterText.toLowerCase())).map(l => ({ value: l.id, label: l.title }));
+        return availableLayers.filter(layer => String(layer.title || layer.name || '').toLowerCase().includes(filterText.toLowerCase())).map(l => ({ value: l.id, label: l.title }));
     };
 
     return (
@@ -70,6 +71,8 @@ const AutoRefreshForm = ({
                         options={getLayers()}
                         value=""
                         onChange={onAddLayer}
+                        menuContainerStyle={{ top: 'auto', bottom: '100%' }}
+                        menuStyle={{ maxHeight: 'min(200px, 25vh)' }}
                         placeholder={<Message msgId="autorefresh.label.add.placeholder" />}
                     />
                 </FormGroup>
@@ -90,7 +93,7 @@ const AutoRefreshForm = ({
                     </InputGroup>
                 </FormGroup>
             </Form>
-            <form>
+            <form className="ms-autorefresh-selected-layers">
                 {filteredLayers.map(layer => {
                     return (
                         <section className={"ms-autorefresh-form-group" + (layer.visibility ? '' : ' ms-autorefresh-form-group-hidden') + (layer.visibility && layer._v_ ? '' : ' ms-autorefresh-form-group-inactive')}
@@ -110,9 +113,12 @@ const AutoRefreshForm = ({
                             <InputGroup className="ms-autorefresh-form-group__input">
                                 <FormControl
                                     type="number"
-                                    value={layer.autoRefreshInterval ?? defaultRefreshInterval}
-                                    onChange={(e) => onIntervalChange(e, layer)}
+                                    key={`${layer.id}:${layer.autoRefreshInterval}`}
+                                    defaultValue={layer.autoRefreshInterval !== undefined ? layer.autoRefreshInterval / 1000 : defaultRefreshInterval}
+                                    onBlur={(e) => onIntervalChange(e, layer)}
+                                    aria-label={layer.title}
                                     min={minimumRefreshInterval}
+                                    max={AUTOREFRESH_MAXIMUM_REFRESH_INTERVAL / 1000}
                                     step={AUTOREFRESH_STEP_INTERVAL_IN_SECONDS}
                                 />
                                 <InputGroup.Addon>

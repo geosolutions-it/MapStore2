@@ -27,7 +27,8 @@ const createLoader = (options) => {
     const strategy = getEffectiveStrategy(options);
     const callOptions = {
         authSourceId: options.security?.sourceId,
-        maxRecordCount: options.maxRecordCount
+        maxRecordCount: options.maxRecordCount,
+        params: { ...(options._v_ !== undefined && { _v_: options._v_ }) }
     };
     if (strategy === 'bbox' || strategy === 'tile') {
         return (extent) => {
@@ -35,6 +36,7 @@ const createLoader = (options) => {
             return fetchFeatureLayerCollection(options.url, options.name, {
                 ...callOptions,
                 params: {
+                    ...callOptions.params,
                     geometry: `${xmin},${ymin},${xmax},${ymax}`,
                     geometryType: 'esriGeometryEnvelope',
                     spatialRel: 'esriSpatialRelIntersects',

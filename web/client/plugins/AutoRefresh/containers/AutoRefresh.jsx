@@ -6,79 +6,71 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from 'react';
-import {Checkbox  } from "react-bootstrap";
-
+import React from 'react';
+import { Checkbox, Dropdown, Glyphicon } from 'react-bootstrap';
 import Message from '../../../components/I18N/Message';
-import {
-    AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
-    AUTOREFRESH_MINIMUM_REFRESH_INTERVAL
-} from '../constants';
+import { ButtonWithTooltip } from '../../../components/misc/Button';
+import { AUTOREFRESH_DEFAULT_REFRESH_INTERVAL, AUTOREFRESH_MINIMUM_REFRESH_INTERVAL, formatDate } from '../constants';
 import AutoRefreshInformations from '../components/AutoRefreshInformations';
-import AutoRefreshSettings from '../components/AutoRefreshSettings';
+import AutoRefreshSettings, { AutoRefreshSettingsForm } from '../components/AutoRefreshSettings';
+import AutoRefreshMenu from '../components/AutoRefreshMenu';
+import AutoRefreshLayerRow from '../components/AutoRefreshLayerRow';
 
-const AUTHORIZED_ACCESS_ROLES = ['ADMIN'];
-
-/**
- * AutoRefresh container component. It manages the state and the logic of the AutoRefresh plugin.
- * @param {object} props - The props of the container
- * @param {number} props.defaultRefreshInterval - The default refresh interval in milliseconds
- * @param {number} props.minimumRefreshInterval - The minimum refresh interval in milliseconds
- * @param {array} props.userRoles - The array of user roles
- * @param {function} props.onUpdateNode - The function to update a node in the store
- * @param {boolean} props.enabled - Indicates if the auto-refresh is enabled
- * @param {array} props.availableLayers - The array of available layers for auto-refresh
- * @param {array} props.activeLayers - The array of currently active layers for auto-refresh
- * @param {function} props.onStart - The function to start the auto-refresh
- * @param {function} props.onStop - The function to stop the auto-refresh
- */
 const AutoRefreshContainer = ({
-    // Configured by the user when added to a Context
     defaultRefreshInterval = AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
     minimumRefreshInterval = AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,
-
-    // Common store
-    userRoles,
-
-    // Common actions
-    onUpdateNode,
-
-    // AutoRefresh store
-    enabled,
-    availableLayers,
-    activeLayers,
-
-    // AutoRefresh actions
-    onStart,
-    onStop
+    canConfigure = false,
+    enabled = false,
+    paused = false,
+    lastRefresh,
+    availableLayers = [],
+    activeLayers = [],
+    eligibleCount = 0,
+    sidebar = false,
+    onUpdateNode = () => {},
+    onStart = () => {},
+    onStop = () => {},
+    onRefreshNow = () => {}
 }) => {
-    const [lastUpdatedText] = useState(null);
-
-    const handleAutoRefreshActivated = (event) => {
-        const { checked } = event.target || {};
-        if (checked) {
-            onStart();
-        } else {
-            onStop();
-        }
+    const settings = {
+        defaultRefreshInterval: defaultRefreshInterval / 1000,
+        minimumRefreshInterval: minimumRefreshInterval / 1000,
+        availableLayers, activeLayers, onUpdateNode
     };
-
-    return (<div className="ms-autorefresh-wrapper">
-        <Checkbox id="autorefresh" inline checked={enabled} onChange={handleAutoRefreshActivated}>
-            <Message msgId={lastUpdatedText ? 'autorefresh.label.lastUpdated' : 'autorefresh.label.default'}/>
+    const summary = activeLayers.map(layer => `${layer.title}: ${layer.autoRefreshInterval / 1000}s`).join('\n');
+    const controls = (<>
+        <Checkbox id={sidebar ? 'autorefresh-dashboard' : 'autorefresh'} inline checked={enabled} title={summary}
+            onChange={event => event.target.checked ? onStart() : onStop()}>
+            <Message msgId="autorefresh.label.default"/>
         </Checkbox>
-
-        {/* Admin users see the settings panel */}
-        {AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <AutoRefreshSettings
-            defaultRefreshInterval={defaultRefreshInterval / 1000}
-            minimumRefreshInterval={minimumRefreshInterval / 1000}
-            availableLayers={availableLayers}
-            activeLayers={activeLayers}
-            onUpdateNode={onUpdateNode}
-        />}
-        {/* Non-admin users see the layers information's panel */}
-        {!AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <AutoRefreshInformations
-            layers={Object.values(activeLayers)}/>}
+        <ButtonWithTooltip bsStyle="link" className="ms-autorefresh-button" disabled={!eligibleCount || paused}
+            tooltipId="autorefresh.label.refreshNow" onClick={() => onRefreshNow()}>
+            <Glyphicon glyph="refresh"/>
+        </ButtonWithTooltip>
+        {paused && <span role="status"><Message msgId="autorefresh.label.paused"/></span>}
+        {lastRefresh && <time className="ms-autorefresh-last-refresh" dateTime={new Date(lastRefresh).toISOString()}>
+            <Message msgId="autorefresh.label.lastUpdated"/>: {formatDate(lastRefresh)}
+        </time>}
+    </>);
+    if (sidebar) {
+        return (<Dropdown id="ms-autorefresh-dashboard">
+            <ButtonWithTooltip bsRole="toggle" bsStyle={enabled ? 'primary' : 'tray'} className="square-button btn btn-tray"
+                tooltipId="autorefresh.label.default" tooltipPosition="left">
+                <Glyphicon glyph="refresh"/>
+            </ButtonWithTooltip>
+            <AutoRefreshMenu bsRole="menu" sidebar>
+                <div className="ms-autorefresh-wrapper">{controls}</div>
+                {canConfigure ? <AutoRefreshSettingsForm {...settings}/>
+                    : <div className="ms-autorefresh-layers-summary">
+                        {!activeLayers.length && <Message msgId="autorefresh.label.noLayers"/>}
+                        {activeLayers.map(layer => <AutoRefreshLayerRow key={layer.id} layer={layer}/>)}
+                    </div>}
+            </AutoRefreshMenu>
+        </Dropdown>);
+    }
+    return (<div className="ms-autorefresh-wrapper">
+        {controls}
+        {canConfigure ? <AutoRefreshSettings {...settings}/> : <AutoRefreshInformations layers={activeLayers}/>}
     </div>);
 };
 

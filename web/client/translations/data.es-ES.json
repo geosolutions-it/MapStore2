@@ -57,6 +57,8 @@
       "label": {
         "default": "Activar actualización automática",
         "lastUpdated": "Última actualización",
+        "refreshNow": "Actualizar ahora",
+        "paused": "En pausa durante la edición",
         "addLayer": "Actualización automática - configuración de capas",
         "addLayerPlaceholder": "Seleccionar...",
         "removeLayer": "Eliminar capa",

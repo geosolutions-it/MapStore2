@@ -57,6 +57,8 @@
       "label": {
         "default": "Automatische Aktualisierung aktivieren",
         "lastUpdated": "Letzte Aktualisierung",
+        "refreshNow": "Jetzt aktualisieren",
+        "paused": "Während der Bearbeitung pausiert",
         "addLayer": "Automatische Aktualisierung - Ebenenkonfiguration",
         "addLayerPlaceholder": "Auswählen...",
         "removeLayer": "Ebene entfernen",

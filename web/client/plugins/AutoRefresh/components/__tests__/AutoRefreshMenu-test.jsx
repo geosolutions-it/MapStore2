@@ -25,13 +25,13 @@ describe('AutoRefreshMenu component', () => {
         document.body.removeChild(container);
     });
 
-    it('renders children inside a right-aligned scrollable dropdown menu', () => {
+    it('renders children inside a right-aligned menu without clipping nested dropdowns', () => {
         ReactDOM.render(<AutoRefreshMenu><span className="menu-content">Content</span></AutoRefreshMenu>, container);
 
         const menu = container.querySelector('.dropdown-menu');
         expect(menu.querySelector('.menu-content').textContent).toBe('Content');
         expect(menu.style.right).toBe('0px');
-        expect(menu.style.overflowY).toBe('auto');
+        expect(menu.style.overflowY).toBe('visible');
         expect(menu.style.maxHeight).toBe('calc(70vh)');
     });
 });

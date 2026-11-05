@@ -73,6 +73,27 @@ describe('wpsChart enhancer', () => {
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
+    it('keeps filter and option invalidation while auto refresh is active', (done) => {
+        let count = 0;
+        const filter = {};
+        const Sink = wpsCounter(createSink(() => {}));
+        const props = {
+            layer: { id: 'test', name: 'test', wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate' },
+            options: { aggregateFunction: 'Count', aggregationAttribute: 'test' },
+            autoRefreshActive: true,
+            autoRefreshLayers: [{ id: 'test', _v_: 1 }],
+            onLoad: () => {
+                count++;
+                if (count === 1) setTimeout(() => ReactDOM.render(<Sink {...props} filter={filter}/>, document.getElementById('container')));
+                else if (count === 2) setTimeout(() => ReactDOM.render(<Sink {...props} filter={filter} options={{ ...props.options, aggregateFunction: 'Sum' }}/>, document.getElementById('container')));
+                else {
+                    expect(count).toBe(3);
+                    done();
+                }
+            }
+        };
+        ReactDOM.render(<Sink {...props}/>, document.getElementById('container'));
+    });
     it('wpsCounter error management', (done) => {
         const Sink = wpsCounter(createSink( ({error, loading} = {}) => {
             if (!loading && error) {

@@ -44,7 +44,7 @@ const AutoRefreshInformations = ({
 }, {messages}) => {
     const [filterText, setFilterText] = React.useState('');
     const filteredLayers = React.useMemo(
-        () => layers.filter(l => l.title.toLowerCase().includes(filterText.toLowerCase())),
+        () => layers.filter(l => String(l.title || l.name || '').toLowerCase().includes(filterText.toLowerCase())),
         [filterText, layers]
     );
 

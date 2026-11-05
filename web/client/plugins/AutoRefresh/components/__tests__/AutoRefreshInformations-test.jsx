@@ -41,8 +41,8 @@ describe('AutoRefreshInformations component', () => {
     it('renders each layer title and interval in the summary', () => {
         renderComponent({
             layers: [
-                { id: 'layer-1', title: 'Roads', autoRefreshInterval: 60, visibility: true, _v_: 1 },
-                { id: 'layer-2', title: 'Buildings', autoRefreshInterval: 120, visibility: false }
+                { id: 'layer-1', title: 'Roads', autoRefreshInterval: 60000, visibility: true, _v_: 1 },
+                { id: 'layer-2', title: 'Buildings', autoRefreshInterval: 120000, visibility: false }
             ]
         });
 
@@ -56,8 +56,8 @@ describe('AutoRefreshInformations component', () => {
     it('marks hidden and inactive layers in the summary', () => {
         renderComponent({
             layers: [
-                { id: 'hidden', title: 'Hidden', autoRefreshInterval: 60, visibility: false },
-                { id: 'stale', title: 'Stale', autoRefreshInterval: 60, visibility: true }
+                { id: 'hidden', title: 'Hidden', autoRefreshInterval: 60000, visibility: false },
+                { id: 'stale', title: 'Stale', autoRefreshInterval: 60000, visibility: true }
             ]
         });
 

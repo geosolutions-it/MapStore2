@@ -15,11 +15,13 @@ const AutoRefreshMenu = React.forwardRef((props, ref) => {
             className="dropdown-menu"
             style={{
                 left: 'auto',
-                right: 0,
+                right: props.sidebar ? '100%' : 0,
+                top: props.sidebar ? 0 : 'auto',
                 padding: '10px',
                 minWidth: '200px',
+                maxWidth: 'calc(100vw - 48px)',
                 maxHeight: "calc(70vh)",
-                overflowY: "auto",
+                overflowY: "visible",
                 zIndex: 9999
             }}>
             {props.children}

@@ -57,6 +57,8 @@
       "label": {
         "default": "Activate AutoRefresh",
         "lastUpdated": "Last Refresh",
+        "refreshNow": "Refresh now",
+        "paused": "Paused while editing",
         "addLayer": "AutoRefresh - layer configuration",
         "addLayerPlaceholder": "Select...",
         "removeLayer": "Remove layer",

@@ -32,12 +32,13 @@ export const optionsToVendorParams = (options = {}, extraCQLFilter = null) => {
         CQL_FILTER = cqlFilters.pop();
     }
     // remove params with undefined value
-    const params = options?.params && Object.keys(options.params)
+    let params = options?.params && Object.keys(options.params)
         .reduce((acc, key) =>
             options.params[key] === undefined
                 ? acc
                 : { ...acc, [key]: options.params[key] },
         {});
+    if (options._v_ !== undefined) params = { ...params, _v_: options._v_ };
     return CQL_FILTER ? {
         ...params,
         CQL_FILTER

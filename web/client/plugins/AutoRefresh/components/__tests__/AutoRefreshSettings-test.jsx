@@ -21,7 +21,7 @@ describe('AutoRefreshSettings component', () => {
         defaultRefreshInterval: 60,
         minimumRefreshInterval: 30,
         availableLayers: [{ id: 'available-layer', title: 'Available layer' }],
-        activeLayers: [{ id: 'active-layer', title: 'Active layer', visibility: true, autoRefreshInterval: 60 }],
+        activeLayers: [{ id: 'active-layer', title: 'Active layer', visibility: true, autoRefreshInterval: 60000 }],
         onUpdateNode: () => {}
     };
 
@@ -64,7 +64,7 @@ describe('AutoRefreshSettings component', () => {
         expect(onUpdateNode).toHaveBeenCalledWith(
             'available-layer',
             NodeTypes.LAYER,
-            { autoRefreshInterval: 60 }
+            { autoRefreshInterval: 60000 }
         );
     });
 
@@ -72,16 +72,16 @@ describe('AutoRefreshSettings component', () => {
         const onUpdateNode = expect.createSpy();
         renderComponent({ onUpdateNode });
 
-        TestUtils.Simulate.change(container.querySelector('input[type="number"]'), { target: { value: '10' } });
+        TestUtils.Simulate.blur(container.querySelector('input[type="number"]'), { target: { value: '10' } });
 
         expect(onUpdateNode).toHaveBeenCalledWith(
             'active-layer',
             NodeTypes.LAYER,
-            { autoRefreshInterval: 30 }
+            { autoRefreshInterval: 30000 }
         );
     });
 
-    it('removes a layer by setting its refresh interval to -1', () => {
+    it('removes a layer by setting its refresh interval to undefined', () => {
         const onUpdateNode = expect.createSpy();
         renderComponent({ onUpdateNode });
 
@@ -90,7 +90,7 @@ describe('AutoRefreshSettings component', () => {
         expect(onUpdateNode).toHaveBeenCalledWith(
             'active-layer',
             NodeTypes.LAYER,
-            { autoRefreshInterval: -1 }
+            { autoRefreshInterval: undefined }
         );
     });
 });

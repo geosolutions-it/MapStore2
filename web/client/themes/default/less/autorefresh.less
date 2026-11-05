@@ -14,7 +14,8 @@
     display: flex;
     gap: 0.5ch;
     align-items: center;
-    height: 24px;
+    min-height: 24px;
+    flex-wrap: wrap;
     border-width: 1px;
     border-style: solid;
     padding: 2px;
@@ -54,13 +55,16 @@
 }
 
 .ms-autorefresh-form-container{
-    min-width: 600px;
-    min-height: 500px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 560px;
+    max-width: calc(100vw - 68px);
+    max-height: 65vh;
 
     form {
         &:first-of-type {
             margin-bottom: 1ch;
+            flex-shrink: 0;
         }
         &:last-of-type {
             gap: 0.5ch;
@@ -68,6 +72,11 @@
         .form-group {
             margin: 0;
         }
+    }
+
+    .ms-autorefresh-selected-layers {
+        min-height: 0;
+        overflow-y: auto;
     }
 
 
@@ -159,7 +168,8 @@
     display: grid;
     flex-direction: column;
     gap: 0.5ch;
-    min-width: 600px;
+    width: 560px;
+    max-width: calc(100vw - 68px);
     max-height: 70vh;
     overflow-y: auto;
 

@@ -57,6 +57,8 @@
       "label": {
         "default": "Attiva aggiornamento automatico",
         "lastUpdated": "Ultimo aggiornamento",
+        "refreshNow": "Aggiorna ora",
+        "paused": "In pausa durante la modifica",
         "addLayer": "Aggiornamento automatico - configurazione dei livelli",
         "addLayerPlaceholder": "Seleziona...",
         "removeLayer": "Rimuovi livello",

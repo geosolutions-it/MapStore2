@@ -8,56 +8,32 @@
 
 import expect from 'expect';
 import autorefresh from '../autorefresh';
-import {
-    autoRefreshStart,
-    autoRefreshStop,
-    autoRefreshPause
-} from '../../actions/autorefresh';
+import { autoRefreshStart, autoRefreshStop, autoRefreshPause, autoRefreshUpdated, autoRefreshInit } from '../../actions/autorefresh';
+import { MAP_CONFIG_LOADED } from '../../../../actions/config';
+import { DASHBOARD_LOADED, DASHBOARD_RESET, LOAD_DASHBOARD } from '../../../../actions/dashboard';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 describe('AutoRefresh reducer', () => {
-    const initialState = {
-        enabled: false,
-        paused: false
-    };
-
-    it('returns the initial state when state is undefined', () => {
-        expect(autorefresh(undefined, { type: 'UNKNOWN_ACTION' })).toEqual(initialState);
+    it('starts disabled with transient status', () => {
+        expect(autorefresh(undefined, {}).enabled).toBe(false);
+        expect(autorefresh(undefined, {}).lastRefresh).toBe(null);
     });
-
-    it('returns the original state for an unknown action', () => {
-        const state = {
-            enabled: true,
-            paused: true
-        };
-
-        expect(autorefresh(state, { type: 'UNKNOWN_ACTION' })).toBe(state);
+    it('does not bypass a pause when activated', () => {
+        expect(autorefresh({ enabled: false, paused: true }, autoRefreshStart())).toEqual({ enabled: true, paused: true });
     });
-
-    it('enables refresh and clears the paused state when started', () => {
-        expect(autorefresh({ enabled: false, paused: true }, autoRefreshStart())).toEqual({
-            enabled: true,
-            paused: false
+    it('can stop, pause and resume', () => {
+        expect(autorefresh({ enabled: true, paused: true }, autoRefreshStop())).toEqual({ enabled: false, paused: false });
+        expect(autorefresh({ enabled: true }, autoRefreshPause(true)).paused).toBe(true);
+        expect(autorefresh({ enabled: true, paused: true }, autoRefreshPause(false)).paused).toBe(false);
+    });
+    it('resets on map/dashboard loading, reset and navigation while retaining configuration', () => {
+        [MAP_CONFIG_LOADED, DASHBOARD_LOADED, DASHBOARD_RESET, LOAD_DASHBOARD, LOCATION_CHANGE].forEach(type => {
+            const next = autorefresh({ enabled: true, paused: true, lastRefresh: 123, minimumRefreshInterval: 1000 }, { type });
+            expect(next).toEqual({ enabled: false, paused: false, lastRefresh: null, minimumRefreshInterval: 1000 });
         });
     });
-
-    it('disables refresh and clears the paused state when stopped', () => {
-        expect(autorefresh({ enabled: true, paused: true }, autoRefreshStop())).toEqual({
-            enabled: false,
-            paused: false
-        });
-    });
-
-    it('pauses refresh without changing its enabled state', () => {
-        expect(autorefresh({ enabled: true, paused: false }, autoRefreshPause(true))).toEqual({
-            enabled: true,
-            paused: true
-        });
-    });
-
-    it('resumes refresh without changing its enabled state', () => {
-        expect(autorefresh({ enabled: true, paused: true }, autoRefreshPause(false))).toEqual({
-            enabled: true,
-            paused: false
-        });
+    it('records a refresh without enabling automatic timers', () => {
+        const initial = autorefresh(undefined, autoRefreshInit(1000));
+        expect(autorefresh(initial, autoRefreshUpdated(123))).toEqual({ ...initial, lastRefresh: 123 });
     });
 });

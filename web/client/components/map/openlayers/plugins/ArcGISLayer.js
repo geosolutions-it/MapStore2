@@ -41,7 +41,8 @@ registerType('arcgis', {
             source: new TileArcGISRest({
                 params: {
                     ...(options.name !== undefined && { LAYERS: `show:${options.name}` }),
-                    ...(options.format && { format: options.format })
+                    ...(options.format && { format: options.format }),
+                    ...(options._v_ !== undefined && { _v_: options._v_ })
                 },
                 url: options.url,
                 ...sourceOpt
@@ -49,6 +50,9 @@ registerType('arcgis', {
         });
     },
     update: (layer, newOptions, oldOptions) => {
+        if (oldOptions._v_ !== newOptions._v_) {
+            layer.getSource().updateParams({ _v_: newOptions._v_ });
+        }
         if (oldOptions.name !== newOptions.name) {
             layer.getSource().updateParams({
                 LAYERS: newOptions.name !== undefined ? `show:${newOptions.name}` : undefined
@@ -61,8 +65,7 @@ registerType('arcgis', {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
         if (!isEqual(oldOptions.security, newOptions.security)
-        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
-        || !isEqual(oldOptions._v_, newOptions._v_)) {
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     },

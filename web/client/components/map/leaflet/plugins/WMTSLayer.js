@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import Layers from '../../../../utils/leaflet/Layers';
 import {normalizeSRS} from '../../../../utils/CoordinatesUtils';
 import L from 'leaflet';
@@ -47,7 +48,7 @@ function getWMSURLs(urls) {
 
 const createLayer = _options => {
     const options = WMTSUtils.parseTileMatrixSetOption(_options);
-    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]).map(url => addRefreshParameter(url, options._v_));
     let queryParameters = wmtsToLeafletOptions(options) || {};
     queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
@@ -64,7 +65,8 @@ const createLayer = _options => {
 };
 
 const updateLayer = (layer, newOptions, oldOptions) => {
-    if (oldOptions.securityToken !== newOptions.securityToken
+    if (newOptions._v_ !== oldOptions._v_
+    || oldOptions.securityToken !== newOptions.securityToken
     || oldOptions.format !== newOptions.format
     || oldOptions.credits !== newOptions.credits
     || !isEqual(oldOptions.security, newOptions.security)) {

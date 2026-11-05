@@ -33,7 +33,6 @@ import BaseCounterWidget from './CounterWidget';
 import BaseLegendWidget from './LegendWidget';
 import BaseFilterWidget from './FilterWidget';
 import dependenciesToShapes from '../enhancers/dependenciesToShapes';
-import layerVersionToWidget from '../enhancers/layerVersionToWidget';
 
 //
 // connect widgets to dependencies, remote services and add base icons/tools
@@ -50,7 +49,6 @@ import layerVersionToWidget from '../enhancers/layerVersionToWidget';
  */
 export const ChartWidget = compose(
     chartWidgetProps,
-    layerVersionToWidget,
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,
@@ -94,7 +92,6 @@ export const MapWidget = compose(
  * @prop {object} options {groupByAttributes: "STATE_NAME", aggregationAttribute: "LAND_KM", aggregateFunction: "Sum"}
  */
 export const TableWidget = compose(
-    layerVersionToWidget,
     dependenciesToWidget,
     dependenciesToOptions,
     dependenciesToFilter,
@@ -112,7 +109,6 @@ export const TableWidget = compose(
  * @prop {object} options for the backing service. E.g. for WPS `{groupByAttributes: "STATE_NAME", aggregationAttribute: "LAND_KM", aggregateFunction: "Sum"}`
  */
 export const CounterWidget = compose(
-    layerVersionToWidget,
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,

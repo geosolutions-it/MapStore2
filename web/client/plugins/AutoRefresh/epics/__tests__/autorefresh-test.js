@@ -9,125 +9,130 @@
 import expect from 'expect';
 import Rx from 'rxjs';
 import { ActionsObservable } from 'redux-observable';
-import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from '../../../../epics/__tests__/epicTestUtils';
-import { CHANGE_LAYER_PROPERTIES, removeNode, updateNode } from '../../../../actions/layers';
-import { autoRefreshPause, autoRefreshStart, autoRefreshStop } from '../../actions/autorefresh';
-import { layersAutoRefreshEpic } from '../autorefresh';
-import autorefresh from '../../reducers/autorefresh';
-import { NodeTypes } from '../../../../utils/LayersUtils';
-import { generateAutoRefreshLayerOptions } from '../../constants';
+import { changeLayerProperties, CHANGE_LAYER_PROPERTIES, addLayer } from '../../../../actions/layers';
+import { UPDATE_LAYER_PROPERTIES, updateWidgetLayerProperties } from '../../../../actions/widgets';
+import layersReducer from '../../../../reducers/layers';
+import widgetsReducer from '../../../../reducers/widgets';
+import { layersAutoRefreshEpic, refreshAutoRefreshEpic, configureAutoRefreshEpic, synchronizeAutoRefreshEpic } from '../autorefresh';
+import { autoRefreshNow, setAutoRefreshInterval } from '../../actions/autorefresh';
+import { allLayersSelector } from '../../selectors/autorefresh';
+
+const layer = { id: 'map', name: 'roads', type: 'wms', title: 'Roads', url: '/wms', visibility: true, autoRefreshInterval: 10 };
+const makeState = () => ({
+    layers: { flat: [layer], groups: [] },
+    autorefresh: { enabled: true, paused: false, minimumRefreshInterval: 1 },
+    security: { user: { role: 'USER' } },
+    map: { mapId: 1, info: { canEdit: true } },
+    widgets: { containers: { floating: { widgets: [{ id: 'table', widgetType: 'table', layer: { ...layer, id: 'widget-copy', filter: 'keep' } }] } } }
+});
+const run = (epic, action, state) => {
+    const result = [];
+    epic(ActionsObservable.of(action), { getState: () => state }).subscribe(item => result.push(item));
+    return result;
+};
+const apply = (state, action) => ({ ...state, layers: layersReducer(state.layers, action), widgets: widgetsReducer(state.widgets, action) });
 
 describe('AutoRefresh epics', () => {
-    const getState = (actions = [], layers = []) => () => ({
-        autorefresh: actions.reduce(autorefresh, undefined),
-        layers: {
-            flat: layers
-        }
+    it('updates map/widget instances in one action and preserves widget filters', () => {
+        const state = makeState();
+        const key = allLayersSelector(state)[0].id;
+        const actions = run(configureAutoRefreshEpic, setAutoRefreshInterval(key, 60000), state);
+        expect(actions.length).toBe(1);
+        const updated = apply(state, actions[0]);
+        expect(updated.layers.flat[0].autoRefreshInterval).toBe(60000);
+        expect(updated.widgets.containers.floating.widgets[0].layer.autoRefreshInterval).toBe(60000);
+        expect(updated.widgets.containers.floating.widgets[0].layer.filter).toBe('keep');
     });
-
-    it('refreshes every active non-background layer immediately', (done) => {
-        const layers = [
-            { id: 'roads', group: 'overlay', autoRefreshInterval: 60 },
-            { id: 'buildings', group: 'overlay', autoRefreshInterval: 120 },
-            { id: 'basemap', group: 'background', autoRefreshInterval: 60 },
-            { id: 'disabled', group: 'overlay', autoRefreshInterval: -1 }
-        ];
-
-        testEpic(layersAutoRefreshEpic, 2, autoRefreshStart(), actions => {
-            expect(actions.map(action => action.type)).toEqual([
-                CHANGE_LAYER_PROPERTIES,
-                CHANGE_LAYER_PROPERTIES
-            ]);
-            expect(actions.map(action => action.layer).sort()).toEqual(['buildings', 'roads']);
-            actions.forEach(action => expect(action.newProperties._v_).toBeGreaterThan(0));
-            done();
-        }, getState([autoRefreshStart()], layers), done);
+    it('removes the interval across all copies without affecting data configuration', () => {
+        const state = makeState();
+        const key = allLayersSelector(state)[0].id;
+        const updated = apply(state, run(configureAutoRefreshEpic, setAutoRefreshInterval(key, undefined), state)[0]);
+        expect(updated.layers.flat[0].autoRefreshInterval).toBe(undefined);
+        expect(updated.widgets.containers.floating.widgets[0].layer.autoRefreshInterval).toBe(undefined);
     });
-
-    it('does not refresh layers when auto refresh is disabled', (done) => {
-        testEpic(addTimeoutEpic(layersAutoRefreshEpic, 10), 1, autoRefreshStart(), actions => {
-            expect(actions.length).toBe(1);
-            expect(actions).toEqual([{ type: TEST_TIMEOUT, timeout: 10 }]);
-            done();
-        }, getState([autoRefreshStart(), autoRefreshStop()], [{ id: 'roads', group: 'overlay', autoRefreshInterval: 30 }]), done);
+    it('rejects settings changes by viewers', () => {
+        const state = { ...makeState(), security: {} };
+        expect(run(configureAutoRefreshEpic, setAutoRefreshInterval('any', 1000), state)).toEqual([]);
     });
-
-    it('does not refresh layers when auto refresh is paused', (done) => {
-        testEpic(addTimeoutEpic(layersAutoRefreshEpic, 31), 1, autoRefreshStart(), actions => {
-            expect(actions.length).toBe(1);
-            expect(actions).toEqual([{ type: TEST_TIMEOUT, timeout: 31 }]);
-            done();
-        }, getState([autoRefreshStart(), autoRefreshPause(true)], [{ id: 'roads', group: 'overlay', autoRefreshInterval: 30 }]), done);
+    it('refreshes manually while automatic timers are off, sharing one version across copies', () => {
+        const state = { ...makeState(), autorefresh: { enabled: false, minimumRefreshInterval: 1 } };
+        const actions = run(refreshAutoRefreshEpic, autoRefreshNow(), state);
+        expect(actions.length).toBe(2);
+        const updated = apply(state, actions[0]);
+        expect(actions[0].type).toBe(CHANGE_LAYER_PROPERTIES);
+        expect(updated.layers.flat[0]._v_).toBe(updated.widgets.containers.floating.widgets[0].layer._v_);
+        expect(updated.layers.flat[0]._v_).toBeGreaterThan(0);
+        expect(state.autorefresh.enabled).toBe(false);
     });
-
-    it('does not refresh background or disabled layers', (done) => {
-        const layers = [
-            { id: 'basemap', group: 'background', autoRefreshInterval: 60 },
-            { id: 'disabled', group: 'overlay', autoRefreshInterval: -1 }
-        ];
-
-        testEpic(addTimeoutEpic(layersAutoRefreshEpic, 10), 1, autoRefreshStart(), actions => {
-            expect(actions.length).toBe(1);
-            expect(actions).toEqual([{ type: TEST_TIMEOUT, timeout: 10 }]);
-            done();
-        }, getState([autoRefreshStart()], layers), done);
+    it('supports dashboards without a main-map layer and ignores dynamic filter widgets', () => {
+        const state = makeState();
+        state.layers.flat = [];
+        state.router = { location: { pathname: '/dashboard/1' } };
+        state.widgets.containers.floating.widgets.push({ id: 'filter', widgetType: 'filter', layer });
+        const actions = run(refreshAutoRefreshEpic, autoRefreshNow(), state);
+        expect(actions[0].type).toBe(UPDATE_LAYER_PROPERTIES);
+        expect(actions[0].updates.length).toBe(1);
+        expect(actions[0].updates[0].widgetId).toBe('table');
     });
-
-    it('does not refresh layer when one layer is removed from the map', (done) => {
-        let layers = [
-            { id: 'roads', group: 'overlay', autoRefreshInterval: 30 },
-            { id: 'buildings', group: 'overlay', autoRefreshInterval: 30 },
-            { id: 'lakes', group: 'overlay', autoRefreshInterval: 60 }
-        ];
-        const actions = new Rx.Subject();
-        const store = {
-            getState: () => getState([autoRefreshStart()], layers)()
-        };
-
-        layersAutoRefreshEpic(new ActionsObservable(actions), store)
-            .subscribe(action => {
-                expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
-                expect(action.layer).toBe('lakes');
-                done();
-            }, done);
-
-        layers = layers.filter(layer => layer.id !== 'roads');
-        actions.next(removeNode('roads', 'layers', false));
-        layers = layers.filter(layer => layer.id !== 'buildings');
-        actions.next(removeNode('buildings', 'layers', false));
+    it('never refreshes hidden or edited datasets', () => {
+        const state = makeState();
+        state.layers.flat = [{ ...layer, visibility: false }];
+        state.widgets.containers.floating.widgets = [];
+        expect(run(refreshAutoRefreshEpic, autoRefreshNow(), state)).toEqual([]);
+        state.layers.flat = [layer];
+        state.featuregrid = { mode: 'EDIT', selectedLayer: layer.id };
+        expect(run(refreshAutoRefreshEpic, autoRefreshNow(), state)).toEqual([]);
     });
-
-    it('does not refresh layer when one layer is removed from the autorefresh menu', (done) => {
-        let layers = [
-            { id: 'roads', group: 'overlay', autoRefreshInterval: 30 },
-            { id: 'buildings', group: 'overlay', autoRefreshInterval: 30 },
-            { id: 'lakes', group: 'overlay', autoRefreshInterval: 60 }
-        ];
-        const actions = new Rx.Subject();
-        const store = {
-            getState: () => getState([autoRefreshStart()], layers)()
-        };
-
-        layersAutoRefreshEpic(new ActionsObservable(actions), store)
-            .subscribe(action => {
-                expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
-                expect(action.layer).toBe('lakes');
-                done();
-            }, done);
-
-        layers = layers.map(layer => {
-            if (layer.id === 'roads') {
-                return { ...layer, autoRefreshInterval: -1 };
-            }
-            return layer;
-        });
-        actions.next(updateNode('roads', NodeTypes.LAYER, generateAutoRefreshLayerOptions(-1)));
-        layers = layers.map(layer => {
-            if (layer.id === 'buildings') {
-                return { ...layer, autoRefreshInterval: -1 };
-            }
-            return layer;
-        });
-        actions.next(updateNode('buildings', NodeTypes.LAYER, generateAutoRefreshLayerOptions(-1)));
+    it('new copies inherit the configured dataset interval', () => {
+        const state = makeState();
+        state.widgets.containers.floating.widgets[0].layer.autoRefreshInterval = undefined;
+        const actions = run(synchronizeAutoRefreshEpic, addLayer(layer), state);
+        expect(actions.length).toBe(1);
+        const updated = apply(state, actions[0]);
+        expect(updated.widgets.containers.floating.widgets[0].layer.autoRefreshInterval).toBe(10);
     });
+    it('uses millisecond intervals, restarts after stop/start, and keeps one timer per dataset', () => {
+        let state = makeState();
+        const scheduler = new Rx.TestScheduler(() => {});
+        const input = new Rx.Subject();
+        const results = [];
+        const subscription = layersAutoRefreshEpic(new ActionsObservable(input), { getState: () => state }, { scheduler })
+            .subscribe(action => results.push({ time: scheduler.frame, action }));
+        scheduler.schedule(() => { state = { ...state, autorefresh: { ...state.autorefresh, enabled: false } }; input.next({ type: 'stop' }); }, 15);
+        scheduler.schedule(() => { state = { ...state, autorefresh: { ...state.autorefresh, enabled: true } }; input.next({ type: 'start' }); }, 25);
+        scheduler.schedule(() => subscription.unsubscribe(), 46);
+        scheduler.flush();
+        expect(results.map(item => item.time)).toEqual([10, 35, 45]);
+        expect(results[0].action.type).toBe(autoRefreshNow().type);
+    });
+    it('versions do not reset timers and editing pauses resume cleanly', () => {
+        let state = makeState();
+        const scheduler = new Rx.TestScheduler(() => {});
+        const input = new Rx.Subject();
+        const times = [];
+        const subscription = layersAutoRefreshEpic(new ActionsObservable(input), { getState: () => state }, { scheduler })
+            .subscribe(() => times.push(scheduler.frame));
+        scheduler.schedule(() => { state = apply(state, changeLayerProperties(layer.id, { _v_: 1 })); input.next({ type: 'version' }); }, 5);
+        scheduler.schedule(() => { state = { ...state, featuregrid: { mode: 'EDIT', selectedLayer: layer.id } }; input.next({ type: 'edit' }); }, 15);
+        scheduler.schedule(() => { state = { ...state, featuregrid: { mode: 'VIEW' } }; input.next({ type: 'view' }); }, 25);
+        scheduler.schedule(() => subscription.unsubscribe(), 46);
+        scheduler.flush();
+        expect(times).toEqual([10, 35, 45]);
+    });
+    it('ignores stale widget paths rather than recreating deleted widgets', () => {
+        const state = makeState();
+        const updated = widgetsReducer(state.widgets, updateWidgetLayerProperties([{ widgetId: 'deleted', path: ['layer'], properties: { _v_: 1 } }]));
+        expect(updated).toBe(state.widgets);
+    });
+    [10, 100].forEach(count => it(`batches a manual refresh for ${count} datasets`, () => {
+        const state = makeState();
+        state.layers.flat = Array.from({ length: count }, (_, index) => ({ ...layer, id: `layer-${index}`, name: `dataset-${index}` }));
+        state.widgets.containers.floating.widgets = [];
+        const actions = run(refreshAutoRefreshEpic, autoRefreshNow(), state);
+        expect(actions.length).toBe(2);
+        expect(actions[0].layer.length).toBe(count);
+        const updated = apply(state, actions[0]);
+        expect(new Set(updated.layers.flat.map(item => item._v_)).size).toBe(1);
+    }));
+
 });

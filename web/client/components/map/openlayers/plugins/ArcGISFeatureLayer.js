@@ -19,6 +19,7 @@ import Layers from '../../../../utils/openlayers/Layers';
 import { reprojectBbox } from '../../../../utils/CoordinatesUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import { fetchFeatureLayerCollection } from '../../../../api/ArcGIS';
+import { cancelVectorLayerRefresh, refreshVectorLayer } from '../../../../utils/openlayers/LayerRefresh';
 
 const getStrategy = (options) => {
     if (options.strategy === 'all') {
@@ -35,7 +36,7 @@ const getEffectiveStrategy = (options) => options?.strategy || 'tile';
 const createLoader = (source, options) => (extent, resolution, projection, success, failure) => {
     const projCode = projection.getCode();
     const strategy = getEffectiveStrategy(options);
-    const params = {};
+    const params = { ...(options._v_ !== undefined && { _v_: options._v_ }) };
     if (strategy === 'bbox' || strategy === 'tile') {
         const [xmin, ymin, xmax, ymax] = reprojectBbox(extent, projCode, 'EPSG:4326');
         params.geometry = `${xmin},${ymin},${xmax},${ymax}`;
@@ -122,12 +123,18 @@ Layers.registerType('arcgis-feature', {
             || oldOptions.name !== options.name
             || !isEqual(oldOptions._v_, options._v_)
         ) {
-            source.setLoader(createLoader(source, {
-                ...options,
-                onLoadEnd: () => updateStyle(layer, layer._msCurrentOptions || options, map)
-            }));
-            source.clear();
-            source.refresh();
+            cancelVectorLayerRefresh(layer);
+            const refreshing = options._v_ !== oldOptions._v_ && refreshVectorLayer(layer,
+                () => Layers.createLayer('arcgis-feature', options, map), map,
+                () => updateStyle(layer, layer._msCurrentOptions || options, map));
+            if (!refreshing) {
+                source.setLoader(createLoader(source, {
+                    ...options,
+                    onLoadEnd: () => updateStyle(layer, layer._msCurrentOptions || options, map)
+                }));
+                source.clear();
+                source.refresh();
+            }
         }
         if (options.style !== oldOptions.style || options.styleName !== oldOptions.styleName) {
             updateStyle(layer, options, map);

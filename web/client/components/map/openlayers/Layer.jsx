@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { bindVectorSourceEvents } from '../../../utils/openlayers/LayerRefresh';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Layers from '../../../utils/openlayers/Layers';
@@ -78,6 +79,7 @@ export default class OpenlayersLayer extends React.Component {
     }
 
     componentWillUnmount() {
+        this.unbindVectorSourceEvents?.();
         if (this.layer && this.props.map) {
             if (this.tileLoadEndStream$) {
                 this.tileLoadEndStream$.complete();
@@ -337,32 +339,11 @@ export default class OpenlayersLayer extends React.Component {
             this.imageLoadEndStream$ = imageLoadEndStream$;
             this.imageStopStream$ = imageStopStream$;
 
-            this.layer.getSource().on('vectorerror', () => {
-                this.props.onLayerLoad(options.id, {error: true});
-            });
-            // Skip loading tracking for client-side vector layers since it only
-            // triggers featuresloadstart but not featuresloadend/featuresloaderror
-            if (this.props.type !== 'vector') {
-                this.featurestoload = 0;
-                this.layer.getSource().on('featuresloadstart', () => {
-                    if (this.featurestoload === 0) {
-                        this.props.onLayerLoading(options.id);
-                    }
-                    this.featurestoload++;
-                });
-                this.layer.getSource().on('featuresloadend', () => {
-                    this.featurestoload--;
-                    if (this.featurestoload === 0) {
-                        this.props.onLayerLoad(options.id);
-                    }
-                });
-                this.layer.getSource().on('featuresloaderror', () => {
-                    this.featurestoload--;
-                    if (this.featurestoload === 0) {
-                        this.props.onLayerLoad(options.id, {error: true});
-                    }
-                });
-            }
+            this.unbindVectorSourceEvents?.();
+            this.unbindVectorSourceEvents = bindVectorSourceEvents(this.layer, {
+                onLoading: () => this.props.onLayerLoading(options.id),
+                onLoad: failed => failed ? this.props.onLayerLoad(options.id, { error: true }) : this.props.onLayerLoad(options.id)
+            }, this.props.type !== 'vector');
 
             if (options.refresh) {
                 let counter = 0;

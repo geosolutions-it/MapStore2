@@ -174,7 +174,7 @@ const createLayer = (options, map) => {
                 timeout = undefined;
                 resource = new Cesium.Resource({
                     url: options.url,
-                    queryParameters: params,
+                    queryParameters: { ...params, ...(options._v_ !== undefined && { _v_: options._v_ }) },
                     headers,
                     proxy: options.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
                     // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
@@ -238,7 +238,7 @@ Layers.registerType('3dtiles', {
             || newOptions.enableImageryOverlay && (newOptions.imageryLayersTreeUpdatedCount !== oldOptions.imageryLayersTreeUpdatedCount)
             || (newOptions.enableImageryOverlay !== oldOptions.enableImageryOverlay)
             || !isEqual(oldOptions.security, newOptions.security)
-            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash) || oldOptions._v_ !== newOptions._v_
         ) {
             return createLayer(newOptions, map);
         }

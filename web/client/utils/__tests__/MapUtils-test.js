@@ -288,6 +288,21 @@ describe('Test the MapUtils', () => {
                 layers.map(({id, name}) => ({id, name}))
             );
         });
+        it('saves configured refresh intervals without adding defaults or transient versions', () => {
+            const layers = [
+                { id: 'configured', name: 'roads', type: 'wms', url: '/wms', autoRefreshInterval: 60000, _v_: 123 },
+                { id: 'unconfigured', name: 'buildings', type: 'wms', url: '/wms' }
+            ];
+            const saved = saveMapConfiguration({
+                center: { x: 0, y: 0, crs: 'EPSG:4326' },
+                projection: 'EPSG:4326',
+                zoom: 0
+            }, layers, [], [], '', {});
+
+            expect(saved.map.layers[0].autoRefreshInterval).toBe(60000);
+            expect('_v_' in saved.map.layers[0]).toBe(false);
+            expect('autoRefreshInterval' in saved.map.layers[1]).toBe(false);
+        });
         it('save map configuration', () => {
 
             const flat = [
@@ -436,8 +451,7 @@ describe('Test the MapUtils', () => {
                                 maxy: '40.878178'
                             }
                         },
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         "allowedSRS": {
@@ -451,8 +465,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         catalogURL: "url",
                         version: '1.3.0',
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         search: {},
@@ -463,8 +476,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         search: {},
@@ -485,8 +497,7 @@ describe('Test the MapUtils', () => {
                                 name: "plugin"
                             }
                         },
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -632,8 +643,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -643,8 +653,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -654,8 +663,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer004",
@@ -666,8 +674,7 @@ describe('Test the MapUtils', () => {
                         visibility: true,
                         catalogURL: "url",
                         origin: [100000, 100000],
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         group: "background",
@@ -679,8 +686,7 @@ describe('Test the MapUtils', () => {
                         visibility: true,
                         catalogURL: "url",
                         origin: [100000, 100000],
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         group: "background",
@@ -692,8 +698,7 @@ describe('Test the MapUtils', () => {
                         visibility: false,
                         catalogURL: "url",
                         origin: [100000, 100000],
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -811,8 +816,7 @@ describe('Test the MapUtils', () => {
                         visibility: true,
                         catalogURL: "url",
                         legendOptions: { legendWidth: "", legendHeight: 40},
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -822,8 +826,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -836,8 +839,7 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: "both",
                         tooltipPlacement: "right",
                         legendOptions: { legendWidth: 20, legendHeight: 40},
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {
                         view: {
@@ -974,8 +976,7 @@ describe('Test the MapUtils', () => {
                         url: "http:url001",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -985,8 +986,7 @@ describe('Test the MapUtils', () => {
                         url: "http:url001",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -996,8 +996,7 @@ describe('Test the MapUtils', () => {
                         url: "http:url001",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1118,8 +1117,7 @@ describe('Test the MapUtils', () => {
                         url: '',
                         visibility: true,
                         catalogURL: 'url',
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     } ]),
                     groups: [ {
                         id: 'Default',
@@ -1247,8 +1245,7 @@ describe('Test the MapUtils', () => {
                         url: "http:url001",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1374,8 +1371,7 @@ describe('Test the MapUtils', () => {
                         url: "http:url001",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1517,8 +1513,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -1528,8 +1523,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -1539,8 +1533,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         id: "layer004",
@@ -1551,8 +1544,7 @@ describe('Test the MapUtils', () => {
                         visibility: true,
                         catalogURL: "url",
                         origin: [100000, 100000],
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1779,8 +1771,7 @@ describe('Test the MapUtils', () => {
                                 maxy: '40.878178'
                             }
                         },
-                        expanded: true,
-                        autoRefreshInterval: -1
+                        expanded: true
                     },
                     {
                         "allowedSRS": {
@@ -1794,8 +1785,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         catalogURL: "url",
                         version: '1.3.0',
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         search: {},
@@ -1806,8 +1796,7 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     },
                     {
                         search: {},
@@ -1828,8 +1817,7 @@ describe('Test the MapUtils', () => {
                                 name: "plugin"
                             }
                         },
-                        expanded: false,
-                        autoRefreshInterval: -1
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

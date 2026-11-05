@@ -32,7 +32,7 @@ import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets, autoRefreshActive, autoRefreshLayers = []}) => {
+        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets}) => {
 
             // Check if mapSync is enabled (true), dependencyMap has mapSync dependency to Map widget and dependencies.viewport is null or falsy
             // If this condition is true, return false to filter out the event.
@@ -41,26 +41,10 @@ const dataStreamFactory = ($props) =>
                 return false;
             }
 
-            const isValid = layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
-            const shouldAutoRefresh = autoRefreshActive && autoRefreshLayers.find(l => l.id === layer.id) !== undefined;
-
-            return isValid || shouldAutoRefresh;
+            return layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
         })
         .distinctUntilChanged(
-            ({layer = {}, options = {}, filter, autoRefreshLayers = []}, newProps) => {
-                const oldAutoRefreshLayer = autoRefreshLayers.find(l => l.id === layer.id);
-                const newAutoRefreshLayer = newProps.autoRefreshLayers?.find(l => l.id === layer.id);
-                if (newProps.autoRefreshActive && newAutoRefreshLayer) {
-                    if (!oldAutoRefreshLayer) {
-                        return false;
-                    }
-                    if (oldAutoRefreshLayer && oldAutoRefreshLayer._v_ !== newAutoRefreshLayer._v_) {
-                        return false;
-                    }
-
-                    return true;
-                }
-
+            ({layer = {}, options = {}, filter}, newProps) => {
                 return (newProps.layer
                     && getWpsUrl(layer) === getWpsUrl(newProps.layer)
                     && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)

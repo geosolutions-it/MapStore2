@@ -6,20 +6,59 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const SUPPORTED_LAYER_TYPES = ['wms', 'wfs', 'arcgis-feature', 'arcgis'];
+import { createSelector } from 'reselect';
+import { layersSelector, groupsSelector } from '../../../selectors/layers';
+import { mapIsEditableSelector, mapIsNewSelector, mapIdSelector } from '../../../selectors/map';
+import { isLoggedIn } from '../../../selectors/security';
+import { pathnameSelector } from '../../../selectors/router';
+import { mapTypeSelector } from '../../../selectors/maptype';
+import { collectLayerInstances, getEditedLayerKeys, isValidInterval } from '../utils';
+import { AUTOREFRESH_MINIMUM_REFRESH_INTERVAL } from '../constants';
 
-export const isPausedSelector = state => state?.autorefresh?.paused;
-export const isActiveRefreshSelector = state => state?.autorefresh?.enabled;
-export const refreshableLayersSelector = state => state.layers.flat.filter(l => l.group !== 'background' && l.autoRefreshInterval > -1);
+export const isPausedSelector = state => !!state?.autorefresh?.paused;
+export const isActiveRefreshSelector = state => !!state?.autorefresh?.enabled;
+export const lastRefreshSelector = state => state?.autorefresh?.lastRefresh;
+export const isDashboardSelector = state => /\/dashboard(?:\/|$)/.test(pathnameSelector(state))
+    || !!state.dashboard?.resource || !!state.dashboard?.editor?.available;
+export const canConfigureSelector = state => !!isLoggedIn(state) && (isDashboardSelector(state)
+    ? !!state.dashboard?.resource?.canEdit || !state.dashboard?.resource?.id
+    : !!mapIsEditableSelector(state) || mapIsNewSelector(state) || !mapIdSelector(state) && mapIsEditableSelector(state) !== false);
 
-// Do not consider background layers, since they are not expected to be updated frequently
-// and they are not visible in the layer switcher,
-// so they cannot be selected by the user in the settings
-export const availableLayersSelector = state => state.layers.flat.filter(l => {
-    const isBasemap = l.group === 'background';
-    const hasAutoRefreshInterval = l.autoRefreshInterval && l.autoRefreshInterval > -1;
-    const isSupportedLayerType = SUPPORTED_LAYER_TYPES.includes(l.type);
+export const layerInstancesSelector = createSelector(
+    layersSelector, groupsSelector, state => state.widgets?.containers, isDashboardSelector, mapTypeSelector,
+    collectLayerInstances
+);
 
-    return isSupportedLayerType && !isBasemap && !hasAutoRefreshInterval;
+export const editedLayerKeysSelector = createSelector(
+    layersSelector, state => state.featuregrid,
+    state => state.controls?.widgetBuilder?.enabled || state.dashboard?.editing ? state.widgets?.builder?.editor : undefined,
+    getEditedLayerKeys
+);
+
+export const allLayersSelector = createSelector(layerInstancesSelector, editedLayerKeysSelector, (instances, edited) => {
+    const datasets = {};
+    instances.forEach(instance => {
+        const { layer, key } = instance;
+        const existing = datasets[key];
+        const interval = isValidInterval(layer.autoRefreshInterval) ? layer.autoRefreshInterval : undefined;
+        datasets[key] = {
+            ...(existing || layer), id: key, title: existing?.title || layer.title || layer.name || layer.provider || layer.url,
+            autoRefreshInterval: existing?.autoRefreshInterval ?? interval,
+            visibility: !!existing?.visibility || instance.visible,
+            _v_: Math.max(existing?._v_ || 0, layer._v_ || 0) || undefined,
+            editing: edited.has(key)
+        };
+    });
+    return Object.values(datasets);
 });
+
+// Configuration includes hidden layers; only the scheduler filters by visibility/editing.
+export const refreshableLayersSelector = createSelector(allLayersSelector,
+    layers => layers.filter(layer => isValidInterval(layer.autoRefreshInterval)));
+export const availableLayersSelector = createSelector(allLayersSelector,
+    layers => layers.filter(layer => !isValidInterval(layer.autoRefreshInterval)));
+export const eligibleLayersSelector = createSelector(refreshableLayersSelector,
+    state => state.autorefresh?.minimumRefreshInterval || AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,
+    (layers, minimum) => layers.filter(layer => layer.visibility && !layer.editing)
+        .map(layer => ({ ...layer, autoRefreshInterval: Math.max(minimum, layer.autoRefreshInterval) })));
 
