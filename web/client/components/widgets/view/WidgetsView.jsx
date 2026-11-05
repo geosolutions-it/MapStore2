@@ -18,6 +18,8 @@ const ResponsiveReactGridLayout =
 import withGroupColor from '../enhancers/withGroupColor';
 const DefaultWidget = withGroupColor(require('../widget/DefaultWidget').default);
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
+// the header is the drag handle, so the controls it contains must not start a drag
+const DRAG_CANCEL = 'button, a, input, select, textarea, [role="button"], .dropdown, .Select';
 import 'react-grid-layout/css/styles.css';
 
 export default pure(({
@@ -38,6 +40,7 @@ export default pure(({
     compactType = null,
     compactMode,
     useDefaultWidthProvider = true,
+    draggableCancel = DRAG_CANCEL,
     measureBeforeMount,
     width,
     showGroupColor,
@@ -76,6 +79,7 @@ export default pure(({
         isResizable={canEdit}
         isDraggable={canEdit}
         draggableHandle={".draggableHandle"}
+        draggableCancel={draggableCancel}
         onLayoutChange={isMaximized ? () => {} : onLayoutChange}
         preventCollision
         style={style}
