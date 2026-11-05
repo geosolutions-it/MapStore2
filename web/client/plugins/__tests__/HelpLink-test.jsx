@@ -37,4 +37,11 @@ describe('HelpLink Plugin', () => {
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(containers.BurgerMenu.selector(null, {docsUrl: 'https://google.com'})).toEqual({ href: 'https://google.com', target: 'blank' });
     });
+
+    it('HelpLink plugin without link when the documentation url uses an unsupported protocol', () => {
+        const { containers } = getPluginForTest(HelpLinkPlugin);
+        const ownProps = { docsUrl: 'ftp://docs.example.com/' };
+        expect(containers.BurgerMenu.selector(null, ownProps)).toEqual({ href: undefined, target: 'blank' });
+        expect(containers.SidebarMenu.selector(null, ownProps)).toEqual({ href: undefined, target: 'blank' });
+    });
 });

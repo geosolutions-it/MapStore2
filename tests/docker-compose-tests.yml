@@ -13,8 +13,14 @@ services:
       - mapstore-network
 
   mapstore:
+    environment:
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:?Set INITIAL_ADMIN_PASSWORD for endpoint tests}
     volumes:
       - ./tests/ldap.properties:/mapstore/datadir/ldap.properties:rw
     depends_on:
       - postgres
       - ldap
+
+  sut:
+    environment:
+      AT_PWD: ${INITIAL_ADMIN_PASSWORD:?Set INITIAL_ADMIN_PASSWORD for endpoint tests}

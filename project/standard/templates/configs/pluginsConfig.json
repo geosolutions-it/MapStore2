@@ -159,13 +159,6 @@
       "description": "plugins.Permalink.description"
     },
     {
-      "name": "LayersSelection",
-      "glyph": "hand-down",
-      "title": "plugins.LayersSelection.title",
-      "description": "plugins.LayersSelection.description",
-      "dependencies": ["SidebarMenu"]
-    },
-    {
       "name": "BackgroundSelector",
       "title": "plugins.BackgroundSelector.title",
       "description": "plugins.BackgroundSelector.description"
@@ -386,11 +379,7 @@
     {
       "name": "Cookie",
       "mandatory": true,
-      "hidden": true,
-      "defaultConfig": {
-        "externalCookieUrl": "",
-        "declineUrl": "http://www.google.com"
-      }
+      "hidden": true
     },
     {
       "name": "Toolbar",

@@ -340,25 +340,29 @@ export default class OpenlayersLayer extends React.Component {
             this.layer.getSource().on('vectorerror', () => {
                 this.props.onLayerLoad(options.id, {error: true});
             });
-            this.featurestoload = 0;
-            this.layer.getSource().on('featuresloadstart', () => {
-                if (this.featurestoload === 0) {
-                    this.props.onLayerLoading(options.id);
-                }
-                this.featurestoload++;
-            });
-            this.layer.getSource().on('featuresloadend', () => {
-                this.featurestoload--;
-                if (this.featurestoload === 0) {
-                    this.props.onLayerLoad(options.id);
-                }
-            });
-            this.layer.getSource().on('featuresloaderror', () => {
-                this.featurestoload--;
-                if (this.featurestoload === 0) {
-                    this.props.onLayerLoad(options.id, {error: true});
-                }
-            });
+            // Skip loading tracking for client-side vector layers since it only
+            // triggers featuresloadstart but not featuresloadend/featuresloaderror
+            if (this.props.type !== 'vector') {
+                this.featurestoload = 0;
+                this.layer.getSource().on('featuresloadstart', () => {
+                    if (this.featurestoload === 0) {
+                        this.props.onLayerLoading(options.id);
+                    }
+                    this.featurestoload++;
+                });
+                this.layer.getSource().on('featuresloadend', () => {
+                    this.featurestoload--;
+                    if (this.featurestoload === 0) {
+                        this.props.onLayerLoad(options.id);
+                    }
+                });
+                this.layer.getSource().on('featuresloaderror', () => {
+                    this.featurestoload--;
+                    if (this.featurestoload === 0) {
+                        this.props.onLayerLoad(options.id, {error: true});
+                    }
+                });
+            }
 
             if (options.refresh) {
                 let counter = 0;

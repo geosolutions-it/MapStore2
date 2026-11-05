@@ -8,11 +8,13 @@
 import GeoStoryPlugin from '../plugins/GeoStory';
 import GeoStoryNavigationPlugin from '../plugins/GeoStoryNavigation';
 import FeedbackMaskPlugin from '../plugins/FeedbackMask';
+import CookiePlugin from '../plugins/Cookie';
 import ReactSwipe from 'react-swipeable-views';
 import SwipeHeader from '../components/data/identify/SwipeHeader';
 
 export default {
     plugins: {
+        CookiePlugin,
         GeoStoryPlugin,
         GeoStoryNavigationPlugin,
         FeedbackMaskPlugin

@@ -9,10 +9,12 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+import MockAdapter from 'axios-mock-adapter';
 import CatalogPlugin from '../Catalog';
 import { getPluginForTest } from './pluginsTestUtils';
 import { setControlProperty } from '../../actions/controls';
 import { catalogClose } from '../../actions/catalog';
+import axios from '../../libs/ajax';
 
 const ACTIVE_CATALOG_STATE = {
     controls: {
@@ -162,6 +164,87 @@ describe('Catalog Plugin', () => {
                         }
                         done();
                     });
+                });
+            });
+        });
+    });
+
+    describe('GeoNode map imports', () => {
+        let mockAxios;
+        beforeEach(() => {
+            mockAxios = new MockAdapter(axios);
+        });
+        afterEach(() => {
+            mockAxios.restore();
+        });
+
+        it('preserves layer order across sibling and nested groups, including empty groups', (done) => {
+            const layer = (id, group) => ({ id, title: id, type: 'vector', group });
+            const mapLayers = [
+                layer('bottom', 'Default'),
+                layer('lower', 'Default.lower'),
+                layer('parent-bottom', 'Default.parent'),
+                layer('nested', 'Default.parent.nested'),
+                layer('parent-top', 'Default.parent'),
+                layer('middle', 'Default'),
+                layer('upper', 'Default.upper'),
+                layer('top', 'Default')
+            ];
+            const record = { pk: 4134, title: 'Imported map', resource_type: 'map' };
+            mockAxios.onGet('http://geonode.test/api/v2/maps/4134').reply(200, {
+                map: {
+                    ...record,
+                    data: {
+                        map: {
+                            layers: mapLayers,
+                            groups: [
+                                { id: 'Default.lower', title: 'Lower' },
+                                { id: 'Default.parent', title: 'Parent' },
+                                { id: 'Default.parent.nested', title: 'Nested' },
+                                { id: 'Default.upper', title: 'Upper' },
+                                { id: 'Default.empty', title: 'Empty' }
+                            ]
+                        }
+                    }
+                }
+            });
+            const { Plugin, store } = getPluginForTest(CatalogPlugin, {
+                ...ACTIVE_CATALOG_STATE,
+                layers: {
+                    flat: [layer('existing', 'Default')],
+                    groups: [{ id: 'Default', title: 'Default', nodes: ['existing'] }]
+                },
+                catalog: {
+                    services: { geonode: { type: 'geonode', title: 'GeoNode', url: 'http://geonode.test', autoload: false } },
+                    selectedService: 'geonode',
+                    result: { records: [record], numberOfRecordsMatched: 1 }
+                }
+            });
+            ReactDOM.render(<Plugin zoomToLayer={false} />, document.getElementById('container'));
+
+            waitForUpdates(() => {
+                const addButton = document.querySelector('.ms-catalog-list .ms-resource-card-buttons .glyphicon-plus')?.closest('button');
+                if (!addButton) {
+                    done(new Error('Missing map import button'));
+                    return;
+                }
+                TestUtils.Simulate.click(addButton);
+                waitForUpdates(() => {
+                    try {
+                        const { flat, groups } = store.getState().layers;
+                        expect(store.getState().catalog.layerError).toBeFalsy();
+                        expect(flat.map(({ title }) => title)).toEqual(['existing', ...mapLayers.map(({ title }) => title)]);
+                        const importedGroup = groups[0].nodes[0];
+                        const getTitles = nodes => nodes.map(node => node.title || flat.find(({ id }) => id === node).title);
+                        expect(importedGroup.title).toBe('Imported map');
+                        expect(groups[0].nodes[1]).toBe('existing');
+                        expect(getTitles(importedGroup.nodes)).toEqual(['top', 'Upper', 'middle', 'Parent', 'Lower', 'bottom', 'Empty']);
+                        expect(getTitles(importedGroup.nodes[3].nodes)).toEqual(['parent-top', 'Nested', 'parent-bottom']);
+                        expect(importedGroup.nodes[6].nodes).toEqual([]);
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
                 });
             });
         });

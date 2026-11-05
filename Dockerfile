@@ -1,4 +1,4 @@
-FROM tomcat:10.1-jdk17 AS mother
+FROM geosolutionsit/tomcat:11.0-jdk17-temurin-resolute AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geosolutionsgroup.com>"
 ARG MAPSTORE_WEBAPP_SRC=""
 WORKDIR /tmp/build-context
@@ -45,7 +45,7 @@ RUN set -eux; \
     cp -r ./docker/. /mapstore/docker/
 WORKDIR /mapstore
 
-FROM tomcat:10.1-jdk17
+FROM geosolutionsit/tomcat:11.0-jdk17-temurin-resolute
 ARG UID=20000
 ARG GID=20000
 ARG UNAME=mapstore

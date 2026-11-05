@@ -75,7 +75,7 @@ With the same procedure used for maps (see [previous section](#maps-with-other-m
 
 * Counter widgets, only if it refers to the same layer
 
-When a table is connected with other widgets, it became a *Parent Table* and a filter appears on the top.
+When another widget is connected to a Table widget, the Table becomes a *Parent Table*, and a filter is displayed at the top.
 
 <img src="../img/connecting-widgets/table_filter.jpg" class="ms-docimage" style="max-width:700px;"/>
 

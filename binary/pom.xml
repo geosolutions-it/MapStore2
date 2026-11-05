@@ -13,7 +13,7 @@
     <url>http://www.geosolutionsgroup.com</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>11.0.25</tomcat.version>
+        <tomcat.version>11.0.27</tomcat.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
     <dependencies>
@@ -116,7 +116,7 @@
                         <configuration>
                             <target>
                                 <echo message="Downloading JRE..." />
-                                <get src="https://maven.geo-solutions.it/jdk/17.0.13/jdk_17.0.13.tar.gz" dest="${project.build.directory}/jre.tar.gz" />
+                                <get src="https://maven.geosolutionsgroup.com/jdk/17.0.20.1/jdk_17.0.20.1_1.tar.gz" dest="${project.build.directory}/jre.tar.gz" />
                                 <echo message="Untar JRE..." />
                                 <gunzip src="${project.build.directory}/jre.tar.gz" dest="${project.build.directory}/jre.tar" />
                                 <untar src="${project.build.directory}/jre.tar" dest="${project.build.directory}/jre" />

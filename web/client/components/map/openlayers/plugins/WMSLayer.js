@@ -69,6 +69,9 @@ const loadFunction = (options, headers) => function(image, src) {
     const isPost = typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity);
 
     if (!isPost && !headers) {
+        img.addEventListener('error', () => {
+            failTiles.add(src);
+        }, { once: true });
         img.src = newSrc;
         return;
     }

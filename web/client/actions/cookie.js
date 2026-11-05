@@ -7,8 +7,6 @@
 */
 
 export const SET_COOKIE_VISIBILITY = 'SET_COOKIE_VISIBILITY';
-export const SET_MORE_DETAILS_VISIBILITY = 'SET_MORE_DETAILS_VISIBILITY';
-export const SET_DETAILS_COOKIE_HTML = 'SET_DETAILS_COOKIE_HTML';
 
 export function setCookieVisibility(status) {
     return {
@@ -16,16 +14,19 @@ export function setCookieVisibility(status) {
         status
     };
 }
-export function setMoreDetailsVisibility(status) {
-    return {
-        type: SET_MORE_DETAILS_VISIBILITY,
-        status
-    };
-}
-export function setDetailsCookieHtml(html, lang) {
-    return {
-        type: SET_DETAILS_COOKIE_HTML,
-        html,
-        lang
-    };
-}
+
+export const SET_PRIVACY_CHOICE = 'SET_PRIVACY_CHOICE';
+export const setPrivacyChoice = choice => ({type: SET_PRIVACY_CHOICE, choice});
+
+export const ADD_PRIVACY_ACCESS = 'COOKIE:ADD_PRIVACY_ACCESS';
+export const REMOVE_PRIVACY_ACCESS = 'COOKIE:REMOVE_PRIVACY_ACCESS';
+/**
+ * Records that a container of the page shows an access to the privacy settings.
+ * @param {string} id the container, one of the `PRIVACY_ACCESS` values
+ */
+export const addPrivacyAccess = id => ({type: ADD_PRIVACY_ACCESS, id});
+/**
+ * Records that a container of the page no longer shows its access to the privacy settings.
+ * @param {string} id the container, one of the `PRIVACY_ACCESS` values
+ */
+export const removePrivacyAccess = id => ({type: REMOVE_PRIVACY_ACCESS, id});

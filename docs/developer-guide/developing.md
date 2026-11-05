@@ -122,6 +122,12 @@ The repository also provides a Docker Compose test setup under the `tests` direc
 
 Before running the stack locally, make sure Docker Compose is available and that the MapStore WAR expected by the test override is present as `mapstore.war` in the repository root. You can build the WAR with `./build.sh` and copy or symlink `product/target/mapstore.war` to `mapstore.war`.
 
+Set `INITIAL_ADMIN_PASSWORD` to a non-default password before starting the stack. Compose passes it to MapStore and uses the same value for the authenticated endpoint tests. Current MapStore versions refuse the legacy `admin` / `admin` credentials.
+
+```sh
+export INITIAL_ADMIN_PASSWORD='<non-default local test password>'
+```
+
 The Compose files are layered deliberately:
 
 * `docker-compose.yml` defines the default MapStore, PostgreSQL and proxy services.
@@ -143,6 +149,8 @@ docker compose --profile test -f docker-compose.yml -f docker-compose-override.y
 ```
 
 The `base` profile starts the services required by the tests, including PostgreSQL, MapStore and the LDAP test container. The `test` profile enables the `sut` service; keep `--exit-code-from sut` so the command returns the result of `tests.py`.
+
+On ARM Docker hosts, if the pinned PostGIS image does not support the native platform, set `DOCKER_DEFAULT_PLATFORM=linux/amd64` before running both commands.
 
 When the local test run is complete, stop the Compose stack with:
 
@@ -195,14 +203,20 @@ npm start # or npm run be:start
     },
     ```
 
-### Defaults Users and Database
+### Initial User and Database
 
-Running MapStore backend locally, on start-up you will find the following users:
+Running MapStore backend locally, on the first start-up (empty database) the `admin` user, with ADMIN role, is created with the password set in the `INITIAL_ADMIN_PASSWORD` environment variable. If the variable is not set, no `admin` account is created and you cannot log in.
 
-* `admin`, with ADMIN role and password `admin`
-* `user` with USER role with password `user`
+For instance:
 
-You can login as `admin` to set-up new users and access to all the features reserved to `ADMIN` users.
+```sh
+export INITIAL_ADMIN_PASSWORD='<your-dev-password>'
+npm start
+```
+
+On Windows use `set INITIAL_ADMIN_PASSWORD=<your-dev-password>` (`cmd`) or `$env:INITIAL_ADMIN_PASSWORD='<your-dev-password>'` (PowerShell) instead of `export`.
+
+You can login as `admin` to set-up new users and access to all the features reserved to `ADMIN` users. See [Initial Administrator Password](initial-admin-password.md) for details.
 
 The database used by default in this mode is H2 on disk. You can find the files of the database in the directory `webapps/mapstore/` starting from your execution context. Check how to set-up database in the dedicated section of the documentation.
 

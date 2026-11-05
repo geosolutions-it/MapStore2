@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import { get, head, last, template, isNil, castArray, isEmpty } from 'lodash';
+import { get, head, last, isNil, castArray, isEmpty } from 'lodash';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
@@ -16,6 +16,7 @@ import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNorma
 import WMS from "../api/WMS";
 import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
 import { getDefaultUrl } from '../utils/URLUtils';
+import { xmlEscape } from '../utils/XMLUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
@@ -240,8 +241,9 @@ const parseCSWResponse = (response) => {
 export const constructXMLBody = (startPosition, maxRecords, searchText, { options: { service } = {} } = {}) => {
     const { filter, sortBy: sortObj } = service ?? {};
     const staticFilter = filter?.staticFilter || defaultStaticFilter;
+    const filterTemplate = String(filter?.dynamicFilter || defaultDynamicFilter);
     const dynamicFilter = `<ogc:And>
-        ${template(filter?.dynamicFilter || defaultDynamicFilter)({ searchText })}
+        ${filterTemplate.split('${searchText}').join(xmlEscape(searchText ?? ''))}
         ${staticFilter}
     </ogc:And>`;
     const sortExp = sortObj?.name ? sortByXml({ name: sortObj?.name, order: sortObj?.order ?? "ASC"}) : '';
