@@ -13,7 +13,7 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>10.1.55</tomcat.version>
+        <tomcat.version>11.0.27</tomcat.version>
         <jackson.version>2.22.3</jackson.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
@@ -42,8 +42,8 @@
 
         <!-- MapStore‑specific -->
         <geostore-webapp.version>2.7-SNAPSHOT</geostore-webapp.version>
-        <print-lib.version>2.5-SNAPSHOT</print-lib.version>
-        <http_proxy.version>1.7-SNAPSHOT</http_proxy.version>
+        <print-lib.version>2.5.2</print-lib.version>
+        <http_proxy.version>1.7.0</http_proxy.version>
 
         <!-- Commons extras -->
         <commons-lang3.version>3.20.0</commons-lang3.version>

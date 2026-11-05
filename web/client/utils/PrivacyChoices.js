@@ -7,6 +7,7 @@
 import { createSelector } from 'reselect';
 import ConfigUtils from './ConfigUtils';
 import { getApi, getItemKey } from '../api/userPersistedStorage';
+import { getSafeHref } from './URLUtils';
 
 export const privacyConfig = () => ConfigUtils.getConfigProp('privacy') || null;
 export const privacyChoiceKey = () => getItemKey('privacy', 'choices');
@@ -62,12 +63,14 @@ export const policyLinkKeys = ['cookie', 'privacy', 'terms'];
  * @param {object} config privacy configuration
  * @param {string} key one of `cookie`, `privacy`, `terms`
  * @param {string} locale current locale, e.g. `it-IT`
- * @returns {string} the url, or undefined when not configured
+ * @returns {string} the url, or undefined when not configured or not usable as a link target
  */
 export const getPolicyLink = (config, key, locale) => {
     const link = config?.links?.[key];
-    if (!link || typeof link === 'string') return link || undefined;
-    return link[locale] || Object.values(link).find(Boolean);
+    const url = !link || typeof link === 'string'
+        ? link
+        : link[locale] || Object.values(link).find(Boolean);
+    return getSafeHref(url) || undefined;
 };
 export const hasPrivacyLinks = config => policyLinkKeys.some(key => !!getPolicyLink(config, key));
 /**

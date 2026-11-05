@@ -28,7 +28,7 @@ The layer settings panel is composed of four sections:
 
 By default, as soon as the user opens the layer settings panel the General information section appears:
 
-<img src="../img/layer-setting/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/layer-settings/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 In this page it is possible to:
 
@@ -39,6 +39,9 @@ In this page it is possible to:
 <video class="ms-docimage" controls><source src="../img/layer-settings/lacalize-layer-title.mp4"/></video>
 
 * View or edit the **Name** of the layer
+
+!!! note
+    The ability to change layer *Title* and *Name* is available for supported ArcGIS, WFS and WMS layers.
 
 * Edit the layer's **Description**
 
@@ -58,9 +61,6 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
     The *WFS linked service* option is available only for WMS layers.
 
 * **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the [Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
-
-!!! note
-    The ability to change layer Title and Name is available for supported ArcGIS, WFS and WMS layers.
 
 ## Display
 
