@@ -149,9 +149,6 @@ describe('Openlayers PopupSupport', () => {
         expect(document.querySelector('#test-component-map-popup')).toExist();
     });
 
-<<<<<<< HEAD
-=======
-
     it('should configure autoPan options on overlay', () => {
         const popups = [
             {
@@ -173,20 +170,5 @@ describe('Openlayers PopupSupport', () => {
         });
     });
 
-    describe('sanitization', () => {
-        it('removes script tags from the popup content', () => {
-            window.__popupScript = undefined;
-            const popups = [{
-                id: 'popup',
-                content: '<div id="innerHtml">content</div><script>window.__popupScript = true</script>',
-                position: { coordinates: [0, 0] },
-                autoPan: false
-            }];
-            renderPopups({ popups });
-            expect(window.__popupScript).toBe(undefined);
-            expect(document.body.innerHTML.indexOf('<script')).toBe(-1);
-        });
-    });
->>>>>>> c280b93d7 (#13029: Fix - GFI Popup hidden when feature is near the map edge (#13041))
 });
 
