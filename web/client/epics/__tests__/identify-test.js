@@ -41,7 +41,7 @@ import {
     clearWarning
 } from '../../actions/mapInfo';
 
-import { REMOVE_MAP_POPUP } from '../../actions/mapPopups';
+import { ADD_MAP_POPUP, REMOVE_MAP_POPUP } from '../../actions/mapPopups';
 import { TEXT_SEARCH_CANCEL_ITEM } from '../../actions/search';
 import {
     getFeatureInfoOnFeatureInfoClick,
@@ -1494,6 +1494,37 @@ describe('identify Epics', () => {
                 }
             }
         }, done());
+    });
+
+    it('onMapClick triggers addPopup with autoPan options when showInMapPopup is true', done => {
+        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
+        const NUM_ACTIONS = 3;
+        testEpic(onMapClick, NUM_ACTIONS, [clickOnMap({latlng: {lat: 8, lng: 8}})], (actions) => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toEqual(FEATURE_INFO_CLICK);
+            expect(actions[1].type).toEqual(TEXT_SEARCH_CANCEL_ITEM);
+            expect(actions[2].type).toEqual(ADD_MAP_POPUP);
+            expect(actions[2].popup).toExist();
+            expect(actions[2].popup.autoPan).toBe(true);
+            expect(actions[2].popup.autoPanMargin).toBe(70);
+        }, {
+            controls: {
+                info: {
+                    available: true
+                }
+            },
+            mapInfo: {
+                enabled: true,
+                disableAlwaysOn: false,
+                showInMapPopup: true
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
+            }
+        }, done);
     });
 
     it('onMapClick do not trigger when mapinfo is not enabled', done => {

@@ -126,10 +126,11 @@ export default class PopupSupport extends React.Component {
             const popup = new Overlay({
                 id,
                 element: container,
-                autoPan,
+                autoPan: autoPan ? { // Use the options-object of autoPan instead of legacy boolen
+                    margin: autoPanMargin,
+                    animation: autoPanAnimation
+                } : false,
                 offset,
-                autoPanMargin,
-                autoPanAnimation,
                 positioning: 'bottom-center',
                 className: 'ol-overlay-container ol-unselectable',
                 position: coordinates
