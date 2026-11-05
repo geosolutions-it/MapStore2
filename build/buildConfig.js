@@ -216,6 +216,11 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     module: {
         rules: [
             {
+                // react 16 has no exports map, so strict esm deps cannot resolve react/jsx-runtime
+                test: /\.m?js$/,
+                resolve: { fullySpecified: false }
+            },
+            {
                 test: /\.css$/,
                 use: [{
                     loader: 'style-loader'

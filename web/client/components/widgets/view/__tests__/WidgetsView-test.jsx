@@ -10,9 +10,15 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-import { Responsive } from 'react-grid-layout';
 
 import WidgetsView from '../WidgetsView';
+
+// the grid is a function component, test utils can only find a class
+class GridStub extends React.Component {
+    render() {
+        return <div className="grid-stub">{this.props.children}</div>;
+    }
+}
 
 const dummyWidget = {
     title: "TEST",
@@ -179,6 +185,7 @@ describe('WidgetsView component', () => {
                 layouts={layouts}
                 maximized={maximized}
                 onLayoutChange={onLayoutChange}
+                gridComponent={GridStub}
             />,
             document.getElementById("container")
         );
@@ -186,7 +193,7 @@ describe('WidgetsView component', () => {
         let component = render({
             widget: [widget, { id: 'other-view-widget', layoutId: 'view-2' }]
         });
-        let grid = ReactTestUtils.findRenderedComponentWithType(component, Responsive);
+        let grid = ReactTestUtils.findRenderedComponentWithType(component, GridStub);
         expect(grid.props.layouts.xxs.length).toBe(1);
         expect(grid.props.layouts.xxs[0]).toEqual({
             i: widget.id,
@@ -202,7 +209,7 @@ describe('WidgetsView component', () => {
         expect(layouts).toEqual(originalLayouts);
 
         component = render({});
-        grid = ReactTestUtils.findRenderedComponentWithType(component, Responsive);
+        grid = ReactTestUtils.findRenderedComponentWithType(component, GridStub);
         expect(grid.props.onLayoutChange).toBe(onLayoutChange);
         expect(grid.props.layouts.md[0].x).toBe(2);
         expect(grid.props.layouts.md[0].y).toBe(3);
