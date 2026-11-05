@@ -40,11 +40,7 @@ export default pure(({
     compactType = null,
     compactMode,
     useDefaultWidthProvider = true,
-<<<<<<< HEAD
-=======
     gridComponent: GridComponent = ResponsiveReactGridLayout,
-    draggableCancel = DRAG_CANCEL,
->>>>>>> 4dea1e6a9 (#12984 Widgets can be moved outside the visible area and become unreachable (#12985))
     measureBeforeMount,
     width,
     showGroupColor,
