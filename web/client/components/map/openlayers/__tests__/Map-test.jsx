@@ -313,6 +313,8 @@ describe('OpenlayersMap', () => {
                 originalEvent: {}
             });
             expect(spy.calls.length).toEqual(1);
+            expect(Number.isFinite(spy.calls[0].arguments[0].resolution)).toBe(true);
+            expect(spy.calls[0].arguments[0].resolution).toBe(map.map.getView().getResolution());
             done();
         }, 500);
     });
