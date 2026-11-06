@@ -172,6 +172,7 @@ const Catalog = ({
         group: group || undefined
     };
 
+    // TODO isSRSNotAllowed() move to utils/CatalogUtils.js after PR #13133 is merged
     const isSRSNotAllowed = (record) => {
         if (record.serviceType !== 'cog') {
             const ogcReferences = record.ogcReferences || { SRS: [] };
