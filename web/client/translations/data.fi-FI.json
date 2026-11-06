@@ -1263,6 +1263,7 @@
       "reset": "Nollaa",
       "options": "Vaihtoehdot",
       "srs_not_allowed": "Tämä palvelu ei tue karttakoordinaattijärjestelmää",
+      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code: the layer cannot be added",
       "add": "Lisää",
       "service": "Palvelu",
       "servicePlaceholder": "kirjoita palvelu",

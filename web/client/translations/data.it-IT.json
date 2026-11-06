@@ -1887,6 +1887,7 @@
       "reset": "Reset",
       "options": "Opzioni",
       "srs_not_allowed": "Il sistema di coordinate della mappa non è supportato da questo servizio",
+      "cog_crs_not_identified": "Il sistema di riferimento del file COG non è identificabile tramite codice: il layer non può essere aggiunto",
       "add": "Aggiungi",
       "service": "Servizio",
       "servicePlaceholder": "seleziona un servizio",

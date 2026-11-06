@@ -58,6 +58,15 @@ export const getCatalogSearchErrorMessage = (error) => {
     return { message: CATALOG_SERVICE_UNAVAILABLE };
 };
 
+/**
+ * Resolve the message with specific errors keep their own message, all the others use the generic `catalog.error`.
+ * @param {string} layerError the message id stored in catalog state (layerError)
+ * @returns {string} message id to display
+ */
+export const getCatalogLayerErrorMessage = (layerError) =>
+    // TODO here could be a map of specific COG CRS error messages, for now we only this one specific error message `cog_crs_not_identified` issue #
+    layerError === 'catalog.cog_crs_not_identified' ? layerError : 'catalog.error';
+
 export const buildSRSMap = (srs) => {
     return srs.filter(s => CoordinatesUtils.isSRSAllowed(s)).reduce((previous, current) => {
         return Object.assign(previous, {[current]: true});
