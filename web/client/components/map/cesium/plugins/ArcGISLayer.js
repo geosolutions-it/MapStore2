@@ -75,7 +75,7 @@ const create = (options) => {
     const { headers, params } = getRequestConfigurationByUrl(options.url, null, options.security?.sourceId);
     const resource = new Cesium.Resource({
         url: options.url,
-        queryParameters: params,
+        queryParameters: { ...params, ...(options._v_ !== undefined && { _v_: options._v_ }) },
         headers,
         proxy: options.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
     });
@@ -94,7 +94,8 @@ const update = (layer, newOptions, oldOptions) => {
     if (newOptions.name !== oldOptions.name
         || newOptions.forceProxy !== oldOptions.forceProxy
         || !isEqual(oldOptions.security, newOptions.security)
-        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+        || !isEqual(oldOptions._v_, newOptions._v_)) {
         return create(newOptions);
     }
     return null;

@@ -16,20 +16,26 @@ const createLayer = (options) => {
         return LEsri.imageMapLayer({
             url: options.url,
             opacity: options.opacity || 1,
-            format: options.format
+            format: options.format,
+            requestParams: { ...(options._v_ !== undefined && { _v_: options._v_ }) }
         });
     }
     return LEsri.dynamicMapLayer({
         url: options.url,
         opacity: options.opacity || 1,
         ...(options.name !== undefined && { layers: [`${options.name}`] }),
-        format: options.format
+        format: options.format,
+        requestParams: { ...(options._v_ !== undefined && { _v_: options._v_ }) }
     });
 };
 
 registerType('arcgis', {
     create: createLayer,
     update: (layer, newOptions, oldOptions) => {
+        if (oldOptions._v_ !== newOptions._v_) {
+            layer.options.requestParams = { ...layer.options.requestParams, _v_: newOptions._v_ };
+            layer.redraw();
+        }
         if (oldOptions.name !== newOptions.name) {
             if (layer.setLayers) {
                 layer.setLayers(newOptions.name !== undefined ? [`${newOptions.name}`] : false);

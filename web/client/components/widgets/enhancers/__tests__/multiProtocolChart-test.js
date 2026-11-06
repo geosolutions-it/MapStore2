@@ -56,6 +56,48 @@ describe('multiProtocolChart enhancer', () => {
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
+    it('refetches chart data when the layer _v_ property changes', (done) => {
+        let loadCount = 0;
+        const props = {
+            traces: [{
+                layer: {
+                    name: "test",
+                    _v_: 1,
+                    url: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
+                    wpsUrl: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
+                    search: { url: 'base/web/client/test-resources/wfs/Arizona_18_results.json'}
+                },
+                options: {
+                    aggregationAttribute: "LAND_KM",
+                    groupByAttributes: "STATE_NAME"
+                }
+            }],
+            onLoad: () => {
+                loadCount++;
+                if (loadCount === 1) {
+                    setTimeout(() => {
+                        const nextProps = {
+                            ...props,
+                            traces: [{
+                                ...props.traces[0],
+                                layer: { ...props.traces[0].layer, _v_: 2 }
+                            }]
+                        };
+                        ReactDOM.render(<Sink {...nextProps} />, document.getElementById("container"));
+                    });
+                } else {
+                    try {
+                        expect(loadCount).toBe(2);
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                }
+            }
+        };
+        const Sink = multiProtocolChart(createSink(() => {}));
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+    });
     it('multiProtocolChart WPS data fetch', (done) => {
         const Sink = multiProtocolChart(createSink(({ data, loading } = {}) => {
             if (!loading) {

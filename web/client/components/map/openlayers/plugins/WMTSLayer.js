@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import Layers from '../../../../utils/openlayers/Layers';
 import isEqual from 'lodash/isEqual';
 import castArray from 'lodash/castArray';
@@ -118,6 +119,7 @@ const createLayer = options => {
     let extent = layerExtent && getIntersection(layerExtent, projection.getExtent());
     let queryParameters = options.params ? options.params : {};
     queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
+    if (options._v_ !== undefined) queryParameters._v_ = options._v_;
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
 
     // TODO: support tileSizes from  matrix
@@ -189,6 +191,10 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || oldOptions.credits !== newOptions.credits
     || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
         return createLayer(newOptions);
+    }
+    if (newOptions._v_ !== oldOptions._v_) {
+        const source = layer.getSource();
+        source.setUrls(source.getUrls().map(url => addRefreshParameter(url, newOptions._v_)));
     }
     if (oldOptions.minResolution !== newOptions.minResolution) {
         layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);

@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
+import { cancelVectorLayerRefresh, refreshVectorLayer } from '../../../../utils/openlayers/LayerRefresh';
 import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -206,7 +208,7 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
             return null;
         }
         const { headers, params } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
-        const secureUrl = updateUrlParams(options.url, params);
+        const secureUrl = addRefreshParameter(updateUrlParams(options.url, params), options._v_);
 
         // FGB header CRS or fallback to EPSG:4326
         const dataProjection = getFlatGeobufCrsFromOptions(options);
@@ -279,21 +281,30 @@ const needsReload = (oldOptions, newOptions) =>
     || !isEqual(oldOptions.security, newOptions.security)
     || !isEqual(oldOptions.params, newOptions.params)
     || oldOptions.requestRuleRefreshHash !== newOptions.requestRuleRefreshHash
+    || oldOptions._v_ !== newOptions._v_
     || oldOptions.maxFeaturesInView !== newOptions.maxFeaturesInView;
 
 Layers.registerType(FGB_LAYER_TYPE, {
     create: createLayer,
     update: (layer, newOptions = {}, oldOptions = {}, map) => {
+        layer._msCurrentOptions = newOptions;
         const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
         const newCrs = newOptions.crs || newOptions.srs || 'EPSG:3857';
         const source = layer.getSource();
         const crsChanged = newCrs !== oldCrs;
         const reload = needsReload(oldOptions, newOptions);
+        let refreshing = false;
+        if (reload) {
+            cancelVectorLayerRefresh(layer);
+            refreshing = newOptions._v_ !== oldOptions._v_ && refreshVectorLayer(layer,
+                () => createLayer(newOptions, map), map,
+                () => updateStyle(layer, layer._msCurrentOptions || newOptions, map));
+        }
 
         // CRS change: drop and refetch instead of transforming in place.
         // Dynamic projections may not be registered yet. Reload also covers
         // URL/security/params changes; rebuild the loader to capture new options.
-        if (crsChanged || reload) {
+        if (!refreshing && (crsChanged || reload)) {
             bumpLoadSession(source);
             clearCappedLoadExtents(source);
             if (reload) {

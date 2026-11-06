@@ -72,10 +72,11 @@ export function updateSettings(options) {
     };
 }
 
-export function changeLayerProperties(layer, properties) {
+export function changeLayerProperties(layer, properties, widgetUpdates) {
     return {
         type: CHANGE_LAYER_PROPERTIES,
         newProperties: properties,
+        ...(widgetUpdates?.length && { widgetUpdates }),
         layer: layer
 
     };
@@ -221,10 +222,11 @@ export function removeLayer(layerId) {
         layerId: layerId
     };
 }
-export function refreshLayerVersion(layer, version) {
+export function refreshLayerVersion(layer, version, widgetUpdates) {
     return {
         type: CHANGE_LAYER_PROPERTIES,
         layer,
+        ...(widgetUpdates?.length && { widgetUpdates }),
         newProperties: {
             _v_: version || new Date().getTime()
         }
