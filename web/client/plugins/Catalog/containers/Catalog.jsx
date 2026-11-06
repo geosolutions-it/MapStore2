@@ -82,7 +82,8 @@ import Button from '../../../components/layout/Button';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import API from '../../../api/catalog';
-import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
+import { isAllowedSRS } from '../../../utils/CoordinatesUtils';
+import { isProjectionAvailable } from '../../../utils/ProjectionUtils';
 import { getResolutions } from '../../../utils/MapUtils';
 import { buildSRSMap } from '../../../utils/CatalogUtils';
 import { useCatalogSelection } from '../../../components/catalog/hooks/useCatalogSelection';
@@ -171,6 +172,7 @@ const Catalog = ({
         group: group || undefined
     };
 
+    // TODO isSRSNotAllowed() move to utils/CatalogUtils.js after PR #13133 is merged
     const isSRSNotAllowed = (record) => {
         if (record.serviceType !== 'cog') {
             const ogcReferences = record.ogcReferences || { SRS: [] };
@@ -178,7 +180,10 @@ const Catalog = ({
             return allowedSRS && !isAllowedSRS(crs, allowedSRS);
         }
         const recordCrs = record?.sourceMetadata?.crs;
-        return recordCrs && !isSRSAllowed(recordCrs);
+        // we need to use ProjectionRegistry list as the single criteria to allow CRS
+        // because some CRSs EPSG:326xx/327xx is registered in proj4js at lib bootstrap
+        // https://github.com/proj4js/proj4js/blob/v2.19.10/lib/global.js#L6
+        return recordCrs && !isProjectionAvailable(recordCrs);
     };
 
 
