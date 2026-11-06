@@ -9,16 +9,16 @@
 import axios from '../libs/ajax';
 import {readZip} from '../utils/FileUtils';
 
+// Uploads one file at a time: each upload rewrites the same configuration files on the server.
 export const upload = (files, url = "rest/config/uploadPlugin") => {
-    return Promise.all(
-        files.map(file => readZip(file)
-            .then((readFile) => axios.post(url, readFile, {
-                headers: {
-                    "Content-Type": "application/octet-stream"
-                }
-            }))
-        )
-    ).then((responses) => responses.map(r => r.data));
+    return files.reduce((previous, file) => previous.then(results => readZip(file)
+        .then((readFile) => axios.post(url, readFile, {
+            headers: {
+                "Content-Type": "application/octet-stream"
+            }
+        }))
+        .then(response => [...results, response.data])
+    ), Promise.resolve([]));
 };
 
 export const uninstall = (plugin, url = "rest/config/uninstallPlugin") => {

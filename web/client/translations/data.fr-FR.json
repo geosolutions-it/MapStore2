@@ -547,7 +547,27 @@
       "groupmanagerTab": "Groupes",
       "usermanagerTab": "Utilisateurs",
       "tagsmanagerTab": "Balises",
-      "ipmanagerTab": "Plages IP"
+      "ipmanagerTab": "Plages IP",
+      "extensionsmanagerTab": "Extensions"
+    },
+    "extensionsManager": {
+      "noExtensions": "Aucune extension installée",
+      "noExtensionsDescription": "Installez une extension pour ajouter ses outils à MapStore",
+      "loadError": "La liste des extensions installées n'a pas pu être chargée",
+      "menuTitle": "Gérer les extensions",
+      "install": "Installer une extension",
+      "replacesVersion": "Remplace la version installée {current} par la version {next}",
+      "installedMessage": "Les extensions sont disponibles dans l'application",
+      "updatedMessage": "Rechargez la page pour utiliser les extensions mises à jour",
+      "uninstall": "Désinstaller",
+      "cancel": "Annuler",
+      "uninstallTitle": "Désinstaller {title} ?",
+      "uninstallDescription": "L'extension et ses fichiers sont supprimés. Les contextes qui utilisent son plugin ne l'afficheront plus.",
+      "uninstallError": "L'extension n'a pas pu être désinstallée",
+      "uninstalledMessage": "{title} a été désinstallée",
+      "plugins": "Plugins",
+      "pluginInContexts": "Peut être ajouté aux contextes d'application",
+      "pluginNotInContexts": "Ne peut pas être ajouté aux contextes d'application"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",

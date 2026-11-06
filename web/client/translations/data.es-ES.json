@@ -547,7 +547,27 @@
       "groupmanagerTab": "Grupos",
       "usermanagerTab": "Usuarios",
       "tagsmanagerTab": "Etiquetas",
-      "ipmanagerTab": "Rangos de IP"
+      "ipmanagerTab": "Rangos de IP",
+      "extensionsmanagerTab": "Extensiones"
+    },
+    "extensionsManager": {
+      "noExtensions": "No hay ninguna extensión instalada",
+      "noExtensionsDescription": "Instale una extensión para añadir sus herramientas a MapStore",
+      "loadError": "No se pudo cargar la lista de las extensiones instaladas",
+      "menuTitle": "Gestionar extensiones",
+      "install": "Instalar extensión",
+      "replacesVersion": "Sustituye la versión instalada {current} por la versión {next}",
+      "installedMessage": "Las extensiones están disponibles en la aplicación",
+      "updatedMessage": "Recargue la página para usar las extensiones actualizadas",
+      "uninstall": "Desinstalar",
+      "cancel": "Cancelar",
+      "uninstallTitle": "¿Desinstalar {title}?",
+      "uninstallDescription": "Se eliminan la extensión y sus archivos. Los contextos que usan su plugin dejarán de mostrarlo.",
+      "uninstallError": "No se pudo desinstalar la extensión",
+      "uninstalledMessage": "{title} se ha desinstalado",
+      "plugins": "Plugins",
+      "pluginInContexts": "Se puede añadir a los contextos de aplicación",
+      "pluginNotInContexts": "No se puede añadir a los contextos de aplicación"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",

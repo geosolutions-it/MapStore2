@@ -1263,6 +1263,7 @@
       "GroupManager",
       "TagsManager",
       "IPManager",
+      "ExtensionsManager",
       "Footer",
       "Cookie",
       {
