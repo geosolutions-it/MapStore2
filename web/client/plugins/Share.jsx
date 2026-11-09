@@ -30,14 +30,13 @@ import { mapTypeSelector } from "../selectors/maptype";
 import { dashboardResource } from '../selectors/dashboard';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
- * You can share it on socials networks(facebook,twitter,google+,linkedIn)
  * copying the direct link
  * copying the embedded code
  * using the QR code with mobile apps
  * @class
  * @memberof plugins
  * @prop {node|string} [title] the title of the page
- * @prop {boolean} [socialPanel] if false, hide the social tab. Default true
+ * @prop {boolean} [socialPanel] deprecated. If true, shows the social tab, with links to share on social networks. Default false
  * @prop {boolean} [embedPanel] if false, hide the embed tab. Default true
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
@@ -45,7 +44,6 @@ import { dashboardResource } from '../selectors/dashboard';
  * @prop {boolean} [embedOptions.showTOCToggle] true by default, set to false to hide the "show TOC" toggle.
  * @prop {boolean} [showAPI] default true, if false, hides the API entry of embed.
  * @prop {function} [onClose] function to call on close window event.
- * @prop {function} [getCount] function used to get the count for social links.
  * @prop {object} [cfg.advancedSettings] show advanced settings (bbox param, centerAndZoom param or home button) f.e {bbox: true, homeButton: true, centerAndZoom: true}
  * @prop {boolean} [cfg.advancedSettings.bbox] if true, the share url is generated with the bbox param
  * @prop {boolean} [cfg.advancedSettings.centerAndZoom] if true, the share url is generated with the center and zoom params

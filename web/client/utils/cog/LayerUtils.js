@@ -39,6 +39,15 @@ export const getProjectionFromGeoKeys = (image) => {
     return null;
 };
 
+/**
+ * Check if a COG record/layer has metadata but its CRS could not be identified
+ * (e.g. user custom GeoKeys, ProjectedCSTypeGeoKey = 32767)
+ * @param {Object} record COG record or layer
+ * @returns {boolean} true if metadata are present and the crs is missing
+ */
+export const isCOGCrsNotIdentified = (record) =>
+    !!record?.sourceMetadata && !record.sourceMetadata.crs;
+
 const abortError = (reject) => reject(new DOMException("Aborted", "AbortError"));
 /**
  * fromUrl with abort fetching of data and data slices
@@ -121,6 +130,7 @@ export const getLayerConfig = ({ url, layer, controller }) => {
 LayerUtils = {
     getTiffImageryProvider,
     getProjectionFromGeoKeys,
+    isCOGCrsNotIdentified,
     fromUrl,
     getLayerConfig
 };
