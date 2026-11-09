@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {isString, has, isNil, trim} from 'lodash';
+import {isString, has, isNil, trim, get} from 'lodash';
 import escape from 'lodash/escape';
 
 /**
@@ -57,7 +57,7 @@ export const generateTemplateString = (function() {
                     .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, (_, match) => {
                         const escapeFunction = escapeFn || (a => a);
                         // only a missing value falls back to '', 0 and false are kept
-                        const value = match.trim().split(".").reduce((a, b) => isNil(a) ? undefined : a[b], map);
+                        const value = get(map, match.trim());
                         return escapeFunction(isNil(value) ? '' : value);
                     });
 
