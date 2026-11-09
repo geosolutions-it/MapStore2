@@ -64,7 +64,7 @@ export const getCatalogSearchErrorMessage = (error) => {
  * @returns {string} message id to display
  */
 export const getCatalogLayerErrorMessage = (layerError) =>
-    // TODO here could be a map of specific COG CRS error messages, for now we only this one specific error message `cog_crs_not_identified` issue #
+    // TODO extend this mapping to support additional COG CRS errors, when applicable
     layerError === 'catalog.cog_crs_not_identified' ? layerError : 'catalog.error';
 
 export const buildSRSMap = (srs) => {
