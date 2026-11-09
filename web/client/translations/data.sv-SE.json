@@ -1685,7 +1685,7 @@
       "reset": "Rensa",
       "options": "Alternativ",
       "srs_not_allowed": "Koordinatsystemet stöds inte av den här tjänsten",
-      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code: the layer cannot be added",
+      "cog_crs_not_identified": "Koordinatsystemet för COG-filen kan inte identifieras med hjälp av koden, och lagret kan inte läggas till",
       "add": "Lägg till",
       "service": "Tjänst",
       "servicePlaceholder": "skriv en tjänst",

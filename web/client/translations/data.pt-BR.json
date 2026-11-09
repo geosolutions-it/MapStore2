@@ -1680,7 +1680,7 @@
       "reset": "Limpar",
       "options": "Opções",
       "srs_not_allowed": "O sistema de coordenadas do mapa não é suportado por este serviço",
-      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code: the layer cannot be added",
+      "cog_crs_not_identified": "O sistema de referência de coordenadas do arquivo COG não pode ser identificado pelo código, e a camada não pode ser adicionada",
       "add": "Adicionar",
       "service": "Serviço",
       "servicePlaceholder": "digite um serviço",

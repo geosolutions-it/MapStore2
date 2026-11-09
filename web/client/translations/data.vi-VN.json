@@ -185,7 +185,7 @@
       "showPreview": "Hiển thị xem trước",
       "showTemplate": "Hiển thị mẫu siêu dữ liệu",
       "srs_not_allowed": "Dịch vụ này không hỗ trợ hệ thống tọa độ bản đồ này",
-      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code: the layer cannot be added",
+      "cog_crs_not_identified": "Không thể xác định hệ tọa độ tham chiếu của tệp COG bằng mã, không thể thêm lớp",
       "start": "Ngày bắt đầu",
       "templateFormatDescriptionExample": "Mô tả của lớp là",
       "templateMetadataAvailable": "Siêu dữ liệu có sẵn từ định dạng Dublin Core: trừu tượng, ràng buộc, đóng góp, mô tả, định dạng, định danh, quyền, nguồn, tạm thời, tiêu đề, loại, URL",

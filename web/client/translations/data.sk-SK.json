@@ -1456,7 +1456,7 @@
       "reset": "Obnoviť",
       "options": "Možnosti",
       "srs_not_allowed": "Súradnicový systém nie je podporovaný touto službou ",
-      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code: the layer cannot be added",
+      "cog_crs_not_identified": "Súradnicový referenčný systém súboru COG sa nepodarilo identifikovať pomocou kódu, vrstvu nie je možné pridať",
       "add": "Pridať",
       "service": "Služba",
       "servicePlaceholder": "Zadaj názov služby",

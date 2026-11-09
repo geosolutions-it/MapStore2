@@ -1743,7 +1743,7 @@
       "reset": "Nulstil",
       "options": "Indstillinger",
       "srs_not_allowed": "Kortets koordinatsystem understøttes ikke af denne tjeneste",
-      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code: the layer cannot be added",
+      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code, the layer cannot be added",
       "add": "Tilføj",
       "service": "Tjeneste",
       "servicePlaceholder": "Indtast tjenestenavn",

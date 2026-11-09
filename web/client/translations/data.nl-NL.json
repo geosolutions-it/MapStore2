@@ -1747,7 +1747,7 @@
       "reset": "Wissen",
       "options": "Opties",
       "srs_not_allowed": "Het kaartcoördinatensysteem wordt niet ondersteund door deze service",
-      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code: the layer cannot be added",
+      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code,  the layer cannot be added",
       "add": "Toevoegen",
       "service": "Service",
       "servicePlaceholder": "typ een service",

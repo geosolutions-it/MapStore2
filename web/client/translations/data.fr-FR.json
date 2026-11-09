@@ -1868,7 +1868,7 @@
       "reset": "Effacer",
       "options": "Options",
       "srs_not_allowed": "Le système de coordonnées géographiques de la carte n'est pas supporté par ce service",
-      "cog_crs_not_identified": "Le système de coordonnées du fichier COG ne peut pas être identifié par un code : la couche ne peut pas être ajoutée",
+      "cog_crs_not_identified": "Le système de coordonnées du fichier COG ne peut pas être identifié par un code, la couche ne peut pas être ajoutée",
       "add": "Ajouter",
       "service": "Service",
       "servicePlaceholder": "Tapez un service",
