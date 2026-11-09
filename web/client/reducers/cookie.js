@@ -8,22 +8,25 @@
 
 import {
     SET_COOKIE_VISIBILITY,
-    SET_MORE_DETAILS_VISIBILITY,
-    SET_DETAILS_COOKIE_HTML
+    SET_PRIVACY_CHOICE,
+    ADD_PRIVACY_ACCESS,
+    REMOVE_PRIVACY_ACCESS
 } from '../actions/cookie';
 
-function cookie(state = {
-    html: {}
-}, action) {
+function cookie(state = {}, action) {
     switch (action.type) {
     case SET_COOKIE_VISIBILITY: {
         return Object.assign({}, state, {showCookiePanel: action.status});
     }
-    case SET_MORE_DETAILS_VISIBILITY: {
-        return Object.assign({}, state, {seeMore: action.status});
+    case SET_PRIVACY_CHOICE: {
+        return {...state, privacyChoice: action.choice};
     }
-    case SET_DETAILS_COOKIE_HTML: {
-        return Object.assign({}, state, {html: { ...state.html, [action.lang]: action.html}});
+    case ADD_PRIVACY_ACCESS: {
+        const accesses = state.privacyAccesses || [];
+        return accesses.includes(action.id) ? state : {...state, privacyAccesses: [...accesses, action.id]};
+    }
+    case REMOVE_PRIVACY_ACCESS: {
+        return {...state, privacyAccesses: (state.privacyAccesses || []).filter(id => id !== action.id)};
     }
     default:
         return state;

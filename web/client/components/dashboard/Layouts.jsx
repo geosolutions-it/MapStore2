@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactResizeDetector from 'react-resize-detector';
 import LoadingSpinner from '../misc/LoadingSpinner';
 import Message from '../I18N/Message';
 import FlexBox from '../layout/FlexBox';
@@ -30,12 +31,20 @@ export default function Layouts({ selectedLayout, layoutsData, ...props }) {
             </div>
         )
         : (
-            <FlexBox.Fill classNames={["_relative", "_overflow-auto"]}>
-                <WidgetsView
-                    {...filteredProps}
-                    layouts={layoutsData}
-                    canEdit={selectedLayout.dashboard ? false : props.canEdit}
-                />
+            <FlexBox.Fill
+                // ms-flex-fill sets min-width only, and the gutter keeps the width stable with or without scrollbar
+                style={{ minHeight: 0, scrollbarGutter: 'stable' }}
+                classNames={["_relative", "_overflow-auto"]}>
+                <ReactResizeDetector handleWidth refreshMode="throttle" refreshRate={100}>
+                    {({ width } = {}) => (
+                        <WidgetsView
+                            {...filteredProps}
+                            width={width ?? filteredProps.width}
+                            layouts={layoutsData}
+                            canEdit={selectedLayout.dashboard ? false : props.canEdit}
+                        />
+                    )}
+                </ReactResizeDetector>
             </FlexBox.Fill>
         );
 

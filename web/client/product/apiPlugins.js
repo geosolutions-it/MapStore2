@@ -9,6 +9,7 @@
 export default {
     plugins: {
         // framework plugins
+        CookiePlugin: require('../plugins/Cookie').default,
         DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu').default,
         FeedbackMaskPlugin: require('../plugins/FeedbackMask').default,

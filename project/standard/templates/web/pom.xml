@@ -344,6 +344,26 @@
                         </resources>
                     </configuration>
                 </execution>
+                <execution>
+                    <id>privacy template pages</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/mapstore/product/assets</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../MapStore2/web/client/product/assets</directory>
+                                <includes>
+                                    <include>privacy/*</include>
+                                    <include>img/logo.png</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
             </executions>
         </plugin>
 
@@ -403,7 +423,7 @@
             <version>${cargo.version}</version>
             <configuration>
                 <container>
-                    <containerId>tomcat10x</containerId>
+                    <containerId>tomcat11x</containerId>
                     <zipUrlInstaller>
                         <url>
                             https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip
