@@ -1,8 +1,9 @@
 import { fromUrl as fromGeotiffUrl } from 'geotiff';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
 
-import { isProjectionAvailable } from "../ProjectionUtils";
+import { getProjection, isProjectionAvailable } from "../ProjectionUtils";
 import { getRequestConfigurationByUrl } from '../SecurityUtils';
 import { updateUrlParams } from '../URLUtils';
 
@@ -127,12 +128,36 @@ export const getLayerConfig = ({ url, layer, controller }) => {
         .catch(() => ({...layer}));
 };
 
+const EPSILON = 1e-6;
+
+/**
+ * Check if a COG cover entire globe so that it can be repeated horizontally (wrapX)
+ * @param {Object} sourceMetadata layer.sourceMetadata
+ * @returns {boolean} true if the COG is global
+ */
+export const isGlobalCOG = (sourceMetadata) => {
+    const { crs, extent, width } = sourceMetadata || {};
+    if (!crs || !isArray(extent) || extent.length !== 4 || !isProjectionAvailable(crs)) {
+        return false;
+    }
+    const { extent: crsExtent, worldExtent } = getProjection(crs);
+    if (!crsExtent || !worldExtent || worldExtent[2] - worldExtent[0] < 360 - EPSILON) {
+        return false;
+    }
+    const crsWidth = crsExtent[2] - crsExtent[0];
+    const cogWidth = extent[2] - extent[0];
+    // tolerance of 1.5 pixels: extents referred to border pixel centers lose 1 pixel in width
+    const pixelSize = width > 0 ? cogWidth / width : 0;
+    return cogWidth >= crsWidth - 1.5 * pixelSize - EPSILON;
+};
+
 LayerUtils = {
     getTiffImageryProvider,
     getProjectionFromGeoKeys,
     isCOGCrsNotIdentified,
     fromUrl,
-    getLayerConfig
+    getLayerConfig,
+    isGlobalCOG
 };
 
 export default LayerUtils;

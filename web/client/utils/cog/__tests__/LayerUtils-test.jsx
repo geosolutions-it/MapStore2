@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { getProjectionFromGeoKeys, isCOGCrsNotIdentified } from '../LayerUtils';
+import { getProjectionFromGeoKeys, isCOGCrsNotIdentified, isGlobalCOG } from '../LayerUtils';
 import expect from 'expect';
 
 
@@ -32,5 +32,14 @@ describe('COG - LayerUtils', () => {
         // metadata not fetched
         expect(isCOGCrsNotIdentified({})).toBe(false);
         expect(isCOGCrsNotIdentified(undefined)).toBe(false);
+    });
+    it('test isGlobalCOG', () => {
+        expect(isGlobalCOG({ crs: 'EPSG:4326', extent: [-180, -90, 180, 90], width: 3600 })).toBe(true);
+        expect(isGlobalCOG({ crs: 'EPSG:4326', extent: [-179.95, -89.95, 179.95, 89.95], width: 3600 })).toBe(true);
+        expect(isGlobalCOG({ crs: 'EPSG:4326', extent: [-179, -90, 179, 90], width: 3600 })).toBe(false);
+        expect(isGlobalCOG({ crs: 'EPSG:3857', extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], width: 4096 })).toBe(true);
+        expect(isGlobalCOG({ crs: 'EPSG:4326', extent: [6, 36, 19, 47], width: 1300 })).toBe(false);
+        expect(isGlobalCOG({ crs: 'EPSG:99999', extent: [-180, -90, 180, 90], width: 3600 })).toBe(false);
+        expect(isGlobalCOG(undefined)).toBe(false);
     });
 });
