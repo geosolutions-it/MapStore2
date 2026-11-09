@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import cookie from '../cookie';
-import { SET_COOKIE_VISIBILITY, SET_MORE_DETAILS_VISIBILITY } from '../../actions/cookie';
+import { SET_COOKIE_VISIBILITY, addPrivacyAccess, removePrivacyAccess } from '../../actions/cookie';
 
 describe('Test the cookie reducer', () => {
     it('cookie visibility', () => {
@@ -18,13 +18,18 @@ describe('Test the cookie reducer', () => {
         });
         expect(state.showCookiePanel).toBeTruthy();
     });
-
-    it('cookie seeMore section', () => {
-        const state = cookie(undefined, {
-            type: SET_MORE_DETAILS_VISIBILITY,
-            status: true
-        });
-        expect(state.seeMore).toBeTruthy();
+    it('records each container that shows an access to the privacy settings once', () => {
+        let state = cookie({showCookiePanel: true}, addPrivacyAccess('footer'));
+        expect(state).toEqual({showCookiePanel: true, privacyAccesses: ['footer']});
+        state = cookie(state, addPrivacyAccess('mapFooter'));
+        const sameState = cookie(state, addPrivacyAccess('footer'));
+        expect(sameState).toBe(state);
+        expect(state.privacyAccesses).toEqual(['footer', 'mapFooter']);
+    });
+    it('forgets a container that no longer shows its access', () => {
+        const state = cookie({privacyAccesses: ['footer', 'mapFooter']}, removePrivacyAccess('footer'));
+        expect(state).toEqual({privacyAccesses: ['mapFooter']});
+        expect(cookie(undefined, removePrivacyAccess('footer'))).toEqual({privacyAccesses: []});
     });
 
 });

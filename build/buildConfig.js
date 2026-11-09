@@ -216,6 +216,11 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     module: {
         rules: [
             {
+                // react 16 has no exports map, so strict esm deps cannot resolve react/jsx-runtime
+                test: /\.m?js$/,
+                resolve: { fullySpecified: false }
+            },
+            {
                 test: /\.css$/,
                 use: [{
                     loader: 'style-loader'
@@ -244,7 +249,20 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                 ]
             },
             {
+                // theme text fonts stay separate files, so the browser downloads only the subsets
+                // matched by the unicode-range of each @font-face, after the stylesheet
+                test: /themes[\\\/]default[\\\/]fonts[\\\/].+\.woff2$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: '[name].[contenthash:8][ext]',
+                    outputPath: 'themes/fonts/',
+                    // relative to the theme stylesheets, emitted in themes/
+                    publicPath: 'fonts/'
+                }
+            },
+            {
                 test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
+                exclude: /themes[\\\/]default[\\\/]fonts[\\\/]/,
                 use: [{
                     loader: 'url-loader',
                     options: {

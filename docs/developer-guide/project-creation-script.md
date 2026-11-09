@@ -72,7 +72,7 @@ If you create a *standard* project, you can customize it editing **js/app.jsx**:
 The following steps are:
 
 * `npm install` to download dependencies
-* `npm start` to test the project
+* `npm start` to test the project. Set the `INITIAL_ADMIN_PASSWORD` environment variable first, otherwise no `admin` account is created and you cannot log in (see [Initial Administrator Password](initial-admin-password.md))
 * `./build.sh` to build the full .war
 
 ## Create a new project type

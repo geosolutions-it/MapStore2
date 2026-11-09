@@ -85,6 +85,7 @@ import API from '../../../api/catalog';
 import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
 import { getResolutions } from '../../../utils/MapUtils';
 import { buildSRSMap } from '../../../utils/CatalogUtils';
+import { isCOGCrsNotIdentified } from '../../../utils/cog/LayerUtils';
 import { useCatalogSelection } from '../../../components/catalog/hooks/useCatalogSelection';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import Message from '../../../components/I18N/Message';
@@ -196,7 +197,10 @@ const Catalog = ({
     });
 
     const createLayer = (record, serviceType = record.serviceType) => {
-        if (isSRSNotAllowed(record)) {
+        if (record.serviceType === 'cog' && isCOGCrsNotIdentified(record)) {
+            onError('catalog.cog_crs_not_identified');
+            return Promise.resolve();
+        } else if (isSRSNotAllowed(record)) {
             onError('catalog.srs_not_allowed');
             return Promise.resolve();
         }
