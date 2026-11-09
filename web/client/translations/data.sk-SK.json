@@ -1475,6 +1475,7 @@
       "reset": "Obnoviť",
       "options": "Možnosti",
       "srs_not_allowed": "Súradnicový systém nie je podporovaný touto službou ",
+      "cog_crs_not_identified": "Súradnicový referenčný systém súboru COG sa nepodarilo identifikovať pomocou kódu, vrstvu nie je možné pridať",
       "add": "Pridať",
       "service": "Služba",
       "servicePlaceholder": "Zadaj názov služby",
