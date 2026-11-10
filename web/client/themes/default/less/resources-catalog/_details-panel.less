@@ -34,7 +34,7 @@
 
 .ms-details-info-field {
     &:not(:has(.ms-tag)) {
-        > .ms-flex-fill > .ms-text > * + * {
+        > .ms-flex-fill > .ms-text:not(._flex-column) > * + * {
             margin-left: 0.5rem;
         }
     }
