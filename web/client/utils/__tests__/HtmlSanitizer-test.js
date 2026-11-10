@@ -64,6 +64,33 @@ describe('HtmlSanitizer', () => {
             expect(result).toContain('referrerpolicy');
         });
 
+        it('keeps the media features of an iframe allow attribute', () => {
+            const result = sanitizeHtml('<iframe src="https://www.youtube.com/embed/abc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>');
+            const iframe = new DOMParser().parseFromString(result, 'text/html').querySelector('iframe');
+            expect(iframe.getAttribute('allow')).toBe('autoplay; encrypted-media; picture-in-picture');
+            expect(iframe.hasAttribute('allowfullscreen')).toBe(true);
+        });
+
+        it('applies the iframe allow features to the iframe source', () => {
+            const result = sanitizeHtml('<iframe src="https://player.example.com/video" allow="Fullscreen https://player.example.com; autoplay *; fullscreen; picture-in-picture \'none\'"></iframe>');
+            const iframe = new DOMParser().parseFromString(result, 'text/html').querySelector('iframe');
+            expect(iframe.getAttribute('allow')).toBe('fullscreen; autoplay');
+        });
+
+        it('removes an iframe allow attribute without media features', () => {
+            const result = sanitizeHtml('<iframe src="https://example.com/page" allow="clipboard-write"></iframe>');
+            const iframe = new DOMParser().parseFromString(result, 'text/html').querySelector('iframe');
+            expect(iframe.hasAttribute('allow')).toBe(false);
+            expect(iframe.getAttribute('sandbox')).toBe('allow-scripts allow-presentation');
+        });
+
+        it('keeps the allow attribute on iframe elements only', () => {
+            const result = sanitizeHtml('<div allow="fullscreen"><iframe src="https://example.com/page" allow="fullscreen"></iframe></div>');
+            const doc = new DOMParser().parseFromString(result, 'text/html');
+            expect(doc.querySelector('div').hasAttribute('allow')).toBe(false);
+            expect(doc.querySelector('iframe').getAttribute('allow')).toBe('fullscreen');
+        });
+
         it('preserves a leading style block (GetFeatureInfo HTML from WMS)', () => {
             const input = '<style>table.featureInfo, table.featureInfo td, table.featureInfo th { border: 1px solid #ddd; }</style><table class="featureInfo"><tr><th>name</th></tr><tr><td>value</td></tr></table>';
             const result = sanitizeHtml(input);

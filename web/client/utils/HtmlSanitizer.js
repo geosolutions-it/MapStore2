@@ -50,6 +50,26 @@ DOMPurify.addHook('uponSanitizeElement', (node, data) => {
  */
 export const IFRAME_SANDBOX = 'allow-scripts allow-presentation';
 export const IFRAME_REFERRER_POLICY = 'no-referrer';
+/**
+ * Permissions Policy features kept in the `allow` attribute of an embedded iframe:
+ * the playback features of embedded media (video players, slideshows).
+ * Each feature applies to the iframe `src`, and a feature set to `'none'` stays disabled.
+ */
+export const IFRAME_ALLOWED_FEATURES = ['autoplay', 'encrypted-media', 'fullscreen', 'picture-in-picture'];
+
+const normalizeIframeAllow = (allow) => [...new Set(
+    allow.split(';')
+        .map(directive => directive.trim().toLowerCase().split(/\s+/))
+        .filter(([feature, ...origins]) => IFRAME_ALLOWED_FEATURES.includes(feature) && !origins.includes("'none'"))
+        .map(([feature]) => feature)
+)].join('; ');
+
+DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
+    if (data.attrName === 'allow') {
+        data.attrValue = node.tagName === 'IFRAME' ? normalizeIframeAllow(data.attrValue) : '';
+        data.keepAttr = !!data.attrValue;
+    }
+});
 
 // Harden iframe elements that survive sanitization
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
