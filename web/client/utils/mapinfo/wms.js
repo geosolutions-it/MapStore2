@@ -59,6 +59,13 @@ export default {
         });
         const featureInfoMaxItems = getFeatureInfoMaxItems(featureInfo, maxItems);
         const featureInfoBuffer = getFeatureInfoBuffer(featureInfo, layer);
+        const bufferParams = layer.isQGIS === true
+            ? {
+                FI_POINT_TOLERANCE: featureInfoBuffer,
+                FI_LINE_TOLERANCE: featureInfoBuffer,
+                FI_POLYGON_TOLERANCE: featureInfoBuffer
+            }
+            : { buffer: featureInfoBuffer };
         return {
             request: addAuthenticationToSLD({
                 service: 'WMS',
@@ -82,7 +89,7 @@ export default {
                 ENV,
                 ...Object.assign({}, params),
                 feature_count: featureInfoMaxItems,
-                ...(featureInfoBuffer !== undefined ? { buffer: featureInfoBuffer } : {})
+                ...(featureInfoBuffer !== undefined ? bufferParams : {})
             }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,

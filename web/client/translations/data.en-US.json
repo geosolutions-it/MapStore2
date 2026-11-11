@@ -130,7 +130,7 @@
         "maxItems": "Feature count",
         "maxItemsTooltip": "Maximum number of features returned by an Identify request. The default value is 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "GeoServer vendor parameter that expands the Identify search radius around the clicked point, measured in screen pixels."
+        "bufferTooltip": "Expands the Identify search radius around the clicked point, measured in screen pixels. Available for GeoServer and automatically detected QGIS Server layers."
       },
       "guideText": "In the URL of the image you can use placeholders like $\\{properties.YOUR_ATTRIBUTE\\} to make the URL parametric, depending by the feature attributes. It supports both URLs or \"Data URIs\" encoded in base64",
       "imageNotFound": "This image may need a feature info request to be rendered correctly",

@@ -757,6 +757,7 @@ export const saveLayer = (layer) => {
         version: layer.version,
         expanded: layer.expanded || false
     },
+    !isNil(layer.isQGIS) ? { isQGIS: layer.isQGIS } : {},
     layer?.enableInteractiveLegend !== undefined ? { enableInteractiveLegend: layer?.enableInteractiveLegend } : {},
     layer?.enableDynamicLegend !== undefined ? { enableDynamicLegend: layer?.enableDynamicLegend } : {},
     layer.sources ? { sources: layer.sources } : {},

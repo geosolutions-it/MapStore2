@@ -14,6 +14,7 @@ import localizedProps from '../../../misc/enhancers/localizedProps';
 import CommonAdvancedSettings from './CommonAdvancedSettings';
 import ReactQuill from '../../../../libs/quill/react-quill-suspense';
 import { ServerTypes } from '../../../../utils/LayersUtils';
+import { isFeatureInfoBufferSupported } from '../../../../utils/FeatureInfoRequestUtils';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
@@ -82,6 +83,14 @@ export default ({
         // Apply default configuration on new service
         service.isNew && onChangeServiceProperty("autoSetVisibilityLimits", props.autoSetVisibilityLimits);
     }, [props.autoSetVisibilityLimits]);
+
+    useEffect(() => {
+        let timeout;
+        if (service.type === 'wms' && service.url) {
+            timeout = setTimeout(() => onFormatOptionsFetch(service.url), 300);
+        }
+        return () => clearTimeout(timeout);
+    }, [service.type, service.url]);
 
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
     const serverTypeOptions = getServerTypeOptions();
@@ -193,7 +202,7 @@ export default ({
             </FormGroup>
             <FeatureInfoRequestOptions
                 featureInfo={service.layerOptions?.featureInfo || {}}
-                showBuffer={service.layerOptions?.serverType === ServerTypes.GEOSERVER}
+                showBuffer={isFeatureInfoBufferSupported(service.layerOptions)}
                 onChange={(featureInfo) => onChangeServiceProperty("layerOptions", {
                     ...service.layerOptions,
                     featureInfo

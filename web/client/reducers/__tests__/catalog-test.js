@@ -91,6 +91,25 @@ const sampleRecord = {
     }
 };
 describe('Test the catalog reducer', () => {
+    it('stores detected QGIS metadata in source layer options while preserving its buffer', () => {
+        const state = catalog({
+            newService: { url, layerOptions: { serverType: 'no-vendor', featureInfo: { buffer: 5 } } }
+        }, setSupportedFormats({ imageFormats: ['image/png'], infoFormats: ['text/html'], isQGIS: true }, url));
+        expect(state.newService.layerOptions).toEqual({ serverType: 'no-vendor', isQGIS: true, featureInfo: { buffer: 5 } });
+    });
+    it('replaces stale detection when capabilities identify a different WMS service', () => {
+        const state = catalog({ newService: { url, layerOptions: { isQGIS: true } } }, setSupportedFormats({ isQGIS: false }, url));
+        expect(state.newService.layerOptions.isQGIS).toBe(false);
+    });
+    it('clears QGIS detection on URL changes and ignores metadata from an old request', () => {
+        const changed = catalog({
+            newService: { url, layerOptions: { isQGIS: true, featureInfo: { buffer: 5 } } }
+        }, { type: CHANGE_URL, url: '/other-wms' });
+        expect(changed.newService.layerOptions.isQGIS).toBe(undefined);
+        expect(changed.newService.layerOptions.featureInfo.buffer).toBe(5);
+        const stale = catalog(changed, setSupportedFormats({ isQGIS: true }, url));
+        expect(stale.newService.layerOptions.isQGIS).toBe(undefined);
+    });
     it('loads records from the catalog', () => {
         const state = catalog({}, {type: RECORD_LIST_LOADED, result: {records: [sampleRecord], searchOptions: {catalogURL: "test"}}});
         expect(state.hasOwnProperty('result')).toBe(true);

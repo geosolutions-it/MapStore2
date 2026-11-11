@@ -67,11 +67,13 @@ export const isValidResponse = (response) => {
  * - `description`: the layer abstract
  * - `boundingBox`: the layer bounding box
  * - `availableStyles`: the list of available styles
+ * - `isQGIS`: the capabilities-based QGIS detection result, when available
  */
 export const getLayerOptions = function(capabilities) {
     return isObject(capabilities)
         ? {
             capabilities,
+            ...(capabilities.layerOptions?.isQGIS !== undefined && { isQGIS: capabilities.layerOptions.isQGIS }),
             ...(capabilities.Abstract && capabilities.Abstract !== '' && { description: capabilities.Abstract }),
             boundingBox: capabilities?.EX_GeographicBoundingBox
                 ? {

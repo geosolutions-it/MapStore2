@@ -7,12 +7,24 @@
  */
 
 import expect from 'expect';
+import { getRecords } from '../../WMS';
 import {
     getCatalogRecords,
     getLayerFromRecord
 } from '../WMS';
 
 describe('Test correctness of the WMS APIs', () => {
+
+    it('preserves capabilities-based QGIS detection when adding a catalog layer', async() => {
+        const response = await getRecords('base/web/client/test-resources/wms/GetCapabilities-qgis.xml', 1, 10, '');
+        const records = getCatalogRecords(response, { url: '/ows' });
+        const layer = getLayerFromRecord(records[0], {
+            service: { layerOptions: { serverType: 'no-vendor', featureInfo: { buffer: 5 } } }
+        });
+        expect(layer.isQGIS).toBe(true);
+        expect(layer.serverType).toBe('no-vendor');
+        expect(layer.featureInfo.buffer).toBe(5);
+    });
 
     it('wms dimensions without values', () => {
         const records = getCatalogRecords({
