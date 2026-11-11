@@ -34,6 +34,29 @@ describe('Plugins API', () => {
             }, 100);
         });
     });
+    it('upload sends one file at a time and returns the responses in order', (done) => {
+        axios.get("base/web/client/test-resources/plugin.zip", { responseType: "blob" }).then(({ data }) => {
+            mockAxios = new MockAdapter(axios);
+            let pending = 0;
+            let overlapping = false;
+            let count = 0;
+            mockAxios.onPost().reply(() => {
+                overlapping = overlapping || pending > 0;
+                pending++;
+                count++;
+                const name = 'plugin' + count;
+                return new Promise(resolve => setTimeout(() => {
+                    pending--;
+                    resolve([200, { name }]);
+                }, 20));
+            });
+            return upload([data, data, data], "uploadPlugin").then(results => {
+                expect(results).toEqual([{ name: 'plugin1' }, { name: 'plugin2' }, { name: 'plugin3' }]);
+                expect(mockAxios.history.post.length).toBe(3);
+                expect(overlapping).toBe(false);
+            });
+        }).then(() => done()).catch(done);
+    });
     it('uninstall successfully calls the uninstall endpoint', (done) => {
         mockAxios = new MockAdapter(axios);
         mockAxios.onDelete().reply(200, {});

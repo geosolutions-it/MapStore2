@@ -85,6 +85,7 @@ export const plugins = {
     DrawerMenuPlugin: toModulePlugin('DrawerMenu', () => import(/* webpackChunkName: 'plugins/drawerMenu' */ '../plugins/DrawerMenu')),
     DynamicLegendPlugin: toModulePlugin('DynamicLegend', () => import(/* webpackChunkName: 'plugins/DynamicLegend' */ '../plugins/DynamicLegend')),
     ExpanderPlugin: toModulePlugin('Expander', () => import(/* webpackChunkName: 'plugins/expander' */ '../plugins/Expander')),
+    ExtensionsManagerPlugin: toModulePlugin('ExtensionsManager', () => import(/* webpackChunkName: 'plugins/extensionsManager' */ '../plugins/ExtensionsManager')),
     FilterLayerPlugin: toModulePlugin('FilterLayer', () => import(/* webpackChunkName: 'plugins/filterLayer' */ '../plugins/FilterLayer')),
     FullScreenPlugin: toModulePlugin('FullScreen', () => import(/* webpackChunkName: 'plugins/fullScreen' */ '../plugins/FullScreen')),
     GeoStoryEditorPlugin: toModulePlugin('GeoStoryEditor', () => import(/* webpackChunkName: 'plugins/geoStoryEditor' */ '../plugins/GeoStoryEditor')),

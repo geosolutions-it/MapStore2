@@ -144,7 +144,7 @@ my-extension.zip
 The `index.json file should contain all the information about the extension:
 
 * An `id` that identifies the extension
-* A `version` to show in UI. Semantic versioning is suggested.+
+* A `version` to show in UI. Semantic versioning is suggested.
 
 * `title` and `description` to display in UI, mnemonic hints for the administrator
 * `plugins` the list of plugins that it adds to the application, with all the data useful for the context manager. Format of the JSON object for plugins is suggested [here](https://github.com/georchestra/mapstore2-georchestra/issues/15#issuecomment-564974270)
@@ -167,9 +167,30 @@ The `index.json file should contain all the information about the extension:
 
 `plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager)
 
+When the extension is installed, the first entry of `plugins` is stored in the plugins catalog, with an `extensionInfo` object. It holds `title`, `description`, `version` and `glyph` of the top level of `index.json`, and `name`, `title`, `version` and `glyph` of every entry of `plugins`. A field missing at the top level is taken from the first entry of `plugins`. The [Extensions Manager](../user-guide/managing-extensions.md#managing-extensions) shows the glyph and the version of the extension, and the version of each of its plugins with whether it can be added to a context. Only the first entry of `plugins` is added to the plugins catalog, so only that plugin can be added to a context. The context creator reads `title`, `description` and `version` of the first entry of `plugins`, so set them there too.
+
+An extension whose plugin adds nothing to a context, for example one that only provides pages or configuration to the whole application, sets `"hidden": true` in the first entry of `plugins`: the context creator does not list it, and it is managed from the Extensions Manager.
+
+```json
+{
+    "id": "PrivacySettings",
+    "version": "1.0.0",
+    "title": "Privacy settings",
+    "description": "Policy pages and privacy configuration",
+    "plugins": [{
+         "name": "PrivacySettings",
+         "title": "Privacy settings",
+         "description": "Policy pages and privacy configuration",
+         "version": "1.0.0",
+         "hidden": true,
+         "defaultConfig": {}
+    }]
+}
+```
+
 ### Installing Extensions
 
-Extensions can be uploaded using the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle is managed by a dedicated MapStore backend service, the ***Upload Service***.
+Extensions can be uploaded from the [Extensions Manager](../user-guide/managing-extensions.md#managing-extensions) or from the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle is managed by a dedicated MapStore backend service, the ***Upload Service***.
 The Upload Service is responsible for unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
 
 * `extensions.json` (the extensions registry)
@@ -177,7 +198,7 @@ The Upload Service is responsible for unzipping the bundle, storing javascript a
 
 ### Updating Extensions
 
-Please refer to the [How to update extensions](../../user-guide/application-context/#how-to-update-extensions) section of user guide to get more information about extensions update workflow.
+Please refer to the [How to update extensions](../../user-guide/application-context/#how-to-update-extensions) section of user guide to get more information about extensions update workflow. The [Extensions Manager](../user-guide/managing-extensions.md#update-an-extension) installs the new version of an extension over the installed one: the new version is used after the page is reloaded, and files that are not in the new zip stay in the extensions folder.
 
 ### Extensions and datadir
 

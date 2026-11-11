@@ -18,15 +18,33 @@ export const ERROR = {
     ALREADY_INSTALLED: 'ALREADY_INSTALLED'
 };
 
+/**
+ * Returns the description of an extension from its index.json, as the backend stores it in the plugins catalog.
+ * A field missing at the top level of index.json is taken from the first plugin.
+ * @param {object} index content of index.json
+ * @returns {object} `{ title, description, version, glyph, plugins: [{ name, title, version, glyph }] }`
+ */
+export const getExtensionInfo = (index) => {
+    const plugins = index.plugins || [];
+    const first = plugins[0] || {};
+    return {
+        title: index.title || first.title,
+        description: index.description || first.description,
+        version: index.version || first.version,
+        glyph: index.glyph || first.glyph,
+        plugins: plugins.map(({ name, title, version, glyph }) => ({ name, title, version, glyph }))
+    };
+};
+
 const parseIndex = (json, plugins) => {
     try {
         const index = JSON.parse(json);
         if (index.plugins && index.plugins.length && index.plugins[0].name) {
-            const name = index.plugins[0].name;
+            const { name } = index.plugins[0];
             if (plugins.indexOf(name) !== -1) {
                 return {error: ERROR.ALREADY_INSTALLED};
             }
-            return { name };
+            return { name, ...getExtensionInfo(index) };
         }
         return {error: ERROR.MISSING_PLUGIN};
     } catch (e) {
@@ -61,3 +79,27 @@ export const checkZipBundle = (file, plugins = []) => {
 
     });
 };
+
+export const UPLOAD_ERROR_MESSAGE_IDS = {
+    [ERROR.WRONG_FORMAT]: "contextCreator.configurePlugins.uploadWrongFileFormatError",
+    [ERROR.MISSING_INDEX]: "contextCreator.configurePlugins.uploadMissingIndexError",
+    [ERROR.MALFORMED_INDEX]: "contextCreator.configurePlugins.uploadParseError",
+    [ERROR.MISSING_PLUGIN]: "contextCreator.configurePlugins.uploadMissingPluginError",
+    [ERROR.MISSING_BUNDLE]: "contextCreator.configurePlugins.uploadMissingBundleError",
+    [ERROR.TOO_MANY_BUNDLES]: "contextCreator.configurePlugins.uploadTooManyBundlesError",
+    [ERROR.ALREADY_INSTALLED]: "contextCreator.configurePlugins.uploadAlreadyInstalledError"
+};
+
+/**
+ * Checks the zip files of extensions before uploading them.
+ * When a file is not valid, every file of the list gets its error.
+ * @param {File[]} files zip files to check
+ * @param {string[]} plugins names of the plugins that cannot be installed again
+ * @param {function} getMessage returns the text of a message id
+ * @returns {Promise} resolves with `[{ name, title, description, version, plugins, file }]`, or `[{ name, file, error }]`
+ */
+export const checkUploads = (files, plugins, getMessage) => Promise.all(files.map(file =>
+    checkZipBundle(file, plugins).catch(e => {
+        throw new Error(getMessage(UPLOAD_ERROR_MESSAGE_IDS[e]));
+    })
+)).catch(e => files.map(f => ({ name: f.name, file: f, error: e })));
