@@ -61,7 +61,8 @@ registerType('arcgis', {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
         if (!isEqual(oldOptions.security, newOptions.security)
-        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+        || !isEqual(oldOptions._v_, newOptions._v_)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     },

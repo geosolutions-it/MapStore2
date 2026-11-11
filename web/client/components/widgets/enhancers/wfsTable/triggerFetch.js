@@ -39,7 +39,8 @@ export default ($props) =>
                 (newProps.layer
                 && getSearchUrl(layer) === getSearchUrl(newProps.layer)
                 && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
-                && layer.loadingError === newProps.layer.loadingError)
+                && layer.loadingError === newProps.layer.loadingError
+                && layer._v_ === newProps.layer._v_)
             && sameOptions(options, newProps.options)
             && sameFilter(filter, newProps.filter)
             && sameSortOptions(sortOptions, newProps.sortOptions))

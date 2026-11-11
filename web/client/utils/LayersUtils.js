@@ -755,7 +755,8 @@ export const saveLayer = (layer) => {
         legendOptions: layer.legendOptions,
         tileSize: layer.tileSize,
         version: layer.version,
-        expanded: layer.expanded || false
+        expanded: layer.expanded || false,
+        autoRefreshInterval: layer.autoRefreshInterval ?? -1
     },
     layer?.enableInteractiveLegend !== undefined ? { enableInteractiveLegend: layer?.enableInteractiveLegend } : {},
     layer?.enableDynamicLegend !== undefined ? { enableDynamicLegend: layer?.enableDynamicLegend } : {},
