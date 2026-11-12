@@ -4,6 +4,9 @@
   "description": "MapStore 2",
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
+  "engines": {
+    "node": ">=22"
+  },
   "eslintConfig": {
     "extends": [
       "@mapstore/eslint-config-mapstore"
@@ -149,7 +152,7 @@
     "concurrently": "6.4.0",
     "connected-react-router": "6.3.2",
     "d3-format": "3.1.0",
-    "dompurify": "^3.1.0",
+    "dompurify": "^3.4.17",
     "draft-js": "0.11.0",
     "draft-js-inline-toolbar-plugin": "3.0.1",
     "draft-js-plugins-editor": "2.1.1",
@@ -216,7 +219,7 @@
     "react-draggable": "2.2.6",
     "react-dropzone": "3.13.1",
     "react-error-boundary": "1.2.5",
-    "react-grid-layout": "1.2.0",
+    "react-grid-layout": "2.2.4",
     "react-image-lightbox": "4.2.2",
     "react-intersection-observer": "8.24.1",
     "react-intl": "2.3.0",

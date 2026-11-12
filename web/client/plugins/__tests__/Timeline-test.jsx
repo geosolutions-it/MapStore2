@@ -8,6 +8,8 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
 
 import TimelinePlugin from '../Timeline';
 import { getPluginForTest } from './pluginsTestUtils';
@@ -154,6 +156,104 @@ describe('Timeline Plugin', () => {
             const { Plugin } = getPluginForTest(TimelinePlugin, {});
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin')).toBeFalsy();
+        });
+    });
+    describe('edit the selected time range', () => {
+        const start = '1583-01-01T00:00:00.000Z';
+        const end = '1981-03-06T01:36:05.000Z';
+
+        it('keeps invalid end-year drafts editable and commits a corrected range', () => {
+            const { Plugin, store, actions } = getPluginForTest(TimelinePlugin, {
+                ...SAMPLE_STATE,
+                dimension: { currentTime: start, offsetTime: end }
+            });
+            ReactDOM.render(<Plugin/>, document.getElementById('container'));
+            const year = document.querySelectorAll('.ms-dt-year input')[1];
+            TestUtils.Simulate.change(year, { target: { value: '198' } });
+            expect(actions.filter(({ type }) => type === SHOW_NOTIFICATION).length).toBe(0);
+            TestUtils.Simulate.blur(year);
+            expect(year.value).toBe('198');
+            expect(year.getAttribute('aria-invalid')).toBe('true');
+            expect(store.getState().dimension.offsetTime).toBe(end);
+            const notification = actions.find(({ type }) => type === SHOW_NOTIFICATION);
+            expect(notification.level).toBe('warning');
+            expect(notification.title).toBe('timeline.errors.invalidDateTitle');
+            expect(notification.message).toBe('timeline.errors.invalidEndDate');
+            expect(notification.autoDismiss).toBe(6);
+            TestUtils.Simulate.keyDown(year, { key: 'Enter' });
+            TestUtils.Simulate.blur(year);
+            expect(actions.filter(({ type }) => type === SHOW_NOTIFICATION).length).toBe(1);
+            TestUtils.Simulate.change(year, { target: { value: '1980' } });
+            expect(store.getState().dimension.offsetTime).toBe(end);
+            TestUtils.Simulate.keyDown(year, { key: 'Enter' });
+            expect(store.getState().dimension.offsetTime).toBe('1980-03-06T01:36:05.000Z');
+            expect(year.value).toBe('1980');
+            expect(year.getAttribute('aria-invalid')).toBe('false');
+            expect(actions.filter(({ type }) => type === SHOW_NOTIFICATION).length).toBe(1);
+        });
+        it('rejects a start after the end and accepts correction on blur', () => {
+            const { Plugin, store, actions } = getPluginForTest(TimelinePlugin, {
+                ...SAMPLE_STATE,
+                dimension: { currentTime: start, offsetTime: end }
+            });
+            ReactDOM.render(<Plugin/>, document.getElementById('container'));
+            const year = document.querySelector('.ms-dt-year input');
+            TestUtils.Simulate.change(year, { target: { value: '1982' } });
+            TestUtils.Simulate.blur(year);
+            expect(year.value).toBe('1982');
+            expect(year.getAttribute('aria-invalid')).toBe('true');
+            expect(store.getState().dimension.currentTime).toBe(start);
+            expect(actions.find(({ type }) => type === SHOW_NOTIFICATION).message).toBe('timeline.errors.invalidStartDate');
+            TestUtils.Simulate.change(year, { target: { value: '1980' } });
+            TestUtils.Simulate.blur(year);
+            expect(store.getState().dimension.currentTime).toBe('1980-01-01T00:00:00.000Z');
+            expect(year.getAttribute('aria-invalid')).toBe('false');
+        });
+        [
+            { name: 'empty year', selector: '.ms-dt-year input', value: '' },
+            { name: 'nonnumeric year', selector: '.ms-dt-year input', value: 'abc' },
+            { name: 'impossible date', selector: '.ms-dt-day input', value: '32' },
+            { name: 'invalid time', selector: '.ms-dt-hours input', value: '25' }
+        ].forEach(({ name, selector, value }) => {
+            it(`warns about invalid input (${name}) without changing the selected range`, () => {
+                const { Plugin, store, actions } = getPluginForTest(TimelinePlugin, {
+                    ...SAMPLE_STATE,
+                    dimension: { currentTime: start, offsetTime: end }
+                });
+                ReactDOM.render(<Plugin/>, document.getElementById('container'));
+                const input = document.querySelectorAll(selector)[1];
+                TestUtils.Simulate.change(input, { target: { value } });
+                TestUtils.Simulate.keyDown(input, { key: 'Enter' });
+                const notification = actions.find(({ type }) => type === SHOW_NOTIFICATION);
+                expect(notification.level).toBe('warning');
+                expect(notification.message).toBe('timeline.errors.invalidDateMessage');
+                expect(input.value).toBe(value);
+                expect(store.getState().dimension.offsetTime).toBe(end);
+            });
+        });
+        it('warns about invalid input in single-time mode', () => {
+            const { Plugin, store, actions } = getPluginForTest(TimelinePlugin, {
+                ...SAMPLE_STATE,
+                dimension: { currentTime: end }
+            });
+            ReactDOM.render(<Plugin/>, document.getElementById('container'));
+            const minutes = document.querySelector('.ms-dt-minutes input');
+            TestUtils.Simulate.change(minutes, { target: { value: '60' } });
+            TestUtils.Simulate.blur(minutes);
+            expect(actions.find(({ type }) => type === SHOW_NOTIFICATION).message).toBe('timeline.errors.invalidDateMessage');
+            expect(store.getState().dimension.currentTime).toBe(end);
+        });
+        it('preserves single-time editing without a range constraint', () => {
+            const { Plugin, store } = getPluginForTest(TimelinePlugin, {
+                ...SAMPLE_STATE,
+                dimension: { currentTime: end }
+            });
+            ReactDOM.render(<Plugin/>, document.getElementById('container'));
+            const year = document.querySelector('.ms-dt-year input');
+            TestUtils.Simulate.change(year, { target: { value: '198' } });
+            expect(store.getState().dimension.currentTime).toBe(end);
+            TestUtils.Simulate.blur(year);
+            expect(store.getState().dimension.currentTime).toBe('0198-03-06T01:36:05.000Z');
         });
     });
 });
