@@ -817,7 +817,7 @@ const formatCircleCoordinate = (value, radius) => {
     return fixed.indexOf('.') !== -1 ? fixed.replace(/0+$/, '').replace(/\.$/, '') : fixed;
 };
 
-export const simplifyCircleRing = function(ring) {
+export const roundCircleRingCoordinates = function(ring) {
     const closed = closePolygon(ring);
     const open = closed.slice(0, -1);
     if (open.length < 3) {
@@ -840,7 +840,7 @@ export const getCQLGeometryElement = function(coordinates, type) {
     case "Circle":
         coordinates.forEach((element, index) => {
             geometry += "(";
-            geometry += simplifyCircleRing(element).map((coordinate) => {
+            geometry += roundCircleRingCoordinates(element).map((coordinate) => {
                 return coordinate[0] + " " + coordinate[1];
             }).join(", ");
             geometry += ")";

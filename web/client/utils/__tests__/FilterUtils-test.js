@@ -41,7 +41,7 @@ import {
     setupCrossLayerFilterDefaults,
     getCQLGeometryElement,
     processCQLSpatialFilter,
-    simplifyCircleRing,
+    roundCircleRingCoordinates,
     CQL_CIRCLE_PRECISION_SAGITTA_RATIO
 } from '../FilterUtils';
 import { CIRCLE_SAGITTA_RATIO, calculateCircleSegments } from '../CoordinatesUtils';
@@ -2983,7 +2983,7 @@ describe('FilterUtils', () => {
         const step = 1000 * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO;
         const countVertices = (cql) => cql.substring(cql.indexOf('((') + 2, cql.indexOf('))')).split(', ');
         it('should keep the vertices of a Circle ring and only round their coordinates', () => {
-            const simplified = simplifyCircleRing(closedRing);
+            const simplified = roundCircleRingCoordinates(closedRing);
             expect(simplified.length).toBe(closedRing.length);
             expect(simplified[0]).toEqual(simplified[simplified.length - 1]);
             simplified.forEach(([x, y], i) => {
@@ -2993,12 +2993,12 @@ describe('FilterUtils', () => {
         });
         it('should round the coordinates of a Circle ring to a tenth of the sagitta', () => {
             const decimalsOf = (value) => (value.split('.')[1] || '').length;
-            simplifyCircleRing(closedRing).forEach(([x, y]) => {
+            roundCircleRingCoordinates(closedRing).forEach(([x, y]) => {
                 expect(decimalsOf(x)).toBeLessThanOrEqualTo(1);
                 expect(decimalsOf(y)).toBeLessThanOrEqualTo(1);
             });
             const degreesRing = createRing(100, 0.01, 0.0000001, 0.00000001);
-            simplifyCircleRing(degreesRing).forEach(([x, y]) => {
+            roundCircleRingCoordinates(degreesRing).forEach(([x, y]) => {
                 expect(decimalsOf(x)).toBeLessThanOrEqualTo(6);
                 expect(decimalsOf(y)).toBeLessThanOrEqualTo(6);
                 expect(x.indexOf('e')).toBe(-1);
@@ -3008,7 +3008,7 @@ describe('FilterUtils', () => {
         it('should round a geodesic circle ring in EPSG:4326 within a tenth of the sagitta', () => {
             const radius = 1000;
             const ring = circular([146.9, -41.4], radius, calculateCircleSegments(radius)).getCoordinates()[0];
-            const simplified = simplifyCircleRing(ring);
+            const simplified = roundCircleRingCoordinates(ring);
             expect(simplified.length).toBe(ring.length);
             simplified.forEach(([x, y], i) => {
                 expect((x.split('.')[1] || '').length).toBeLessThanOrEqualTo(6);
@@ -3024,6 +3024,30 @@ describe('FilterUtils', () => {
                 }
             });
             expect(cql.indexOf('INTERSECTS("the_geom",SRID=4326;Polygon((')).toBe(0);
+        });
+        it('roundCircleRingCoordinates should produce shorter coordinates of a circle when converted to string', () => {
+            // circle in EPSG:4326 with radius 0.02 degrees around Firenze
+            const circle = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [[
+                        [11.2758136, 43.7695604],
+                        [11.26995573562373, 43.78370253562373],
+                        [11.2558136, 43.789560400000006],
+                        [11.24167146437627, 43.78370253562373],
+                        [11.2358136, 43.7695604],
+                        [11.24167146437627, 43.755418264376274],
+                        [11.2558136, 43.7495604],
+                        [11.26995573562373, 43.755418264376274],
+                        [11.2758136, 43.7695604]
+                    ]]
+                }
+            };
+            const ring = circle.geometry.coordinates[0];
+            const normalized = roundCircleRingCoordinates(ring);
+            expect(String(normalized).length < String(ring).length).toBe(true);
         });
         it('should not simplify a Polygon ring', () => {
             const cql = getCQLGeometryElement([closedRing], 'Polygon');
