@@ -44,6 +44,7 @@ import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
 import {
     convertDependenciesMappingForCompatibility as convertToCompatibleWidgets,
     cleanMaximizedState,
+    restoreWidgetsTileMatrixSets,
     editorChange
 } from "../utils/WidgetsUtils";
 
@@ -211,7 +212,7 @@ function widgetsReducer(state = emptyState, action) {
     case DASHBOARD_LOADED:
         const { data } = action;
         return set(`containers[${DEFAULT_TARGET}]`, {
-            ...cleanMaximizedState(data)
+            ...restoreWidgetsTileMatrixSets(cleanMaximizedState(data))
         }, state);
     case REFRESH_SECURITY_LAYERS: {
         let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
@@ -279,7 +280,7 @@ function widgetsReducer(state = emptyState, action) {
     case MAP_CONFIG_LOADED:
         let { widgetsConfig } = (action.config || {});
         if (!isEmpty(widgetsConfig)) {
-            widgetsConfig = cleanMaximizedState(convertToCompatibleWidgets(widgetsConfig));
+            widgetsConfig = restoreWidgetsTileMatrixSets(cleanMaximizedState(convertToCompatibleWidgets(widgetsConfig)));
             return set(`containers[${DEFAULT_TARGET}]`, {
                 ...widgetsConfig
             }, state);

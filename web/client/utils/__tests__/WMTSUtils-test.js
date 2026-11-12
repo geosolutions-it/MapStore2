@@ -162,4 +162,22 @@ describe('Test the WMTSUtils', () => {
         expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/geoserver/wms', name: 'name' })).toBe('/geoserver/gwc/service/wmts?REQUEST=GetCapabilities');
         expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/wms' })).toBe('');
     });
+    it('parseTileMatrixSetOption skips tile matrix sets without definition', () => {
+        const tileMatrixSet = { 'ows:Identifier': 'EPSG:4326', TileMatrix: [{ 'ows:Identifier': 'EPSG:4326:0' }] };
+        const layer = WMTSUtils.parseTileMatrixSetOption({
+            availableTileMatrixSets: {
+                'EPSG:4326': { crs: 'EPSG:4326', tileMatrixSet },
+                'EPSG:900913': { crs: 'EPSG:900913', limits: [{ identifier: 'EPSG:900913:0' }], tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['EPSG:900913']" }
+            }
+        });
+        expect(layer.tileMatrixSet).toEqual([tileMatrixSet]);
+        expect(layer.matrixIds).toEqual({
+            'EPSG:4326': [{ identifier: 'EPSG:4326:0' }]
+        });
+        const unresolved = WMTSUtils.parseTileMatrixSetOption({
+            availableTileMatrixSets: { 'EPSG:900913': { crs: 'EPSG:900913', tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['EPSG:900913']" } }
+        });
+        expect(unresolved.tileMatrixSet).toEqual([]);
+        expect(unresolved.matrixIds).toEqual({});
+    });
 });

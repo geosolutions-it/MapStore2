@@ -28,6 +28,7 @@ import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import { v1 as uuidv1 } from "uuid";
 import { arrayUpsert } from "./ImmutableUtils";
+import { addTileMatrixFromSourcesToLayers } from './LayersUtils';
 import { randomInt } from "./RandomUtils";
 import moment from 'moment';
 import { dateFormats } from './FeatureGridUtils';
@@ -588,6 +589,20 @@ export const cleanMaximizedState = (config = {}) => ({
     } : {}),
     ...(config.layouts ? { layouts: cleanLayouts(config.layouts) } : {}),
     ...(config.layout ? { layout: cleanLayoutItems(config.layout) } : {})
+});
+
+/**
+ * Restores in the layers of map widgets the WMTS tile matrix sets stored in the map `sources`.
+ * @param {object} config stored widgets configuration
+ * @returns {object} widgets configuration with the tile matrix sets inside the layers
+ */
+export const restoreWidgetsTileMatrixSets = (config = {}) => ({
+    ...config,
+    ...(config.widgets ? {
+        widgets: config.widgets.map(widget => widget.maps
+            ? { ...widget, maps: widget.maps.map(map => ({ ...map, layers: addTileMatrixFromSourcesToLayers(map.sources, map.layers) })) }
+            : widget)
+    } : {})
 });
 
 /**

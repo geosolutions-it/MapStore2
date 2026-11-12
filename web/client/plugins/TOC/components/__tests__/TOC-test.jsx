@@ -47,12 +47,14 @@ describe('TOC', () => {
         });
 
         [false, true].forEach(linked => {
-            it(`preserves matrix definitions through repeated visibility changes ${linked ? 'with' : 'without'} initial sources`, () => {
+            it(`keeps matrix definitions unchanged through repeated visibility changes ${linked ? 'with' : 'without'} links to sources`, () => {
                 let map = createMap();
                 if (linked) {
                     map = saveMapConfiguration(map, map.layers, map.groups, []).map;
                     expect(map.layers[0].availableTileMatrixSets['EPSG:4326'].tileMatrixSet).toBe(undefined);
                 }
+                const availableTileMatrixSets = map.layers[0].availableTileMatrixSets;
+                const sources = map.sources;
                 const onChangeMap = expect.createSpy(newMap => { map = newMap; }).andCallThrough();
                 const render = () => ReactDOM.render(<TOC map={map} onChangeMap={onChangeMap} config={{ sortable: false }} />,
                     document.getElementById('container'));
@@ -60,9 +62,12 @@ describe('TOC', () => {
                     render();
                     Simulate.click(document.querySelector('.ms-visibility-check'));
                     expect(map.layers[0].visibility).toBe(visibility);
-                    expect(map.layers[0].availableTileMatrixSets['EPSG:4326'].tileMatrixSet).toEqual(tileMatrixSet);
-                    expect(getTileMatrix(map.layers[0], 'EPSG:4326').tileMatrixSet).toEqual(tileMatrixSet);
+                    expect(map.layers[0].availableTileMatrixSets).toEqual(availableTileMatrixSets);
+                    expect(map.sources).toEqual(sources);
                 });
+                if (!linked) {
+                    expect(getTileMatrix(map.layers[0], 'EPSG:4326').tileMatrixSet).toEqual(tileMatrixSet);
+                }
                 expect(onChangeMap.calls.length).toBe(2);
             });
         });

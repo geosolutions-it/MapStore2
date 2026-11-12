@@ -13,12 +13,11 @@ import {
     denormalizeGroups,
     splitMapAndLayers,
     sortGroups,
-    changeNodeConfiguration,
-    addTileMatrixFromSourcesToLayers
+    changeNodeConfiguration
 } from '../../../utils/LayersUtils';
 import { selectedNodesIdsToObject } from '../utils/TOCUtils';
 import {
-    saveMapConfiguration
+    formatGroupsForSave
 } from '../../../utils/MapUtils';
 
 /**
@@ -174,14 +173,11 @@ function TOC({
     const { layers } = splitMapAndLayers(map) || {};
     const tree = denormalizeGroups(layers.flat || [], layers.groups || []).groups;
     function handleOnChange(currentLayers, currentGroups) {
-        const mapConfig = saveMapConfiguration(map, currentLayers || layers.flat, currentGroups || layers.groups, []);
-        const newMap = {
+        onChangeMap({
             ...map,
-            // The TOC emits renderable layers, while saved layers reference matrix definitions in sources.
-            layers: addTileMatrixFromSourcesToLayers(mapConfig?.map?.sources, mapConfig?.map?.layers),
-            groups: mapConfig?.map?.groups
-        };
-        onChangeMap(newMap);
+            layers: currentLayers || layers.flat,
+            groups: formatGroupsForSave(currentGroups || layers.groups)
+        });
     }
     function handleOnSort(nodeId, groupId, index) {
         const sortedGroups = sortGroups({
