@@ -631,6 +631,21 @@ export const calculateCircleCoordinates = function(center, radius, sides, rotati
     points[0].push(points[0][0]);
     return points;
 };
+
+/**
+ * Sagitta as about 0.1% of the radius
+ */
+export const CIRCLE_SAGITTA_RATIO = 0.001;
+
+/**
+ * Calculates the number of segments to use for a circle based on the radius and sagitta for all drawings circles
+ */
+export const calculateCircleSegments = function(radius, sagitta = radius * CIRCLE_SAGITTA_RATIO, minSegments = 3) {
+    if (!(radius > 0) || !(sagitta > 0) || sagitta >= radius) {
+        return minSegments;
+    }
+    return Math.max(minSegments, Math.ceil(Math.PI / Math.acos(1 - sagitta / radius)));
+};
 /**
  * Generate arcs between a series of points
  * @param {number[]} coordinates of points of a LineString reprojected in 4326
@@ -1184,6 +1199,7 @@ CoordinatesUtils = {
     getGeoJSONExtent,
     isValidExtent,
     calculateCircleCoordinates,
+    calculateCircleSegments,
     transformLineToArcs,
     transformArcsToLine,
     coordsOLtoLeaflet,

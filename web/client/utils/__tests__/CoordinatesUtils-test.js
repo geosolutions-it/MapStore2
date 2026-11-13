@@ -42,7 +42,8 @@ import {
     convertDegreesToRadian,
     transformExtentToObj,
     transformExtentToArray,
-    fitBoundsToProjectionExtent
+    fitBoundsToProjectionExtent,
+    calculateCircleSegments
 } from '../CoordinatesUtils';
 
 import Proj4js from 'proj4';
@@ -991,5 +992,13 @@ describe('CoordinatesUtils', () => {
             .toEqual({ minx: -10, miny: -10, maxx: 10, maxy: 10 });
         expect(fitBoundsToProjectionExtent({ minx: -190, miny: -91, maxx: 190, maxy: 91 }, 'EPSG:4326'))
             .toEqual({ minx: -180, miny: -90, maxx: 180, maxy: 90 });
+    });
+    it('calculateCircleSegments', () => {
+        expect(calculateCircleSegments(100, 0.1)).toBe(71);
+        expect(calculateCircleSegments(1000)).toBe(71);
+        expect(calculateCircleSegments(1000, 1)).toBe(71);
+        expect(calculateCircleSegments(1000, 5)).toBe(32);
+        expect(calculateCircleSegments(10, 10)).toBe(3);
+        expect(calculateCircleSegments(0)).toBe(3);
     });
 });
