@@ -20,6 +20,17 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.03.00 to 2026.03.01
+
+### Jackson updated to 2.22.4
+
+In your project, you should update the `jackson.version` property from version `2.22.3` to version `2.22.4` in the root `pom.xml`.
+
+```diff
+-        <jackson.version>2.22.3</jackson.version>
++        <jackson.version>2.22.4</jackson.version>
+```
+
 ## Migration from 2026.02.02 to 2026.03.00
 
 ### Set minimum NodeJS version to 22
