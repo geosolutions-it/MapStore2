@@ -48,7 +48,9 @@ import { defaults as defaultControls } from 'ol/control';
 
 import axios from "../../../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
-import {get} from 'ol/proj';
+import {get, transform} from 'ol/proj';
+import { register } from 'ol/proj/proj4';
+import proj4 from 'proj4';
 import { getResolutions } from '../../../../utils/MapUtils';
 
 let mockAxios;
@@ -1036,6 +1038,118 @@ describe('Openlayers layer', () => {
         expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[1])).toBe(-20037509);
         expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[2])).toBe(20037508);
         expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[3])).toBe(20037508);
+    });
+    [{
+        code: 'EPSG:2154',
+        def: '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs',
+        extent: [-378305.81, 6093283.21, 1212610.74, 7186901.68]
+    }, {
+        code: 'EPSG:3948',
+        def: '+proj=lcc +lat_1=47.25 +lat_2=48.75 +lat_0=48 +lon_0=3 +x_0=1700000 +y_0=7200000 +ellps=GRS80 +units=m +no_defs',
+        extent: [618180.54, 6527546.03, 2211981.05, 7620707.95]
+    }].forEach(({ code, def, extent }) => {
+        describe(`wmts extent in ${code}`, () => {
+            let projection;
+            let previousExtent;
+            const resolution = Math.max(extent[2] - extent[0], extent[3] - extent[1]) / (256 * 64);
+            const createSource = (bbox) => Layers.createLayer('wmts', {
+                srs: code,
+                name: 'ortho2021',
+                url: 'https://example.com/wmts',
+                requestEncoding: 'KVP',
+                bbox,
+                matrixIds: { [code]: [{ identifier: '0' }] },
+                tileMatrixSet: [{
+                    'ows:Identifier': code,
+                    'ows:SupportedCRS': `urn:ogc:def:crs:EPSG::${code.split(':')[1]}`,
+                    TileMatrix: [{
+                        'ows:Identifier': '0',
+                        ScaleDenominator: resolution / 0.00028,
+                        TopLeftCorner: `${extent[0]} ${extent[3]}`,
+                        TileWidth: 256,
+                        TileHeight: 256,
+                        MatrixWidth: 64,
+                        MatrixHeight: 64
+                    }]
+                }]
+            }).getSource();
+            const getTileUrl = (source, coordinate = transform([-1.68, 48.11], 'EPSG:4326', code)) => {
+                const tileCoord = source.getTileCoordForTileUrlFunction(
+                    source.getTileGrid().getTileCoordForCoordAndResolution(coordinate, resolution), projection
+                );
+                return source.getTileUrlFunction()(tileCoord, 1, projection);
+            };
+            beforeEach(() => {
+                proj4.defs(code, def);
+                register(proj4);
+                projection = get(code);
+                previousExtent = projection.getExtent();
+                projection.setExtent(extent);
+            });
+            afterEach(() => {
+                projection.setExtent(previousExtent);
+            });
+            [Number, String].forEach(convert => {
+                it(`requests tiles with a worldwide WGS84 bbox containing ${convert.name} coordinates`, () => {
+                    const source = createSource({
+                        crs: 'EPSG:4326',
+                        bounds: {
+                            minx: convert(-180), miny: convert(-90), maxx: convert(180), maxy: convert(90)
+                        }
+                    });
+                    expect(getTileUrl(source)).toContain('TileMatrix=0');
+                    expect(source.getTileCoordForTileUrlFunction([0, 64, 0], projection)).toBe(null);
+                    expect(source.getTileCoordForTileUrlFunction([0, 0, 64], projection)).toBe(null);
+                });
+            });
+            it('preserves matrix bounds without adding an extent when no bbox is provided', () => {
+                const source = createSource();
+                expect(source.getTileGrid().getExtent()).toBe(null);
+                expect(getTileUrl(source)).toContain('TileMatrix=0');
+                expect(source.getTileCoordForTileUrlFunction([0, 64, 0], projection)).toBe(null);
+            });
+            it('keeps clipping tiles to a valid layer bbox', () => {
+                const [x, y] = transform([-1.68, 48.11], 'EPSG:4326', code);
+                const source = createSource({
+                    crs: code,
+                    bounds: { minx: x - 10000, miny: y - 10000, maxx: x + 10000, maxy: y + 10000 }
+                });
+                expect(getTileUrl(source)).toContain('TileMatrix=0');
+                expect(getTileUrl(source, [x + 100000, y])).toBe(undefined);
+            });
+            it('clips a partially overlapping bbox to the projection extent', () => {
+                const source = createSource({
+                    crs: code,
+                    bounds: { minx: extent[0] - 100000, miny: extent[1], maxx: extent[2], maxy: extent[3] }
+                });
+                expect(source.getTileGrid().getExtent()).toEqual(extent);
+                expect(getTileUrl(source)).toContain('TileMatrix=0');
+            });
+            it('does not request tiles for a genuine bbox outside the projection area', () => {
+                const source = createSource({
+                    crs: 'EPSG:4326',
+                    bounds: { minx: -74, miny: 40, maxx: -73, maxy: 41 }
+                });
+                expect(getTileUrl(source)).toBe(undefined);
+            });
+        });
+    });
+    it('keeps requesting Mercator tiles with a worldwide WGS84 bbox', () => {
+        const projection = get('EPSG:3857');
+        const source = Layers.createLayer('wmts', {
+            srs: 'EPSG:3857',
+            name: 'ortho2021',
+            url: 'https://example.com/wmts',
+            requestEncoding: 'KVP',
+            ...sampleTileMatrixConfig900913,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: { minx: -180, miny: -90, maxx: 180, maxy: 90 }
+            }
+        }).getSource();
+        expect(source.getTileGrid().getExtent()).toEqual(projection.getExtent());
+        const tileCoord = source.getTileCoordForTileUrlFunction([0, 0, 0], projection);
+        expect(source.getTileUrlFunction()(tileCoord, 1, projection)).toContain('TileMatrix=EPSG%3A900913%3A0');
     });
     it('test fix for OL draw image (remove when OL > 5.3.0) ', () => {
         // see https://github.com/openlayers/openlayers/issues/8700
