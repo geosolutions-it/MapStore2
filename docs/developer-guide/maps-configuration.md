@@ -245,6 +245,7 @@ Details:
 - `params`: an object with additional parameters to add to the WMS request
 - `layerFilter`: an object to filter the layer. See [LayerFilter](LayerFilter.md) for details.
 - `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs', typeName: 'workspace:featureType'}`. The optional `typeName` identifies the linked WFS feature type; when omitted, MapStore uses the WMS layer `name` for backward compatibility.
+- `isQGIS`: optional boolean populated automatically from QGIS namespace declarations or schema references in GetCapabilities. It is preserved when saving the layer so `featureInfo.buffer` can be mapped to QGIS Identify tolerance parameters after reload, without changing `serverType`. Other `no-vendor` layers do not expose Buffer or generate buffer parameters.
 - `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.). See [Fields](#fields) for details.
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
 - `singleTile`: By default, WMS is invoked using tiled requests. If you want to use a single tile request, you can set this property to `true`.

@@ -43,6 +43,10 @@ describe('Test the WMSUtils', () => {
                 availableStyles: [{ name: 'generic' }]
             });
     });
+    it('passes detected QGIS metadata to existing layer settings', () => {
+        expect(getLayerOptions({ layerOptions: { isQGIS: true } }).isQGIS).toBe(true);
+        expect(getLayerOptions({ layerOptions: { isQGIS: false } }).isQGIS).toBe(false);
+    });
     it('test getLayerOptions with empty or no Abstract', () => {
         expect(getLayerOptions()).toEqual({});
         const capabilities = {

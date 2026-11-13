@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0" xmlns="http://www.opengis.net/wms"
+    xmlns:qgs="http://www.qgis.org/wms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.qgis.org/wms ?SERVICE=WMS&amp;REQUEST=GetSchemaExtension">
+    <Service>
+        <Name>WMS</Name>
+        <Title>Tree inventory</Title>
+    </Service>
+    <Capability>
+        <Request>
+            <GetMap><Format>image/png</Format></GetMap>
+            <GetFeatureInfo><Format>text/html</Format><Format>application/json</Format></GetFeatureInfo>
+        </Request>
+        <Layer>
+            <Title>Tree inventory</Title>
+            <CRS>EPSG:3857</CRS>
+            <Layer queryable="1">
+                <Name>CLASSI_GENERE_GEOPORTALE</Name>
+                <Title>Alberature</Title>
+                <EX_GeographicBoundingBox>
+                    <westBoundLongitude>8.65</westBoundLongitude>
+                    <eastBoundLongitude>9.11</eastBoundLongitude>
+                    <southBoundLatitude>44.35</southBoundLatitude>
+                    <northBoundLatitude>44.54</northBoundLatitude>
+                </EX_GeographicBoundingBox>
+            </Layer>
+        </Layer>
+    </Capability>
+</WMS_Capabilities>

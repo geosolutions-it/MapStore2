@@ -13,6 +13,37 @@ import axios from '../../libs/ajax';
 let mockAxios;
 
 describe('Test correctness of the WMS APIs', () => {
+    it('detects QGIS from capabilities and exposes it to catalog records and layer settings', async() => {
+        const url = 'base/web/client/test-resources/wms/GetCapabilities-qgis.xml';
+        const capabilities = await API.getCapabilities(url);
+        const parsed = API.parseLayerCapabilities(capabilities, { name: 'CLASSI_GENERE_GEOPORTALE' });
+        expect(parsed.layerOptions.isQGIS).toBe(true);
+        const records = await API.getRecords(url, 1, 10, '');
+        expect(records.layerOptions.isQGIS).toBe(true);
+        const formats = await API.getSupportedFormat(url, true);
+        expect(formats.isQGIS).toBe(true);
+        expect(formats.infoFormats).toEqual(['text/html', 'application/json']);
+    });
+    [
+        { 'xmlns:custom': 'http://www.qgis.org/wms' },
+        { 'xsi:schemaLocation': 'http://www.qgis.org/wms /schema' }
+    ].forEach(attributes => {
+        it(`detects QGIS independently of the namespace prefix: ${Object.keys(attributes)[0]}`, () => {
+            const capabilities = API.parseLayerCapabilities({
+                $: attributes,
+                Capability: { Layer: { Name: 'trees' } }
+            }, { name: 'trees' });
+            expect(capabilities.layerOptions.isQGIS).toBe(true);
+        });
+    });
+    it('does not infer QGIS from a service title', () => {
+        const capabilities = API.parseLayerCapabilities({
+            $: { xmlns: 'http://www.opengis.net/wms' },
+            Service: { Title: 'QGIS maps' },
+            Capability: { Layer: { Name: 'trees' } }
+        }, { name: 'trees' });
+        expect(capabilities.layerOptions.isQGIS).toBe(false);
+    });
     it('parseUrl uses the first array element', () => {
         expect(API.parseUrl(["http://first", "https://second"]).indexOf("http://first/")).toBe(0);
     });
@@ -462,6 +493,7 @@ describe('Test getSupportedFormat WMS API (mock axios)', () => {
                 try {
                     expect(formats.imageFormats).toEqual(['image/png', 'image/jpeg']);
                     expect(formats.infoFormats).toEqual(['text/html', 'application/json']);
+                    expect(formats.isQGIS).toBe(false);
                     done();
                 } catch (e) {
                     done(e);

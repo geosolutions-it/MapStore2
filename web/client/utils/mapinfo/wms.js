@@ -9,17 +9,45 @@
 import {Observable} from "rxjs";
 import {getCurrentResolution} from '../MapUtils';
 import {reproject, getProjectedBBox, normalizeSRS} from '../CoordinatesUtils';
-import {getLayerUrl} from '../LayersUtils';
+import {getCapabilitiesUrl, getLayerUrl} from '../LayersUtils';
 import {isObject, isNil} from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { generateEnvString } from '../LayerLocalizationUtils';
-import { getFeatureInfoBuffer, getFeatureInfoMaxItems } from '../FeatureInfoRequestUtils';
+import { getFeatureInfoBuffer, getFeatureInfoMaxItems, sanitizeFeatureInfoBuffer } from '../FeatureInfoRequestUtils';
+import { getSupportedFormat } from '../../api/WMS';
 import axios from "../../libs/ajax";
 // import {parseString} from "xml2js";
 // import {stripPrefix} from "xml2js/lib/processors";
 import {addAuthenticationToSLD} from '../SecurityUtils';
 import { interceptOGCError } from '../ObservableUtils';
+
+const serverDetectionRequests = new WeakMap();
+
 export default {
+    /**
+     * Detects QGIS before identifying layers saved without server metadata.
+     * Only layers with a configured buffer need detection. Cache the request for
+     * the current layer configuration, and retry failed detection on the next click.
+     * @param {object} layer the layer configuration
+     * @return {Promise} the layer with the detected server metadata, when available
+     */
+    resolveLayer: (layer) => {
+        if (layer.isQGIS !== undefined || !layer.url || sanitizeFeatureInfoBuffer(layer.featureInfo?.buffer) === undefined) {
+            return Promise.resolve(layer);
+        }
+        if (!serverDetectionRequests.has(layer)) {
+            serverDetectionRequests.set(layer, getSupportedFormat(getCapabilitiesUrl(layer), true, {
+                _msAuthSourceId: layer.security?.sourceId
+            }).then(({ isQGIS }) => {
+                if (isQGIS === undefined) {
+                    serverDetectionRequests.delete(layer);
+                }
+                return isQGIS;
+            }));
+        }
+        return serverDetectionRequests.get(layer)
+            .then(isQGIS => isQGIS === undefined ? layer : { ...layer, isQGIS });
+    },
     /**
      * Creates the request object and it's metadata for WMS GetFeatureInfo.
      * @param {object} layer
@@ -59,6 +87,13 @@ export default {
         });
         const featureInfoMaxItems = getFeatureInfoMaxItems(featureInfo, maxItems);
         const featureInfoBuffer = getFeatureInfoBuffer(featureInfo, layer);
+        const bufferParams = layer.isQGIS === true
+            ? {
+                FI_POINT_TOLERANCE: featureInfoBuffer,
+                FI_LINE_TOLERANCE: featureInfoBuffer,
+                FI_POLYGON_TOLERANCE: featureInfoBuffer
+            }
+            : { buffer: featureInfoBuffer };
         return {
             request: addAuthenticationToSLD({
                 service: 'WMS',
@@ -82,7 +117,7 @@ export default {
                 ENV,
                 ...Object.assign({}, params),
                 feature_count: featureInfoMaxItems,
-                ...(featureInfoBuffer !== undefined ? { buffer: featureInfoBuffer } : {})
+                ...(featureInfoBuffer !== undefined ? bufferParams : {})
             }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,

@@ -113,7 +113,7 @@
         "maxItems": "Antal features",
         "maxItemsTooltip": "Det maksimale antal features som bliver returneret af en infoforespørgsel. Standardværdien er 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "GeoServer-leverandørparameter der udvider info-søgeradius omkring det valgte punkt, målt i pixel på skærmen."
+        "bufferTooltip": "Udvider info-søgeradius omkring det valgte punkt, målt i pixel på skærmen. Tilgængelig for GeoServer-lag og automatisk registrerede QGIS Server-lag."
       },
       "legenderror": "Signaturforklaring er ikke tilgængelig",
       "editCustomFormat": "Rediger brugerdefineret format",

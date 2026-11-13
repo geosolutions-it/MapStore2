@@ -242,10 +242,12 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser.
 
-* Server Type: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other. Depending on the selected server type, the following **Feature Info** options are available for the [Identify](identify.md) requests (GetFeatureInfo) performed on layers added from this source:
+* Server Type: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example QGIS Server, MapProxy, MapServer or other. The following **Feature Info** options are available for the [Identify](identify.md) requests (GetFeatureInfo) performed on layers added from this source:
 * Feature count (available for both `Geoserver` and `No Vendor`): sets the maximum number of features returned by the server for each identify request (default `10`)
 
-* Buffer (px) (available only for `Geoserver`): sets the search radius, in pixels, around the clicked point within which features are identified. It uses the GeoServer `BUFFER` vendor parameter, so it is useful to make it easier to select points and lines on the map
+* Buffer (px) (available for `Geoserver` and automatically detected QGIS Server sources): sets the search radius, in pixels, around the clicked point within which features are identified. For GeoServer, it uses the `BUFFER` vendor parameter. QGIS Server is detected from the service's GetCapabilities response and uses the same value for `FI_POINT_TOLERANCE`, `FI_LINE_TOLERANCE`, and `FI_POLYGON_TOLERANCE`. Other `No Vendor` sources do not show this option. Leave the field blank to use the server's default tolerance
+
+QGIS detection reuses the capabilities request made when opening the WMS advanced settings. The detection result and Buffer value are inherited by layers added from the source. No additional server type or URL matching is required.
 
 <img src="../img/catalog/AdvancedsettingsNoVendor.jpg" class="ms-docimage"  style="max-width:500px;" />
 

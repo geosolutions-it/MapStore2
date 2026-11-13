@@ -130,7 +130,7 @@
         "maxItems": "Numero di elementi",
         "maxItemsTooltip": "Numero massimo di elementi restituiti da una richiesta di identificazione. Il valore predefinito è 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "Parametro del fornitore GeoServer che espande il raggio di ricerca di identificazione attorno al punto cliccato, misurato in pixel dello schermo."
+        "bufferTooltip": "Espande il raggio di ricerca di identificazione attorno al punto cliccato, misurato in pixel dello schermo. Disponibile per i livelli GeoServer e QGIS Server rilevati automaticamente."
       },
       "guideText": "Nell'URL dell'immagine puoi utilizzare variabili come $\\{properties.YOUR_ATTRIBUTE\\}  per rendere parametrico l'URL a seconda degli attributi della feature. Supporta sia URL che \"Data URI\" codificati in base64",
       "imageNotFound": "Questa immagine può necessitare di una richiesta informazioni sulle feature per essere renderizzata correttamente",
