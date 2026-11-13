@@ -623,7 +623,7 @@ export default Quill => {
             // Remove the overlay
             if (this.input) {
                 if (this.domNode.parentNode && this.domNode.parentNode.children && this.domNode.parentNode.children[0] && this.domNode.parentNode.children[0]) {
-                    this.domNode.parentNode.children[0].setAttribute('src', this.input.value);
+                    this.domNode.parentNode.children[0].setAttribute('src', Link.sanitize(this.input.value));
                 }
                 this.overlay.removeChild(this.input);
                 this.input = undefined;
