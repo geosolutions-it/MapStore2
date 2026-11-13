@@ -54,7 +54,8 @@ export const getWMSLegendConfig = ({
         style: layer.style || null,
         version: layer.version || "1.3.0",
         SLD_VERSION: "1.1.0",
-        LEGEND_OPTIONS: legendOptions
+        LEGEND_OPTIONS: legendOptions,
+        ...(layer._v_ !== undefined && { _v_: layer._v_ })
     };
     if (layer.serverType !== ServerTypes.NO_VENDOR) {
         const addContentDependantParams = layer.enableDynamicLegend || layer.enableInteractiveLegend;

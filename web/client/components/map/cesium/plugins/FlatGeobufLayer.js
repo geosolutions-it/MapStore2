@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import Layers from '../../../../utils/cesium/Layers';
 
 import * as Cesium from 'cesium';
@@ -143,7 +144,7 @@ const createLayer = (options, map) => {
         }
 
         const { headers, params } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
-        const secureUrl = updateUrlParams(options.url, params);
+        const secureUrl = addRefreshParameter(updateUrlParams(options.url, params), options._v_);
 
         const resolver = createFlatGeobufGeometryTypeResolver(
             options,
@@ -252,6 +253,7 @@ Layers.registerType(FGB_LAYER_TYPE, {
         if (!isEqual(newOptions.features, oldOptions.features)
             || !isEqual(oldOptions.security, newOptions.security)
             || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+            || oldOptions._v_ !== newOptions._v_
             || newOptions.maxFeaturesInView !== oldOptions.maxFeaturesInView) {
             return createLayer(newOptions, map);
         }

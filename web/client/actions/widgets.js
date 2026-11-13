@@ -17,6 +17,7 @@ export const INIT = "WIDGETS:INIT";
 export const UPDATE = "WIDGETS:UPDATE";
 export const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
 export const UPDATE_LAYER = "WIDGETS:UPDATE_LAYER";
+export const UPDATE_LAYER_PROPERTIES = "WIDGETS:UPDATE_LAYER_PROPERTIES";
 export const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 export const DELETE = "WIDGETS:DELETE";
 export const REPLACE = "WIDGETS:REPLACE";
@@ -150,6 +151,9 @@ export const updateWidgetLayer = (layer) => ({
     type: UPDATE_LAYER,
     layer
 });
+
+/** Patch layer properties at explicit widget paths, preserving widget-specific configuration. */
+export const updateWidgetLayerProperties = updates => ({ type: UPDATE_LAYER_PROPERTIES, updates });
 /**
  * Deletes a widget from the passed target
  * @param  {object} widget The widget template to start with

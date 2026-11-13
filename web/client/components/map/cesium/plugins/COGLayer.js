@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import Layers from '../../../../utils/cesium/Layers';
 import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 import { updateUrlParams } from '../../../../utils/URLUtils';
@@ -94,7 +95,7 @@ const createLayer = (options) => {
 
     const url = options.url || options?.sources[0]?.url;
     const {headers, params} = getRequestConfigurationByUrl(url, options?.security?.sourceId);
-    const secureUrl = updateUrlParams(url, params);
+    const secureUrl = addRefreshParameter(updateUrlParams(url, params), options._v_);
     const renderOptions = buildRenderOptions(options);
 
     // https://github.com/hongfaqiu/TIFFImageryProvider?tab=readme-ov-file#api
@@ -120,7 +121,7 @@ const createLayer = (options) => {
 Layers.registerType(COG_LAYER_TYPE, {
     create: createLayer,
     update: (layer, newOptions, oldOptions) => {
-        if (!isEqual(newOptions.sources, oldOptions.sources) ||
+        if (newOptions._v_ !== oldOptions._v_ || !isEqual(newOptions.sources, oldOptions.sources) ||
             !isEqual(newOptions.style, oldOptions.style) ||
             !isEqual(oldOptions.security, newOptions.security) ||
             !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
