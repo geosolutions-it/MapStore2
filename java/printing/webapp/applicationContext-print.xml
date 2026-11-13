@@ -16,6 +16,19 @@
 
     <context:annotation-config />
 
+    <!-- Default PRINT_BASE_URL to "pdf", so the URLs returned by info.json are relative to MapStore and work behind any proxy.
+         A value passed with -DPRINT_BASE_URL is kept; an empty one restores the absolute URLs computed from the request. -->
+    <bean id="printBaseUrlDefault" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass" value="java.lang.System"/>
+        <property name="targetMethod" value="setProperty"/>
+        <property name="arguments">
+            <list>
+                <value>PRINT_BASE_URL</value>
+                <value>#{systemProperties['PRINT_BASE_URL'] != null ? systemProperties['PRINT_BASE_URL'] : 'pdf'}</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="mapPrinter" class="org.mapfish.print.MapPrinter" scope="prototype"></bean>
 	<bean id="configFactory" class="org.mapfish.print.config.ConfigFactory"></bean>
     <bean id="threadResources" class="org.mapfish.print.ThreadResources">
