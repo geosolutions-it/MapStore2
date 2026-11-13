@@ -22,7 +22,7 @@ import urlParser from 'url';
 import { isValidResponse } from '../../../../utils/WMSUtils';
 
 import { get, getTransform } from 'ol/proj';
-import { applyTransform, getIntersection } from 'ol/extent';
+import { applyTransform, getIntersection, isEmpty } from 'ol/extent';
 import TileLayer from 'ol/layer/Tile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import WMTS from 'ol/source/WMTS';
@@ -116,6 +116,16 @@ const createLayer = options => {
     // the extent has effect to the tile ranges
     // we should skip the extent if the layer does not provide bounding box
     let extent = layerExtent && getIntersection(layerExtent, projection.getExtent());
+    // Recover only the worldwide WGS84 bbox used when capabilities omit WGS84BoundingBox.
+    if (extent && isEmpty(extent)
+        && bbox.crs === 'EPSG:4326'
+        && Number(bbox.bounds.minx) === -180
+        && Number(bbox.bounds.miny) === -90
+        && Number(bbox.bounds.maxx) === 180
+        && Number(bbox.bounds.maxy) === 90
+    ) {
+        extent = projection.getExtent();
+    }
     let queryParameters = options.params ? options.params : {};
     queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
