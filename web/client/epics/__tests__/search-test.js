@@ -8,6 +8,12 @@
  */
 
 import expect from 'expect';
+import * as Rx from 'rxjs';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
+import { API } from '../../api/searchText';
+import { reproject } from '../../utils/CoordinatesUtils';
+import { layerSelectorWithMarkers } from '../../selectors/layers';
 
 import { head, last } from 'lodash';
 import configureMockStore from 'redux-mock-store';
@@ -15,6 +21,7 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable';
 
 import {
     textSearch,
+    addMarker, TEXT_SEARCH_RESET,
     selectSearchItem,
     TEXT_SEARCH_RESULTS_LOADED,
     TEXT_SEARCH_LOADING,
@@ -32,10 +39,11 @@ import {
 
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER, loadFeatureInfo, UPDATE_CENTER_TO_MARKER } from '../../actions/mapInfo';
-import { ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../actions/map';
+import { CHANGE_MAP_CRS, ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../actions/map';
 import { UPDATE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
 import {
     searchEpic,
+    resetSearchOnMapCrsChange,
     searchItemSelected,
     zoomAndAddPointEpic,
     searchOnStartEpic,
@@ -51,7 +59,7 @@ const SEARCH_NESTED = 'SEARCH NESTED';
 const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
 const STATE_NAME = 'STATE_NAME';
 
-import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { testEpic, testCombinedEpicStream, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import {addLayer} from "../../actions/layers";
 import { ADD_MAP_POPUP } from '../../actions/mapPopups';
 
@@ -923,5 +931,133 @@ describe('search Epics', () => {
                 expect(actions[1].type).toBe(TEST_TIMEOUT);
                 done();
             }, {});
+    });
+});
+
+describe('WFS search CRS flow', () => {
+    const service = (srsName) => ({ type: 'wfs', options: { srsName, typeName: 'test:layer' } });
+    const feature = {
+        type: 'Feature', properties: {},
+        geometry: { type: 'Point', coordinates: [111319.49079327357, 222684.20850554405] }
+    };
+    const state = { map: { projection: 'EPSG:3857' }, layers: [{ name: 'test:layer', type: 'wms', visibility: true }] };
+
+    let originalWfs;
+    let mock;
+    beforeEach(() => { originalWfs = API.Utils.getService('wfs'); });
+    afterEach(() => {
+        API.Utils.setService('wfs', originalWfs);
+        mock?.restore();
+        mock = undefined;
+    });
+
+    ['EPSG:3857', undefined].forEach(srsName => {
+        it(`requests and records the effective CRS for ${srsName || 'legacy configuration'}`, done => {
+            const configured = service(srsName);
+            let requested;
+            API.Utils.setService('wfs', (text, options) => {
+                requested = options;
+                return Promise.resolve([feature]);
+            });
+            testEpic(searchEpic, 3, textSearch('test', { services: [configured] }), actions => {
+                const result = actions.find(a => a.type === TEXT_SEARCH_RESULTS_LOADED).results[0];
+                expect(requested.srsName).toBe(srsName);
+                expect(result.__CRS__).toBe(srsName || 'EPSG:4326');
+                expect(result.__SERVICE__).toBe(configured);
+                expect(configured.options.srsName).toBe(srsName);
+            }, state, done);
+        });
+    });
+
+    it('passes the resolved CRS through the actual WFS adapter', done => {
+        mock = new MockAdapter(axios);
+        mock.onAny().reply(config => {
+            expect(config.params.srsName).toBe('EPSG:3857');
+            expect(config.params.typeName).toBe('test:layer');
+            return [200, { type: 'FeatureCollection', features: [feature] }];
+        });
+        const configured = service('map');
+        configured.options.url = '/mock-wfs';
+        testEpic(searchEpic, 3, textSearch('test', { services: [configured] }), actions => {
+            expect(mock.history.get.length).toBe(1);
+            expect(actions.find(a => a.type === TEXT_SEARCH_RESULTS_LOADED).results[0].__CRS__).toBe('EPSG:3857');
+        }, state, done);
+    });
+
+    it('zooms using the captured result CRS after the map CRS changes', done => {
+        const searchItem = { ...feature, __SERVICE__: service('map'), __CRS__: 'EPSG:3857' };
+        testEpic(searchItemSelected, 3, selectSearchItem(searchItem), actions => {
+            const zoom = actions.find(a => a.type === ZOOM_TO_EXTENT);
+            expect(zoom.crs).toBe('EPSG:3857');
+            expect(zoom.extent).toEqual([...feature.geometry.coordinates, ...feature.geometry.coordinates]);
+            expect(actions.find(a => a.type === TEXT_SEARCH_ADD_MARKER).markerPosition).toBe(searchItem);
+        }, { map: { projection: 'EPSG:4326' } }, done);
+    });
+
+    it('uses the geometry service CRS and recomputes its bbox', done => {
+        let requested;
+        API.Utils.setService('wfs', (text, options) => {
+            requested = options;
+            return Promise.resolve([feature]);
+        });
+        const searchItem = {
+            ...feature, bbox: [-1, -1, 1, 1],
+            __SERVICE__: { ...service('EPSG:4326'), geomService: service('map') }
+        };
+        testEpic(searchItemSelected, 3, selectSearchItem(searchItem), actions => {
+            const marker = actions.find(a => a.type === TEXT_SEARCH_ADD_MARKER).markerPosition;
+            expect(requested.srsName).toBe('EPSG:3857');
+            expect(marker.__CRS__).toBe('EPSG:3857');
+            expect(marker.bbox).toEqual([...feature.geometry.coordinates, ...feature.geometry.coordinates]);
+        }, state, done);
+    });
+
+    it('resets mixed searches and ignores late responses on projection change', done => {
+        let resolve;
+        const actions = [];
+        API.Utils.setService('wfs', () => new Promise(r => { resolve = r; }));
+        const triggerEpic = () => Rx.Observable.of(textSearch('test', { services: [service('map'), service('EPSG:4326')] }))
+            .concat(Rx.Observable.timer(300).map(() => ({ type: CHANGE_MAP_CRS, crs: 'EPSG:4326' }))
+                .do(() => resolve([feature])));
+        testCombinedEpicStream(
+            [searchEpic, resetSearchOnMapCrsChange, triggerEpic],
+            () => Rx.Observable.timer(450),
+            {
+                onNext: action => actions.push(action),
+                onError: done,
+                onComplete: () => {
+                    try {
+                        expect(actions.some(a => a.type === TEXT_SEARCH_RESET)).toBe(true);
+                        expect(actions.some(a => a.type === TEXT_SEARCH_RESULTS_LOADED)).toBe(false);
+                        done();
+                    } catch (error) { done(error); }
+                }
+            },
+            { getState: () => state }
+        );
+    });
+
+    it('converts the automatic feature info point to longitude/latitude', done => {
+        const searchItem = { ...feature, __CRS__: 'EPSG:3857', __SERVICE__: { ...service('map'), launchInfoPanel: 'single_layer' } };
+        testEpic(getFeatureInfoOfSelectedItem, 2, addMarker(searchItem), actions => {
+            const info = actions.find(a => a.type === FEATURE_INFO_CLICK);
+            expect(Math.abs(info.point.latlng.lng - 1)).toBeLessThan(1e-8);
+            expect(Math.abs(info.point.latlng.lat - 2)).toBeLessThan(1e-8);
+        }, state, done);
+    });
+
+    ['openlayers', 'leaflet', 'cesium'].forEach(mapType => {
+        it(`renders the search highlight in the correct CRS for ${mapType}`, () => {
+            const polygon = {
+                ...feature, __CRS__: 'EPSG:3857',
+                geometry: { type: 'Polygon', coordinates: [[[0, 0], [1000, 0], [1000, 1000], [0, 0]]] }
+            };
+            const layer = layerSelectorWithMarkers({ maptype: { mapType }, search: { markerPosition: polygon } })[0];
+            expect(layer.featuresCrs).toBe(mapType === 'openlayers' ? 'EPSG:3857' : 'EPSG:4326');
+            const coordinates = layer.features[1].geometry.coordinates[0][2];
+            const expected = mapType === 'openlayers' ? { x: 1000, y: 1000 } : reproject([1000, 1000], 'EPSG:3857', 'EPSG:4326');
+            expect(coordinates).toEqual([expected.x, expected.y]);
+            expect(polygon.geometry.coordinates[0][2]).toEqual([1000, 1000]);
+        });
     });
 });
