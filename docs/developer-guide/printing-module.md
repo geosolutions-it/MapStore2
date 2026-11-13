@@ -69,7 +69,7 @@ Please check if:
 
 ### I have an error printing (using Reverse Proxy/HTTPS)
 
-When you open MapStore from the browser, MapStore do a request to the main entry point (`info.json`) of the printing module. This entry point provides a set of URLs where to find all the print related services. These URLs are generated starting from the current request.
+When you open MapStore from the browser, MapStore do a request to the main entry point (`info.json`) of the printing module. This entry point provides a set of URLs where to find all the print related services. By default these URLs are relative to MapStore (`PRINT_BASE_URL` is set to `pdf`, see [below](#forcing-print_base_url-of-printing-module)), so they work behind any reverse proxy. If you set `PRINT_BASE_URL` to an empty value, or your project does not set the default, these URLs are generated starting from the current request.
 
 A common practice is to use a reverse proxy in front of a Java Application Server, and so MapStore (this is used also to add https, if the reverse proxy is part of a web server). If this reverse proxy is not properly configured anyway, MapStore will not be able to correctly generate the URLs of the printing services, and this may cause an error when you try to print a PDF.
 
@@ -109,16 +109,18 @@ proxy_set_header X-Forwarded-Proto https;
 
 #### Forcing PRINT_BASE_URL of printing module
 
-If, for any reason, you can not modify the proxy configuration, MapStore printing module provides a system variable `PRINT_BASE_URL` that you can set to force the URLs returned by `info.json` to be resolved from it.
+MapStore printing module reads the system variable `PRINT_BASE_URL` to resolve the URLs returned by `info.json`.
 
-A useful trick can be to set as a relative URL (relative to MapStore) to make it work in any context (only for MapStore).
+MapStore sets it to `pdf` by default (in `applicationContext-print.xml`), a URL relative to MapStore that works in any context (only for MapStore).
+
+You can override it with an absolute URL:
 
 ```bash
-JAVA_OPTS= "$JAVA_OPTS -DPRINT_BASE_URL=pdf"
+JAVA_OPTS="$JAVA_OPTS -DPRINT_BASE_URL=https://example.com/mapstore/pdf"
 ```
 
-or you can use the absolute URL:
+or set it to an empty value to generate the URLs from the current request:
 
 ```bash
-JAVA_OPTS= "$JAVA_OPTS -DPRINT_BASE_URL=https://example.com/mapstore/pdf"
+JAVA_OPTS="$JAVA_OPTS -DPRINT_BASE_URL="
 ```

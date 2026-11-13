@@ -20,6 +20,29 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.03.00 to 2027.01.00
+
+### Default `PRINT_BASE_URL` for the printing module
+
+MapStore now sets the `PRINT_BASE_URL` system property to `pdf` by default, so the URLs returned by the printing module `info.json` are relative to MapStore and printing works behind a reverse proxy (e.g. https) without additional configuration.
+
+To get this default in your project, add this bean to `web/src/printing/applicationContext-print.xml` (see the updated [project template](https://github.com/geosolutions-it/MapStore2/blob/master/project/standard/templates/web/src/printing/applicationContext-print.xml) for reference):
+
+```xml
+<bean id="printBaseUrlDefault" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="targetClass" value="java.lang.System"/>
+    <property name="targetMethod" value="setProperty"/>
+    <property name="arguments">
+        <list>
+            <value>PRINT_BASE_URL</value>
+            <value>#{systemProperties['PRINT_BASE_URL'] != null ? systemProperties['PRINT_BASE_URL'] : 'pdf'}</value>
+        </list>
+    </property>
+</bean>
+```
+
+A `PRINT_BASE_URL` passed with `JAVA_OPTS` still takes precedence. If other clients use the printing service of your MapStore and need absolute URLs, set `-DPRINT_BASE_URL=` (empty) to keep the previous behavior, or set an absolute URL. See [printing module](printing-module.md#forcing-print_base_url-of-printing-module) for details.
+
 ## Migration from 2026.02.02 to 2026.03.00
 
 ### Set minimum NodeJS version to 22
