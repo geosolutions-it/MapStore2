@@ -176,6 +176,14 @@ describe('URLUtils', () => {
     it('isValidURLTemplate', () => {
         SAMPLE_URL_TEMPLATES.map(url => expect(isValidURLTemplate(url)).toBeTruthy());
     });
+    it('isValidURLTemplate rejects invalid templates', () => {
+        [
+            'ftp://tile.server.org/{z}/{x}/{y}.png',
+            'http://localhost/{z}/{x}/{y}.png',
+            'http://tile.server.org/{z}/{x}/{y}.png?a=<b>',
+            'http://-.' + '-.'.repeat(40) + '!'
+        ].forEach(url => expect(isValidURLTemplate(url)).toBe(false));
+    });
     it('getDefaultUrl', () => {
         const _url = [
             'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
