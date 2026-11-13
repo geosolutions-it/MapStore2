@@ -107,11 +107,26 @@ function ensureReady(layer, callback, eventKey) {
     }
 }
 
+/**
+ * Check if the url points to the Google Photorealistic 3D Tiles service
+ * @param {string} url tileset url
+ * @return {boolean} true when the url host is the Google tiles one
+ */
+export const isGooglePhotorealistic3DTilesUrl = (url) => {
+    try {
+        const { protocol, host } = new URL(url);
+        return protocol === 'https:' && host === 'tile.googleapis.com';
+    } catch (e) {
+        // relative or invalid urls cannot point to the Google service
+        return false;
+    }
+};
+
 // Google Photorealistic 3D Tiles requires both attribution and brand logo (see https://cloud.google.com/blog/products/maps-platform/commonly-asked-questions-about-our-recently-launched-photorealistic-3d-tiles)
 // The attribution are dynamic and updated directly with the `showCreditsOnScreen` property (see https://developers.google.com/maps/documentation/tile/policies#3d_tiles)
 // The brand logo instead is not managed by the Cesium3DTileset class and must to be included in the credits
 function updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet) {
-    if ((options?.url || '').includes('https://tile.googleapis.com')) {
+    if (isGooglePhotorealistic3DTilesUrl(options?.url)) {
         if (!tileSet._googleCredit) {
             const bodyStyle = window?.getComputedStyle ? window.getComputedStyle(document.body, null) : null;
             const bodyBackgroundColor = bodyStyle?.getPropertyValue ? bodyStyle.getPropertyValue('background-color') : '#ffffff';
