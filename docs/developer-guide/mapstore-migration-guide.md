@@ -179,7 +179,7 @@ The following changes must be applied to your project (see the updated [project 
 -        <tomcat.version>9.0.116</tomcat.version>
 -        <jackson.version>2.16.1</jackson.version>
 +        <tomcat.version>11.0.27</tomcat.version>
-+        <jackson.version>2.22.3</jackson.version>
++        <jackson.version>2.22.4</jackson.version>
          <!-- Spring Framework & Security (aligned) -->
 -        <spring.version>5.3.39</spring.version>
 -        <spring.security.version>5.7.13</spring.security.version>
@@ -299,10 +299,10 @@ The steps below remove the duplicates. They change only two files of your projec
 
 #### 1. `pom.xml` (in the root folder of your project)
 
-**1.1** In the `<properties>` section, add these two lines right after the `jackson.version` line (updated to `2.22.3` in the previous section):
+**1.1** In the `<properties>` section, add these two lines right after the `jackson.version` line (updated to `2.22.4` in the previous section):
 
 ```diff
-         <jackson.version>2.22.3</jackson.version>
+         <jackson.version>2.22.4</jackson.version>
 +        <guava.version>32.0.0-jre</guava.version>
 +        <jsr305.version>3.0.2</jsr305.version>
 ```
