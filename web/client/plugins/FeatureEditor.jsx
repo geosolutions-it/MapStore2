@@ -16,6 +16,7 @@ import FeatureEditorFallback from '../components/data/featuregrid/FeatureEditorF
 import withSuspense from '../components/misc/withSuspense';
 import {compose, lifecycle} from "recompose";
 import { browseData } from "../actions/layers";
+import { canBrowseFeatures } from "../api/featuresource";
 import { initPlugin, setViewportFilter } from "../actions/featuregrid";
 import {isViewportFilterActive} from "../selectors/featuregrid";
 
@@ -241,7 +242,7 @@ const AttributeTableButton = connect(() => ({}), {
 }) => {
     const ItemComponent = itemComponent;
     const layer = selectedNodes?.[0]?.node;
-    if ([statusTypes.LAYER].includes(status) && layer?.search && !layer?.error) {
+    if ([statusTypes.LAYER].includes(status) && canBrowseFeatures(layer) && !layer?.error) {
         return (
             <ItemComponent
                 {...props}

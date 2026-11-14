@@ -12,7 +12,7 @@ import turfArea from '@turf/area';
 import {
     createAnnotationId,
     ANNOTATIONS
-} from '../plugins/Annotations/utils/AnnotationsUtils';
+} from './AnnotationsLayerUtils';
 import {
     convertUom,
     getFormattedBearingValue,

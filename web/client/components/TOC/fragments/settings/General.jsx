@@ -24,7 +24,7 @@ import {
     isValidNewGroupOption,
     getLabelName as _getLabelName
 } from '../../../../plugins/TOC/utils/TOCUtils';
-import { supportsFeatureEditing } from "../../../../utils/FeatureGridUtils";
+import { supportsFeatureEditing } from "../../../../api/featuresource";
 import { DEFAULT_GROUP_ID, flattenGroups, getTitle as _getTitle } from '../../../../utils/LayersUtils';
 import { validateSourceField } from '../../../../utils/LayerSourceUtils';
 import { addSearch } from '../../../../observables/wms';

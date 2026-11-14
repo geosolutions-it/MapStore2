@@ -11,7 +11,8 @@ import { every, get, some } from 'lodash';
 import { compose, createEventHandler, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
 
-import { isAnnotation, importJSONToAnnotations } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
+import { importJSONToAnnotations } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
+import { isAnnotation } from '../../../../utils/AnnotationsLayerUtils';
 import ProjectionRegistry from '../../../../utils/ProjectionRegistry';
 import {
     MIME_LOOKUPS,

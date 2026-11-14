@@ -14,8 +14,10 @@ import TestUtils from 'react-dom/test-utils';
 import describePois from '../../../../test-resources/wfs/describe-pois.json';
 import museam from '../../../../test-resources/wfs/museam.json';
 import FeatureGrid from '../FeatureGrid';
+import { describeFeatureTypeToSchema } from '../../../../utils/FeatureTypeUtils';
 
 const spyOn = expect.spyOn;
+const poisSchema = describeFeatureTypeToSchema(describePois);
 
 // TODO FIX ALL THESE TESTS (recompose)
 describe('Test for FeatureGrid component', () => {
@@ -34,7 +36,7 @@ describe('Test for FeatureGrid component', () => {
         expect(document.getElementsByClassName('react-grid-Container').length).toBe(1);
     });
     it('render sample features', () => {
-        ReactDOM.render(<FeatureGrid describeFeatureType={describePois} virtualScroll={false} features={museam.features}/>, document.getElementById("container"));
+        ReactDOM.render(<FeatureGrid schema={poisSchema} virtualScroll={false} features={museam.features}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(3);
         expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
     });
@@ -75,14 +77,14 @@ describe('Test for FeatureGrid component', () => {
             formatter: () => <div className="test-grid-tool" />
         };
         spyOn(tool.events, "onClick");
-        ReactDOM.render(<FeatureGrid virtualScroll={false} describeFeatureType={describePois} features={museam.features} tools={[tool]}/>, document.getElementById("container"));
+        ReactDOM.render(<FeatureGrid virtualScroll={false} schema={poisSchema} features={museam.features} tools={[tool]}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(4);
         expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
         document.getElementsByClassName('test-grid-tool')[0].click();
         expect(tool.events.onClick).toHaveBeenCalled();
     });
     it('hide columns features', () => {
-        ReactDOM.render(<FeatureGrid virtualScroll={false} describeFeatureType={describePois} features={museam.features} columnSettings={{NAME: {hide: true}}}/>, document.getElementById("container"));
+        ReactDOM.render(<FeatureGrid virtualScroll={false} schema={poisSchema} features={museam.features} columnSettings={{NAME: {hide: true}}}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(2);
     });
     it('sort event', () => {
@@ -90,7 +92,7 @@ describe('Test for FeatureGrid component', () => {
             onSort: () => {}
         };
         spyOn(events, "onSort");
-        ReactDOM.render(<FeatureGrid virtualScroll={false} gridEvents={{onGridSort: events.onSort}} describeFeatureType={describePois} features={museam.features}/>, document.getElementById("container"));
+        ReactDOM.render(<FeatureGrid virtualScroll={false} gridEvents={{onGridSort: events.onSort}} schema={poisSchema} features={museam.features}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--ascending').length).toBe(0);
         document.getElementsByClassName('react-grid-HeaderCell-sortable')[0].click();
         expect(events.onSort).toHaveBeenCalled();
@@ -115,7 +117,7 @@ describe('Test for FeatureGrid component', () => {
                     values: []
                 }
             }
-        }}} describeFeatureType={describePois} features={museam.features}/>, document.getElementById("container"));
+        }}} schema={poisSchema} features={museam.features}/>, document.getElementById("container"));
         // TODO click on a row
         document.getElementsByClassName('react-grid-Cell')[0].click();
         expect(events.onRowsToggled).toHaveBeenCalled();
@@ -132,7 +134,7 @@ describe('Test for FeatureGrid component', () => {
         ReactDOM.render(<FeatureGrid virtualScroll={false}
             gridEvents={events}
             mode="EDIT"
-            describeFeatureType={describePois}
+            schema={poisSchema}
             features={museam.features}
         />, document.getElementById("container"));
         let domNode = document.getElementsByClassName('react-grid-checkbox')[1];
@@ -142,7 +144,7 @@ describe('Test for FeatureGrid component', () => {
             virtualScroll={false}
             gridEvents={events}
             mode="EDIT"
-            describeFeatureType={describePois}
+            schema={poisSchema}
             features={museam.features}
             select={[{id: museam.features[0].id}]}
         />, document.getElementById("container"));
@@ -152,7 +154,7 @@ describe('Test for FeatureGrid component', () => {
     });
     it('Test the field values are rendered right way in grid cells', () => {
         ReactDOM.render(<FeatureGrid virtualScroll={false}
-            describeFeatureType={describePois}
+            schema={poisSchema}
             features={museam.features}/>, document.getElementById("container"));
         let domNode = Array.prototype.filter.call(document.getElementsByClassName("react-grid-Cell"), (element) =>{
             return element;
@@ -171,7 +173,7 @@ describe('Test for FeatureGrid component', () => {
         ReactDOM.render(<FeatureGrid virtualScroll={false}
             gridEvents={events}
             mode="EDIT"
-            describeFeatureType={describePois}
+            schema={poisSchema}
             features={museam.features}
         />, document.getElementById("container"));
         let domNode = Array.prototype.filter.call(document.getElementsByClassName('react-grid-Cell'),
@@ -188,7 +190,7 @@ describe('Test for FeatureGrid component', () => {
                 headerRowHeight: 28,
                 headerFiltersHeight: 28
             }}
-            describeFeatureType={describePois} enableColumnFilters features={museam.features}/>, document.getElementById("container"));
+            schema={poisSchema} enableColumnFilters features={museam.features}/>, document.getElementById("container"));
         const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
         const gridRow = document.getElementsByClassName('react-grid-Row');
         expect(gridHeaderRows.length).toBe(2);
@@ -205,7 +207,7 @@ describe('Test for FeatureGrid component', () => {
                 rowHeight: 28,
                 headerRowHeight: 28
             }}
-            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+            schema={poisSchema} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
         const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
         const gridRow = document.getElementsByClassName('react-grid-Row');
         expect(gridHeaderRows.length).toBe(1);
@@ -216,14 +218,14 @@ describe('Test for FeatureGrid component', () => {
     });
     it('Test grid with default header title', () => {
         ReactDOM.render(<FeatureGrid virtualScroll={false}
-            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+            schema={poisSchema} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
         const gridHeaderCell = document.getElementsByClassName('react-grid-HeaderCell');
         expect(gridHeaderCell[0].innerText).toBe('NAME');
     });
     it('Test grid with custom header title', () => {
         ReactDOM.render(<FeatureGrid virtualScroll={false}
             options={{propertyName: [{name: "NAME", title: "Some Name", description: "Some description"}]}}
-            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+            schema={poisSchema} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
         const gridHeaderCell = document.getElementsByClassName('react-grid-HeaderCell');
         expect(gridHeaderCell[0].innerText).toBe('Some Name');
     });

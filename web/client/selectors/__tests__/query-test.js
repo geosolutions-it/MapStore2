@@ -19,6 +19,7 @@ import {
     featureLoadingSelector,
     isDescribeLoaded,
     describeSelector,
+    featureSchemaSelector,
     featureTypeSelectorCreator,
     getFeatureById,
     attributesSelector,
@@ -357,6 +358,18 @@ describe('Test query selectors', () => {
     it('test describeSelector selector', () => {
         const describe = describeSelector(initialState);
         expect(describe.elementFormDefault).toBe("qualified");
+    });
+    it('test featureSchemaSelector selector', () => {
+        const schema = featureSchemaSelector(initialState);
+        expect(schema.srs).toBe('EPSG:4326');
+        expect(schema.attributes.length).toBeGreaterThan(0);
+        expect(schema.geometryAttribute).toExist();
+    });
+    it('test featureSchemaSelector with no describe', () => {
+        expect(featureSchemaSelector({})).toBe(undefined);
+    });
+    it('test featureSchemaSelector is memoized on the describe', () => {
+        expect(featureSchemaSelector(initialState)).toBe(featureSchemaSelector(initialState));
     });
     it('test isDescribeLoaded', () => {
         const isLoaded = isDescribeLoaded(initialState, "editing:polygons.layer");
