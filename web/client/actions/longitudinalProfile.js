@@ -12,6 +12,7 @@ import {
 } from "../actions/maplayout";
 import {error} from "../actions/notifications";
 import {
+    LONGITUDINAL_DISTANCES,
     CONTROL_DOCK_NAME,
     LONGITUDINAL_OWNER,
     LONGITUDINAL_VECTOR_LAYER_ID,
@@ -199,7 +200,7 @@ export const setup = (config) => {
         dispatch(setupPlugin(config));
         const {
             referentials = [],
-            distances = [],
+            distances = LONGITUDINAL_DISTANCES,
             defaultDistance,
             defaultReferentialName
         } = configSelector(getState()) || {};
