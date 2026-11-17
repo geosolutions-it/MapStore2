@@ -20,67 +20,53 @@ export const makePlugins = (plugins = []) =>
  */
 export const flattenPluginTree = (plugins = []) =>
     flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(plugin.enabled ? flattenPluginTree(plugin.children) : [])));
+const CHANGED_PLUGINS_NAMES = {
+    'DeleteMap': 'DeleteResource',
+    'MetadataExplorer': 'Catalog'
+};
+const PLUGINS_CONTAINER_POSITIONS = {
+    'MapFooter': 'footer',
+    'FeatureEditor': 'bottom',
+    'Timeline': 'bottom',
+    'Map': 'background'
+};
+/**
+ * @param {object} plugin plugin configuration
+ * @returns the plugin configuration with the current name and the container position it needs
+ */
+const migratePluginConfiguration = (plugin) => {
+    if (CHANGED_PLUGINS_NAMES[plugin.name]) {
+        return {
+            ...plugin,
+            name: CHANGED_PLUGINS_NAMES[plugin.name]
+        };
+    }
+    const containerPosition = PLUGINS_CONTAINER_POSITIONS[plugin.name];
+    if (containerPosition && plugin?.cfg?.containerPosition !== containerPosition) {
+        return {
+            ...plugin,
+            cfg: {
+                ...plugin.cfg,
+                containerPosition
+            }
+        };
+    }
+    return plugin;
+};
 /**
  * @param {object} context context configuration
- * @returns update context configuration based on plugins updates or changes (eg. rename of plugins)
+ * @returns update context configuration based on plugins updates or changes (eg. rename of plugins).
+ * It applies to the plugins enabled by default and to the ones the user can activate (`userPlugins`).
  */
 export const migrateContextConfiguration = (context) => {
-    const changedPluginsNames = {
-        'DeleteMap': 'DeleteResource',
-        'MetadataExplorer': 'Catalog'
-    };
     return {
         ...context,
         ...(context?.plugins && {
             plugins: Object.fromEntries(Object.keys(context.plugins)
-                .map((key) => {
-                    const plugins = context.plugins[key];
-                    return [key, plugins.map((plugin) => {
-                        if (changedPluginsNames[plugin.name]) {
-                            return {
-                                ...plugin,
-                                name: changedPluginsNames[plugin.name]
-                            };
-                        }
-                        // migration for MapFooter to add containerPosition: 'footer' if not present
-                        if (plugin.name === 'MapFooter') {
-                            if (plugin?.cfg?.containerPosition !== 'footer') {
-                                return {
-                                    ...plugin,
-                                    cfg: {
-                                        ...plugin.cfg,
-                                        containerPosition: 'footer'
-                                    }
-                                };
-                            }
-                        }
-                        // migration for FeatureEditor and Timeline to add containerPosition: 'bottom' if not present
-                        if (['FeatureEditor', 'Timeline'].includes(plugin.name)) {
-                            if (plugin?.cfg?.containerPosition !== 'bottom') {
-                                return {
-                                    ...plugin,
-                                    cfg: {
-                                        ...plugin.cfg,
-                                        containerPosition: 'bottom'
-                                    }
-                                };
-                            }
-                        }
-                        // migrate for Map to add containerPosition: 'background' if not present
-                        if (plugin.name === 'Map') {
-                            if (plugin?.cfg?.containerPosition !== 'background') {
-                                return {
-                                    ...plugin,
-                                    cfg: {
-                                        ...plugin.cfg,
-                                        containerPosition: 'background'
-                                    }
-                                };
-                            }
-                        }
-                        return plugin;
-                    })];
-                }))
+                .map((key) => [key, context.plugins[key].map(migratePluginConfiguration)]))
+        }),
+        ...(context?.userPlugins && {
+            userPlugins: context.userPlugins.map(migratePluginConfiguration)
         })
     };
 };
