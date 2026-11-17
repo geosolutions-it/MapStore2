@@ -161,7 +161,8 @@ const arePropsEqual = (prevProps, nextProps) =>
     (nextProps.layer
     && getSearchUrl(prevProps.layer) === getSearchUrl(nextProps.layer)
     && getWFSLayerName(prevProps.layer) === getWFSLayerName(nextProps.layer)
-    && prevProps.layer.loadingError === nextProps.layer.loadingError)
+    && prevProps.layer.loadingError === nextProps.layer.loadingError
+    && prevProps.layer._v_ === nextProps.layer._v_)
     && sameOptions(prevProps.options, nextProps.options)
     && sameFilter(prevProps.filter, nextProps.filter);
 
