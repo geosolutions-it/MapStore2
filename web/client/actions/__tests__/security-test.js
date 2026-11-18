@@ -105,6 +105,11 @@ describe('Test correctness of the close actions', () => {
         const action = security.refreshSecurityLayers();
         expect(action.type).toBe(security.REFRESH_SECURITY_LAYERS);
     });
+    it('sessionEnded', () => {
+        const action = security.sessionEnded(security.SESSION_END_REASONS.BROWSER_SESSION);
+        expect(action).toEqual({ type: security.SESSION_ENDED, reason: 'browserSession' });
+        expect(security.SESSION_END_REASONS.REFRESH_FAILED).toBe('refreshFailed');
+    });
     it('setLoginLoading', () => {
         const action = security.setLoginLoading(true);
         expect(action.loading).toBe(true);
@@ -128,7 +133,8 @@ describe('refreshAccessToken', () => {
         mockAxios.onDelete(/session\/logout/).reply((config) => {
             try {
                 expect(config.headers.Authorization).toBe('Bearer old-token');
-                expect(actions.map(({type}) => type)).toEqual([security.LOGOUT]);
+                expect(actions.map(({type}) => type)).toEqual([security.LOGOUT, security.SESSION_ENDED]);
+                expect(actions[1].reason).toBe(security.SESSION_END_REASONS.REFRESH_FAILED);
                 done();
             } catch (e) {
                 done(e);

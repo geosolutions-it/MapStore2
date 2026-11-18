@@ -207,6 +207,8 @@ With this option, a login left by an earlier browser session is not restored: Ma
 
 When a token refresh fails, MapStore sends the logout to the back-end in the same way, whatever the value of `loginPersistence`.
 
+In both cases MapStore dispatches the `SESSION_ENDED` action (`web/client/actions/security.js`), with `reason` set to `browserSession` or `refreshFailed`, so that a project can react to it, for example by showing a notice. It is not dispatched when the user logs out.
+
 ## Multiple simultaneous providers
 
 You can run multiple OIDC providers at the same time by listing them in `oidc_providers` (comma-separated) and configuring each with its own `{provider}OAuth2Config.*` prefix. Each provider's `redirectUri` **must** include the provider name in the path.

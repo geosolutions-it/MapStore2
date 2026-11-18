@@ -13,7 +13,7 @@ import axios from '../../libs/ajax';
 
 import { MAP_CONFIG_LOAD_ERROR } from '../../actions/config';
 import { SET_CONTROL_PROPERTY, setControlProperty } from '../../actions/controls';
-import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED, LOGIN_SUCCESS, RESET_ERROR } from '../../actions/security';
+import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED, LOGIN_SUCCESS, RESET_ERROR, SESSION_ENDED } from '../../actions/security';
 import { setCookie, eraseCookie } from '../../utils/CookieUtils';
 import { consumeLoginRedirect, saveLoginRedirect } from '../../utils/LoginRedirectUtils';
 
@@ -27,12 +27,18 @@ import {
     restoreLoginRedirect,
     verifyOpenIdSessionCookie,
     closeLoginPromptOnLoginSuccess,
-    markLoginBrowserSessionEpic
+    markLoginBrowserSessionEpic,
+    notifyLoginNotRestoredEpic
 } from '../login';
 import Rx from 'rxjs';
 import { ActionsObservable } from 'redux-observable';
 import ConfigUtils from '../../utils/ConfigUtils';
-import { isLoginBrowserSessionMarked, clearLoginBrowserSession } from '../../utils/LoginPersistenceUtils';
+import {
+    isLoginBrowserSessionMarked,
+    clearLoginBrowserSession,
+    discardPersistedLogin,
+    consumeDiscardedPersistedLogin
+} from '../../utils/LoginPersistenceUtils';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import security from '../../reducers/security';
@@ -325,6 +331,25 @@ describe('login Epics', () => {
         it('does nothing without loginPersistence set to browserSession', () => {
             run(loginSuccess({}));
             expect(isLoginBrowserSessionMarked()).toBe(false);
+        });
+    });
+    describe('notifyLoginNotRestoredEpic', () => {
+        const run = (...actions) => {
+            const emitted = [];
+            notifyLoginNotRestoredEpic(new ActionsObservable(Rx.Observable.of(...actions)))
+                .subscribe(action => emitted.push(action));
+            return emitted;
+        };
+        beforeEach(() => {
+            consumeDiscardedPersistedLogin();
+        });
+        it('notifies, once, a login that was not restored at startup', () => {
+            discardPersistedLogin({}); // no token, so no logout request
+            expect(run({ type: LOCATION_CHANGE }, { type: LOCATION_CHANGE }))
+                .toEqual([{ type: SESSION_ENDED, reason: 'browserSession' }]);
+        });
+        it('emits nothing when the stored login was restored', () => {
+            expect(run({ type: LOCATION_CHANGE })).toEqual([]);
         });
     });
 });

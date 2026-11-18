@@ -17,7 +17,9 @@ import {
     clearLoginBrowserSession,
     isLoginBrowserSessionMarked,
     canRestorePersistedLogin,
-    endServerSession
+    endServerSession,
+    discardPersistedLogin,
+    consumeDiscardedPersistedLogin
 } from '../LoginPersistenceUtils';
 
 describe('LoginPersistenceUtils', () => {
@@ -82,5 +84,18 @@ describe('LoginPersistenceUtils', () => {
                 done();
             })
             .catch(done);
+    });
+
+    it('discardPersistedLogin ends the session and is reported once', (done) => {
+        consumeDiscardedPersistedLogin();
+        mockAxios.onDelete(/session\/logout/).reply(204);
+        expect(consumeDiscardedPersistedLogin()).toBe(false);
+        discardPersistedLogin({ user: { name: 'user' }, token: 'old-token' }).then(() => {
+            expect(mockAxios.history.delete.length).toBe(1);
+            expect(mockAxios.history.delete[0].headers.Authorization).toBe('Bearer old-token');
+            expect(consumeDiscardedPersistedLogin()).toBe(true);
+            expect(consumeDiscardedPersistedLogin()).toBe(false);
+            done();
+        }).catch(done);
     });
 });

@@ -20,7 +20,7 @@ import securityReducer from '../../reducers/security';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
-import { markLoginBrowserSession, clearLoginBrowserSession } from '../../utils/LoginPersistenceUtils';
+import { markLoginBrowserSession, clearLoginBrowserSession, consumeDiscardedPersistedLogin } from '../../utils/LoginPersistenceUtils';
 
 describe('Test StandardStore', () => {
     it('storeOpts notify is true by default', () => {
@@ -193,6 +193,7 @@ describe('Test StandardStore persist - loginPersistence', () => {
         mockAxios = new MockAdapter(axios);
         mockAxios.onDelete(/session\/logout/).reply(204);
         clearLoginBrowserSession();
+        consumeDiscardedPersistedLogin();
     });
     afterEach(() => {
         getApi().removeItem(PERSIST_KEY);
@@ -205,6 +206,7 @@ describe('Test StandardStore persist - loginPersistence', () => {
         const store = create();
         expect(store.getState().security?.user).toEqual({ name: 'test' });
         expect(mockAxios.history.delete.length).toBe(0);
+        expect(consumeDiscardedPersistedLogin()).toBe(false);
     });
 
     it('with browserSession, restores the login of the same browser session', () => {
@@ -220,6 +222,7 @@ describe('Test StandardStore persist - loginPersistence', () => {
         const store = create();
         expect(store.getState().security?.user).toBeFalsy();
         expect(JSON.parse(getApi().getItem(PERSIST_KEY) || '{}').user).toBeFalsy();
+        expect(consumeDiscardedPersistedLogin()).toBe(true);
         setTimeout(() => {
             try {
                 expect(mockAxios.history.delete.length).toBe(1);

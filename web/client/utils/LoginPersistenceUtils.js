@@ -78,3 +78,26 @@ export const endServerSession = (accessToken) => {
     return AuthenticationAPI.logout({ headers: { Authorization: `Bearer ${accessToken}` } })
         .catch(() => {});
 };
+
+let persistedLoginDiscarded = false;
+
+/**
+ * Ends on the server the session of a persisted login that is not restored, and records that
+ * the login was dropped, so that it can be notified once the application has started (see
+ * {@link consumeDiscardedPersistedLogin}).
+ * @param {object} security the persisted security state
+ * @returns {Promise}
+ */
+export const discardPersistedLogin = (security) => {
+    persistedLoginDiscarded = true;
+    return endServerSession(security?.token);
+};
+
+/**
+ * @returns {boolean} true, once, after a persisted login was dropped by {@link discardPersistedLogin}
+ */
+export const consumeDiscardedPersistedLogin = () => {
+    const discarded = persistedLoginDiscarded;
+    persistedLoginDiscarded = false;
+    return discarded;
+};
