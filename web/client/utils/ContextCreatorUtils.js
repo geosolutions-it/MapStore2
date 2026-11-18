@@ -24,15 +24,22 @@ const CHANGED_PLUGINS_NAMES = {
     'DeleteMap': 'DeleteResource',
     'MetadataExplorer': 'Catalog'
 };
-const PLUGINS_CONTAINER_POSITIONS = {
-    'MapFooter': 'footer',
-    'FeatureEditor': 'bottom',
-    'Timeline': 'bottom',
-    'Map': 'background'
+/**
+ * Overrides of the configuration of the plugins saved with a previous version of MapStore.
+ * The key is the name of the plugin, the value is merged in its saved `cfg`.
+ */
+const PLUGINS_CFG_OVERRIDES = {
+    // migration for MapFooter to add containerPosition: 'footer' if not present
+    'MapFooter': { containerPosition: 'footer' },
+    // migration for FeatureEditor and Timeline to add containerPosition: 'bottom' if not present
+    'FeatureEditor': { containerPosition: 'bottom' },
+    'Timeline': { containerPosition: 'bottom' },
+    // migrate for Map to add containerPosition: 'background' if not present
+    'Map': { containerPosition: 'background' }
 };
 /**
  * @param {object} plugin plugin configuration
- * @returns the plugin configuration with the current name and the container position it needs
+ * @returns the plugin configuration with the current name and the overrides of `cfg` defined for it
  */
 const migratePluginConfiguration = (plugin) => {
     if (CHANGED_PLUGINS_NAMES[plugin.name]) {
@@ -41,13 +48,13 @@ const migratePluginConfiguration = (plugin) => {
             name: CHANGED_PLUGINS_NAMES[plugin.name]
         };
     }
-    const containerPosition = PLUGINS_CONTAINER_POSITIONS[plugin.name];
-    if (containerPosition && plugin?.cfg?.containerPosition !== containerPosition) {
+    const overrides = PLUGINS_CFG_OVERRIDES[plugin.name];
+    if (overrides) {
         return {
             ...plugin,
             cfg: {
                 ...plugin.cfg,
-                containerPosition
+                ...overrides
             }
         };
     }
