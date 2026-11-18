@@ -119,11 +119,11 @@ function geoProcessing( state = {
             ...state,
             ...initialState,
             buffer: {
-                ...(state.cfg.buffer || {}),
+                ...(state.cfg?.buffer || {}),
                 ...initialState.buffer
             },
             intersection: {
-                ...(state.cfg.intersection || {}),
+                ...(state.cfg?.intersection || {}),
                 ...initialState.intersection
             },
             source: {
