@@ -23,11 +23,14 @@ import {
     parseUpdatedCoordinates,
     validateFeature,
     applyDefaultCoordinates,
-    getFeatureIcon
+    getFeatureIcon,
+    getHighlightBoxCoordinates
 } from '../AnnotationsUtils';
 import { annotationsTest, annotationsTestResult, annotationsTestFromGeoJson } from './resources';
 
 import { MeasureTypes } from '../../../../utils/MeasureUtils';
+import Proj4js from 'proj4';
+import { reproject } from '../../../../utils/CoordinatesUtils';
 
 describe('AnnotationsUtils', () => {
     it('isGeodesicMeasure', () => {
@@ -618,6 +621,43 @@ describe('AnnotationsUtils', () => {
         expect(getFeatureIcon({ type: 'Feature', geometry: null, properties: { measureType: 'length', annotationType: 'LineString' } })).toBe('1-measure-length');
         expect(getFeatureIcon({ type: 'Feature', geometry: null, properties: { measureType: 'area', annotationType: 'Polygon' } })).toBe('1-measure-area');
         expect(getFeatureIcon({ type: 'Feature', geometry: null, properties: { measureType: 'bearing', annotationType: 'LineString' } })).toBe('1-measure-bearing');
+    });
+    describe('getHighlightBoxCoordinates', () => {
+        // a 500 km square, axis-aligned in EPSG:25832 (UTM 32N); its lon/lat bounds are rotated ~2-4 deg on such a map
+        const UTM32 = 'EPSG:25832';
+        Proj4js.defs(UTM32, '+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
+        const square = [[400000, 5900000], [900000, 5900000], [900000, 6400000], [400000, 6400000], [400000, 5900000]];
+        const toLonLat = ([x, y]) => { const p = reproject([x, y], UTM32, 'EPSG:4326'); return [p.x, p.y]; };
+        const toUtm = ([x, y]) => { const p = reproject([x, y], 'EPSG:4326', UTM32); return [p.x, p.y]; };
+        const feature = { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [square.map(toLonLat)] } };
+        const maxDistance = (ring, expected) => Math.max(...ring.map((c, i) => Math.hypot(c[0] - expected[i][0], c[1] - expected[i][1])));
+        // the box as a ring starting at the lower left, as getHighlightBoxCoordinates returns it
+        const expectedBox = [[400000, 5900000], [400000, 6400000], [900000, 6400000], [900000, 5900000], [400000, 5900000]];
+        const lonLatBox = () => {
+            const lons = feature.geometry.coordinates[0].map(c => c[0]);
+            const lats = feature.geometry.coordinates[0].map(c => c[1]);
+            const [minx, miny, maxx, maxy] = [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)];
+            return [[minx, miny], [minx, maxy], [maxx, maxy], [maxx, miny], [minx, miny]];
+        };
+        it('in a projected map CRS the box is the box of the feature in that CRS', () => {
+            const ring = getHighlightBoxCoordinates(feature, UTM32);
+            expect(ring.length).toBe(5);
+            expect(maxDistance(ring.map(toUtm), expectedBox)).toBeLessThan(0.001); // metres
+            // the lon/lat box (the behaviour before) is kilometres off on this map
+            expect(maxDistance(lonLatBox().map(toUtm), expectedBox)).toBeGreaterThan(1000);
+        });
+        it('works for a LineString too', () => {
+            const line = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: square.slice(0, 3).map(toLonLat) } };
+            expect(maxDistance(getHighlightBoxCoordinates(line, UTM32).map(toUtm), expectedBox)).toBeLessThan(0.001);
+        });
+        it('EPSG:4326, EPSG:3857 and no projection keep the lon/lat bounds', () => {
+            [undefined, 'EPSG:4326', 'EPSG:3857', 'EPSG:900913'].forEach((projection) => {
+                expect(getHighlightBoxCoordinates(feature, projection)).toEqual(lonLatBox());
+            });
+        });
+        it('an unknown projection falls back to the lon/lat bounds', () => {
+            expect(getHighlightBoxCoordinates(feature, 'EPSG:999999')).toEqual(lonLatBox());
+        });
     });
 });
 
