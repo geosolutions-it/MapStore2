@@ -17,6 +17,10 @@ import browserReducers from "../../reducers/browser";
 import { CHANGE_BROWSER_PROPERTIES } from '../../actions/browser';
 import { setApi, getApi, getItemKey } from '../../api/userPersistedStorage';
 import securityReducer from '../../reducers/security';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
+import ConfigUtils from '../../utils/ConfigUtils';
+import { markLoginBrowserSession, clearLoginBrowserSession } from '../../utils/LoginPersistenceUtils';
 
 describe('Test StandardStore', () => {
     it('storeOpts notify is true by default', () => {
@@ -169,5 +173,61 @@ describe('Test StandardStore persist - authHeader not stored', () => {
         );
         expect(store.getState().security?.authHeader).toBe(undefined);
         expect(store.getState().security?.user).toEqual({ name: 'test' });
+    });
+});
+
+describe('Test StandardStore persist - loginPersistence', () => {
+    const PERSIST_KEY = getItemKey('persistence', 'security');
+    const PERSISTED_LOGIN = { user: { name: 'test' }, token: 'persisted-token' };
+    let mockAxios;
+
+    const create = () => createStore(
+        { appReducers: { security: securityReducer } },
+        {},
+        { persist: { whitelist: ['security'] } }
+    );
+
+    beforeEach(() => {
+        setApi('memoryStorage');
+        getApi().setItem(PERSIST_KEY, JSON.stringify(PERSISTED_LOGIN));
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onDelete(/session\/logout/).reply(204);
+        clearLoginBrowserSession();
+    });
+    afterEach(() => {
+        getApi().removeItem(PERSIST_KEY);
+        mockAxios.restore();
+        clearLoginBrowserSession();
+        ConfigUtils.removeConfigProp('loginPersistence');
+    });
+
+    it('restores the persisted login by default', () => {
+        const store = create();
+        expect(store.getState().security?.user).toEqual({ name: 'test' });
+        expect(mockAxios.history.delete.length).toBe(0);
+    });
+
+    it('with browserSession, restores the login of the same browser session', () => {
+        ConfigUtils.setConfigProp('loginPersistence', 'browserSession');
+        markLoginBrowserSession();
+        const store = create();
+        expect(store.getState().security?.user).toEqual({ name: 'test' });
+        expect(mockAxios.history.delete.length).toBe(0);
+    });
+
+    it('with browserSession, drops the login of an earlier browser session and ends it on the server', (done) => {
+        ConfigUtils.setConfigProp('loginPersistence', 'browserSession');
+        const store = create();
+        expect(store.getState().security?.user).toBeFalsy();
+        expect(JSON.parse(getApi().getItem(PERSIST_KEY) || '{}').user).toBeFalsy();
+        setTimeout(() => {
+            try {
+                expect(mockAxios.history.delete.length).toBe(1);
+                expect(mockAxios.history.delete[0].headers.Authorization).toBe('Bearer persisted-token');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 50);
     });
 });

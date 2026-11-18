@@ -12,6 +12,7 @@
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
+import { endServerSession } from '../utils/LoginPersistenceUtils';
 
 export const CHECK_LOGGED_USER = 'CHECK_LOGGED_USER';
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
@@ -160,6 +161,8 @@ export function refreshAccessToken() {
             dispatch(refreshSuccess(response, AuthenticationAPI.authProviderName));
         }).catch(() => {
             dispatch(logout(null));
+            // the session cannot be renewed: end it on the server too, not only in the client
+            endServerSession(accessToken);
         });
     };
 }

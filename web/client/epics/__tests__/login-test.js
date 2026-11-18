@@ -26,8 +26,13 @@ import {
     redirectOnLogout,
     restoreLoginRedirect,
     verifyOpenIdSessionCookie,
-    closeLoginPromptOnLoginSuccess
+    closeLoginPromptOnLoginSuccess,
+    markLoginBrowserSessionEpic
 } from '../login';
+import Rx from 'rxjs';
+import { ActionsObservable } from 'redux-observable';
+import ConfigUtils from '../../utils/ConfigUtils';
+import { isLoginBrowserSessionMarked, clearLoginBrowserSession } from '../../utils/LoginPersistenceUtils';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import security from '../../reducers/security';
@@ -297,6 +302,29 @@ describe('login Epics', () => {
         }, {
             security: security(undefined, loginSuccess(testUserDetails)),
             controls: controls(undefined, setControlProperty('LoginForm', 'enabled', true))
+        });
+    });
+    describe('markLoginBrowserSessionEpic', () => {
+        const run = (...actions) => {
+            const emitted = [];
+            markLoginBrowserSessionEpic(new ActionsObservable(Rx.Observable.of(...actions)))
+                .subscribe(action => emitted.push(action));
+            return emitted;
+        };
+        afterEach(() => {
+            clearLoginBrowserSession();
+            ConfigUtils.removeConfigProp('loginPersistence');
+        });
+        it('marks the browser session on login and clears the mark on logout', () => {
+            ConfigUtils.setConfigProp('loginPersistence', 'browserSession');
+            expect(run(loginSuccess({}))).toEqual([]);
+            expect(isLoginBrowserSessionMarked()).toBe(true);
+            expect(run(logout(null))).toEqual([]);
+            expect(isLoginBrowserSessionMarked()).toBe(false);
+        });
+        it('does nothing without loginPersistence set to browserSession', () => {
+            run(loginSuccess({}));
+            expect(isLoginBrowserSessionMarked()).toBe(false);
         });
     });
 });

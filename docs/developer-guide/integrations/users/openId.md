@@ -193,6 +193,20 @@ These values correspond to the standard fields in the discovery document and are
     }
     ```
 
+### End the login with the browser session
+
+By default MapStore keeps the login in the browser's local storage, so it survives a browser restart, and the next token refresh renews the session as long as the session at the identity provider is still valid. On shared computers you may want the login to end when the browser is closed instead. Set `loginPersistence` to `browserSession` in `localConfig.json`:
+
+```json
+{
+    "loginPersistence": "browserSession"
+}
+```
+
+With this option, a login left by an earlier browser session is not restored: MapStore starts logged out and sends the logout to the back-end with the stored access token. With `globalLogoutEnabled`, the back-end also ends the session at the identity provider, even when that access token has already expired (this needs GeoStore 2.7.1 or later). See [loginPersistence](../../local-config.md#explanation-of-some-config-properties) for the details.
+
+When a token refresh fails, MapStore sends the logout to the back-end in the same way, whatever the value of `loginPersistence`.
+
 ## Multiple simultaneous providers
 
 You can run multiple OIDC providers at the same time by listing them in `oidc_providers` (comma-separated) and configuring each with its own `{provider}OAuth2Config.*` prefix. Each provider's `redirectUri` **must** include the provider name in the path.

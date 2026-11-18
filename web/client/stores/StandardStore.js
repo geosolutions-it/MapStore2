@@ -16,6 +16,7 @@ import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
 import { getApi, getItemKey } from '../api/userPersistedStorage';
+import { canRestorePersistedLogin, endServerSession } from '../utils/LoginPersistenceUtils';
 import {getPlugins} from "../utils/ModulePluginsUtils";
 const standardEpics = {};
 const STORAGE_SECTION = "persistence";
@@ -90,7 +91,14 @@ const appStore = (
                             console.error(e);
                         }
                     }
-                    defaultState[fragment] = parsed;
+                    if (fragment === 'security' && !canRestorePersistedLogin(parsed)) {
+                        // a login of an earlier browser session (loginPersistence: browserSession):
+                        // its session is ended on the server and the login is not restored
+                        endServerSession(parsed.token);
+                        getApi().removeItem(getItemKey(STORAGE_SECTION, fragment));
+                    } else {
+                        defaultState[fragment] = parsed;
+                    }
                 }
             } catch (e) {
                 console.error(e);
