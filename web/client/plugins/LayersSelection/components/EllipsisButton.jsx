@@ -34,7 +34,8 @@ export default ({
     onAddOrUpdateSelection = () => { },
     onZoomToExtent = () => { },
     onAddLayer = () => { },
-    onChangeLayerProperties = () => { }
+    onChangeLayerProperties = () => { },
+    onViewInTable = () => { }
 }) => {
 
     const [statisticsOpen, setStatisticsOpen] = useState(false);
@@ -182,6 +183,7 @@ export default ({
                 noCaret
             >
                 <MenuItem onClick={() => triggerAction('zoomTo')}><Message msgId="layersSelection.button.zoomTo" /></MenuItem>
+                {['wms', 'wfs'].includes(node.type) && <MenuItem onClick={() => onViewInTable(node, primaryKey)}><Message msgId="layersSelection.button.viewInTable" /></MenuItem>}
                 <MenuItem onClick={() => { selectionData.features?.length > 0 ? setStatisticsOpen(true) : null; }}><Message msgId="layersSelection.button.statistics" /></MenuItem>
                 <MenuItem onClick={() => triggerAction('createLayer')}><Message msgId="layersSelection.button.createLayer" /></MenuItem>
                 {primaryKey ? <MenuItem onClick={() => triggerAction('filterData')}><Message msgId="layersSelection.button.filterData" /></MenuItem> : null}

@@ -8,9 +8,12 @@
 
 import { Observable } from 'rxjs';
 import axios from 'axios';
-import { SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../../../actions/controls';
-import { UPDATE_NODE, REMOVE_NODE } from '../../../actions/layers';
+import { SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL, RESET_CONTROLS } from '../../../actions/controls';
+import { UPDATE_NODE, REMOVE_NODE, browseData } from '../../../actions/layers';
 import { registerEventListener, unRegisterEventListener} from '../../../actions/map';
+import { purgeMapInfoResults, hideMapinfoMarker } from '../../../actions/mapInfo';
+import { updateDockPanelsList, forceUpdateMapLayout } from '../../../actions/maplayout';
+import { setLayer, storeAdvancedSearchFilter } from '../../../actions/featuregrid';
 import { shutdownToolOnAnotherToolDrawing } from "../../../utils/ControlUtils";
 import { describeFeatureType, getFeatureURL } from '../../../api/WFS';
 import { extractGeometryAttributeName } from '../../../utils/WFSLayerUtils';
@@ -20,8 +23,8 @@ import { layersSelector, groupsSelector } from '../../../selectors/layers';
 import { flattenArrayOfObjects, getInactiveNode, getSearchUrl, getWFSLayerName } from '../../../utils/LayersUtils';
 
 import { optionsToVendorParams } from '../../../utils/VendorParamsUtils';
-import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions } from '../selectors/layersSelection';
-import { SELECT_CLEAN_SELECTION, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection, UPDATE_SELECTION_FEATURE } from '../actions/layersSelection';
+import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions, getSelectionFeature, getSelectSelections } from '../selectors/layersSelection';
+import { SELECT_CLEAN_SELECTION, SELECT_STORE_CFG, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection, UPDATE_SELECTION_FEATURE, cleanSelection as cleanSelectionAction, VIEW_SELECTION_IN_TABLE } from '../actions/layersSelection';
 import { buildAdditionalLayerId, buildAdditionalLayerOwnerName, arcgisToGeoJSON, makeCrsValid, customUpdateAdditionalLayer } from '../utils/LayersSelection';
 
 /**
@@ -142,35 +145,49 @@ const queryLayer = (layer, geometry, selectQueryMaxCount) => {
 
 /**
  * Epic triggered when the Select tool is opened.
- * Registers map click event and synchronizes visibility of additional layers.
+ * Claims map clicks and registers the selection dock with the shared layout.
  *
  * @param {Observable} action$ - Stream of Redux actions.
  * @param {Object} store - Redux store.
  * @returns {Observable} Epic stream.
  */
+const isSelectionControlAction = action => action.control === 'layersSelection'
+    && (action.type === SET_CONTROL_PROPERTIES
+        ? Object.hasOwn(action.properties, 'enabled')
+        : !action.property || action.property === 'enabled');
+
 export const openSelectEpic = (action$, store) => action$
-    .ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-    .filter(action => action.control === "select" && isSelectEnabled(store.getState()))
-    .switchMap(() => Observable.merge(
-        Observable.of(registerEventListener('click', 'select')),
-        ...selectLayersSelector(store.getState()).map(layer => Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), { visibility: layer.visibility })))
+    .ofType(SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL)
+    .filter(action => isSelectionControlAction(action) && isSelectEnabled(store.getState()))
+    .switchMap(() => Observable.of(
+        purgeMapInfoResults(),
+        hideMapinfoMarker(),
+        registerEventListener('click', 'layersSelection'),
+        // Both panel modes remain exclusive with the tools using the right dock.
+        updateDockPanelsList('layersSelection', 'add', 'right')
     ));
+
+export const updateSelectionLayout = action$ => action$
+    .ofType(SELECT_STORE_CFG)
+    .mapTo(forceUpdateMapLayout());
 
 /**
  * Epic triggered when the Select tool is closed.
- * Unregisters map events and hides additional layers.
+ * Releases map clicks and clears drawing geometry and selection results.
  *
  * @param {Observable} action$ - Stream of Redux actions.
  * @param {Object} store - Redux store.
  * @returns {Observable} Epic stream.
  */
 export const closeSelectEpics = (action$, store) => action$
-    .ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-    .filter(action => action.control === "select" && !isSelectEnabled(store.getState()))
-    .switchMap(() => Observable.merge(
-        Observable.of(unRegisterEventListener('click', 'select')),
-        ...selectLayersSelector(store.getState()).map(layer => Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), { visibility: false }))))
-    );
+    .ofType(SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL, RESET_CONTROLS)
+    .filter(action => (isSelectionControlAction(action) || action.type === RESET_CONTROLS)
+        && !isSelectEnabled(store.getState()))
+    .switchMap(() => Observable.of(
+        unRegisterEventListener('click', 'layersSelection'),
+        updateDockPanelsList('layersSelection', 'remove', 'right'),
+        cleanSelectionAction(null)
+    ));
 
 /**
  * Shuts down the Select tool if another drawing tool is activated.
@@ -179,7 +196,20 @@ export const closeSelectEpics = (action$, store) => action$
  * @param {Object} store - Redux store.
  * @returns {Observable} Epic stream.
  */
-export const tearDownSelectOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'select');
+export const tearDownSelectOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'layersSelection');
+
+const querySelection = (action$, store, layer, geometry) => Observable.concat(
+    Observable.of(addOrUpdateSelection(layer, { loading: true })),
+    Observable.defer(() => queryLayer(layer, geometry, getSelectQueryMaxFeatureCount(store.getState())))
+        .map(geoJsonData => addOrUpdateSelection(layer, geoJsonData))
+        .catch(error => Observable.of(addOrUpdateSelection(layer, { error })))
+).takeUntil(action$.filter(action => action.type === SELECT_CLEAN_SELECTION
+    || action.type === UPDATE_SELECTION_FEATURE
+    || !isSelectEnabled(store.getState())
+    || (action.type === REMOVE_NODE && action.node === layer.id)
+    || (action.type === UPDATE_NODE && action.node === layer.id
+        && Object.hasOwn(action.options || {}, 'isSelectQueriable'))
+));
 
 /**
  * Epic triggered at the end of a drawing session.
@@ -194,19 +224,25 @@ export const queryLayers = (action$, store) => action$
     .filter((action) => action?.feature?.geometry && isSelectEnabled(store.getState()))
     .switchMap(action => {
         const state = store.getState();
-        const selectQueryMaxCount = getSelectQueryMaxFeatureCount(state);
-        return Observable.from(selectLayersSelector(state))
-            .mergeMap(layer => Observable.concat(
-                Observable.of(addOrUpdateSelection(layer, {})),
-                isSelectQueriable(layer)
-                    ? Observable.concat(
-                        Observable.of(addOrUpdateSelection(layer, { loading: true })),
-                        Observable.fromPromise(queryLayer(layer, action.feature.geometry, selectQueryMaxCount))
-                            .map(geoJsonData => addOrUpdateSelection(layer, geoJsonData))
-                            .catch(error => Observable.of(addOrUpdateSelection(layer, { error })))
-                    )
-                    : Observable.empty()
-            ));
+        return Observable.from(selectLayersSelector(state).filter(isSelectQueriable))
+            .mergeMap(layer => querySelection(action$, store, layer, action.feature.geometry));
+    });
+
+export const updateSelectedLayer = (action$, store) => action$
+    .ofType(UPDATE_NODE)
+    .filter(action => isSelectEnabled(store.getState())
+        && action.nodeType === 'layers'
+        && Object.hasOwn(action.options || {}, 'isSelectQueriable'))
+    .mergeMap(action => {
+        const state = store.getState();
+        const layer = selectLayersSelector(state).find(({ id }) => id === action.node);
+        if (!layer) {
+            return Observable.empty();
+        }
+        const geometry = getSelectionFeature(state)?.geometry;
+        return isSelectQueriable(layer) && geometry
+            ? querySelection(action$, store, layer, geometry)
+            : Observable.of(addOrUpdateSelection(layer, {}), removeAdditionalLayer({ owner: buildAdditionalLayerOwnerName(layer.id) }));
     });
 
 /**
@@ -218,16 +254,8 @@ export const queryLayers = (action$, store) => action$
  */
 export const cleanSelection = (action$, store) => action$
     .ofType(SELECT_CLEAN_SELECTION)
-    .filter(() => isSelectEnabled(store.getState()))
-    .switchMap(() => Observable.from(selectLayersSelector(store.getState())).flatMap(layer =>
-        Observable.merge(
-            Observable.of(addOrUpdateSelection(layer, {})),
-            Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), {
-                features: [],
-                visibility: false
-            }))
-        )
-    ));
+    .switchMap(() => Observable.from(selectLayersSelector(store.getState()))
+        .map(layer => removeAdditionalLayer({ owner: buildAdditionalLayerOwnerName(layer.id) })));
 
 /**
  * Epic to synchronize visibility of layers and additional layers when their state changes.
@@ -246,12 +274,13 @@ export const synchroniseLayersAndAdditionalLayers = (action$, store) => action$
         const layersForSelect = layersSelector(state).filter(filterLayerForSelect);
 
         if (layersForSelect?.find(layer => layer.id === action.node)) {
-            return Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(action.node), { visibility: action.options.visibility }));
+            const layer = layersForSelect.find(({ id }) => id === action.node);
+            return Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(action.node), { visibility: !!action.options.visibility && isSelectQueriable(layer) }));
         }
 
         const groups = flattenArrayOfObjects(groupsSelector(state));
         return Observable.from(layersForSelect.filter(layer => layer.group?.startsWith(action.node)))
-            .mergeMap(layer => Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), { visibility: !getInactiveNode(layer.group, groups) }))
+            .mergeMap(layer => Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), { visibility: layer.visibility && isSelectQueriable(layer) && !getInactiveNode(layer.group, groups) }))
             );
     });
 
@@ -262,11 +291,9 @@ export const synchroniseLayersAndAdditionalLayers = (action$, store) => action$
  * @param {Object} store - Redux store.
  * @returns {Observable} Epic stream.
  */
-export const onRemoveLayer = (action$, store) => action$
+export const onRemoveLayer = action$ => action$
     .ofType(REMOVE_NODE)
-    .filter(action => isSelectEnabled(store.getState())
-        && action.nodeType === 'layers'
-    )
+    .filter(action => action.nodeType === 'layers')
     .mergeMap(action => Observable.of(removeAdditionalLayer({ id: buildAdditionalLayerId(action.node), owner: buildAdditionalLayerOwnerName(action.node) })));
 
 /**
@@ -279,20 +306,75 @@ export const onRemoveLayer = (action$, store) => action$
 export const onSelectionUpdate = (action$, store) => action$
     .ofType(ADD_OR_UPDATE_SELECTION)
     .filter(action => isSelectEnabled(store.getState()) && action.layer)
-    .mergeMap(action => Observable.of(customUpdateAdditionalLayer(
-        action.layer.id,
-        action.geoJsonData.features ?? [],
-        action.layer.visibility && action.geoJsonData.error && !action.geoJsonData.loading,
-        { ...highlightStyleSelector(store.getState()), ...getSelectHighlightOptions(store.getState())}
-    )));
+    .mergeMap(action => {
+        const state = store.getState();
+        const layer = selectLayersSelector(state).find(({ id }) => id === action.layer.id);
+        return Observable.of(customUpdateAdditionalLayer(
+            action.layer.id,
+            action.geoJsonData.features ?? [],
+            !!layer?.visibility && isSelectQueriable(layer) && !action.geoJsonData.error && !action.geoJsonData.loading,
+            { ...highlightStyleSelector(state), ...getSelectHighlightOptions(state)}
+        ));
+    });
+
+export const viewSelectionInTable = (action$, store) => action$
+    .ofType(VIEW_SELECTION_IN_TABLE)
+    .filter(({ layer }) => isSelectEnabled(store.getState()) && ['wms', 'wfs'].includes(layer.type))
+    .switchMap(({ layer, primaryKey }) => {
+        const state = store.getState();
+        const features = getSelectSelections(state)[layer.id]?.features || [];
+        const geometry = getSelectionFeature(state)?.geometry;
+        if (!features.length || (!primaryKey && !geometry)) {
+            return Observable.empty();
+        }
+        const url = getSearchUrl(layer);
+        const name = getWFSLayerName(layer);
+        return Observable.defer(() => describeFeatureType(url, name))
+            .mergeMap(describe => Observable.of(
+                setLayer(layer.id),
+                storeAdvancedSearchFilter({
+                    featureTypeName: name,
+                    filterType: 'OGC',
+                    ogcVersion: '1.1.0',
+                    ...(primaryKey ? {
+                        groupFields: [{ id: 1, logic: 'OR', index: 0 }],
+                        filterFields: features.map((feature, index) => ({
+                            rowId: index,
+                            groupId: 1,
+                            attribute: primaryKey,
+                            operator: '=',
+                            value: feature.properties[primaryKey],
+                            type: typeof feature.properties[primaryKey] === 'number' ? 'number' : 'string'
+                        }))
+                    } : {
+                        spatialField: {
+                            operation: 'INTERSECTS',
+                            attribute: extractGeometryAttributeName(describe),
+                            geometry
+                        }
+                    })
+                }),
+                browseData(layer)
+            ))
+            .catch(error => Observable.of(addOrUpdateSelection(layer, { error })))
+            .takeUntil(action$.filter(action => action.type === SELECT_CLEAN_SELECTION
+                || action.type === UPDATE_SELECTION_FEATURE
+                || !isSelectEnabled(store.getState())
+                || (action.type === UPDATE_NODE && action.node === layer.id && action.options?.isSelectQueriable === false)
+                || (action.type === REMOVE_NODE && action.node === layer.id)
+            ));
+    });
 
 export default {
     openSelectEpic,
+    updateSelectionLayout,
     closeSelectEpics,
     tearDownSelectOnDrawToolActive,
     queryLayers,
+    updateSelectedLayer,
     cleanSelection,
     synchroniseLayersAndAdditionalLayers,
     onRemoveLayer,
-    onSelectionUpdate
+    onSelectionUpdate,
+    viewSelectionInTable
 };

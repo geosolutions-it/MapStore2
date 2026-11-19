@@ -223,6 +223,18 @@ describe('map layout epics', () => {
             const state = { controls: { userExtensions: { enabled: true, group: "parent" } } };
             testEpic(updateMapLayoutEpic, 1, setControlProperties("userExtensions", "enabled", true, "group", "parent"), epicResult(done), state);
         });
+        it('layersSelection', done => {
+            const state = { controls: { layersSelection: { enabled: true } }, layersSelection: { cfg: { isFloating: false } } };
+            testEpic(updateMapLayoutEpic, 1, toggleControl('layersSelection'), epicResult(done), state);
+        });
+        it('floating layersSelection does not reserve right dock space', done => {
+            const state = { controls: { layersSelection: { enabled: true } }, layersSelection: { cfg: { isFloating: true } } };
+            testEpic(updateMapLayoutEpic, 1, toggleControl('layersSelection'), epicResult(done, 0), state);
+        });
+        it('layersSelection defaults to floating without reserving right dock space', done => {
+            const state = { controls: { layersSelection: { enabled: true } } };
+            testEpic(updateMapLayoutEpic, 1, toggleControl('layersSelection'), epicResult(done, 0), state);
+        });
         it('details', (done) => {
             const state = { controls: { details: { enabled: true, group: "parent" } } };
             testEpic(updateMapLayoutEpic, 1, setControlProperties("details", "enabled", true, "group", "parent"), epicResult(done), state);

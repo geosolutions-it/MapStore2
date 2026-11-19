@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ControlLabel, Glyphicon } from 'react-bootstrap';
 
 import { ControlledTOC } from '../../TOC/components/TOC';
+import ResponsivePanel from '../../../components/misc/panels/ResponsivePanel';
 import ResizableModal from '../../../components/misc/ResizableModal';
+import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import Message from '../../../components/I18N/Message';
 import VisibilityCheck from '../../TOC/components/VisibilityCheck';
 import NodeHeader from '../../TOC/components/NodeHeader';
@@ -46,8 +48,8 @@ function applyVersionParamToLegend(layer) {
  * @param {Object} props - Component props.
  * @param {Array} props.layers - List of layers from the map.
  * @param {Function} props.onUpdateNode - Redux action to update a layer node.
- * @param {Function} props.onClose - Callback for closing the modal.
- * @param {Boolean} props.isVisible - Whether the modal is visible.
+ * @param {Function} props.onClose - Callback for closing the dock.
+ * @param {Boolean} props.isVisible - Whether the dock is visible.
  * @param {Object} props.highlightOptions - Highlighting options for selected features.
  * @param {Object} props.queryOptions - Options for querying features.
  * @param {Array} props.selectTools - Toolbar tools for the selection module.
@@ -61,7 +63,11 @@ function applyVersionParamToLegend(layer) {
  * @param {Function} props.addLayer - Action to add a new layer.
  * @param {Function} props.changeLayerProperties - Action to update layer properties.
  *
- * @returns {JSX.Element} The rendered Select tool modal.
+ * @param {Function} props.viewSelectionInTable - Opens WMS/WFS selection results in the attribute table.
+ * @param {string} props.drawType - Current selection geometry type.
+ * @param {Object} props.dockStyle - Layout offsets that leave the sidebar accessible.
+ * @param {boolean} [props.isFloating=true] - Shows a draggable panel; false uses a dock.
+ * @returns {JSX.Element} The rendered Select tool panel.
  */
 const LayersSelection = ({
     layers,
@@ -84,7 +90,11 @@ const LayersSelection = ({
     addOrUpdateSelection,
     zoomToExtent,
     addLayer,
-    changeLayerProperties
+    changeLayerProperties,
+    viewSelectionInTable,
+    drawType,
+    dockStyle,
+    isFloating = true
 }, context) => {
 
     const filterLayers = layers.filter(filterLayerForSelect);
@@ -137,6 +147,7 @@ const LayersSelection = ({
                                 onZoomToExtent={zoomToExtent}
                                 onAddLayer={addLayer}
                                 onChangeLayerProperties={changeLayerProperties}
+                                onViewInTable={viewSelectionInTable}
                             />}
                         </>
                     }
@@ -146,10 +157,8 @@ const LayersSelection = ({
     };
 
     useEffect(() => {
-        storeConfiguration({ highlightOptions, queryOptions });
-    }, []);
-
-    const [selectedTool, setSelectedTool] = useState(null);
+        storeConfiguration({ highlightOptions, queryOptions, isFloating });
+    }, [highlightOptions, queryOptions, isFloating]);
 
     const selectionOptions = selectTools
         .filter(tool => SelectionToolsTypes[tool])
@@ -158,67 +167,77 @@ const LayersSelection = ({
             return { ...option, label: <><Glyphicon glyph={option.icon} />{' '}<Message msgId={option.labelId} /></> };
         });
 
-    return (
-        <ResizableModal
-            onClose = {onClose}
-            enableFooter={false}
-            title={<>
-                <Glyphicon glyph="hand-down"/>{' '}
-                <Message msgId="layersSelection.title"/>
-            </>}
-            dialogClassName=" select-dialog"
-            show={isVisible}
-            draggable
-            style={{zIndex: 1993}}>
-            <FlexBox className="_padding-md" gap="sm" column>
-                <ControlLabel><Message msgId="layersSelection.button.select"/></ControlLabel>
-                <FlexBox gap="sm">
-                    <FlexBox.Fill>
-                        <Select
-                            value={selectedTool}
-                            clearable={false}
-                            options={selectionOptions}
-                            onChange={option => {
-                                setSelectedTool(option);
-                                cleanSelection(option?.value ?? null);
+    const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
+    return isVisible ? (
+        <div style={{ '--ms-layers-selection-sidebar-offset': `${dockStyle?.right ?? 0}px` }}>
+            <ContainerComponent
+                onClose={onClose}
+                title={<Message msgId="layersSelection.title"/>}
+                {...(isFloating ? {
+                    modalClassName: 'ms-layers-selection-floating',
+                    dialogClassName: 'select-dialog',
+                    show: isVisible,
+                    draggable: true,
+                    enableFooter: false,
+                    clickOutEnabled: false
+                } : {
+                    containerId: 'layers-selection-container',
+                    containerStyle: dockStyle,
+                    size: DEFAULT_PANEL_WIDTH,
+                    glyph: 'hand-down',
+                    className: 'select-dialog',
+                    position: 'right',
+                    open: isVisible
+                })}>
+                <FlexBox className="_padding-md" gap="sm" column>
+                    <ControlLabel><Message msgId="layersSelection.button.select"/></ControlLabel>
+                    <FlexBox gap="sm">
+                        <FlexBox.Fill>
+                            <Select
+                                value={selectionOptions.find(option => option.value === drawType) || null}
+                                disabled={!filterLayers.some(isSelectQueriable)}
+                                clearable={false}
+                                options={selectionOptions}
+                                onChange={option => {
+                                    cleanSelection(option?.value ?? null);
+                                }}
+                            />
+                        </FlexBox.Fill>
+                        <Button
+                            disabled={!drawType}
+                            onClick={() => {
+                                cleanSelection(null);
                             }}
-                        />
-                    </FlexBox.Fill>
-                    <Button
-                        disabled={!selectedTool}
-                        onClick={() => {
-                            setSelectedTool(null);
-                            cleanSelection(null);
-                        }}
-                    >
-                        <Message msgId="layersSelection.button.clear"/>
-                    </Button>
+                        >
+                            <Message msgId="layersSelection.button.clear"/>
+                        </Button>
+                    </FlexBox>
                 </FlexBox>
-            </FlexBox>
-            <ControlledTOC
-                tree={filterLayers.map(layer => Object.fromEntries(Object.entries(applyVersionParamToLegend(layer)).filter(([key]) => key !== 'group'))).reverse()}
-                className="select-content"
-                theme="legend"
-                layerNodeComponent={customLayerNodeComponent}
-                treeHeader={
-                    <li className={'ms-node ms-node-layer tree-header'}>
-                        <NodeHeader
-                            node={{ title: getMessageById(context.messages, 'layersSelection.allLayers') }}
-                            beforeTitle={
-                                <VisibilityCheck
-                                    hide={false}
-                                    mutuallyExclusive={false}
-                                    value={filterLayers.every(isSelectQueriable)}
-                                    onChange={checked => filterLayers.forEach(layer => onUpdateNode(layer.id, 'layers', { isSelectQueriable: checked }))}
-                                />
-                            }
-                            afterTitle={<Message msgId="layersSelection.featuresCount" />}
-                        />
-                    </li>
-                }
-            />
-        </ResizableModal>
-    );
+                <ControlledTOC
+                    tree={filterLayers.map(layer => Object.fromEntries(Object.entries(applyVersionParamToLegend(layer)).filter(([key]) => key !== 'group'))).reverse()}
+                    className="select-content"
+                    theme="legend"
+                    layerNodeComponent={customLayerNodeComponent}
+                    treeHeader={
+                        <li className={'ms-node ms-node-layer tree-header'}>
+                            <NodeHeader
+                                node={{ title: getMessageById(context.messages, 'layersSelection.allLayers') }}
+                                beforeTitle={
+                                    <VisibilityCheck
+                                        hide={false}
+                                        mutuallyExclusive={false}
+                                        value={filterLayers.every(isSelectQueriable)}
+                                        onChange={checked => filterLayers.forEach(layer => onUpdateNode(layer.id, 'layers', { isSelectQueriable: checked }))}
+                                    />
+                                }
+                                afterTitle={<Message msgId="layersSelection.featuresCount" />}
+                            />
+                        </li>
+                    }
+                />
+            </ContainerComponent>
+        </div>
+    ) : null;
 };
 
 LayersSelection.contextTypes = {

@@ -22,10 +22,11 @@ import Message from '../../components/I18N/Message';
 import SelectComponent from './components/LayersSelection';
 import epics from './epics/layersSelection';
 import layersSelection from './reducers/layersSelection';
-import { storeConfiguration, cleanSelection, addOrUpdateSelection, updateSelectionFeature } from './actions/layersSelection';
-import { getSelectSelections, getSelectQueryMaxFeatureCount, getSelectDrawType, getSelectionFeature } from './selectors/layersSelection';
+import { storeConfiguration, cleanSelection, addOrUpdateSelection, updateSelectionFeature, viewSelectionInTable } from './actions/layersSelection';
+import { getSelectSelections, getSelectQueryMaxFeatureCount, getSelectDrawType, getSelectionFeature, isSelectEnabled, canDrawSelection } from './selectors/layersSelection';
 import LayersSelectionSupport from './components/LayersSelectionSupport';
 import { removeAdditionalLayer, updateAdditionalLayer } from '../../actions/additionallayers';
+import { dockStyleSelector } from '../../selectors/maplayout';
 
 /**
  * Select plugin that enables layer feature selection in the map.
@@ -33,6 +34,7 @@ import { removeAdditionalLayer, updateAdditionalLayer } from '../../actions/addi
   * @class LayersSelection
   * @memberof plugins
   * @static
+  * @prop {boolean} cfg.isFloating Shows a draggable panel by default. Set false to use a docked panel.
  */
 export default createPlugin('LayersSelection', {
     component: connect(
@@ -40,12 +42,16 @@ export default createPlugin('LayersSelection', {
             (state) => get(state, 'controls.layersSelection.enabled'),
             layersSelector,
             getSelectSelections,
-            getSelectQueryMaxFeatureCount
-        ], (isVisible, layers, selections, maxFeatureCount) => ({
+            getSelectQueryMaxFeatureCount,
+            getSelectDrawType,
+            dockStyleSelector
+        ], (isVisible, layers, selections, maxFeatureCount, drawType, dockStyle) => ({
             isVisible,
             layers,
             selections,
-            maxFeatureCount
+            maxFeatureCount,
+            drawType,
+            dockStyle
         })),
         {
             onClose: toggleControl.bind(null, 'layersSelection', null),
@@ -55,7 +61,8 @@ export default createPlugin('LayersSelection', {
             addOrUpdateSelection,
             zoomToExtent,
             addLayer,
-            changeLayerProperties
+            changeLayerProperties,
+            viewSelectionInTable
         }
     )(SelectComponent),
     options: {
@@ -102,9 +109,11 @@ export default createPlugin('LayersSelection', {
         Map: {
             name: 'LayersSelectionSupport',
             Tool: connect(
-                createSelector([getSelectDrawType, getSelectionFeature], (type, feature) => ({
+                createSelector([getSelectDrawType, getSelectionFeature, isSelectEnabled, canDrawSelection], (type, feature, enabled, canDraw) => ({
                     type,
-                    feature
+                    feature,
+                    enabled,
+                    canDraw
                 })),
                 {
                     onChange: updateSelectionFeature,
