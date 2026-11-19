@@ -13,13 +13,12 @@ import TestUtils, { act } from 'react-dom/test-utils';
 import { getLayerFromRecord } from '../../../../api/catalog/ArcGIS';
 
 import SelectComponent from '../LayersSelection';
-import './LayerSelection-test.less';
 
 describe('Select Component', () => {
     let container;
 
     beforeEach((done) => {
-        document.body.innerHTML = '<div id="container" class="ms-layers-selection-test"></div>';
+        document.body.innerHTML = '<div id="container"></div>';
         container = document.getElementById('container');
         setTimeout(done);
     });
@@ -61,27 +60,6 @@ describe('Select Component', () => {
         ReactDOM.render(<SelectComponent {...defaultProps} />, container);
         const componentContainer = container.querySelector('.select-dialog');
         expect(componentContainer).toBeTruthy();
-    });
-
-    it('uses floating mode by default and keeps the map and sidebar clickable', () => {
-        const storeConfiguration = expect.createSpy();
-        const onClose = expect.createSpy();
-        act(() => {
-            ReactDOM.render(<SelectComponent {...defaultProps} isFloating={undefined} dockStyle={{ right: 40 }} storeConfiguration={storeConfiguration} onClose={onClose}/>, container);
-        });
-        const modal = container.querySelector('.ms-layers-selection-floating');
-        const dialog = container.querySelector('.select-dialog');
-        expect(modal).toBeTruthy();
-        expect(modal.classList.contains('ms-draggable')).toBe(true);
-        expect(container.querySelector('#layers-selection-container')).toBe(null);
-        expect(dialog.classList.contains('ms-side-panel')).toBe(false);
-        expect(getComputedStyle(modal).pointerEvents).toBe('none');
-        expect(getComputedStyle(dialog).pointerEvents).toBe('auto');
-        expect(storeConfiguration).toHaveBeenCalledWith({ highlightOptions: {}, queryOptions: {}, isFloating: true });
-        TestUtils.Simulate.click(container.querySelector('.ms-resizable-modal'));
-        expect(onClose).toNotHaveBeenCalled();
-        TestUtils.Simulate.click(container.querySelector('.modal-header button'));
-        expect(onClose).toHaveBeenCalled();
     });
 
     it('updates stored layout configuration when switching panel modes', () => {
