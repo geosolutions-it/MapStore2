@@ -56,7 +56,8 @@ const Menu = ({
         const ButtonElement = document.getElementById("longitudinal-tool");
         const offsetTop = getOffsetTop(ButtonElement);
         const offsetBottom = getOffsetBottom(ButtonElement);
-        const dropUpVal = offsetTop > 130 || offsetBottom < 130;
+        const MAX_OFFSET_TOP = 140; // this value is tested both for Mapstore and GeoNode layout (DON'T reduce it)
+        const dropUpVal = offsetTop > MAX_OFFSET_TOP || offsetBottom < MAX_OFFSET_TOP;
         setDropUp(dropUpVal);
     }, []);
     const [open, setMenuOpen ] = useState(false);

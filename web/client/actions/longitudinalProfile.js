@@ -12,6 +12,7 @@ import {
 } from "../actions/maplayout";
 import {error} from "../actions/notifications";
 import {
+    LONGITUDINAL_DISTANCES,
     CONTROL_DOCK_NAME,
     LONGITUDINAL_OWNER,
     LONGITUDINAL_VECTOR_LAYER_ID,
@@ -197,14 +198,22 @@ export const toggleMode = (mode) => ({
 export const setup = (config) => {
     return (dispatch, getState) => {
         dispatch(setupPlugin(config));
-        const { referentials, distances, defaultDistance, defaultReferentialName } = config || configSelector(getState());
+        const {
+            referentials = [],
+            distances = LONGITUDINAL_DISTANCES,
+            defaultDistance,
+            defaultReferentialName
+        } = configSelector(getState()) || {};
+        if (!referentials.length) {
+            dispatch(error({ title: "Error", message: "longitudinalProfile.errors.loadingError", autoDismiss: 10 }));
+        }
         const defaultReferential = referentials.find(el => el.layerName === defaultReferentialName);
         if (defaultReferentialName && !defaultReferential) {
             dispatch(error({ title: "Error", message: "longitudinalProfile.errors.defaultReferentialNotFound", autoDismiss: 10 }));
         }
 
         dispatch(updateDockPanelsList(CONTROL_DOCK_NAME, "add", "right"));
-        dispatch(changeReferential(defaultReferentialName ?? referentials[0].layerName));
+        dispatch(changeReferential(defaultReferentialName || referentials[0]?.layerName));
         dispatch(changeDistance(defaultDistance ?? distances[0]));
         dispatch(updateAdditionalLayer(
             LONGITUDINAL_VECTOR_LAYER_ID,
