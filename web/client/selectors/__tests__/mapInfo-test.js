@@ -29,6 +29,7 @@ import {
     hoverEnabledSelector,
     currentFeatureSelector,
     mapInfoEnabledSelector,
+    isMapInfoDockedSelector,
     mapInfoDisabledSelector,
     enableInfoForSelectedLayersSelector,
     identifyOptionsSelector
@@ -380,6 +381,12 @@ describe('Test mapinfo selectors', () => {
         expect(feature).toBeTruthy();
         expect(feature.id).toBe('poi.4');
     });
+    it('test isMapInfoDockedSelector', () => {
+        expect(isMapInfoDockedSelector({})).toBe(true); // default: docked
+        expect(isMapInfoDockedSelector({ mapInfo: { dock: true } })).toBe(true);
+        expect(isMapInfoDockedSelector({ mapInfo: { dock: false } })).toBe(false);
+    });
+
     it('test mapInfoEnabledSelector ', () => {
         const state = { mapInfo: { enabled: true}};
         const mapInfoEnabled = mapInfoEnabledSelector(state);

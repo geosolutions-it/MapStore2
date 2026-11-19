@@ -19,7 +19,7 @@ import {
 } from '../actions/mapInfo';
 
 import { SHOW_SETTINGS, HIDE_SETTINGS } from '../actions/layers';
-import {isMapInfoOpen, mapInfoEnabledSelector} from '../selectors/mapInfo';
+import {isMapInfoOpen, isMapInfoDockedSelector, mapInfoEnabledSelector} from '../selectors/mapInfo';
 import { showCoordinateEditorSelector } from '../selectors/controls';
 import ConfigUtils from '../utils/ConfigUtils';
 import { mapInfoDetailsSettingsFromIdSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
@@ -121,7 +121,7 @@ export const updateMapLayoutEpic = (action$, store) =>
                 get(state, "controls.userExtensions.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "controls.mapTemplates.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "controls.mapCatalog.enabled") && { right: mapLayout.right.md } || null,
-                mapInfoEnabledSelector(state) && isMapInfoOpen(state) && !isMouseMoveIdentifyActiveSelector(state) && {right: mapLayout.right.md} || null
+                mapInfoEnabledSelector(state) && isMapInfoOpen(state) && isMapInfoDockedSelector(state) && !isMouseMoveIdentifyActiveSelector(state) && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
             const transform = isFeatureGridOpen(state) && {transform: 'translate(0, -' + mapLayout.bottom.sm + 'px)'} || {transform: 'none'};

@@ -81,7 +81,8 @@ export const identifyLifecycle = compose(
                 onInitPlugin = () => {},
                 pluginCfg = {},
                 enableHideEmptyPopupOption = () => {},
-                hidePopupIfNoResults = false
+                hidePopupIfNoResults = false,
+                dock = true
             } = this.props;
 
             // Initialize plugin configuration
@@ -91,7 +92,8 @@ export const identifyLifecycle = compose(
                 },
                 maxItems,
                 showAllResponses,
-                highlight: pluginCfg?.highlightEnabledFromTheStart || false
+                highlight: pluginCfg?.highlightEnabledFromTheStart || false,
+                dock: dock !== false
             });
             if (hidePopupIfNoResults) {
                 enableHideEmptyPopupOption(true);

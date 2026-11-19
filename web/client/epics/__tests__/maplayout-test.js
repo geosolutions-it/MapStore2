@@ -227,6 +227,14 @@ describe('map layout epics', () => {
             const state = { controls: { details: { enabled: true, group: "parent" } } };
             testEpic(updateMapLayoutEpic, 1, setControlProperties("details", "enabled", true, "group", "parent"), epicResult(done), state);
         });
+        it('identify docked (default) reserves right panel space', (done) => {
+            const state = { mapInfo: { enabled: true, requests: [{}] } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperty("drawer", "enabled", false), epicResult(done), state);
+        });
+        it('identify floating (dock: false) does not reserve right panel space', (done) => {
+            const state = { mapInfo: { enabled: true, requests: [{}], dock: false } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperty("drawer", "enabled", false), epicResult(done, 0), state);
+        });
     });
 
     describe('tests layout updated for left panels', () => {

@@ -71,6 +71,14 @@ export const drawSupportActiveSelector = (state) => {
 };
 export const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 export const mapInfoEnabledSelector = (state) => get(state, "mapInfo.enabled", false);
+
+/**
+ * Whether Identify shows its results in a docked panel (`cfg.dock`, default true) rather than a floating window
+ * @memberof selectors.mapinfo
+ * @param  {object} state the state
+ * @return {boolean}
+ */
+export const isMapInfoDockedSelector = (state) => get(state, "mapInfo.dock", true) !== false;
 export const mapInfoDisabledSelector = (state) => !mapInfoEnabledSelector(state);
 
 
