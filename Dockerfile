@@ -1,4 +1,4 @@
-FROM geosolutionsit/tomcat:11.0-jdk17-temurin-resolute AS mother
+FROM tomcat:11.0-jdk17-temurin-resolute AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geosolutionsgroup.com>"
 ARG MAPSTORE_WEBAPP_SRC=""
 WORKDIR /tmp/build-context
@@ -45,7 +45,7 @@ RUN set -eux; \
     cp -r ./docker/. /mapstore/docker/
 WORKDIR /mapstore
 
-FROM geosolutionsit/tomcat:11.0-jdk17-temurin-resolute
+FROM tomcat:11.0-jdk17-temurin-resolute
 ARG UID=20000
 ARG GID=20000
 ARG UNAME=mapstore
@@ -61,6 +61,7 @@ ARG OVR=""
 ARG DATA_DIR="${CATALINA_BASE}/datadir"
 ENV GEOSTORE_OVR_OPT=""
 ENV JAVA_OPTS="${JAVA_OPTS} ${GEOSTORE_OVR_OPT} -Ddatadir.location=${DATA_DIR}"
+ENV CATALINA_OPTS="${CATALINA_OPTS} -XX:-UseBASE64Intrinsics"
 ENV TERM xterm
 
 COPY --from=mother "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war"
