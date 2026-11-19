@@ -71,10 +71,10 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @prop {Object} cfg.config the plugin configuration
  * @prop {string} cfg.config.wpsurl optional, the geoserver url the the wps endpoint to use. It can be an absolute url. default is "/geoserver/wps".
  * @prop {string} cfg.config.chartTitle the default title of the chart
- * @prop {number} cfg.config.noDataThreshold the number that beyond it will exclude data
- * @prop {number} cfg.config.defaultDistance the default distance value in meters
+ * @prop {number} cfg.config.noDataThreshold the number that beyond it will exclude data. Default is 999999
+ * @prop {number} cfg.config.defaultDistance optional, the initial value of the distance (in meters) shown in the settings and used by the WPS process. Default is 100
  * @prop {string} cfg.config.identifier the profile to use in the wps request, defaulted to gs:LongitudinalProfile
- * @prop {string} cfg.config.defaultReferentialName the default referential name
+ * @prop {string} cfg.config.defaultReferentialName optional, the default referential name. If not set, the first item of `referentials` is used
  * @prop {Object[]} cfg.config.referentials (required) the layers that can be used as referentials
  * @prop {string[]} cfg.filterAllowedCRS the allowed crs to be proposed when dropping a DXF file, (needs to be supported by mapstore)
  * @prop {Object} cfg.additionalCRS the crs object that allow to define also a label
