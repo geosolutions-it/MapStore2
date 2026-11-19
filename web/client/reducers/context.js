@@ -35,7 +35,7 @@ export default (state = {}, action) => {
     switch (action.type) {
     case MAP_CONFIG_LOADED: {
         const userPlugins = action.config?.context?.userPlugins ?? state.resource?.data?.userPlugins;
-        return  userPlugins ? set('currentContext.userPlugins', userPlugins, state) : state;
+        return  userPlugins ? set('currentContext.userPlugins', migrateContextConfiguration({ userPlugins }).userPlugins, state) : state;
     }
     case SET_CURRENT_CONTEXT: {
         return set('currentContext', migrateContextConfiguration(action.context), state);
