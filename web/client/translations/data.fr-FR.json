@@ -1714,6 +1714,7 @@
         "clear": "Effacer",
         "zoomTo": "Zoomer sur",
         "statistics": "Statistiques",
+        "viewInTable": "Afficher dans la table attributaire",
         "createLayer": "Créer une couche",
         "filterData": "Filtrer les données",
         "export": "Exporter",

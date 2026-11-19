@@ -1714,6 +1714,7 @@
         "clear": "Borrar",
         "zoomTo": "Hacer zoom en",
         "statistics": "Estadísticas",
+        "viewInTable": "Ver en la tabla de atributos",
         "createLayer": "Crear capa",
         "filterData": "Filtrar datos",
         "export": "Exportar",
