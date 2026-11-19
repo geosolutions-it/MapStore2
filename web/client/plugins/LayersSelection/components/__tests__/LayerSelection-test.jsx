@@ -13,12 +13,13 @@ import TestUtils, { act } from 'react-dom/test-utils';
 import { getLayerFromRecord } from '../../../../api/catalog/ArcGIS';
 
 import SelectComponent from '../LayersSelection';
+import './LayerSelection-test.less';
 
 describe('Select Component', () => {
     let container;
 
     beforeEach((done) => {
-        document.body.innerHTML = '<div id="container"></div>';
+        document.body.innerHTML = '<div id="container" class="ms-layers-selection-test"></div>';
         container = document.getElementById('container');
         setTimeout(done);
     });
