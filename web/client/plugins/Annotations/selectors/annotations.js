@@ -11,7 +11,7 @@ import {
     layersSelector,
     getSelectedLayer
 } from '../../../selectors/layers';
-import { isAnnotationLayer } from '../utils/AnnotationsUtils';
+import { isAnnotationLayer } from '../../../utils/AnnotationsLayerUtils';
 /**
  * It returns the first annotation layer available in map
  * @param {object} state

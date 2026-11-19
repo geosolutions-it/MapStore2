@@ -38,8 +38,9 @@ import {
 } from '../selectors/layerdownload';
 import {attributesSelector} from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
+import { getCapabilities } from '../api/featuresource';
 import { currentLocaleSelector } from '../selectors/locale';
-import { customAttributesSettingsSelector } from "../selectors/featuregrid";
+import { customAttributesSettingsSelector, selectedLayerSelector as selectedFeatureGridLayer } from "../selectors/featuregrid";
 import { offsetEnabledSelector } from '../selectors/dimension';
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
@@ -207,7 +208,8 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
             position: 20,
             target: "toolbar",
             Component: connect(createStructuredSelector({
-                isDownloadOpen: state =>  state?.controls?.layerdownload?.enabled
+                isDownloadOpen: state =>  state?.controls?.layerdownload?.enabled,
+                supported: state => getCapabilities(selectedFeatureGridLayer(state)).download
             }), {
                 onClick: () => toggleControl("layerdownload")
             })(FeatureEditorButton)

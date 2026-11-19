@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { lazy } from 'react';
+import React, { lazy, useMemo } from 'react';
 
 import { getWidgetFilterRenderers } from '../../../plugins/widgets/getWidgetFilterRenderers';
+import { describeFeatureTypeToSchema } from '../../../utils/FeatureTypeUtils';
 import EmptyRowsView from '../../data/featuregrid/EmptyRowsView';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
@@ -19,12 +20,12 @@ import WidgetEmptyMessage from './WidgetEmptyMessage';
 import withSuspense from '../../misc/withSuspense';
 
 const FeatureGridComp = withSuspense()(lazy(() => import('../../data/featuregrid/FeatureGrid')));
-const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
+const FeatureGrid = errorChartState(loadingState(({ schema }) => !schema)(FeatureGridComp));
 const DEFAULT_GRID_HEIGHT = 28;
 const defaultGridOpts = ['rowHeight', 'headerRowHeight', 'headerFiltersHeight']
     .reduce((acc, prop) => ({...acc, [prop]: DEFAULT_GRID_HEIGHT}), '');
 
-export default getWidgetFilterRenderers(({
+const TableWidget = ({
     id,
     title,
     loading,
@@ -54,8 +55,12 @@ export default getWidgetFilterRenderers(({
     options = {},
     dateFormats,
     gridTools
-}) =>
-    (<WidgetContainer
+}) => {
+    const schema = useMemo(
+        () => describeFeatureType ? describeFeatureTypeToSchema(describeFeatureType, layer?.fields) : undefined,
+        [describeFeatureType, layer?.fields]
+    );
+    return (<WidgetContainer
         id={`widget-chart-${id}`}
         title={title}
         headerStyle={headerStyle}
@@ -94,13 +99,15 @@ export default getWidgetFilterRenderers(({
                 error={error}
                 size={size}
                 rowKey="id"
-                describeFeatureType={describeFeatureType}
+                schema={schema}
                 pagination={pagination}
                 gridOpts={gridOpts}
                 options={options}
                 tools={gridTools}       // if geom prop is existing show zoom icon
                 dateFormats={dateFormats}/>
         </BorderLayout>
-    </WidgetContainer>
+    </WidgetContainer>);
+};
 
-    ));
+// recompose calls a plain function component directly, so its hooks need an element in between
+export default getWidgetFilterRenderers((props) => <TableWidget {...props} />);

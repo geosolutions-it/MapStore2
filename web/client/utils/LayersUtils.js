@@ -21,7 +21,11 @@ import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
 import { sanitizeHtml } from './HtmlSanitizer';
 import { getEPSGCode } from './CoordinatesUtils';
-import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
+import {
+    ANNOTATIONS,
+    updateAnnotationsLayer,
+    isAnnotationLayer
+} from './AnnotationsLayerUtils';
 import { getLocale } from './LocaleUtils';
 import { has, includes, indexOf } from 'lodash';
 import { DEFAULT_DOCUMENTS_FEATURE_INFO } from './FeatureInfoAttributeUtils';

@@ -7,22 +7,24 @@
   */
 
 import { head, get, isObject } from 'lodash';
+import { createSelector } from 'reselect';
+
+import { getCapabilities, getFeatureTypeName } from '../api/featuresource';
 
 import { getLayerFromId } from './layers';
-import { findGeometryProperty } from '../utils/ogc/WFS/base';
+import { getGeometryAttribute } from '../utils/FeatureSchemaUtils';
 import { currentLocaleSelector } from './locale';
 import { isSimpleGeomType } from '../utils/MapUtils';
 import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
 import { isUserAllowedSelectorCreator } from './security';
 import {isCesium, mapTypeSelector} from './maptype';
-import { attributesSelector, describeSelector } from './query';
+import { attributesSelector, featureSchemaSelector } from './query';
 import { createShallowSelectorCreator } from "../utils/ReselectUtils";
 import isEqual from "lodash/isEqual";
 import { mapBboxSelector, projectionSelector } from "./map";
 import { bboxToFeatureGeometry } from "../utils/CoordinatesUtils";
 import { MapLibraries } from '../utils/MapTypeUtils';
-import { getWFSLayerName } from '../utils/LayersUtils';
 
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
@@ -35,10 +37,9 @@ export const newFeaturesSelector = state => state && state.featuregrid && state.
 export const selectedFeatureSelector = state => head(selectedFeaturesSelector(state));
 
 export const geomTypeSelectedFeatureSelector = state => {
-    let desc = describeSelector(state);
-    if (desc) {
-        const geomDesc = findGeometryProperty(desc);
-        return geomDesc && geomDesc.localType;
+    const schema = featureSchemaSelector(state);
+    if (schema) {
+        return getGeometryAttribute(schema)?.localType ?? null;
     }
     return null;
 };
@@ -76,6 +77,14 @@ export const hasNewFeaturesSelector = state => newFeaturesSelector(state) && new
 export const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
 export const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLayerIdSelector(state)), "params");
 export const selectedLayerSelector = state => getLayerById(state, selectedLayerIdSelector(state));
+/**
+ * Capabilities of the source of the selected layer. Memoized, the object identity
+ * has to stay stable or the grid rebuilds its columns and filter renderers.
+ */
+export const featureSourceCapabilitiesSelector = createSelector(
+    selectedLayerSelector,
+    (layer) => getCapabilities(layer)
+);
 export const editingAllowedRolesSelector = state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]);
 export const editingAllowedGroupsSelector = state => get(state, "featuregrid.editingAllowedGroups", []);
 export const canEditSelector = state => state && state.featuregrid && state.featuregrid.canEdit;
@@ -176,7 +185,7 @@ export const isSimpleGeomSelector = state => isSimpleGeomType(geomTypeSelectedFe
  */
 export const selectedLayerNameSelector = state => {
     const layer = getLayerById(state, selectedLayerIdSelector(state));
-    return getWFSLayerName(layer) || '';
+    return getFeatureTypeName(layer) || '';
 
 };
 /**
@@ -214,10 +223,10 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
     mapBboxSelector,
     projectionSelector,
     state => get(state, 'query.filterObj.spatialField'),
-    describeSelector,
+    featureSchemaSelector,
     isFilterByViewportSupported,
-    (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, viewportFilterIsSupported) => {
-        const attribute = findGeometryProperty(describeLayer)?.name;
+    (viewportFilterIsActive, box, projection, spatialField = [], schema, viewportFilterIsSupported) => {
+        const attribute = getGeometryAttribute(schema)?.name;
         const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
         return viewportFilterIsActive && viewportFilterIsSupported && box ? {
             spatialField: [
@@ -237,12 +246,11 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
 );
 
 /**
- * Returns true when neither the DescribeFeatureType metadata nor the
- * loaded features expose a geometry field.
+ * Returns true when neither the feature schema nor the loaded features expose a geometry field.
  */
 export const hasNoGeometry = (state) => {
-    const describe = describeSelector(state);
-    if (describe && findGeometryProperty(describe)) {
+    const schema = featureSchemaSelector(state);
+    if (schema && getGeometryAttribute(schema)) {
         return false;
     }
     const features = get(state, "featuregrid.features", []);

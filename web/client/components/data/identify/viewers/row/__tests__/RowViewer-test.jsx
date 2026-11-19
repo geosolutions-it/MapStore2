@@ -10,7 +10,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import RowViewer from '../RowViewer';
-import { ANNOTATIONS } from '../../../../../../plugins/Annotations/utils/AnnotationsUtils';
+import { ANNOTATIONS } from '../../../../../../utils/AnnotationsLayerUtils';
 import { registerRowViewer } from '../../../../../../utils/MapInfoUtils';
 
 describe('RowViewer', () => {

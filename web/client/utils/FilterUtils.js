@@ -1325,17 +1325,17 @@ export const createFeatureFilter = (filterObj) => feature => {
             return false;
         }
         if (filterFields[i].type === "string" &&
-            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())) {
+            !`${feature.properties[filterFields[i].attribute]}`.toLowerCase().includes(`${filterFields[i].value}`.toLowerCase())) {
             return false;
         }
         if (filterFields[i].type === "boolean" &&
-            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())) {
+            !`${feature.properties[filterFields[i].attribute]}`.toLowerCase().includes(`${filterFields[i].value}`.toLowerCase())) {
             return false;
         }
-        /* TODO: support spatial, number, boolean, filter.
+        /* TODO: support spatial filters and the comparison operators, only equality is applied here.
             TODO: Also nested filters should be supported (AND, OR ...)*/
         if (filterFields[i].type === "number") {
-            const numberFilter = parseFloat(filterFields[i].attribute);
+            const numberFilter = parseFloat(filterFields[i].value);
             const numberFeature = parseFloat(feature.properties[filterFields[i].attribute]);
             if (numberFilter !== numberFeature) {
                 return false;

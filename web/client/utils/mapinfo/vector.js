@@ -9,7 +9,7 @@
 import { Observable } from 'rxjs';
 import isObject from 'lodash/isObject';
 import { getCurrentResolution } from '../MapUtils';
-import { isAnnotationLayer } from '../../plugins/Annotations/utils/AnnotationsUtils';
+import { isAnnotationLayer } from '../AnnotationsLayerUtils';
 import isNil from 'lodash/isNil';
 
 export default {

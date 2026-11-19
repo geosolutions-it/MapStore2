@@ -14,7 +14,8 @@ import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 
 import axios from '../libs/ajax';
-import { createFeatureFilter, getWFSFilterData } from '../utils/FilterUtils';
+import { getWFSFilterData } from '../utils/FilterUtils';
+import { filterFeatureCollection } from '../utils/VectorFeaturesUtils';
 import { getCapabilitiesUrl, getWFSLayerName } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -83,44 +84,6 @@ export const getPagination = (filterObj = {}, options = {}) =>
             maxFeatures: options.maxFeatures
         };
 
-const createFeatureCollection = (features) => (
-    {
-        crs: {type: "name", properties: {name: "urn:ogc:def:crs:EPSG::4326"}},
-        numberMatched: features.length,
-        numberReturned: features.length,
-        timeStamp: "2020-07-20T11:36:20.118Z",
-        totalFeatures: features.length,
-        type: 'FeatureCollection',
-        features: features
-    }
-);
-
-const getFeaturesFiltered = (features, filterObj) => {
-    if (filterObj.filterFields && filterObj.filterFields.length !== 0) {
-        const featuresFiltered = features.features.filter(createFeatureFilter(filterObj));
-
-        features.features = featuresFiltered;
-        features.numberMatched = featuresFiltered.length;
-        features.numberReturned = featuresFiltered.length;
-        features.totalFeatures = featuresFiltered.length;
-    }
-    if (filterObj.sortOptions && filterObj.sortOptions.sortBy && filterObj.sortOptions.sortOrder &&
-        filterObj.sortOptions.sortOrder !== "NONE") {
-        features.features.sort((a, b) => {
-            const avalue = a.properties[filterObj.sortOptions.sortBy];
-            const bvalue = b.properties[filterObj.sortOptions.sortBy];
-            const diff = avalue.toLowerCase().localeCompare(bvalue.toLowerCase());
-            if (filterObj.sortOptions.sortOrder === "ASC") {
-                return diff;
-            }
-
-            return -1 * diff;
-        });
-    }
-    return features;
-
-};
-
 /**
  * Get data and query string for WFS query for either JSON or XML formats
  * @param {string} searchUrl URL of WFS service
@@ -142,14 +105,6 @@ export const getFeatureUtilities = (searchUrl, filterObj, options = {}, download
         query: params
     });
 
-    if (options.layer && options.layer.type === 'vector') {
-        return Rx.Observable.defer(() => new Promise((resolve) => {
-            let features = createFeatureCollection(options.layer.features);
-            let featuresFiltered = getFeaturesFiltered(features, filterObj);
-            resolve(featuresFiltered);
-        }));
-    }
-
     return {
         data,
         queryString
@@ -165,8 +120,9 @@ export const getFeatureUtilities = (searchUrl, filterObj, options = {}, download
  */
 export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption) => {
 
+    // a vector layer carries its own features, the download gets them as GeoJSON
     if (options.layer && options.layer.type === 'vector') {
-        return getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
+        return Rx.Observable.of(filterFeatureCollection(options.layer.features, filterObj));
     }
 
     const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
@@ -191,11 +147,6 @@ export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
 export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
-
-    if (options.layer && options.layer.type === 'vector') {
-        return getFeatureUtilities(searchUrl, filterObj, options);
-    }
-
     const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options);
 
     return Rx.Observable.defer(() =>

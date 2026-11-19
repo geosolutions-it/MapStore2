@@ -30,11 +30,11 @@ import {
     storeAnnotationsSession,
     confirmCloseAnnotations
 } from '../actions/annotations';
+import { annotationsToGeoJSON } from '../utils/AnnotationsUtils';
 import {
     ANNOTATIONS,
-    annotationsToGeoJSON,
     createAnnotationId
-} from '../utils/AnnotationsUtils';
+} from '../../../utils/AnnotationsLayerUtils';
 import {
     annotationsLayersSelector,
     getAnnotationsSession

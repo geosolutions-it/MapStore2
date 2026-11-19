@@ -47,6 +47,7 @@ import {
     isViewportFilterActive,
     isFilterByViewportSupported,
     selectedLayerSelector,
+    featureSourceCapabilitiesSelector,
     hasNoGeometry
 } from '../../../selectors/featuregrid';
 import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
@@ -59,7 +60,6 @@ import {
     paginationInfo,
     resultsSelector
 } from '../../../selectors/query';
-import { getFeatureTypeProperties, isGeometryType } from '../../../utils/ogc/WFS/base';
 import { getSearchUrl } from '../../../utils/LayersUtils';
 import { pageEvents, toolbarEvents } from '../index';
 import settings from './AttributeSelector';
@@ -108,6 +108,7 @@ const Toolbar = connect(
         viewportFilter: isViewportFilterActive,
         isFilterByViewportSupported,
         layer: selectedLayerSelector,
+        capabilities: featureSourceCapabilitiesSelector,
         hideSpatialFunctionalityTools: hasNoGeometry
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
@@ -188,13 +189,15 @@ export const getEmptyRowsView = () => {
 
 /**
  * Returns an object with field name as key and a filterRenderer components as value
- * @param {object} describe describeFeatureType object in json format
+ * @param {object} schema the {@link utils.FeatureSchemaUtils FeatureSchema} of the features
  * @param {object[]} fields array of fields (with `filterRenderer` property)
+ * @param {boolean} isWithinAttrTbl true when rendered inside the attribute table
+ * @param {object} [options] `spatialFilter` and `showOperators`, false when the source does not honour them
  * @returns {object} object with field name as key and filterRenderer as value
  */
-export const getFilterRenderers =  (describe, fields = [], isWithinAttrTbl) => {
-    if (describe) {
-        return (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => {
+export const getFilterRenderers =  (schema, fields = [], isWithinAttrTbl, { spatialFilter = true, showOperators = true } = {}) => {
+    if (schema) {
+        return (schema.attributes || []).filter((attribute) => !attribute.geometry || spatialFilter).reduce( (out, cur) => {
             const field = fields.find(f => f.name === cur.name);
             return {
                 ...out,
@@ -206,18 +209,18 @@ export const getFilterRenderers =  (describe, fields = [], isWithinAttrTbl) => {
                             const props = {
                                 value: filter && (filter.rawValue || filter.value),
                                 operator: filter && (filter.operator),
-                                ...(isGeometryType(cur) ? {
+                                ...(cur.geometry ? {
                                     filterEnabled: filter?.enabled,
                                     filterDeactivated: filter?.deactivated
                                 } : {})
                             };
-                            const editProps = !isGeometryType(cur) ? {
+                            const editProps = !cur.geometry ? {
                                 disabled: true,
                                 tooltipMsgId: "featuregrid.filter.tooltips.editMode"
                             } : {};
                             return mode === "EDIT" ? {...props, ...editProps} : props;
                         }
-                    ))(getFilterRenderer({type: isGeometryType(cur) ? 'geometry' : cur.localType, name: field?.filterRenderer?.name, options: field?.filterRenderer?.options, isWithinAttrTbl}))
+                    ))(getFilterRenderer({type: cur.geometry ? 'geometry' : cur.localType, name: field?.filterRenderer?.name, options: field?.filterRenderer?.options, isWithinAttrTbl, showOperators}))
             };
         }, {});
     }

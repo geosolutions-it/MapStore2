@@ -31,7 +31,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { isCesium } from '../selectors/maptype';
 import { showEditableFeatureCheckboxSelector } from "../selectors/map";
-import { isAnnotationLayer } from './Annotations/utils/AnnotationsUtils';
+import { isAnnotationLayer } from '../utils/AnnotationsLayerUtils';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,

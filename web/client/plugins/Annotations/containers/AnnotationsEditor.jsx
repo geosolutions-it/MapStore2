@@ -13,10 +13,10 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import tinycolor from 'tinycolor2';
 import {
-    ANNOTATIONS,
     checkInvalidCoordinate,
     validateFeature
 } from '../utils/AnnotationsUtils';
+import { ANNOTATIONS } from '../../../utils/AnnotationsLayerUtils';
 import { zoomToExtent } from '../../../actions/map';
 import { updateNode } from '../../../actions/layers';
 import {

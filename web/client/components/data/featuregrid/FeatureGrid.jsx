@@ -15,19 +15,19 @@ import featuresToGrid from './enhancers/editor';
 import rowRenderer from './renderers/RowRenderer';
 
 /**
- * A component that gets the describeFeatureType and the features to display
+ * A component that gets the feature schema and the features to display
  * attributes
  * @class
  * @name FeatureGrid
  * @memberof components.data.featuregrid
  * @prop {geojson[]} features array of geojson features
- * @prop {object} describeFeatureType the describeFeatureType in json format
+ * @prop {object} schema the {@link utils.FeatureSchemaUtils FeatureSchema} of the features
  * @prop {Component} gridComponent the grid component, if different from AdaptiveGrid
  * @prop {object} gridOptions to pass to the grid
  * @prop {object} gridEvents an object with events for the grid. Note: onRowsSelected, onRowsDeselected and onRowsToggled will be associated automatically from this object
  * to the rowSelection tool. If checkbox are enabled, onRowsSelected and onRowsDeselected will be triggered. If showCheckbox is false, onRowsToggled will be triggered.
  * @prop {object[]} tools. a list of tools. the format is the react-data-grid column format but with the following differences:
- * - The events are automatically binded to call the related callback with the feature as first parameter, second argument is the same, no original event is passed. describeFeatureType as third
+ * - The events are automatically binded to call the related callback with the feature as first parameter, second argument is the same, no original event is passed. The schema as third
  */
 class FeatureGrid extends React.PureComponent {
     static propTypes = {
@@ -40,7 +40,7 @@ class FeatureGrid extends React.PureComponent {
         features: PropTypes.array,
         showDragHandle: PropTypes.bool,
         gridComponent: PropTypes.func,
-        describeFeatureType: PropTypes.object,
+        schema: PropTypes.object,
         columnSettings: PropTypes.object,
         gridOptions: PropTypes.object,
         actionOpts: PropTypes.object,
@@ -61,7 +61,7 @@ class FeatureGrid extends React.PureComponent {
         changes: {},
         gridEvents: {},
         gridOpts: {},
-        describeFeatureType: {},
+        schema: {},
         columnSettings: {},
         features: [],
         tools: [],
@@ -79,7 +79,7 @@ class FeatureGrid extends React.PureComponent {
                 return this.props.changes.hasOwnProperty(id) &&
                     this.props.changes[id].hasOwnProperty(key);
             },
-            isProperty: (k) => k === "geometry" || isProperty(k, this.props.describeFeatureType),
+            isProperty: (k) => k === "geometry" || isProperty(k, this.props.schema),
             isValid: (val, key, rowId) => {
                 const { errors = [], changed } = (this.props?.validationErrors?.[rowId] || {});
                 // Extract field name from instancePath or dataPath (e.g., "/fid" -> "fid")
@@ -90,7 +90,7 @@ class FeatureGrid extends React.PureComponent {
                 if (error) {
                     return { valid: false, message: error?.message, changed };
                 }
-                return { valid: this.props.describeFeatureType ? isValidValueForPropertyName(val, key, this.props.describeFeatureType) :  false };
+                return { valid: this.props.schema ? isValidValueForPropertyName(val, key, this.props.schema) :  false };
             }
         };
     }

@@ -11,10 +11,12 @@ import TSplitButtonComp from "./TSplitButton";
 import Spinner from "react-spinkit";
 import Select from "react-select";
 import { MapLibraries } from '../../../../utils/MapTypeUtils';
-import { areLayerFeaturesEditable } from "../../../../utils/FeatureGridUtils";
+import { areLayerFeaturesEditable } from "../../../../api/featuresource";
 
 const TButton = withHint(TButtonComp);
 const TSplitButton = withHint(TSplitButtonComp);
+// the container always passes the full set, an absent one means no constraint
+const ALL_CAPABILITIES = { advancedFilter: true, spatialFilter: true, mapFilterSync: true };
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     if (isDrawing) {
         return "featuregrid.toolbar.stopDrawGeom";
@@ -49,13 +51,13 @@ const standardButtons = {
         visible={mode === "VIEW" && isEditingAllowed && areLayerFeaturesEditable(layer)}
         onClick={events.switchEditMode}
         glyph="pencil"/>),
-    filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<VisibleTButton
+    filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, capabilities = ALL_CAPABILITIES, events = {}}) => (<VisibleTButton
         id="search"
         keyProp="search"
         tooltipId="featuregrid.toolbar.advancedFilter"
         active={isFilterActive || viewportFilter}
         disabled={disabled || !isSearchAllowed}
-        visible={mode === "VIEW" && showAdvancedFilterButton}
+        visible={mode === "VIEW" && showAdvancedFilterButton && !!capabilities.advancedFilter}
         onClick={events.showQueryPanel}
         glyph="filter"/>),
     zoomAll: ({disabled, disableZoomAll = false, showZoomAll = true, mode, events = {}, hideSpatialFunctionalityTools = false}) => (<VisibleTButton
@@ -138,13 +140,13 @@ const standardButtons = {
         visible={selectedCount <= 1 && mode === "VIEW"}
         onClick={events.settings}
         glyph="features-grid-set"/>),
-    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, events = {}, syncPopover = { dockSize: "32.2%" }, showPopoverSync, hideSyncPopover, hideSpatialFunctionalityTools = false}) => (<VisibleTButton
+    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, capabilities = ALL_CAPABILITIES, events = {}, syncPopover = { dockSize: "32.2%" }, showPopoverSync, hideSyncPopover, hideSpatialFunctionalityTools = false}) => (<VisibleTButton
         id="grid-map-filter"
         keyProp="grid-map-filter"
         tooltipId="featuregrid.toolbar.syncOnMap"
         disabled={disabled}
         active={isSyncActive}
-        visible={showSyncOnMapButton && !hideSpatialFunctionalityTools}
+        visible={showSyncOnMapButton && !hideSpatialFunctionalityTools && !!capabilities.mapFilterSync}
         onClick={events.sync}
         glyph="map-filter"
         renderPopover={showPopoverSync}
@@ -269,11 +271,11 @@ const standardButtons = {
             <span className="clearfix" />
         </FormGroup>
     </VisibleTSplitButton>),
-    viewportFilter: ({viewportFilter, isFilterByViewportSupported, pluginCfg, events = {}, hideSpatialFunctionalityTools = false}) => (<VisibleTButton
+    viewportFilter: ({viewportFilter, isFilterByViewportSupported, pluginCfg, capabilities = ALL_CAPABILITIES, events = {}, hideSpatialFunctionalityTools = false}) => (<VisibleTButton
         id="viewportFilter-button"
         keyProp="viewportFilter-button"
         tooltipId={viewportFilter ? "featuregrid.toolbar.disableViewportFilter" : "featuregrid.toolbar.enableViewportFilter"}
-        visible={(pluginCfg?.showFilterByViewportTool ?? true) && isFilterByViewportSupported && !hideSpatialFunctionalityTools}
+        visible={(pluginCfg?.showFilterByViewportTool ?? true) && isFilterByViewportSupported && !hideSpatialFunctionalityTools && !!capabilities.spatialFilter}
         onClick={() => {
             events.setViewportFilter && events.setViewportFilter(!viewportFilter);
         }}

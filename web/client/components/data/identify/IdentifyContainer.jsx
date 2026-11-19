@@ -18,7 +18,7 @@ import Coordinate from './coordinates/Coordinate';
 import LayerSelector from './LayerSelector';
 import ResponsivePanel from "../../misc/panels/ResponsivePanel";
 import { responseValidForEdit } from '../../../utils/IdentifyUtils';
-import { areLayerFeaturesEditable } from "../../../utils/FeatureGridUtils";
+import { areLayerFeaturesEditable } from "../../../api/featuresource";
 
 /**
  * Component for rendering Identify Container inside a Dockable container

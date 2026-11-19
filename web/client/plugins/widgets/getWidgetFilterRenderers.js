@@ -11,6 +11,7 @@ import { compose, mapPropsStream, withProps, withPropsOnChange } from 'recompose
 
 import { getFilterRenderer } from '../../components/data/featuregrid/filterRenderers';
 import { getAttributeFields, getAttributesNames } from '../../utils/FeatureGridUtils';
+import { describeFeatureTypeToSchema } from '../../utils/FeatureTypeUtils';
 
 /**
  * Uses the quickFilterStream$ to generate the value prop.
@@ -63,7 +64,7 @@ export const getWidgetFilterRenderers = compose(
         ({ layer = {}, describeFeatureType, options, quickFilterStream$} = {}) => {
             const fields = layer?.fields || [];
             return describeFeatureType ?
-                {filterRenderers: getAttributeFields(describeFeatureType).reduce( (prev, {localType, name: attributeName}) => {
+                {filterRenderers: getAttributeFields(describeFeatureTypeToSchema(describeFeatureType)).reduce( (prev, {localType, name: attributeName}) => {
                     const field = find(fields, {name: attributeName});
                     const filterComp = getFilterComponent({field, options, localType, attributeName, quickFilterStream$});
                     return {...prev, [attributeName]: filterComp};

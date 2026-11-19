@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import isFunction from 'lodash/isFunction';
 import capitalize from 'lodash/capitalize';
-import { ANNOTATIONS } from '../utils/AnnotationsUtils';
+import { ANNOTATIONS } from '../../../utils/AnnotationsLayerUtils';
 import { registerRowViewer } from '../../../utils/MapInfoUtils';
 import MSButton from '../../../components/misc/Button';
 import tooltip from '../../../components/misc/enhancers/tooltip';
