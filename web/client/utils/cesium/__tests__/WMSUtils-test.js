@@ -118,6 +118,20 @@ describe('Test the WMSUtil for Cesium', () => {
         const cesiumOptions = wmsToCesiumOptionsSingleTile(options);
         expect(cesiumOptions.url.url).toBe('/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&styles=&format=image%2Fpng&transparent=true&opacity=1&TILED=true&layers=workspace%3Alayer&width=2000&height=2000&bbox=-180.0%2C-90%2C180.0%2C90&srs=EPSG%3A4326&_v_=0123456789');
     });
+    it('wmsToCesiumOptionsSingleTile can use the last url of a list', () => {
+        const spy = expect.spyOn(window.crypto, 'getRandomValues').andCall((array) => {
+            array.set([0, 2]);
+            return array;
+        });
+        const options = {
+            type: 'wms',
+            url: ['/geoserver1/wms', '/geoserver2/wms', '/geoserver3/wms'],
+            name: 'workspace:layer'
+        };
+        const cesiumOptions = wmsToCesiumOptionsSingleTile(options);
+        spy.restore();
+        expect(cesiumOptions.url.url.split('?')[0]).toBe('/geoserver3/wms');
+    });
     it('wmsToCesiumOptionsSingleTile with creds', () => {
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         const options = {
