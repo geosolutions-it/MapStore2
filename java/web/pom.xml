@@ -67,26 +67,47 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
-                    <packagingExcludes>
-                        WEB-INF/lib/*spring*5.3.18*.jar,
-                        WEB-INF/lib/json-lib-2.4-jdk15.jar,
-                        WEB-INF/lib/msg-simple-1.1.jar,
-                        WEB-INF/lib/btf-1.2.jar,
-                        WEB-INF/lib/commons-io-2.1.jar,
-                        WEB-INF/lib/commons-beanutils-1.8.0.jar,
-                        WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/jackson-coreutils-1.6.jar,
-                        WEB-INF/lib/stax-ex-1.8.jar
-                    </packagingExcludes>
+                    <!--
+                        Overlays copy their WEB-INF/lib as they are, so a library also managed here
+                        would end up twice in the WAR, in two versions. Drop the overlay copy of those
+                        libraries and keep the version managed by MapStore.
+                    -->
                     <overlays>
                         <overlay>
                             <groupId>it.geosolutions.geostore</groupId>
                             <artifactId>geostore-webapp</artifactId>
-                            <excludes>WEB-INF/classes/geostore-spring-security.xml</excludes>
+                            <excludes>
+                                <exclude>WEB-INF/classes/geostore-spring-security.xml</exclude>
+                                <exclude>WEB-INF/lib/commons-io-*.jar</exclude>
+                                <exclude>WEB-INF/lib/jackson-annotations-*.jar</exclude>
+                                <exclude>WEB-INF/lib/jackson-core-*.jar</exclude>
+                                <exclude>WEB-INF/lib/jackson-databind-*.jar</exclude>
+                                <exclude>WEB-INF/lib/log4j-api-*.jar</exclude>
+                                <exclude>WEB-INF/lib/log4j-core-*.jar</exclude>
+                                <exclude>WEB-INF/lib/log4j-slf4j-impl-*.jar</exclude>
+                                <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
+                                <!-- the versions required by Spring Security -->
+                                <exclude>WEB-INF/lib/micrometer-commons-*.jar</exclude>
+                                <exclude>WEB-INF/lib/micrometer-observation-*.jar</exclude>
+                                <!-- legacy asm:asm, same packages as org.ow2.asm:asm 9.x shipped next to it -->
+                                <exclude>WEB-INF/lib/asm-2.*.jar</exclude>
+                            </excludes>
                         </overlay>
                         <overlay>
                             <groupId>proxy</groupId>
                             <artifactId>http_proxy</artifactId>
+                            <excludes>
+                                <exclude>WEB-INF/lib/commons-io-*.jar</exclude>
+                                <exclude>WEB-INF/lib/log4j-api-*.jar</exclude>
+                                <exclude>WEB-INF/lib/log4j-core-*.jar</exclude>
+                                <!-- SLF4J 2 binding: MapStore and GeoStore use SLF4J 1.7 with log4j-slf4j-impl -->
+                                <exclude>WEB-INF/lib/log4j-slf4j2-impl-*.jar</exclude>
+                                <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
+                                <!-- not used by the proxy, GeoStore ships its own -->
+                                <exclude>WEB-INF/lib/commons-codec-*.jar</exclude>
+                                <!-- embedded server of the proxy standalone launcher, not used in a webapp -->
+                                <exclude>WEB-INF/lib/jetty-*.jar</exclude>
+                            </excludes>
                         </overlay>
                     </overlays>
                 </configuration>

@@ -217,6 +217,7 @@ export class OpenlayersMap extends React.Component {
                         z: this.getElevation(event.coordinate, event.pixel)
                     },
                     rawPos: event.coordinate.slice(),
+                    resolution: map.getView().getResolution(),
                     modifiers: {
                         alt: event.originalEvent.altKey,
                         ctrl: event.originalEvent.ctrlKey,

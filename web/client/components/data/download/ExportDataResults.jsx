@@ -15,6 +15,7 @@ import Loader from '../../misc/Loader';
 import Message from '../../I18N/Message';
 
 import { getLayerTitle } from '../../../utils/LayersUtils';
+import { getSafeHref } from '../../../utils/URLUtils';
 
 const failButton = (
     <Button
@@ -54,7 +55,7 @@ const ExportDataResults = ({
                             </OverlayTrigger> : null}
                         {status === 'failed' && (!result || !result.msgId) ? failButton : null}
                         {status === 'completed' &&
-                            <a href={result} target="_blank" rel="noopener noreferrer">
+                            <a href={getSafeHref(result) || undefined} target="_blank" rel="noopener noreferrer">
                                 <Button bsStyle="primary" bsSize="small">
                                     <Glyphicon glyph="floppy-disk"/>
                                 </Button>

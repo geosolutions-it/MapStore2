@@ -27,4 +27,19 @@ describe('MenuNavLink component', () => {
         const menuNavLink = document.querySelector('a');
         expect(menuNavLink).toBeTruthy();
     });
+    it('should keep the href of web and in-app links', () => {
+        ReactDOM.render(<div>
+            <MenuNavLink href="https://mapstore.geosolutionsgroup.com/">web</MenuNavLink>
+            <MenuNavLink href="#/viewer/1">viewer</MenuNavLink>
+            <MenuNavLink href="docs/index.html">docs</MenuNavLink>
+        </div>, document.getElementById('container'));
+        const hrefs = [...document.querySelectorAll('a')].map(a => a.getAttribute('href'));
+        expect(hrefs).toEqual(['https://mapstore.geosolutionsgroup.com/', '#/viewer/1', 'docs/index.html']);
+    });
+    it('should render without href when the link uses an unsupported protocol', () => {
+        ReactDOM.render(<MenuNavLink href="ftp://files.example.com/docs">docs</MenuNavLink>, document.getElementById('container'));
+        const menuNavLink = document.querySelector('a');
+        expect(menuNavLink.hasAttribute('href')).toBe(false);
+        expect(menuNavLink.innerText).toBe('docs');
+    });
 });

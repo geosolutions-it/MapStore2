@@ -629,6 +629,9 @@ class CesiumMap extends React.Component {
         let deltaY = north - south;
 
         if (deltaX === 0 && deltaY === 0) {
+            if (!Number.isFinite(maxZoom)) {
+                return bounds;
+            }
             const centerLat = (south + north) / 2;
             const fallbackHeight = getHeightFromZoom(maxZoom);
             const metersPerDegreeLat = 111320;
@@ -667,11 +670,12 @@ class CesiumMap extends React.Component {
                 return;
             }
             const ellipsoid = this.map.scene.globe.ellipsoid;
+            const maxZoomValue = Number.isFinite(maxZoom) ? maxZoom : this.props.mapOptions?.zoomToExtentSettings?.maxZoom;
             const [west, south, east, north] = this.applyPaddingToBounds(
                 bounds,
                 padding,
                 { width: this.map.canvas?.clientWidth, height: this.map.canvas?.clientHeight },
-                maxZoom,
+                maxZoomValue,
                 this.getHeightFromZoom
             );
             const height = options?.height ?? options?.altitude ?? 0;
@@ -695,7 +699,6 @@ class CesiumMap extends React.Component {
 
             if (this.map.camera.flyToBoundingSphere) {
                 const fitFactor = this.props.mapOptions?.zoomToExtentSettings?.fitFactor || 2.0;
-                const maxZoomValue = Number.isFinite(maxZoom) ? maxZoom : this.props.mapOptions?.zoomToExtentSettings?.maxZoom;
                 const idealRange = fitFactor * radius;
                 const minRangeFromMaxZoom = Number.isFinite(maxZoomValue) ? this.getHeightFromZoom(maxZoomValue) : 0;
                 const range = Number.isFinite(maxZoomValue) && idealRange < minRangeFromMaxZoom

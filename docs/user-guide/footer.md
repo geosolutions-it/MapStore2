@@ -52,3 +52,7 @@ In this panel, the user can:
 !!! Note
     [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) can be configured to connect to a GeoServer endpoint exposing thousands of standard CRS definitions. This enables users to search for the desired CRS and its definition dynamically by fetching ti from GeoServer instead of manually defining it and so without redeploying the application or editing configuration files.
     This capability is disabled by default and requires additional configuration of the CRS plugin. For details on how to enable it, refer to the online [plugin documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.CRSSelector).
+
+## Privacy Settings
+
+Use **Privacy settings** in the footer to reopen privacy information and, where configured, change optional consent choices. See [Privacy Settings](privacy-settings.md#privacy-settings) for the available actions.

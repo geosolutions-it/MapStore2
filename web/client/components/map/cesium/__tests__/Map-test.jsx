@@ -551,6 +551,79 @@ describe('CesiumMap', () => {
         // unregister hook
         registerHook(ZOOM_TO_EXTENT_HOOK);
     });
+    it('pads a point extent using the configured maxZoom when the action omits it', () => {
+        const hookRegister = createRegisterHooks();
+        let ref;
+        act(() => {
+            ReactDOM.render(<CesiumMap
+                ref={value => { ref = value; }}
+                center={{ y: 20, x: 10 }}
+                zoom={11}
+                hookRegister={hookRegister}
+                mapOptions={{ zoomToExtentSettings: { maxZoom: 20 } }}
+            />, document.getElementById('container'));
+        });
+        Object.defineProperties(ref.map.canvas, {
+            clientWidth: { configurable: true, value: 400 },
+            clientHeight: { configurable: true, value: 200 }
+        });
+        let flight;
+        ref.map.camera.flyToBoundingSphere = (boundingSphere, options) => {
+            flight = { boundingSphere, options };
+        };
+
+        const hook = hookRegister.getHook(ZOOM_TO_EXTENT_HOOK);
+        expect(typeof hook).toBe('function');
+        hook([10, 20, 10, 20], { crs: 'EPSG:4326', duration: 0, padding: { left: 100 } });
+
+        expect(flight).toExist();
+        const position = Cesium.Cartographic.fromCartesian(flight.boundingSphere.center);
+        const longitude = Cesium.Math.toDegrees(position.longitude);
+        const latitude = Cesium.Math.toDegrees(position.latitude);
+        expect(Number.isFinite(longitude)).toBe(true);
+        expect(Number.isFinite(latitude)).toBe(true);
+        expect(Number.isFinite(flight.boundingSphere.radius)).toBe(true);
+        expect(Math.round(longitude * 1000000)).toBe(9999757);
+        expect(Math.round(latitude * 1000000)).toBe(20000000);
+        expect(Math.round(flight.boundingSphere.radius)).toBe(25);
+        expect(Math.round(flight.options.offset.range)).toBe(153);
+    });
+    it('uses the point radius when padding has no configured maxZoom', () => {
+        const hookRegister = createRegisterHooks();
+        let ref;
+        act(() => {
+            ReactDOM.render(<CesiumMap
+                ref={value => { ref = value; }}
+                center={{ y: 20, x: 10 }}
+                zoom={11}
+                hookRegister={hookRegister}
+            />, document.getElementById('container'));
+        });
+        Object.defineProperties(ref.map.canvas, {
+            clientWidth: { configurable: true, value: 400 },
+            clientHeight: { configurable: true, value: 200 }
+        });
+        let flight;
+        ref.map.camera.flyToBoundingSphere = (boundingSphere, options) => {
+            flight = { boundingSphere, options };
+        };
+
+        const hook = hookRegister.getHook(ZOOM_TO_EXTENT_HOOK);
+        expect(typeof hook).toBe('function');
+        hook([10, 20, 10, 20], { crs: 'EPSG:4326', duration: 0, padding: { left: 100 } });
+
+        expect(flight).toExist();
+        const position = Cesium.Cartographic.fromCartesian(flight.boundingSphere.center);
+        const longitude = Cesium.Math.toDegrees(position.longitude);
+        const latitude = Cesium.Math.toDegrees(position.latitude);
+        expect(Number.isFinite(longitude)).toBe(true);
+        expect(Number.isFinite(latitude)).toBe(true);
+        expect(Number.isFinite(flight.boundingSphere.radius)).toBe(true);
+        expect(Math.round(longitude * 1000000)).toBe(10000000);
+        expect(Math.round(latitude * 1000000)).toBe(20000000);
+        expect(flight.boundingSphere.radius).toBe(10);
+        expect(flight.options.offset.range).toBe(20);
+    });
     it('should reorder the layer correctly even if the position property of layer exceed the imageryLayers length', (done) => {
 
         let ref;

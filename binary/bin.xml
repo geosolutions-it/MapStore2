@@ -17,15 +17,37 @@
     </fileSet>
     <fileSet>
       <!-- JRE's -->
-      <directory>target/jre</directory>
+      <directory>../target/jre</directory>
       <outputDirectory>mapstore2/jre</outputDirectory>
       <includes>
         <include>**/*</include>
       </includes>
+      <excludes>
+        <exclude>linux/bin/**</exclude>
+        <exclude>linux/lib/jexec</exclude>
+        <exclude>linux/lib/jspawnhelper</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>../target/jre/linux/bin</directory>
+      <outputDirectory>mapstore2/jre/linux/bin</outputDirectory>
+      <includes><include>**/*</include></includes>
+      <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>../target/jre/linux/lib</directory>
+      <outputDirectory>mapstore2/jre/linux/lib</outputDirectory>
+      <includes>
+        <include>jexec</include>
+        <include>jspawnhelper</include>
+      </includes>
+      <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
     </fileSet>
     <fileSet>
       <!-- the libs needed to run tomcat (copied by dependency plugin into target/dependency) -->
-      <directory>target/dependency</directory>
+      <directory>../target/dependency</directory>
       <outputDirectory>mapstore2/lib</outputDirectory>
       <includes>
         <include>tomcat-*.jar</include>

@@ -20,6 +20,12 @@
     ]
   },
   "geoStoreUrl": "rest/geostore/",
+  "privacy": {
+    "enabled": true,
+    "policyVersion": "vanilla-2026.03-consent-1",
+    "retentionDays": 180,
+    "categories": []
+  },
   "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
   "printUrl": "pdf/info.json",
   "mapquestApiKey": "__API_KEY_MAPQUEST__",
@@ -286,6 +292,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -377,13 +384,7 @@
       "BurgerMenu",
       "Expander",
       "GlobeViewSwitcher",
-      {
-        "name": "Cookie",
-        "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "http://www.google.com"
-        }
-      },
+      "Cookie",
       "FeedbackMask",
       { "name": "Widgets" },
       { "name": "WidgetsTray" }
@@ -554,6 +555,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -623,13 +625,7 @@
           }
         }
       },
-      {
-        "name": "Cookie",
-        "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "http://www.google.com"
-        }
-      },
+      "Cookie",
       "OmniBar",
       "Login",
       { "name": "ResourceDetails", "cfg": { "resourceType": "MAP" } },
@@ -757,7 +753,12 @@
         }
       },
       "AddGroup",
-      "MapFooter",
+      {
+        "name": "MapFooter",
+        "cfg": {
+          "containerPosition": "footer"
+        }
+      },
       {
         "name": "Settings",
         "cfg": {
@@ -926,16 +927,16 @@
         }
       },
       { "name": "Footer" },
-      { "name": "About" },
       {
-        "name": "Cookie",
+        "name": "About",
         "cfg": {
-          "externalCookieUrl": "",
-          "declineUrl": "http://www.google.com"
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
+          "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
-      }
+      },
+      "Cookie"
     ],
-    "permalink": ["Permalink", "FeedbackMask"],
+    "permalink": ["Permalink", "Cookie", "FeedbackMask"],
     "dashboard": [
       {
         "name": "LayerDownload",
@@ -975,6 +976,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -1094,6 +1096,7 @@
           "preset": "dashboard_tutorial"
         }
       },
+      "Cookie",
       {
         "name": "FeedbackMask",
         "cfg": {
@@ -1104,6 +1107,7 @@
     "geostory-embedded": [
       "GeoStory",
       { "name": "SecurityPopup" },
+      "Cookie",
       {
         "name": "GeoStoryNavigation",
         "cfg": {
@@ -1125,6 +1129,7 @@
         }
       },
       { "name": "SecurityPopup" },
+      "Cookie",
       { "name": "FeedbackMask" }
     ],
     "geostory": [
@@ -1155,6 +1160,7 @@
       {
         "name": "About",
         "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
         }
       },
@@ -1209,6 +1215,7 @@
           }
         }
       },
+      "Cookie",
       "Permalink"
     ],
     "context-creator": [
@@ -1218,7 +1225,13 @@
           "containerPosition": "header"
         }
       },
-      { "name": "About" },
+      {
+        "name": "About",
+        "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
+          "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+        }
+      },
       "Redirect",
       "Login",
       "Language",
@@ -1234,6 +1247,7 @@
       "ContextImport",
       "ContextExport",
       "Notifications",
+      "Cookie",
       {
         "name": "FeedbackMask",
         "cfg": {
@@ -1250,7 +1264,14 @@
       "TagsManager",
       "IPManager",
       "Footer",
-      { "name": "About" }
+      "Cookie",
+      {
+        "name": "About",
+        "cfg": {
+          "showVersionInfo": "{state('userrole') == 'ADMIN'}",
+          "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+        }
+      }
     ]
   }
 }

@@ -92,6 +92,9 @@ services:
         condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      # The datadir is mounted read-only, so the initial admin password must be provided explicitly
+      INITIAL_ADMIN_PASSWORD: "${INITIAL_ADMIN_PASSWORD:?INITIAL_ADMIN_PASSWORD must be set in .env}"
     volumes:
       - "${DATADIR_PATH:-./datadir}:/usr/local/tomcat/datadir:ro"
     networks:

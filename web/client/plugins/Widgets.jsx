@@ -168,6 +168,8 @@ compose(
             return {
                 ...commonProps,
                 ...defaultLayoutProps,
+                // the map does not scroll, so the grid has to end where the visible area ends
+                maxRows: rowsCount,
                 rowHeight: rowHeight || rowHeightRecalculated,
                 breakpoints: { md: 0 },
                 style: { ...baseStyle, height: baseHeight }

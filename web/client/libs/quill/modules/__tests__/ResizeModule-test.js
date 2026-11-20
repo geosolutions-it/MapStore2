@@ -159,6 +159,43 @@ describe("test quill ResizeModule", () => {
         expect(document.querySelector('.ms-quill-iframe')).toExist();
     });
 
+    it('ResizeModule applies the src edited in the iframe overlay', () => {
+        const rQuill = ReactDOM.render(
+            <ReactQuill
+                modules={{
+                    resizeModule: {},
+                    toolbar: toolbarConfig
+                }}/>, document.getElementById("container"));
+        const quill = rQuill.getEditor();
+        quill.insertEmbed(0, 'video', 'https://example.com/first');
+        const iframe = document.querySelector('.ql-editor iframe');
+        expect(iframe.getAttribute('src')).toBe('https://example.com/first');
+        const resizeModule = quill.getModule('resizeModule');
+        resizeModule.show(document.querySelector('.ms-quill-iframe'));
+        expect(resizeModule.input.value).toBe('https://example.com/first');
+        resizeModule.input.value = 'https://example.com/second';
+        resizeModule.hide();
+        expect(iframe.getAttribute('src')).toBe('https://example.com/second');
+    });
+
+    it('ResizeModule applies the link sanitizer to the src edited in the iframe overlay', () => {
+        const rQuill = ReactDOM.render(
+            <ReactQuill
+                modules={{
+                    resizeModule: {},
+                    toolbar: toolbarConfig
+                }}/>, document.getElementById("container"));
+        const quill = rQuill.getEditor();
+        quill.insertEmbed(0, 'video', 'https://example.com/first');
+        const iframe = document.querySelector('.ql-editor iframe');
+        expect(iframe.getAttribute('src')).toBe('https://example.com/first');
+        const resizeModule = quill.getModule('resizeModule');
+        resizeModule.show(document.querySelector('.ms-quill-iframe'));
+        resizeModule.input.value = 'ftp://example.com/second';
+        resizeModule.hide();
+        expect(iframe.getAttribute('src')).toBe('about:blank');
+    });
+
     it('test ResizeModule class ', () => {
         const domNode = document.createElement('img');
         const rQuill = ReactDOM.render(

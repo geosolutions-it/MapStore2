@@ -1,0 +1,37 @@
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #273746; background: #f7f9fa; font: 15px/1.6 "Noto Sans", "Helvetica Neue", Arial, sans-serif; }
+a { color: #17678c; }
+a:hover, a:focus { color: #0f4c6b; }
+a:focus-visible { outline: 3px solid #e39b29; outline-offset: 3px; }
+.site-header { background: #fff; border-bottom: 1px solid #dce3e7; }
+.header-inner { max-width: 1040px; margin: auto; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.brand { display: inline-flex; align-items: center; min-height: 40px; }
+.brand img { display: block; width: auto; height: 54px; }
+.site-nav { display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; }
+.site-nav a { text-decoration: none; }
+.site-nav a[aria-current="page"] { font-weight: 700; border-bottom: 2px solid #17678c; }
+.document { max-width: 900px; margin: 28px auto 48px; padding: 28px 34px; background: #fff; border: 1px solid #dce3e7; border-radius: 3px; }
+.eyebrow { margin: 0 0 2px; color: #557180; font-size: 12px; letter-spacing: .07em; text-transform: uppercase; font-weight: 700; }
+h1 { font-size: 28px; line-height: 1.2; margin: 0 0 18px; font-weight: 600; }
+h2 { font-size: 18px; margin: 25px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #e7ecef; font-weight: 600; }
+p, ul { margin: 10px 0; }
+ul { padding-left: 24px; }
+.template-note { background: #f2f7fa; border-left: 4px solid #2c769b; padding: 12px 15px; margin: 16px 0 22px; }
+.template-note strong { display: block; }
+.template-warning { background: #fff4df; border: 1px solid #e39b29; border-left-width: 4px; padding: 12px 15px; margin: 0 0 22px; }
+.template-warning strong { display: block; }
+.placeholder { background: #fff4df; padding: 1px 4px; font-weight: 600; }
+.fineprint { color: #52616b; font-size: 13px; }
+code { color: #354b5b; background: #f1f3f5; padding: 2px 4px; overflow-wrap: anywhere; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px; border: 1px solid #dce3e7; text-align: left; vertical-align: top; }
+th { background: #f2f7fa; }
+footer { max-width: 900px; margin: 0 auto 30px; padding: 0 18px; color: #52616b; font-size: 12px; }
+@media (max-width: 640px) {
+    .header-inner { padding: 8px 14px; }
+    .brand img { height: 44px; }
+    .document { margin: 10px 0 20px; padding: 20px 16px; border-left: 0; border-right: 0; }
+    h1 { font-size: 23px; }
+}

@@ -69,6 +69,128 @@ public class SetParamsControllerTest {
         assertTrue(mapper.readTree(StringEscapeUtils.unescapeEcmaScript(json)).isObject());
     }
 
+    @Test
+    public void setParamsEndpointTestJavascriptSchemeRejected() throws IOException {
+        String payload="{\"page\":\"javascript:alert(1)//\"}";
+        MockHttpServletRequest request=new MockHttpServletRequest();
+        request.setContent(payload.getBytes());
+        MockHttpServletResponse response=new MockHttpServletResponse();
+        SetParamsController paramsController=new SetParamsController();
+        String uuid= UUID.randomUUID().toString();
+        FixedUUIGenerationStrategy strategy= new FixedUUIGenerationStrategy(uuid);
+        paramsController.setUuidStrategy(strategy);
+
+        paramsController.setParams(request,response,"application/json");
+
+        String resp=response.getContentAsString();
+        String locationStatement=resp.substring(resp.indexOf("location.href="));
+        assertTrue(!locationStatement.contains("javascript:"));
+        assertTrue(resp.contains("location.href=\"..\\/..\\/#viewer\\/openlayers\\/config?queryParamsID="+uuid+"\";"));
+    }
+
+    @Test
+    public void setParamsEndpointTestHttpsSchemeAllowed() throws IOException {
+        String payload="{\"page\":\"https://example.com/viewer\"}";
+        MockHttpServletRequest request=new MockHttpServletRequest();
+        request.setContent(payload.getBytes());
+        MockHttpServletResponse response=new MockHttpServletResponse();
+        SetParamsController paramsController=new SetParamsController();
+        String uuid= UUID.randomUUID().toString();
+        FixedUUIGenerationStrategy strategy= new FixedUUIGenerationStrategy(uuid);
+        paramsController.setUuidStrategy(strategy);
+
+        paramsController.setParams(request,response,"application/json");
+
+        String resp=response.getContentAsString();
+        assertTrue(resp.contains("location.href=\"https:\\/\\/example.com\\/viewer?queryParamsID="+uuid+"\";"));
+    }
+
+    @Test
+    public void setParamsEndpointTestJavascriptSchemeWithWhitespaceRejected() throws IOException {
+        String payload="{\"page\":\"java\\tscript:alert(1)//\"}";
+        MockHttpServletRequest request=new MockHttpServletRequest();
+        request.setContent(payload.getBytes());
+        MockHttpServletResponse response=new MockHttpServletResponse();
+        SetParamsController paramsController=new SetParamsController();
+        String uuid= UUID.randomUUID().toString();
+        FixedUUIGenerationStrategy strategy= new FixedUUIGenerationStrategy(uuid);
+        paramsController.setUuidStrategy(strategy);
+
+        paramsController.setParams(request,response,"application/json");
+
+        String resp=response.getContentAsString();
+        String locationStatement=resp.substring(resp.indexOf("location.href="));
+        assertTrue(!locationStatement.contains("script:"));
+        assertTrue(resp.contains("location.href=\"..\\/..\\/#viewer\\/openlayers\\/config?queryParamsID="+uuid+"\";"));
+    }
+
+    @Test
+    public void setParamsEndpointTestQuoteBreakoutEscaped() throws IOException {
+        String payload="{\"page\":\"\\\";alert(document.domain);//\"}";
+        MockHttpServletRequest request=new MockHttpServletRequest();
+        request.setContent(payload.getBytes());
+        MockHttpServletResponse response=new MockHttpServletResponse();
+        SetParamsController paramsController=new SetParamsController();
+        String uuid= UUID.randomUUID().toString();
+        FixedUUIGenerationStrategy strategy= new FixedUUIGenerationStrategy(uuid);
+        paramsController.setUuidStrategy(strategy);
+
+        paramsController.setParams(request,response,"application/json");
+
+        String resp=response.getContentAsString();
+        assertTrue(!resp.contains("href=\"\";alert(document.domain)"));
+        assertTrue(resp.contains("location.href=\"\\\";alert(document.domain);\\/\\/?queryParamsID="+uuid+"\";"));
+    }
+
+    @Test
+    public void setParamsEndpointTestControlCharObfuscatedSchemeRejected() throws IOException {
+        String[] prefixes={"\\u0000","\\u0001","\\u000E","\\u001F","\\u007F"};
+        for (String prefix : prefixes) {
+            String uuid=UUID.randomUUID().toString();
+            String resp=redirectResponseFor("{\"page\":\""+prefix+"javascript:alert(1)//\"}",uuid);
+            String locationStatement=resp.substring(resp.indexOf("location.href="));
+            assertTrue("scheme not filtered for prefix "+prefix,!locationStatement.contains("javascript:"));
+            assertTrue(resp.contains("location.href=\"..\\/..\\/#viewer\\/openlayers\\/config?queryParamsID="+uuid+"\";"));
+        }
+    }
+
+    @Test
+    public void setParamsEndpointTestProtocolRelativePageRejected() throws IOException {
+        String[] pages={"//external.example.com/x","\\\\\\\\external.example.com/x","/\\\\external.example.com/x"};
+        for (String page : pages) {
+            String uuid=UUID.randomUUID().toString();
+            String resp=redirectResponseFor("{\"page\":\""+page+"\"}",uuid);
+            assertTrue("protocol relative page not filtered: "+page,
+                    resp.contains("location.href=\"..\\/..\\/#viewer\\/openlayers\\/config?queryParamsID="+uuid+"\";"));
+        }
+    }
+
+    @Test
+    public void setParamsEndpointTestRelativePageAllowed() throws IOException {
+        String uuid=UUID.randomUUID().toString();
+        String resp=redirectResponseFor("{\"page\":\"#viewer/openlayers/config\"}",uuid);
+        assertTrue(resp.contains("location.href=\"#viewer\\/openlayers\\/config?queryParamsID="+uuid+"\";"));
+    }
+
+    @Test
+    public void setParamsEndpointTestUppercaseSchemeAllowed() throws IOException {
+        String uuid=UUID.randomUUID().toString();
+        String resp=redirectResponseFor("{\"page\":\"HTTPS://example.com/viewer\"}",uuid);
+        assertTrue(resp.contains("location.href=\"HTTPS:\\/\\/example.com\\/viewer?queryParamsID="+uuid+"\";"));
+    }
+
+    private String redirectResponseFor(String payload, String uuid) throws IOException {
+        MockHttpServletRequest request=new MockHttpServletRequest();
+        request.setContent(payload.getBytes());
+        MockHttpServletResponse response=new MockHttpServletResponse();
+        SetParamsController paramsController=new SetParamsController();
+        paramsController.setUuidStrategy(new FixedUUIGenerationStrategy(uuid));
+
+        paramsController.setParams(request,response,"application/json");
+
+        return response.getContentAsString();
+    }
+
     /**
      * Returns the uuid passed in constructor. For tests purpose.
      */

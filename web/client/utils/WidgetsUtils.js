@@ -480,6 +480,81 @@ export const legacyChartToChartWithTraces = ({
     };
 };
 
+const overflowsRows = (item, maxRows) => item.y + item.h > maxRows;
+
+const overlaps = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+const contentRows = (items = []) => items.reduce((acc, item) => Math.max(acc, item.y + item.h), 0);
+
+/**
+ * First free position in reading order, null when a bounded grid is full.
+ */
+const findFreeSlot = (placed, size, cols, maxRows) => {
+    const bounded = !!maxRows && isFinite(maxRows);
+    const w = Math.min(size.w, cols);
+    const h = bounded ? Math.min(size.h, maxRows) : size.h;
+    const lastRow = bounded ? maxRows - h : contentRows(placed);
+    for (let y = 0; y <= lastRow; y++) {
+        for (let x = 0; x <= cols - w; x++) {
+            const candidate = { x, y, w, h };
+            if (!placed.some(other => overlaps(candidate, other))) {
+                return candidate;
+            }
+        }
+    }
+    return null;
+};
+
+/**
+ * Moves back the widgets saved beyond the available rows, unreachable where the container does not scroll.
+ * @param {object[]} layout the layout items of one breakpoint
+ * @param {number} cols columns of that breakpoint
+ * @param {number} maxRows rows available, nothing is corrected without it
+ * @returns {object[]} the layout, unchanged when every widget already fits
+ */
+export const fitLayoutInRows = (layout = [], cols = 6, maxRows) => {
+    if (!maxRows || !isFinite(maxRows) || !layout.some(item => overflowsRows(item, maxRows))) {
+        return layout;
+    }
+    const placed = layout.filter(item => !overflowsRows(item, maxRows));
+    return layout.map(item => {
+        if (!overflowsRows(item, maxRows)) {
+            return item;
+        }
+        const w = Math.min(item.w, cols);
+        const h = Math.min(item.h, maxRows);
+        const slot = findFreeSlot(placed, { w: item.w, h: item.h }, cols, maxRows)
+            || { x: Math.min(item.x, cols - w), y: maxRows - h, w, h };
+        const fitted = { ...item, ...slot };
+        placed.push(fitted);
+        return fitted;
+    });
+};
+
+/**
+ * Places the widgets without a layout entry in free space, falling back to the origin on a full grid.
+ * @param {object[]} layout the layout items of one breakpoint
+ * @param {object[]} widgets the widgets of that container
+ * @param {number} cols columns of that breakpoint
+ * @param {number} maxRows rows available, unbounded when missing
+ * @returns {object[]} the layout, with an entry added for every widget that lacked one
+ */
+export const placeNewWidgets = (layout = [], widgets = [], cols = 6, maxRows) => {
+    const missing = widgets.filter(widget => !layout.some(item => item.i === widget.id));
+    if (!missing.length) {
+        return layout;
+    }
+    const placed = [...layout];
+    missing.forEach(widget => {
+        const { w = 1, h = 1 } = widget.dataGrid || {};
+        const slot = findFreeSlot(placed, { w, h }, cols, maxRows)
+            || { x: 0, y: 0, w: Math.min(w, cols), h };
+        const added = { ...slot, i: widget.id };
+        placed.push(added);
+    });
+    return placed;
+};
+
 const MAXIMIZE_TRANSIENT_PROPS = ['isDraggable', 'isResizable'];
 
 const cleanLayoutItems = (items) => Array.isArray(items)

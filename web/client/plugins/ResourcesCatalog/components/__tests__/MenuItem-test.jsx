@@ -218,4 +218,26 @@ describe('MenuItem component', () => {
         expect(link.getAttribute('href')).toBe('/');
         expect(link.getAttribute('target')).toBe('_self');
     });
+    it('should render items with an unsupported link protocol without href', () => {
+        ReactDOM.render(<ul>
+            <MenuItem item={{ type: 'button', label: 'button', href: 'ftp://files.example.com/a' }} />
+            <MenuItem item={{ type: 'link', label: 'link', href: 'ftp://files.example.com/b' }} />
+            <MenuItem item={{
+                type: 'dropdown',
+                id: 'dropdown-02',
+                label: 'dropdown',
+                items: [
+                    { type: 'link', label: 'web', href: 'https://mapstore.geosolutionsgroup.com/' },
+                    { type: 'link', label: 'files', href: 'ftp://files.example.com/c' }
+                ]
+            }} />
+        </ul>, document.getElementById('container'));
+        const hrefs = [...document.querySelectorAll('a, button:not(.dropdown-toggle)')].map(a => [a.tagName, a.innerText, a.getAttribute('href')]);
+        expect(hrefs).toEqual([
+            ['BUTTON', 'button', null],
+            ['A', 'link', null],
+            ['A', 'web', 'https://mapstore.geosolutionsgroup.com/'],
+            ['A', 'files', '#']
+        ]);
+    });
 });

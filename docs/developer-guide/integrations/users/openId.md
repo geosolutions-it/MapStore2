@@ -58,9 +58,12 @@ oidcOAuth2Config.discoveryUrl=https://<idp-host>/.well-known/openid-configuratio
 oidcOAuth2Config.autoCreateUser=true
 
 # Redirect URIs
-oidcOAuth2Config.redirectUri=http://<my-domain-site>/mapstore/rest/geostore/openid/oidc/callback
+oidcOAuth2Config.redirectUri=https://<my-domain-site>/mapstore/rest/geostore/openid/oidc/callback
 # Internal redirect URI (can be relative path, e.g. `../../..` to work across domains)
-oidcOAuth2Config.internalRedirectUri=http://<my-domain-site>/mapstore
+oidcOAuth2Config.internalRedirectUri=https://<my-domain-site>/mapstore
+
+# Send the login cookies only over HTTPS (set to false if MapStore is reached over plain HTTP)
+oidcOAuth2Config.forceSecureCookies=true
 
 # User name attribute (default: email)
 # oidcOAuth2Config.principalKey=email
@@ -140,6 +143,7 @@ These values correspond to the standard fields in the discovery document and are
 - `oidcOAuth2Config.bearerTokenStrategy`: (*optional*) strategy for validating bearer JWTs: `jwt` (default, JWKS signature verification), `introspection` (RFC 7662 token introspection, required for opaque tokens), or `auto` (try JWT first, fall back to introspection).
 - `oidcOAuth2Config.maxTokenAgeSecs`: (*optional*) maximum accepted age in seconds for bearer JWTs. `0` disables the check.
 - `oidcOAuth2Config.accessType`: (*optional*) passed as the `access_type` parameter in the authorization request. Set to `offline` to request a refresh token (required by Google).
+- `oidcOAuth2Config.forceSecureCookies`: (*recommended*) if `true`, the cookies set at login (`refresh_token`, `tokens_key`, `authProvider`) always carry the `Secure` attribute, so the browser sends them only over HTTPS. Set it to `true` on every installation reached over HTTPS: MapStore usually runs behind a reverse proxy that forwards plain HTTP to Tomcat, and without this option the cookies are `Secure` only when Tomcat sees the request as HTTPS (e.g. through its `RemoteIpValve`). If omitted it is `false`. Set it to `false` only when MapStore is reached over plain HTTP: browsers do not store `Secure` cookies received over HTTP, and the login would fail.
 
 !!! note
     The only mandatory claim is `email` (or whatever you set in `oidcOAuth2Config.principalKey`). Role and group mapping are optional. All OIDC providers, including Keycloak, Google, and Azure, use the same generic configuration.

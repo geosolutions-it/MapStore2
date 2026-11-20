@@ -14,7 +14,8 @@ import {
     escapeText,
     escapeAttributeValue,
     removeEmptyNodes,
-    writeXML
+    writeXML,
+    xmlEscape
 } from '../XMLUtils';
 
 const namespaces = {
@@ -154,5 +155,12 @@ describe('XMLUtils tests', () => {
   <SimpleElement/>
 </Root>`;
         expect(writeXML(removeEmptyNodes(tree), values(namespaces))).toBe(xml);
+    });
+    it('xmlEscape', () => {
+        expect(xmlEscape(`<a href="x">Tom & 'Jerry'</a>`))
+            .toBe('&lt;a href=&quot;x&quot;&gt;Tom &amp; &apos;Jerry&apos;&lt;/a&gt;');
+        expect(xmlEscape('&amp;')).toBe('&amp;amp;');
+        expect(xmlEscape(null)).toBe('');
+        expect(xmlEscape(42)).toBe('42');
     });
 });

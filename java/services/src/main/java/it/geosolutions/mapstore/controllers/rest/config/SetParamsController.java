@@ -42,6 +42,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This controller exposes a service to read a JSON body holding parameters and a redirect page,
@@ -53,6 +55,8 @@ public class SetParamsController extends BaseConfigController {
     private static final String PAGE_PARAM = "page";
     private static final String QUERY_PARAMS = "queryParams";
     private static final String DEF_PAGE = "../../#viewer/openlayers/config";
+    // matches a URI scheme per RFC 3986: a leading token followed by ':'
+    private static final Pattern SCHEME_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9+.-]*:");
 
     private SetParamsUUIDStrategy uuidStrategy;
 
@@ -131,10 +135,40 @@ public class SetParamsController extends BaseConfigController {
                 pageStr = pageNode.asText();
             }
         }
-        if (pageStr == null) {
+        if (pageStr == null || !hasAllowedScheme(pageStr)) {
             pageStr = DEF_PAGE;
         }
         return pageStr;
+    }
+
+    private boolean hasAllowedScheme(String page) {
+        String normalized = stripUrlIgnorableChars(page);
+        Matcher matcher = SCHEME_PATTERN.matcher(normalized);
+        if (!matcher.find()) {
+            return !isProtocolRelative(normalized);
+        }
+        String scheme = matcher.group().substring(0, matcher.group().length() - 1);
+        return scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https");
+    }
+
+    private String stripUrlIgnorableChars(String page) {
+        StringBuilder sb = new StringBuilder(page.length());
+        for (int i = 0; i < page.length(); i++) {
+            char c = page.charAt(i);
+            if (c > 0x20 && c != 0x7F) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private boolean isProtocolRelative(String page) {
+        if (page.length() < 2) {
+            return false;
+        }
+        char first = page.charAt(0);
+        char second = page.charAt(1);
+        return (first == '/' || first == '\\') && (second == '/' || second == '\\');
     }
 
     private JsonNode formEncodedToJSON(HttpInputMessage message) throws IOException {

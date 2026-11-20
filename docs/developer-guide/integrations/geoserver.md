@@ -57,10 +57,9 @@ I am assuming this is a new installation, so no existing user or map will be pre
 5. Edit the new `WEB-INF/classes/geostore-database-ovr.properties` file with your DB URL and credentials.
 6. Start Tomcat
 
-### Default user password couples are
+### Initial user
 
-- admin:admin
-- user:user
+On the first start with the empty database, MapStore creates only the `admin` user. See [Initial Administrator Password](../initial-admin-password.md) to know how its password is set.
 
 ## GeoServer Setup
 
@@ -68,7 +67,7 @@ Follow [this guide](https://github.com/geosolutions-it/geostore/tree/master/geos
 
 Create the empty GeoStore database using scripts as described in [GeoStore WIKI](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support).
 
-The following procedure will make GeoServer accessible to users stored in the MapStore database. In case of the users on MapStore and GeoServer have the same name, the users of MapStore will have precedence. At the end of the procedure, if you access with the user `admin`, you will have to use the password of the `admin` user of MapStore (`admin` by default).
+The following procedure will make GeoServer accessible to users stored in the MapStore database. In case of the users on MapStore and GeoServer have the same name, the users of MapStore will have precedence. At the end of the procedure, if you access with the user `admin`, you will have to use the password of the `admin` user of MapStore.
 
 ### User Groups and Roles
 

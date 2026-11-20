@@ -15,6 +15,7 @@ import Message from '../../../components/I18N/Message';
 import HTML from '../../../components/I18N/HTML';
 import MenuNavLink from './MenuNavLink';
 import Button from '../../../components/layout/Button';
+import { getSafeHref } from '../../../utils/URLUtils';
 
 /**
  * List of menu items for the `dropdown` type
@@ -39,7 +40,7 @@ const DropdownMenuItems = ({
                 return (
                     <React.Fragment key={idx}>
                         <RBMenuItem
-                            href={itm.href}
+                            href={getSafeHref(itm.href) || undefined}
                             style={itm.style}
                             as={itm?.items ? 'span' : 'a' }
                             target={itm.target ?? target}
@@ -191,7 +192,7 @@ const MenuItem = ({
                 tooltipId={tooltipId}
                 variant={variant}
                 size={size}
-                href={href}
+                href={getSafeHref(href) || undefined}
                 target={target}
                 borderTransparent
             >

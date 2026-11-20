@@ -27,6 +27,10 @@
     "showMore": "Laat meer zien...",
     "collapse": "Samenvouwen",
     "expand": "Uitvouwen",
+    "scrollableTabs": {
+      "scrollLeft": "Tabbladen naar links scrollen",
+      "scrollRight": "Tabbladen naar rechts scrollen"
+    },
     "Links": "Links",
     "height": "Hoogte",
     "Forbidden": "Verboden",
@@ -83,6 +87,9 @@
       "windowTitle": "Eigenschappen van de laag",
       "title": "Titel",
       "name": "Naam",
+      "url": "URL",
+      "typeName": "TypeName",
+      "wfsLinkedService": "Gekoppelde WFS-service",
       "group": "Groep",
       "general": "Algemeen",
       "description": "Beschrijving",
@@ -93,6 +100,10 @@
       "cropToProjectionExtent": {
         "label": "Roteer naar projectie-extensie",
         "tooltip": "De laag wordt bijgesneden tot de projectie-extensie wanneer deze aan de kaart wordt toegevoegd met deze optie ingeschakeld"
+      },
+      "coalesceExclude": {
+        "label": "Uitsluiten van gecombineerde verzoeken",
+        "tooltip": "Houdt deze laag buiten gecombineerde WMS-verzoeken, zodat ze altijd afzonderlijk wordt opgevraagd. Dit heeft geen effect zolang gecombineerde verzoeken voor de kaart uitgeschakeld zijn."
       },
       "cached": "Gebruik cache-opties",
       "styleCustom": "Gebruik een stijl genaamd \"{value}\"",
@@ -109,31 +120,72 @@
       "elevation": "hoogte",
       "groupProperties": "Groep eigenschappen",
       "featureInfo": "object informatie",
+      "noIdentifyView": "Er is geen identificatieweergave geconfigureerd, het formaat uit de kaartinstellingen wordt gebruikt.",
+      "disableIdentify": "Identificatie uitschakelen",
+      "addIdentifyView": "Nieuwe identificatieweergave toevoegen",
       "featureInfoFormatLbl": "identificeer formaat respons",
+      "featureInfoRequestOptions": {
+        "title": "Verzoekopties",
+        "description": "Limieten van het WMS-identificatieverzoek configureren",
+        "maxItems": "Aantal objecten",
+        "maxItemsTooltip": "Maximum aantal objecten dat een identificatieverzoek teruggeeft. De standaardwaarde is 10.",
+        "buffer": "Buffer (px)",
+        "bufferTooltip": "GeoServer-specifieke parameter die de zoekstraal van de identificatie rond het aangeklikte punt vergroot, uitgedrukt in schermpixels."
+      },
       "guideText": "In de afbeeldingslink kunnen placeholders gebruikt worden in de vorm van $\\{properties.YOUR_ATTRIBUTE\\} om objectattributen als parameters toe te voegen aan de URL. Zowel URLs als base64 gecodeerde \"Data URIs\" worden ondersteund",
       "imageNotFound": "Deze afbeelding heeft mogelijks een feature info request nodig om correct te renderen",
       "legenderror": "De legende is niet bereikbaar",
       "editCustomFormat": "Editeer formaat op maat",
-      "exampleOfResponse": "Voorbeeld",
       "changedSettings": "Eigenschappen aangepast",
       "changedSettingsAlert": "U sluit het eigenschappenpaneel zonder de wijzigingen op te slaan.",
       "textFormatTitle": "TEXT",
-      "textFormatDescription": "Toont de objectinformatie in platte tekst",
       "htmlFormatTitle": "HTML",
-      "htmlFormatDescription": "Toont de objectinformatie in HTML",
       "propertiesFormatTitle": "PROPERTIES",
-      "propertiesFormatDescription": "Toont de objectinformatie in een eigenschappenlijst",
       "templateFormatTitle": "TEMPLATE",
-      "templateFormatDescription": "Objectinformatie in een formaat op maat",
-      "hideFormatTitle": "UITSCHAKELEN IDENTIFICATIE",
-      "hideFormatDescription": "Schakel de feature-info voor deze laag uit",
       "styleWarning": "Layer style editor ondersteunt geometrietype '{geometryType}' niet.",
-      "templateFormatInfoAlert1": "Klik op de editeerknop om een nieuw sjabloon toe te voegen.",
       "templateFormatInfoAlert2": "Gebruik ${ attribute } om de eigenschappen die je wenst te tonen aan te duiden.",
-      "templateFormatInfoAlertExample": "Het id van het object is <span style='white-space:nowrap'>${ properties.id }</span> of <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
       "templateError": "De server geeft een foutmelding bij het toepassen van het sjabloon; gelieve het sjabloon te controleren",
+      "propertiesView": {
+        "attributes": "Attributen",
+        "noAttributes": "Het laagschema bevat geen attributen die getoond kunnen worden."
+      },
+      "externalData": {
+        "title": "EXTERNE GEGEVENS",
+        "description": "Attributen opvragen uit een externe WFS-bron",
+        "wfsUrl": "WFS-URL",
+        "invalidWfsUrl": "De URL biedt geen geldige WFS-service aan",
+        "layerName": "Laagnaam",
+        "cqlFilter": "CQL-filtersjabloon",
+        "cqlFilterHelp": "Plaats enkele aanhalingstekens rond placeholders voor tekst; laat placeholders voor getallen en booleans zonder aanhalingstekens.",
+        "attributes": "Attributen",
+        "validate": "Valideren",
+        "validation": {
+          "missingFields": "WFS-URL, laagnaam en CQL-filtersjabloon zijn verplicht",
+          "invalidPlaceholder": "Het CQL-filtersjabloon moet minstens één geldige verwijzing naar een veld bevatten",
+          "invalidDoubleQuotedPlaceholder": "Dubbele aanhalingstekens duiden in CQL veldnamen aan. Plaats enkele aanhalingstekens rond placeholders voor tekst.",
+          "invalidCql": "Het CQL-filtersjabloon is niet geldig",
+          "unquotedPlaceholder": "In de filter staat de verwijzing naar “{property}” niet tussen enkele aanhalingstekens, waardoor ze enkel getallen aanvaardt. Voeg de aanhalingstekens toe om tekstwaarden te gebruiken.",
+          "valid": "De configuratie van de externe gegevens is geldig",
+          "sourceUnavailable": "Een WFS-bron-URL en laagnaam zijn nodig om het testverzoek uit te voeren",
+          "sampleNotFound": "De bronlaag gaf geen voorbeeldobject terug",
+          "testRequestFailed": "Het testverzoek voor de externe gegevens is mislukt",
+          "generatedCql": "Gegenereerde CQL"
+        },
+        "noSourceFeatures": "Er zijn geen geïdentificeerde objecten beschikbaar voor deze weergave van externe gegevens",
+        "invalidConfiguration": "Ongeldige configuratie",
+        "notConfigured": "Deze identificatieweergave is niet correct geconfigureerd.",
+        "noResults": "Geen externe gegevens gevonden",
+        "requestError": "Kan de externe gegevens niet laden",
+        "missingProperty": "Het bronobject bevat de eigenschap “{property}” niet",
+        "unsafeSourceValue": "De externe gegevens kunnen niet geladen worden omdat “{property}” tekst bevat waar een getal verwacht wordt.",
+        "invalidInterpolatedCql": "De CQL-filter die op basis van het bronobject is opgebouwd, is niet geldig",
+        "invalidResponse": "De externe WFS gaf geen geldige GeoJSON terug",
+        "retry": "Opnieuw proberen"
+      },
       "heightOffset": "Hoogteverschuiving (m)",
       "wmsLayerTileSize": "Tegelgrootte (WMS)",
+      "maxFeaturesInView": "Max objecten in beeld",
+      "maxFeaturesInViewTooltip": "Als er geen waarde is ingesteld, werkt alles zoals voorheen (alle objecten worden geladen)",
       "serverType": "Type server",
       "formatError": "Het is niet mogelijk om de afbeeldings- en informatieformaten op te halen van de opgegeven service. Waarschijnlijk is dit een 'No Vendor' service, een type dat dit niet ondersteunt (vb. GeoNetwork)",
       "serverTypeOption": {
@@ -215,6 +267,19 @@
         "bottom": "Onder",
         "top": "Boven"
       },
+      "sourceField": {
+        "edit": "Waarde bewerken",
+        "confirm": "Waarde bevestigen",
+        "required": "Een waarde is verplicht",
+        "requiredUrl": "De service-URL is nodig om deze waarde te valideren",
+        "requiredName": "De laagnaam is nodig om deze waarde te valideren",
+        "requiredSearchUrl": "De URL van de WFS-service is nodig om deze waarde te valideren",
+        "requiredSearchTypeName": "De WFS-TypeName is nodig om deze waarde te valideren",
+        "service": "De service is niet bereikbaar op deze URL. Pas de URL aan of bevestig opnieuw om deze waarde te behouden",
+        "notFound": "De laag werd niet gevonden op deze service. Controleer de naam en de URL of bevestig opnieuw om deze waarde te behouden",
+        "load": "De laag kon niet geladen worden, bijvoorbeeld omdat de stijl niet compatibel is. Pas de waarden aan of bevestig om ze te behouden",
+        "generic": "Validatie mislukt. Controleer de naam en de URL of bevestig opnieuw om deze waarde te behouden"
+      },
       "legendOptions": {
         "title": "Legende",
         "legendWidth": "Breedte",
@@ -254,6 +319,7 @@
       "forceProxy": "Forceer proxy",
       "fields": {
         "refresh": "Herlaad attributen van de gegevensbron",
+        "showAll": "Alle attributen tonen of verbergen",
         "title": "Attributen",
         "tooltip": "Attributen",
         "name": "Naam",
@@ -261,7 +327,21 @@
         "type": "Type",
         "clearCustomization": "Verwijder aanpassingen",
         "clearCustomizationConfirm": "Bent u zeker dat u alle aanpassingen wil ongedaan maken?",
-        "error": "Het is niet mogelijk om de attributen automatisch in te laden"
+        "error": "Het is niet mogelijk om de attributen automatisch in te laden",
+        "featureInfoDisplayType": "Weergavetype objectinformatie",
+        "configureField": "Veld configureren",
+        "mediaTypeAttribute": "Attribuut met mediatype",
+        "displayTypes": {
+          "string": "Tekst",
+          "image": "Afbeelding",
+          "video": "Video",
+          "audio": "Audio",
+          "panorama": "Panoramabeeld",
+          "pdf": "PDF",
+          "url": "URL",
+          "iframe": "Iframe",
+          "media": "Media"
+        }
       },
       "disableFeaturesEditing": "Deactiveer editeerfunctionaliteit in attributentabel",
       "interactiveLegend": {
@@ -300,11 +380,30 @@
       "tooltipDeactivate": "Verlaat de 3D-modus",
       "tooltipActivate": "Ga naar de 3D-modus"
     },
-    "cookie": {
-      "info": "Deze website maakt gebruik van cookies om uw ervaring te verbeteren. We gaan ervan uit dat je hiermee akkoord gaat, maar je kunt er van afzien als je dat wilt.",
-      "moreDetailsButton": "Meer details",
-      "leave": "Verlaten",
-      "accept": "Aanvaarden"
+    "privacySettings": {
+      "title": "Privacy settings",
+      "settings": "Privacy settings",
+      "necessary": "Functional and necessary",
+      "always": "Always active",
+      "functional": "Optional functional",
+      "statistics": "Statistics",
+      "marketing": "Marketing",
+      "unused": "Not used",
+      "reject": "Reject all",
+      "accept": "Accept all",
+      "close": "Close",
+      "baseline": "This configuration uses only necessary technical tools, which do not require consent. Closing this notice does not express consent.",
+      "optional": "Optional tools stay off until you choose. You can refuse them and continue using MapStore.",
+      "required": "Authentication when you sign in, security and remembering your privacy settings. See the Cookie Policy for purposes and duration.",
+      "status": "Change or withdraw consent at any time from Privacy settings (icon of a shield with a user). Withdrawal stops registered integrations; it cannot undo data already sent or remove third-party cookies.",
+      "storageError": "Your choice could not be saved. Optional tools remain off. Check browser storage and try again.",
+      "fixture": "LOCAL TEST FIXTURE: synthetic optional tools, not included in Vanilla.",
+      "templateWarning": "The policy pages still need to be configured! Current pages are still referring to the MapStore templates: the operator of this installation has not configured its own pages yet.",
+      "templateWarningLink": "How to configure them",
+      "policies": "Policies",
+      "cookie": "Cookie Policy",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use"
     },
     "background": "Achtergrondkaart",
     "language": "Taal",
@@ -575,7 +674,9 @@
           "dateTimePlaceholder": "Selecteer de datum-tijd"
         },
         "collisionDetection": "Activeer terreinbotsingsdetectie",
-        "imageryLayersOverlay": "Activeer overlay mapservicelaag"
+        "imageryLayersOverlay": "Activeer overlay mapservicelaag",
+        "coalesceWMSLayers": "WMS-verzoeken combineren (coalesce)",
+        "coalesceWMSLayersTooltip": "Bepaalt het standaardgedrag voor de lagen van deze kaart: indien ingeschakeld worden WMS-lagen van dezelfde bron aaneengesloten gecombineerd in één GetMap-verzoek, waardoor er minder verzoeken naar de server gaan. Achtergrondlagen worden uitgesloten."
       },
       "thumbnailError": {
         "error403": "Er is een fout opgetreden bij het verwijderen van de miniatuur",
@@ -665,6 +766,7 @@
       "grabGroupIcon": "Neem en sorteer groep",
       "toggleLayerVisibilityWarning": "Wijzig zichtbaarheid van de laag, Waarschuwing: laag is niet correct geladen",
       "createWidget": "Maak een widget voor de geselecteerde laag",
+      "createWidgetForMap": "Maak een widget voor de kaart",
       "editLayerProperties": "Wijzig de eigenschappen van de laag",
       "browseData": "Open de attributentabel",
       "removeLayer": "De laag verwijderen",
@@ -688,6 +790,10 @@
       "radius": "Straal",
       "filterIconEnabled": "Schakel laagfilter uit",
       "filterIconDisabled": "Schakel laagfilter in",
+      "filterWidgetIconEnabled": "Schakel filter van geconnecteerde widget uit",
+      "filterWidgetIconDisabled": "Schakel filter van geconnecteerde widget in",
+      "filterAndWidgetIconEnabled": "Schakel laagfilter en filters van geconnecteerde widgets uit",
+      "filterAndWidgetIconDisabled": "Schakel laagfilter en filters van geconnecteerde widgets in",
       "notVisibleZoomIn": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom in om de laag te tonen",
       "notVisibleZoomOut": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom uit om de laag weer te geven",
       "notVisibleSwitchTo3D": "Activeer de 3D-modus om deze laag te kunnen zien",
@@ -857,6 +963,7 @@
     "identifyRevGeocodeSubmitText": "Meer informatie",
     "identifyRevGeocodeCloseText": "Sluiten",
     "identifyRevGeocodeError": "Kan niet geocoderen",
+    "identifyShowFullscreen": "Volledig scherm tonen",
     "identifyEdit": "Editeren",
     "identifyLayerSelectNoResult": "Geen lagen gevonden",
     "getFeatureInfoError": {
@@ -1003,6 +1110,7 @@
       "serviceslistempty": "Geen aangepaste services gedefinieerd",
       "service_missing": "De {serviceType} -service is niet geconfigureerd",
       "generic_error": "Er is een fout opgetreden tijdens het zoeken. Foutdetails: {message}",
+      "services_error": "Er zijn fouten opgetreden bij het zoeken in de services: {message}",
       "showGFI": "Toon GFI",
       "errors": {
         "nonQueriableLayers": "De laag in de URL is niet opvraagbaar of niet zichtbaar op de kaart.",
@@ -1255,6 +1363,7 @@
         }
       },
       "spatialfilter": {
+        "notAvailable": "Ruimtelijk filteren is niet beschikbaar voor deze laag.",
         "filterType": "Filter type",
         "geometric_operation": "Geometrische operatie",
         "combo_placeholder": "Selecteer...",
@@ -1575,7 +1684,8 @@
           "title": "Fout laden permalink",
           "pleaseLogin": "Deze permalink is niet publiek beschikbaar. Gelieve u aan te melden",
           "notFound": "Permalink niet gevonden",
-          "notAccessible": "Permalink niet toegankelijk"
+          "notAccessible": "Permalink niet toegankelijk",
+          "invalidTarget": "Het doel van de permalink is niet geldig en kan niet geopend worden"
         },
         "save": {
           "title": "Genereren van permalink mislukt",
@@ -1697,7 +1807,25 @@
     },
     "catalog": {
       "subtypes": {
+        "label": "Inhoudstype",
+        "vector": "Vector",
+        "raster": "Raster",
+        "vector_time": "Tijdreeks",
+        "3dtiles": "3D Tiles",
+        "tabular": "Tabel",
+        "image": "Afbeelding",
+        "video": "Video",
+        "audio": "Audio",
+        "text": "Tekst",
+        "archive": "Archief",
+        "presentation": "Presentatie",
         "file": "File"
+      },
+      "filterFields": {
+        "category": "Categorie",
+        "keyword": "Trefwoord",
+        "region": "Regio",
+        "extent": "Filter op extent"
       },
       "start": "Begin datum ",
       "end": "Einddatum ",
@@ -1708,6 +1836,12 @@
       "fetchMetadata": {
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
+      },
+      "resourceTypes": {
+        "label": "Brontypes",
+        "dataset": "Datasets",
+        "document": "Documenten",
+        "map": "Kaarten"
       },
       "tagFilterType": {
         "label": "Type tagfilter",
@@ -1728,6 +1862,12 @@
       "addToMap": "Toevoegen aan kaart",
       "getWMSLink": "Krijg WMS Link",
       "error": "Er is een fout opgetreden bij het laden van de catalogus",
+      "errors": {
+        "unauthorized": "Authenticatie is vereist om toegang te krijgen tot de catalogusservice (HTTP 401).",
+        "forbidden": "De toegang tot de catalogusservice werd geweigerd (HTTP 403). Controleer uw rechten.",
+        "http": "Het verzoek aan de catalogusservice is mislukt (HTTP {status}).",
+        "serviceUnavailable": "De catalogusservice kon niet bereikt worden. Het verzoek is mogelijk geblokkeerd."
+      },
       "pageInfo": "Resultaten {start} - {end} van {total}",
       "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
       "pageInfoInfinite": "{total, plural, =undefined {} =0 {No results} =1 {{total} of {total} matched} other {Loaded {loaded} of {total} matched}}",
@@ -1747,6 +1887,7 @@
       "reset": "Wissen",
       "options": "Opties",
       "srs_not_allowed": "Het kaartcoördinatensysteem wordt niet ondersteund door deze service",
+      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code,  the layer cannot be added",
       "add": "Toevoegen",
       "service": "Service",
       "servicePlaceholder": "typ een service",
@@ -2114,6 +2255,9 @@
       "title": "Exporteer Data",
       "service": "Service",
       "downloadMode": "Downloadmodus",
+      "visibleGranuleInfo": "Enkel de granule die momenteel zichtbaar is op de kaart wordt gedownload",
+      "timeAttributeInfo": "Selecteer het attribuut dat de tijdsinformatie in uw gegevens bevat. Dit wordt gebruikt om objecten te filteren op een bepaald tijdstip of tijdsbereik.",
+      "timeAttribute": "Tijdsattribuut",
       "format": "Bestandsformaat",
       "srs": "Coördinaten Referentie Systeem",
       "export": "Exporteer",
@@ -2237,6 +2381,8 @@
           "backToFilterOptions": "Terug naar filteropties",
           "selectALayer": "Selecteer een laag",
           "selectLayers": "Selecteer een of meerdere lagen",
+          "selectMapLayers": "Selecteer een laag uit de kaart",
+          "noFilterableMapLayers": "Geen enkele laag in de kaart kan gefilterd worden. Voeg eerst een WMS- of WFS-laag toe.",
           "selectAMap": "Selecteer een kaart",
           "configureChartOptions": "Configureer grafiekopties",
           "configureWidgetOptions": "Configureer widget-opties",
@@ -2571,6 +2717,8 @@
         "layoutTabLabel": "Layout",
         "title": "Titel",
         "label": "Label",
+        "description": "Beschrijving",
+        "descriptionPlaceholder": "Voer een beschrijving in...",
         "icon": "Icoon",
         "fontSize": "Lettertypegrootte",
         "fontWeight": "Lettertypedikte",
@@ -2596,6 +2744,11 @@
 
         "applyFilter": "Filter toepassen",
         "applyDimension": "Dimensie toepassen",
+        "zoomTo": "Zoom naar",
+        "zoomToRequiresApplyFilterTooltip": "Connecteer een 'Filter toepassen'-item met een laag in deze kaart voordat u 'Zoom naar' inschakelt",
+        "zoomToFilterExtent": "Zoom naar gefilterde extent {names}",
+        "autoZoomLabel": "Automatisch zoomen",
+        "autoZoomInfo": "Zoom automatisch naar de gefilterde extent wanneer de selectie wijzigt. Schakel uit om manueel te zoomen.",
         "noConnectableNodesAvailable": "Geen connecterbare items beschikbaar",
 
         "selectAll": "Selecteer alles",
@@ -2628,6 +2781,8 @@
         "applyStyleFromWidgetButton": "Pas stijl toe op alle geconnecteerde lagen in deze filterwidget",
         "dimensionChangedByWidgetInfo": "Een of meerdere geconnecteerde items gebruiken een andere dimensiewaarde dan de geselecteerde waarde. Klik op de onderstaande knop om de geselecteerde waarde toe te passen op alle geconnecteerde items.",
         "applyDimensionFromWidgetButton": "Pas waarde van deze filter toe op alle geconnecteerde items",
+        "showConnectedLayers": "Toon geconnecteerde lagen",
+        "showConnectedLayersTooltip": "Toon de geconnecteerde doellagen op de widget",
 
         "defaultFilter": "Standaardfilter",
         "defaultFilterInfo": "Definieer een filter om toe te passen wanneer niets geselecteerd is. Suggestie: als je niets wil weergeven wanneer niets geselecteerd is, maak dan een filter die altijd geen objecten teruggeeft",
@@ -2640,6 +2795,12 @@
         "forceSelection": "Verplicht selectie",
         "forceSelectionTooltip": "Wanneer ingeschakeld, dan is het verplicht om een filteritem te selecteren",
         "forceSelectionEnabledTooltip": "Wanneer 'Verplicht Selectie' ingeschakeld is, moet minstens één filteritem geselecteerd worden",
+        "defaultExpanded": "Standaard uitgevouwen",
+        "defaultExpandedTooltip": "Indien aangevinkt wordt de filter standaard uitgevouwen getoond; anders start de filterkaart samengevouwen",
+        "disableFilter": "Schakel deze filter uit",
+        "enableFilter": "Schakel deze filter in",
+        "collapseFilter": "Filter samenvouwen",
+        "expandFilter": "Filter uitvouwen",
         "selectDataSourcePlaceHolder": "Selecteer databron ...",
         "selectAttribute": "Selecteer attribuut",
         "valueFromUniqueAttributeDescription": "Haalt alle unieke waarden op voor het geselecteerde attribuut.",
@@ -3161,6 +3322,7 @@
       "disableRange": "Schakel tijdbereik uit",
       "enablePlayBack": "Schakel afspeelknoppen in",
       "disablePlayBack": "Schakel afspeelknoppen uit",
+      "hiddenGuideLayerWarning": "De laag is verborgen in de lagenlijst en op de kaart, maar bepaalt nog steeds het vastklikken van de tijdlijn.",
       "expand": "Schuifregelaar voor tijd uitvouwen",
       "collapse": "Schuifregelaar voor tijd samenvouwen",
       "reset": {
@@ -3173,6 +3335,10 @@
         "tooltip": "Klik hier om het weer uit te vouwen"
       },
       "errors": {
+        "invalidDateTitle": "Ongeldige datum of tijd",
+        "invalidDateMessage": "Voer een volledige, geldige datum en tijd in.",
+        "invalidStartDate": "De begindatum moet vroeger zijn dan de einddatum.",
+        "invalidEndDate": "De einddatum moet later zijn dan de begindatum.",
         "multidim_error_title": "Backend-service reageert niet",
         "multidim_error_message": "De vereiste services voor multidimensionale ondersteuning reageren niet. Probeer het later opnieuw of neem contact op met de beheerder."
       }
@@ -4550,6 +4716,10 @@
       "loadingAPI": "API laden...",
       "cyclomedia": {
         "initializing": "Street Smart API initialiseren...",
+        "logout": "Street Smart uitloggen",
+        "tryForceLogout": "Street Smart geforceerd uitloggen",
+        "confirmLogout": "Weet u zeker dat u wilt uitloggen bij Street Smart?",
+        "loggingOut": "Uitloggen bij Street Smart...",
         "loadingAPI": "Street Smart API laden...",
         "changeCredentials": "Wijzig Street Smart inloggegevens",
         "insertCredentials": "Voer uw Street Smart inloggegevens in",
@@ -4560,8 +4730,10 @@
         "zoomIn": "Gelieve in te zoomen op de kaart om de street view dekking te zien",
         "errorOccurred": "Foutmelding: ",
         "errors": {
+          "notLoggedIn": "U bent niet ingelogd",
           "invalidCredentials": "Ongeldige inloggegevens",
-          "projectionNotAvailable": "De geconfigureerde projectie {srs} is niet beschikbaar. Gelieve de administrator te contacteren."
+          "projectionNotAvailable": "De geconfigureerde projectie {srs} is niet beschikbaar. Gelieve de administrator te contacteren.",
+          "apiLoadFailed": "Het laden van de Street Smart API is mislukt. Controleer uw netwerkverbinding of neem contact op met de beheerder."
         },
         "reloadAPI": "Herlaad API"
       },
@@ -4722,6 +4894,9 @@
       "filter": "Filter",
       "filters": "Filters",
       "view": "Weergave",
+      "cardLayoutGrid": "Raster",
+      "cardLayoutList": "Lijst",
+      "cardLayoutTable": "Tabel",
       "resourcesFound": "{count, plural, =0 {0 bronnen gevonden} =1 {1 bron gevonden} other {# bronnen gevonden}}",
       "unadvertised": "Resource is niet geadverteerd. Het is verborgen in de catalogus en zoekresultaten",
       "mapUsesContext": "Deze kaart gebruikt de context: {contextName}",
@@ -4841,6 +5016,7 @@
         "errorDefault": "Netwerkfout"
       },
       "myResources": "Mijn bronnen",
+      "select": "Selecteren",
       "creationFilter": {
         "from": "Aanmaakdatum vanaf",
         "to": "Aanmaakdatum tot"

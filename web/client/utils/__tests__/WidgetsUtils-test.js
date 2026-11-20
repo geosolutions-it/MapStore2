@@ -13,6 +13,8 @@ import {
     CHART_PROPS,
     isWidgetLayerSupported,
     cleanMaximizedState, convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
+    fitLayoutInRows,
+    placeNewWidgets,
     getConnectionList, getDependantWidget,
     getChartAxisDependencyPath, getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
@@ -215,6 +217,89 @@ describe('Test WidgetsUtils', () => {
         const maps = [_widgets[0]];
         const modified = getWidgetDependency('widgets[w_2]', _widgets, maps);
         expect(modified).toEqual(_widgets[1]);
+    });
+    it('fitLayoutInRows brings widgets saved past the last row back into view', () => {
+        const layout = [
+            { i: 'a', x: 0, y: 0, w: 3, h: 2 },
+            { i: 'b', x: 3, y: 0, w: 3, h: 2 },
+            { i: 'c', x: 0, y: 4, w: 3, h: 2 },
+            { i: 'd', x: 0, y: 9, w: 3, h: 2 }
+        ];
+        const fitted = fitLayoutInRows(layout, 6, 4);
+        expect(fitted.every(item => item.y + item.h <= 4)).toBe(true);
+        expect(fitted[2]).toEqual({ i: 'c', x: 0, y: 2, w: 3, h: 2 });
+        expect(fitted[3]).toEqual({ i: 'd', x: 3, y: 2, w: 3, h: 2 });
+        expect(fitted[0]).toBe(layout[0]);
+        expect(fitted[1]).toBe(layout[1]);
+    });
+    it('fitLayoutInRows leaves a layout that already fits alone', () => {
+        const layout = [{ i: 'a', x: 0, y: 0, w: 3, h: 2 }, { i: 'b', x: 3, y: 2, w: 3, h: 2 }];
+        expect(fitLayoutInRows(layout, 6, 4)).toBe(layout);
+    });
+    it('fitLayoutInRows is idempotent', () => {
+        const layout = [{ i: 'a', x: 0, y: 0, w: 6, h: 2 }, { i: 'b', x: 0, y: 7, w: 3, h: 2 }];
+        const once = fitLayoutInRows(layout, 6, 4);
+        expect(fitLayoutInRows(once, 6, 4)).toBe(once);
+    });
+    it('fitLayoutInRows preserves the other properties of an item', () => {
+        const fitted = fitLayoutInRows([{ i: 'a', x: 0, y: 9, w: 3, h: 2, "static": true }], 6, 4);
+        expect(fitted[0].static).toBe(true);
+        expect(fitted[0].i).toBe('a');
+    });
+    it('fitLayoutInRows shrinks an item taller than the rows available', () => {
+        const fitted = fitLayoutInRows([{ i: 'a', x: 0, y: 2, w: 3, h: 9 }], 6, 4);
+        expect(fitted[0].h).toBe(4);
+        expect(fitted[0].y).toBe(0);
+    });
+    it('fitLayoutInRows puts an item on the last row when nothing is free', () => {
+        const fitted = fitLayoutInRows([
+            { i: 'a', x: 0, y: 0, w: 6, h: 4 },
+            { i: 'b', x: 0, y: 5, w: 3, h: 2 }
+        ], 6, 4);
+        expect(fitted[1].y).toBe(2);
+        expect(fitted[1].y + fitted[1].h).toBe(4);
+    });
+    it('fitLayoutInRows does nothing without a row limit', () => {
+        const layout = [{ i: 'a', x: 0, y: 9, w: 3, h: 2 }];
+        expect(fitLayoutInRows(layout, 6, undefined)).toBe(layout);
+        expect(fitLayoutInRows(layout, 6, Infinity)).toBe(layout);
+    });
+    it('placeNewWidgets gives a widget without a position the first free place', () => {
+        const layout = [{ i: 'a', x: 0, y: 0, w: 3, h: 2 }];
+        const added = [{ id: 'a' }, { id: 'b', dataGrid: { w: 3, h: 2, x: 0, y: 0 } }];
+        const placed = placeNewWidgets(layout, added, 6, 4);
+        expect(placed.length).toBe(2);
+        expect(placed[1]).toEqual({ i: 'b', x: 3, y: 0, w: 3, h: 2 });
+        expect(placed[0]).toBe(layout[0]);
+    });
+    it('placeNewWidgets moves to the next row when the first one is taken', () => {
+        const placed = placeNewWidgets(
+            [{ i: 'a', x: 0, y: 0, w: 6, h: 2 }],
+            [{ id: 'a' }, { id: 'b', dataGrid: { w: 3, h: 2 } }],
+            6, 4
+        );
+        expect(placed[1]).toEqual({ i: 'b', x: 0, y: 2, w: 3, h: 2 });
+    });
+    it('placeNewWidgets falls back to the origin when a bounded grid is full', () => {
+        const placed = placeNewWidgets(
+            [{ i: 'a', x: 0, y: 0, w: 6, h: 4 }],
+            [{ id: 'a' }, { id: 'b', dataGrid: { w: 3, h: 2 } }],
+            6, 4
+        );
+        expect(placed[1]).toEqual({ i: 'b', x: 0, y: 0, w: 3, h: 2 });
+    });
+    it('placeNewWidgets goes below the content when there is no row limit', () => {
+        const placed = placeNewWidgets(
+            [{ i: 'a', x: 0, y: 0, w: 6, h: 3 }],
+            [{ id: 'a' }, { id: 'b', dataGrid: { w: 3, h: 2 } }],
+            6
+        );
+        expect(placed[1]).toEqual({ i: 'b', x: 0, y: 3, w: 3, h: 2 });
+    });
+    it('placeNewWidgets leaves a layout alone when every widget has a position', () => {
+        const layout = [{ i: 'a', x: 0, y: 0, w: 3, h: 2 }];
+        expect(placeNewWidgets(layout, [{ id: 'a' }], 6, 4)).toBe(layout);
+        expect(placeNewWidgets(layout, [], 6, 4)).toBe(layout);
     });
     it('cleanMaximizedState cleans map widget and layout flags without changing the source', () => {
         const config = {

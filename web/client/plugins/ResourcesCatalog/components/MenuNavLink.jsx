@@ -7,15 +7,18 @@
  */
 
 import React, { forwardRef } from 'react';
+import { getSafeHref } from '../../../utils/URLUtils';
 
 const MenuNavLink = forwardRef(({
     children,
     className,
+    href,
     ...props
 }, ref) => {
     return (
         <a
             {...props}
+            href={getSafeHref(href) || undefined}
             ref={ref}
             className={`nav-link${className ? ` ${className}` : ''}`}
         >

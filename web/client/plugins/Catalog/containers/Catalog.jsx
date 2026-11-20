@@ -82,9 +82,11 @@ import Button from '../../../components/layout/Button';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import API from '../../../api/catalog';
-import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
+import { isAllowedSRS } from '../../../utils/CoordinatesUtils';
+import { isProjectionAvailable } from '../../../utils/ProjectionUtils';
 import { getResolutions } from '../../../utils/MapUtils';
 import { buildSRSMap } from '../../../utils/CatalogUtils';
+import { isCOGCrsNotIdentified } from '../../../utils/cog/LayerUtils';
 import { useCatalogSelection } from '../../../components/catalog/hooks/useCatalogSelection';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import Message from '../../../components/I18N/Message';
@@ -178,7 +180,10 @@ const Catalog = ({
             return allowedSRS && !isAllowedSRS(crs, allowedSRS);
         }
         const recordCrs = record?.sourceMetadata?.crs;
-        return recordCrs && !isSRSAllowed(recordCrs);
+        // we need to use ProjectionRegistry list as the single criteria to allow CRS
+        // because some CRSs EPSG:326xx/327xx is registered in proj4js at lib bootstrap
+        // https://github.com/proj4js/proj4js/blob/v2.19.10/lib/global.js#L6
+        return recordCrs && !isProjectionAvailable(recordCrs);
     };
 
 
@@ -196,7 +201,10 @@ const Catalog = ({
     });
 
     const createLayer = (record, serviceType = record.serviceType) => {
-        if (isSRSNotAllowed(record)) {
+        if (record.serviceType === 'cog' && isCOGCrsNotIdentified(record)) {
+            onError('catalog.cog_crs_not_identified');
+            return Promise.resolve();
+        } else if (isSRSNotAllowed(record)) {
             onError('catalog.srs_not_allowed');
             return Promise.resolve();
         }
@@ -291,8 +299,26 @@ const Catalog = ({
             setLoadingLayers(allowed.map(record => record.identifier));
             return processRecords(allowed, buildLayerOptions(), locales)
                 .then(({ layers = [], groups = [] } = {}) => {
-                    groups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
-                    layers.filter(Boolean).forEach(layer => onLayerAdd(layer, { zoomToLayer }));
+                    // Create outer groups first, then descendants in layer stacking order.
+                    const isNested = _group => groups.some(parent => parent.options?.id === _group.parent);
+                    groups.filter(_group => !isNested(_group))
+                        .forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
+                    const pendingGroups = groups.filter(isNested);
+                    const addPendingGroup = groupId => {
+                        const index = pendingGroups.findIndex(_group => _group.options?.id === groupId);
+                        if (index === -1) {
+                            return;
+                        }
+                        const [_group] = pendingGroups.splice(index, 1);
+                        addPendingGroup(_group.parent);
+                        onAddGroup(_group.title, _group.parent, _group.options, true);
+                    };
+                    layers.filter(Boolean).forEach(layer => {
+                        addPendingGroup(layer.group);
+                        onLayerAdd(layer, { zoomToLayer });
+                    });
+                    // Preserve groups that have no layers.
+                    pendingGroups.forEach(_group => onAddGroup(_group.title, _group.parent, _group.options, _group.asFirst));
                     if (clearSelected) {
                         clearSelection();
                     }

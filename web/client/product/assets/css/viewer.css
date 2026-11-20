@@ -45,11 +45,11 @@ html, body, #container, .fill {
 
 .map-logo{
 	position:absolute;
-	width:90px;
-	height:27px;
+	width:36px;
+	height:36px;
 	bottom:36px;
 	left:5px;
-	background-image:url(../img/mapstore2_logo.png);
+	background-image:url(../img/logo.png);
 	background-repeat:no-repeat;
 	background-size:contain;
     cursor: pointer;

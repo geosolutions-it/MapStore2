@@ -7,11 +7,11 @@
  */
 
 import React from 'react';
-import { Responsive } from 'react-grid-layout';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import Dashboard from '../Dashboard';
+import WidgetsView from '../../widgets/view/WidgetsView';
 
 const testWidget = {
     title: "TEST",
@@ -59,7 +59,7 @@ describe('WidgetsView component', () => {
         const width = 460;
         let cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]} layouts={layouts} />, document.getElementById("container"));
         expect(cmp).toBeTruthy();
-        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
+        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, WidgetsView);
         expect(innerLayout).toExist();
         expect(innerLayout.props.width).toEqual(width - WIDGET_MOBILE_RIGHT_SPACE);
     });
@@ -67,7 +67,7 @@ describe('WidgetsView component', () => {
         const width = 640;
         const cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]} layouts={layouts} />, document.getElementById("container"));
         expect(cmp).toExist();
-        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
+        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, WidgetsView);
         expect(innerLayout).toExist();
         expect(innerLayout.props.width).toEqual(width);
     });

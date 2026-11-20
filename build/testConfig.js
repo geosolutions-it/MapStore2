@@ -87,6 +87,11 @@ module.exports = ({browsers = [ 'ChromeHeadlessWebGL' ], files, path, testFile, 
         module: {
             rules: [
                 {
+                    // react 16 has no exports map, so strict esm deps cannot resolve react/jsx-runtime
+                    test: /\.m?js$/,
+                    resolve: { fullySpecified: false }
+                },
+                {
                     test: /\.jsx?$/,
                     exclude: /node_modules/,
                     use: [{

@@ -140,4 +140,10 @@ describe("Test the login modal", () => {
             expect(document.querySelector('.modal-footer button')).toBeFalsy();
         });
     });
+    it('renders the footer items at the bottom of the window', () => {
+        const footerItems = [{name: 'first', Component: () => <button id="footer-first"/>}, {name: 'second', Component: () => <button id="footer-second"/>}];
+        ReactDOM.render(<LoginModal show footerItems={footerItems} providers={[{type: "basic", provider: "geostore"}, {type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+        const buttons = [...document.querySelectorAll('.modal-footer button')].map(button => button.id || button.textContent);
+        expect(buttons).toEqual(['footer-first', 'footer-second', 'close']);
+    });
 });

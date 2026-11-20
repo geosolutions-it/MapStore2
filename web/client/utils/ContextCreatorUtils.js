@@ -20,67 +20,60 @@ export const makePlugins = (plugins = []) =>
  */
 export const flattenPluginTree = (plugins = []) =>
     flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(plugin.enabled ? flattenPluginTree(plugin.children) : [])));
+const CHANGED_PLUGINS_NAMES = {
+    'DeleteMap': 'DeleteResource',
+    'MetadataExplorer': 'Catalog'
+};
+/**
+ * Overrides of the configuration of the plugins saved with a previous version of MapStore.
+ * The key is the name of the plugin, the value is merged in its saved `cfg`.
+ */
+const PLUGINS_CFG_OVERRIDES = {
+    // migration for MapFooter to add containerPosition: 'footer' if not present
+    'MapFooter': { containerPosition: 'footer' },
+    // migration for FeatureEditor and Timeline to add containerPosition: 'bottom' if not present
+    'FeatureEditor': { containerPosition: 'bottom' },
+    'Timeline': { containerPosition: 'bottom' },
+    // migrate for Map to add containerPosition: 'background' if not present
+    'Map': { containerPosition: 'background' }
+};
+/**
+ * @param {object} plugin plugin configuration
+ * @returns the plugin configuration with the current name and the overrides of `cfg` defined for it
+ */
+const migratePluginConfiguration = (plugin) => {
+    if (CHANGED_PLUGINS_NAMES[plugin.name]) {
+        return {
+            ...plugin,
+            name: CHANGED_PLUGINS_NAMES[plugin.name]
+        };
+    }
+    const overrides = PLUGINS_CFG_OVERRIDES[plugin.name];
+    if (overrides) {
+        return {
+            ...plugin,
+            cfg: {
+                ...plugin.cfg,
+                ...overrides
+            }
+        };
+    }
+    return plugin;
+};
 /**
  * @param {object} context context configuration
- * @returns update context configuration based on plugins updates or changes (eg. rename of plugins)
+ * @returns update context configuration based on plugins updates or changes (eg. rename of plugins).
+ * It applies to the plugins enabled by default and to the ones the user can activate (`userPlugins`).
  */
 export const migrateContextConfiguration = (context) => {
-    const changedPluginsNames = {
-        'DeleteMap': 'DeleteResource',
-        'MetadataExplorer': 'Catalog'
-    };
     return {
         ...context,
         ...(context?.plugins && {
             plugins: Object.fromEntries(Object.keys(context.plugins)
-                .map((key) => {
-                    const plugins = context.plugins[key];
-                    return [key, plugins.map((plugin) => {
-                        if (changedPluginsNames[plugin.name]) {
-                            return {
-                                ...plugin,
-                                name: changedPluginsNames[plugin.name]
-                            };
-                        }
-                        // migration for MapFooter to add containerPosition: 'footer' if not present
-                        if (plugin.name === 'MapFooter') {
-                            if (plugin?.cfg?.containerPosition !== 'footer') {
-                                return {
-                                    ...plugin,
-                                    cfg: {
-                                        ...plugin.cfg,
-                                        containerPosition: 'footer'
-                                    }
-                                };
-                            }
-                        }
-                        // migration for FeatureEditor and Timeline to add containerPosition: 'bottom' if not present
-                        if (['FeatureEditor', 'Timeline'].includes(plugin.name)) {
-                            if (plugin?.cfg?.containerPosition !== 'bottom') {
-                                return {
-                                    ...plugin,
-                                    cfg: {
-                                        ...plugin.cfg,
-                                        containerPosition: 'bottom'
-                                    }
-                                };
-                            }
-                        }
-                        // migrate for Map to add containerPosition: 'background' if not present
-                        if (plugin.name === 'Map') {
-                            if (plugin?.cfg?.containerPosition !== 'background') {
-                                return {
-                                    ...plugin,
-                                    cfg: {
-                                        ...plugin.cfg,
-                                        containerPosition: 'background'
-                                    }
-                                };
-                            }
-                        }
-                        return plugin;
-                    })];
-                }))
+                .map((key) => [key, context.plugins[key].map(migratePluginConfiguration)]))
+        }),
+        ...(context?.userPlugins && {
+            userPlugins: context.userPlugins.map(migratePluginConfiguration)
         })
     };
 };

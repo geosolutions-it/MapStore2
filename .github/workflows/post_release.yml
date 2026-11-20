@@ -27,6 +27,10 @@ jobs:
         java-version: '17.x'
         distribution: 'adopt'
         cache: maven
+    - name: "setting up npm"
+      uses: actions/setup-node@v6
+      with:
+          node-version: '24.x'
 
     - name: Bot Details
       id: bot-details
@@ -45,7 +49,7 @@ jobs:
         echo
         echo "Restoring snapshot version tp $SNAPSHOT_VERSION"
         mvn versions:set -DnewVersion=$SNAPSHOT_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle
-        mvn versions:set-property -f project/standard/templates/web/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$SNAPSHOT_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+        mvn versions:set-property -f project/standard/templates/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$SNAPSHOT_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
         npm version patch --git-tag-version=false
         echo "Committing changes"
         find . -name 'pom.xml' | xargs git add

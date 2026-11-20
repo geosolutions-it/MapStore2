@@ -14,6 +14,7 @@ import tooltip from "../components/misc/enhancers/tooltip";
 import ToolsContainer from './containers/ToolsContainer';
 import Message from './locale/Message';
 import { createPlugin } from '../utils/PluginsUtils';
+import { getSafeHref } from '../utils/URLUtils';
 import {setControlProperty} from "../actions/controls";
 import {burgerMenuSelector} from "../selectors/controls";
 
@@ -41,7 +42,7 @@ const InnerContainer = ({children, ...props}) => (
 );
 
 const AnchorElement = ({children, href, target, onClick}) => (
-    <a href={href} target={target} onClick={onClick}>{children}</a>
+    <a href={getSafeHref(href) || undefined} target={target} onClick={onClick}>{children}</a>
 );
 
 const BurgerMenuMenuItem = ({
