@@ -74,5 +74,17 @@ describe('LayersSelection Reducer', () => {
             expect(state.drawType).toBeFalsy();
             expect(state.selectionFeature).toBeFalsy();
         });
+
+        it('clears results and geometry even when keeping the same drawing mode', () => {
+            const state = layersSelection({
+                ...initialState,
+                drawType: 'Point',
+                selectionFeature: GeoJsonfeatures.features[0],
+                selections: { layer: GeoJsonfeatures }
+            }, cleanSelection('Point'));
+            expect(state.drawType).toBe('Point');
+            expect(state.selectionFeature).toBe(null);
+            expect(state.selections).toEqual({});
+        });
     });
 });
