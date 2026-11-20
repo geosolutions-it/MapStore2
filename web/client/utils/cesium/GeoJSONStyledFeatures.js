@@ -541,7 +541,7 @@ class GeoJSONStyledFeatures {
     }
     _updateScaleVisibility() {
         if (!this._map) return;
-        const currentMapScale = getMapScaleForCesium(this._map);
+        const currentMapScale = getMapScaleForCesium(this._map, Cesium);
         this._entities.forEach(wrapper => {
             const { entity} = wrapper;
             // If no custom rules → apply default visibility

@@ -5,8 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import * as Cesium from 'cesium';
-
 import {
     pick,
     get,
@@ -451,7 +449,7 @@ export function isCameraPerpendicularToSurface(camera, position, ellipsoid, thre
     const cameraDirection = camera.direction;
 
     // Dot product: -1 = exactly opposite (straight down), 0 = parallel to surface
-    const dot = Cesium.Cartesian3.dot(cameraDirection, surfaceNormal);
+    const dot = cameraDirection.x * surfaceNormal.x + cameraDirection.y * surfaceNormal.y + cameraDirection.z * surfaceNormal.z;
 
     // Check if dot product is close to -1 (camera looking straight down)
     return dot < -threshold;
@@ -461,11 +459,12 @@ export function isCameraPerpendicularToSurface(camera, position, ellipsoid, thre
  * Calculates the map scale denominator at the center of the Cesium viewer's screen.
  *
  * * @param {Cesium.Viewer} viewer - The Cesium Viewer instance containing the scene and camera.
+ * @param {object} Cesium the Cesium library namespace, passed by the caller to keep Cesium out of the main bundle
  * @returns {number} The map scale denominator (M in 1:M) at the screen center.
  *                   Returns a fallback scale based on camera height if the camera
  *                   is looking at space or the globe intersection fails.
  **/
-export function getMapScaleForCesium(viewer) {
+export function getMapScaleForCesium(viewer, Cesium) {
     const FALLBACK_EARTH_CIRCUMFERENCE_METERS = 80000000;
     const cesiumDefaultProj = "EPSG:3857";
     const scene = viewer.scene;
