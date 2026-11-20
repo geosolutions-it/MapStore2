@@ -35,7 +35,8 @@ export const searchServiceUsesMapCrs = (service) => !!service && (
 
 /** Feature info expects longitude/latitude even when the search geometry is projected. */
 export const getSearchResultLatLng = (item) => {
-    const coordinates = pointOnSurface(item).geometry.coordinates;
+    const coordinates = pointOnSurface(item)?.geometry?.coordinates;
+    if (!coordinates || coordinates.length < 2) return null;
     const crs = getSearchResultCrs(item);
     if (crs === 'EPSG:4326') {
         return { lng: coordinates[0], lat: coordinates[1] };
