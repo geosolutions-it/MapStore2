@@ -786,6 +786,23 @@ export const groupSaveFormatted = (node) => {
 };
 
 /**
+ * Converts a groups tree into the flat list of groups used in the map configuration
+ * @param {object[]} groups groups tree, with nested `nodes`
+ * @return {object[]} flat list of groups in save format
+ */
+export const formatGroupsForSave = (groups = []) => {
+    const flatGroupId = groups.reduce((a, b) => {
+        const flatGroups = a.concat(getGroupNodes(b));
+        return flatGroups;
+    }, [].concat(groups.map(g => g.id)));
+
+    return flatGroupId.map(g => {
+        const node = getNode(groups, g);
+        return node && node.nodes ? groupSaveFormatted(node) : null;
+    }).filter(g => g);
+};
+
+/**
  * Formats persisted layer properties and extracts referenced WMTS definitions.
  * Resolves saved source links before formatting so saved and runtime layers use the same representation.
  * @param {object[]} layers layers to save
@@ -873,15 +890,7 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
 
     const { formattedLayers, sources } = formatLayersForSave(currentLayers, currentMap.sources);
 
-    const flatGroupId = currentGroups.reduce((a, b) => {
-        const flatGroups = a.concat(getGroupNodes(b));
-        return flatGroups;
-    }, [].concat(currentGroups.map(g => g.id)));
-
-    const groups = flatGroupId.map(g => {
-        const node = getNode(currentGroups, g);
-        return node && node.nodes ? groupSaveFormatted(node) : null;
-    }).filter(g => g);
+    const groups = formatGroupsForSave(currentGroups);
 
     const backgrounds = currentBackgrounds.filter(background => !!background.thumbnail);
 
