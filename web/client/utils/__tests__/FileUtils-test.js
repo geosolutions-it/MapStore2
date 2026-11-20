@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
+import JSZip from 'jszip';
 
 import {readJson, readZip, checkShapePrj, isFileSizeExceedMaxLimit} from '../FileUtils';
 import axios from '../../libs/ajax';
@@ -30,6 +31,17 @@ describe('FilterUtils', () => {
                 });
             });
         });
+    });
+    it('checkShapePrj detects .shp files only by their extension', (done) => {
+        const zip = new JSZip();
+        zip.file("a.shp.old.shp", "");
+        zip.generateAsync({ type: "arraybuffer" })
+            .then((buffer) => checkShapePrj(buffer))
+            .then((warnings) => {
+                expect(warnings).toEqual(["a.shp.old"]);
+                done();
+            })
+            .catch(done);
     });
     it('isFileSizeExceedMaxLimit with large size exceed the max', () => {
         const maxLimitInMega = 1;
