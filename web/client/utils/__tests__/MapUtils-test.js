@@ -2980,7 +2980,7 @@ describe('test calc scale utils for cesium', () => {
             }
         };
 
-        const result = getMapScaleForCesium(mockViewer);
+        const result = getMapScaleForCesium(mockViewer, Cesium);
 
         expect(typeof result).toBe('number');
         expect(Number.isInteger(result)).toBe(true);
@@ -3010,7 +3010,7 @@ describe('test calc scale utils for cesium', () => {
             }
         };
 
-        const result = getMapScaleForCesium(mockViewer);
+        const result = getMapScaleForCesium(mockViewer, Cesium);
 
         expect(typeof result).toBe('number');
         expect(Number.isInteger(result)).toBe(true);
@@ -3039,7 +3039,7 @@ describe('test calc scale utils for cesium', () => {
             }
         };
 
-        const result = getMapScaleForCesium(mockViewer);
+        const result = getMapScaleForCesium(mockViewer, Cesium);
 
         expect(typeof result).toBe('number');
         expect(Number.isInteger(result)).toBe(true);
