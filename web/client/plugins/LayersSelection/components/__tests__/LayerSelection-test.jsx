@@ -41,7 +41,6 @@ describe('Select Component', () => {
         onUpdateNode: () => { },
         onClose: () => { },
         isVisible: true,
-        isFloating: false,
         highlightOptions: {},
         queryOptions: {},
         selectTools: [],
@@ -62,22 +61,10 @@ describe('Select Component', () => {
         expect(componentContainer).toBeTruthy();
     });
 
-    it('updates stored layout configuration when switching panel modes', () => {
-        const storeConfiguration = expect.createSpy();
-        act(() => {
-            ReactDOM.render(<SelectComponent {...defaultProps} storeConfiguration={storeConfiguration}/>, container);
-        });
-        act(() => {
-            ReactDOM.render(<SelectComponent {...defaultProps} isFloating storeConfiguration={storeConfiguration}/>, container);
-        });
-        expect(storeConfiguration.calls.map(({ arguments: args }) => args[0].isFloating)).toEqual([false, true]);
-        expect(container.querySelector('.ms-layers-selection-floating')).toBeTruthy();
-    });
-
     it('should render the header when container is visible', () => {
         ReactDOM.render(<SelectComponent {...defaultProps} />, container);
         const componentContainer = container.querySelector('.select-dialog');
-        const header = componentContainer.querySelector('.ms-header');
+        const header = componentContainer.querySelector('.modal-header');
         expect(header).toBeTruthy();
     });
 
@@ -102,18 +89,6 @@ describe('Select Component', () => {
         const LookingForTestedLayer = msnodestitleAsArray.filter(obj => obj.innerHTML === 'TestedLayer');
         expect(LookingForTestedLayer.length).toBeGreaterThanOrEqualTo(1);
 
-    });
-
-    it('keeps the dock clear of the sidebar without a modal backdrop', () => {
-        container.style.cssText = 'position: absolute; inset: 0;';
-        ReactDOM.render(<SelectComponent {...defaultProps} dockStyle={{ right: 40 }} />, container);
-        expect(container.querySelector('.select-dialog').classList.contains('ms-side-panel')).toBe(true);
-        expect(container.querySelector('.modal-backdrop')).toBe(null);
-        const dockContainer = container.querySelector('#layers-selection-container');
-        expect(dockContainer.style.width).toBe('calc(100% - 40px)');
-        expect(dockContainer.style.transform).toBe('translateX(-40px)');
-        const header = container.querySelector('.select-dialog .ms-header').getBoundingClientRect();
-        expect(header.right).toBeLessThanOrEqualTo(window.innerWidth - 40);
     });
 
     it('disables geometry selection when no eligible layer is checked', () => {

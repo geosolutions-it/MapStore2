@@ -3,12 +3,9 @@ import ReactDOM from 'react-dom';
 import EllipsisButton from '../EllipsisButton';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
-import axios from '../../../../libs/ajax';
-import MockAdapter from 'axios-mock-adapter';
 
 describe('Ellipsis button component', () => {
     let container;
-    let mockAxios;
     const defaultProps = {
         node: {},
         selectionData: {},
@@ -19,15 +16,12 @@ describe('Ellipsis button component', () => {
     };
 
     beforeEach((done) => {
-        mockAxios = new MockAdapter(axios);
-        mockAxios.onGet().reply(200, { featureTypes: [{ typeName: 'test', properties: [] }] });
         container = document.createElement('div');
         document.body.appendChild(container);
         setTimeout(done);
     });
 
     afterEach((done) => {
-        mockAxios.restore();
         ReactDOM.unmountComponentAtNode(container);
         document.body.removeChild(container);
         setTimeout(done);
@@ -74,20 +68,6 @@ describe('Ellipsis button component', () => {
     };
 
     describe('render EllipsisButton component', () => {
-        it('opens the selected WFS layer in the attribute table', () => {
-            const node = { id: 'layer', type: 'wfs', name: 'test', url: '/wfs' };
-            const onViewInTable = expect.createSpy();
-            renderComponentWithFakeFeature({ node, onViewInTable });
-            const item = [...container.querySelectorAll('a')].find(link => link.textContent === 'layersSelection.button.viewInTable');
-            expect(item).toBeTruthy();
-            TestUtils.Simulate.click(item);
-            expect(onViewInTable).toHaveBeenCalledWith(node, null);
-        });
-
-        it('only offers the attribute table for supported WFS data sources', () => {
-            renderComponentWithFakeFeature({ node: { type: 'vector' } });
-            expect(container.textContent.indexOf('layersSelection.button.viewInTable')).toBe(-1);
-        });
         it('should render with default props', () => {
             renderComponent();
             expect(container.querySelector('._border-transparent')).toBeTruthy();

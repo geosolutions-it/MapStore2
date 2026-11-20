@@ -22,11 +22,10 @@ import Message from '../../components/I18N/Message';
 import SelectComponent from './components/LayersSelection';
 import epics from './epics/layersSelection';
 import layersSelection from './reducers/layersSelection';
-import { storeConfiguration, cleanSelection, addOrUpdateSelection, updateSelectionFeature, viewSelectionInTable } from './actions/layersSelection';
+import { storeConfiguration, cleanSelection, addOrUpdateSelection, updateSelectionFeature } from './actions/layersSelection';
 import { getSelectSelections, getSelectQueryMaxFeatureCount, getSelectDrawType, getSelectionFeature, isSelectEnabled, canDrawSelection } from './selectors/layersSelection';
 import LayersSelectionSupport from './components/LayersSelectionSupport';
 import { removeAdditionalLayer, updateAdditionalLayer } from '../../actions/additionallayers';
-import { dockStyleSelector } from '../../selectors/maplayout';
 
 /**
  * Select plugin that enables layer feature selection in the map.
@@ -34,7 +33,6 @@ import { dockStyleSelector } from '../../selectors/maplayout';
   * @class LayersSelection
   * @memberof plugins
   * @static
-  * @prop {boolean} cfg.isFloating Shows a draggable panel by default. Set false to use a docked panel.
  */
 export default createPlugin('LayersSelection', {
     component: connect(
@@ -43,15 +41,13 @@ export default createPlugin('LayersSelection', {
             layersSelector,
             getSelectSelections,
             getSelectQueryMaxFeatureCount,
-            getSelectDrawType,
-            dockStyleSelector
-        ], (isVisible, layers, selections, maxFeatureCount, drawType, dockStyle) => ({
+            getSelectDrawType
+        ], (isVisible, layers, selections, maxFeatureCount, drawType) => ({
             isVisible,
             layers,
             selections,
             maxFeatureCount,
-            drawType,
-            dockStyle
+            drawType
         })),
         {
             onClose: toggleControl.bind(null, 'layersSelection', null),
@@ -61,8 +57,7 @@ export default createPlugin('LayersSelection', {
             addOrUpdateSelection,
             zoomToExtent,
             addLayer,
-            changeLayerProperties,
-            viewSelectionInTable
+            changeLayerProperties
         }
     )(SelectComponent),
     options: {

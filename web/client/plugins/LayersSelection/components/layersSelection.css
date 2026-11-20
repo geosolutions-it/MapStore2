@@ -1,13 +1,8 @@
-.modal-fixed.ms-layers-selection-floating {
-    width: calc(100% - var(--ms-layers-selection-sidebar-offset, 0px));
-}
 
-.ms-layers-selection-floating .ms-resizable-modal > .modal-content.select-dialog {
+.ms-resizable-modal>.modal-content.select-dialog {
     top: 0;
-    right: 10px;
-    left: auto;
-    width: min(500px, calc(100% - 20px));
-    height: min(70%, calc(100% - 170px));
+    right: 50px;
+    left: unset;
 }
 
 .select-content * .ms-node-header-info>.ms-node-header-addons:nth-child(3) {

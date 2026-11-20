@@ -9,11 +9,9 @@
 import { Observable } from 'rxjs';
 import axios from 'axios';
 import { SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL, RESET_CONTROLS } from '../../../actions/controls';
-import { UPDATE_NODE, REMOVE_NODE, browseData } from '../../../actions/layers';
+import { UPDATE_NODE, REMOVE_NODE } from '../../../actions/layers';
 import { registerEventListener, unRegisterEventListener} from '../../../actions/map';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../../../actions/mapInfo';
-import { updateDockPanelsList, forceUpdateMapLayout } from '../../../actions/maplayout';
-import { setLayer, storeAdvancedSearchFilter } from '../../../actions/featuregrid';
 import { shutdownToolOnAnotherToolDrawing } from "../../../utils/ControlUtils";
 import { describeFeatureType, getFeatureURL } from '../../../api/WFS';
 import { extractGeometryAttributeName } from '../../../utils/WFSLayerUtils';
@@ -23,8 +21,8 @@ import { layersSelector, groupsSelector } from '../../../selectors/layers';
 import { flattenArrayOfObjects, getInactiveNode, getSearchUrl, getWFSLayerName } from '../../../utils/LayersUtils';
 
 import { optionsToVendorParams } from '../../../utils/VendorParamsUtils';
-import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions, getSelectionFeature, getSelectSelections } from '../selectors/layersSelection';
-import { SELECT_CLEAN_SELECTION, SELECT_STORE_CFG, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection, UPDATE_SELECTION_FEATURE, cleanSelection as cleanSelectionAction, VIEW_SELECTION_IN_TABLE } from '../actions/layersSelection';
+import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions, getSelectionFeature } from '../selectors/layersSelection';
+import { SELECT_CLEAN_SELECTION, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection, UPDATE_SELECTION_FEATURE, cleanSelection as cleanSelectionAction } from '../actions/layersSelection';
 import { buildAdditionalLayerId, buildAdditionalLayerOwnerName, arcgisToGeoJSON, makeCrsValid, customUpdateAdditionalLayer } from '../utils/LayersSelection';
 
 /**
@@ -143,33 +141,27 @@ const queryLayer = (layer, geometry, selectQueryMaxCount) => {
     }
 };
 
-/**
- * Epic triggered when the Select tool is opened.
- * Claims map clicks and registers the selection dock with the shared layout.
- *
- * @param {Observable} action$ - Stream of Redux actions.
- * @param {Object} store - Redux store.
- * @returns {Observable} Epic stream.
- */
 const isSelectionControlAction = action => action.control === 'layersSelection'
     && (action.type === SET_CONTROL_PROPERTIES
         ? Object.hasOwn(action.properties, 'enabled')
         : !action.property || action.property === 'enabled');
 
+/**
+ * Epic triggered when the Select tool is opened.
+ * Claims map clicks and clears identify results.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const openSelectEpic = (action$, store) => action$
     .ofType(SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL)
     .filter(action => isSelectionControlAction(action) && isSelectEnabled(store.getState()))
     .switchMap(() => Observable.of(
         purgeMapInfoResults(),
         hideMapinfoMarker(),
-        registerEventListener('click', 'layersSelection'),
-        // Both panel modes remain exclusive with the tools using the right dock.
-        updateDockPanelsList('layersSelection', 'add', 'right')
+        registerEventListener('click', 'layersSelection')
     ));
-
-export const updateSelectionLayout = action$ => action$
-    .ofType(SELECT_STORE_CFG)
-    .mapTo(forceUpdateMapLayout());
 
 /**
  * Epic triggered when the Select tool is closed.
@@ -185,7 +177,6 @@ export const closeSelectEpics = (action$, store) => action$
         && !isSelectEnabled(store.getState()))
     .switchMap(() => Observable.of(
         unRegisterEventListener('click', 'layersSelection'),
-        updateDockPanelsList('layersSelection', 'remove', 'right'),
         cleanSelectionAction(null)
     ));
 
@@ -317,57 +308,8 @@ export const onSelectionUpdate = (action$, store) => action$
         ));
     });
 
-export const viewSelectionInTable = (action$, store) => action$
-    .ofType(VIEW_SELECTION_IN_TABLE)
-    .filter(({ layer }) => isSelectEnabled(store.getState()) && ['wms', 'wfs'].includes(layer.type))
-    .switchMap(({ layer, primaryKey }) => {
-        const state = store.getState();
-        const features = getSelectSelections(state)[layer.id]?.features || [];
-        const geometry = getSelectionFeature(state)?.geometry;
-        if (!features.length || (!primaryKey && !geometry)) {
-            return Observable.empty();
-        }
-        const url = getSearchUrl(layer);
-        const name = getWFSLayerName(layer);
-        return Observable.defer(() => describeFeatureType(url, name))
-            .mergeMap(describe => Observable.of(
-                setLayer(layer.id),
-                storeAdvancedSearchFilter({
-                    featureTypeName: name,
-                    filterType: 'OGC',
-                    ogcVersion: '1.1.0',
-                    ...(primaryKey ? {
-                        groupFields: [{ id: 1, logic: 'OR', index: 0 }],
-                        filterFields: features.map((feature, index) => ({
-                            rowId: index,
-                            groupId: 1,
-                            attribute: primaryKey,
-                            operator: '=',
-                            value: feature.properties[primaryKey],
-                            type: typeof feature.properties[primaryKey] === 'number' ? 'number' : 'string'
-                        }))
-                    } : {
-                        spatialField: {
-                            operation: 'INTERSECTS',
-                            attribute: extractGeometryAttributeName(describe),
-                            geometry
-                        }
-                    })
-                }),
-                browseData(layer)
-            ))
-            .catch(error => Observable.of(addOrUpdateSelection(layer, { error })))
-            .takeUntil(action$.filter(action => action.type === SELECT_CLEAN_SELECTION
-                || action.type === UPDATE_SELECTION_FEATURE
-                || !isSelectEnabled(store.getState())
-                || (action.type === UPDATE_NODE && action.node === layer.id && action.options?.isSelectQueriable === false)
-                || (action.type === REMOVE_NODE && action.node === layer.id)
-            ));
-    });
-
 export default {
     openSelectEpic,
-    updateSelectionLayout,
     closeSelectEpics,
     tearDownSelectOnDrawToolActive,
     queryLayers,
@@ -375,6 +317,5 @@ export default {
     cleanSelection,
     synchroniseLayersAndAdditionalLayers,
     onRemoveLayer,
-    onSelectionUpdate,
-    viewSelectionInTable
+    onSelectionUpdate
 };

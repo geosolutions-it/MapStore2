@@ -7,12 +7,10 @@
  */
 
 import isNil from 'lodash/isNil';
-import { UPDATE_MAP_LAYOUT, updateMapLayout, updateDockPanelsList } from '../../../actions/maplayout';
-import { SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL, RESET_CONTROLS } from '../../../actions/controls';
+import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
 import { DEFAULT_PANEL_WIDTH, getBoundingSidebarRect } from '../../../utils/LayoutUtils';
 import { CONTROL_NAME } from '../constants';
 import { enabledSelector, isFloatingSelector } from '../selectors/dynamiclegend';
-import { SET_CONFIGURATION } from '../actions/dynamiclegend';
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
 /**
@@ -42,16 +40,6 @@ export const dynamicLegendMapLayoutEpic = (action$, store) =>
             return { ...action, source: CONTROL_NAME };
         });
 
-export const dynamicLegendDockPanelEpic = (action$, store) => action$
-    .ofType(SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL, RESET_CONTROLS, SET_CONFIGURATION)
-    .filter(action => [SET_CONFIGURATION, RESET_CONTROLS].includes(action.type)
-        || (action.control === CONTROL_NAME && (action.type === SET_CONTROL_PROPERTIES
-            ? Object.hasOwn(action.properties, 'enabled')
-            : !action.property || action.property === 'enabled')))
-    .map(() => updateDockPanelsList(CONTROL_NAME,
-        enabledSelector(store.getState()) && !isFloatingSelector(store.getState()) ? 'add' : 'remove', 'right'));
-
 export default {
-    dynamicLegendMapLayoutEpic,
-    dynamicLegendDockPanelEpic
+    dynamicLegendMapLayoutEpic
 };

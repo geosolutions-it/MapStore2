@@ -2,7 +2,6 @@ export const SELECT_CLEAN_SELECTION = "SELECT:CLEAN_SELECTION";
 export const SELECT_STORE_CFG = "SELECT:STORE_CFG";
 export const ADD_OR_UPDATE_SELECTION = "SELECT:ADD_OR_UPDATE_SELECTION";
 export const UPDATE_SELECTION_FEATURE = "SELECT:UPDATE_SELECTION_FEATURE";
-export const VIEW_SELECTION_IN_TABLE = "SELECT:VIEW_SELECTION_IN_TABLE";
 /**
  * Action creator to clean the current selection based on geometry type.
  *
@@ -48,13 +47,5 @@ export function updateSelectionFeature(feature) {
     return {
         type: UPDATE_SELECTION_FEATURE,
         feature
-    };
-}
-
-export function viewSelectionInTable(layer, primaryKey) {
-    return {
-        type: VIEW_SELECTION_IN_TABLE,
-        layer,
-        primaryKey
     };
 }

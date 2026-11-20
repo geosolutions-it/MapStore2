@@ -115,7 +115,6 @@ export const updateMapLayoutEpic = (action$, store) =>
             ].filter(panel => panel)) || {left: 0};
 
             const rightPanels = head([
-                get(state, "controls.layersSelection.enabled") && !get(state, "layersSelection.cfg.isFloating", true) && {right: mapLayout.right.md} || null,
                 get(state, "controls.details.enabled") && !mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal && {right: mapLayout.right.md} || null,
                 get(state, "controls.metadataexplorer.enabled") && get(state, "controls.metadataexplorer.panel", true) !== false && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,
