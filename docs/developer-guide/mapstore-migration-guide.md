@@ -31,6 +31,15 @@ In your project, you should update the `jackson.version` property from version `
 +        <jackson.version>2.22.4</jackson.version>
 ```
 
+### Guava updated to 33.7.2-jre
+
+In your project, you should update the `guava.version` property from version `32.0.0-jre` to version `33.7.2-jre` in the root `pom.xml`.
+
+```diff
+-        <guava.version>32.0.0-jre</guava.version>
++        <guava.version>33.7.2-jre</guava.version>
+```
+
 ## Migration from 2026.02.02 to 2026.03.00
 
 ### Set minimum NodeJS version to 22
