@@ -12,6 +12,7 @@
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
+import { endServerSession } from '../utils/LoginPersistenceUtils';
 
 export const CHECK_LOGGED_USER = 'CHECK_LOGGED_USER';
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
@@ -27,6 +28,17 @@ export const CHANGE_PASSWORD_FAIL = 'CHANGE_PASSWORD_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const REFRESH_SUCCESS = 'REFRESH_SUCCESS';
 export const SESSION_VALID = 'SESSION_VALID';
+export const SESSION_ENDED = 'SESSION_ENDED';
+
+/**
+ * Reasons of {@link sessionEnded}.
+ */
+export const SESSION_END_REASONS = {
+    /** a login left by an earlier browser session was not restored (`loginPersistence: "browserSession"`) */
+    BROWSER_SESSION: 'browserSession',
+    /** the access token could not be refreshed */
+    REFRESH_FAILED: 'refreshFailed'
+};
 
 export const SET_SHOW_MODAL_STATUS = 'SECURITY:SET_SHOW_MODAL_STATUS';
 export const SET_CREDENTIALS = 'SECURITY:SET_CREDENTIALS';
@@ -152,6 +164,18 @@ export function refreshSuccess(userDetails, authProvider) {
     };
 }
 
+/**
+ * Notifies that MapStore ended the login without a user action, for example to show a notice.
+ * Not dispatched when the user logs out.
+ * @param {string} reason one of {@link SESSION_END_REASONS}
+ */
+export function sessionEnded(reason) {
+    return {
+        type: SESSION_ENDED,
+        reason
+    };
+}
+
 export function refreshAccessToken() {
     return (dispatch) => {
         const accessToken = getToken();
@@ -160,6 +184,9 @@ export function refreshAccessToken() {
             dispatch(refreshSuccess(response, AuthenticationAPI.authProviderName));
         }).catch(() => {
             dispatch(logout(null));
+            dispatch(sessionEnded(SESSION_END_REASONS.REFRESH_FAILED));
+            // the session cannot be renewed: end it on the server too, not only in the client
+            endServerSession(accessToken);
         });
     };
 }

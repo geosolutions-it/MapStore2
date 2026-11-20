@@ -11,6 +11,8 @@ import {
     loginSuccess,
     logout,
     loginPromptClosed,
+    sessionEnded,
+    SESSION_END_REASONS,
     LOGIN_SUCCESS,
     LOGOUT,
     LOGIN_REQUIRED
@@ -28,6 +30,12 @@ import { isLoggedIn, isLoginWindowOpen } from '../selectors/security';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCookieValue, eraseCookie} from '../utils/CookieUtils';
 import { consumeLoginRedirect } from '../utils/LoginRedirectUtils';
+import {
+    isLoginTiedToBrowserSession,
+    markLoginBrowserSession,
+    clearLoginBrowserSession,
+    consumeDiscardedPersistedLogin
+} from '../utils/LoginPersistenceUtils';
 import AuthenticationAPI from '../api/GeoStoreDAO';
 import Rx from 'rxjs';
 import { push, replace, LOCATION_CHANGE } from 'connected-react-router';
@@ -169,6 +177,32 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
     });
 };
 
+/**
+ * With `loginPersistence` set to `browserSession`, marks the browser session the login belongs to
+ * when the user logs in, and removes the mark on logout. A login persisted by a browser session
+ * without the mark is not restored (see `utils/LoginPersistenceUtils`).
+ * @memberof epics.login
+ * @return {external:Observable} emitting no actions
+ */
+export const markLoginBrowserSessionEpic = (action$) =>
+    action$.ofType(LOGIN_SUCCESS, LOGOUT)
+        .filter(() => isLoginTiedToBrowserSession())
+        .do(({type}) => type === LOGIN_SUCCESS ? markLoginBrowserSession() : clearLoginBrowserSession())
+        .ignoreElements();
+
+/**
+ * Notifies, with {@link #actions.security.sessionEnded}, a login of an earlier browser session
+ * that was not restored at startup (`loginPersistence: "browserSession"`). It is emitted on the
+ * first location change, when the session check of a restored login runs too.
+ * @memberof epics.login
+ * @return {external:Observable} emitting a session ended event with the `browserSession` reason
+ */
+export const notifyLoginNotRestoredEpic = (action$) =>
+    action$.ofType(LOCATION_CHANGE)
+        .take(1)
+        .filter(() => consumeDiscardedPersistedLogin())
+        .mapTo(sessionEnded(SESSION_END_REASONS.BROWSER_SESSION));
+
 export const checkSSO = ( action$, store ) => {
     return action$.ofType(LOCAL_CONFIG_LOADED).take(1).switchMap(() => {
         const providers = ConfigUtils.getConfigProp("authenticationProviders");
@@ -202,5 +236,7 @@ export default {
     initCatalogOnLoginOutEpic,
     verifyOpenIdSessionCookie,
     restoreLoginRedirect,
-    redirectOnLogout
+    redirectOnLogout,
+    markLoginBrowserSessionEpic,
+    notifyLoginNotRestoredEpic
 };

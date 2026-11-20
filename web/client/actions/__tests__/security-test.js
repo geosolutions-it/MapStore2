@@ -10,6 +10,9 @@ import expect from 'expect';
 
 import * as security from '../security';
 import { getCredentials } from '../../utils/SecurityUtils';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
+import { setStore } from '../../utils/StateUtils';
 
 
 describe('Test correctness of the close actions', () => {
@@ -102,9 +105,56 @@ describe('Test correctness of the close actions', () => {
         const action = security.refreshSecurityLayers();
         expect(action.type).toBe(security.REFRESH_SECURITY_LAYERS);
     });
+    it('sessionEnded', () => {
+        const action = security.sessionEnded(security.SESSION_END_REASONS.BROWSER_SESSION);
+        expect(action).toEqual({ type: security.SESSION_ENDED, reason: 'browserSession' });
+        expect(security.SESSION_END_REASONS.REFRESH_FAILED).toBe('refreshFailed');
+    });
     it('setLoginLoading', () => {
         const action = security.setLoginLoading(true);
         expect(action.loading).toBe(true);
         expect(action.type).toBe(security.LOGIN_LOADING);
+    });
+});
+
+describe('refreshAccessToken', () => {
+    let mockAxios;
+    beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
+        setStore({ getState: () => ({ security: { token: 'old-token', refresh_token: 'refresh' } }) });
+    });
+    afterEach(() => {
+        mockAxios.restore();
+        setStore({});
+    });
+    it('a failed refresh logs out locally and ends the session on the server', (done) => {
+        const actions = [];
+        mockAxios.onPost(/session\/refreshToken/).reply(403);
+        mockAxios.onDelete(/session\/logout/).reply((config) => {
+            try {
+                expect(config.headers.Authorization).toBe('Bearer old-token');
+                expect(actions.map(({type}) => type)).toEqual([security.LOGOUT, security.SESSION_ENDED]);
+                expect(actions[1].reason).toBe(security.SESSION_END_REASONS.REFRESH_FAILED);
+                done();
+            } catch (e) {
+                done(e);
+            }
+            return [204];
+        });
+        security.refreshAccessToken()(action => actions.push(action));
+    });
+    it('a successful refresh does not log out', (done) => {
+        mockAxios.onPost(/session\/refreshToken/).reply(200, { sessionToken: { access_token: 'new-token' } });
+        security.refreshAccessToken()((action) => {
+            try {
+                expect(action.type).toBe(security.REFRESH_SUCCESS);
+                setTimeout(() => {
+                    expect(mockAxios.history.delete.length).toBe(0);
+                    done();
+                }, 20);
+            } catch (e) {
+                done(e);
+            }
+        });
     });
 });
