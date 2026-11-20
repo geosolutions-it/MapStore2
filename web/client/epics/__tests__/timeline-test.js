@@ -478,6 +478,11 @@ describe('timeline Epics', () => {
         });
     });
     describe("setRangeOnInit", () => {
+        let mockAxios;
+        afterEach(() => {
+            mockAxios?.restore();
+            mockAxios = null;
+        });
         it("setRangeOnInit on domain and current time", (done) => {
             testEpic(setRangeOnInit, 3, initializeRange(), ([action1, action2, action3]) => {
                 const { time, type } = action1;
@@ -567,6 +572,59 @@ describe('timeline Epics', () => {
                                 source: {
                                     type: 'multidim-extension',
                                     url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+        it("setRangeOnInit when one end of the domain is not available", (done) => {
+            const DOMAIN_START = "2016-09-01T00:00:00.000Z";
+            mockAxios = new MockAdapter(axios);
+            // the request for the last value of the domain fails
+            mockAxios.onGet().reply(({ params }) => params.sort === "asc"
+                ? [200, `<?xml version="1.0" encoding="UTF-8"?><DomainValues xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1"><ows:Identifier>time</ows:Identifier><Limit>1</Limit><Sort>asc</Sort><Domain>${DOMAIN_START}</Domain><Size>1</Size></DomainValues>`]
+                : [500]);
+            testEpic(setRangeOnInit, 3, initializeRange(), ([action1, action2, action3]) => {
+                try {
+                    expect(action1.type).toBe(SET_CURRENT_TIME);
+                    expect(action1.time).toBe(DOMAIN_START);
+                    expect(action2.type).toBe(SET_OFFSET_TIME);
+                    expect(moment(action2.offsetTime).isValid()).toBe(true);
+                    expect(action3.type).toBe(RANGE_CHANGED);
+                    expect(action3.start).toBe(DOMAIN_START);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    }
+                },
+                dimension: {
+                    currentTime: "2000-01-01T00:00:00.000Z"
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: '/geoserver/wms',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: '/geoserver/gwc/service/wmts'
                                 },
                                 name: 'time'
                             }
