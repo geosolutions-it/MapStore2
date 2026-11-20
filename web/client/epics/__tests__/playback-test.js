@@ -349,6 +349,33 @@ describe('playback Epics', () => {
             }
         }, ANIMATION_MOCK_STATE);
     });
+    it('setIsIntervalData when one of the nearest values is not available', done => {
+        mock.onGet('MOCK_DOMAIN_VALUES').replyOnce(500);
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_INTERVAL_VALUES_RESPONSE);
+        testEpic(setIsIntervalData, 1, setCurrentTime("2016-09-04T00:00:00.000Z"), ([action]) => {
+            try {
+                const { type, timeIntervalData } = action;
+                expect(type).toBe(SET_INTERVAL_DATA);
+                expect(timeIntervalData).toBe(true);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
+    it('setIsIntervalData when no nearest value is available', done => {
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(500);
+        testEpic(setIsIntervalData, 1, setCurrentTime("2016-09-04T00:00:00.000Z"), ([action]) => {
+            try {
+                const { type, timeIntervalData } = action;
+                expect(type).toBe(SET_INTERVAL_DATA);
+                expect(timeIntervalData).toBe(false);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
     it('setIsIntervalData when no time layer selected', done => {
         testEpic(addTimeoutEpic(setIsIntervalData, 100), 1, setCurrentTime("2016-09-04T00:00:00.000Z"), ([action]) => {
             try {
