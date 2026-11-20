@@ -130,7 +130,7 @@
         "maxItems": "Feature count",
         "maxItemsTooltip": "Maximum number of features returned by an Identify request. The default value is 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "GeoServer vendor parameter that expands the Identify search radius around the clicked point, measured in screen pixels."
+        "bufferTooltip": "Expands the Identify search radius around the clicked point, measured in screen pixels. Available for GeoServer and QGIS Server layers."
       },
       "guideText": "In the URL of the image you can use placeholders like $\\{properties.YOUR_ATTRIBUTE\\} to make the URL parametric, depending by the feature attributes. It supports both URLs or \"Data URIs\" encoded in base64",
       "imageNotFound": "This image may need a feature info request to be rendered correctly",
@@ -189,6 +189,7 @@
       "serverType": "Server Type",
       "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "No Vendor",
         "geoserver": "GeoServer"
       },

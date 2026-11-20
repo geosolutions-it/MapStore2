@@ -132,6 +132,7 @@
       "serverType": "Servertyp",
       "formatError": "Det var inte möjligt att hämta format och informationsbladsformat från den konfigurerade tjänsten. Troligen använder du en tjänst utan leverantör och detta stöds inte (t.ex. GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Ingen leverantör",
         "geoserver": "GeoServer"
       },

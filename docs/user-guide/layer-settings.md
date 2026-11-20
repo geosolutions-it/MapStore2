@@ -757,4 +757,6 @@ For `WMS` layers, the Feature Info section also provides settings that control h
 * **Buffer (px)**: the search radius, in pixels, around the clicked point. Increasing the buffer makes it easier to identify points and lines.
 
 !!! note
-    **Buffer (px)** uses the GeoServer `BUFFER` vendor parameter and is available only for layers served by GeoServer.
+    **Buffer (px)** uses the `BUFFER` vendor parameter for GeoServer layers. Layers configured with the `QGIS Server` server type use the same value for `FI_POINT_TOLERANCE`, `FI_LINE_TOLERANCE`, and `FI_POLYGON_TOLERANCE`. The field is hidden for **No Vendor** layers. Leave it blank to use the server's default tolerance.
+
+Select `QGIS Server` in the WMS source's advanced catalog settings before adding layers. For existing map configurations, set the layer's `serverType` to `qgis`. Saving the map preserves the server type and Buffer value.

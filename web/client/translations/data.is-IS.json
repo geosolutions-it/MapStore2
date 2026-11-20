@@ -117,6 +117,7 @@
       "wmsLayerTileSize": "Tile size (WMS)",
       "serverType": "Server Type",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "No Vendor",
         "geoserver": "GeoServer"
       },

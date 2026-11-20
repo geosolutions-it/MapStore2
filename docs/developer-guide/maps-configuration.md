@@ -245,6 +245,8 @@ Details:
 - `params`: an object with additional parameters to add to the WMS request
 - `layerFilter`: an object to filter the layer. See [LayerFilter](LayerFilter.md) for details.
 - `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs', typeName: 'workspace:featureType'}`. The optional `typeName` identifies the linked WFS feature type; when omitted, MapStore uses the WMS layer `name` for backward compatibility.
+- `serverType`: the WMS server vendor: `geoserver`, `qgis`, or `no-vendor`. If omitted, GeoServer is assumed for backward compatibility. Set `qgis` explicitly for QGIS Server layers to use QGIS Identify tolerance parameters and avoid GeoServer vendor extensions.
+- `featureInfo.buffer`: optional Identify search radius in pixels, from `0` to `1000`. GeoServer uses `BUFFER`; QGIS Server uses the same value for `FI_POINT_TOLERANCE`, `FI_LINE_TOLERANCE`, and `FI_POLYGON_TOLERANCE`. The option is not available for `no-vendor` layers. Leave it unset to use the server default.
 - `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.). See [Fields](#fields) for details.
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
 - `singleTile`: By default, WMS is invoked using tiled requests. If you want to use a single tile request, you can set this property to `true`.
@@ -976,7 +978,7 @@ This layer differs from the "vector" because all the loading/filtering/querying 
 
 Here a list of experimental properties that can be used in the WFS layer configuration, they may change in the future.
 
-- `serverType`: analogous to the `serverType` of the WMS layer. It can be `geoserver` or `no-vendor`. If `no-vendor` is used, the requests will not contain vendor specific parameters like `cql_filter`, and the layer will be treated as a generic WFS layer. The filtering will be done on the "WFS client" side, using the `filter` property. Actually this property is supported only in OpenLayers and only for the map viewer.
+- `serverType`: analogous to the `serverType` of the WMS layer. It can be `geoserver`, `qgis`, or `no-vendor`. If omitted, GeoServer is assumed. If `qgis` or `no-vendor` is used, the requests will not contain vendor specific parameters like `cql_filter`, and the layer will be treated as a generic WFS layer. The filtering will be done on the "WFS client" side, using the `filter` property. Actually this property is supported only in OpenLayers and only for the map viewer.
 - `security`: this is an object that can contain the security configuration for the layer. It allows to specify if some particular security is configured for this layer, apart from the usual `securityRules` configured globally. It can contain the following properties. Actually this property is supported only in OpenLayers and only for the map viewer:
 
   - `type`: the type of security to use. It can be `Basic`.

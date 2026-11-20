@@ -20,7 +20,7 @@ import { get as getProjection } from 'ol/proj';
 import { isArray, filter, find, isEmpty, toNumber, castArray, reverse, includes } from 'lodash';
 import { getFeature } from '../api/WFS';
 import { generateEnvString } from './LayerLocalizationUtils';
-import { ServerTypes } from './LayersUtils';
+import { isGeoServer } from './LayersUtils';
 import PrintStyleParser from './styleparser/PrintStyleParser';
 import url from 'url';
 
@@ -700,7 +700,7 @@ export const getDefaultPrintingService = () => {
  * @param {layer} the layer object
  */
 export const getPrintVendorParams = (layer) => {
-    if (layer?.serverType === ServerTypes.NO_VENDOR) {
+    if (!isGeoServer(layer)) {
         return {};
     }
     return { "TILED": true };
