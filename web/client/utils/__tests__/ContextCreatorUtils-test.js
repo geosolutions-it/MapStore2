@@ -79,4 +79,36 @@ describe('Test the ContextCreatorUtils', () => {
             }
         });
     });
+    it('migrateContextConfiguration migrates also the plugins the user can activate', () => {
+        const newContext = migrateContextConfiguration({
+            plugins: {
+                desktop: [{ name: 'Map' }]
+            },
+            userPlugins: [
+                { name: 'Timeline', active: false },
+                { name: 'MetadataExplorer', active: true },
+                { name: 'FeatureEditor', cfg: { someOption: true } },
+                { name: 'Measure' }
+            ]
+        });
+        expect(newContext).toEqual({
+            plugins: {
+                desktop: [{ name: 'Map', cfg: { containerPosition: 'background' } }]
+            },
+            userPlugins: [
+                { name: 'Timeline', active: false, cfg: { containerPosition: 'bottom' } },
+                { name: 'Catalog', active: true },
+                { name: 'FeatureEditor', cfg: { someOption: true, containerPosition: 'bottom' } },
+                { name: 'Measure' }
+            ]
+        });
+    });
+    it('migrateContextConfiguration does not add userPlugins when the context has none', () => {
+        const newContext = migrateContextConfiguration({
+            plugins: {
+                desktop: [{ name: 'Timeline' }]
+            }
+        });
+        expect(Object.keys(newContext)).toEqual(['plugins']);
+    });
 });
