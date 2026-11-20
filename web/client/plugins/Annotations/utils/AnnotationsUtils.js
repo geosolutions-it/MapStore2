@@ -18,7 +18,8 @@ import {
 } from '../../../utils/MeasurementUtils';
 
 import {
-    transformLineToArcs
+    transformLineToArcs,
+    reproject
 } from '../../../utils/CoordinatesUtils';
 
 // legacy style
@@ -100,6 +101,37 @@ export const ANNOTATIONS = "annotations";
  * @param {object} layer MapStore layer object
  * @returns {boolean}
  */
+const flattenCoordinates = (coordinates) => typeof coordinates?.[0] === 'number'
+    ? [coordinates]
+    : (coordinates || []).reduce((acc, c) => [...acc, ...flattenCoordinates(c)], []);
+
+const boxRing = ([minx, miny, maxx, maxy]) => [[minx, miny], [minx, maxy], [maxx, maxy], [maxx, miny], [minx, miny]];
+
+/**
+ * Returns the closed ring (EPSG:4326 coordinates) of the box around a feature, axis-aligned in the map projection.
+ * A box computed from the lon/lat bounds is drawn rotated and too large on maps in a projected CRS other than
+ * Web Mercator (e.g. UTM), so for those the bounds are computed in the map projection and only the corners are
+ * reprojected back. EPSG:4326, EPSG:3857 and EPSG:900913 keep the lon/lat bounds.
+ * @param {object} feature GeoJSON feature in EPSG:4326
+ * @param {string} projection the map projection code
+ * @returns {number[][]} closed ring of [x, y] coordinates in EPSG:4326
+ */
+export const getHighlightBoxCoordinates = (feature, projection) => {
+    const lonLatBox = () => boxRing(turfBbox(feature));
+    if (!projection || ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'].includes(projection)) {
+        return lonLatBox();
+    }
+    const projected = flattenCoordinates(feature?.geometry?.coordinates).map((c) => reproject(c, 'EPSG:4326', projection));
+    if (!projected.length || projected.some((p) => !p)) {
+        return lonLatBox();
+    }
+    const xs = projected.map(({ x }) => x);
+    const ys = projected.map(({ y }) => y);
+    const corners = boxRing([Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)])
+        .map((c) => reproject(c, projection, 'EPSG:4326'));
+    return corners.some((c) => !c) ? lonLatBox() : corners.map(({ x, y }) => [x, y]);
+};
+
 export const isAnnotationLayer = (layer) => (layer.id || '').includes(`${ANNOTATIONS}:`) && layer.rowViewer === ANNOTATIONS;
 /**
  * Legacy: utility to check if the GeoJSON has the annotation model structure i.e. {"type": "ms2-annotations", "features": [list of FeatureCollection]}

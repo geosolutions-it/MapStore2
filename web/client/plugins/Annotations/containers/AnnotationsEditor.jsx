@@ -15,6 +15,7 @@ import tinycolor from 'tinycolor2';
 import {
     ANNOTATIONS,
     checkInvalidCoordinate,
+    getHighlightBoxCoordinates,
     validateFeature
 } from '../utils/AnnotationsUtils';
 import { zoomToExtent } from '../../../actions/map';
@@ -36,7 +37,6 @@ import {
     updateAdditionalLayer,
     removeAdditionalLayer
 } from '../../../actions/additionallayers';
-import bbox from '@turf/bbox';
 import {
     DEFAULT_TARGET_ID,
     ANNOTATIONS_ADDITIONAL_LAYERS_OWNER,
@@ -72,17 +72,16 @@ function getInvalidFeatures(features) {
         }, []);
 }
 
-function getHighlightFeatures(feature) {
+function getHighlightFeatures(feature, projection) {
     if (!feature?.geometry?.type) {
         return [];
     }
     if (feature.geometry.type === 'Point' && !feature.geometry.coordinates.some(checkInvalidCoordinate)) {
         return [{ ...feature, properties: { geometryType: 'Point' } }];
     }
-    const [minx, miny, maxx, maxy] = bbox(feature);
     const perimeter = {
         type: 'Feature',
-        geometry: { type: 'LineString', coordinates: [[minx, miny], [minx, maxy], [maxx, maxy], [maxx, miny], [minx, miny]] },
+        geometry: { type: 'LineString', coordinates: getHighlightBoxCoordinates(feature, projection) },
         properties: { geometryType: 'LineString' }
     };
     if (feature.geometry.type === 'LineString') {
@@ -180,6 +179,7 @@ function AnnotationsEditor({
             onRemoveALayer({ owner: ANNOTATIONS_ADDITIONAL_LAYERS_OWNER });
         };
     }, [enabled]);
+    const highlightProjection = mapType === 'cesium' ? undefined : projection;
     function updateInvalidLayer(invalidFeatures) {
         onUpdateALayer(ANNOTATIONS_INVALID_LAYER, ANNOTATIONS_ADDITIONAL_LAYERS_OWNER, 'overlay', {
             type: 'vector',
@@ -237,7 +237,7 @@ function AnnotationsEditor({
         onUpdateALayer(ANNOTATIONS_SELECTED_LAYER, ANNOTATIONS_ADDITIONAL_LAYERS_OWNER, 'overlay', {
             type: 'vector',
             visibility: true,
-            features: feature ? getHighlightFeatures(feature) : [],
+            features: feature ? getHighlightFeatures(feature, highlightProjection) : [],
             style: {
                 format: 'geostyler',
                 body: {
@@ -318,7 +318,7 @@ function AnnotationsEditor({
                     onUpdateALayer(ANNOTATIONS_HIGHLIGHT_LAYER, ANNOTATIONS_ADDITIONAL_LAYERS_OWNER, 'overlay', {
                         type: 'vector',
                         visibility: true,
-                        features: feature ? getHighlightFeatures(feature) : [],
+                        features: feature ? getHighlightFeatures(feature, highlightProjection) : [],
                         style: {
                             format: 'geostyler',
                             body: {
