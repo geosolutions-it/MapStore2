@@ -30,8 +30,8 @@ describe('mapinfo wms utils', () => {
         mockAxios = null;
         setTimeout(done);
     });
-    [undefined, ServerTypes.NO_VENDOR].forEach(serverType => {
-        it(`detects QGIS before planning Identify for an existing ${serverType || 'default'} layer`, async() => {
+    [undefined, ServerTypes.GEOSERVER, ServerTypes.QGIS, ServerTypes.NO_VENDOR].forEach(serverType => {
+        it(`plans Identify without fetching capabilities for ${serverType || 'default'} layers`, async() => {
             const layer = {
                 type: 'wms',
                 name: 'trees',
@@ -41,8 +41,6 @@ describe('mapinfo wms utils', () => {
                 infoFormats: ['text/html'],
                 featureInfo: { buffer: 10 }
             };
-            mockAxios.onGet('/ows?service=WMS&version=1.3.0&request=GetCapabilities&MAP=trees.qgz')
-                .reply(200, '<WMS_Capabilities xmlns:qgs="http://www.qgis.org/wms"><Capability/></WMS_Capabilities>');
             const options = {
                 point: { latlng: { lat: 0, lng: 0 } },
                 map: { projection: 'EPSG:4326', resolution: 1 },
@@ -50,45 +48,19 @@ describe('mapinfo wms utils', () => {
             };
             const resolvedLayer = await resolveIdentifyLayer(layer, options);
             const { requests } = buildIdentifyRequestPlan(resolvedLayer, options);
-            expect(resolvedLayer.isQGIS).toBe(true);
-            expect(layer).toExcludeKey('isQGIS');
+            expect(resolvedLayer).toBe(layer);
             expect(requests.length).toBe(1);
-            expect(requests[0].request).toInclude({
-                FI_POINT_TOLERANCE: 10,
-                FI_LINE_TOLERANCE: 10,
-                FI_POLYGON_TOLERANCE: 10,
-                MAP: 'trees.qgz'
-            });
-            expect(requests[0].request).toExcludeKey('buffer');
+            expect(requests[0].request.MAP).toBe('trees.qgz');
+            if (serverType === ServerTypes.QGIS) {
+                expect(requests[0].request).toInclude({
+                    FI_POINT_TOLERANCE: 10,
+                    FI_LINE_TOLERANCE: 10,
+                    FI_POLYGON_TOLERANCE: 10
+                });
+                expect(requests[0].request).toExcludeKey('buffer');
+            }
+            expect(mockAxios.history.get.length).toBe(0);
         });
-    });
-    it('reuses QGIS detection for concurrent and subsequent clicks on the same layer', async() => {
-        const layer = { url: '/ows', featureInfo: { buffer: 0 } };
-        mockAxios.onGet().reply(200, '<WMS_Capabilities xmlns:qgs="http://www.qgis.org/wms"><Capability/></WMS_Capabilities>');
-        const layers = await Promise.all([wms.resolveLayer(layer), wms.resolveLayer(layer)]);
-        expect(layers.every(({ isQGIS }) => isQGIS)).toBe(true);
-        expect((await wms.resolveLayer(layer)).isQGIS).toBe(true);
-        expect(mockAxios.history.get.length).toBe(1);
-    });
-    it('keeps Identify working after failed detection and retries on the next click', async() => {
-        const layer = { url: '/ows', featureInfo: { buffer: 10 } };
-        mockAxios.onGet().replyOnce(500);
-        expect(await wms.resolveLayer(layer)).toBe(layer);
-        mockAxios.onGet().reply(200, '<WMS_Capabilities xmlns:qgs="http://www.qgis.org/wms"><Capability/></WMS_Capabilities>');
-        expect((await wms.resolveLayer(layer)).isQGIS).toBe(true);
-        expect(mockAxios.history.get.length).toBe(2);
-    });
-    it('does not fetch capabilities for known servers or layers without a valid buffer', async() => {
-        const layers = [
-            { url: '/ows', isQGIS: true, featureInfo: { buffer: 10 } },
-            { url: '/ows', isQGIS: false, featureInfo: { buffer: 10 } },
-            { featureInfo: { buffer: 10 } },
-            ...[undefined, '', null, -1, 'invalid'].map(buffer => ({ url: '/ows', featureInfo: { buffer } }))
-        ];
-        for (const layer of layers) {
-            expect(await wms.resolveLayer(layer)).toBe(layer);
-        }
-        expect(mockAxios.history.get.length).toBe(0);
     });
     it('should build a WMS GetFeatureInfo request with default feature_count', () => {
         const { request } = wms.buildRequest({
@@ -126,10 +98,10 @@ describe('mapinfo wms utils', () => {
         { serverType: ServerTypes.GEOSERVER },
         { serverType: ServerTypes.NO_VENDOR },
         {},
-        { serverType: ServerTypes.NO_VENDOR, isQGIS: true },
-        { isQGIS: true }
+        { serverType: ServerTypes.QGIS },
+        { serverType: 'other' }
     ].forEach(serverOptions => {
-        const { serverType, isQGIS } = serverOptions;
+        const { serverType } = serverOptions;
         const layer = {
             type: "wms",
             id: "test_layer",
@@ -143,15 +115,15 @@ describe('mapinfo wms utils', () => {
         };
         const toleranceParams = ['FI_POINT_TOLERANCE', 'FI_LINE_TOLERANCE', 'FI_POLYGON_TOLERANCE'];
 
-        const serverDescription = `${serverType || 'default'}${isQGIS ? ' QGIS' : ''}`;
+        const serverDescription = serverType || 'default';
         it(`should map the buffer to the correct parameters for ${serverDescription} WMS requests`, () => {
             [0, 8, '5', 1000, 1001].forEach(buffer => {
                 const { request } = wms.buildRequest(layer, options, undefined, undefined, { buffer });
                 const expectedBuffer = Math.min(Number(buffer), 1000);
-                if (isQGIS) {
+                if (serverType === ServerTypes.QGIS) {
                     expect(request).toExcludeKey('buffer');
                     toleranceParams.forEach(param => expect(request[param]).toBe(expectedBuffer));
-                } else if (serverType !== ServerTypes.NO_VENDOR) {
+                } else if (serverType === undefined || serverType === ServerTypes.GEOSERVER) {
                     expect(request.buffer).toBe(expectedBuffer);
                     toleranceParams.forEach(param => expect(request).toExcludeKey(param));
                 } else {
@@ -167,20 +139,19 @@ describe('mapinfo wms utils', () => {
             });
         });
     });
-    it('should preserve QGIS detection and buffer mapping when saving and reloading a layer', () => {
+    it('should preserve the QGIS server type and buffer mapping when saving and reloading a layer', () => {
         const layer = JSON.parse(JSON.stringify(saveLayer({
             type: 'wms',
             name: 'trees',
             url: '/ows',
-            serverType: ServerTypes.NO_VENDOR,
-            isQGIS: true,
+            serverType: ServerTypes.QGIS,
             featureInfo: { buffer: 5 }
         })));
         const { request } = wms.buildRequest(layer, {
             point: { latlng: { lat: 0, lng: 0 } },
             map: { projection: 'EPSG:4326', resolution: 1 }
         }, undefined, undefined, layer.featureInfo);
-        expect(layer.isQGIS).toBe(true);
+        expect(layer.serverType).toBe(ServerTypes.QGIS);
         expect(request.FI_POINT_TOLERANCE).toBe(5);
         expect(request.FI_LINE_TOLERANCE).toBe(5);
         expect(request.FI_POLYGON_TOLERANCE).toBe(5);

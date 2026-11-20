@@ -8,7 +8,7 @@
 
 import { clamp, isNil } from 'lodash';
 
-import { ServerTypes } from './LayersUtils';
+import { isGeoServer, ServerTypes } from './LayersUtils';
 
 export const DEFAULT_FEATURE_COUNT = 10;
 export const MAX_FEATURE_INFO_BUFFER = 1000;
@@ -31,7 +31,7 @@ export const getFeatureInfoMaxItems = (featureInfo = {}, fallback = DEFAULT_FEAT
     ?? DEFAULT_FEATURE_COUNT;
 
 export const isFeatureInfoBufferSupported = (layer = {}) =>
-    layer.isQGIS === true || layer.serverType !== ServerTypes.NO_VENDOR;
+    isGeoServer(layer) || layer.serverType === ServerTypes.QGIS;
 
 export const getFeatureInfoBuffer = (featureInfo = {}, layer = {}) =>
     isFeatureInfoBufferSupported(layer) ? sanitizeFeatureInfoBuffer(featureInfo.buffer) : undefined;

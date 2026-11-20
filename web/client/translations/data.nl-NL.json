@@ -137,6 +137,7 @@
       "serverType": "Type server",
       "formatError": "Het is niet mogelijk om de afbeeldings- en informatieformaten op te halen van de opgegeven service. Waarschijnlijk is dit een 'No Vendor' service, een type dat dit niet ondersteunt (vb. GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Geen 'Vendor'",
         "geoserver": "GeoServer"
       },

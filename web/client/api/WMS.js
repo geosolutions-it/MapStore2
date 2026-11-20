@@ -92,19 +92,11 @@ export const flatLayers = (root) => {
         : rootName && [root] || [];
 };
 
-const isQGISCapabilities = (capabilities = {}) => {
-    const namespace = 'http://www.qgis.org/wms';
-    return Object.entries(capabilities.$ || {}).some(([key, value]) =>
-        ((key === 'xmlns' || key.startsWith('xmlns:')) && value === namespace)
-        || (key.endsWith(':schemaLocation') && value.split(/\s+/).includes(namespace))
-    );
-};
-
 const getFormats = (response) => {
     const root = response.Capability;
     const imageFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
     const infoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetFeatureInfoFormat);
-    return { imageFormats, infoFormats, isQGIS: isQGISCapabilities(response) };
+    return { imageFormats, infoFormats };
 };
 
 export const getOnlineResource = (c) => {
@@ -128,8 +120,7 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         service,
         layerOptions: {
-            version: json?.$?.version || WMS_GET_CAPABILITIES_VERSION,
-            isQGIS: isQGISCapabilities(json)
+            version: json?.$?.version || WMS_GET_CAPABILITIES_VERSION
         },
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
@@ -266,9 +257,13 @@ export const parseLayerCapabilities = (json, layer) => {
         return layer.name === capabilityName && layerCapability;
     });
     if (capabilities) {
+        const { imageFormats, infoFormats } = getFormats(json);
         return {
             ...capabilities,
-            layerOptions: getFormats(json)
+            layerOptions: {
+                imageFormats,
+                infoFormats
+            }
         };
     }
     return null;
@@ -320,17 +315,16 @@ export const reset = () => {
  * Fetch the supported formats of the WMS service
  * @param {string} url WMS endpoint
  * @param {boolean} includeGFIFormats include GFI formats
- * @param {object} options options passed to the capabilities request
- * @returns {object|string[]} image formats, or image/info formats and isQGIS when includeGFIFormats is true
+ * @returns {object|string} formats
  */
-export const getSupportedFormat = (url, includeGFIFormats = false, options) => {
-    return getCapabilities(url, options)
+export const getSupportedFormat = (url, includeGFIFormats = false) => {
+    return getCapabilities(url)
         .then((response) => {
-            const formats = getFormats(response);
+            const { imageFormats, infoFormats } = getFormats(response);
             if (includeGFIFormats) {
-                return formats;
+                return { imageFormats, infoFormats };
             }
-            return formats.imageFormats;
+            return imageFormats;
         })
         .catch(() => includeGFIFormats ? { imageFormats: [], infoFormats: [] } : []);
 };

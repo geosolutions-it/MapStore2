@@ -152,12 +152,8 @@ function catalog(state = {
     }
     case CHANGE_TITLE:
         return set("newService.title", action.title, state);
-    case CHANGE_URL: {
-        const nextState = set("newService.url", action.url, set("showFormatError", false, state));
-        return state.newService?.url !== action.url
-            ? set("newService.layerOptions.isQGIS", undefined, nextState)
-            : nextState;
-    }
+    case CHANGE_URL:
+        return set("newService.url", action.url, set("showFormatError", false, state));
     case CHANGE_SERVICE_FORMAT:
         return set("newService.format", action.format, state);
     case CHANGE_TYPE: {
@@ -244,10 +240,7 @@ function catalog(state = {
         return set("showFormatError", action.status, state);
     }
     case SET_FORMAT_OPTIONS: {
-        const nextState = set("newService.supportedFormats", action.formats, set("newService.formatUrlUsed", action.url, state));
-        return action.url === state.newService?.url && action.formats.isQGIS !== undefined
-            ? set("newService.layerOptions.isQGIS", action.formats.isQGIS, nextState)
-            : nextState;
+        return set("newService.supportedFormats", action.formats, set("newService.formatUrlUsed", action.url, state));
     }
     case NEW_SERVICE_STATUS: {
         return set("isNewServiceAdded", action.status, state);

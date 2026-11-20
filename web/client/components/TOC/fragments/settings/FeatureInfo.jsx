@@ -194,15 +194,11 @@ export default class extends React.Component {
 
     componentDidMount() {
         const getSupportedFormat = supportedFormatRequests[this.props.element.type];
-        const needsServerDetection = this.props.element.type === 'wms' && this.props.element.isQGIS === undefined;
-        if (getSupportedFormat && this.props.element.url && (!this.props.element.infoFormats?.length || needsServerDetection)) {
+        if (getSupportedFormat && this.props.element.url && !this.props.element.infoFormats?.length) {
             this.setState({ loading: true }); // eslint-disable-line -- TODO: need to be fixed
-            getSupportedFormat(getCapabilitiesUrl(this.props.element), true, { _msAuthSourceId: this.props.element.security?.sourceId })
-                .then(({ infoFormats, isQGIS }) => {
+            getSupportedFormat(getCapabilitiesUrl(this.props.element), true)
+                .then(({ infoFormats }) => {
                     this.props.onChange("infoFormats", infoFormats);
-                    if (isQGIS !== undefined) {
-                        this.props.onChange("isQGIS", isQGIS);
-                    }
                     this.setState({ loading: false }); // eslint-disable-line -- TODO: need to be fixed
                 })
                 .catch(() => {

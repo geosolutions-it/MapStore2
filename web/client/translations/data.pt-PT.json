@@ -183,6 +183,7 @@
       "serverType": "Tipo de servidor",
       "formatError": "Não foi possível obter o formato e o formato da ficha de informação do serviço configurado. Provavelmente está a usar um serviço sem fornecedor e este não é suportado (ex. GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Sem fornecedor",
         "geoserver": "GeoServer"
       },

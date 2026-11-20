@@ -132,6 +132,7 @@
       "serverType": "Tipo de Servidor",
       "formatError": "Não foi possível buscar o formato e o formato da folha de informações do serviço configurado. Provavelmente você está usando um serviço No Vendor e isso não é suportado (ex: GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Sem Fornecedor",
         "geoserver": "GeoServer"
       },

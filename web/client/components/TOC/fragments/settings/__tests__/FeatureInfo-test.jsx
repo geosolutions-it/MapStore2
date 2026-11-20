@@ -10,7 +10,6 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-import { waitFor } from '@testing-library/react';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import testBackend from 'react-dnd-test-backend';
 
@@ -251,13 +250,12 @@ describe("test FeatureInfo", () => {
         TestUtils.Simulate.change(document.querySelector('[data-qa="feature-info-max-items"]'), {target: {value: "25"}});
     });
 
-    it('test WMS feature info buffer is editable for detected QGIS and preserves existing configuration', () => {
+    it('test WMS feature info buffer is editable for QGIS and preserves existing configuration', () => {
         const onChange = expect.createSpy();
         ReactDOM.render(<DndFeatureInfo
             element={{
                 type: "wms",
-                serverType: "no-vendor",
-                isQGIS: true,
+                serverType: "qgis",
                 featureInfo: { maxItems: 25, format: "TEXT" }
             }}
             onChange={onChange}
@@ -273,42 +271,26 @@ describe("test FeatureInfo", () => {
         expect(onChange.calls[0].arguments).toEqual(['featureInfo', { maxItems: 25, format: "TEXT", buffer: 5 }]);
     });
 
-    it('hides Buffer for No Vendor services that are not detected as QGIS', () => {
+    it('hides Buffer for No Vendor services', () => {
         ReactDOM.render(<FeatureInfo
-            element={{ type: 'wms', serverType: 'no-vendor', isQGIS: false, featureInfo: { buffer: 5 } }}
+            element={{ type: 'wms', serverType: 'no-vendor', featureInfo: { buffer: 5 } }}
             formatCards={formatCards}
             defaultInfoFormat={defaultInfoFormat}/>, document.getElementById('container'));
         expect(document.querySelector('[data-qa="feature-info-max-items"]')).toExist();
         expect(document.querySelector('[data-qa="feature-info-buffer"]')).toNotExist();
     });
 
-    it('detects QGIS for existing layers even when infoFormats are already saved', async() => {
-        const element = { type: 'wms', url: '/ows', serverType: 'no-vendor', infoFormats: ['text/html'], featureInfo: { buffer: 5 } };
-        mockAxios.onGet().reply(200, '<WMS_Capabilities xmlns:custom="http://www.qgis.org/wms"><Capability/></WMS_Capabilities>');
-        const onChange = expect.createSpy();
-        ReactDOM.render(<FeatureInfo element={element} onChange={onChange}/>, document.getElementById('container'));
-        await waitFor(() => expect(onChange).toHaveBeenCalledWith('isQGIS', true));
-        ReactDOM.render(<FeatureInfo element={{ ...element, isQGIS: true }}/>, document.getElementById('container'));
-        expect(document.querySelector('[data-qa="feature-info-buffer"]').value).toBe('5');
-    });
-
-    it('leaves Buffer hidden when capabilities detection fails', done => {
-        mockAxios.onGet().reply(500);
-        ReactDOM.render(<FeatureInfo
-            element={{ type: 'wms', url: '/ows', serverType: 'no-vendor', infoFormats: ['text/html'] }}
-            onChange={(key) => {
-                if (key === 'infoFormats') {
-                    setTimeout(() => {
-                        try {
-                            expect(document.querySelector('[data-qa="feature-info-buffer"]')).toNotExist();
-                            expect(document.querySelector('[data-qa="feature-info-max-items"]')).toExist();
-                            done();
-                        } catch (error) {
-                            done(error);
-                        }
-                    });
-                }
-            }}/>, document.getElementById('container'));
+    [undefined, 'geoserver', 'qgis', 'no-vendor'].forEach(serverType => {
+        it(`does not fetch capabilities when infoFormats are saved for ${serverType || 'default'} layers`, async() => {
+            const onChange = expect.createSpy();
+            ReactDOM.render(<FeatureInfo
+                element={{ type: 'wms', url: '/ows', serverType, infoFormats: ['text/html'], featureInfo: { buffer: 5 } }}
+                onChange={onChange}/>, document.getElementById('container'));
+            await new Promise(resolve => setTimeout(resolve));
+            expect(mockAxios.history.get.length).toBe(0);
+            expect(onChange).toNotHaveBeenCalled();
+            expect(!!document.querySelector('[data-qa="feature-info-buffer"]')).toBe(serverType !== 'no-vendor');
+        });
     });
 
     it('test WMS feature info buffer is clamped to the maximum immediately', done => {
