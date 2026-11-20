@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import Layers from '../../../../utils/openlayers/Layers';
 import isEqual from 'lodash/isEqual';
 import get from 'lodash/get';
@@ -29,7 +30,7 @@ function getSource(options) {
         sources = options.sources.map((source) => {
             return {
                 ...source,
-                url: updateUrlParams(source.url, params)
+                url: addRefreshParameter(updateUrlParams(source.url, params), options._v_)
             };
         });
     }
@@ -75,6 +76,7 @@ Layers.registerType('cog', {
         if (newOptions.srs !== oldOptions.srs
             || !isEqual(newOptions.style, oldOptions.style)
             || !isEqual(newOptions.security, oldOptions.security)
+            || newOptions._v_ !== oldOptions._v_
             || !isEqual(newOptions.sources, oldOptions.sources) // min/max source data value can change
             || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
         ) {

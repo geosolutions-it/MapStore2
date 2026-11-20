@@ -21,6 +21,7 @@ import { getAttributesNames } from "../utils/FeatureGridUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
 import { isFeatureGridOpen } from './featuregrid';
 import { isPluginInContext } from './context';
+import { stripWidgetsLayerVersions } from '../utils/LayerRefreshUtils';
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -367,7 +368,7 @@ export const filterLinkedWidgets = createSelector(
 );
 
 export const widgetsConfig = createStructuredSelector({
-    widgets: filterLinkedWidgets,
+    widgets: createSelector(filterLinkedWidgets, stripWidgetsLayerVersions),
     layouts: getUpdatedLayout,
     catalogs: dashboardServicesSelector
 });

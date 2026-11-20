@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
 import Layers from '../../../../utils/cesium/Layers';
@@ -160,7 +161,7 @@ const createLayer = (options, map) => {
         getPrimitives: () => primitives,
         add: () => {
             primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
-            getIFCModel(options.url)
+            getIFCModel(addRefreshParameter(options.url, options._v_))
                 .then(({ifcModule, data}) => {
                     const { meshes } = ifcDataToJSON({ ifcModule, data });
                     const translucentPrimitive = createPrimitiveFromMeshes(meshes, options, 'translucentPrimitive');
@@ -194,7 +195,7 @@ Layers.registerType('model', {
         if (primitives && !isEqual(newOptions?.features?.[0], oldOptions?.features?.[0])) {
             updatePrimitivesMatrix(primitives, newOptions?.features?.[0]);
         }
-        if (newOptions?.forceProxy !== oldOptions?.forceProxy || !isEqual(oldOptions.security, newOptions.security)) {
+        if (newOptions._v_ !== oldOptions._v_ || newOptions?.forceProxy !== oldOptions?.forceProxy || !isEqual(oldOptions.security, newOptions.security)) {
             return createLayer(newOptions, map);
         }
         return null;

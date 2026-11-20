@@ -288,6 +288,21 @@ describe('Test the MapUtils', () => {
                 layers.map(({id, name}) => ({id, name}))
             );
         });
+        it('saves configured refresh intervals without adding defaults or transient versions', () => {
+            const layers = [
+                { id: 'configured', name: 'roads', type: 'wms', url: '/wms', autoRefreshInterval: 60000, _v_: 123 },
+                { id: 'unconfigured', name: 'buildings', type: 'wms', url: '/wms' }
+            ];
+            const saved = saveMapConfiguration({
+                center: { x: 0, y: 0, crs: 'EPSG:4326' },
+                projection: 'EPSG:4326',
+                zoom: 0
+            }, layers, [], [], '', {});
+
+            expect(saved.map.layers[0].autoRefreshInterval).toBe(60000);
+            expect('_v_' in saved.map.layers[0]).toBe(false);
+            expect('autoRefreshInterval' in saved.map.layers[1]).toBe(false);
+        });
         it('save map configuration', () => {
 
             const flat = [

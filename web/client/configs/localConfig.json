@@ -392,6 +392,13 @@
     "desktop": [
       "Details",
       {
+        "name": "AutoRefresh",
+        "cfg": {
+          "defaultRefreshInterval": 10000,
+          "minimumRefreshInterval": 5000
+        }
+      },
+      {
         "name": "BrandNavbar",
         "cfg": {
           "containerPosition": "header"
@@ -938,6 +945,7 @@
     ],
     "permalink": ["Permalink", "Cookie", "FeedbackMask"],
     "dashboard": [
+      "AutoRefresh",
       {
         "name": "LayerDownload",
         "cfg": {
@@ -1122,6 +1130,8 @@
       }
     ],
     "dashboard-embedded": [
+      "AutoRefresh",
+      { "name": "SidebarMenu", "cfg": { "containerPosition": "columns" } },
       {
         "name": "Dashboard",
         "cfg": {

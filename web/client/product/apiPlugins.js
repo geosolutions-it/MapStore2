@@ -9,6 +9,7 @@
 export default {
     plugins: {
         // framework plugins
+        AutoRefreshPlugin: require('../plugins/AutoRefresh').default,
         CookiePlugin: require('../plugins/Cookie').default,
         DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu').default,

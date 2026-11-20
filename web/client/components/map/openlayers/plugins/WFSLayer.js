@@ -22,6 +22,7 @@ import { getFeature, getFeatureLayer } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { needsReload, needsCredentials, getConfig } from '../../../../utils/WFSLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
+import { cancelVectorLayerRefresh, refreshVectorLayer } from '../../../../utils/openlayers/LayerRefresh';
 
 const createLoader = (source, options) => (extent, resolution, projection, success, failure) => {
     let proj = projection.getCode();
@@ -164,6 +165,7 @@ Layers.registerType('wfs', {
         return layer;
     },
     update: (layer, options = {}, oldOptions = {}, map) => {
+        layer._msCurrentOptions = options;
         const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
         const newCrs = options.crs || options.srs || 'EPSG:3857';
         const source = layer.getSource();
@@ -176,14 +178,20 @@ Layers.registerType('wfs', {
             || !isEqual(oldOptions.security, options.security)
             || !isEqual(oldOptions.requestRuleRefreshHash, options.requestRuleRefreshHash)
         ) {
-            source.setLoader(createLoader(source, {
-                ...options,
-                onLoadEnd: () => {
-                    updateStyle(layer, options, map);
-                }
-            }));
-            source.clear();
-            source.refresh();
+            cancelVectorLayerRefresh(layer);
+            const refreshing = options._v_ !== oldOptions._v_ && refreshVectorLayer(layer,
+                () => Layers.createLayer('wfs', options, map), map,
+                () => updateStyle(layer, layer._msCurrentOptions || options, map));
+            if (!refreshing) {
+                source.setLoader(createLoader(source, {
+                    ...options,
+                    onLoadEnd: () => {
+                        updateStyle(layer, options, map);
+                    }
+                }));
+                source.clear();
+                source.refresh();
+            }
         }
         if (options.style !== oldOptions.style || options.styleName !== oldOptions.styleName) {
             updateStyle(layer, options, map);

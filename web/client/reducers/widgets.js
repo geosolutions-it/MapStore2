@@ -13,6 +13,7 @@ import {
     EDIT,
     UPDATE_PROPERTY,
     UPDATE_LAYER,
+    UPDATE_LAYER_PROPERTIES,
     DELETE,
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
@@ -38,6 +39,7 @@ import {
 import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
+import { CHANGE_LAYER_PROPERTIES } from '../actions/layers';
 import set from 'lodash/fp/set';
 import { get, find, omit, mapValues, castArray, isEmpty } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
@@ -181,6 +183,20 @@ function widgetsReducer(state = emptyState, action) {
             }
         }
         return state;
+    }
+    case CHANGE_LAYER_PROPERTIES:
+    case UPDATE_LAYER_PROPERTIES: {
+        return (action.widgetUpdates || action.updates || []).reduce((result, { target = DEFAULT_TARGET, widgetId, path, properties }) => {
+            const targetPath = ['containers', target, 'widgets'];
+            const currentWidgets = get(result, targetPath, []);
+            const index = currentWidgets.findIndex(widget => widget.id === widgetId);
+            if (index === -1 || currentWidgets[index].widgetType === 'filter') return result;
+            const layerPath = [...targetPath, index, ...path];
+            const layer = get(result, layerPath);
+            if (!layer) return result;
+            const removed = Object.keys(properties).filter(key => properties[key] === undefined);
+            return set(layerPath, omit({ ...layer, ...properties }, removed), result);
+        }, state);
     }
     case DELETE: {
         const path = `containers[${action.target}].widgets`;

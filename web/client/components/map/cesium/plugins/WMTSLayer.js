@@ -113,7 +113,7 @@ function wmtsToCesiumOptions(_options) {
         proxy = options.forceProxy;
     }
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSetID]);
-    const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
+    const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options), ...(options._v_ !== undefined && { _v_: options._v_ })}});
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : '';
 
@@ -150,7 +150,7 @@ function wmtsToCesiumOptions(_options) {
         tileHeight: options.tileHeight || options.tileSize || 256,
         tileMatrixSetID: tileMatrixSetID,
         maximumLevel: 30,
-        parameters: {...getAuthenticationParam(options)}
+        parameters: {...getAuthenticationParam(options), ...(options._v_ !== undefined && { _v_: options._v_ })}
     });
 }
 
@@ -170,7 +170,8 @@ const createLayer = options => {
 };
 
 const updateLayer = (layer, newOptions, oldOptions) => {
-    if (newOptions.securityToken !== oldOptions.securityToken
+    if (newOptions._v_ !== oldOptions._v_
+    || newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.format !== newOptions.format
     || !isEqual(oldOptions.security, newOptions.security)
     || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)

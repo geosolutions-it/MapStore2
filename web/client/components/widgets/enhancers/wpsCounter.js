@@ -33,22 +33,26 @@ import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
 const dataStreamFactory = ($props) =>
     $props
         .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets}) => {
+
             // Check if mapSync is enabled (true), dependencyMap has mapSync dependency to Map widget and dependencies.viewport is null or falsy
             // If this condition is true, return false to filter out the event.
             // This prevents an extra API call from being triggered when the viewport is not available.
             if (mapSync && checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) && !dependencies?.viewport) {
                 return false;
             }
+
             return layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
         })
         .distinctUntilChanged(
-            ({layer = {}, options = {}, filter}, newProps) =>
-                (newProps.layer
-                && getWpsUrl(layer) === getWpsUrl(newProps.layer)
-                && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
-                && layer.loadingError === newProps.layer.loadingError)
-                && sameOptions(options, newProps.options)
-                && sameFilter(filter, newProps.filter))
+            ({layer = {}, options = {}, filter}, newProps) => {
+                return (newProps.layer
+                    && getWpsUrl(layer) === getWpsUrl(newProps.layer)
+                    && getWFSLayerName(layer) === getWFSLayerName(newProps.layer)
+                    && layer.loadingError === newProps.layer.loadingError
+                    && layer._v_ === newProps.layer._v_)
+                    && sameOptions(options, newProps.options)
+                    && sameFilter(filter, newProps.filter);
+            })
         .switchMap(
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(

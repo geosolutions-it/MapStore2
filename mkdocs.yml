@@ -86,6 +86,7 @@ nav:
       - Filtering Layers: 'user-guide/filtering-layers.md'
       - Attribute Table: 'user-guide/attributes-table.md'
       - Widgets: 'user-guide/widgets.md'
+      - Automatic Refresh: 'user-guide/auto-refresh.md'
       - Export Layer Data: 'user-guide/export-data.md'
       - MapStore Toolbars: 'user-guide/mapstore-toolbars.md'
       - Printing a Map: 'user-guide/print.md'
