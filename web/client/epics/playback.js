@@ -381,8 +381,9 @@ export const setIsIntervalData = (action$, { getState = () => { } } = {}) =>
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
             return getNearestTimesObservable(domainArgs, true, getState, snapType, time)
-                .map(([next, previous]) => {
-                    const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
+                .map((values) => {
+                    // a value is empty when its request fails or returns no value
+                    const isTimeIntervalData = values.some(value => !!value && value.indexOf('/') !== -1);
                     return setIntervalData(isTimeIntervalData);
                 });
         });

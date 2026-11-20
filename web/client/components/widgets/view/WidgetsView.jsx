@@ -75,7 +75,7 @@ export default pure(({
     const getEnableColumnFilters = w => w.widgetType  === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(w.id) !== -1).length > 0 ).length > 0;
 
     return (<GridComponent
-        key={id || "widgets-view"}
+        key={`${id || "widgets-view"}${isMaximized ? "-maximized" : ""}`}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
         width={!useDefaultWidthProvider ? width : undefined}
