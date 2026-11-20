@@ -141,7 +141,7 @@ export const sortTileMatrix = (tileMatrixSet, ids)  => {
             )
                 .reverse()
                 // return only the Ids allowed to match array indexes
-                .filter(t => ids ? ids.map(({ identifier } = {}) => identifier).indexOf(t["ows:Identifier"]) >= 0 : true)
+                .filter(t => ids?.length ? ids.map(id => (isObject(id) ? id.identifier : id)).indexOf(t["ows:Identifier"]) >= 0 : true)
     };
 };
 
@@ -153,10 +153,11 @@ export const parseTileMatrixSetOption = (options) => {
                 ? options.availableTileMatrixSets[key].limits
                 : options.availableTileMatrixSets[key].tileMatrixSet.TileMatrix
                     .map((matrix) => ({ identifier: matrix['ows:Identifier'] }));
+            const crs = options.availableTileMatrixSets[key].crs;
             return {
                 ...acc,
-                [key]: limits,
-                [options.availableTileMatrixSets[key].crs]: limits
+                ...(crs && !acc[crs] && !options.availableTileMatrixSets[crs] ? { [crs]: limits } : {}),
+                [key]: limits
             };
         }, {});
         const tileMatrixSet = tileMatrixSetKeys
