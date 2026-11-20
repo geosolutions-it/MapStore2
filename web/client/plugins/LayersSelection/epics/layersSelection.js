@@ -11,7 +11,8 @@ import axios from 'axios';
 import { SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL, RESET_CONTROLS } from '../../../actions/controls';
 import { UPDATE_NODE, REMOVE_NODE } from '../../../actions/layers';
 import { registerEventListener, unRegisterEventListener} from '../../../actions/map';
-import { purgeMapInfoResults, hideMapinfoMarker } from '../../../actions/mapInfo';
+import { closeIdentify } from '../../../actions/mapInfo';
+import { forceUpdateMapLayout } from '../../../actions/maplayout';
 import { shutdownToolOnAnotherToolDrawing } from "../../../utils/ControlUtils";
 import { describeFeatureType, getFeatureURL } from '../../../api/WFS';
 import { extractGeometryAttributeName } from '../../../utils/WFSLayerUtils';
@@ -158,8 +159,8 @@ export const openSelectEpic = (action$, store) => action$
     .ofType(SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, TOGGLE_CONTROL)
     .filter(action => isSelectionControlAction(action) && isSelectEnabled(store.getState()))
     .switchMap(() => Observable.of(
-        purgeMapInfoResults(),
-        hideMapinfoMarker(),
+        closeIdentify(),
+        forceUpdateMapLayout(),
         registerEventListener('click', 'layersSelection')
     ));
 
