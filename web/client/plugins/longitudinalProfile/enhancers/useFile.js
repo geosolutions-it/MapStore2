@@ -21,7 +21,13 @@ export default compose(
             onChangeGeometry = () => {},
             onWarning = () => {}
         }) =>
-            (flattenFeatures, crs) => {
+            (flattenFeatures, crs, warnings = []) => {
+                warnings.forEach(({ message }) => onWarning({
+                    title: "notification.warning",
+                    message,
+                    autoDismiss: 6,
+                    position: "tc"
+                }));
                 const { feature, coordinates } = selectLineFeature(flattenFeatures, crs);
                 if (feature && feature.showProjectionCombobox) {
                     // eslint-disable-next-line no-console
