@@ -79,6 +79,17 @@ describe("test identify enhancers", () => {
         expect(spySetIndex.calls.length).toEqual(0);
     });
 
+    it("test identifyLifecycle passes the dock setting to onInitPlugin", () => {
+        const Component = identifyLifecycle(() => <div id="test-component"></div>);
+        const actions = { onInitPlugin: () => {} };
+        const spyInitPlugin = expect.spyOn(actions, 'onInitPlugin');
+        ReactDOM.render(<Component onInitPlugin={actions.onInitPlugin} />, document.getElementById("container"));
+        expect(spyInitPlugin.calls[0].arguments[0].dock).toBe(true); // default: docked
+        ReactDOM.render(<div></div>, document.getElementById("container"));
+        ReactDOM.render(<Component dock={false} onInitPlugin={actions.onInitPlugin} />, document.getElementById("container"));
+        expect(spyInitPlugin.calls[1].arguments[0].dock).toBe(false);
+    });
+
     it("test identifyLifecycle on close", () => {
         const Component = identifyLifecycle(({onClose = () => {}}) => <div id="test-component" onClick={() => onClose()}></div>);
         const testHandlers = {
