@@ -46,6 +46,20 @@ describe('mapinfo 3D tiles utils', () => {
             url: 'client'
         });
     });
+    it('should pass viewer and featureInfo to the metadata so the template viewer can use them', () => {
+        const layer = {
+            id: 'layer-id',
+            title: 'Title'
+        };
+        const viewer = { type: 'custom' };
+        const featureInfo = { format: 'TEMPLATE', template: '<p>${properties.key}</p>' };
+        const request = threeDTiles.buildRequest(layer, {}, 'application/json', viewer, featureInfo);
+        expect(request.metadata).toEqual({
+            title: layer.title,
+            viewer,
+            featureInfo
+        });
+    });
     it('should return the response object from getIdentifyFlow', (done) => {
         threeDTiles.getIdentifyFlow(undefined, undefined, { features: [] })
             .toPromise()
