@@ -31,6 +31,7 @@ import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY } from '../../actions/controls';
 import { reducersLoaded } from '../../actions/storemanager';
 import { closeTutorial } from '../../actions/tutorial';
+import { loading } from '../../actions/context';
 
 const baseUrl = "base/web/client/test-resources/geostore/";
 const mapId = 1;
@@ -204,6 +205,12 @@ describe('details epics tests for map', () => {
             expect(action.type).toBe(OPEN_DETAILS_PANEL);
             done();
         }, autoOpenState);
+    });
+
+    it('opens details when context loading finishes', (done) => {
+        testEpic(openDetailsPanelOnStartup, 1, loading(false), ([action]) => {
+            expect(action.type).toBe(OPEN_DETAILS_PANEL);
+        }, autoOpenState, done);
     });
 });
 
