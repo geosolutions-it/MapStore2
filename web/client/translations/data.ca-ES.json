@@ -1694,6 +1694,7 @@
       "reset": "Clar",
       "options": "Les opcions",
       "srs_not_allowed": "El sistema de coordenades del mapa no \u00e9s compatible amb aquest servei",
+      "cog_crs_not_identified": "El sistema de referència de coordenades del fitxer COG no es pot identificar mitjançant el codi, i no es pot afegir la capa",
       "add": "Addiccionar",
       "service": "Manteniment",
       "servicePlaceholder": "Escriviu un servei",
