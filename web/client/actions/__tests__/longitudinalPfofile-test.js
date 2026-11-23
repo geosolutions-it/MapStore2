@@ -7,7 +7,7 @@
 */
 import expect from "expect";
 
-import {CONTROL_DOCK_NAME} from '../../plugins/longitudinalProfile/constants';
+import {CONTROL_DOCK_NAME, LONGITUDINAL_DISTANCES} from '../../plugins/longitudinalProfile/constants';
 import {SET_CONTROL_PROPERTY} from "../controls";
 import {
     ADD_PROFILE_DATA,
@@ -24,6 +24,7 @@ import {
     loading,
     LOADING,
     openDock,
+    setup,
     setupPlugin,
     SETUP,
     TEAR_DOWN,
@@ -33,6 +34,22 @@ import {
     toggleMaximize,
     toggleMode
 } from "../longitudinalProfile";
+import longitudinalProfile from '../../reducers/longitudinalProfile';
+
+/**
+ * runs the setup thunk against the real reducer and returns the dispatched actions
+ */
+const runSetup = (config) => {
+    let state = { longitudinalProfile: longitudinalProfile(undefined, {}) };
+    const actions = [];
+    const dispatch = (action) => {
+        actions.push(action);
+        state = { longitudinalProfile: longitudinalProfile(state.longitudinalProfile, action) };
+    };
+    setup(config)(dispatch, () => state);
+    return { actions, state };
+};
+const REFERENTIALS = [{ layerName: "sfdem", title: "sfdem" }];
 
 describe('Test correctness of the actions', () => {
     it('setup', () => {
@@ -135,5 +152,28 @@ describe('Test correctness of the actions', () => {
         const action = toggleMaximize();
         expect(action).toExist();
         expect(action.type).toBe(TOGGLE_MAXIMIZE);
+    });
+});
+
+describe('Test setup thunk (defaultDistance / distances)', () => {
+    it('setup without defaultDistance and distances uses the default distance', () => {
+        const { actions, state } = runSetup({ referentials: REFERENTIALS });
+        const distanceAction = actions.find(a => a.type === CHANGE_DISTANCE);
+        expect(distanceAction).toExist();
+        expect(distanceAction.distance).toBe(100);
+        expect(state.longitudinalProfile.config.distances).toEqual(LONGITUDINAL_DISTANCES);
+        expect(actions[actions.length - 1].type).toBe(INITIALIZED);
+    });
+    it('setup with defaultDistance uses the configured value', () => {
+        const { actions } = runSetup({ referentials: REFERENTIALS, defaultDistance: 75 });
+        expect(actions.find(a => a.type === CHANGE_DISTANCE).distance).toBe(75);
+    });
+    it('setup with distances only keeps the default distance', () => {
+        const { actions } = runSetup({ referentials: REFERENTIALS, distances: [20, 40] });
+        expect(actions.find(a => a.type === CHANGE_DISTANCE).distance).toBe(100);
+    });
+    it('setup with defaultDistance null falls back to the first of distances', () => {
+        const { actions } = runSetup({ referentials: REFERENTIALS, defaultDistance: null, distances: [20, 40] });
+        expect(actions.find(a => a.type === CHANGE_DISTANCE).distance).toBe(20);
     });
 });
