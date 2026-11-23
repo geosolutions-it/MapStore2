@@ -130,7 +130,7 @@
         "maxItems": "Aantal objecten",
         "maxItemsTooltip": "Maximum aantal objecten dat een identificatieverzoek teruggeeft. De standaardwaarde is 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "GeoServer-specifieke parameter die de zoekstraal van de identificatie rond het aangeklikte punt vergroot, uitgedrukt in schermpixels."
+        "bufferTooltip": "Vergroot de zoekstraal voor de 'Identify'-functie rond het aangeklikte punt, gemeten in schermpixels. Beschikbaar voor lagen uit GeoServer en QGIS Server."
       },
       "guideText": "In de afbeeldingslink kunnen placeholders gebruikt worden in de vorm van $\\{properties.YOUR_ATTRIBUTE\\} om objectattributen als parameters toe te voegen aan de URL. Zowel URLs als base64 gecodeerde \"Data URIs\" worden ondersteund",
       "imageNotFound": "Deze afbeelding heeft mogelijks een feature info request nodig om correct te renderen",
