@@ -13,6 +13,7 @@
     .longitude-help {
         .background-color-var(@theme-vars[mask-bg]);
         .color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
     }
     .longitudinal-tool-container {
         .background-color-var(@theme-vars[main-bg]);
@@ -75,6 +76,11 @@
     top: 45px;
     width: 300px;
     border-radius: 3px;
+    // keep the message visible on light basemaps: border + shadow around the box,
+    // dark text-shadow around the light (main-bg) text
+    border: 1px solid;
+    .shadow();
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
     z-index: 1;
     padding: 10px;
     opacity: 0.8;

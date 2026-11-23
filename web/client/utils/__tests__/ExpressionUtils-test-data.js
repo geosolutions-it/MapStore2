@@ -32,7 +32,9 @@ export const FAIL_TESTS = [
         }
     ],
     // (state('data') || {}).pk do not work, string concatenation works. Use `get(state("data"),"pk")
-    ["'#/dataset/' + (state('data') || {}).pk + '/edit/data'", {state: {data: {pk: 'test'}}}, {type: "compile"}, "complex other syntaxes"]
+    ["'#/dataset/' + (state('data') || {}).pk + '/edit/data'", {state: {data: {pk: 'test'}}}, {type: "compile"}, "complex other syntaxes"],
+    ["'" + "\\!".repeat(40), {}, {type: "compile"}, "unterminated string with escapes"],
+    ['"' + "\\!".repeat(40), {}, {type: "compile"}, "unterminated double quoted string with escapes"]
 ];
 
 export const BASIC_FUNCTIONS_TEST = [
@@ -48,6 +50,7 @@ export const BASIC_FUNCTIONS_TEST = [
     ["state('present') || state('notPresent2')", {state: {present: true}}, true],
 
     ["'a'+'b'", {}, "ab", "string concatenation"],
+    [`'a\\"b.c' + 'd'`, {}, 'a"b.cd', "escaped quote in string"],
     ["a and b", {context: {a: true, b: false}}, false, "bool expression"],
     // string concatenation default applied with || {} must be replaced with get or state fun with default
     [

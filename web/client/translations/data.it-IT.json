@@ -152,7 +152,7 @@
         "maxItems": "Numero di elementi",
         "maxItemsTooltip": "Numero massimo di elementi restituiti da una richiesta di identificazione. Il valore predefinito è 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "Parametro del fornitore GeoServer che espande il raggio di ricerca di identificazione attorno al punto cliccato, misurato in pixel dello schermo."
+        "bufferTooltip": "Espande il raggio di ricerca di identificazione attorno al punto cliccato, misurato in pixel dello schermo. Disponibile per i livelli GeoServer e QGIS Server."
       },
       "guideText": "Nell'URL dell'immagine puoi utilizzare variabili come $\\{properties.YOUR_ATTRIBUTE\\}  per rendere parametrico l'URL a seconda degli attributi della feature. Supporta sia URL che \"Data URI\" codificati in base64",
       "imageNotFound": "Questa immagine può necessitare di una richiesta informazioni sulle feature per essere renderizzata correttamente",
@@ -211,6 +211,7 @@
       "serverType": "Tipo di Server",
       "formatError": "Non è stato possibile recuperare le informazioni sui formati dal servizio configurato. Probabilmente stai usando un servizio \"No Vendor\" e questo non è supportato (es. GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "No Vendor",
         "geoserver": "GeoServer"
       },
@@ -1121,6 +1122,9 @@
       "s_layer": "Nome layer",
       "s_attributes": "Attributi",
       "s_sort": "Ordina per",
+      "s_request_crs": "CRS della richiesta",
+      "s_request_crs_info": "Scegli il CRS utilizzato per richiedere la geometria dei risultati di ricerca. Il valore predefinito è EPSG:4326. Il CRS della mappa segue la proiezione attiva; se questa cambia, le ricerche che lo utilizzano vengono cancellate. Un CRS fisso non cambia con la proiezione della mappa. La lista include le proiezioni registrate in MapStore.",
+      "s_map_crs": "CRS della mappa",
       "s_max_features": "Numero massimo di risultati (Max features)",
       "s_max_zoom": "Livello di zoom massimo",
       "s_wfs_props_label": "Proprietà del servizio WFS",
@@ -1909,6 +1913,7 @@
       "reset": "Reset",
       "options": "Opzioni",
       "srs_not_allowed": "Il sistema di coordinate della mappa non è supportato da questo servizio",
+      "cog_crs_not_identified": "Il sistema di riferimento del file COG non è identificabile tramite codice, il layer non può essere aggiunto",
       "add": "Aggiungi",
       "service": "Servizio",
       "servicePlaceholder": "seleziona un servizio",

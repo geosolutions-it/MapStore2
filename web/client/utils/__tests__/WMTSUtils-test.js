@@ -116,6 +116,80 @@ describe('Test the WMTSUtils', () => {
             }
         ]);
     });
+    it('parseTileMatrixSetOption and getTileMatrix with shared CRS', () => {
+        const options = {
+            availableTileMatrixSets: {
+                'EPSG:4326': {
+                    crs: 'EPSG:4326',
+                    tileMatrixSet: {
+                        'TileMatrix': [{
+                            'ows:Identifier': 'EPSG:4326:0',
+                            'ScaleDenominator': '279541132.0143589'
+                        }],
+                        'ows:Identifier': 'EPSG:4326',
+                        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::4326'
+                    }
+                },
+                'GlobalCRS84Geometric': {
+                    crs: 'EPSG:4326',
+                    tileMatrixSet: {
+                        'TileMatrix': [{
+                            'ows:Identifier': 'GlobalCRS84Geometric:0',
+                            'ScaleDenominator': '279541132.0143589'
+                        }],
+                        'ows:Identifier': 'GlobalCRS84Geometric',
+                        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::4326'
+                    }
+                },
+                'GridA': {
+                    crs: 'EPSG:3857',
+                    tileMatrixSet: {
+                        'TileMatrix': [{
+                            'ows:Identifier': 'GridA:0',
+                            'ScaleDenominator': '559082264.0287178'
+                        }],
+                        'ows:Identifier': 'GridA',
+                        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::3857'
+                    }
+                },
+                'GridB': {
+                    crs: 'EPSG:3857',
+                    tileMatrixSet: {
+                        'TileMatrix': [{
+                            'ows:Identifier': 'GridB:0',
+                            'ScaleDenominator': '559082264.0287178'
+                        }],
+                        'ows:Identifier': 'GridB',
+                        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::3857'
+                    }
+                }
+            }
+        };
+        const parsed = WMTSUtils.parseTileMatrixSetOption(options);
+        expect(parsed.matrixIds['EPSG:4326']).toEqual([{ identifier: 'EPSG:4326:0' }]);
+        expect(parsed.matrixIds.GlobalCRS84Geometric).toEqual([{ identifier: 'GlobalCRS84Geometric:0' }]);
+        expect(parsed.matrixIds['EPSG:3857']).toEqual([{ identifier: 'GridA:0' }]);
+
+        const { tileMatrixSetName, tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, 'EPSG:4326');
+        expect(tileMatrixSetName).toBe('EPSG:4326');
+        expect(tileMatrixSet.TileMatrix.length).toBe(1);
+        expect(tileMatrixSet.TileMatrix[0]['ows:Identifier']).toBe('EPSG:4326:0');
+        expect(matrixIds).toEqual([{ identifier: 'EPSG:4326:0' }]);
+    });
+    it('sortTileMatrix handles empty ids and string ids', () => {
+        const tms = {
+            'ows:Identifier': 'EPSG:4326',
+            TileMatrix: [
+                { 'ows:Identifier': 'EPSG:4326:1', ScaleDenominator: '1000' },
+                { 'ows:Identifier': 'EPSG:4326:0', ScaleDenominator: '2000' }
+            ]
+        };
+        const withEmptyIds = WMTSUtils.sortTileMatrix(tms, []);
+        expect(withEmptyIds.TileMatrix.map(t => t['ows:Identifier'])).toEqual(['EPSG:4326:0', 'EPSG:4326:1']);
+
+        const withStringIds = WMTSUtils.sortTileMatrix(tms, ['EPSG:4326:1']);
+        expect(withStringIds.TileMatrix.map(t => t['ows:Identifier'])).toEqual(['EPSG:4326:1']);
+    });
     describe('getDefaultStyleIdentifier', () => {
         it('tests fetching the style when it is missing', () => {
             let style = WMTSUtils.getDefaultStyleIdentifier({});
@@ -161,5 +235,23 @@ describe('Test the WMTSUtils', () => {
         expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/geoserver/wms', name: 'workspace:name' })).toBe('/geoserver/workspace/name/gwc/service/wmts?REQUEST=GetCapabilities');
         expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/geoserver/wms', name: 'name' })).toBe('/geoserver/gwc/service/wmts?REQUEST=GetCapabilities');
         expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/wms' })).toBe('');
+    });
+    it('parseTileMatrixSetOption skips tile matrix sets without definition', () => {
+        const tileMatrixSet = { 'ows:Identifier': 'EPSG:4326', TileMatrix: [{ 'ows:Identifier': 'EPSG:4326:0' }] };
+        const layer = WMTSUtils.parseTileMatrixSetOption({
+            availableTileMatrixSets: {
+                'EPSG:4326': { crs: 'EPSG:4326', tileMatrixSet },
+                'EPSG:900913': { crs: 'EPSG:900913', limits: [{ identifier: 'EPSG:900913:0' }], tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['EPSG:900913']" }
+            }
+        });
+        expect(layer.tileMatrixSet).toEqual([tileMatrixSet]);
+        expect(layer.matrixIds).toEqual({
+            'EPSG:4326': [{ identifier: 'EPSG:4326:0' }]
+        });
+        const unresolved = WMTSUtils.parseTileMatrixSetOption({
+            availableTileMatrixSets: { 'EPSG:900913': { crs: 'EPSG:900913', tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['EPSG:900913']" } }
+        });
+        expect(unresolved.tileMatrixSet).toEqual([]);
+        expect(unresolved.matrixIds).toEqual({});
     });
 });

@@ -302,6 +302,16 @@ export const extractTileMatrixFromSources = (sources, layer) => {
 };
 
 /**
+ * Restores inline tile matrix definitions for layers using the map sources.
+ * @param {object} sources sources from a saved map configuration
+ * @param {object[]} layers map layers
+ * @return {object[]} layers with tile matrix definitions, or the original layers when sources are absent
+ */
+export const addTileMatrixFromSourcesToLayers = (sources, layers) => sources && layers
+    ? layers.map(layer => ({ ...layer, ...extractTileMatrixFromSources(sources, { ...layer }) }))
+    : layers;
+
+/**
  * It extracts tile matrix set from layers and add them to sources map object
  *
  * @param  {object} groupedLayersByUrl layers grouped by url
@@ -786,13 +796,22 @@ export const saveLayer = (layer) => {
 };
 
 /**
- * constants to specify whether we can use some geoserver vendor extensions of if they
- * should rather be avoided
+ * Server types used to select supported vendor extensions.
 */
 export const ServerTypes = {
     GEOSERVER: 'geoserver',
+    QGIS: 'qgis',
     NO_VENDOR: 'no-vendor'
 };
+
+/**
+ * Checks whether a layer supports GeoServer vendor extensions.
+ * An omitted server type defaults to GeoServer for backward compatibility.
+ * @param {object} layer the layer configuration
+ * @returns {boolean} true for GeoServer or an undefined server type
+ */
+export const isGeoServer = (layer = {}) =>
+    layer?.serverType === undefined || layer.serverType === ServerTypes.GEOSERVER;
 
 /**
  * default initial constant regex rule for searching for a /geoserver/ string in a url
@@ -1010,7 +1029,7 @@ export const removeWorkspace = (layer) => {
  * @param {layer} the layer object
  */
 export const getWMSVendorParams = (layer) =>  {
-    if (layer?.serverType === ServerTypes.NO_VENDOR) {
+    if (!isGeoServer(layer)) {
         return {};
     }
     return { TILED: layer.singleTile ? false : (!isNil(layer.tiled) ? layer.tiled : true)};

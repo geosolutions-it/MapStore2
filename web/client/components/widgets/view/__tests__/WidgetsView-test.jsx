@@ -214,4 +214,31 @@ describe('WidgetsView component', () => {
         expect(grid.props.layouts.md[0].x).toBe(2);
         expect(grid.props.layouts.md[0].y).toBe(3);
     });
+    it('remounts GridComponent on maximize state change to reset layout state', () => {
+        let mountCount = 0;
+        class TestComponent extends React.Component {
+            componentDidMount() {
+                mountCount++;
+            }
+            render() {
+                return <div className="test-grid">{this.props.children}</div>;
+            }
+        }
+        const widget = { ...dummyWidget };
+        const render = (maximized) => ReactDOM.render(
+            <WidgetsView
+                id="test-grid"
+                widgets={[widget]}
+                maximized={maximized}
+                gridComponent={TestComponent}
+            />,
+            document.getElementById("container")
+        );
+
+        render({});
+        expect(mountCount).toBe(1);
+
+        render({ widget });
+        expect(mountCount).toBe(2);
+    });
 });

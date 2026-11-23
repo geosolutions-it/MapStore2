@@ -24,11 +24,12 @@ import {
     showMapinfoMarker,
     updateCenterToMarker
 } from '../actions/mapInfo';
-import {zoomToExtent, zoomToPoint} from '../actions/map';
+import {CHANGE_MAP_CRS, zoomToExtent, zoomToPoint} from '../actions/map';
 import {ADD_LAYER, changeLayerProperties} from '../actions/layers';
 import {
     addMarker,
     nonQueriableLayerError,
+    resetSearch,
     resultsPurge, SCHEDULE_SEARCH_LAYER_WITH_FILTER,
     SEARCH_LAYER_WITH_FILTER, searchLayerWithFilter,
     searchResultError,
@@ -47,7 +48,7 @@ import {
 } from '../actions/search';
 
 import CoordinatesUtils, { reproject } from '../utils/CoordinatesUtils';
-import {defaultIconStyle, layerIsVisibleForGFI, showGFIForService} from '../utils/SearchUtils';
+import {defaultIconStyle, getSearchResultCrs, getSearchResultLatLng, getSearchServiceOptions, layerIsVisibleForGFI, searchServiceUsesMapCrs, showGFIForService} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
@@ -68,11 +69,11 @@ const getInfoFormat = (layerObj, state) => getDefaultInfoFormatValueFromLayer(la
  * @memberof epics.search
  * @return {external:Observable}
  */
-export const searchEpic = action$ =>
+export const searchEpic = (action$, store = { getState: () => ({}) }) =>
     action$.ofType(TEXT_SEARCH_STARTED)
-        .debounceTime(250)
-        .switchMap( action => {
+        .switchMap(action => Rx.Observable.timer(250).switchMap(() => {
             const services = action.services || [ {type: "nominatim", priority: 5} ];
+            const mapCrs = projectionSelector(store.getState()) || 'EPSG:4326';
             const serviceErrors = [];
             // create a stream of streams from array
             return Rx.Observable.from(
@@ -87,10 +88,16 @@ export const searchEpic = action$ =>
                             err.serviceType = service.type;
                             stream$ = Rx.Observable.of(err).do((e) => {throw e; });
                         } else {
-                            stream$ = Rx.Observable.defer(() =>
-                                serviceInstance(action.searchText, service.options)
-                                    .then( (response = []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
-                                    ))
+                            stream$ = Rx.Observable.defer(() => {
+                                const options = getSearchServiceOptions(service, mapCrs);
+                                return serviceInstance(action.searchText, options)
+                                    .then((response = []) => response.map(result => ({
+                                        ...result,
+                                        ...(service.type === 'wfs' ? { __CRS__: options?.srsName || 'EPSG:4326' } : {}),
+                                        __SERVICE__: service,
+                                        __PRIORITY__: service.priority || 0
+                                    })));
+                            })
                                 .retryWhen(errors => errors.delay(200).scan((count, err) => {
                                     if ( count >= 2) {
                                         throw err;
@@ -120,12 +127,34 @@ export const searchEpic = action$ =>
                     return Rx.Observable.empty();
                 }))
                 .startWith(searchTextLoading(true))
-                .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
-                .concat([searchTextLoading(false)])
                 .catch(e => {
                     const err = {msgId: "search.services_error", ...e, message: e.message, stack: e.stack};
-                    return Rx.Observable.from([searchResultError(err), searchTextLoading(false)]);
+                    return Rx.Observable.of(searchResultError(err));
                 });
+        })
+            .takeUntil(action$.ofType(TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
+            .concat(Rx.Observable.of(searchTextLoading(false))));
+
+/** Reset a map-dependent search, including mixed and nested services, on a CRS switch. */
+export const resetSearchOnMapCrsChange = (action$, store) =>
+    action$.ofType(TEXT_SEARCH_STARTED, TEXT_SEARCH_ITEM_SELECTED, TEXT_SEARCH_SHOW_GFI)
+        .switchMap(action => {
+            const state = store.getState();
+            const services = [
+                ...(action.services || []),
+                action.item?.__SERVICE__,
+                state.search?.markerPosition?.__SERVICE__,
+                ...(state.search?.selectedServices || [])
+            ];
+            if (!services.some(searchServiceUsesMapCrs)) {
+                return Rx.Observable.empty();
+            }
+            const crs = projectionSelector(state);
+            return action$.ofType(CHANGE_MAP_CRS)
+                .filter(next => next.crs !== crs)
+                .take(1)
+                .mapTo(resetSearch())
+                .takeUntil(action$.ofType(TEXT_SEARCH_RESET));
         });
 
 /**
@@ -141,27 +170,32 @@ export const searchEpic = action$ =>
  * @return {Observable}
  */
 
-export const searchItemSelected = (action$) =>
+export const searchItemSelected = (action$, store = { getState: () => ({}) }) =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
         .switchMap(action => {
             // itemSelectionStream --> emits actions for zoom and marker add
             let itemSelectionStream = Rx.Observable.of(action.item)
                 .concatMap((item) => {
                     if (item && item.__SERVICE__ && item.__SERVICE__.geomService) {
-                        let staticFilter = generateTemplateString(item.__SERVICE__.geomService.options.staticFilter || "")(item);
+                        let staticFilter = generateTemplateString(item.__SERVICE__.geomService.options?.staticFilter || "")(item);
                         // retrieve geometry from geomService or pass the item directly
-                        return Rx.Observable.fromPromise(
-                            API.Utils.getService(item.__SERVICE__.geomService.type)("", Object.assign({}, item.__SERVICE__.geomService.options, { staticFilter }))
-                                .then(res => Object.assign({}, item, { geometry: CoordinatesUtils.mergeToPolyGeom(res) }))
-                        );
+                        return Rx.Observable.defer(() => {
+                            const service = item.__SERVICE__.geomService;
+                            const options = getSearchServiceOptions(service, projectionSelector(store.getState()) || 'EPSG:4326');
+                            return API.Utils.getService(service.type)('', { ...options, staticFilter })
+                                .then(res => {
+                                    const feature = { ...item, geometry: CoordinatesUtils.mergeToPolyGeom(res) };
+                                    return { ...feature, bbox: toBbox(feature), __CRS__: options?.srsName || 'EPSG:4326' };
+                                });
+                        });
                     }
                     return Rx.Observable.of(action.item);
                 }).concatMap((item) => {
                     // check if the service has been configured to start a GetFeatureInfo request based on the item selected
                     // if so, then do it with a point inside the geometry
-                    let bbox = item.bbox || item.properties.bbox || toBbox(item);
+                    let bbox = item.bbox || item.properties?.bbox || toBbox(item);
                     let actions = [
-                        zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item.__SERVICE__ && item.__SERVICE__.options && item.__SERVICE__.options.maxZoomLevel || 21),
+                        zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], getSearchResultCrs(item), item.__SERVICE__ && item.__SERVICE__.options && item.__SERVICE__.options.maxZoomLevel || 21),
                         addMarker(item)
                     ];
                     return actions;
@@ -189,7 +223,9 @@ export const searchItemSelected = (action$) =>
             let searchTextTemplate = item.__SERVICE__ && item.__SERVICE__.searchTextTemplate;
             let searchTextStream = searchTextTemplate ? Rx.Observable.of(searchTextChanged(generateTemplateString(searchTextTemplate)(item))) : Rx.Observable.empty();
 
-            return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
+            return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream)
+                .takeUntil(action$.ofType(TEXT_SEARCH_RESET))
+                .catch(e => Rx.Observable.of(searchResultError({ msgId: 'search.services_error', message: e.message })));
         });
 
 /**
@@ -202,10 +238,9 @@ export const getFeatureInfoOfSelectedItem = (action$, store) =>
     action$.ofType(TEXT_SEARCH_ADD_MARKER).switchMap((action) => {
         const item = action.markerPosition;
         if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
-            let coord = pointOnSurface(item).geometry.coordinates;
-            const latlng = { lng: coord[0], lat: coord[1] };
+            const latlng = getSearchResultLatLng(item);
             const typeName = item.__SERVICE__.options.typeName;
-            if (coord) {
+            if (latlng) {
                 const state = store.getState();
                 const layerObj = typeName && getLayerFromName(state, typeName);
                 let itemId = null;
@@ -234,16 +269,16 @@ export const getFeatureInfoOfSelectedItem = (action$, store) =>
                     };
                 }
                 const ignoreVisibilityLimits = true;
-                return [
+                return Rx.Observable.of(
                     ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
                     ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId, ignoreVisibilityLimits)] : []),
 
                     showMapinfoMarker()
-                ];
+                ).delay(50).takeUntil(action$.ofType(TEXT_SEARCH_RESET));
             }
         }
         return Rx.Observable.empty();
-    }).delay(50);
+    });
 /**
  * Handles show GFI button click action.
  */
@@ -254,12 +289,11 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const state = store.getState();
             const typeName = item?.__SERVICE__?.options?.typeName;
             const layerObj = typeName && getLayerFromName(state, typeName);
-            const bbox = item.bbox || item.properties.bbox || toBbox(item);
-            const coord = pointOnSurface(item).geometry.coordinates;
-            const latlng = { lng: coord[0], lat: coord[1] };
+            const bbox = item.bbox || item.properties?.bbox || toBbox(item);
+            const latlng = getSearchResultLatLng(item);
             const itemId = item.id;
             const ignoreVisibilityLimits = true;
-            return !!coord &&
+            return !!latlng &&
                 showGFIForService(item?.__SERVICE__) && layerIsVisibleForGFI(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
                     ...(item?.__SERVICE__?.forceSearchLayerVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
@@ -285,10 +319,11 @@ export const textSearchShowGFIEpic = (action$, store) =>
                         action$
                             .ofType(LOAD_FEATURE_INFO)
                             .take(1)
-                            .mapTo(zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item?.__SERVICE__?.options?.maxZoomLevel || 21))
+                            .mapTo(zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], getSearchResultCrs(item), item?.__SERVICE__?.options?.maxZoomLevel || 21))
                             .takeUntil(action$.ofType(EXCEPTIONS_FEATURE_INFO, ERROR_FEATURE_INFO))
                         : Rx.Observable.empty()
                 )
+                    .takeUntil(action$.ofType(TEXT_SEARCH_RESET))
                 // disable temporary centerToMarker when this operation happens, because we have the zoom
                     .let(stream$ => bbox && centerToMarkerSelector(store.getState())
                         ? stream$.startWith(updateCenterToMarker(false)).concat(Rx.Observable.of(updateCenterToMarker(true)))

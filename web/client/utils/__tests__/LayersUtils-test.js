@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
+import cloneDeep from 'lodash/cloneDeep';
 import { v1 as uuidv1 } from 'uuid';
 import * as LayersUtils from '../LayersUtils';
 import { readZip, shpToGeoJSON } from '../FileUtils';
@@ -34,6 +35,83 @@ const noVendorWmsLayer = {
     serverType: 'no-vendor'
 };
 
+describe('addTileMatrixFromSourcesToLayers', () => {
+    const tileMatrixSet = {
+        'ows:Identifier': 'EPSG:4326',
+        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::4326',
+        TileMatrix: [{ 'ows:Identifier': 'EPSG:4326:0' }]
+    };
+    const sources = {
+        '/wmts': {
+            tileMatrixSet: {
+                'EPSG:4326': tileMatrixSet,
+                custom: { ...tileMatrixSet, 'ows:Identifier': 'custom' }
+            }
+        }
+    };
+
+    it('restores multiple linked matrix sets and preserves layer options, limits and order', () => {
+        const layers = [{
+            id: 'wmts',
+            type: 'wmts',
+            url: '/tiles',
+            capabilitiesURL: '/wmts',
+            opacity: 0.5,
+            availableTileMatrixSets: {
+                'EPSG:4326': {
+                    crs: 'EPSG:4326',
+                    limits: [{ identifier: 'EPSG:4326:0', ranges: { cols: { min: 0, max: 0 } } }],
+                    tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['EPSG:4326']"
+                },
+                custom: { crs: 'EPSG:4326', tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['custom']" }
+            }
+        }, { id: 'wms', type: 'wms', url: '/wms' }];
+        const originalLayers = cloneDeep(layers);
+        const originalSources = cloneDeep(sources);
+        const restored = LayersUtils.addTileMatrixFromSourcesToLayers(sources, layers);
+
+        expect(restored).toEqual([{
+            ...layers[0],
+            availableTileMatrixSets: {
+                'EPSG:4326': { ...layers[0].availableTileMatrixSets['EPSG:4326'], tileMatrixSet },
+                custom: { ...layers[0].availableTileMatrixSets.custom, tileMatrixSet: sources['/wmts'].tileMatrixSet.custom }
+            }
+        }, layers[1]]);
+        expect(layers).toEqual(originalLayers);
+        expect(sources).toEqual(originalSources);
+    });
+
+    [ ['EPSG:4326'], { 'EPSG:4326': [] } ].forEach(matrixIds => {
+        it(`restores legacy ${Array.isArray(matrixIds) ? 'array' : 'object'} references without mutating layers`, () => {
+            const layers = [{ id: 'wmts', url: ['/wmts'], tileMatrixSet: true, matrixIds }];
+            const original = cloneDeep(layers);
+            const restored = LayersUtils.addTileMatrixFromSourcesToLayers(sources, layers);
+
+            expect(restored[0].availableTileMatrixSets).toEqual({
+                'EPSG:4326': { crs: 'EPSG:4326', tileMatrixSet }
+            });
+            expect(restored[0].matrixIds).toEqual(matrixIds);
+            expect(layers).toEqual(original);
+        });
+    });
+
+    it('keeps inline definitions when no matching source exists', () => {
+        const layers = [{
+            id: 'wmts', url: '/other',
+            availableTileMatrixSets: { 'EPSG:4326': { crs: 'EPSG:4326', tileMatrixSet } }
+        }];
+        expect(LayersUtils.addTileMatrixFromSourcesToLayers(sources, layers)).toEqual(layers);
+    });
+
+    it('returns the original layers without sources and handles absent or empty layers', () => {
+        const layers = [{ id: 'wms', type: 'wms' }];
+        expect(LayersUtils.addTileMatrixFromSourcesToLayers(undefined, layers)).toBe(layers);
+        expect(LayersUtils.addTileMatrixFromSourcesToLayers(null, layers)).toBe(layers);
+        expect(LayersUtils.addTileMatrixFromSourcesToLayers(sources, undefined)).toBe(undefined);
+        expect(LayersUtils.addTileMatrixFromSourcesToLayers(sources, [])).toEqual([]);
+    });
+});
+
 describe('legacy tile matrix placeholders', () => {
     [true, 'PM'].forEach(tileMatrixSet => {
         it(`handles ${tileMatrixSet} without treating it as an inline matrix array`, () => {
@@ -46,6 +124,26 @@ describe('legacy tile matrix placeholders', () => {
         expect(LayersUtils.extractSourcesFromLayers([
             { id: 'wmts', url: '/wmts', tileMatrixSet: true, matrixIds: ['PM'] }
         ])).toEqual({ '/wmts': { tileMatrixSet: {} } });
+    });
+});
+
+describe('isGeoServer', () => {
+    it('preserves the GeoServer default for layers without a server type', () => {
+        expect(LayersUtils.isGeoServer()).toBe(true);
+        expect(LayersUtils.isGeoServer({})).toBe(true);
+        expect(LayersUtils.isGeoServer({ serverType: LayersUtils.ServerTypes.GEOSERVER })).toBe(true);
+    });
+    [LayersUtils.ServerTypes.QGIS, LayersUtils.ServerTypes.NO_VENDOR, 'other'].forEach(serverType => {
+        it(`does not use GeoServer extensions for ${serverType}`, () => {
+            expect(LayersUtils.isGeoServer({ serverType })).toBe(false);
+            expect(LayersUtils.getWMSVendorParams({ serverType })).toEqual({});
+        });
+    });
+    it('preserves the GeoServer tiled options', () => {
+        const layer = { serverType: LayersUtils.ServerTypes.GEOSERVER };
+        expect(LayersUtils.getWMSVendorParams(layer)).toEqual({ TILED: true });
+        expect(LayersUtils.getWMSVendorParams({ ...layer, singleTile: true })).toEqual({ TILED: false });
+        expect(LayersUtils.getWMSVendorParams({ ...layer, tiled: false })).toEqual({ TILED: false });
     });
 });
 

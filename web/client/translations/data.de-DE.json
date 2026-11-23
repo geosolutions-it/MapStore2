@@ -152,7 +152,7 @@
         "maxItems": "Anzahl der Features",
         "maxItemsTooltip": "Maximale Anzahl von Features, die von einer Identify-Anfrage zurückgegeben werden. Der Standardwert ist 10.",
         "buffer": "Puffer (px)",
-        "bufferTooltip": "GeoServer-Anbieterparameter, der den Identify-Suchradius um den angeklickten Punkt erweitert, gemessen in Bildschirmpixeln."
+        "bufferTooltip": "Erweitert den Identify-Suchradius um den angeklickten Punkt, gemessen in Bildschirmpixeln. Verfügbar für GeoServer-Layer und QGIS-Server-Layer."
       },
       "guideText": "In der URL des Bildes können Sie Platzhalter wie $\\{properties.YOUR_ATTRIBUTE\\} verwenden, um die URL abhängig von den Feature-Attributen parametrisch zu machen. Es unterstützt sowohl URLs als auch „Data URI“, die in Base64 codiert sind",
       "imageNotFound": "Für die korrekte Darstellung dieses Bildes ist möglicherweise eine Feature-Info-Anfrage erforderlich",
@@ -211,6 +211,7 @@
       "serverType": "Servertyp",
       "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "No Vendor",
         "geoserver": "GeoServer"
       },
@@ -1160,6 +1161,9 @@
       "s_layer": "Ebenen",
       "s_attributes": "Attribute",
       "s_sort": "Sortiere nach",
+      "s_request_crs": "Anfrage-CRS",
+      "s_request_crs_info": "Wählen Sie das CRS für die Anfrage der Suchgeometrie. EPSG:4326 ist der Standard. Das Karten-CRS folgt der aktiven Kartenprojektion; bei einem Wechsel werden Suchen gelöscht, die es verwenden. Ein festes CRS bleibt bei einem Wechsel der Kartenprojektion unverändert. Die Liste enthält die in MapStore registrierten Projektionen.",
+      "s_map_crs": "Karten-CRS",
       "s_max_features": "Max. Objekte",
       "s_max_zoom": "Max. Zoomstufe",
       "s_wfs_props_label": "WFS-Dienst-Eigenschaften",
@@ -1948,6 +1952,7 @@
       "reset": "Zurücksetzen",
       "options": "Optionen",
       "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt",
+      "cog_crs_not_identified": "Das Koordinatenreferenzsystem der COG-Datei kann nicht anhand eines Codes identifiziert werden, Der Layer kann nicht hinzugefügt werden",
       "add": "Hinzufügen",
       "service": "Service",
       "servicePlaceholder": "Geben Sie einen Service ein",

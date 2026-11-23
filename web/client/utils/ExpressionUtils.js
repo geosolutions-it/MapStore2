@@ -143,7 +143,7 @@ export const wrapBooleans = (expr, isInsideLogical) => {
 
 export const transformSyntax = (expr) => {
     const tempExpr = expr
-        .replace(/'((?:\\.|[^'])*)'/g, '"$1"') // replace ' with "
+        .replace(/'((?:\\.|[^'\\])*)'/g, '"$1"') // replace ' with "
         .replace(/context\./g, '') // removes context string
         .replace(/(\[[^\]]+\]|[\w\d\(\)\"\'_]+)\.includes\(([^)]+)\)/g, 'includes($1, $2)')
         .replace(/\[\s*(.*?)\s*\]/g, '($1)') // replace [] arrays with () arrays
@@ -155,7 +155,7 @@ export const transformSyntax = (expr) => {
         .replace(/===/g, '==') // replace proper equal operator
         .replace(/([\w\.\(\)\"\'\s,]+)\.toLowerCase\(\)/g, 'toLowerCase($1)') // wraps toLowerCase as function
         // applies `get` replacing `.` notation - captures full property chains (a.b.c -> get(a, "b.c"))
-        .replace(/("(?:\\.|[^"])*")|([a-zA-Z_]\w*(?:\([^\)]*\))?(?:\.\w+)+)(?!\()/g, (match, stringContent, chain) => {
+        .replace(/("(?:\\.|[^"\\])*")|([a-zA-Z_]\w*(?:\([^\)]*\))?(?:\.\w+)+)(?!\()/g, (match, stringContent, chain) => {
             if (stringContent) return stringContent; // strings like "owner.username" should be preserved
             if (!chain) return match;
             const firstDot = chain.indexOf('.');

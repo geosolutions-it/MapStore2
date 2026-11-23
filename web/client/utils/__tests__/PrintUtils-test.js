@@ -795,6 +795,10 @@ describe('PrintUtils', () => {
         expect(params).toExist();
         expect(params.TILED).toBe(true);
     });
+    it('omits GeoServer print parameters for QGIS', () => {
+        expect(getPrintVendorParams({ ...layer, serverType: 'qgis' })).toEqual({});
+        expect(getPrintVendorParams({ ...layer, serverType: 'geoserver' })).toEqual({ TILED: true });
+    });
     it('getPrintVendorParams no-vendor', () => {
         const params = getPrintVendorParams(noVendorLayer);
         expect(params).toExist();

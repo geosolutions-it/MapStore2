@@ -152,7 +152,7 @@
         "maxItems": "Feature count",
         "maxItemsTooltip": "Maximum number of features returned by an Identify request. The default value is 10.",
         "buffer": "Buffer (px)",
-        "bufferTooltip": "GeoServer vendor parameter that expands the Identify search radius around the clicked point, measured in screen pixels."
+        "bufferTooltip": "Expands the Identify search radius around the clicked point, measured in screen pixels. Available for GeoServer and QGIS Server layers."
       },
       "guideText": "In the URL of the image you can use placeholders like $\\{properties.YOUR_ATTRIBUTE\\} to make the URL parametric, depending by the feature attributes. It supports both URLs or \"Data URIs\" encoded in base64",
       "imageNotFound": "This image may need a feature info request to be rendered correctly",
@@ -211,6 +211,7 @@
       "serverType": "Server Type",
       "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "No Vendor",
         "geoserver": "GeoServer"
       },
@@ -1121,6 +1122,9 @@
       "s_layer": "Layer",
       "s_attributes": "Attributes",
       "s_sort": "Sort by",
+      "s_request_crs": "Request CRS",
+      "s_request_crs_info": "Choose the CRS used to request search geometry. EPSG:4326 is the default. Map CRS follows the active map projection; changing the map CRS clears searches that use it. A fixed CRS stays the same when the map projection changes. The list includes projections registered in MapStore.",
+      "s_map_crs": "Map CRS",
       "s_max_features": "Max features",
       "s_max_zoom": "Max zoom level",
       "s_wfs_props_label": "WFS service properties",
@@ -1909,6 +1913,7 @@
       "reset": "Clear",
       "options": "Options",
       "srs_not_allowed": "The map coordinate system is not supported by this service",
+      "cog_crs_not_identified": "The coordinate reference system of the COG file cannot be identified by code, the layer cannot be added",
       "add": "Add",
       "service": "Service",
       "servicePlaceholder": "type a service",

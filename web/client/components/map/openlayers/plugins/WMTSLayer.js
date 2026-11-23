@@ -23,7 +23,7 @@ import urlParser from 'url';
 import { isValidResponse } from '../../../../utils/WMSUtils';
 
 import { get, getTransform } from 'ol/proj';
-import { applyTransform, getIntersection } from 'ol/extent';
+import { applyTransform, getIntersection, isEmpty } from 'ol/extent';
 import TileLayer from 'ol/layer/Tile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import WMTS from 'ol/source/WMTS';
@@ -71,7 +71,8 @@ const createLayer = options => {
     const projection = get(srs);
     const metersPerUnit = projection.getMetersPerUnit();
     const { tileMatrixSetName, tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
-    const scales = tileMatrixSet && tileMatrixSet?.TileMatrix.map(t => Number(t.ScaleDenominator));
+    const hasTileMatrix = !!tileMatrixSet?.TileMatrix?.length;
+    const scales = hasTileMatrix ? tileMatrixSet.TileMatrix.map(t => Number(t.ScaleDenominator)) : undefined;
     const mapResolutions = MapUtils.getResolutions();
     /*
      * WMTS assumes a DPI 90.7 instead of 96 as documented in the WMTSCapabilities document:
@@ -87,21 +88,21 @@ const createLayer = options => {
     * - wnu - westing, north-ing, up - some planetary coordinate systems have "west positive" coordinate systems
     */
     const switchOriginXY = projection.getAxisOrientation().substr(0, 2) === 'ne';
-    const origins = tileMatrixSet
-        && tileMatrixSet.TileMatrix
-        && tileMatrixSet.TileMatrix
+    const origins = hasTileMatrix
+        ? tileMatrixSet.TileMatrix
             .map(({ TopLeftCorner } = {}) => TopLeftCorner && CoordinatesUtils.parseString(TopLeftCorner))
-            .map(({ x, y } = {}) => switchOriginXY ? [y, x] : [x, y]);
+            .map(({ x, y } = {}) => switchOriginXY ? [y, x] : [x, y])
+        : undefined;
 
-    const sizes = tileMatrixSet
-        && tileMatrixSet.TileMatrix
-        && tileMatrixSet.TileMatrix
-            .map(({ MatrixWidth, MatrixHeight } = {}) => ([parseInt(MatrixWidth, 10), parseInt(MatrixHeight, 10)]));
+    const sizes = hasTileMatrix
+        ? tileMatrixSet.TileMatrix
+            .map(({ MatrixWidth, MatrixHeight } = {}) => ([parseInt(MatrixWidth, 10), parseInt(MatrixHeight, 10)]))
+        : undefined;
 
-    const tileSizes = tileMatrixSet
-        && tileMatrixSet.TileMatrix
-        && tileMatrixSet.TileMatrix
-            .map(({ TileWidth, TileHeight } = {}) => ([parseInt(TileWidth, 10), parseInt(TileHeight, 10)]));
+    const tileSizes = hasTileMatrix
+        ? tileMatrixSet.TileMatrix
+            .map(({ TileWidth, TileHeight } = {}) => ([parseInt(TileWidth, 10), parseInt(TileHeight, 10)]))
+        : undefined;
 
     // if the layer comes with bbox, it can be used as extent to define the tile source's extent (and avoid to load tiles out of this area). Otherwise the default extent of the projection will be used.
     const bbox = options.bbox;
@@ -117,6 +118,16 @@ const createLayer = options => {
     // the extent has effect to the tile ranges
     // we should skip the extent if the layer does not provide bounding box
     let extent = layerExtent && getIntersection(layerExtent, projection.getExtent());
+    // Recover only the worldwide WGS84 bbox used when capabilities omit WGS84BoundingBox.
+    if (extent && isEmpty(extent)
+        && bbox.crs === 'EPSG:4326'
+        && Number(bbox.bounds.minx) === -180
+        && Number(bbox.bounds.miny) === -90
+        && Number(bbox.bounds.maxx) === 180
+        && Number(bbox.bounds.maxy) === 90
+    ) {
+        extent = projection.getExtent();
+    }
     let queryParameters = options.params ? options.params : {};
     queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     if (options._v_ !== undefined) queryParameters._v_ = options._v_;

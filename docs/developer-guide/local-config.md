@@ -304,7 +304,7 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   "format": "image/png8" // the image format to use by default for layers coming from this catalog (or tiles).
   "layerOptions": { // optional
       "format": "image/png8", // image format needs to be configured also inside layerOptions
-      "serverType": "geoserver or no-vendor, depending on this some geoserver vendor extensions will be used for WMS requests.",
+      "serverType": "geoserver, qgis or no-vendor. Defaults to geoserver when omitted. Selects the vendor extensions used for WMS requests.",
       "tileSize": 512 // determine the default tile size for the catalog, valid for WMS and CSW catalogs
   },
   "filter": { // applicable only for CSW service
@@ -522,6 +522,10 @@ Nominatim configuration:
 ```
 
 WFS configuration:
+
+Set WFS `options.srsName` to a registered CRS or `"map"` for the active map
+projection. If omitted, the request is unchanged and results are assumed to use
+EPSG:4326. Changing the map projection clears searches that use `"map"`.
 
 ```javascript
 "plugins": {

@@ -9,6 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import DrawSupport from '../DrawSupport';
+import { calculateCircleSegments, calculateDistance } from '../../../../utils/CoordinatesUtils';
 import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
 import {Map, View, Feature} from 'ol';
@@ -1327,7 +1328,7 @@ describe('Test DrawSupport', () => {
         const radius = 100;
         const coords = support.polygonCoordsFromCircle(center, radius);
 
-        expect(coords[0].length).toBe(101);
+        expect(coords[0].length).toBe(calculateCircleSegments(radius) + 1);
 
     });
 
@@ -1356,7 +1357,7 @@ describe('Test DrawSupport', () => {
         const radius = 123459;
         const coords = support.polygonCoordsFromCircle(center, radius);
 
-        expect(coords[0].length).toBe(101);
+        expect(coords[0].length).toBe(calculateCircleSegments(radius) + 1);
 
     });
     it('test createOLGeometry with type in properties', () => {
@@ -1398,7 +1399,7 @@ describe('Test DrawSupport', () => {
         const projection = 'EPSG:3857';
         const geometry = support.createOLGeometry({type, coordinates, radius, center, projection, options: { geodesic: true }});
         const geometryCoordinates = geometry.getCoordinates();
-        expect(geometryCoordinates[0].length).toBe(101);
+        expect(geometryCoordinates[0].length).toBe(calculateCircleSegments(radius) + 1);
         const geometryProperties = geometry.getProperties();
         const geodesicCenter = geometryProperties.geodesicCenter;
         expect(geodesicCenter).toEqual([0, 0]);
@@ -1436,6 +1437,39 @@ describe('Test DrawSupport', () => {
         expect(geodesicCenter).toBe(undefined);
     });
 
+    it('test createOLGeometry type Circle not geodesic for map with different projections', () => {
+        const support = ReactDOM.render(<DrawSupport/>, document.getElementById("container"));
+        const radius = 50;
+        const center = {x: 0, y: 0};
+        const projection = 'EPSG:3857';
+        const geometry = support.createOLGeometry({type: 'Circle', coordinates: [], radius, center, projection});
+        expect(geometry.getCoordinates()[0].length).toBe(calculateCircleSegments(radius) + 1);
+    });
+    it('test geometryFunction of the geodesic Circle draw interaction, EPSG:3857', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+        const support = ReactDOM.render(<DrawSupport map={fakeMap} options={{geodesic: true}}/>, document.getElementById("container"));
+        const drawProps = support.drawPropertiesForGeometryType('Circle', 100, new VectorSource(), {options: {geodesic: true}});
+        const center = [1260844.6064174946, 5857951.114737838];
+        const edge = [center[0] + 1000, center[1]];
+        const geometry = drawProps.geometryFunction([center, edge]);
+        const radius = calculateDistance([center, edge].map(c => support.reprojectCoordinatesToWGS84(c, 'EPSG:3857')), 'haversine');
+        expect(geometry.getCoordinates()[0].length).toBe(calculateCircleSegments(radius) + 1);
+    });
     it('test createOLGeometry type Circle wrong center', () => {
         const support = ReactDOM.render(<DrawSupport options={{geodesic: true}}/>, document.getElementById("container"));
         const type = 'Circle';
@@ -1972,6 +2006,57 @@ describe('Test DrawSupport', () => {
         expect(spyEnd).toHaveBeenCalled();
         const [feature] = spyEnd.calls[0].arguments[0].features;
         expect(feature.properties.radius).toBe(79.91);
+    });
+
+    it('test drawend callbacks with Circle with geodesic, vertices given by calculateCircleSegments', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+        const simplifiedCircle = new Feature({
+            geometry: new Polygon([[
+                [1260844.6064174946, 5858067.29727681],
+                [1260960.7874218025, 5857951.114737838],
+                [1260844.6064174946, 5857834.9352681665],
+                [1260728.4254131867, 5857951.114737838],
+                [1260844.6064174946, 5858067.29727681]
+            ]])
+        });
+        const features = JSON.parse(`[{"type":"FeatureCollection","id":"1","geometry":null,"features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[]]},"properties":{"id":"1","isValidFeature":false,"canEdit":true,"isCircle":true,"isDrawing":true}}],"newFeature":true,"properties":{"id":"1"},"tempFeatures":[]}]`);
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const support = ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Circle" options={{
+                stopAfterDrawing: true,
+                geodesic: true,
+                drawEnabled: true,
+                transformToFeatureCollection: true
+            }}
+            onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: simplifiedCircle
+        });
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: simplifiedCircle
+        });
+        expect(spyEnd).toHaveBeenCalled();
+        const [feature] = spyEnd.calls[0].arguments[0].features;
+        expect(feature.properties.isCircle).toBe(true);
+        expect(feature.geometry.type).toBe('Polygon');
+        expect(feature.geometry.coordinates[0].length).toBe(calculateCircleSegments(feature.properties.radius) + 1);
     });
 
     it('test drawend callbacks with Text, transformed int feature collection', (done) => {

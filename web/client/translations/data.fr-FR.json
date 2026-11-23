@@ -152,7 +152,7 @@
         "maxItems": "Nombre d'entités",
         "maxItemsTooltip": "Nombre maximum d'entités renvoyées par une requête d'identification. La valeur par défaut est 10.",
         "buffer": "Tampon (px)",
-        "bufferTooltip": "Paramètre fournisseur GeoServer qui étend le rayon de recherche d'identification autour du point cliqué, mesuré en pixels d'écran."
+        "bufferTooltip": "Étend le rayon de recherche d'identification autour du point cliqué, mesuré en pixels d'écran. Disponible pour les couches GeoServer et QGIS Server."
       },
       "guideText": "Dans l'URL de l'image, vous pouvez utiliser des espaces réservés comme $\\{properties.YOUR_ATTRIBUTE\\} pour rendre l'URL paramétrique, en fonction des attributs de la fonctionnalité. Il prend en charge à la fois les URL ou les « Data URI » codés en base64.",
       "imageNotFound": "Cette image peut nécessiter une demande d\\'informations sur les fonctionnalités pour être rendue correctement",
@@ -211,6 +211,7 @@
       "serverType": "Type de serveur",
       "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "No Vendor",
         "geoserver": "GeoServer"
       },
@@ -1121,6 +1122,9 @@
       "s_layer": "Couche",
       "s_attributes": "Les attributs",
       "s_sort": "Trier par",
+      "s_request_crs": "SCR de la requête",
+      "s_request_crs_info": "Choisissez le SCR utilisé pour demander la géométrie des résultats de recherche. EPSG:4326 est la valeur par défaut. Le SCR de la carte suit la projection active ; lorsque celle-ci change, les recherches qui l’utilisent sont effacées. Un SCR fixe reste inchangé lorsque la projection de la carte change. La liste comprend les projections enregistrées dans MapStore.",
+      "s_map_crs": "SCR de la carte",
       "s_max_features": "Nb d'enregistrements max",
       "s_max_zoom": "Niveau de zoom max",
       "s_wfs_props_label": "Propriétés du service WFS",
@@ -1909,6 +1913,7 @@
       "reset": "Effacer",
       "options": "Options",
       "srs_not_allowed": "Le système de coordonnées géographiques de la carte n'est pas supporté par ce service",
+      "cog_crs_not_identified": "Le système de coordonnées du fichier COG ne peut pas être identifié par un code, la couche ne peut pas être ajoutée",
       "add": "Ajouter",
       "service": "Service",
       "servicePlaceholder": "Tapez un service",

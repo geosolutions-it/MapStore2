@@ -67,6 +67,12 @@ describe('test BackgroundDialog', () => {
         expect(updateThumbnailSpy).toHaveBeenCalled();
         expect(onSaveSpy).toHaveBeenCalled();
     });
+    it('hides GeoServer cache options for QGIS backgrounds', () => {
+        ReactDOM.render(<BackgroundDialog
+            layer={{ type: 'wms', name: 'trees', url: '/ows', serverType: 'qgis' }}/>,
+        document.getElementById('container'));
+        expect(document.querySelector('.ms-wms-cache-options-content')).toNotExist();
+    });
     it('should render with WMS cache options', () => {
         ReactDOM.render(<BackgroundDialog
             layer={{

@@ -152,7 +152,7 @@
         "maxItems": "Número de entidades",
         "maxItemsTooltip": "Número máximo de entidades devueltas por una solicitud de identificación. El valor predeterminado es 10.",
         "buffer": "Búfer (px)",
-        "bufferTooltip": "Parámetro del proveedor de GeoServer que amplía el radio de búsqueda de identificación alrededor del punto seleccionado, medido en píxeles de pantalla."
+        "bufferTooltip": "Amplía el radio de búsqueda de identificación alrededor del punto seleccionado, medido en píxeles de pantalla. Disponible para capas GeoServer y QGIS Server."
       },
       "guideText": "En la URL de la imagen, puede utilizar marcadores de posición como $\\{properties.YOUR_ATTRIBUTE\\} para hacer que la URL sea paramétrica, según los atributos de la característica. Admite URL o \"Data URI\" codificados en base64",
       "imageNotFound": "Es posible que esta imagen necesite una solicitud de información de función para renderizarse correctamente",
@@ -210,6 +210,7 @@
       "serverType": "Tipo de servidor",
       "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "No Vendor",
         "geoserver": "GeoServer"
       },
@@ -1121,6 +1122,9 @@
       "s_layer": "Capa",
       "s_attributes": "Atributos",
       "s_sort": "Ordenado por",
+      "s_request_crs": "CRS de la solicitud",
+      "s_request_crs_info": "Elija el CRS utilizado para solicitar la geometría de búsqueda. El valor predeterminado es EPSG:4326. El CRS del mapa sigue la proyección activa; al cambiarla se borran las búsquedas que lo utilizan. Un CRS fijo no cambia con la proyección del mapa. La lista incluye las proyecciones registradas en MapStore.",
+      "s_map_crs": "CRS del mapa",
       "s_max_features": "Máximo de características",
       "s_max_zoom": "Nivel máximo de zoom",
       "s_wfs_props_label": "Propiedades del servicio WFS",
@@ -1909,6 +1913,7 @@
       "reset": "Reset",
       "options": "Opciones",
       "srs_not_allowed": "Este servicio no soporta el sistema de coordernadas geográficas del mapa",
+      "cog_crs_not_identified": "No se puede identificar el sistema de referencia de coordenadas del archivo COG mediante un código, la capa no se puede añadir",
       "add": "Añadir",
       "servicePlaceholder": "escribe un servicio",
       "service": "Servicio",

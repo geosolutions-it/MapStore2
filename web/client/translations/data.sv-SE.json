@@ -132,6 +132,7 @@
       "serverType": "Servertyp",
       "formatError": "Det var inte möjligt att hämta format och informationsbladsformat från den konfigurerade tjänsten. Troligen använder du en tjänst utan leverantör och detta stöds inte (t.ex. GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Ingen leverantör",
         "geoserver": "GeoServer"
       },
@@ -1704,6 +1705,7 @@
       "reset": "Rensa",
       "options": "Alternativ",
       "srs_not_allowed": "Koordinatsystemet stöds inte av den här tjänsten",
+      "cog_crs_not_identified": "Koordinatsystemet för COG-filen kan inte identifieras med hjälp av koden, och lagret kan inte läggas till",
       "add": "Lägg till",
       "service": "Tjänst",
       "servicePlaceholder": "skriv en tjänst",

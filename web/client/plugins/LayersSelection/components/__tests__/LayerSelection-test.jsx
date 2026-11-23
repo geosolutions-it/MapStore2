@@ -9,6 +9,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils, { act } from 'react-dom/test-utils';
 import { getLayerFromRecord } from '../../../../api/catalog/ArcGIS';
 
 import SelectComponent from '../LayersSelection';
@@ -88,5 +89,38 @@ describe('Select Component', () => {
         const LookingForTestedLayer = msnodestitleAsArray.filter(obj => obj.innerHTML === 'TestedLayer');
         expect(LookingForTestedLayer.length).toBeGreaterThanOrEqualTo(1);
 
+    });
+
+    it('disables geometry selection when no eligible layer is checked', () => {
+        act(() => {
+            ReactDOM.render(<SelectComponent {...defaultProps} layers={[{ ...layer, isSelectQueriable: false }]} selectTools={['Point']} />, container);
+        });
+        expect(container.querySelector('.Select').classList.contains('is-disabled')).toBe(true);
+        act(() => {
+            ReactDOM.render(<SelectComponent {...defaultProps} layers={[{ ...layer, isSelectQueriable: true }]} selectTools={['Point']} />, container);
+        });
+        expect(container.querySelector('.Select').classList.contains('is-disabled')).toBe(false);
+    });
+
+    it('updates every checkbox when all layers are deselected', () => {
+        const onUpdateNode = expect.createSpy();
+        ReactDOM.render(<SelectComponent {...defaultProps} layers={[{ ...layer, id: 'one', isSelectQueriable: true }, { ...layer, id: 'two', isSelectQueriable: true }]} onUpdateNode={onUpdateNode} />, container);
+        TestUtils.Simulate.click(container.querySelector('.tree-header .ms-visibility-check'));
+        expect(onUpdateNode.calls.map(({ arguments: args }) => args)).toEqual([
+            ['one', 'layers', { isSelectQueriable: false }],
+            ['two', 'layers', { isSelectQueriable: false }]
+        ]);
+    });
+
+    it('resets the selected geometry shown in the dropdown after closing', () => {
+        act(() => {
+            ReactDOM.render(<SelectComponent {...defaultProps} drawType="Point" selectTools={['Point']} />, container);
+        });
+        expect(container.querySelector('.Select-value')).toBeTruthy();
+        act(() => {
+            ReactDOM.render(<SelectComponent {...defaultProps} drawType={null} isVisible={false} selectTools={['Point']} />, container);
+            ReactDOM.render(<SelectComponent {...defaultProps} drawType={null} selectTools={['Point']} />, container);
+        });
+        expect(container.querySelector('.Select-value')).toBe(null);
     });
 });

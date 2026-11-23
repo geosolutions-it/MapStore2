@@ -132,6 +132,7 @@
       "serverType": "Tipo de Servidor",
       "formatError": "Não foi possível buscar o formato e o formato da folha de informações do serviço configurado. Provavelmente você está usando um serviço No Vendor e isso não é suportado (ex: GeoNetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Sem Fornecedor",
         "geoserver": "GeoServer"
       },
@@ -1699,6 +1700,7 @@
       "reset": "Limpar",
       "options": "Opções",
       "srs_not_allowed": "O sistema de coordenadas do mapa não é suportado por este serviço",
+      "cog_crs_not_identified": "O sistema de referência de coordenadas do arquivo COG não pode ser identificado pelo código, e a camada não pode ser adicionada",
       "add": "Adicionar",
       "service": "Serviço",
       "servicePlaceholder": "digite um serviço",

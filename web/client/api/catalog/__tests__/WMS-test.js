@@ -13,6 +13,16 @@ import {
 } from '../WMS';
 
 describe('Test correctness of the WMS APIs', () => {
+    it('inherits the configured QGIS server type and feature info options from the service', () => {
+        const records = getCatalogRecords({
+            records: [{ Name: 'trees', Title: 'Trees' }]
+        }, { url: '/ows' });
+        const layer = getLayerFromRecord(records[0], {
+            service: { layerOptions: { serverType: 'qgis', featureInfo: { buffer: 5, maxItems: 25 } } }
+        });
+        expect(layer.serverType).toBe('qgis');
+        expect(layer.featureInfo).toEqual({ buffer: 5, maxItems: 25 });
+    });
 
     it('wms dimensions without values', () => {
         const records = getCatalogRecords({

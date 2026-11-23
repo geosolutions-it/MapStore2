@@ -18,7 +18,7 @@ import {
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
-import { ServerTypes } from '../../../../utils/LayersUtils';
+import { isGeoServer } from '../../../../utils/LayersUtils';
 import TiledBillboardCollection from '../../../../utils/cesium/TiledBillboardCollection';
 
 
@@ -32,7 +32,7 @@ const requestFeatures = (options, params, config) => {
 };
 
 const createLoader = (options) => {
-    if (options.serverType === ServerTypes.NO_VENDOR) {
+    if (!isGeoServer(options)) {
         if (needsCredentials(options)) {
             return () => null;
         }
@@ -95,7 +95,7 @@ const createLayer = (options, map) => {
 
     const add = () => {
         loader = createLoader(options);
-        if (options?.strategy === 'bbox' && options?.serverType === ServerTypes.NO_VENDOR) {
+        if (options?.strategy === 'bbox' && !isGeoServer(options)) {
             loadingBbox = () => {
                 if (bboxTimeout) {
                     clearTimeout(bboxTimeout);
@@ -135,7 +135,7 @@ const createLayer = (options, map) => {
                 }, 300);
             };
             map.camera.moveEnd.addEventListener(loadingBbox);
-        } else if (options?.strategy === 'tile' && options?.serverType === ServerTypes.NO_VENDOR) {
+        } else if (options?.strategy === 'tile' && !isGeoServer(options)) {
             tiledPrimitive = new TiledBillboardCollection({
                 map,
                 tileType: 'billboard',

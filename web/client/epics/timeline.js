@@ -225,8 +225,9 @@ const updateRangeOnInit = (state, value, currentTime) => {
     } else {
         values = value;
     }
+    // an end of the domain is empty when its request fails or returns no value
     // if values are intervals (separated by /) spread them in the array
-    values = values.reduce((acc, v) => acc.concat(v.split('/')), []);
+    values = values.filter(v => !!v).reduce((acc, v) => acc.concat(v.split('/')), []);
     if (values.length > 2) {
         values = [values[0], values[values.length - 1]]; // more than 2 values, start and end are the first and last values
     }

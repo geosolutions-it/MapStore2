@@ -122,6 +122,7 @@
       "serverType": "Tipus de servidor",
       "formatError": "No es va poder buscar el format i el format de fulls d'informaci\u00f3 del servei configurat. Probablement utilitzeu un servei de venedors i aix\u00f2 no \u00e9s compatible (per exemple,geonetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Sense venedor",
         "geoserver": "Geoserver"
       },
@@ -1694,6 +1695,7 @@
       "reset": "Clar",
       "options": "Les opcions",
       "srs_not_allowed": "El sistema de coordenades del mapa no \u00e9s compatible amb aquest servei",
+      "cog_crs_not_identified": "El sistema de referència de coordenades del fitxer COG no es pot identificar mitjançant el codi, i no es pot afegir la capa",
       "add": "Addiccionar",
       "service": "Manteniment",
       "servicePlaceholder": "Escriviu un servei",

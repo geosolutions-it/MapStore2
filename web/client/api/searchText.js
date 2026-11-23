@@ -21,7 +21,7 @@ const defaultFromTextToFilter = ({searchText, staticFilter, blacklist, item, que
     }
     let filter;
     if (searchWords.length > 0 ) {
-        filter = "(".concat( searchWords.map( (w) => queriableAttributes.map( attr => `${attr} ${predicate} '%${w.replace("'", "''")}%'`).join(" OR ")).join(') AND (')).concat(")");
+        filter = "(".concat( searchWords.map( (w) => queriableAttributes.map( attr => `${attr} ${predicate} '%${w.replace(/'/g, "''")}%'`).join(" OR ")).join(') AND (')).concat(")");
     }
 
     filter = filter ? filter.concat(staticFilterParsed) : staticFilterParsed || null;

@@ -13,7 +13,8 @@ import {isNil, camelCase} from "lodash";
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import CommonAdvancedSettings from './CommonAdvancedSettings';
 import ReactQuill from '../../../../libs/quill/react-quill-suspense';
-import { ServerTypes } from '../../../../utils/LayersUtils';
+import { isGeoServer, ServerTypes } from '../../../../utils/LayersUtils';
+import { isFeatureInfoBufferSupported } from '../../../../utils/FeatureInfoRequestUtils';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
@@ -86,7 +87,7 @@ export default ({
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
     const serverTypeOptions = getServerTypeOptions();
     // for CSW services with no vendor options, disable format and info format options
-    const canLoadInfo = !(['csw'].includes(service.type) && service.layerOptions?.serverType === ServerTypes.NO_VENDOR);
+    const canLoadInfo = !(['csw'].includes(service.type) && !isGeoServer(service.layerOptions));
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
         {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
             <Checkbox data-qa="service-lacalized-layer-styles-option"
@@ -165,12 +166,15 @@ export default ({
                     value={service.layerOptions?.serverType}
                     options={serverTypeOptions}
                     onChange={event => {
-                        if (event?.value === ServerTypes.NO_VENDOR) onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: undefined});
-                        onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value });
+                        onChangeServiceProperty("layerOptions", {
+                            ...service.layerOptions,
+                            serverType: event?.value,
+                            ...(!isGeoServer({ serverType: event?.value }) && { enableInteractiveLegend: undefined })
+                        });
                     }} />
             </InputGroup>
         </FormGroup>
-        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
+        {isGeoServer(service.layerOptions) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
             <Checkbox data-qa="display-interactive-legend-option"
                 onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: e.target.checked})}
                 checked={!isNil(service.layerOptions?.enableInteractiveLegend) ? service.layerOptions?.enableInteractiveLegend : false}>
@@ -178,7 +182,7 @@ export default ({
                 &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
             </Checkbox>
         </FormGroup>}
-        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && service.type === "wms" &&  <FormGroup controlId="useCacheOption" key="useCacheOption">
+        {isGeoServer(service.layerOptions) && service.type === "wms" &&  <FormGroup controlId="useCacheOption" key="useCacheOption">
             <Checkbox data-qa="display-interactive-legend-option"
                 onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, remoteTileGrids: e.target.checked})}
                 checked={!isNil(service.layerOptions?.remoteTileGrids) ? service.layerOptions?.remoteTileGrids : false}>
@@ -193,7 +197,7 @@ export default ({
             </FormGroup>
             <FeatureInfoRequestOptions
                 featureInfo={service.layerOptions?.featureInfo || {}}
-                showBuffer={service.layerOptions?.serverType === ServerTypes.GEOSERVER}
+                showBuffer={isFeatureInfoBufferSupported(service.layerOptions)}
                 onChange={(featureInfo) => onChangeServiceProperty("layerOptions", {
                     ...service.layerOptions,
                     featureInfo

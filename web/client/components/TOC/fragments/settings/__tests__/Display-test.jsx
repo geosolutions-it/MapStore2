@@ -161,6 +161,17 @@ describe('test Layer Properties Display module component', () => {
         expect(spy.calls[0].arguments[0]).toBe('coalesce');
         expect(spy.calls[0].arguments[1]).toBe(false);
     });
+    it('hides GeoServer settings for QGIS layers', () => {
+        ReactDOM.render(<Display
+            element={{ type: 'wms', name: 'trees', serverType: ServerTypes.QGIS, infoFormats: ['text/html'] }}
+            settings={{ options: {} }}
+            isLocalizedLayerStylesEnabled/>, document.getElementById('container'));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-wms-cache-options')).toNotExist();
+        expect(container.querySelector('input[value="cropToProjectionExtent"]')).toNotExist();
+        expect(container.querySelector('input[data-qa="display-interactive-legend-option"]')).toNotExist();
+        expect(container.querySelector('input[value="localizedLayerStyles"]')).toNotExist();
+    });
     it('tests Display component for wms with format fetch', (done) => {
         const l = {
             name: 'layer00',
