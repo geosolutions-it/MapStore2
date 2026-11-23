@@ -25,6 +25,8 @@ const LayersSelectionSupport = ({
     mapType,
     type,
     feature,
+    enabled = false,
+    canDraw = false,
     onChange = () => {},
     onUpdateLayer = () => {},
     onRemoveLayer = () => {},
@@ -45,8 +47,8 @@ const LayersSelectionSupport = ({
         onUpdateLayer(LAYER_SELECTION_LAYER_ID, LAYER_SELECTION_LAYER_ID, 'overlay', {
             id: LAYER_SELECTION_LAYER_ID,
             type: 'vector',
-            visibility: true,
-            features: feature ? [feature] : [],
+            visibility: enabled,
+            features: enabled && feature ? [feature] : [],
             style: feature ? createDefaultStyle({
                 fillColor: '#f2f2f2',
                 fillOpacity: 0.3,
@@ -57,7 +59,7 @@ const LayersSelectionSupport = ({
                 geometryType: feature?.geometry?.type
             }) : undefined
         });
-    }, [feature]);
+    }, [feature, enabled]);
 
     if (!DrawGeometrySupport) {
         return null;
@@ -67,7 +69,7 @@ const LayersSelectionSupport = ({
         <Suspense fallback={null}>
             <DrawGeometrySupport
                 map={map}
-                active={!!geometryType && !feature}
+                active={enabled && canDraw && !!geometryType && !feature}
                 depthTestAgainstTerrain={false}
                 geometryType={geometryType}
                 getObjectsToExcludeOnPick={() => []}

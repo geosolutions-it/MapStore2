@@ -39,7 +39,7 @@ export const isSelectEnabled = state => get(state, "controls.layersSelection.ena
  * @param {Object} node - Layer node or descriptor.
  * @returns {boolean} True if the property exists.
  */
-export const hasSelectQueriableProp = node => Object.hasOwn(node, 'isSelectQueriable');
+export const hasSelectQueriableProp = node => Object.hasOwn(node || {}, 'isSelectQueriable');
 
 /**
  * Determines whether a layer node is considered selectable.
@@ -98,3 +98,6 @@ export const getSelectSelections = state => getSelectObj(state).selections ?? {}
 
 export const getSelectDrawType = state => getSelectObj(state).drawType;
 export const getSelectionFeature = state => getSelectObj(state).selectionFeature;
+
+export const canDrawSelection = state => !!isSelectEnabled(state)
+    && selectLayersSelector(state).some(isSelectQueriable);
