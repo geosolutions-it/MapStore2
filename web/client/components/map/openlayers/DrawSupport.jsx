@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import { v1 as uuid } from 'uuid';
 import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
-import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
+import {reprojectGeoJson, calculateDistance, reproject, calculateCircleSegments} from '../../../utils/CoordinatesUtils';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
 import {transformPolygonToCircle} from '../../../utils/openlayers/DrawSupportUtils';
 import {isCompletePolygon} from '../../../plugins/Annotations/utils/AnnotationsUtils';
@@ -576,7 +576,7 @@ export default class DrawSupport extends React.Component {
                             return this.reprojectCoordinatesToWGS84(coordinate, projection);
                         });
                         radius = calculateDistance(wgs84Coordinates, 'haversine');
-                        coordinates = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
+                        coordinates = circular(wgs84Coordinates[0], radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection).getCoordinates();
                     } else {
                         radius = drawnGeom.getRadius();
                         center = drawnGeom.getCenter();
@@ -880,7 +880,7 @@ export default class DrawSupport extends React.Component {
                         return this.reprojectCoordinatesToWGS84(coordinate, projection);
                     });
                     let radius = calculateDistance(wgs84Coordinates, 'haversine');
-                    let coords = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
+                    let coords = circular(wgs84Coordinates[0], radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection).getCoordinates();
                     geom.setCoordinates(coords);
                     return geom;
                 };
@@ -1041,7 +1041,7 @@ export default class DrawSupport extends React.Component {
                         const wgs84Coordinates = [[...center]].map((coordinate) => {
                             return this.reprojectCoordinatesToWGS84(coordinate, projection);
                         });
-                        coords = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
+                        coords = circular(wgs84Coordinates[0], radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection).getCoordinates();
                     }
                     olFt = this.getNewFeature(newDrawMethod, coords);
                     // TODO verify center is projected in 4326 and is an array
@@ -1597,8 +1597,8 @@ export default class DrawSupport extends React.Component {
             // TODO simplify, too much use of elvis operator
             geometry = isCircle ?
                 options.geodesic ?
-                    circular(this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
-                    : fromCircle(new Circle([correctCenter.x, correctCenter.y], radius), 100)
+                    circular(this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, calculateCircleSegments(radius)).clone().transform('EPSG:4326', projection)
+                    : fromCircle(new Circle([correctCenter.x, correctCenter.y], radius), calculateCircleSegments(radius))
                 : new Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
 
             // store geodesic center
@@ -1639,11 +1639,11 @@ export default class DrawSupport extends React.Component {
      * @param {number} npoints number of sides
      * @return {Polygon} the polygon which approximate the circle
     */
-    polygonFromCircle = (center, radius, npoints = 100) => {
+    polygonFromCircle = (center, radius, npoints = calculateCircleSegments(radius)) => {
         return fromCircle(new Circle(center, radius), npoints);
     }
 
-    polygonCoordsFromCircle = (center, radius, npoints = 100) => {
+    polygonCoordsFromCircle = (center, radius, npoints = calculateCircleSegments(radius)) => {
         return this.polygonFromCircle(center, radius, npoints).getCoordinates();
     }
     /**

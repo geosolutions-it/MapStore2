@@ -38,8 +38,15 @@ import {
     resetLayerLegendFilter,
     updateLayerWFSVectorLegendFilter,
     createVectorFeatureFilter,
-    setupCrossLayerFilterDefaults
+    setupCrossLayerFilterDefaults,
+    getCQLGeometryElement,
+    processCQLSpatialFilter,
+    roundCircleRingCoordinates,
+    CQL_CIRCLE_PRECISION_SAGITTA_RATIO
 } from '../FilterUtils';
+import { CIRCLE_SAGITTA_RATIO, calculateCircleSegments } from '../CoordinatesUtils';
+import { circular } from 'ol/geom/Polygon';
+import { getDistance } from 'ol/sphere';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
 
@@ -2961,6 +2968,108 @@ describe('FilterUtils', () => {
         it('should return true if there are only widget filters', () => {
             expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }] })).toBe(true);
             expect(isFilterFromWidgetOnly({ filters: [{ appliedFromWidget: 'w1' }, { appliedFromWidget: 'w2' }] })).toBe(true);
+        });
+    });
+
+    describe('getCQLGeometryElement circle simplification', () => {
+        const createRing = (sides, radius = 1000, cx = 1000000, cy = 5000000) => {
+            const ring = Array.from({ length: sides }, (v, i) => {
+                const angle = 2 * Math.PI * i / sides;
+                return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+            });
+            return [...ring, ring[0]];
+        };
+        const closedRing = createRing(100);
+        const step = 1000 * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO;
+        const countVertices = (cql) => cql.substring(cql.indexOf('((') + 2, cql.indexOf('))')).split(', ');
+        it('should keep the vertices of a Circle ring and only round their coordinates', () => {
+            const simplified = roundCircleRingCoordinates(closedRing);
+            expect(simplified.length).toBe(closedRing.length);
+            expect(simplified[0]).toEqual(simplified[simplified.length - 1]);
+            simplified.forEach(([x, y], i) => {
+                expect(Math.abs(Number(x) - closedRing[i][0])).toBeLessThanOrEqualTo(step);
+                expect(Math.abs(Number(y) - closedRing[i][1])).toBeLessThanOrEqualTo(step);
+            });
+        });
+        it('should round the coordinates of a Circle ring to a tenth of the sagitta', () => {
+            const decimalsOf = (value) => (value.split('.')[1] || '').length;
+            roundCircleRingCoordinates(closedRing).forEach(([x, y]) => {
+                expect(decimalsOf(x)).toBeLessThanOrEqualTo(1);
+                expect(decimalsOf(y)).toBeLessThanOrEqualTo(1);
+            });
+            const degreesRing = createRing(100, 0.01, 0.0000001, 0.00000001);
+            roundCircleRingCoordinates(degreesRing).forEach(([x, y]) => {
+                expect(decimalsOf(x)).toBeLessThanOrEqualTo(6);
+                expect(decimalsOf(y)).toBeLessThanOrEqualTo(6);
+                expect(x.indexOf('e')).toBe(-1);
+                expect(y.indexOf('e')).toBe(-1);
+            });
+        });
+        it('should round a geodesic circle ring in EPSG:4326 within a tenth of the sagitta', () => {
+            const radius = 1000;
+            const ring = circular([146.9, -41.4], radius, calculateCircleSegments(radius)).getCoordinates()[0];
+            const simplified = roundCircleRingCoordinates(ring);
+            expect(simplified.length).toBe(ring.length);
+            simplified.forEach(([x, y], i) => {
+                expect((x.split('.')[1] || '').length).toBeLessThanOrEqualTo(6);
+                expect((y.split('.')[1] || '').length).toBeLessThanOrEqualTo(6);
+                expect(getDistance(ring[i], [Number(x), Number(y)])).toBeLessThanOrEqualTo(radius * CIRCLE_SAGITTA_RATIO * CQL_CIRCLE_PRECISION_SAGITTA_RATIO);
+            });
+            const cql = processCQLSpatialFilter({
+                spatialField: {
+                    method: 'Circle',
+                    operation: 'INTERSECTS',
+                    attribute: 'the_geom',
+                    geometry: { type: 'Polygon', projection: 'EPSG:4326', coordinates: [ring] }
+                }
+            });
+            expect(cql.indexOf('INTERSECTS("the_geom",SRID=4326;Polygon((')).toBe(0);
+        });
+        it('roundCircleRingCoordinates should produce shorter coordinates of a circle when converted to string', () => {
+            // circle in EPSG:4326 with radius 0.02 degrees around Firenze
+            const circle = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [[
+                        [11.2758136, 43.7695604],
+                        [11.26995573562373, 43.78370253562373],
+                        [11.2558136, 43.789560400000006],
+                        [11.24167146437627, 43.78370253562373],
+                        [11.2358136, 43.7695604],
+                        [11.24167146437627, 43.755418264376274],
+                        [11.2558136, 43.7495604],
+                        [11.26995573562373, 43.755418264376274],
+                        [11.2758136, 43.7695604]
+                    ]]
+                }
+            };
+            const ring = circle.geometry.coordinates[0];
+            const normalized = roundCircleRingCoordinates(ring);
+            expect(String(normalized).length < String(ring).length).toBe(true);
+        });
+        it('should not simplify a Polygon ring', () => {
+            const cql = getCQLGeometryElement([closedRing], 'Polygon');
+            expect(countVertices(cql).length).toBe(101);
+        });
+        it('should simplify the geometry of a Circle spatial filter in EPSG:3857', () => {
+            const cql = processCQLSpatialFilter({
+                spatialField: {
+                    method: 'Circle',
+                    operation: 'INTERSECTS',
+                    attribute: 'the_geom',
+                    geometry: { type: 'Polygon', projection: 'EPSG:3857', coordinates: [closedRing] }
+                }
+            });
+            expect(cql.indexOf('INTERSECTS("the_geom",SRID=3857;Polygon((')).toBe(0);
+            const vertices = countVertices(cql);
+            expect(vertices.length).toBe(closedRing.length);
+            vertices.forEach((vertex) => {
+                vertex.split(' ').forEach((value) => {
+                    expect((value.split('.')[1] || '').length).toBeLessThanOrEqualTo(1);
+                });
+            });
         });
     });
 });
