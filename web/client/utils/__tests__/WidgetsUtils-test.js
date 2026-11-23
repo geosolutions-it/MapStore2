@@ -12,7 +12,7 @@ import {
     FILTER_PROPS,
     CHART_PROPS,
     isWidgetLayerSupported,
-    cleanMaximizedState, convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
+    cleanMaximizedState, restoreWidgetsTileMatrixSets, convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
     fitLayoutInRows,
     placeNewWidgets,
     getConnectionList, getDependantWidget,
@@ -1464,4 +1464,29 @@ describe('Test WidgetsUtils', () => {
         });
     });
 
+    it('restoreWidgetsTileMatrixSets restores linked tile matrix sets in map widgets only', () => {
+        const tileMatrixSet = { 'ows:Identifier': 'EPSG:4326', TileMatrix: [{ 'ows:Identifier': 'EPSG:4326:0' }] };
+        const linkedLayer = {
+            id: 'wmts', type: 'wmts', url: '/wmts',
+            availableTileMatrixSets: { 'EPSG:4326': { crs: 'EPSG:4326', tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['EPSG:4326']" } }
+        };
+        const sources = { '/wmts': { tileMatrixSet: { 'EPSG:4326': tileMatrixSet } } };
+        const chart = { id: 'chart', widgetType: 'chart' };
+        const config = {
+            layouts: { md: [] },
+            widgets: [
+                { id: 'map-with-sources', widgetType: 'map', maps: [{ mapId: 'm1', sources, layers: [linkedLayer] }] },
+                { id: 'map-without-sources', widgetType: 'map', maps: [{ mapId: 'm2', layers: [linkedLayer] }] },
+                chart
+            ]
+        };
+        const restored = restoreWidgetsTileMatrixSets(config);
+        expect(restored.layouts).toBe(config.layouts);
+        expect(restored.widgets[0].maps[0].layers[0].availableTileMatrixSets).toEqual({
+            'EPSG:4326': { ...linkedLayer.availableTileMatrixSets['EPSG:4326'], tileMatrixSet }
+        });
+        expect(restored.widgets[1].maps[0].layers).toBe(config.widgets[1].maps[0].layers);
+        expect(restored.widgets[2]).toBe(chart);
+        expect(restoreWidgetsTileMatrixSets({ layouts: {} })).toEqual({ layouts: {} });
+    });
 });

@@ -124,6 +124,36 @@ describe('handleMapSelect enhancer', () => {
         const EnhancedSink = handleMapSelect(sink);
         ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
     });
+    it('restores modern linked WMTS definitions when selecting a saved map', (done) => {
+        const tileMatrixSet = mapData.map.sources.sourceUrl.tileMatrixSet['EPSG:4326'];
+        const limits = [{ identifier: 'EPSG:4326:0', ranges: { cols: { min: 0, max: 0 } } }];
+        const layer = {
+            id: 'wmts', type: 'wmts', name: 'topp:states', url: 'sourceUrl',
+            availableTileMatrixSets: {
+                'EPSG:4326': {
+                    crs: 'EPSG:4326', limits,
+                    tileMatrixSetLink: "sources['sourceUrl'].tileMatrixSet['EPSG:4326']"
+                }
+            }
+        };
+        mockAxios.onGet().reply(200, { ...mapData, map: { ...mapData.map, layers: [layer] } });
+        const EnhancedSink = handleMapSelect(createSink(props => props.onMapChoice(props.map)));
+        ReactDOM.render(<EnhancedSink
+            map={{ id: 3 }}
+            onMapSelected={({ maps: [map] }) => {
+                try {
+                    expect(map.sources).toEqual(mapData.map.sources);
+                    expect(map.layers[0].availableTileMatrixSets['EPSG:4326']).toEqual({
+                        ...layer.availableTileMatrixSets['EPSG:4326'], tileMatrixSet
+                    });
+                    expect(map.mapInfoControl).toBe(true);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }}
+        />, document.getElementById('container'));
+    });
     it('handleMapSelect enhancer callbacks for map data without source', (done) => {
         const mapDataWithoutSource = {...omit(mapData, ['map.sources', 'map.layers[0].tileMatrixSet'])};
         mockAxios.onGet().reply(200, mapDataWithoutSource);
