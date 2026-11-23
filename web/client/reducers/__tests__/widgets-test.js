@@ -431,6 +431,26 @@ describe('Test the widgets reducer', () => {
         expect(state.containers[DEFAULT_TARGET].widgets).toExist();
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
+    it('widgets dashboardLoaded restores linked WMTS tile matrix sets in map widgets', () => {
+        const tileMatrixSet = { 'ows:Identifier': 'EPSG:4326', TileMatrix: [{ 'ows:Identifier': 'EPSG:4326:0' }] };
+        const data = {
+            widgets: [{
+                id: 'map-widget',
+                widgetType: 'map',
+                maps: [{
+                    mapId: 'map-1',
+                    sources: { '/wmts': { tileMatrixSet: { 'EPSG:4326': tileMatrixSet } } },
+                    layers: [{
+                        id: 'wmts', type: 'wmts', url: '/wmts',
+                        availableTileMatrixSets: { 'EPSG:4326': { crs: 'EPSG:4326', tileMatrixSetLink: "sources['/wmts'].tileMatrixSet['EPSG:4326']" } }
+                    }]
+                }]
+            }]
+        };
+        const state = widgets(undefined, dashboardLoaded("RESOURCE", data));
+        const [layer] = state.containers[DEFAULT_TARGET].widgets[0].maps[0].layers;
+        expect(layer.availableTileMatrixSets['EPSG:4326'].tileMatrixSet).toEqual(tileMatrixSet);
+    });
     it('widgets dashboardLoaded cleans stale maximized properties from saved dashboard widgets', () => {
         const data = {
             widgets: [{ id: 'widget-1', dataGrid: { y: 3, custom: true, isResizable: false } }],

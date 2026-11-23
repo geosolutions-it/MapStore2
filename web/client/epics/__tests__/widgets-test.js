@@ -45,6 +45,9 @@ import { ActionsObservable } from 'redux-observable';
 import Rx from 'rxjs';
 import { HIDE, save } from '../../actions/mapEditor';
 import { CHANGE_MAP_EDITOR } from '../../actions/queryform';
+import { saveMapConfiguration } from '../../utils/MapUtils';
+import { getTileMatrix } from '../../utils/WMTSUtils';
+import cloneDeep from 'lodash/cloneDeep';
 
 describe('widgets Epics', () => {
     it('onOpenFilterEditorEpic initializes the spatial filter map from the layer bbox', (done) => {
@@ -758,6 +761,52 @@ describe('widgets Epics', () => {
             2,
             [save(mapData, "widgetInlineEditor")],
             checkActions);
+    });
+    it('onMapEditorOpenEpic restores saved WMTS definitions while preserving the map payload', (done) => {
+        const tileMatrixSet = {
+            'ows:Identifier': 'EPSG:4326',
+            'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::4326',
+            TileMatrix: [{ 'ows:Identifier': 'EPSG:4326:0', ScaleDenominator: 1000 }]
+        };
+        const layers = [{
+            id: 'wmts', type: 'wmts', name: 'topp:states', url: '/wmts', visibility: true,
+            availableTileMatrixSets: {
+                'EPSG:4326': {
+                    crs: 'EPSG:4326',
+                    limits: [{ identifier: 'EPSG:4326:0', ranges: { cols: { min: 0, max: 0 } } }],
+                    tileMatrixSet
+                }
+            }
+        }, { id: 'wms', type: 'wms', name: 'other', url: '/wms' }];
+        const mapData = {
+            ...saveMapConfiguration({ center: { x: 0, y: 0, crs: 'EPSG:4326' }, zoom: 5 }, layers, [], []).map,
+            widgetId: 'widget-123',
+            mapId: 'map-456',
+            name: 'Widget map'
+        };
+        const original = cloneDeep(mapData);
+        expect(mapData.layers[0].availableTileMatrixSets['EPSG:4326'].tileMatrixSet).toBe(undefined);
+        testEpic(onMapEditorOpenEpic, 2, [save(mapData, 'widgetInlineEditor')], actions => {
+            expect(actions[0].type).toBe(UPDATE_PROPERTY);
+            expect(actions[0].id).toBe('widget-123');
+            expect(actions[0].key).toBe('maps');
+            expect(actions[0].mode).toBe('merge');
+            expect(actions[0].value).toEqual({
+                ...mapData,
+                layers: [{
+                    ...mapData.layers[0],
+                    availableTileMatrixSets: {
+                        'EPSG:4326': { ...mapData.layers[0].availableTileMatrixSets['EPSG:4326'], tileMatrixSet }
+                    }
+                }, mapData.layers[1]]
+            });
+            expect(actions[1].type).toBe(HIDE);
+            expect(actions[1].owner).toBe('widgetInlineEditor');
+            const reopened = JSON.parse(JSON.stringify(actions[0].value));
+            expect(getTileMatrix(reopened.layers[0], 'EPSG:4326').tileMatrixSet).toEqual(tileMatrixSet);
+            expect(mapData).toEqual(original);
+            done();
+        });
     });
     it('onMapEditorOpenEpic does not trigger actions when map has no widgetId', (done) => {
         const checkActions = actions => {
