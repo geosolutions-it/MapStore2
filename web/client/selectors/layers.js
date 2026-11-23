@@ -11,11 +11,12 @@ import { createSelector } from 'reselect';
 import { getCurrentResolution } from '../utils/MapUtils';
 import {getMarkerLayer, defaultQueryableFilter} from '../utils/MapInfoUtils';
 import { denormalizeGroups, isInsideResolutionsLimits, getDerivedLayersVisibility, flattenGroups, getTitle } from '../utils/LayersUtils';
-import { defaultIconStyle } from '../utils/SearchUtils';
-import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
+import { defaultIconStyle, getSearchResultCrs } from '../utils/SearchUtils';
+import { getNormalizedLatLon, reprojectGeoJson } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
 import { get, head, find, isObject, isArray, castArray, isNil } from 'lodash';
 import { mapSelector } from './map';
+import { isOpenlayers } from './maptype';
 import { getSelectedMapView } from './mapviews';
 import { mergeViewLayers } from '../utils/MapViewsUtils';
 import { currentLocaleSelector } from "../selectors/locale";
@@ -53,9 +54,10 @@ export const layerSelectorWithMarkers = createSelector(
         geoColderSelector,
         centerToMarkerSelector,
         additionalLayersSelector,
-        highlightPointSelector
+        highlightPointSelector,
+        isOpenlayers
     ],
-    (layers = [], groups, markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
+    (layers = [], groups, markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint, openlayers) => {
 
         // Perform an override action on the layers using options retrieved from additional layers
         const overrideLayers = additionalLayers.filter(({actionType}) => actionType === 'override');
@@ -92,9 +94,16 @@ export const layerSelectorWithMarkers = createSelector(
 
         if (geocoder && geocoder.markerPosition) {
             let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
-            newLayers.push(getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
+            const resultCrs = getSearchResultCrs(geocoder.markerPosition);
+            // Only openLayers accepts the source CRS.
+            const geographic = !openlayers && resultCrs !== 'EPSG:4326';
+            const marker = geographic
+                ? reprojectGeoJson(geocoder.markerPosition, resultCrs, 'EPSG:4326')
+                : geocoder.markerPosition;
+            newLayers.push(getMarkerLayer("GeoCoder", marker, "marker",
                 {
                     overrideOLStyle: true,
+                    featuresCrs: geographic ? 'EPSG:4326' : resultCrs,
                     style: {...defaultIconStyle, ...geocoderStyle}
                 }, geocoder.markerLabel
             ));

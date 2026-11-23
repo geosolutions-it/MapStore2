@@ -3388,6 +3388,36 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getMaxResolution()).toBe(Infinity);
     });
 
+    it('wmts layer falls back to valid tileGrid when TileMatrix is empty', () => {
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'gs:spearfish_roads',
+            format: 'image/png',
+            srs: 'EPSG:4326',
+            url: 'http://localhost:8080/geoserver/gwc/service/wmts',
+            tileMatrixSet: [
+                {
+                    TileMatrix: [],
+                    'ows:Identifier': 'EPSG:4326',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::4326'
+                }
+            ]
+        };
+        ReactDOM.render(
+            <OpenlayersLayer
+                type="wmts"
+                options={options}
+                map={map}
+            />, document.getElementById("container"));
+
+        const wmtsLayer = map.getLayers().item(0);
+        const tileGrid = wmtsLayer.getSource().getTileGrid();
+        expect(tileGrid.getResolutions().length > 0).toBe(true);
+        expect(tileGrid.getOrigin(0)).toBeTruthy();
+        expect(tileGrid.getTileRangeForExtentAndZ([0, 0, 10, 10], 0)).toBeTruthy();
+    });
+
     it('should apply native ol min and max resolution on wfs layer', (done) => {
         mockAxios.onGet().reply(r => {
             expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
