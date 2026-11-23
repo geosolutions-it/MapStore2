@@ -147,7 +147,8 @@ export const refreshVectorLayer = (layer, createLayer, map, onReady = () => {}) 
      */
     const end = () => {
         loading--;
-        // A strategy can start several extent requests synchronously.
+        // The replacement vector source's loading strategy (all, bbox or tile) determines the requested extents.
+        // The tile strategy can start several extent requests synchronously.
         Promise.resolve().then(() => {
             if (!loading && !failed && pendingRefreshes.get(layer)?.source === source) {
                 cancelVectorLayerRefresh(layer);
