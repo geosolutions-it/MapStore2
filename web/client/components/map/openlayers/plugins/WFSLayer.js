@@ -178,18 +178,18 @@ Layers.registerType('wfs', {
             || !isEqual(oldOptions.security, options.security)
             || !isEqual(oldOptions.requestRuleRefreshHash, options.requestRuleRefreshHash)
         ) {
-            cancelVectorLayerRefresh(layer);
+            // Keep features visible during version refreshes to avoid flicker while replacement data loads.
             const refreshing = options._v_ !== oldOptions._v_ && refreshVectorLayer(layer,
                 () => Layers.createLayer('wfs', options, map), map,
                 () => updateStyle(layer, layer._msCurrentOptions || options, map));
             if (!refreshing) {
+                cancelVectorLayerRefresh(layer);
                 source.setLoader(createLoader(source, {
                     ...options,
                     onLoadEnd: () => {
                         updateStyle(layer, options, map);
                     }
                 }));
-                source.clear();
                 source.refresh();
             }
         }
