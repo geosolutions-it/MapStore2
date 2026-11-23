@@ -1,8 +1,9 @@
 # Automatic Refresh
 
-AutoRefresh updates selected datasets periodically in maps and dashboards. Enable the
-plugin in a map context to show its control in the map footer. Dashboards include the
-control in their sidebar, including embedded dashboards.
+AutoRefresh updates selected datasets periodically in maps and dashboards. The plugin
+is available in the Application Context plugin list and is not enabled by default.
+Enable it in a map context to show its control in the map footer. When configured for
+dashboards, the control appears in their sidebar, including embedded dashboards.
 
 ## Configure and use refresh
 
@@ -46,7 +47,8 @@ cannot be refreshed by that engine.
 
 ## Plugin configuration
 
-Add the plugin to a map context, or configure it in the dashboard plugin list:
+Add the plugin to a map context. For custom dashboard integrations, include AutoRefresh
+in the plugin bundle and configure it in the dashboard plugin list:
 
 ```json
 {
