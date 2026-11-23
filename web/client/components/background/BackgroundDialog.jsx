@@ -24,7 +24,7 @@ import {Form, FormGroup, ControlLabel, FormControl, Glyphicon, Checkbox} from 'r
 import ButtonRB from '../misc/Button';
 import Thumbnail from '../maps/forms/Thumbnail';
 import WMSCacheOptions from '../TOC/fragments/settings/WMSCacheOptions';
-import { ServerTypes } from '../../utils/LayersUtils';
+import { isGeoServer } from '../../utils/LayersUtils';
 import {getMessageById} from '../../utils/LocaleUtils';
 import tooltip from '../misc/enhancers/tooltip';
 import InfoPopover from '../widgets/widget/InfoPopover';
@@ -186,7 +186,7 @@ export default class BackgroundDialog extends React.Component {
                     onChange={(e) => this.setState({ cropToProjectionExtent: e.target.checked })}>
                     <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
                 </Checkbox>}
-                {this.props.layer?.serverType !== ServerTypes.NO_VENDOR && <FormGroup>
+                {isGeoServer(this.props.layer) && <FormGroup>
                     <WMSCacheOptions
                         layer={{ ...this.props.layer, ...this.state }}
                         projection={this.props.projection}
