@@ -7,6 +7,7 @@
  */
 
 import { SELECT_STORE_CFG, ADD_OR_UPDATE_SELECTION, SELECT_CLEAN_SELECTION, UPDATE_SELECTION_FEATURE } from '../actions/layersSelection';
+import { REMOVE_NODE } from '../../../actions/layers';
 
 /**
  * Reducer for managing selection configuration and selection data per layer.
@@ -36,9 +37,8 @@ export default function layersSelection(state = {cfg: {}, selections: {}}, actio
         return {
             ...state,
             drawType: action.geomType,
-            ...((action.geomType !== state.drawType) && {
-                selectionFeature: null
-            })
+            selections: {},
+            selectionFeature: null
         };
     }
     case UPDATE_SELECTION_FEATURE: {
@@ -46,6 +46,13 @@ export default function layersSelection(state = {cfg: {}, selections: {}}, actio
             ...state,
             selectionFeature: action.feature
         };
+    }
+    case REMOVE_NODE: {
+        if (action.nodeType !== 'layers') {
+            return state;
+        }
+        const { [action.node]: removed, ...selections } = state.selections;
+        return { ...state, selections };
     }
     default:
         return state;
