@@ -60,7 +60,7 @@ export default class SearchResultList extends React.Component {
                 subTitle={service.subTitle}
                 idField={service.idField}
                 displayName={service.displayName}
-                key={item.osm_id || item.id || "res_" + idx}
+                key={`${item.osm_id || item.id || 'res'}_${idx}`}
                 item={item}
                 onItemClick={() => this.onItemClick(item, service)}
                 tools={[{
