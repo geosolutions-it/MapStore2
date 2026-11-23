@@ -1890,6 +1890,7 @@
       "reset": "Effacer",
       "options": "Options",
       "srs_not_allowed": "Le système de coordonnées géographiques de la carte n'est pas supporté par ce service",
+      "cog_crs_not_identified": "Le système de coordonnées du fichier COG ne peut pas être identifié par un code, la couche ne peut pas être ajoutée",
       "add": "Ajouter",
       "service": "Service",
       "servicePlaceholder": "Tapez un service",
@@ -3329,6 +3330,10 @@
         "tooltip": "Cliquez ici pour la développer à nouveau"
       },
       "errors": {
+        "invalidDateTitle": "Date ou heure invalide",
+        "invalidDateMessage": "Saisissez une date et une heure complètes et valides.",
+        "invalidStartDate": "La date de début doit être antérieure à la date de fin.",
+        "invalidEndDate": "La date de fin doit être postérieure à la date de début.",
         "multidim_error_title": "Le service principal ne répond pas",
         "multidim_error_message": "Les services requis pour le support multidimensionnel ne répondent pas. Veuillez réessayer plus tard ou contactez l'administrateur"
       }

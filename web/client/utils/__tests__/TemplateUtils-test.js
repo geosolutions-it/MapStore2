@@ -135,4 +135,31 @@ describe('TemplateUtils', () => {
         const retVal = parseCustomTemplate('${desc}', { desc: '<b>value</b>' }, () => '');
         expect(retVal).toBe('&lt;b&gt;value&lt;/b&gt;');
     });
+
+    it('generateTemplateString supports dot and bracket notations', () => {
+        const feature = {
+            properties: {
+                name: 'Rome',
+                fid: 12,
+                'data-name': 'Roman Road',
+                data_name: 'Roman Highway',
+                data_id_1: 99,
+                count: 0,
+                flag: false,
+                intermediate: null
+            }
+        };
+        expect(generateTemplateString('${properties.name}')(feature)).toBe('Rome');
+        expect(generateTemplateString("${properties['fid']}")(feature)).toBe('12');
+        expect(generateTemplateString("${properties['data-name']}")(feature)).toBe('Roman Road');
+        expect(generateTemplateString("${properties['data_name']}")(feature)).toBe('Roman Highway');
+        expect(generateTemplateString('${properties["data_name"]}')(feature)).toBe('Roman Highway');
+        expect(generateTemplateString("${properties['data_id_1']}")(feature)).toBe('99');
+        expect(generateTemplateString('${properties.count}')(feature)).toBe('0');
+        expect(generateTemplateString('${properties.flag}')(feature)).toBe('false');
+        expect(generateTemplateString('${properties.missing}')(feature)).toBe('');
+        expect(generateTemplateString('${properties.intermediate.val}')(feature)).toBe('');
+        expect(generateTemplateString('${properties.missing.nested}')(feature)).toBe('');
+        expect(generateTemplateString('${1 + 1}')(feature).indexOf('2')).toBe(-1);
+    });
 });

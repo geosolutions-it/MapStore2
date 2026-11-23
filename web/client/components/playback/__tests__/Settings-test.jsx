@@ -206,6 +206,25 @@ describe('Timeline/Playback Settings component', () => {
         expect(spyClick.calls[0].arguments[0].startPlaybackTime).toExist();
         expect(spyClick.calls[0].arguments[0].endPlaybackTime).toExist();
     });
+    it('commits manually edited playback dates on blur', () => {
+        const setPlaybackRange = expect.createSpy();
+        ReactDOM.render(<Settings
+            playbackRange={{
+                startPlaybackTime: '2018-11-19T11:36:26.990Z',
+                endPlaybackTime: '2019-11-19T11:36:26.990Z'
+            }}
+            setPlaybackRange={setPlaybackRange}/>, document.getElementById('container'));
+        const year = document.querySelectorAll('.ms-dt-year input')[1];
+        ReactTestUtils.Simulate.change(year, { target: { value: '' } });
+        expect(year.value).toBe('');
+        ReactTestUtils.Simulate.change(year, { target: { value: '2020' } });
+        expect(setPlaybackRange).toNotHaveBeenCalled();
+        ReactTestUtils.Simulate.blur(year);
+        expect(setPlaybackRange.calls[0].arguments[0]).toEqual({
+            startPlaybackTime: '2018-11-19T11:36:26.990Z',
+            endPlaybackTime: '2020-11-19T11:36:26.990Z'
+        });
+    });
     it('follow button', () => {
         const actions = {
             onSettingChange: () => { }
