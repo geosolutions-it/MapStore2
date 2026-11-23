@@ -97,7 +97,7 @@ export const openDetailsPanelOnStartup = (action$, store, { pluginRenderStream$ 
         .filter((action) => action.type !== REDUCERS_LOADED || isDetailsReducerLoaded(action.reducers))
         .filter((action) => action.type !== CONTEXT_LOADING || (action.name === 'loading' && action.value === false))
         // Recheck state when a cached plugin is unmuted after missing actions.
-        .merge(pluginRenderStream$.distinctUntilChanged().filter(rendered => rendered))
+        .merge(pluginRenderStream$.distinctUntilChanged().filter(Boolean))
         .delay(100)
         .filter(() => {
             const state = store.getState();
