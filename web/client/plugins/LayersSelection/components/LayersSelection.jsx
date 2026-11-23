@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ControlLabel, Glyphicon } from 'react-bootstrap';
 
 import { ControlledTOC } from '../../TOC/components/TOC';
@@ -60,6 +60,7 @@ function applyVersionParamToLegend(layer) {
  * @param {Function} props.zoomToExtent - Action to zoom to the extent of selected features.
  * @param {Function} props.addLayer - Action to add a new layer.
  * @param {Function} props.changeLayerProperties - Action to update layer properties.
+ * @param {string} props.drawType - Current selection geometry type.
  *
  * @returns {JSX.Element} The rendered Select tool modal.
  */
@@ -84,7 +85,8 @@ const LayersSelection = ({
     addOrUpdateSelection,
     zoomToExtent,
     addLayer,
-    changeLayerProperties
+    changeLayerProperties,
+    drawType
 }, context) => {
 
     const filterLayers = layers.filter(filterLayerForSelect);
@@ -149,8 +151,6 @@ const LayersSelection = ({
         storeConfiguration({ highlightOptions, queryOptions });
     }, []);
 
-    const [selectedTool, setSelectedTool] = useState(null);
-
     const selectionOptions = selectTools
         .filter(tool => SelectionToolsTypes[tool])
         .map(tool => {
@@ -175,19 +175,18 @@ const LayersSelection = ({
                 <FlexBox gap="sm">
                     <FlexBox.Fill>
                         <Select
-                            value={selectedTool}
+                            value={selectionOptions.find(option => option.value === drawType) || null}
+                            disabled={!filterLayers.some(isSelectQueriable)}
                             clearable={false}
                             options={selectionOptions}
                             onChange={option => {
-                                setSelectedTool(option);
                                 cleanSelection(option?.value ?? null);
                             }}
                         />
                     </FlexBox.Fill>
                     <Button
-                        disabled={!selectedTool}
+                        disabled={!drawType}
                         onClick={() => {
-                            setSelectedTool(null);
                             cleanSelection(null);
                         }}
                     >

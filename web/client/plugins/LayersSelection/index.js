@@ -23,7 +23,7 @@ import SelectComponent from './components/LayersSelection';
 import epics from './epics/layersSelection';
 import layersSelection from './reducers/layersSelection';
 import { storeConfiguration, cleanSelection, addOrUpdateSelection, updateSelectionFeature } from './actions/layersSelection';
-import { getSelectSelections, getSelectQueryMaxFeatureCount, getSelectDrawType, getSelectionFeature } from './selectors/layersSelection';
+import { getSelectSelections, getSelectQueryMaxFeatureCount, getSelectDrawType, getSelectionFeature, isSelectEnabled, canDrawSelection } from './selectors/layersSelection';
 import LayersSelectionSupport from './components/LayersSelectionSupport';
 import { removeAdditionalLayer, updateAdditionalLayer } from '../../actions/additionallayers';
 
@@ -40,12 +40,14 @@ export default createPlugin('LayersSelection', {
             (state) => get(state, 'controls.layersSelection.enabled'),
             layersSelector,
             getSelectSelections,
-            getSelectQueryMaxFeatureCount
-        ], (isVisible, layers, selections, maxFeatureCount) => ({
+            getSelectQueryMaxFeatureCount,
+            getSelectDrawType
+        ], (isVisible, layers, selections, maxFeatureCount, drawType) => ({
             isVisible,
             layers,
             selections,
-            maxFeatureCount
+            maxFeatureCount,
+            drawType
         })),
         {
             onClose: toggleControl.bind(null, 'layersSelection', null),
@@ -102,9 +104,11 @@ export default createPlugin('LayersSelection', {
         Map: {
             name: 'LayersSelectionSupport',
             Tool: connect(
-                createSelector([getSelectDrawType, getSelectionFeature], (type, feature) => ({
+                createSelector([getSelectDrawType, getSelectionFeature, isSelectEnabled, canDrawSelection], (type, feature, enabled, canDraw) => ({
                     type,
-                    feature
+                    feature,
+                    enabled,
+                    canDraw
                 })),
                 {
                     onChange: updateSelectionFeature,
