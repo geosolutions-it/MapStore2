@@ -9,11 +9,14 @@ import React, { useLayoutEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { sanitizeHtml } from '../../utils/HtmlSanitizer';
 
+const CONTAINED_LAYOUT = { contain: 'paint', overflow: 'auto' };
+
 /**
  * Renders an HTML fragment inside a shadow root, so any <style> block it carries
  * (e.g. from a WMS GetFeatureInfo HTML response) is scoped to this subtree instead
  * of leaking into the whole document, and the application theme does not override
- * the server-provided styling.
+ * the server-provided styling. The host also contains the layout: the fragment is
+ * painted and positioned inside the host box, and content wider than it scrolls.
  *
  * @param {string} html - untrusted HTML string
  */
@@ -29,7 +32,7 @@ const ShadowHtml = ({ html, id, style = { color: '#000000' } }) => {
     }, [html]);
     // inherited properties (color, font) cross the shadow boundary from the host,
     // so the default text color is preserved for the injected content.
-    return <div id={id} style={style} ref={hostRef} />;
+    return <div id={id} style={{ ...style, ...CONTAINED_LAYOUT }} ref={hostRef} />;
 };
 
 ShadowHtml.propTypes = {
