@@ -36,6 +36,7 @@ import { REDUCERS_LOADED } from '../actions/storemanager';
 import { detailsSettingsSelector, detailsUriSelector } from '../selectors/details';
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
 import { CLOSE_TUTORIAL } from '../actions/tutorial';
+import { LOADING as CONTEXT_LOADING } from '../actions/context';
 
 export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
@@ -91,9 +92,12 @@ const parseDetailsSettings = (detailsSettings) => {
     return detailsSettings;
 };
 
-export const openDetailsPanelOnStartup = (action$, store) =>
-    action$.ofType(DETAILS_LOADED, REDUCERS_LOADED, CLOSE_TUTORIAL)
+export const openDetailsPanelOnStartup = (action$, store, { pluginRenderStream$ = Rx.Observable.empty() } = {}) =>
+    action$.ofType(DETAILS_LOADED, REDUCERS_LOADED, CLOSE_TUTORIAL, CONTEXT_LOADING)
         .filter((action) => action.type !== REDUCERS_LOADED || isDetailsReducerLoaded(action.reducers))
+        .filter((action) => action.type !== CONTEXT_LOADING || (action.name === 'loading' && action.value === false))
+        // Recheck state when a cached plugin is unmuted after missing actions.
+        .merge(pluginRenderStream$.distinctUntilChanged().filter(rendered => rendered))
         .delay(100)
         .filter(() => {
             const state = store.getState();
