@@ -15,6 +15,7 @@ import TileLayer from 'ol/layer/WebGLTile.js';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 import { updateUrlParams } from '../../../../utils/URLUtils';
+import { isGlobalCOG } from '../../../../utils/cog/LayerUtils';
 
 function getSource(options) {
     let sources = [];
@@ -36,7 +37,7 @@ function getSource(options) {
         convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
         sourceOptions,
         sources,
-        wrapX: true
+        wrapX: isGlobalCOG(options?.sourceMetadata) // enable wrapX only in case of global coverage COGs to avoid #13064
     });
 }
 
