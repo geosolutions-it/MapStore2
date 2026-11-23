@@ -60,11 +60,14 @@ const DetailInfoFieldLabel = ({ field }) => {
 function DetailsInfoField({ field, children, className }) {
     const values = castArray(field.value);
     const isLinkLabel = isFieldLabelOnly(field);
+    const isColumn = field?.direction === 'column';
     return (
         <FlexBox gap="sm" classNames={['ms-details-info-field', '_padding-b-xs', '_row']} className={className}>
             <Text className={isLinkLabel ? '' : '_label'} fontSize="sm"><DetailInfoFieldLabel field={field} /></Text>
             {!isLinkLabel ? <FlexBox.Fill>
-                <Text fontSize="sm">{children(values)}</Text>
+                <Text component={FlexBox} fontSize="sm" column={isColumn} wrap={!isColumn} gap="xs">
+                    {children(values)}
+                </Text>
             </FlexBox.Fill> : null}
         </FlexBox>
     );

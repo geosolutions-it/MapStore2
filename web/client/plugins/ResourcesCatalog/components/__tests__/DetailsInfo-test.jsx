@@ -190,6 +190,31 @@ describe('DetailsInfo component', () => {
         />, document.getElementById('container'));
         expect(document.querySelectorAll('a[href^="javascript:"]').length).toBe(0);
     });
+    it('should render field values with column direction when value is an array', (done) => {
+        ReactDOM.render(<DetailsInfo
+            selectedTab="info"
+            tabs={[{
+                type: 'tab',
+                id: 'info',
+                labelId: 'Info',
+                items: [{
+                    type: 'link',
+                    labelId: 'Links',
+                    value: [
+                        { href: '#link1', value: 'Link 1' },
+                        { href: '#link2', value: 'Link 2' }
+                    ],
+                    direction: 'column'
+                }]
+            }]}
+        />, document.getElementById('container'));
+        waitFor(() => document.querySelector('.ms-details-info-field .ms-flex-fill ._flex-column'))
+            .then(() => {
+                expect(document.querySelector('.ms-details-info-field._flex-column')).toBeFalsy();
+                done();
+            })
+            .catch(done);
+    });
     describe('sanitization', () => {
         it('removes script tags from an html field value', () => {
             window.__detailsInfoScript = undefined;
