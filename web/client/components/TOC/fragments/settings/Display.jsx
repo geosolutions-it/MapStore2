@@ -22,7 +22,7 @@ import InfoPopover from '../../../widgets/widget/InfoPopover';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import Legend from '../../../../plugins/TOC/components/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
-import { ServerTypes, getCapabilitiesUrl } from '../../../../utils/LayersUtils';
+import { isGeoServer, getCapabilitiesUrl } from '../../../../utils/LayersUtils';
 import {updateLayerLegendFilter} from '../../../../utils/FilterUtils';
 import Select from 'react-select';
 import { getSupportedFormat } from '../../../../api/WMS';
@@ -274,14 +274,14 @@ export default class extends React.Component {
                                 onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
                                 <Message msgId="layerProperties.singleTile"/>
                             </Checkbox>
-                            {(this.props.isLocalizedLayerStylesEnabled && this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
+                            {(this.props.isLocalizedLayerStylesEnabled && isGeoServer(this.props.element) && (
                                 <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
                                     data-qa="display-lacalized-layer-styles-option"
                                     checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false )}
                                     onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
                                     <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
                                 </Checkbox>))}
-                            {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
+                            {(isGeoServer(this.props.element) && (
                                 <>
                                     <hr/>
                                     {!this.props.isCesiumActive && <Checkbox
@@ -312,7 +312,7 @@ export default class extends React.Component {
                         </Col>
                         <Col xs={12} className="first-selectize">
                             <FormGroup>
-                                {this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
+                                {isGeoServer(this.props.element) && !this.props?.hideInteractiveLegendOption &&
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
                                     value="enableInteractiveLegend"

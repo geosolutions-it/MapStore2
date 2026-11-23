@@ -7,7 +7,7 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
-import { ServerTypes } from '../../../../utils/LayersUtils';
+import { isGeoServer } from '../../../../utils/LayersUtils';
 import isEqual from 'lodash/isEqual';
 
 import {getStyle} from '../VectorStyle';
@@ -32,7 +32,7 @@ const createLoader = (source, options) => (extent, resolution, projection, succe
         source.dispatchEvent('vectorerror');
         failure && failure();
     };
-    if (options.serverType === ServerTypes.NO_VENDOR) {
+    if (!isGeoServer(options)) {
 
         if (needsCredentials(options)) {
             source.dispatchEvent('vectorerror');
@@ -107,13 +107,13 @@ const getWFSStyle = (layer, options, map) => {
         });
 };
 const getStrategy = (options) => {
-    if (options.strategy === 'bbox' && options?.serverType === ServerTypes.NO_VENDOR) {
+    if (options.strategy === 'bbox' && !isGeoServer(options)) {
         return bbox;
     }
     if (options.strategy === 'all') {
         return all;
     }
-    if (options.strategy === 'tile' && options?.serverType === ServerTypes.NO_VENDOR) {
+    if (options.strategy === 'tile' && !isGeoServer(options)) {
         return tile(createXYZ({
             tileSize: options?.tileSize || 512
         }));

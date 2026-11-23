@@ -28,7 +28,7 @@ import { getCapabilitiesUrl } from '../../../../utils/LayersUtils';
 import FeatureInfoEditor from './FeatureInfoEditor';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import FeatureInfoRequestOptions from '../../../misc/FeatureInfoRequestOptions';
-import { isGeoServerLayer } from '../../../../utils/FeatureInfoRequestUtils';
+import { isFeatureInfoBufferSupported } from '../../../../utils/FeatureInfoRequestUtils';
 import ExternalDataEditor from './ExternalDataEditor';
 import PropertiesEditor from './PropertiesEditor';
 import { EXTERNAL_DATA, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
@@ -194,8 +194,7 @@ export default class extends React.Component {
 
     componentDidMount() {
         const getSupportedFormat = supportedFormatRequests[this.props.element.type];
-        // we dont know supported infoFormats yet
-        if (getSupportedFormat && this.props.element.url && !this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
+        if (getSupportedFormat && this.props.element.url && !this.props.element.infoFormats?.length) {
             this.setState({ loading: true }); // eslint-disable-line -- TODO: need to be fixed
             getSupportedFormat(getCapabilitiesUrl(this.props.element), true)
                 .then(({ infoFormats }) => {
@@ -377,7 +376,7 @@ export default class extends React.Component {
                     <div style={{ padding: "15px 15px 0 15px" }}>
                         <FeatureInfoRequestOptions
                             featureInfo={this.props.element.featureInfo || {}}
-                            showBuffer={isGeoServerLayer(this.props.element)}
+                            showBuffer={isFeatureInfoBufferSupported(this.props.element)}
                             onChange={(featureInfo) => this.props.onChange("featureInfo", featureInfo)} />
                     </div>
                 ) : null}

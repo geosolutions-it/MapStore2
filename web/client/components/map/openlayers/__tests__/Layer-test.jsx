@@ -3475,7 +3475,7 @@ describe('Openlayers layer', () => {
                 map={map} />, document.getElementById("container"));
             expect(layer.layer.getSource()).toBeTruthy();
         };
-        describe('serverType: no-vendor', () => {
+        [ServerTypes.NO_VENDOR, ServerTypes.QGIS].forEach(serverType => describe(`serverType: ${serverType}`, () => {
             it('test basic post request', (done) => {
                 mockAxios.onPost().reply(({
                     url,
@@ -3493,10 +3493,10 @@ describe('Openlayers layer', () => {
                     visibility: true,
                     url: 'SAMPLE_URL',
                     name: 'osm:vector_tile',
-                    serverType: ServerTypes.NO_VENDOR
+                    serverType
                 }, done);
             });
-            it('reloads a no-vendor layer with the new typeName', (done) => {
+            it('reloads a layer with the new typeName', (done) => {
                 mockAxios.onPost().reply(200, SAMPLE_FEATURE_COLLECTION);
                 const options = {
                     id: 'wfs-no-vendor-name-change',
@@ -3504,7 +3504,7 @@ describe('Openlayers layer', () => {
                     visibility: true,
                     url: 'SAMPLE_URL',
                     name: 'osm:old_name',
-                    serverType: ServerTypes.NO_VENDOR
+                    serverType
                 };
                 ReactDOM.render(<OpenlayersLayer
                     type="wfs"
@@ -3548,7 +3548,7 @@ describe('Openlayers layer', () => {
                     visibility: true,
                     url: 'SAMPLE_URL',
                     name: 'osm:vector_tile',
-                    serverType: ServerTypes.NO_VENDOR,
+                    serverType,
                     layerFilter: {
                         filters: [{
                             format: 'cql',
@@ -3578,7 +3578,7 @@ describe('Openlayers layer', () => {
                     url: 'SAMPLE_URL',
                     strategy: 'bbox',
                     name: 'osm:vector_tile',
-                    serverType: ServerTypes.NO_VENDOR,
+                    serverType,
                     layerFilter: {
                         filters: [{
                             format: 'cql',
@@ -3608,7 +3608,7 @@ describe('Openlayers layer', () => {
                     url: 'SAMPLE_URL',
                     strategy: 'tile',
                     name: 'osm:vector_tile',
-                    serverType: ServerTypes.NO_VENDOR,
+                    serverType,
                     layerFilter: {
                         filters: [{
                             format: 'cql',
@@ -3634,7 +3634,7 @@ describe('Openlayers layer', () => {
                     visibility: true,
                     url: 'SAMPLE_URL',
                     name: 'osm:vector_tile',
-                    serverType: ServerTypes.NO_VENDOR,
+                    serverType,
                     security: {
                         type: 'basic',
                         sourceId: 'TEST_SOURCE'
@@ -3656,7 +3656,7 @@ describe('Openlayers layer', () => {
                     visibility: true,
                     url: 'SAMPLE_URL',
                     name: 'osm:vector_tile',
-                    serverType: ServerTypes.NO_VENDOR,
+                    serverType,
                     security: {
                         type: 'basic',
                         sourceId: 'TEST_SOURCE'
@@ -3665,7 +3665,7 @@ describe('Openlayers layer', () => {
                     setCredentials("TEST_SOURCE", undefined);
                 }, false);
             });
-        });
+        }));
     });
     it('should apply native ol min and max resolution on vector layer', () => {
         const minResolution = 1222; // ~ zoom 7 Web Mercator
