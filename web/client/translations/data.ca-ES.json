@@ -2,7 +2,7 @@
   "locale": "ca-ES",
   "messages": {
     "Language": "Llengua",
-    "msgId0": "{name} va fer {numPhotos,plural, =0 {no photos} = 1 {one photo} Altres {# photos}} a {takenDate,date,long}.",
+    "msgId0": "{name} va fer {numPhotos,plural, =0 {no photos} =1 {one photo} other {# photos}} a {takenDate,date,long}.",
     "htmlTest": "{name} {surname}",
     "about_title": "Quant a",
     "aboutTooltip": "Quant a",
@@ -11,7 +11,7 @@
     "about_p0-1": "i",
     "about_p1": "MapStore t\u00e9 diverses aplicacions d\u2019exemple:",
     "about_ul0_li0": "MapViewer \u00e9s un visualitzador senzill de mapes preconfigurats (opcionalment emmagatzemat en una base de dades mitjan\u00e7ant Geostore)",
-    "about_ul0_li1": "Mappublisher s'ha desenvolupat per crear,estalviar i compartir de manera senzilla i intu\u00eftiva mapes i mashups creats seleccionant continguts procedents de fonts conegudes com Google Maps i OpenStreetMap o de serveis prestats per organitzacions que utilitzen protocols oberts com OGC WMS,WFS,WMTS o TMS,etc. Per a m\u00e9s informaci\u00f3,comproveu el",
+    "about_ul0_li1": "Mappublisher s'ha desenvolupat per crear, desar i compartir de manera senzilla i intu\u00eftiva mapes i mashups creats seleccionant continguts procedents de fonts conegudes com Google Maps i OpenStreetMap o de serveis prestats per organitzacions que utilitzen protocols oberts com OGC WMS,WFS,WMTS o TMS,etc. Per a m\u00e9s informaci\u00f3,comproveu el",
     "about_h20": "Llicenciar",
     "about_p3": "MapStore \u00e9s un programari gratu\u00eft i de codi obert,es basa en OpenLayers,Fullet i ReactJS,i t\u00e9 llic\u00e8ncia sota la llic\u00e8ncia BSD simplificada.",
     "about_p5-0": "Per obtenir m\u00e9s informaci\u00f3,comproveu",
@@ -95,7 +95,7 @@
       "groupProperties": "Propietats de grup",
       "featureInfo": "Informaci\u00f3 de funcions",
       "featureInfoFormatLbl": "Identifiqueu el format de resposta",
-      "guideText": "A l\u2019URL de la imatge podeu utilitzar els marcadors de Place com $ \\ {properties.YOUR_ATTRIBUTE\\} per fer la param\u00e8trica de l\u2019URL,segons els atributs de funcions. Admet tant URL com \"Data URIS\" codificada a la base64",
+      "guideText": "A l\u2019URL de la imatge podeu utilitzar els marcadors de Place com $\\{properties.YOUR_ATTRIBUTE\\} per fer la param\u00e8trica de l\u2019URL,segons els atributs de funcions. Admet tant URL com \"Data URIS\" codificada a la base64",
       "imageNotFound": "\u00c9s possible que aquesta imatge necessiti una sol\u00b7licitud d\u2019informaci\u00f3 de funcions que es faci correctament",
       "legenderror": "La llegenda no est\u00e0 disponible",
       "editCustomFormat": "Edita el format personalitzat",
@@ -335,7 +335,7 @@
       "selectedProjection": "La projecció seleccionada s’utilitzarà al mapa",
       "quickSwitch": "La projecció seleccionada s’afegirà a la llista de canvi ràpid",
       "help": "Marqueu la casella per afegir una projecció al canvi ràpid. Feu clic a una fila per establir-la com a projecció per defecte.",
-      "save": "Desar",
+      "save": "Desa",
       "close": "Tancar"
     },
     "menu": "Men\u00fa",
@@ -351,7 +351,7 @@
     "printToolTip": "Imprimir",
     "annotationsbutton": "Anotacions",
     "noresultfound": "No es va trobar cap resultat",
-    "save": "Estalviar",
+    "save": "Desa",
     "saveAs": "Desa com ...",
     "opacity": "Opacitat",
     "elevation": "Elevaci\u00f3",
@@ -361,7 +361,7 @@
     "yes": "S\u00ed",
     "confirm": "Confirmar",
     "confirmTitle": "Confireu?",
-    "pageInfo": "{total ,plural,  =0 {No items} = 1 {{total} item de {total}} altres {Items {start}-{end} de {total}}}",
+    "pageInfo": "{total ,plural,  =0 {No items} =1 {{total} item de {total}} other {Items {start}-{end} de {total}}}",
     "loading": "Carregant ...",
     "group": "Agrupar",
     "groups": "Grups",
@@ -369,14 +369,14 @@
     "permissions": "Permisos",
     "global": {
       "colors": {
-        "red": "{number,plural, =0 {Red} = 1 {Red} Altres {Reds}}",
-        "blue": "{number,plural, =0 {Blue} = 1 {Blue} Altres {Blues}}",
-        "green": "{number,plural, =0 {Green} = 1 {Green} Altres {Greens}}",
-        "gray": "{number,plural, =0 {Gray} = 1 {Gray} Altres {Grays}}",
-        "jet": "{number,plural, =0 {Jet} = 1 {Jet} Altres {Jet}}",
-        "brown": "{number,plural, =0 {Brown} = 1 {Brown} Altres {Browns}}",
-        "purple": "{number,plural, =0 {Purple} = 1 {Purple} Altres {Purples}}",
-        "random": "{number,plural, =0 {Random} = 1 {Random} Altres {Random}}",
+        "red": "{number,plural, =0 {Red} =1 {Red} other {Reds}}",
+        "blue": "{number,plural, =0 {Blue} =1 {Blue} other {Blues}}",
+        "green": "{number,plural, =0 {Green} =1 {Green} other {Greens}}",
+        "gray": "{number,plural, =0 {Gray} =1 {Gray} other {Grays}}",
+        "jet": "{number,plural, =0 {Jet} =1 {Jet} other {Jet}}",
+        "brown": "{number,plural, =0 {Brown} =1 {Brown} other {Browns}}",
+        "purple": "{number,plural, =0 {Purple} =1 {Purple} other {Purples}}",
+        "random": "{number,plural, =0 {Random} =1 {Random} other {Random}}",
         "orrd": "Orrd",
         "pubu": "Pubu",
         "bupu": "BUPU",
@@ -469,7 +469,7 @@
           "savedSuccesfully": "La miniatura s\u2019ha salvat correctament",
           "updatedSuccesfully": "La miniatura s'ha actualitzat correctament"
         },
-        "errorWhenSaving": "S'ha produ\u00eft un error durant el proc\u00e9s d'estalvi",
+        "errorWhenSaving": "S'ha produ\u00eft un error en desar",
         "errorWhenUpdating": "S'ha produ\u00eft un error durant el proc\u00e9s d'actualitzaci\u00f3",
         "errorWhenDeleting": "S'ha produ\u00eft un error durant la supressi\u00f3 del proc\u00e9s",
         "errorSizeExceeded": "Si us plau,redueix la mida o la qualitat de les imatges",
@@ -594,7 +594,7 @@
       },
       "details": {
         "back": "Esquena",
-        "save": "Estalviar",
+        "save": "Desa",
         "show": "Mostra el full de detalls",
         "add": "Afegiu nous detalls",
         "edit": "Editeu els detalls",
@@ -647,7 +647,7 @@
       "toolDownloadTooltip": "Exporta dades de la capa",
       "noFilteredResults": "Sense resultats",
       "emptyLayerTree": "L\u2019arbre de capes est\u00e0 buit. Afegiu una nova capa del cat\u00e0leg",
-      "filterPlaceholder": "Capes de filtre",
+      "filterPlaceholder": "Filtra les capes",
       "clearFilter": "Filtre net",
       "toolReloadLayerTooltip": "For\u00e7a de rec\u00e0rrega de la capa seleccionada",
       "toolReloadLayersTooltip": "For\u00e7a la rec\u00e0rrega de capes seleccionades",
@@ -672,11 +672,11 @@
       "epsgNotSupported": "CRS {epsg} No \u00e9s compatible amb el zoom per a la capa",
       "compareTool": "Compareu l'eina",
       "configureTool": "Configurar",
-      "spyconfiguration": "Configuraci\u00f3 de SpyGlass",
-      "swipeconfiguration": "Configuraci\u00f3 de lliscar",
-      "swipe": "Coles",
-      "spyGlass": "Vidre espia",
-      "direction": "Feu lliscar la direcci\u00f3",
+      "spyconfiguration": "Configuraci\u00f3 de la lupa",
+      "swipeconfiguration": "Configuraci\u00f3 del lliscador",
+      "swipe": "Lliscador",
+      "spyGlass": "Lupa",
+      "direction": "Direcci\u00f3",
       "radius": "Radi",
       "filterIconEnabled": "Desactiva el filtre de capa",
       "filterIconDisabled": "Activa el filtre de la capa",
@@ -688,18 +688,18 @@
       "toolGroupHideAllChildren": "Amaga tots els nodes infantils",
       "activateToolGroupMutuallyExclusive": "Activeu la visibilitat m\u00fatuament excloent dels nodes infantils",
       "deactivateToolGroupMutuallyExclusive": "Desactiveu la visibilitat m\u00fatuament excloent dels nodes dels nens",
-      "toolGroupCollapseAllChildren": "Col\u00b7lapsar tots els nodes infantils",
-      "toolGroupExpandAllChildren": "Amplieu tots els nodes infantils",
-      "closeOnMapInitialization": "Mantingueu -vos tancat a la inicialitzaci\u00f3 del mapa",
-      "openOnMapInitialization": "Obriu la inicialitzaci\u00f3 del mapa",
+      "toolGroupCollapseAllChildren": "Plega tots els subnodes",
+      "toolGroupExpandAllChildren": "Desplega tots els subnodes",
+      "closeOnMapInitialization": "Mantén tancat en iniciar el mapa",
+      "openOnMapInitialization": "Obre en iniciar el mapa",
       "defaultTheme": "Tema per defecte",
-      "legendTheme": "Tema Legend",
+      "legendTheme": "Tema de llegenda",
       "showFullTitle": "Mostra el t\u00edtol complet",
       "hideFullTitle": "T\u00edtol en una sola l\u00ednia",
-      "showOpacitySlider": "Mostra el control lliscant de l'opacitat",
-      "hideOpacitySlider": "Amaga el control lliscant de l'opacitat",
-      "showOpacityTooltip": "Mostra l\u2019opacitat d\u2019opacitat",
-      "hideOpacityTooltip": "Oculta l'opacitat Toolip",
+      "showOpacitySlider": "Mostra el control d'opacitat",
+      "hideOpacitySlider": "Amaga el control d'opacitat",
+      "showOpacityTooltip": "Mostra l'indicador d'opacitat",
+      "hideOpacityTooltip": "Amaga l'indicador d'opacitat",
       "refreshOptions": {
         "bbox": "Actualitzeu Bbox",
         "search": "Actualitzeu les opcions de cerca",
@@ -943,7 +943,7 @@
       "addbtn": "Addiccionar",
       "nextbtn": "Pr\u00f2xim",
       "prevbtn": "Esquena",
-      "savebtn": "Desar/actualitzar",
+      "savebtn": "Desa/actualitza",
       "cancelbtn": "Cancel\u00b7lar",
       "confirmremove": "Esborrar?",
       "cancelconfirm": "Esteu segur?",
@@ -1113,8 +1113,8 @@
         "toolbar": {
           "actions": {
             "save": {
-              "title": "Desar els canvis.",
-              "text": "Estalviar"
+              "title": "Desa els canvis.",
+              "text": "Desa"
             },
             "cancel": {
               "title": "Cancel\u00b7la l\u2019edici\u00f3,descarta tots els canvis.",
@@ -1189,7 +1189,7 @@
       "query": "Buscar",
       "apply": "Aplicar -se",
       "reset": "Restablir: restabliu tots els filtres,incl\u00f2s qualsevol altre filtre extern",
-      "save": "Estalviar",
+      "save": "Desa",
       "discard": "Desfer",
       "query_request_exception": "Error de sol\u00b7licitud",
       "config": {
@@ -1304,7 +1304,7 @@
       "errorLoadingSymbols": "Hi va haver un problema per carregar la llista de s\u00edmbols. Poseu -vos en contacte amb l'administrador per comprovar les opcions de configuraci\u00f3.",
       "edit": "Preprarar una edici\u00f3",
       "remove": "Esborrar",
-      "save": "Estalvieu l\u2019anotaci\u00f3",
+      "save": "Desa l\u2019anotaci\u00f3",
       "saveGeometry": "Desa la geometria",
       "cancel": "Cancel\u00b7lar",
       "back": "Tornar a l\u2019anotaci\u00f3",
@@ -1323,7 +1323,7 @@
       "filter": "Anotacions de filtre ...",
       "undo": "Esteu segur que voleu abandonar la sessi\u00f3 d\u2019edici\u00f3 de l\u2019anotaci\u00f3? Les funcions no seran eliminades despr\u00e9s de tancar",
       "titleUndoGeom": "La geometria ha canviat",
-      "undoGeom": "Esteu segur que sortireu sense estalviar? (Perdreu qualsevol canvi)",
+      "undoGeom": "Esteu segur que voleu sortir sense desar? (Perdreu qualsevol canvi)",
       "confirmGeom": "Confirmar",
       "cancelModalGeom": "Cancel\u00b7lar",
       "deleteFeature": "Suprimeix aquesta funci\u00f3",
@@ -1390,7 +1390,7 @@
         "newFeature": "Nou"
       },
       "geometryError": "La configuraci\u00f3 de la geometria no \u00e9s v\u00e0lida",
-      "annotationSaveGeometryError": "L\u2019estalvi est\u00e0 desactivat a causa d\u2019una geometria no v\u00e0lida,solucioneu -la per desar l\u2019anotaci\u00f3",
+      "annotationSaveGeometryError": "El desament est\u00e0 desactivat a causa d\u2019una geometria no v\u00e0lida,solucioneu -la per desar l\u2019anotaci\u00f3",
       "resolveAllErrors": "Corregiu els errors de validaci\u00f3 abans d\u2019editar altres geometries",
       "selectAnnotationFeature": "Seleccioneu una funci\u00f3 d\u2019anotaci\u00f3 al tauler esquerre per editar coordenades i estils",
       "properties": "Propietats",
@@ -1444,8 +1444,8 @@
       "enabled": "Activat",
       "groupTitle": "Grups:",
       "roleTitle": "Paper",
-      "saveUser": "Estalviar",
-      "savingUser": "Estalvi ...",
+      "saveUser": "Desa",
+      "savingUser": "S'està desant...",
       "userSaved": "Desat!",
       "createUser": "Crear",
       "creatingUser": "Creaci\u00f3 ...",
@@ -1477,7 +1477,7 @@
       "noDescriptionAvailable": "(Sense descripci\u00f3)",
       "groupName": "Nom de grup",
       "groupDescription": "Descripci\u00f3",
-      "saveGroup": "Estalviar",
+      "saveGroup": "Desa",
       "createGroup": "Crear",
       "creatingGroup": "Creaci\u00f3 ...",
       "groupMembers": "Membres:",
@@ -1572,7 +1572,7 @@
     },
     "snapshot": {
       "title": "Vista pr\u00e8via de la instant\u00e0nia",
-      "save": "Estalviar",
+      "save": "Desa",
       "tooltip": "Deseu una instant\u00e0nia del mapa.",
       "googleError": "Les capes de Google no estan disponibles per a la instantània, a causa de les restriccions de copyright.",
       "downloadingSnapshots": "pendent de generaci\u00f3 d\u2019instant\u00e0nies",
@@ -1631,7 +1631,7 @@
       },
       "formats": {
         "mapstore2": {
-          "label": "Map\u00e0s",
+          "label": "MapStore",
           "description": "<p> <small> format de configuraci\u00f3 del mapa MapStore </small> </p>"
         },
         "wmc": {
@@ -1677,8 +1677,8 @@
       "getWMSLink": "Obteniu enlla\u00e7 WMS",
       "error": "S'ha produ\u00eft un error en carregar dades",
       "pageInfo": "Resultats {start}-{end} de {total}",
-      "resultInfo": "{total, plural, =0 {No items} = 1 {{total} Item of {total}} Altres {{start}-{end} of {total}}}",
-      "pageInfoInfinite": "{total, plural, =undefined {} = 0 {No results} = 1 {{total} of {total} matched} other {Loaded {loaded} of {total} matched}}",
+      "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+      "pageInfoInfinite": "{total, plural, =undefined {} =0 {No results} =1 {{total} of {total} matched} other {Loaded {loaded} of {total} matched}}",
       "noRecordsMatched": "No es va coincidir amb el r\u00e8cord",
       "wmsGetCapLink": "WMS",
       "wfsGetCapLink": "Wfs",
@@ -1771,7 +1771,7 @@
         "dynamic": {
           "label": "Filtre din\u00e0mic",
           "info": "El filtre s'utilitza quan el text de cerca \u00e9s present i s'aplica a \"i\" amb filtre est\u00e0tic",
-          "helpText": "Utilitzeu la plantilla amb $ \\ {searchText\\} marcador de lloc per capturar la cadena de cerca"
+          "helpText": "Utilitzeu la plantilla amb el marcador $\\{searchText\\} per capturar la cadena de cerca"
         },
         "error": "Sintaxi XML no v\u00e0lida"
       },
@@ -1937,10 +1937,10 @@
       "selectall": "Seleccioneu tot",
       "deselectall": "Selecci\u00f3 clara",
       "backtosearch": "Tornar a la cerca",
-      "resultInfo": "{total, plural, =0 {No items} = 1 {{total} Item of {total}} Altres {{start}-{end} of {total}}}",
-      "resultInfoVirtual": "{total, plural, =0 {No items} = 1 {{total} Item} other {{total} Items}}",
+      "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+      "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item} other {{total} Items}}",
       "selectedInfo": "({selected} seleccionat)",
-      "pageInfo": "{totalPages,plural, =0 {No pages} = 1 {Page {totalPages} de {totalPages}} Altres {Page {page} de {totalPages}}}",
+      "pageInfo": "{totalPages,plural, =0 {No pages} =1 {Page {totalPages} de {totalPages}} other {Page {page} de {totalPages}}}",
       "pagination": {
         "page": "P\u00e0gina",
         "of": "de",
@@ -1948,7 +1948,7 @@
         "more": "m\u00e9s"
       },
       "noFeaturesAvailable": "No hi ha funcions disponibles",
-      "errorSaving": "Es va produir un error amb l'operaci\u00f3 d'estalvi",
+      "errorSaving": "Es va produir un error en desar",
       "errorProjFetch": "Error en recuperaci\u00f3 de la definici\u00f3 de la cadena Proj4 de SpacialReference.org. L\u2019eina de sincronitzaci\u00f3 no pot aplicar el filtre espacial.",
       "notSupportedGeometryTitle": "Tipus de geometria no \u00e9s compatible",
       "notSupportedGeometry": "El tipus de geometria de capa actual no \u00e9s compatible amb l'edici\u00f3,per\u00f2 encara podeu editar atributs",
@@ -2023,7 +2023,7 @@
         "addGeom": "Afegiu una forma a la geometria existent",
         "deleteSelectedFeatures": "Suprimeix les funcions seleccionades",
         "saveChanges": "Desa els canvis",
-        "saving": "Estalvi ...",
+        "saving": "S'està desant...",
         "cancelChanges": "Cancel\u00b7la els canvis",
         "deleteGeometry": "Suprimeix la geometria",
         "downloadGridData": "Descarregueu les dades de la graella",
@@ -2591,7 +2591,7 @@
       "backToList": "Torna a la llista d'estil",
       "createNewStyle": "Crea un estil nou",
       "editSelectedStyle": "Edita l'estil seleccionat",
-      "saveCurrentStyle": "Estalvieu l'estil actual",
+      "saveCurrentStyle": "Desa l'estil actual",
       "addSelectedTemplate": "Afegiu la plantilla seleccionada a la llista d'estils",
       "deleteSelectedStyle": "Suprimeix l'estil seleccionat",
       "closeWithoutSaveAlertTitle": "L\u2019estil ha canviat",
@@ -2873,12 +2873,12 @@
         "step": {
           "tooltip": "Quan s'ha desactivat l'opci\u00f3 \"Snap to guy ona\",podeu personalitzar el pas d'animaci\u00f3",
           "label": "Pas d'animaci\u00f3",
-          "year": "{number,plural, =0 {Year} = 1 {Year} Altres {Years}}",
-          "week": "{number,plural, =0 {Week} = 1 {Week} Altres {Weeks}}",
-          "day": "{number,plural, =0 {Day} = 1 {Day} Altres {Days}}",
-          "hour": "{number,plural, =0 {Hour} = 1 {Hour} Altres {Hours}}",
-          "minute": "{number,plural, =0 {Minute} = 1 {Minute} Altres {Minutes}}",
-          "second": "{number,plural, =0 {Second} = 1 {Second} Altres {Seconds}}"
+          "year": "{number,plural, =0 {Year} =1 {Year} other {Years}}",
+          "week": "{number,plural, =0 {Week} =1 {Week} other {Weeks}}",
+          "day": "{number,plural, =0 {Day} =1 {Day} other {Days}}",
+          "hour": "{number,plural, =0 {Hour} =1 {Hour} other {Hours}}",
+          "minute": "{number,plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+          "second": "{number,plural, =0 {Second} =1 {Second} other {Seconds}}"
         },
         "mode": {
           "title": "Model",
@@ -2994,7 +2994,7 @@
       "newModal": "Nova regla",
       "editModal": "Editeu la regla",
       "newButton": "Crear",
-      "editButton": "Estalviar",
+      "editButton": "Desa",
       "close": "Tancar -se",
       "previous": "previ",
       "next": "pr\u00f2xim",
@@ -3010,7 +3010,7 @@
       "errorMovingRules": "Error de moure les regles.",
       "errorDeletingRules": "Error de suprimir les regles.",
       "errorAddingRule": "Error afegint regla.",
-      "errorUpdatingRule": "Regla d\u2019estalvi d\u2019errors.",
+      "errorUpdatingRule": "Error en desar la regla.",
       "errorDuplicateRule": "Regla duplicada.",
       "errorLoading": "Error de c\u00e0rrega",
       "deleteModal": "Esborra les regles",
@@ -3194,7 +3194,7 @@
       },
       "webPageCreator": {
         "title": "P\u00e0gina web",
-        "saveButton": "Estalviar",
+        "saveButton": "Desa",
         "error": "Proporcioneu URL de p\u00e0gina web v\u00e0lida",
         "url": {
           "label": "Url"
@@ -3232,12 +3232,12 @@
       "namePlaceholder": "Escriviu un nom ...",
       "descriptionPlaceholder": "Escriviu una descripci\u00f3 ...",
       "titlePlaceholder": "Escriviu el t\u00edtol A ...",
-      "confirmCloseText": "Hi ha canvis pendents,esteu segur que voleu tancar sense estalviar?",
+      "confirmCloseText": "Hi ha canvis pendents,esteu segur que voleu tancar sense desar?",
       "close": "Tancar -se",
       "cancel": "Cancel\u00b7lar",
       "saveSuccessTitle": "\u00c8xit",
       "saveSuccessMessage": "S'ha salvat amb \u00e8xit",
-      "saveTooltip": "Estalviar",
+      "saveTooltip": "Desa",
       "saveAsTooltip": "Desa com",
       "unadvertised": "No comunicat",
       "creator": "Creat per",
@@ -3264,7 +3264,7 @@
         "selectService": "Seleccioneu un servei",
         "add": "Addiccionar",
         "back": "Esquena",
-        "save": "Estalviar",
+        "save": "Desa",
         "edit": "Preprarar una edici\u00f3",
         "sourcePlaceholder": "Introdu\u00efu una font",
         "source": "Font",
@@ -3300,7 +3300,7 @@
         "removeResourceTitle": "Esteu segur?",
         "confirmRemoveResource": "Voleu eliminar aquest recurs de mitjans de la hist\u00f2ria?",
         "confirmRemoveUsedResource": "Aquest recurs tamb\u00e9 s\u2019eliminar\u00e0 de totes les seccions/continguts on s\u2019utilitza deixant -les buides. Voleu treure -la de la hist\u00f2ria?",
-        "resultsCount": "{count} de {total} {total, plural, one {Result} Altres {Results}}"
+        "resultsCount": "{count} de {total} {total, plural, one {Result} other {Results}}"
       },
       "imageList": {
         "emptyList": "Feu clic al bot\u00f3 Plus per afegir una imatge nova. Consulteu la guia de l'usuari <a href = 'https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' objectiu = '_ en blanc'/> aqu\u00ed </a>"
@@ -3327,7 +3327,7 @@
       "removeAdditionalParameterTooltip": "Traieu el par\u00e0metre",
       "parameter": "Par\u00e0metre",
       "value": "Valorar",
-      "string": "Corda",
+      "string": "Cadena",
       "number": "Nombre",
       "boolean": "Boolean"
     },
@@ -3464,7 +3464,7 @@
       },
       "Save": {
         "description": "Permet desar els canvis al mapa del servidor",
-        "title": "Estalviar"
+        "title": "Desa"
       },
       "SaveAs": {
         "description": "Permet crear o clonar mapes al servidor",
@@ -3690,8 +3690,8 @@
         "confirm": "Aix\u00f2 descartar\u00e0 tots els canvis actuals del mapa. Continuar?"
       },
       "saveErrorNotification": {
-        "titleContext": "Estalvi de context ha fallat",
-        "titleTemplate": "L'estalvi de plantilla ha fallat",
+        "titleContext": "No s'ha pogut desar el context",
+        "titleTemplate": "No s'ha pogut desar la plantilla",
         "conflict": "Ja existeix un recurs amb aquest nom",
         "defaultMessage": "Error desconegut",
         "categoryError": "S'ha fallat la creaci\u00f3 de la categoria que falta \"{categoryName}\""
@@ -3791,7 +3791,7 @@
         "syncError": "No \u00e9s possible actualitzar el t\u00edtol i la descripci\u00f3 d'aquesta capa. Podeu verificar si totes les opcions de capa s\u00f3n correctes al tauler de configuraci\u00f3"
       },
       "syncingLayersSavingToServerError": {
-        "title": "Error d'estalvi del servidor",
+        "title": "Error del servidor en desar",
         "message": "S'ha produ\u00eft un error inesperat en desar les capes actualitzades al servidor"
       },
       "syncingLayersGeneralError": {
@@ -4144,7 +4144,7 @@
     },
     "userSession": {
       "saveErrorNotification": {
-        "titleContext": "S'ha fallat l'estalvi de la sessi\u00f3 d'usuari",
+        "titleContext": "No s'ha pogut desar la sessi\u00f3 d'usuari",
         "categoryError": "S'ha fallat la creaci\u00f3 de la categoria que falta \"{categoryName}\"",
         "defaultMessage": "Error desconegut"
       },
@@ -4368,7 +4368,7 @@
       "filter": "Filtre",
       "filters": "Filtres",
       "view": "Visi\u00f3",
-      "resourcesFound": "{count,plural, =0 {0 Resources found} = 1 {1 Resource found} Altres {# Resources found}}",
+      "resourcesFound": "{count, plural, =0 {No s'ha trobat cap recurs} =1 {S'ha trobat 1 recurs} other {S'han trobat # recursos}}",
       "unadvertised": "El recurs no es fa publicitat. S'amaga al cat\u00e0leg i als resultats de la cerca",
       "mapUsesContext": "Aquest mapa utilitza el context: {contextName}",
       "orderBy": "Ordre per",
