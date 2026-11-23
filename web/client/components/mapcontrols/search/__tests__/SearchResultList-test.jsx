@@ -44,6 +44,19 @@ describe("test the SearchResultList", () => {
         expect(tb).toExist();
     });
 
+    it('replaces results when services return features with the same ids', () => {
+        const container = document.getElementById('container');
+        const result = (id, name, service) => ({
+            id,
+            properties: {name},
+            __SERVICE__: {displayName: `${service}: \${properties.name}`}
+        });
+        ReactDOM.render(<SearchResultList results={[result('alabama', 'Alabama', 'first'), result('alabama', 'Alabama', 'second')]}/>, container);
+        ReactDOM.render(<SearchResultList results={[result('california', 'California', 'first'), result('california', 'California', 'second')]}/>, container);
+        const titles = [...container.querySelectorAll('.text-result-title')].map(node => node.textContent);
+        expect(titles).toEqual(['first: California', 'second: California']);
+    });
+
     it('create component without items', () => {
         const tb = ReactDOM.render(<SearchResultList />, document.getElementById("container"));
         expect(tb).toExist();
@@ -248,6 +261,6 @@ describe("test the SearchResultList", () => {
 
         const searchResultEl = TestUtils.findRenderedComponentWithType(tb, SearchResult);
         expect(searchResultEl).toExist();
-        expect(searchResultEl._reactInternalFiber.key).toBe('ID');
+        expect(searchResultEl._reactInternalFiber.key).toBe('ID_0');
     });
 });
