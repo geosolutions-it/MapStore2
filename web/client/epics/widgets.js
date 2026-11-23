@@ -57,6 +57,7 @@ import {json2csv} from 'json-2-csv';
 import { defaultGetZoomForExtent } from '../utils/MapUtils';
 import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
 import { hide, SAVE } from '../actions/mapEditor';
+import { addTileMatrixFromSourcesToLayers } from '../utils/LayersUtils';
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
@@ -335,7 +336,10 @@ export const onMapEditorOpenEpic = (action$) =>
         .filter(({map} = {}) => map?.widgetId)
         .switchMap(({map}) => {
             return Rx.Observable.of(
-                updateWidgetProperty(map.widgetId, "maps", map, "merge"),
+                updateWidgetProperty(map.widgetId, "maps", {
+                    ...map,
+                    layers: addTileMatrixFromSourcesToLayers(map.sources, map.layers)
+                }, "merge"),
                 hide("widgetInlineEditor")
             );
         });
