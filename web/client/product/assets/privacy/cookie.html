@@ -151,6 +151,25 @@
                         </tr>
                         <tr>
                             <td>
+                                <code>ms2-login-session</code
+                                ><br />Cookie; installation host, application
+                                path. Conditional: only with
+                                <code>loginPersistence</code> set to
+                                <code>browserSession</code>
+                            </td>
+                            <td>
+                                Necessary for sign-in. Marks the browser
+                                session of the login, so that a login left by an
+                                earlier browser session is not restored.
+                            </td>
+                            <td>
+                                Session cookie: removed when the browser is
+                                closed, and at logout. Browsers that restore the
+                                previous session at startup also restore it.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <code>mapstore.privacy.choices</code
                                 ><br />LocalStorage; installation origin
                             </td>

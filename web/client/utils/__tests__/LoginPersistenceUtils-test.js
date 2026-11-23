@@ -65,12 +65,10 @@ describe('LoginPersistenceUtils', () => {
     });
 
     it('endServerSession sends the logout with the given token', (done) => {
-        mockAxios.onDelete(/session\/logout/).reply((config) => {
-            expect(config.headers.Authorization).toBe('Bearer expired-token');
-            return [204];
-        });
+        mockAxios.onDelete(/session\/logout/).reply(204);
         endServerSession('expired-token').then(() => {
             expect(mockAxios.history.delete.length).toBe(1);
+            expect(mockAxios.history.delete[0].headers.Authorization).toBe('Bearer expired-token');
             done();
         }).catch(done);
     });

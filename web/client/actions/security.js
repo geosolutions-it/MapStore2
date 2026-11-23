@@ -12,7 +12,9 @@
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
-import { endServerSession } from '../utils/LoginPersistenceUtils';
+import { endServerSession, isLoginTiedToBrowserSession } from '../utils/LoginPersistenceUtils';
+
+const SESSION_REFUSED_STATUSES = [401, 403];
 
 export const CHECK_LOGGED_USER = 'CHECK_LOGGED_USER';
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
@@ -182,11 +184,15 @@ export function refreshAccessToken() {
         const refreshToken = getRefreshToken();
         AuthenticationAPI.refreshToken(accessToken, refreshToken).then((response) => {
             dispatch(refreshSuccess(response, AuthenticationAPI.authProviderName));
-        }).catch(() => {
+        }).catch((error) => {
             dispatch(logout(null));
             dispatch(sessionEnded(SESSION_END_REASONS.REFRESH_FAILED));
-            // the session cannot be renewed: end it on the server too, not only in the client
-            endServerSession(accessToken);
+            // With loginPersistence set to browserSession, a session the server refused to renew is
+            // ended on the server too. Network errors and server errors do not end it, because the
+            // session may still be valid.
+            if (isLoginTiedToBrowserSession() && SESSION_REFUSED_STATUSES.includes(error?.status)) {
+                endServerSession(accessToken);
+            }
         });
     };
 }

@@ -65,9 +65,10 @@ export const canRestorePersistedLogin = (security) =>
     !isLoginTiedToBrowserSession() || !security?.user || isLoginBrowserSessionMarked();
 
 /**
- * Ends a session on the server with the given access token, even when it is no longer the one in
- * the application state. GeoStore removes the session and, where it is configured for it, ends
- * the session at the identity provider too. Errors are ignored: the session may already be gone.
+ * Ends a session on the server with the given access token. Call it when the application state holds
+ * no token: otherwise the request authentication rules replace the `Authorization` header with the
+ * token of the state. GeoStore removes the session and, where it is configured for it, ends the
+ * session at the identity provider too. Errors are ignored: the session may already be gone.
  * @param {string} accessToken the access token of the session
  * @returns {Promise}
  */
