@@ -10,7 +10,20 @@ import React from 'react';
 
 import { formatDate } from '../constants';
 
+/**
+ * Display a dataset's title, interval and last visible refresh time.
+ * @function AutoRefreshLayerRow
+ * @param {object} props Component props.
+ * @param {object} props.layer Dataset entry with id, title, visibility, autoRefreshInterval and optional _v_.
+ * Interval and timestamp values are in milliseconds.
+ * @returns {React.ReactElement} Dataset summary row.
+ */
 const AutoRefreshLayerRow = ({layer}) => {
+    /**
+     * Build the row tooltip using seconds and the localized last-refresh time.
+     * @function getFullyQualifiedLayerTitle
+ * @returns {string} Dataset title, interval and visible refresh timestamp.
+     */
     const getFullyQualifiedLayerTitle = React.useCallback(() => {
         const title = layer.title;
         const interval = `(${layer.autoRefreshInterval / 1000}s)`;

@@ -20,6 +20,21 @@ import { AUTOREFRESH_STEP_INTERVAL_IN_SECONDS, AUTOREFRESH_MAXIMUM_REFRESH_INTER
 const SelectSync = ReactSelect;
 const Button = tooltip(ButtonRB);
 
+/**
+ * Render searchable dataset settings with refresh interval inputs expressed in seconds.
+ * @function AutoRefreshForm
+ * @param {object} props Component props.
+ * @param {number} props.defaultRefreshInterval Default interval in seconds.
+ * @param {number} props.minimumRefreshInterval Minimum interval in seconds.
+ * @param {object[]} [props.availableLayers=[]] Datasets available to add, identified by dataset key.
+ * @param {object[]} [props.activeLayers=[]] Configured datasets with saved intervals in milliseconds.
+ * @param {function} props.handleAddLayer Called with dataset key and the default interval in seconds.
+ * @param {function} props.handleRemoveLayer Called with the dataset key to remove.
+ * @param {function} props.handleIntervalChange Called with the validated interval in seconds and dataset key.
+ * @param {object} context React context.
+ * @param {object} context.messages Localized messages.
+ * @returns {React.ReactElement} Dataset selection and interval editing form.
+ */
 const AutoRefreshForm = ({
     defaultRefreshInterval,
     minimumRefreshInterval,
@@ -36,6 +51,12 @@ const AutoRefreshForm = ({
         [filterText, activeLayers]
     );
 
+    /**
+     * Validate an interval on blur and update the input and dataset setting.
+     * @param {object} event Input event whose target.value is an interval in seconds.
+     * @param {object} layer Dataset entry containing its key as id.
+     * @returns {void}
+     */
     const onIntervalChange = (event, layer) => {
         const { value } = event.target || {};
         const numericValue = Number(value);
@@ -45,6 +66,11 @@ const AutoRefreshForm = ({
         handleIntervalChange(interval, layer.id);
     };
 
+    /**
+     * Add a selected dataset using the default interval, ignoring cleared or placeholder selections.
+     * @param {object} e Selected option with the dataset key in value, or a cleared selection.
+     * @returns {void}
+     */
     const onAddLayer = (e) => {
         if (!e || e.value === "none") {
             return;
@@ -53,6 +79,10 @@ const AutoRefreshForm = ({
         handleAddLayer(e.value, defaultRefreshInterval);
     };
 
+    /**
+     * Build dataset options matching the current case-insensitive title filter.
+     * @returns {object[]} Select options containing dataset keys as values and titles as labels.
+     */
     const getLayers = () => {
         return availableLayers.filter(layer => String(layer.title || layer.name || '').toLowerCase().includes(filterText.toLowerCase())).map(l => ({ value: l.id, label: l.title }));
     };

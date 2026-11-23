@@ -16,6 +16,26 @@ import AutoRefreshSettings, { AutoRefreshSettingsForm } from '../components/Auto
 import AutoRefreshMenu from '../components/AutoRefreshMenu';
 import AutoRefreshLayerRow from '../components/AutoRefreshLayerRow';
 
+/**
+ * Render refresh controls in the map footer or dashboard sidebar, converting interval props to seconds for the form.
+ * @function AutoRefreshContainer
+ * @param {object} props Component props.
+ * @param {number} [props.defaultRefreshInterval=60000] Default interval in milliseconds.
+ * @param {number} [props.minimumRefreshInterval=30000] Minimum interval in milliseconds.
+ * @param {boolean} [props.canConfigure=false] Show editable settings instead of the layer summary.
+ * @param {boolean} [props.enabled=false] Whether automatic refresh is enabled.
+ * @param {boolean} [props.paused=false] Whether refresh controls are paused.
+ * @param {number} [props.lastRefresh] Last dispatched refresh timestamp in milliseconds.
+ * @param {object[]} [props.availableLayers=[]] Datasets available to configure.
+ * @param {object[]} [props.activeLayers=[]] Datasets with configured refresh intervals.
+ * @param {number} [props.eligibleCount=0] Visible, non-edited configured datasets.
+ * @param {boolean} [props.sidebar=false] Use the dashboard sidebar dropdown layout.
+ * @param {function} [props.onUpdateNode] Called with dataset key, node type and a millisecond interval patch.
+ * @param {function} [props.onStart] Enable automatic refresh.
+ * @param {function} [props.onStop] Stop automatic refresh.
+ * @param {function} [props.onRefreshNow] Request an immediate refresh of eligible datasets.
+ * @returns {React.ReactElement} Refresh controls and settings or summary.
+ */
 const AutoRefreshContainer = ({
     defaultRefreshInterval = AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
     minimumRefreshInterval = AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,

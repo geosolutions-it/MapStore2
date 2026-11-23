@@ -8,6 +8,15 @@
 
 import React from 'react';
 
+/**
+ * Position a refresh dropdown above the map footer or beside the dashboard sidebar.
+ * @function AutoRefreshMenu
+ * @param {object} props Component props.
+ * @param {boolean} [props.sidebar=false] Position the menu to the left of the sidebar control.
+ * @param {React.ReactNode} props.children Menu content.
+ * @param {object|function} ref Forwarded menu element reference.
+ * @returns {React.ReactElement} Positioned dropdown menu.
+ */
 const AutoRefreshMenu = React.forwardRef((props, ref) => {
     return (
         <div

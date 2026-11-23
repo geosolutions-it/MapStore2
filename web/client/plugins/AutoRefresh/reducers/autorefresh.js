@@ -25,6 +25,17 @@ const defaultState = {
     minimumRefreshInterval: AUTOREFRESH_MINIMUM_REFRESH_INTERVAL
 };
 
+/**
+ * Store transient activation, pause state, last dispatched refresh time and the configured minimum interval.
+ * Loading or navigating to a resource resets runtime state while preserving the minimum interval.
+ * Dataset intervals are persisted on layers rather than in this reducer.
+ * @function autorefresh
+ * @param {object} [state] Current refresh state; defaults to disabled, unpaused and never refreshed.
+ * @param {object} action Redux action.
+ * @returns {object} Updated refresh state.
+ * @memberof reducers
+ * @name autorefresh
+ */
 const autorefresh = (state = {...defaultState}, action) => {
 
     switch (action.type) {

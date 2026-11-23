@@ -18,6 +18,19 @@ import { isActiveRefreshSelector, isPausedSelector, eligibleLayersSelector, laye
 import { isValidInterval } from '../utils';
 import { AUTOREFRESH_MINIMUM_REFRESH_INTERVAL } from '../constants';
 
+/**
+ * Epics for synchronizing dataset intervals and scheduling refreshes across maps and widgets.
+ * @name epics.autorefresh
+ */
+
+/**
+ * Build actions that update map layers and widget copies together in one dispatch.
+ * @param {object[]} instances Layer instances from layerInstancesSelector.
+ * @param {object} properties Properties to merge into every instance.
+ * @param {boolean} [refresh=false] Use refreshLayerVersion with properties._v_ for map instances.
+ * @returns {object[]} One combined layer/widget action, a widget-only action, or no actions.
+ * @private
+ */
 const updateInstances = (instances, properties, refresh = false) => {
     const ids = instances.filter(instance => instance.mapLayer).map(instance => instance.layer.id);
     const updates = instances.filter(instance => !instance.mapLayer).map(({ target, widgetId, path }) => ({
@@ -30,7 +43,15 @@ const updateInstances = (instances, properties, refresh = false) => {
     return updates.length ? [updateWidgetLayerProperties(updates)] : [];
 };
 
-// New widget/map instances inherit the dataset's saved interval atomically.
+/**
+ * Make new map/widget instances inherit their dataset's configured interval atomically.
+ * @function synchronizeAutoRefreshEpic
+ * @param {external:Observable} action$ Layer/widget changes and map/dashboard load actions.
+ * @param {object} store Redux store.
+ * @param {function} store.getState Return the current Redux state.
+ * @returns {external:Observable} Actions aligning intervals on copies of each configured dataset.
+ * @memberof epics.autorefresh
+ */
 export const synchronizeAutoRefreshEpic = (action$, { getState }) => action$
     .ofType(ADD_LAYER, INSERT, UPDATE_PROPERTY, REPLACE, MAP_CONFIG_LOADED, DASHBOARD_LOADED)
     .mergeMap(() => {
@@ -43,6 +64,16 @@ export const synchronizeAutoRefreshEpic = (action$, { getState }) => action$
         ], []));
     });
 
+/**
+ * Apply interval edits to all instances of a dataset when the user can configure the resource.
+ * Valid millisecond intervals are clamped to the minimum; invalid or absent intervals remove the setting.
+ * @function configureAutoRefreshEpic
+ * @param {external:Observable} action$ AUTOREFRESH_SET_INTERVAL actions.
+ * @param {object} store Redux store.
+ * @param {function} store.getState Return the current Redux state.
+ * @returns {external:Observable} Layer/widget property update actions.
+ * @memberof epics.autorefresh
+ */
 export const configureAutoRefreshEpic = (action$, { getState }) => action$.ofType(AUTOREFRESH_SET_INTERVAL)
     .filter(() => canConfigureSelector(getState()))
     .mergeMap(({ key, interval }) => {
@@ -54,6 +85,17 @@ export const configureAutoRefreshEpic = (action$, { getState }) => action$.ofTyp
         }));
     });
 
+/**
+ * Refresh visible instances of eligible datasets unless refreshes are paused.
+ * A single timestamp is used for all `_v_` updates and the last-refresh status.
+ * Automatic activation is not required, allowing manual refresh while timers are stopped.
+ * @function refreshAutoRefreshEpic
+ * @param {external:Observable} action$ AUTOREFRESH_NOW actions, optionally scoped to a dataset key.
+ * @param {object} store Redux store.
+ * @param {function} store.getState Return the current Redux state.
+ * @returns {external:Observable} Layer/widget version updates followed by AUTOREFRESH_UPDATED, or no actions.
+ * @memberof epics.autorefresh
+ */
 export const refreshAutoRefreshEpic = (action$, { getState }) => action$.ofType(AUTOREFRESH_NOW)
     .mergeMap(({ key }) => {
         const state = getState();
@@ -65,7 +107,24 @@ export const refreshAutoRefreshEpic = (action$, { getState }) => action$.ofType(
         return Rx.Observable.from([...updateInstances(instances, { _v_: time }, true), autoRefreshUpdated(time)]);
     });
 
+/**
+ * Maintain one timer per eligible dataset while automatic refresh is enabled and not paused.
+ * Timers restart when intervals change and stop when a dataset becomes ineligible; version updates
+ * do not restart them. A dataset that becomes eligible again receives a new timer.
+ * @function layersAutoRefreshEpic
+ * @param {external:Observable} action$ Redux actions used to re-evaluate the active schedule.
+ * @param {object} store Redux store.
+ * @param {function} store.getState Return the current Redux state.
+ * @param {object} [dependencies={}] Epic dependencies.
+ * @param {object} [dependencies.scheduler=Rx.Scheduler.async] RxJS scheduler used for refresh timers.
+ * @returns {external:Observable} AUTOREFRESH_NOW actions emitted at each dataset's millisecond interval.
+ * @memberof epics.autorefresh
+ */
 export const layersAutoRefreshEpic = (action$, store, { scheduler = Rx.Scheduler.async } = {}) => {
+    /**
+     * Derive the active schedule without transient layer versions.
+     * @returns {object} Dataset keys mapped to millisecond intervals, or an empty object when stopped/paused.
+     */
     const getLayersMap = () => isPausedSelector(store.getState()) || !isActiveRefreshSelector(store.getState()) ?
         {} :
         eligibleLayersSelector(store.getState()).reduce((acc, l) => ({ ...acc, [l.id]: l.autoRefreshInterval }), {});

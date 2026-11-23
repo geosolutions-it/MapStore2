@@ -22,15 +22,30 @@ import { isValidInterval } from './utils';
 import { autoRefreshStart, autoRefreshStop, autoRefreshInit, autoRefreshNow, setAutoRefreshInterval } from './actions/autorefresh';
 
 /**
- * Automatic refresh for map and dashboard datasets. Intervals are stored in milliseconds.
- * Activation and last-refresh status are transient and reset when loading a resource.
+ * Configure and control automatic refresh for map and dashboard datasets.
+ * The map control is displayed in MapFooter and the dashboard control in SidebarMenu.
+ * Refresh intervals are saved as autoRefreshInterval on each layer in milliseconds;
+ * the settings form displays seconds. Copies of a dataset share the configured interval.
+ * Hidden datasets and datasets being edited are excluded from refreshes. Activation,
+ * pause state and last-refresh status are transient and reset when loading a resource.
+ * Logged-in users with resource edit permission can configure intervals; other viewers
+ * can activate configured refreshes and request an immediate refresh.
  * @memberof plugins
  * @class
  * @name AutoRefresh
- * @param {number} cfg.defaultRefreshInterval Default interval in milliseconds (60000).
- * @param {number} cfg.minimumRefreshInterval Minimum interval in milliseconds (30000).
+ * @param {object} cfg Plugin configuration.
+ * @param {number} [cfg.defaultRefreshInterval=60000] Default interval in milliseconds for newly configured datasets.
+ * Values below the effective minimum are clamped to that minimum.
+ * @param {number} [cfg.minimumRefreshInterval=30000] Minimum interval in milliseconds enforced by the form and scheduler.
+ * Both interval options must be finite, positive and at most 2147483647; invalid values use their defaults.
  * @example
- * { "name": "AutoRefresh", "cfg": { "defaultRefreshInterval": 60000, "minimumRefreshInterval": 30000 } }
+ * {
+ *     "name": "AutoRefresh",
+ *     "cfg": {
+ *         "defaultRefreshInterval": 60000,
+ *         "minimumRefreshInterval": 30000
+ *     }
+ * }
  */
 export const AutoRefresh = ({
     defaultRefreshInterval = AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,

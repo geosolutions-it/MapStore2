@@ -19,6 +19,17 @@ import ButtonRB from '../../../components/misc/Button';
 
 const Button = tooltip(ButtonRB);
 
+/**
+ * Connect interval settings in seconds to layer property patches in milliseconds.
+ * @function AutoRefreshSettingsForm
+ * @param {object} props Component props.
+ * @param {number} props.defaultRefreshInterval Default interval in seconds.
+ * @param {number} props.minimumRefreshInterval Minimum interval in seconds.
+ * @param {object[]} props.availableLayers Datasets available to add.
+ * @param {object[]} props.activeLayers Configured datasets with intervals in milliseconds.
+ * @param {function} props.onUpdateNode Called with dataset key, NodeTypes.LAYER and the interval patch.
+ * @returns {React.ReactElement} Editable refresh settings form.
+ */
 export const AutoRefreshSettingsForm = ({
     defaultRefreshInterval,
     minimumRefreshInterval,
@@ -27,15 +38,32 @@ export const AutoRefreshSettingsForm = ({
     onUpdateNode
 }) => {
 
+    /**
+     * Validate and clamp an interval before converting it to a millisecond layer patch.
+     * @param {number} interval Requested interval in seconds.
+     * @param {string} layerId Dataset key to configure.
+     * @returns {void}
+     */
     const handleIntervalChange = (interval, layerId) => {
         const i = Number.isFinite(interval) && interval > 0 && interval <= AUTOREFRESH_MAXIMUM_REFRESH_INTERVAL / 1000 ? interval : defaultRefreshInterval;
         onUpdateNode(layerId, NodeTypes.LAYER, generateAutoRefreshLayerOptions(Math.max(minimumRefreshInterval, i) * 1000));
     };
 
+    /**
+     * Configure a previously unconfigured dataset.
+     * @param {string} layerId Dataset key to add.
+     * @param {number} interval Initial interval in seconds.
+     * @returns {void}
+     */
     const handleAddLayer = (layerId, interval) => {
         handleIntervalChange(interval, layerId);
     };
 
+    /**
+     * Remove the saved refresh interval from every instance of a dataset.
+     * @param {string} layerId Dataset key to remove.
+     * @returns {void}
+     */
     const handleRemoveLayer = (layerId) =>{
         onUpdateNode(layerId, NodeTypes.LAYER, generateAutoRefreshLayerOptions(undefined));
     };
@@ -50,6 +78,12 @@ export const AutoRefreshSettingsForm = ({
         handleRemoveLayer={handleRemoveLayer}/>);
 };
 
+/**
+ * Render the map footer's refresh settings dropdown.
+ * @function AutoRefreshSettings
+ * @param {object} props Settings props forwarded to AutoRefreshSettingsForm; interval values are in seconds.
+ * @returns {React.ReactElement} Settings dropdown.
+ */
 const AutoRefreshSettings = props => (<Dropdown id="ms-autorefresh-selector" dropup>
     <Button bsRole="toggle"
         bsStyle="link"

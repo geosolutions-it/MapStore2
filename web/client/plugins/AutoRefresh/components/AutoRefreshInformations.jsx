@@ -18,6 +18,15 @@ import ButtonRB from '../../../components/misc/Button';
 
 const Button = tooltip(ButtonRB);
 
+/**
+ * Render the viewer summary dropdown menu and forward its DOM reference.
+ * @function AutoRefreshInformationsMenu
+ * @param {object} props Component props.
+ * @param {string} props.msgId Localized menu heading message ID.
+ * @param {React.ReactNode} props.children Summary content.
+ * @param {object|function} ref Forwarded menu element reference.
+ * @returns {React.ReactElement} Summary menu.
+ */
 const AutoRefreshInformationsMenu = React.forwardRef((props, ref) => {
     return (
         <div
@@ -39,6 +48,15 @@ const AutoRefreshInformationsMenu = React.forwardRef((props, ref) => {
 });
 
 
+/**
+ * Render a searchable refresh summary for viewers without configuration permission.
+ * @function AutoRefreshInformations
+ * @param {object} props Component props.
+ * @param {object[]} [props.layers=[]] Configured datasets with intervals and refresh timestamps in milliseconds.
+ * @param {object} context React context.
+ * @param {object} context.messages Localized messages.
+ * @returns {React.ReactElement} Layer summary dropdown.
+ */
 const AutoRefreshInformations = ({
     layers = []
 }, {messages}) => {
