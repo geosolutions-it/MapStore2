@@ -8,6 +8,7 @@
 
 import expect from 'expect';
 import Rx from 'rxjs';
+import { createStore } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { changeLayerProperties, CHANGE_LAYER_PROPERTIES, addLayer } from '../../../../actions/layers';
 import { UPDATE_LAYER_PROPERTIES, updateWidgetLayerProperties } from '../../../../actions/widgets';
@@ -38,7 +39,12 @@ describe('AutoRefresh epics', () => {
         const key = allLayersSelector(state)[0].id;
         const actions = run(configureAutoRefreshEpic, setAutoRefreshInterval(key, 60000), state);
         expect(actions.length).toBe(1);
-        const updated = apply(state, actions[0]);
+        const store = createStore(apply, state);
+        const observed = [];
+        store.subscribe(() => observed.push(store.getState()));
+        actions.forEach(store.dispatch);
+        expect(observed.length).toBe(1);
+        const updated = observed[0];
         expect(updated.layers.flat[0].autoRefreshInterval).toBe(60000);
         expect(updated.widgets.containers.floating.widgets[0].layer.autoRefreshInterval).toBe(60000);
         expect(updated.widgets.containers.floating.widgets[0].layer.filter).toBe('keep');
@@ -58,10 +64,16 @@ describe('AutoRefresh epics', () => {
         const state = { ...makeState(), autorefresh: { enabled: false, minimumRefreshInterval: 1 } };
         const actions = run(refreshAutoRefreshEpic, autoRefreshNow(), state);
         expect(actions.length).toBe(2);
-        const updated = apply(state, actions[0]);
+        const store = createStore(apply, state);
+        const observed = [];
+        store.subscribe(() => observed.push(store.getState()));
+        actions.forEach(store.dispatch);
+        expect(observed.length).toBe(2);
+        observed.forEach(updated => {
+            expect(updated.layers.flat[0]._v_).toBe(updated.widgets.containers.floating.widgets[0].layer._v_);
+            expect(updated.layers.flat[0]._v_).toBeGreaterThan(0);
+        });
         expect(actions[0].type).toBe(CHANGE_LAYER_PROPERTIES);
-        expect(updated.layers.flat[0]._v_).toBe(updated.widgets.containers.floating.widgets[0].layer._v_);
-        expect(updated.layers.flat[0]._v_).toBeGreaterThan(0);
         expect(state.autorefresh.enabled).toBe(false);
     });
     it('supports dashboards without a main-map layer and ignores dynamic filter widgets', () => {

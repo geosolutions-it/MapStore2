@@ -13,7 +13,7 @@ import { ADD_LAYER, changeLayerProperties, refreshLayerVersion } from '../../../
 import { INSERT, UPDATE_PROPERTY, REPLACE, updateWidgetLayerProperties } from '../../../actions/widgets';
 import { MAP_CONFIG_LOADED } from '../../../actions/config';
 import { DASHBOARD_LOADED } from '../../../actions/dashboard';
-import { AUTOREFRESH_NOW, AUTOREFRESH_SET_INTERVAL, autoRefreshNow, autoRefreshUpdated } from '../actions/autorefresh';
+import { AUTOREFRESH_NOW, AUTOREFRESH_SET_INTERVAL, autoRefreshNow, autoRefreshUpdated, withWidgetLayerUpdates } from '../actions/autorefresh';
 import { isActiveRefreshSelector, isPausedSelector, eligibleLayersSelector, layerInstancesSelector, canConfigureSelector, refreshableLayersSelector } from '../selectors/autorefresh';
 import { isValidInterval } from '../utils';
 import { AUTOREFRESH_MINIMUM_REFRESH_INTERVAL } from '../constants';
@@ -23,7 +23,10 @@ const updateInstances = (instances, properties, refresh = false) => {
     const updates = instances.filter(instance => !instance.mapLayer).map(({ target, widgetId, path }) => ({
         target, widgetId, path, properties
     }));
-    if (ids.length) return [refresh ? refreshLayerVersion(ids, properties._v_, updates) : changeLayerProperties(ids, properties, updates)];
+    if (ids.length) {
+        const action = refresh ? refreshLayerVersion(ids, properties._v_) : changeLayerProperties(ids, properties);
+        return [withWidgetLayerUpdates(action, updates)];
+    }
     return updates.length ? [updateWidgetLayerProperties(updates)] : [];
 };
 

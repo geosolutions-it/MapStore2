@@ -19,6 +19,15 @@ export const setAutoRefreshInterval = (key, interval) => ({ type: AUTOREFRESH_SE
 export const autoRefreshNow = key => ({ type: AUTOREFRESH_NOW, key });
 export const autoRefreshUpdated = time => ({ type: AUTOREFRESH_UPDATED, time });
 
+/**
+ * Attach widget layer patches to a layer action so both reducers update in one dispatch.
+ * @param {object} action The layer action to decorate without mutation.
+ * @param {object[]} [widgetUpdates=[]] Widget layer patches to apply with the layer action.
+ * @returns {object} The decorated action, or the original action when there are no widget updates.
+ */
+export const withWidgetLayerUpdates = (action, widgetUpdates = []) =>
+    widgetUpdates.length ? { ...action, widgetUpdates } : action;
+
 export const autoRefreshStart = () => {
     return {
         type: AUTOREFRESH_START,

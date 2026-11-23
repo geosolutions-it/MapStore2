@@ -7,16 +7,37 @@
  */
 
 import expect from 'expect';
+import { changeLayerProperties, refreshLayerVersion } from '../../../../actions/layers';
 import {
     AUTOREFRESH_START,
     AUTOREFRESH_STOP,
     AUTOREFRESH_PAUSE,
     autoRefreshStart,
     autoRefreshStop,
-    autoRefreshPause
+    autoRefreshPause,
+    withWidgetLayerUpdates
 } from '../autorefresh';
 
 describe('AutoRefresh actions', () => {
+    [
+        { name: 'property changes', action: changeLayerProperties(['map'], { autoRefreshInterval: 60000 }) },
+        { name: 'version refreshes', action: refreshLayerVersion(['map'], 123) }
+    ].forEach(({ name, action }) => {
+        it(`adds widget updates to ${name} without mutating the layer action`, () => {
+            const updates = [{ widgetId: 'table', path: ['layer'], properties: action.newProperties }];
+            Object.freeze(action);
+            const wrapped = withWidgetLayerUpdates(action, updates);
+            expect(wrapped).toNotBe(action);
+            expect(wrapped).toEqual({ ...action, widgetUpdates: updates });
+            expect(action.widgetUpdates).toBe(undefined);
+        });
+
+        it(`leaves ${name} unchanged when widget updates are empty or omitted`, () => {
+            expect(withWidgetLayerUpdates(action)).toBe(action);
+            expect(withWidgetLayerUpdates(action, [])).toBe(action);
+        });
+    });
+
     it('creates the start action', () => {
         expect(autoRefreshStart()).toEqual({
             type: AUTOREFRESH_START,
