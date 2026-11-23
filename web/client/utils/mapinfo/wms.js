@@ -9,7 +9,7 @@
 import {Observable} from "rxjs";
 import {getCurrentResolution} from '../MapUtils';
 import {reproject, getProjectedBBox, normalizeSRS} from '../CoordinatesUtils';
-import {getLayerUrl} from '../LayersUtils';
+import {getLayerUrl, ServerTypes} from '../LayersUtils';
 import {isObject, isNil} from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { generateEnvString } from '../LayerLocalizationUtils';
@@ -19,6 +19,7 @@ import axios from "../../libs/ajax";
 // import {stripPrefix} from "xml2js/lib/processors";
 import {addAuthenticationToSLD} from '../SecurityUtils';
 import { interceptOGCError } from '../ObservableUtils';
+
 export default {
     /**
      * Creates the request object and it's metadata for WMS GetFeatureInfo.
@@ -59,6 +60,13 @@ export default {
         });
         const featureInfoMaxItems = getFeatureInfoMaxItems(featureInfo, maxItems);
         const featureInfoBuffer = getFeatureInfoBuffer(featureInfo, layer);
+        const bufferParams = layer.serverType === ServerTypes.QGIS
+            ? {
+                FI_POINT_TOLERANCE: featureInfoBuffer,
+                FI_LINE_TOLERANCE: featureInfoBuffer,
+                FI_POLYGON_TOLERANCE: featureInfoBuffer
+            }
+            : { buffer: featureInfoBuffer };
         return {
             request: addAuthenticationToSLD({
                 service: 'WMS',
@@ -82,7 +90,7 @@ export default {
                 ENV,
                 ...Object.assign({}, params),
                 feature_count: featureInfoMaxItems,
-                ...(featureInfoBuffer !== undefined ? { buffer: featureInfoBuffer } : {})
+                ...(featureInfoBuffer !== undefined ? bufferParams : {})
             }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,

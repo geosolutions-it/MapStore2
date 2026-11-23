@@ -8,7 +8,7 @@
 
 import isEmpty from "lodash/isEmpty";
 import { getExtentFromViewport } from "./CoordinatesUtils";
-import { ServerTypes } from "./LayersUtils";
+import { isGeoServer } from "./LayersUtils";
 import { optionsToVendorParams } from "./VendorParamsUtils";
 import { composeFilterObject } from "../components/widgets/enhancers/utils";
 import { toCQLFilter } from "./FilterUtils";
@@ -56,7 +56,7 @@ export const getWMSLegendConfig = ({
         SLD_VERSION: "1.1.0",
         LEGEND_OPTIONS: legendOptions
     };
-    if (layer.serverType !== ServerTypes.NO_VENDOR) {
+    if (isGeoServer(layer)) {
         const addContentDependantParams = layer.enableDynamicLegend || layer.enableInteractiveLegend;
         return {
             ...baseParams,

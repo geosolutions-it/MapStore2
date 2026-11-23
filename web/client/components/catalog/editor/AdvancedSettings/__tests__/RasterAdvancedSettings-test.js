@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(17);
+        expect(fields.length).toBe(18);
         // check disabled refresh button
 
     });
@@ -282,13 +282,64 @@ describe('Test Raster advanced settings', () => {
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'layerOptions', { serverType: "geoserver", featureInfo: { maxItems: 15 } } ]);
     });
-    it('test component hides catalog feature info buffer for non GeoServer', () => {
+    it('test component edits catalog feature info buffer for QGIS and preserves existing options', () => {
+        const onChangeServiceProperty = expect.createSpy();
         ReactDOM.render(<RasterAdvancedSettings
-            service={{ type: "wms", layerOptions: {serverType: 'no-vendor'} }}
+            onChangeServiceProperty={onChangeServiceProperty}
+            service={{
+                type: "wms",
+                layerOptions: {
+                    serverType: 'qgis',
+                    singleTile: true,
+                    featureInfo: { maxItems: 25, format: 'HTML' }
+                }
+            }}
         />, document.getElementById("container"));
-        expect(document.querySelector('[data-qa="feature-info-max-items"]')).toBeTruthy();
-        expect(document.querySelector('[data-qa="feature-info-max-items"]').value).toBe('10');
+        expect(document.querySelector('[data-qa="feature-info-max-items"]').value).toBe('25');
+        const bufferInput = document.querySelector('[data-qa="feature-info-buffer"]');
+        expect(bufferInput).toBeTruthy();
+        expect(bufferInput.value).toBe('');
+        TestUtils.Simulate.change(bufferInput, {target: {value: "5"}});
+        expect(onChangeServiceProperty.calls[0].arguments).toEqual(['layerOptions', {
+            serverType: 'qgis',
+            singleTile: true,
+            featureInfo: { maxItems: 25, format: 'HTML', buffer: 5 }
+        }]);
+    });
+    it('hides catalog Buffer for other No Vendor services', () => {
+        ReactDOM.render(<RasterAdvancedSettings
+            service={{ type: 'wms', layerOptions: { serverType: 'no-vendor' } }}/>, document.getElementById('container'));
         expect(document.querySelector('[data-qa="feature-info-buffer"]')).toNotExist();
+    });
+    it('does not fetch capabilities when opening QGIS advanced settings or changing the URL', async() => {
+        const onFormatOptionsFetch = expect.createSpy();
+        const service = { type: 'wms', url: '/ows', layerOptions: { serverType: 'qgis' } };
+        ReactDOM.render(<RasterAdvancedSettings service={service}
+            onFormatOptionsFetch={onFormatOptionsFetch}/>, document.getElementById('container'));
+        ReactDOM.render(<RasterAdvancedSettings service={{ ...service, url: '/other-ows' }}
+            onFormatOptionsFetch={onFormatOptionsFetch}/>, document.getElementById('container'));
+        await new Promise(resolve => setTimeout(resolve, 350));
+        expect(onFormatOptionsFetch).toNotHaveBeenCalled();
+        expect(document.querySelector('[data-qa="feature-info-buffer"]')).toExist();
+    });
+    ['qgis', 'no-vendor'].forEach(serverType => {
+        it(`hides GeoServer controls and clears the interactive legend when switching to ${serverType}`, () => {
+            const onChangeServiceProperty = expect.createSpy();
+            const layerOptions = { serverType: 'geoserver', enableInteractiveLegend: true, featureInfo: { buffer: 5 } };
+            ReactDOM.render(<RasterAdvancedSettings
+                service={{ type: 'wms', layerOptions }}
+                onChangeServiceProperty={onChangeServiceProperty}/>, document.getElementById('container'));
+            const serverTypeInput = document.querySelector('input[role="combobox"]');
+            TestUtils.Simulate.change(serverTypeInput, { target: { value: serverType } });
+            TestUtils.Simulate.keyDown(serverTypeInput, { keyCode: 9, key: 'Tab' });
+            const updatedOptions = { ...layerOptions, serverType, enableInteractiveLegend: undefined };
+            expect(onChangeServiceProperty.calls.length).toBe(1);
+            expect(onChangeServiceProperty.calls[0].arguments).toEqual(['layerOptions', updatedOptions]);
+            ReactDOM.render(<RasterAdvancedSettings service={{ type: 'wms', layerOptions: updatedOptions }}/>, document.getElementById('container'));
+            expect(document.querySelector('#enableInteractiveLegend')).toNotExist();
+            expect(document.querySelector('#useCacheOption')).toNotExist();
+            expect(!!document.querySelector('[data-qa="feature-info-buffer"]')).toBe(serverType === 'qgis');
+        });
     });
     it('test component onChangeServiceProperty infoFormat', () => {
         const action = {
