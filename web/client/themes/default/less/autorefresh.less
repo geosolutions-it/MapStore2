@@ -5,6 +5,33 @@
     .ms-autorefresh-divider {
         .border-color-var(@theme-vars[main-border-color]);
     }
+
+    .ms-autorefresh-wrapper {
+        .border-color-var(@theme-vars[main-border-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-autorefresh-button {
+        background-color: transparent;
+        .color-var(@theme-vars[main-color]);
+
+        &:hover,
+        &:focus,
+        &:active,
+        &:active:focus {
+            .background-color-var(@theme-vars[main-hover-bg]);
+            color: inherit;
+        }
+    }
+
+    .ms-autorefresh-form-container .ms-autorefresh-form-group,
+    .ms-autorefresh-layers-summary .ms-autorefresh-layer-summary__row {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        &:hover {
+            .border-color-var(@theme-vars[focus-color]);
+        }
+    }
 }
 
 // **************
@@ -20,8 +47,6 @@
     border-style: solid;
     padding: 2px;
     border-radius: 4px;
-    border-color: var(--ms-main-border-color);
-    background-color: var(--ms-main-bg);
 }
 
 .ms-autorefresh-button {
@@ -30,21 +55,17 @@
     justify-content: center;
     height: 20px;
     width: 20px;
-    background-color: transparent;
     border: none;
     box-shadow: none;
     text-decoration: none;
-    color: var(--ms-main-color);
 
     &:hover,
     &:focus,
     &:active,
     &:active:focus {
-        background-color: var(--ms-main-hover-bg);
         box-shadow: none;
         outline: none;
         border: none;
-        color: inherit;
         text-decoration: none;
     }
 }
@@ -94,11 +115,9 @@
         border-width: 1px;
         border-style: solid;
         border-radius: 4px;
-        border-color: var(--ms-main-border-color, #555555);
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
 
         &:hover {
-            border-color: var(--ms-focus-color);
             box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.12);
         }
 
@@ -187,11 +206,9 @@
         border-width: 1px;
         border-style: solid;
         border-radius: 4px;
-        border-color: var(--ms-main-border-color, #555555);
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
 
         &:hover {
-            border-color: var(--ms-focus-color);
             box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.12);
         }
 

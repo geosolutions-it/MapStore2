@@ -79,6 +79,9 @@ export default class OpenlayersLayer extends React.Component {
     }
 
     componentWillUnmount() {
+        // Removing a layer from the map does not remove its source listeners.
+        // Stop following source replacements and detach load/error handlers so
+        // pending requests cannot notify this component after it unmounts.
         this.unbindVectorSourceEvents?.();
         if (this.layer && this.props.map) {
             if (this.tileLoadEndStream$) {
@@ -339,6 +342,8 @@ export default class OpenlayersLayer extends React.Component {
             this.imageLoadEndStream$ = imageLoadEndStream$;
             this.imageStopStream$ = imageStopStream$;
 
+            // addLayer also runs when updateLayer replaces the layer instance;
+            // detach the previous layer's listeners before binding the new one.
             this.unbindVectorSourceEvents?.();
             this.unbindVectorSourceEvents = bindVectorSourceEvents(this.layer, {
                 onLoading: () => this.props.onLayerLoading(options.id),
