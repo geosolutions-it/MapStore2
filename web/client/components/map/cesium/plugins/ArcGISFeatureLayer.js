@@ -218,6 +218,7 @@ Layers.registerType('arcgis-feature', {
             || !isEqual(oldOptions.security, newOptions.security)
             || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
             || oldOptions.strategy !== newOptions.strategy
+            || !isEqual(oldOptions._v_, newOptions._v_)
         ) {
             return createLayer(newOptions, map);
         }

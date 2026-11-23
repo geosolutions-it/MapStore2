@@ -35,6 +35,22 @@ describe('triggerFetch stream', () => {
                 }
             );
     });
+    it('triggerFetch triggers on layer _v_ changes', (done) => {
+        const base = {
+            layer: { name: "TEST", _v_: 1 },
+            options: { propertyName: ["A"] }
+        };
+        const propsChanges = [base, base, { ...base, layer: { ...base.layer } }, { ...base, layer: { ...base.layer, _v_: 2 } }];
+        triggerFetch(Rx.Observable.from(propsChanges))
+            .bufferCount(2)
+            .subscribe(
+                ([p1, p2]) => {
+                    expect(p1.layer._v_).toBe(1);
+                    expect(p2.layer._v_).toBe(2);
+                    done();
+                }
+            );
+    });
     it('triggerFetch triggers on filter changes', (done) => {
         const base = {
             layer: {name: "TEST"},
