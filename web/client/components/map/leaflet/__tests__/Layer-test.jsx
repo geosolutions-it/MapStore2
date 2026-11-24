@@ -879,9 +879,9 @@ describe('Leaflet layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            url: "http://sample.server/geoserver/wms",
+            url: "/geoserver/wms",
             params: {
-                SLD: "http://sample.server/geoserver/rest/sld?test1=aaa"
+                SLD: "/geoserver/rest/sld?test1=aaa"
             }
         };
         setConfigProp('useAuthenticationRules', true);
@@ -915,7 +915,7 @@ describe('Leaflet layer', () => {
         expect(lcount).toBe(1);
 
         expect(layer.layer.wmsParams['ms2-authkey']).toBe("########-####-####-####-###########");
-        expect(layer.layer.wmsParams.SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
+        expect(layer.layer.wmsParams.SLD).toBe("/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
     });
     it('test wms security token', () => {
         const options = {
@@ -925,7 +925,7 @@ describe('Leaflet layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            url: "http://sample.server/geoserver/wms"
+            url: "/geoserver/wms"
         };
         setConfigProp('useAuthenticationRules', true);
         setConfigProp('authenticationRules', [
@@ -1120,7 +1120,7 @@ describe('Leaflet layer', () => {
                     'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
                 }
             ],
-            url: 'http://sample.server/geoserver/gwc/service/wmts'
+            url: '/geoserver/gwc/service/wmts'
         };
         setConfigProp('useAuthenticationRules', true);
         setConfigProp('authenticationRules', [

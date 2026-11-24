@@ -20,6 +20,16 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.02.03 to 2026.02.04
+
+### Request configuration rules and the application domain
+
+A `urlPattern` written as a path (for example `^\\/geoserver\\/` or `.*rest/geostore.*`) now matches the services of the application domain in both relative and absolute form, so the same rule covers `/geoserver/wms` and `https://<mapstore-host>/geoserver/wms`.
+
+For a service on another domain, a rule applies only when its pattern names the host of the service, as in `^https://gs\\.example\\.com/geoserver/`. A pattern that does not name any host, such as `.*geoserver.*`, applies only to the application domain: to keep sending headers or parameters to a GeoServer on another domain, add its host to the pattern. One word of the host name is not enough to name it: for `https://geoserver.example.com/` write `geoserver\\.example\\.com/`.
+
+The default rules need no change. See [requestsConfigurationRules](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/local-config/#explanation-of-some-config-properties) for details.
+
 ## Migration from 2026.02.00 to 2026.02.01
 
 ### Login `hideGroupUserInfo` configuration

@@ -1,5 +1,7 @@
 import expect from 'expect';
-import {template} from '../plugins/TileProviderLayer';
+import {template, getSubdomainUrls} from '../plugins/TileProviderLayer';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import { getRequestConfigurationRule } from '../../../../utils/SecurityUtils';
 
 
 describe('TileProviderLayer', () => {
@@ -15,5 +17,33 @@ describe('TileProviderLayer', () => {
             expect(template(sample.url, sample.data)).toBe(sample.expected);
         });
 
+    });
+    it('getSubdomainUrls returns one URL for each subdomain', () => {
+        expect(getSubdomainUrls('https://{s}.tiles.example.com/{z}/{x}/{y}.png')).toEqual([
+            'https://a.tiles.example.com/{z}/{x}/{y}.png',
+            'https://b.tiles.example.com/{z}/{x}/{y}.png',
+            'https://c.tiles.example.com/{z}/{x}/{y}.png'
+        ]);
+        expect(getSubdomainUrls('https://{s}.tiles.example.com/{z}/{x}/{y}.png', ['t1', 't2'])).toEqual([
+            'https://t1.tiles.example.com/{z}/{x}/{y}.png',
+            'https://t2.tiles.example.com/{z}/{x}/{y}.png'
+        ]);
+        expect(getSubdomainUrls('https://tiles.example.com/{z}/{x}/{y}.png')).toBe('https://tiles.example.com/{z}/{x}/{y}.png');
+        expect(getSubdomainUrls(undefined)).toBe(undefined);
+    });
+    describe('request rules on subdomain URLs', () => {
+        afterEach(() => {
+            ConfigUtils.setConfigProp('requestsConfigurationRules', null);
+        });
+        it('applies a host rule when every subdomain URL is on the named host', () => {
+            const rules = [{ urlPattern: 'tiles\\.example\\.com/', params: { key: 'service-key' } }];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(getRequestConfigurationRule(getSubdomainUrls('https://{s}.tiles.example.com/{z}/{x}/{y}.png', 'ab'))).toEqual(rules[0]);
+        });
+        it('does not apply a host rule when a subdomain moves the request to another host', () => {
+            const rules = [{ urlPattern: 'tiles\\.example\\.com/', params: { key: 'service-key' } }];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(getRequestConfigurationRule(getSubdomainUrls('https://{s}tiles.example.com/{z}/{x}/{y}.png', ['a.', 'other.example.net/']))).toBe(undefined);
+        });
     });
 });

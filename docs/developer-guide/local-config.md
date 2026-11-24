@@ -54,7 +54,7 @@ This is the main structure:
         "authkey": "${securityToken}"
       }
     }, {
-      "urlPattern": ".*azure-blob.*",
+      "urlPattern": "^https://myaccount\\.blob\\.core\\.windows\\.net/",
       // expiration timestamp (optional, Unix timestamp in seconds)
       "expires": 1735689600,
       // parameters can be used for SAS tokens
@@ -160,6 +160,13 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 - `useAuthenticationRules` (deprecated): if this flag is set to true, legacy `authenticationRules` will be used. The new `requestsConfigurationRules` system does not require this flag and is always active when rules are present.
 - `requestsConfigurationRules`: is an array of objects that contain rules to match for request configuration. Each rule has a `urlPattern` regex to match and either `headers`, `params`, or `withCredentials` configuration. If the URL of a request matches the `urlPattern` of a rule, the configuration will be applied to the request.
 
+  How to write `urlPattern`:
+  - For services on the same domain as MapStore, write only the path, for example `^\\/geoserver\\/` or `.*rest/geostore.*`. The rule applies to these services whether their URL is relative (`/geoserver/wms`) or absolute (`https://<mapstore-host>/geoserver/wms`).
+  - For services on another domain, write the full address from `^https://` to the `/` after the host name, escaping the dots, for example `^https://gs\\.example\\.com/geoserver/`. The rule applies only to that host.
+  - A single word is not a domain: a pattern such as `.*geoserver.*` applies only to the services on the MapStore domain, and not to `https://geoserver.example.com/`. For a server on another domain, write its domain in the pattern, for example `geoserver\\.example\\.com`.
+  - When a layer has several URLs, a rule applies only if it matches all of them.
+  - A request sent through the MapStore proxy uses the rules of the service it asks to the proxy, the same as a direct request to that service.
+
   **Available variable for template substitution (ES6 template syntax `${variable}`):**
   - `${securityToken}` - The current MapStore session token (automatically replaced)
 
@@ -190,7 +197,7 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 
     ```json
     {
-      "urlPattern": ".*internal-api.*",
+      "urlPattern": "^https://internal-api\\.example\\.com/",
       "withCredentials": true
     }
     ```
@@ -199,7 +206,7 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 
     ```json
     {
-      "urlPattern": ".*azure-blob.*",
+      "urlPattern": "^https://myaccount\\.blob\\.core\\.windows\\.net/",
       "expires": 1735689600,
       "params": {
         "sv": "2024-11-04",

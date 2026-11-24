@@ -196,35 +196,35 @@ describe('Test security utils methods', () => {
         setSecurityInfo(securityInfoToken);
 
         // Test basic authentication rule should be found and converted
-        let rule = SecurityUtils.getRequestConfigurationRule('http://www.some-site.com/index?parameter1=value1&parameter2=value2');
+        let rule = SecurityUtils.getRequestConfigurationRule('/some-site/index?parameter1=value1&parameter2=value2');
         expect(rule).toExist();
         expect(rule.urlPattern).toBe('.*some-site.*');
 
         // Test authkey authentication rule should be found
-        rule = SecurityUtils.getRequestConfigurationRule('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
+        rule = SecurityUtils.getRequestConfigurationRule('/some-site/geoserver?parameter1=value1&parameter2=value2');
         expect(rule).toExist();
 
         // Test that no rule matches
         rule = SecurityUtils.getRequestConfigurationRule('http://www.no-matching.com/?parameter1=value1&parameter2=value2');
         expect(rule).toNotExist();
 
-        // Test with array URL (single element) - should use first URL
-        rule = SecurityUtils.getRequestConfigurationRule(['http://www.some-site.com/index?parameter1=value1&parameter2=value2']);
+        // Test with array URL (single element)
+        rule = SecurityUtils.getRequestConfigurationRule(['/some-site/index?parameter1=value1&parameter2=value2']);
         expect(rule).toExist();
         expect(rule.urlPattern).toBe('.*some-site.*');
 
-        // Test with array URL (multiple elements) - should use first URL only, basepath never changes
+        // Test with array URL (multiple elements) - the rule applies to all the URLs
         rule = SecurityUtils.getRequestConfigurationRule([
-            'http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2',
-            'http://www.some-site.com/geoserver/api'
+            '/geoserver?parameter1=value1&parameter2=value2',
+            '/geoserver/api'
         ]);
         expect(rule).toExist();
         expect(rule.urlPattern).toBe('.*geoserver.*');
 
-        // Test that changing the order of URLs in array changes the result (only first URL matters)
+        // Test with other URLs that share the same rule
         rule = SecurityUtils.getRequestConfigurationRule([
-            'http://www.some-site.com/index',
-            'http://www.some-site.com/api'
+            '/some-site/index',
+            '/some-site/api'
         ]);
         expect(rule).toExist();
         expect(rule.urlPattern).toBe('.*some-site.*');
@@ -245,16 +245,16 @@ describe('Test security utils methods', () => {
         ConfigUtils.setConfigProp("useAuthenticationRules", true);
         ConfigUtils.setConfigProp('requestsConfigurationRules', requestConfigRules);
         // authkey authentication with no user
-        let urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
-        expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
+        let urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('/geoserver?parameter1=value1&parameter2=value2');
+        expect(urlWithAuthentication).toBe('/geoserver?parameter1=value1&parameter2=value2');
         // authkey authentication with user not providing a uuid
         setSecurityInfo(securityInfoA);
-        urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
-        expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
+        urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('/geoserver?parameter1=value1&parameter2=value2');
+        expect(urlWithAuthentication).toBe('/geoserver?parameter1=value1&parameter2=value2');
         // authkey authentication with a user providing a uuid
         setSecurityInfo(securityInfoC);
-        urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
-        expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=263c6917-543f-43e3-8e1a-6a0d29952f72');
+        urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('/geoserver?parameter1=value1&parameter2=value2');
+        expect(urlWithAuthentication).toBe('/geoserver?parameter1=value1&parameter2=value2&authkey=263c6917-543f-43e3-8e1a-6a0d29952f72');
         // basic authentication with a user providing a uuid
         setSecurityInfo(securityInfoC);
         urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/index?parameter1=value1&parameter2=value2');
@@ -263,8 +263,8 @@ describe('Test security utils methods', () => {
         ConfigUtils.setConfigProp("useAuthenticationRules", false);
         ConfigUtils.setConfigProp('requestsConfigurationRules', []);
         setSecurityInfo(securityInfoC);
-        urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
-        expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
+        urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('/geoserver?parameter1=value1&parameter2=value2');
+        expect(urlWithAuthentication).toBe('/geoserver?parameter1=value1&parameter2=value2');
     });
     it('test addAuthenticationParameter for authkey', () => {
         setSecurityInfo(securityInfoToken);
@@ -276,7 +276,7 @@ describe('Test security utils methods', () => {
         setSecurityInfo(securityInfoToken);
         ConfigUtils.setConfigProp("useAuthenticationRules", true);
         ConfigUtils.setConfigProp('authenticationRules', headerAuthenticationRules);
-        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null)).toEqual({'X-Auth-Token': 'goodtoken'});
+        expect(SecurityUtils.getAuthenticationHeaders("/header-site/something", null)).toEqual({'X-Auth-Token': 'goodtoken'});
     });
     it('test getAuthenticationHeaders using basic auth', () => {
         const creds = {username: "testuser", password: "testpass"};
@@ -347,7 +347,7 @@ describe('Test security utils methods', () => {
             ConfigUtils.setConfigProp('useAuthenticationRules', true);
             setSecurityInfo(securityInfoToken);
 
-            const result = SecurityUtils.getRequestConfigurationByUrl('https://example.com/api');
+            const result = SecurityUtils.getRequestConfigurationByUrl('/api');
             expect(result.headers).toExist();
             expect(result.headers.Authorization).toBe('Bearer goodtoken');
         });
@@ -363,7 +363,7 @@ describe('Test security utils methods', () => {
             ConfigUtils.setConfigProp('useAuthenticationRules', true);
             setSecurityInfo(securityInfoToken);
 
-            const result = SecurityUtils.getRequestConfigurationByUrl('https://example.com/geoserver/wms');
+            const result = SecurityUtils.getRequestConfigurationByUrl('/geoserver/wms');
             expect(result.params).toExist();
             expect(result.params.authkey).toBe('goodtoken');
         });
@@ -597,7 +597,7 @@ describe('Test security utils methods', () => {
             ];
             ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
 
-            const result = SecurityUtils.getAuthKeyParameter('https://example.com/api');
+            const result = SecurityUtils.getAuthKeyParameter('/api');
             expect(result).toBe('customAuthKey');
         });
 
@@ -622,7 +622,7 @@ describe('Test security utils methods', () => {
             setSecurityInfo(securityInfoToken);
 
             const existingParams = { param1: 'value1' };
-            const result = SecurityUtils.addAuthenticationParameter('https://geoserver.example.com/wms', existingParams);
+            const result = SecurityUtils.addAuthenticationParameter('/geoserver/wms', existingParams);
 
             expect(result).toExist();
             expect(result.param1).toBeTruthy();
@@ -642,7 +642,7 @@ describe('Test security utils methods', () => {
             setSecurityInfo(securityInfoToken);
 
             const originalParams = { param1: 'value1' };
-            const result = SecurityUtils.addAuthenticationParameter('https://geoserver.example.com/wms', originalParams);
+            const result = SecurityUtils.addAuthenticationParameter('/geoserver/wms', originalParams);
 
             expect(result).toExist();
             expect(originalParams).toEqual({ param1: 'value1' }); // Original unchanged
@@ -682,7 +682,7 @@ describe('Test security utils methods', () => {
             setSecurityInfo(securityInfoToken);
 
             const layerParams = {
-                SLD: 'http://geoserver.example.com/sld?LAYER=layer1'
+                SLD: '/geoserver/sld?LAYER=layer1'
             };
             const options = { securityToken: 'testtoken' };
 
@@ -711,7 +711,7 @@ describe('Test security utils methods', () => {
             ConfigUtils.setConfigProp('useAuthenticationRules', true);
             setSecurityInfo(securityInfoToken);
 
-            const result = SecurityUtils.getAuthenticationHeaders('https://api.example.com', null);
+            const result = SecurityUtils.getAuthenticationHeaders('/api', null);
             expect(result).toExist();
             expect(result.Authorization).toBe('Bearer goodtoken');
         });
@@ -806,7 +806,7 @@ describe('Test security utils methods', () => {
             ConfigUtils.setConfigProp('useAuthenticationRules', true);
             setSecurityInfo(securityInfoToken);
 
-            const url = 'http://geoserver.example.com/wms?LAYERS=layer1';
+            const url = '/geoserver/wms?LAYERS=layer1';
             const result = SecurityUtils.addAuthenticationToUrl(url);
             expect(result).toInclude('authkey=goodtoken');
         });
@@ -909,6 +909,223 @@ describe('Test security utils methods', () => {
                     done(ex);
                 }
             });
+        });
+    });
+
+    describe('request configuration rules and request origin', () => {
+        const APP_ORIGIN = window.location.origin;
+        const OTHER_ORIGIN = 'https://other.example.net';
+        afterEach(() => {
+            ConfigUtils.setConfigProp('requestsConfigurationRules', null);
+        });
+        it('applies application service rules to relative and absolute URLs of the application', () => {
+            const rules = [
+                { urlPattern: '.*rest/geostore.*', headers: { 'Authorization': 'Bearer ${securityToken}' } },
+                { urlPattern: '.*rest/config.*', headers: { 'Authorization': 'Bearer ${securityToken}' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('rest/geostore/resources')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${APP_ORIGIN}/rest/geostore/resources`)).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('rest/config/load/localConfig.json')).toEqual(rules[1]);
+        });
+        it('applies application service rules only to the application origin', () => {
+            const rules = [
+                { urlPattern: '.*rest/geostore.*', headers: { 'Authorization': 'Bearer ${securityToken}' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/rest/geostore/wms`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('//other.example.net/rest/geostore/wms')).toBe(undefined);
+        });
+        it('applies a relative path rule to the absolute URL of the same service', () => {
+            const rules = [
+                { urlPattern: '^\\/geoserver(_ui)?(\\/|\\?|$)', params: { authkey: '${securityToken}' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${APP_ORIGIN}/geoserver/wms?SERVICE=WMS`)).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${APP_ORIGIN}/geoserver_ui/ows`)).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${APP_ORIGIN}/geoserver-backup/wms`)).toBe(undefined);
+        });
+        it('applies a rule combining a relative path and hosts to the application and to the named hosts', () => {
+            const rules = [{
+                urlPattern: '(^|(https?:)?\\/\\/(platform\\.)?gis\\.(region|province)\\.example\\.org)?\\/geoserver(_ui)?(\\/|\\?|$)',
+                headers: { 'Authorization': 'Bearer ${securityToken}' }
+            }];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${APP_ORIGIN}/geoserver/wms`)).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://gis.region.example.org/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://platform.gis.province.example.org/geoserver_ui/ows')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/geoserver/wms`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('https://gis.region.example.org.other.example.net/geoserver/wms')).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/x//gis.region.example.org/geoserver/wms`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/x?u=//gis.region.example.org/geoserver/`)).toBe(undefined);
+        });
+        it('applies separate path and host rules to the application and to the named hosts', () => {
+            const rules = [
+                { urlPattern: '^\\/geoserver(_ui)?(\\/|\\?|$)', params: { authkey: '${securityToken}' } },
+                {
+                    urlPattern: '^(https?:)?\\/\\/(platform\\.)?gis\\.(region|province)\\.example\\.org\\/geoserver(_ui)?(\\/|\\?|$)',
+                    params: { authkey: '${securityToken}' }
+                }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${APP_ORIGIN}/geoserver/wms`)).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://gis.region.example.org/geoserver/wms')).toEqual(rules[1]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://platform.gis.province.example.org/geoserver_ui/ows')).toEqual(rules[1]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://gis.region.example.org.other.example.net/geoserver/wms')).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/geoserver/wms`)).toBe(undefined);
+        });
+        it('applies host rules to their services and not to URLs that contain the host in the path or query', () => {
+            const rules = [
+                { urlPattern: 'https://geoserver-dev.cloud.example.com/geoserver/.*', headers: { 'Authorization': 'Bearer service-token' } },
+                { urlPattern: 'https://storage.example.net/cog/.*', params: { sp: 'r', sig: 'signature' } },
+                { urlPattern: 'https://geonode.cloud.example.com/gs.*', params: { 'access_token': 'service-token' } },
+                { urlPattern: 'https://api.cloud.example.com/v1/.*', headers: { 'Authorization': 'Bearer service-token', 'x-api-key': 'service-key' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://geoserver-dev.cloud.example.com/geoserver/wms?SERVICE=WMS')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://storage.example.net/cog/image.tif')).toEqual(rules[1]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://geonode.cloud.example.com/gs/wms')).toEqual(rules[2]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://api.cloud.example.com/v1/items')).toEqual(rules[3]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/x?u=https://geoserver-dev.cloud.example.com/geoserver/`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/https://geoserver-dev.cloud.example.com/geoserver/wms`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/?https://storage.example.net/cog/`)).toBe(undefined);
+        });
+        it('applies host rules to requests that reference the same service in their parameters', () => {
+            const rules = [
+                { urlPattern: 'https://geoserver-dev.cloud.example.com/geoserver/.*', headers: { 'Authorization': 'Bearer service-token' } },
+                { urlPattern: '^.*wms-service\\.example\\.com.*', headers: { 'Authorization': 'Basic service-credentials' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://geoserver-dev.cloud.example.com/geoserver/wms?SLD=https://geoserver-dev.cloud.example.com/geoserver/rest/styles/roads.sld')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://wms-service.example.com/wms?LEGEND_URL=https://wms-service.example.com/legend.png')).toEqual(rules[1]);
+        });
+        it('applies host rules that also match request parameters', () => {
+            const rules = [
+                { urlPattern: 'https://ows.example.com/ows\\?.*layers=restricted', params: { key: 'service-key' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://ows.example.com/ows?service=WMS&layers=restricted')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://ows.example.com/ows?service=WMS&layers=public')).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/x?u=https://ows.example.com/ows?layers=restricted`)).toBe(undefined);
+        });
+        it('applies host rules written without the scheme', () => {
+            const rules = [
+                { urlPattern: 'gs\\.example\\.com/geoserver', params: { authkey: '${securityToken}' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://gs.example.com/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/x?u=gs.example.com/geoserver`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('https://other.example.net\\@gs.example.com/geoserver/wms')).toBe(undefined);
+        });
+        it('applies a host pattern without a closing slash also to longer host names', () => {
+            const rules = [
+                { urlPattern: '^.*wms-service\\.example\\.com.*', headers: { 'Authorization': 'Basic service-credentials' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://wms-service.example.com/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/wms-service.example.com`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(`${OTHER_ORIGIN}/?x=wms-service.example.com`)).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('https://wms-service.example.com.other.example.net/wms')).toEqual(rules[0]);
+        });
+        it('applies a pattern of one word to the application and not to other hosts with that word in the name', () => {
+            const rules = [
+                { urlPattern: '.*geoserver.*', params: { authkey: '${securityToken}' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(`${APP_ORIGIN}/geoserver/wms`)).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://geoserver.example.net/wms')).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('https://maps-geoserver.example.net/wms')).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('//geoserver.example.net/wms')).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('https://{s}.geoserver.example.net/{z}/{x}/{y}.png')).toBe(undefined);
+        });
+        it('applies a pattern to another host when it names at least two parts of the host name', () => {
+            const rules = [
+                { urlPattern: '.*\\.example\\.net/geoserver.*', params: { authkey: '${securityToken}' } },
+                { urlPattern: '.*\\.net/mapserver.*', params: { key: 'service-key' } },
+                { urlPattern: '.*:8080/ows.*', params: { key: 'service-key' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://tiles.example.net/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://tiles.example.net/mapserver/wms')).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule('https://tiles.example.net:8080/ows')).toBe(undefined);
+        });
+        it('applies a pattern that names a host of one part or an IP address', () => {
+            const rules = [
+                { urlPattern: '.*localhost:8080/geoserver.*', params: { authkey: '${securityToken}' } },
+                { urlPattern: '10\\.0\\.0\\.5:8080/geoserver', params: { authkey: '${securityToken}' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('http://localhost:8080/geoserver/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('http://10.0.0.5:8080/geoserver/wms')).toEqual(rules[1]);
+            expect(SecurityUtils.getRequestConfigurationRule('http://10.0.0.6:8080/geoserver/wms')).toBe(undefined);
+        });
+        it('applies to a request through the application proxy the rules of the requested service', () => {
+            const proxyUrl = ConfigUtils.getConfigProp('proxyUrl');
+            ConfigUtils.setConfigProp('proxyUrl', { url: 'proxy/?url=', useCORS: [] });
+            const rules = [
+                { urlPattern: '.*rest/geostore.*', headers: { 'Authorization': 'Bearer ${securityToken}' } },
+                { urlPattern: '^https://gs\\.example\\.com/geoserver/', params: { authkey: '${securityToken}' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            const results = [
+                'rest/geostore/data/1',
+                `proxy/?url=${encodeURIComponent('https://gs.example.com/geoserver/wms?SERVICE=WMS')}`,
+                `${APP_ORIGIN}/proxy/?url=https://gs.example.com/geoserver/wms`,
+                `proxy?url=${encodeURIComponent('https://gs.example.com/geoserver/wms')}`,
+                `proxy/?url=${encodeURIComponent(`${APP_ORIGIN}/rest/geostore/data/1`)}`,
+                `proxy/?url=${encodeURIComponent(`${OTHER_ORIGIN}/rest/geostore/data/1`)}`,
+                `proxy/?url=${OTHER_ORIGIN}/rest/geostore/data/1`,
+                `rest/geostore/../../proxy/?url=${OTHER_ORIGIN}/data`,
+                `proxy/?url=${encodeURIComponent(`proxy/?url=${APP_ORIGIN}/rest/geostore/data/1`)}`,
+                'proxy/?rest/geostore'
+            ].map(url => SecurityUtils.getRequestConfigurationRule(url));
+            ConfigUtils.setConfigProp('proxyUrl', proxyUrl);
+            expect(results).toEqual([rules[0], rules[1], rules[1], rules[1], rules[0], undefined, undefined, undefined, undefined, undefined]);
+        });
+        it('applies an anchored host pattern only to the named hosts', () => {
+            const rules = [
+                { urlPattern: '^https://(wms|ogc)-service\\.example\\.com/', headers: { 'Authorization': 'Basic service-credentials' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://wms-service.example.com/wms')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://ogc-service.example.com/ows')).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule('https://wms-service.example.com.other.example.net/wms')).toBe(undefined);
+        });
+        it('applies a rule to a layer with several URLs only when all URLs share it', () => {
+            const rules = [
+                { urlPattern: '.*geoserver.*', headers: { 'Authorization': 'Bearer ${securityToken}' } },
+                { urlPattern: '^https://(a|b)\\.tiles\\.example\\.com/', headers: { 'Authorization': 'Bearer service-token' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule(['/geoserver/wms', `${APP_ORIGIN}/geoserver/wms`])).toEqual(rules[0]);
+            expect(SecurityUtils.getRequestConfigurationRule(['https://a.tiles.example.com/wms', 'https://b.tiles.example.com/wms'])).toEqual(rules[1]);
+            expect(SecurityUtils.getRequestConfigurationRule(['/geoserver/wms', `${OTHER_ORIGIN}/geoserver/wms`])).toBe(undefined);
+            expect(SecurityUtils.getRequestConfigurationRule(['/geoserver/wms', 'https://a.tiles.example.com/wms'])).toBe(undefined);
+        });
+        it('applies a host rule to URL templates', () => {
+            const rules = [
+                { urlPattern: '^https://\\{s\\}\\.tiles\\.example\\.com/', params: { key: 'service-key' } }
+            ];
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            expect(SecurityUtils.getRequestConfigurationRule('https://{s}.tiles.example.com/{z}/{x}/{y}.png')).toEqual(rules[0]);
+        });
+        it('resolves request headers and parameters by request origin', () => {
+            setSecurityInfo({ token: 'session-token' });
+            ConfigUtils.setConfigProp('requestsConfigurationRules', [
+                { urlPattern: '.*geoserver.*', headers: { 'Authorization': 'Bearer ${securityToken}' }, params: { authkey: '${securityToken}' } }
+            ]);
+            expect(SecurityUtils.getRequestConfigurationByUrl(`${APP_ORIGIN}/geoserver/wms`)).toEqual({
+                headers: { 'Authorization': 'Bearer session-token' },
+                params: { authkey: 'session-token' }
+            });
+            expect(SecurityUtils.getRequestConfigurationByUrl(`${OTHER_ORIGIN}/geoserver/wms`)).toEqual({});
+            expect(SecurityUtils.getAuthenticationHeaders(['/geoserver/wms', `${OTHER_ORIGIN}/geoserver/wms`])).toBe(null);
+            expect(SecurityUtils.addAuthenticationParameter(['/geoserver/wms', `${OTHER_ORIGIN}/geoserver/wms`], { LAYERS: 'roads' })).toEqual({ LAYERS: 'roads' });
+            expect(SecurityUtils.addAuthenticationParameter(['/geoserver/wms', `${APP_ORIGIN}/geoserver/wms`], { LAYERS: 'roads' })).toEqual({ LAYERS: 'roads', authkey: 'session-token' });
         });
     });
 });
