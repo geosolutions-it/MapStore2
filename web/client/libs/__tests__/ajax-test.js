@@ -337,7 +337,7 @@ describe('Tests ajax library', () => {
             return [200, {}];
 
         });
-        axios.get('http://www.some-site.com/index?parameter1=value1&parameter2=value2').then(() => {
+        axios.get('/some-site/index?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch(e => {
 
@@ -359,7 +359,7 @@ describe('Tests ajax library', () => {
         });
         // basic authentication header available
         setSecurityInfo(securityInfoB);
-        axios.get('http://non-existent.mapstore2/youhavetouseacustomone?parameter1=value1&par2=v2').then(() => {
+        axios.get('/youhavetouseacustomone?parameter1=value1&par2=v2').then(() => {
             done();
         }).catch((e) => {
             done(e);
@@ -406,7 +406,7 @@ describe('Tests ajax library', () => {
             return [200, {}];
         });
         setSecurityInfo(securityInfoB);
-        axios.get('http://non-existent.mapstore2/imtokenized?parameter1=value1&par2=v2').then(() => {
+        axios.get('/imtokenized?parameter1=value1&par2=v2').then(() => {
             done();
         }).catch((e) => {
 
@@ -443,7 +443,7 @@ describe('Tests ajax library', () => {
             expect(config.headers.Authorization).toNotExist();
             return [200, {}];
         });
-        axios.get('http://non-existent.mapstore2/imtokenized?parameter1=value1&par2=v2').then(() => {
+        axios.get('/imtokenized?parameter1=value1&par2=v2').then(() => {
             done();
         }).catch((e) => {
             done(e);
@@ -509,7 +509,7 @@ describe('Tests ajax library', () => {
             return [200, {}];
 
         });
-        axios.get('http://www.useBrowserCredentials.com/useBrowserCredentials?parameter1=value1&parameter2=value2').then(() => {
+        axios.get('/useBrowserCredentials/index?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch( (e) => {
 
@@ -551,5 +551,62 @@ describe('Tests ajax library', () => {
             });
     });
 
-
+    describe('request configuration rules and request URL', () => {
+        const APP_ORIGIN = window.location.origin;
+        const rules = [
+            { urlPattern: '.*geoserver/.*', headers: { 'X-Service': 'application' } },
+            { urlPattern: '^https://gs\\.example\\.com/geoserver/', headers: { 'X-Service': 'gs' } }
+        ];
+        const getServiceHeader = (url, options) => {
+            let header;
+            mockAxios.onGet().reply(config => {
+                header = config.headers['X-Service'];
+                return [200, {}];
+            });
+            return axios.get(url, options).then(() => header);
+        };
+        beforeEach(() => {
+            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
+            setSecurityInfo(securityInfoB);
+        });
+        afterEach(() => {
+            ConfigUtils.setConfigProp('requestsConfigurationRules', null);
+        });
+        it('applies a path rule to the relative URL of an application service', (done) => {
+            getServiceHeader('/geoserver/wms').then(header => {
+                expect(header).toBe('application');
+                done();
+            }).catch(done);
+        });
+        it('applies a path rule to the absolute URL of an application service', (done) => {
+            getServiceHeader(`${APP_ORIGIN}/geoserver/wms`).then(header => {
+                expect(header).toBe('application');
+                done();
+            }).catch(done);
+        });
+        it('applies a rule that starts with the host to the absolute URL of the service', (done) => {
+            getServiceHeader('https://gs.example.com/geoserver/wfs?service=WFS').then(header => {
+                expect(header).toBe('gs');
+                done();
+            }).catch(done);
+        });
+        it('uses the rules of its own host for a service on another domain', (done) => {
+            getServiceHeader('https://other.example.net/geoserver/wms').then(header => {
+                expect(header).toBe(undefined);
+                done();
+            }).catch(done);
+        });
+        it('applies the rules to a relative URL combined with the baseURL', (done) => {
+            getServiceHeader('wfs', { baseURL: 'https://gs.example.com/geoserver/' }).then(header => {
+                expect(header).toBe('gs');
+                done();
+            }).catch(done);
+        });
+        it('applies the rules to an absolute URL as it is, also with a baseURL', (done) => {
+            getServiceHeader('https://other.example.net/geoserver/wms', { baseURL: 'https://gs.example.com/geoserver/' }).then(header => {
+                expect(header).toBe(undefined);
+                done();
+            }).catch(done);
+        });
+    });
 });

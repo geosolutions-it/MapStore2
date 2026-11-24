@@ -128,7 +128,7 @@ const createLayer = options => {
         extent = projection.getExtent();
     }
     let queryParameters = options.params ? options.params : {};
-    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
+    queryParameters = addAuthenticationParameter(urls, queryParameters, options.securityToken, options.security?.sourceId);
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
 
     // TODO: support tileSizes from  matrix

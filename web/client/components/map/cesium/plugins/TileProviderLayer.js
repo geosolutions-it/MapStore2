@@ -76,13 +76,28 @@ export function template(str, data) {
     });
 }
 
+/**
+ * Gets the URLs requested for each subdomain of a URL template.
+ * The subdomain is part of the request host, so request rules are checked on each of these URLs.
+ * @param {string} url URL template, for example `https://{s}.tiles.example.com/{z}/{x}/{y}.png`
+ * @param {string|string[]} [subdomains="abc"] subdomains, as a string of characters or a list
+ * @returns {string|string[]} one URL for each subdomain, or the URL itself when it has no `{s}` placeholder
+ */
+export const getSubdomainUrls = (url, subdomains = 'abc') => {
+    if (!url?.includes('{s}')) {
+        return url;
+    }
+    const values = typeof subdomains === 'string' ? subdomains.split('') : subdomains;
+    return values.map(subdomain => url.replace(/\{s\}/g, subdomain));
+};
+
 const create = (options) => {
     let [url, opt] = TileProvider.getLayerConfig(options.provider, options);
     let proxyUrl = ConfigUtils.getProxyUrl({});
     const cr = opt.credits;
 
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : opt.attribution;
-    const { headers, params } = getRequestConfigurationByUrl(options.url, null, options.security?.sourceId);
+    const { headers, params } = getRequestConfigurationByUrl(getSubdomainUrls(options.url, opt.subdomains), null, options.security?.sourceId);
     const resource = new Cesium.Resource({
         url: template(url, opt),
         queryParameters: params,

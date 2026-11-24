@@ -49,7 +49,7 @@ const createLayer = _options => {
     const options = WMTSUtils.parseTileMatrixSetOption(_options);
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     let queryParameters = wmtsToLeafletOptions(options) || {};
-    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
+    queryParameters = addAuthenticationParameter(urls, queryParameters, options.securityToken, options.security?.sourceId);
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const { tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
     return L.tileLayer.wmts(urls, queryParameters, {

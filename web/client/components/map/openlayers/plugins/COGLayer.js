@@ -21,8 +21,7 @@ function getSource(options) {
     let sources = [];
     let sourceOptions = {};
     if (options.sources && options.sources.length > 0) {
-        const firstSource = options.sources[0];
-        const {headers, params} = getRequestConfigurationByUrl(firstSource.url, null, options.security?.sourceId);
+        const {headers, params} = getRequestConfigurationByUrl(options.sources.map(source => source.url), null, options.security?.sourceId);
         if (headers) {
             sourceOptions.headers = headers;
         }

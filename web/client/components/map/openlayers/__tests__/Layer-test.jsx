@@ -2204,7 +2204,7 @@ describe('Openlayers layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            url: "http://sample.server/geoserver/wms"
+            url: "/geoserver/wms"
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         ConfigUtils.setConfigProp('authenticationRules', [
@@ -2247,9 +2247,9 @@ describe('Openlayers layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            url: "http://sample.server/geoserver/wms",
+            url: "/geoserver/wms",
             params: {
-                SLD: "http://sample.server/geoserver/rest/sld?test1=aaa"
+                SLD: "/geoserver/rest/sld?test1=aaa"
             }
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
@@ -2281,7 +2281,7 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getSource()).toBeTruthy();
         expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe("########-####-####-####-###########");
-        expect(layer.layer.getSource().getParams().SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
+        expect(layer.layer.getSource().getParams().SLD).toBe("/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
     });
     it('test wms security token', () => {
         const options = {
@@ -2291,7 +2291,7 @@ describe('Openlayers layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            url: "http://sample.server/geoserver/wms"
+            url: "/geoserver/wms"
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         ConfigUtils.setConfigProp('authenticationRules', [
@@ -2431,7 +2431,7 @@ describe('Openlayers layer', () => {
                     'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
                 }
             ],
-            url: 'http://sample.server/geoserver/gwc/service/wmts'
+            url: '/geoserver/gwc/service/wmts'
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         ConfigUtils.setConfigProp('authenticationRules', [
@@ -2460,7 +2460,7 @@ describe('Openlayers layer', () => {
 
         expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-####-####-###########"]);
+        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["/geoserver/gwc/service/wmts?ms2-authkey=########-####-####-####-###########"]);
 
         layer = ReactDOM.render(<OpenlayersLayer
             type="wmts"
@@ -2469,7 +2469,7 @@ describe('Openlayers layer', () => {
             securityToken=""/>, document.getElementById("container"));
         expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts"]);
+        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["/geoserver/gwc/service/wmts"]);
 
 
         layer = ReactDOM.render(<OpenlayersLayer
@@ -2480,7 +2480,7 @@ describe('Openlayers layer', () => {
 
         expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-$$$$-####-###########"]);
+        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["/geoserver/gwc/service/wmts?ms2-authkey=########-####-$$$$-####-###########"]);
 
 
     });

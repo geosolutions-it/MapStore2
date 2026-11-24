@@ -310,18 +310,164 @@ export const getRequestConfigurationRules = () => {
  * @param {string|string[]} url - The URL to match against rules
  * @returns {Object|null} Matching rule or null
  */
+const URL_TEMPLATE_PLACEHOLDER = /\{[^}]*\}/g;
+const URL_TEMPLATE_MARKER = /msplaceholder(\d+)/g;
+
+/**
+ * Resolves a request URL against the page.
+ * Template placeholders such as {s} are not valid in a host name,
+ * so they are resolved as markers and restored in the returned parts.
+ * @param {string} url URL of the request, relative or absolute
+ * @returns {object} origin, pathname and search of the URL, and if it is on the application origin
+ */
+const resolveRequestUrl = (url) => {
+    const placeholders = url.match(URL_TEMPLATE_PLACEHOLDER) ?? [];
+    let count = 0;
+    try {
+        const resolved = new window.URL(url.replace(URL_TEMPLATE_PLACEHOLDER, () => `msplaceholder${count++}`), document.baseURI);
+        const restore = (text) => text.replace(URL_TEMPLATE_MARKER, (marker, index) => placeholders[index] ?? marker);
+        return {
+            origin: restore(resolved.origin),
+            pathname: restore(resolved.pathname),
+            search: restore(resolved.search),
+            isApplicationOrigin: resolved.origin === window.location.origin
+        };
+    } catch (e) {
+        return null;
+    }
+};
+
+const PLACEHOLDER_HOST_PART = 'invalid';
+const PLACEHOLDER_ORIGIN = `https://domain.${PLACEHOLDER_HOST_PART}`;
+const ORIGIN_PARTS = /^(.*:\/\/)(.*?)(:\d+)?$/;
+
+/**
+ * Gets the origins a pattern is compared with, to know if it names the host of an origin:
+ * a placeholder domain, and the origin with only one part of its host name kept,
+ * once for each part (`gs.example.com` gives `gs.invalid.invalid`, `invalid.example.invalid` and `invalid.invalid.com`).
+ * A host name of one part, such as `localhost`, is compared with the placeholder domain only.
+ * @param {string} origin origin of the request URL
+ * @returns {string[]} the origins to compare
+ */
+const getComparisonOrigins = (origin) => {
+    const [, scheme, host, port = ''] = origin.match(ORIGIN_PARTS) ?? [];
+    const hostParts = host?.split('.') ?? [];
+    const singlePartOrigins = hostParts.length > 1
+        ? hostParts.map((kept, keptIndex) =>
+            scheme + hostParts.map((part, index) => index === keptIndex ? kept : PLACEHOLDER_HOST_PART).join('.') + port)
+        : [];
+    return [PLACEHOLDER_ORIGIN, ...singlePartOrigins];
+};
+
+/**
+ * Checks if a pattern matches a URL because it names the host of the URL.
+ * The pattern is tested, free and anchored at the start, on the service address and on the full URL,
+ * then again on the comparison origins: the pattern names the host when none of them matches,
+ * that is when the match needs at least two parts of the host name.
+ * @param {string} urlPattern pattern of the rule
+ * @param {object} url resolved parts of the request URL
+ * @returns {boolean} true when the pattern names the host of the URL
+ */
+const matchesOrigin = (urlPattern, url) => {
+    const patterns = [new RegExp(urlPattern, "i"), new RegExp(`^(?:${urlPattern})`, "i")];
+    const targets = [url.pathname, url.pathname + url.search];
+    const comparisonOrigins = getComparisonOrigins(url.origin);
+    return patterns.some(pattern => targets.some(target =>
+        pattern.test(url.origin + target) && !comparisonOrigins.some(origin => pattern.test(origin + target))));
+};
+
+/**
+ * Checks if a request configuration rule applies to a URL.
+ * For the application origin, the pattern is tested on the URL and on its path,
+ * so a path pattern applies to relative and absolute URLs of the application.
+ * For another origin, the rule applies only when the pattern matches because of that origin,
+ * that is when the pattern names the host of the service.
+ * @param {object} rule request configuration rule
+ * @param {string} url URL of the request, relative or absolute
+ * @returns {boolean} true when the rule applies to the URL
+ */
+const isRuleMatchingUrl = (rule, url) => {
+    const resolved = resolveRequestUrl(url);
+    if (!resolved) {
+        return false;
+    }
+    const pattern = new RegExp(rule.urlPattern, "i");
+    if (resolved.isApplicationOrigin) {
+        return pattern.test(url) || pattern.test(resolved.pathname + resolved.search);
+    }
+    return pattern.test(url) && matchesOrigin(rule.urlPattern, resolved);
+};
+
+const getServletPath = (pathname) => pathname.replace(/;[^/]*/g, '').replace(/\/+/g, '/').replace(/\/$/, '');
+
+/**
+ * Gets the URL that a request asks to the application proxy.
+ * @param {string} url URL of the request, relative or absolute
+ * @returns {string} the URL passed to the proxy, or null when the request is not for the proxy
+ */
+const getProxyRequestTarget = (url) => {
+    const proxyUrl = ConfigUtils.getProxyUrl();
+    const proxy = isString(proxyUrl) ? proxyUrl : proxyUrl?.url;
+    if (!proxy) {
+        return null;
+    }
+    try {
+        const proxyLocation = new window.URL(proxy, document.baseURI);
+        const requestLocation = new window.URL(url, document.baseURI);
+        const proxyPath = getServletPath(proxyLocation.pathname);
+        const requestPath = getServletPath(requestLocation.pathname);
+        if (requestLocation.origin !== proxyLocation.origin || !(requestPath === proxyPath || requestPath.startsWith(`${proxyPath}/`))) {
+            return null;
+        }
+        const parameter = [...proxyLocation.searchParams.keys()].pop();
+        return requestLocation.searchParams.get(parameter) ?? '';
+    } catch (e) {
+        return null;
+    }
+};
+
+/**
+ * Checks if a request configuration rule applies to a request.
+ * A request to the application proxy uses the rules of the URL it asks to the proxy,
+ * so a service gets the same rules when it is requested directly or through the proxy.
+ * @param {object} rule request configuration rule
+ * @param {string} url URL of the request, relative or absolute
+ * @returns {boolean} true when the rule applies to the request
+ */
+export const isRequestConfigurationRuleMatching = (rule, url) => {
+    if (!rule?.urlPattern || !isString(url)) {
+        return false;
+    }
+    const proxyTarget = getProxyRequestTarget(url);
+    if (proxyTarget === null) {
+        return isRuleMatchingUrl(rule, url);
+    }
+    // the proxy is asked for one service: a target that is the proxy again has no rules
+    return getProxyRequestTarget(proxyTarget) === null && isRuleMatchingUrl(rule, proxyTarget);
+};
+
+const findRequestConfigurationRule = (rules, url) =>
+    head(rules.filter(rule => isRequestConfigurationRuleMatching(rule, url)));
+
+/**
+ * Gets the request configuration rule that applies to a URL.
+ * The first rule that matches, in configuration order, is returned.
+ * A layer with several URLs (for example tile servers) shares one request configuration,
+ * so all of its URLs must match the same rule.
+ * @param {string|string[]} url URL of the request, or all the URLs of a layer. With several URLs, the rule is returned only when every URL matches the same rule.
+ * @returns {object} the matching rule, or undefined when no rule applies
+ */
 export const getRequestConfigurationRule = (url) => {
-    const _url = head(castArray(url ?? [])) ?? "";
     const rules = getRequestConfigurationRules();
-    return head(rules.filter(
-        rule => rule && rule.urlPattern && _url.match(new RegExp(rule.urlPattern, "i"))
-    ));
+    const [rule, ...otherRules] = castArray(url ?? []).map(current => findRequestConfigurationRule(rules, current ?? ""));
+    // a layer with several URLs shares one request configuration across all of them
+    return otherRules.every(otherRule => otherRule === rule) ? rule : undefined;
 };
 
 /**
  * Gets the authentication method for a given URL based on request configuration rules.
  * Infers the method type from the rule structure for backward compatibility.
- * @param {string} url - The URL to check.
+ * @param {string|string[]} url URL of the request, or all the URLs of a layer. With several URLs, the rule is returned only when every URL matches the same rule.
  * @returns {string} The inferred authentication method.
  */
 export function getAuthenticationMethod(url) {
@@ -407,7 +553,7 @@ const basicAuthorizationHeader = (sourceId) => {
 /**
  * Gets request configuration (headers and params) for a given URL
  * This is the main function that centralizes all request configuration logic
- * @param {string} url - The URL to get configuration for
+ * @param {string|string[]} url URL of the request, or all the URLs of a layer. With several URLs, the rule is returned only when every URL matches the same rule.
  * @param {string} securityToken - Optional security token override
  * @param {string} [sourceId] - Optional source ID for sessionStorage-based credentials
  * @returns {Object} Object containing headers and/or params
@@ -444,6 +590,13 @@ export const getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     };
 };
 
+/**
+ * Checks if a URL gets headers or parameters from the request configuration.
+ * @param {string|string[]} url URL of the request, or all the URLs of a layer. With several URLs, the rule is returned only when every URL matches the same rule.
+ * @param {string} [securityToken] optional security token override
+ * @param {string} [sourceId] optional source ID for sessionStorage-based credentials
+ * @returns {boolean} true when headers or parameters apply
+ */
 export const hasRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     const { headers, params } = getRequestConfigurationByUrl(url, securityToken, sourceId);
     return !!(headers || params);
@@ -464,6 +617,13 @@ export function getAuthKeyParameter(url) {
     return 'authkey';
 }
 
+/**
+ * Gets the authentication headers for a URL from the request configuration.
+ * @param {string|string[]} url URL of the request, or all the URLs of a layer. With several URLs, the rule is returned only when every URL matches the same rule.
+ * @param {string} [securityToken] optional security token override
+ * @param {object} [security] layer security options, with the optional `sourceId` of stored credentials
+ * @returns {object} the headers, or null when no headers apply
+ */
 export function getAuthenticationHeaders(url, securityToken, security) {
     const requestConfig = getRequestConfigurationByUrl(url, securityToken, security?.sourceId);
     if (!isEmpty(requestConfig.headers)) {
@@ -482,6 +642,11 @@ export function clearNilValuesForParams(params = {}) {
 /**
  * This method will add query parameter based authentications to an object
  * containing query parameters.
+ * @param {string|string[]} url URL of the request, or all the URLs of a layer. With several URLs, the rule is returned only when every URL matches the same rule.
+ * @param {object} parameters query parameters to extend
+ * @param {string} [securityToken] optional security token override
+ * @param {string} [sourceId] optional source ID for sessionStorage-based credentials
+ * @returns {object} the query parameters with the authentication parameters added
  */
 export function addAuthenticationParameter(url, parameters, securityToken, sourceId) {
     let params = {...(parameters ?? {})};
@@ -550,6 +715,7 @@ const SecurityUtils = {
     getRequestConfigurationByUrl,
     getRequestConfigurationRules,
     getRequestConfigurationRule,
+    isRequestConfigurationRuleMatching,
     getAuthenticationMethod,
     isRequestConfigurationActivated,
     convertAuthenticationRulesToRequestConfiguration,
