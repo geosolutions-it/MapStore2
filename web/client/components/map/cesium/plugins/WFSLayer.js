@@ -205,6 +205,10 @@ const createLayer = (options, map) => {
             if (loadingBbox) {
                 map.camera.moveEnd.removeEventListener(loadingBbox);
             }
+            if (bboxTimeout) {
+                clearTimeout(bboxTimeout);
+                bboxTimeout = undefined;
+            }
         }
     };
     _layerRef = layerObj;
