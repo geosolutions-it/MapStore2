@@ -1705,6 +1705,36 @@ describe('Cesium layer', () => {
         expect(cmp.layer.styledFeatures._queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
     });
+    it('does not request features after a wfs layer with the bbox strategy is removed', (done) => {
+        mockAxios.onPost('/ows').reply(200, { type: 'FeatureCollection', features: [] });
+        map.camera.setView({
+            destination: Cesium.Cartesian3.fromDegrees(0, 0, 1000000),
+            orientation: { heading: 0, pitch: -Math.PI / 2, roll: 0 }
+        });
+        ReactDOM.render(<CesiumLayer
+            type="wfs"
+            options={{
+                type: 'wfs',
+                url: '/ows',
+                name: 'trees',
+                id: 'qgis-wfs',
+                visibility: true,
+                serverType: 'no-vendor',
+                strategy: 'bbox'
+            }}
+            map={map}/>, document.getElementById('container'));
+        map.camera.moveEnd.raiseEvent();
+        ReactDOM.unmountComponentAtNode(document.getElementById('container'));
+        // the bbox request is debounced by 300ms after the camera stops
+        setTimeout(() => {
+            try {
+                expect(mockAxios.history.post.length).toBe(0);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, 500);
+    });
     it('recreates a wfs layer when its URL changes', () => {
         const options = {
             type: 'wfs',
