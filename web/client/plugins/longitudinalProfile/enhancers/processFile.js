@@ -142,7 +142,8 @@ export default compose(
                 })
             ).combineLatest(
                 warnings$
-                    .scan((warnings = [], warning) => ([...warnings, warning]), [])
+                    .merge(drop$.mapTo(null)) // a new drop resets the warnings of the previous one
+                    .scan((warnings, warning) => warning ? [...warnings, warning] : [], [])
                     .startWith(undefined),
                 (p1, warnings) => ({
                     ...p1,
