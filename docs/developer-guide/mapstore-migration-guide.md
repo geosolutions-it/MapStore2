@@ -40,6 +40,14 @@ In your project, you should update the `guava.version` property from version `32
 +        <guava.version>33.7.2-jre</guava.version>
 ```
 
+### Request configuration rules and the application domain
+
+A `urlPattern` written as a path (for example `^\\/geoserver\\/` or `.*rest/geostore.*`) now matches the services of the application domain in both relative and absolute form, so the same rule covers `/geoserver/wms` and `https://<mapstore-host>/geoserver/wms`.
+
+For a service on another domain, a rule applies only when its pattern names the host of the service, as in `^https://gs\\.example\\.com/geoserver/`. A pattern that does not name any host, such as `.*geoserver.*`, applies only to the application domain: to keep sending headers or parameters to a GeoServer on another domain, add its host to the pattern. One word of the host name is not enough to name it: for `https://geoserver.example.com/` write `geoserver\\.example\\.com/`.
+
+The default rules need no change. See [requestsConfigurationRules](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/local-config/#explanation-of-some-config-properties) for details.
+
 ## Migration from 2026.02.02 to 2026.03.00
 
 ### Set minimum NodeJS version to 22

@@ -917,8 +917,8 @@ export const setCustomUtils = (type, fun) => {
 
 export const getAuthenticationParam = options => {
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
-    // Use first URL since all URLs in array should have same auth config
-    return addAuthenticationParameter(urls[0] || '', {}, options.securityToken, options.security?.sourceId);
+    // the layer shares one request configuration, so the rule must apply to all of its URLs
+    return addAuthenticationParameter(urls, {}, options.securityToken, options.security?.sourceId);
 };
 /**
  * Removes google backgrounds and select an alternative one as visible

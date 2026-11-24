@@ -146,8 +146,8 @@ const createLayer = (options, map, mapId) => {
     }
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     let queryParameters = wmsToOpenlayersOptions(options) || {};
-    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
-    const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
+    queryParameters = addAuthenticationParameter(urls, queryParameters, options.securityToken, options.security?.sourceId);
+    const headers = getAuthenticationHeaders(urls, options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
     if (options.singleTile && !vectorFormat) {
         return new ImageLayer({

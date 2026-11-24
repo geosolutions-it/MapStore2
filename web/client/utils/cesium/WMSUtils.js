@@ -7,7 +7,7 @@
  */
 
 import * as Cesium from 'cesium';
-import { isArray, castArray } from 'lodash';
+import { isArray } from 'lodash';
 import { addAuthenticationParameter, addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
 import { getProxyUrl } from "../ProxyUtils";
 import ConfigUtils from "../ConfigUtils";
@@ -82,7 +82,7 @@ export const getProxy = (options) => {
  */
 export const wmsToCesiumOptionsBIL = (layer) => {
     const url = layer.url;
-    const headers = getAuthenticationHeaders(castArray(url)[0], layer.securityToken, layer.security);
+    const headers = getAuthenticationHeaders(url, layer.securityToken, layer.security);
     const params = getAuthenticationParam(layer);
     // specific options for terrain provider now are inside the options parameter
     // we still use layer object for retrocompatibility
@@ -114,8 +114,8 @@ export function wmsToCesiumOptions(options) {
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
-    const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
-    params = addAuthenticationParameter(urls[0], params, options.securityToken);
+    const headers = getAuthenticationHeaders(urls, options.securityToken, options.security);
+    params = addAuthenticationParameter(urls, params, options.securityToken);
     return {
         url: new Cesium.Resource({
             url: "{s}",

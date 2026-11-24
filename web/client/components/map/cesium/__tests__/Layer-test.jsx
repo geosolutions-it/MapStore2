@@ -848,7 +848,7 @@ describe('Cesium layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            url: "http://sample.server/geoserver/wms"
+            url: "/geoserver/wms"
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         ConfigUtils.setConfigProp('authenticationRules', [
@@ -887,7 +887,7 @@ describe('Cesium layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            url: "http://sample.server/geoserver/wms"
+            url: "/geoserver/wms"
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         ConfigUtils.setConfigProp('authenticationRules', [
@@ -1010,7 +1010,7 @@ describe('Cesium layer', () => {
                     }
                 }]
             },
-            "url": "http://sample.server/geoserver/gwc/service/wmts"
+            "url": "/geoserver/gwc/service/wmts"
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         ConfigUtils.setConfigProp('authenticationRules', [

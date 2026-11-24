@@ -10,7 +10,6 @@ import uniqBy from 'lodash/uniqBy';
 import isArray from 'lodash/isArray';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
-import head from 'lodash/head';
 import castArray from 'lodash/castArray';
 import isEmpty from 'lodash/isEmpty';
 import { v4 as uuidv4 } from 'uuid';
@@ -29,7 +28,8 @@ import {
 } from '../actions/security';
 import {
     getCredentials,
-    convertAuthenticationRulesToRequestConfiguration
+    convertAuthenticationRulesToRequestConfiguration,
+    isRequestConfigurationRuleMatching
 } from '../utils/SecurityUtils';
 import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
 import { layersSelector } from '../selectors/layers';
@@ -269,10 +269,11 @@ export const refreshLayersOnRulesUpdateEpic = (action$, store) =>
             // Find layers that should be refreshed based on matching changed rules
             const layersToUpdate = [];
             layers.forEach(layer => {
-                const url = head(castArray(layer.url));
+                const urls = castArray(layer.url ?? []);
 
-                // Check if any layer URL matches any changed rule pattern
-                const shouldRefresh = changedPatterns.some(pattern => url?.match(new RegExp(pattern, "i")));
+                // a changed rule applies to the layer when it applies to one of its URLs
+                const shouldRefresh = changedPatterns.some(urlPattern =>
+                    urls.some(url => isRequestConfigurationRuleMatching({ urlPattern }, url)));
                 if (shouldRefresh) layersToUpdate.push(layer);
             });
 

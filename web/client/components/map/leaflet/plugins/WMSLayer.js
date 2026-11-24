@@ -58,7 +58,7 @@ Layers.registerType('wms', {
         }
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         let queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
-        queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
+        queryParameters = addAuthenticationParameter(urls, queryParameters, options.securityToken, options.security?.sourceId);
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
         }
@@ -75,7 +75,7 @@ Layers.registerType('wms', {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
             let queryParameters = wmsToLeafletOptions(newOptions) || {};
-            queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, newOptions.securityToken, newOptions.security?.sourceId);
+            queryParameters = addAuthenticationParameter(urls, queryParameters, newOptions.securityToken, newOptions.security?.sourceId);
             if (newOptions.singleTile) {
                 // return the nonTiledLayer
                 newLayer = L.nonTiledLayer.wmsCustom(urls[0], queryParameters);

@@ -7,7 +7,7 @@
  */
 
 import axios from 'axios';
-import combineURLs from 'axios/lib/helpers/combineURLs';
+import buildFullPath from 'axios/lib/core/buildFullPath';
 import ConfigUtils from '../utils/ConfigUtils';
 import {
     getAuthenticationMethod,
@@ -50,7 +50,8 @@ function addAuthenticationToAxios(axiosConfig) {
     if (!axiosConfig || !axiosConfig.url) {
         return axiosConfig;
     }
-    const axiosUrl = combineURLs(axiosConfig.baseURL || '', axiosConfig.url);
+    // the URL of the request, built as axios does: the baseURL applies only to relative URLs
+    const axiosUrl = buildFullPath(axiosConfig.baseURL, axiosConfig.url, axiosConfig.allowAbsoluteUrls);
 
     // Extract custom sourceId from axios config if provided
     const sourceId = axiosConfig._msAuthSourceId;

@@ -9,6 +9,7 @@ import expect from 'expect';
 import cloneDeep from 'lodash/cloneDeep';
 import { v1 as uuidv1 } from 'uuid';
 import * as LayersUtils from '../LayersUtils';
+import ConfigUtils from '../ConfigUtils';
 import { readZip, shpToGeoJSON } from '../FileUtils';
 import axios from '../../libs/ajax';
 import { DEFAULT_DOCUMENTS_FEATURE_INFO } from '../FeatureInfoAttributeUtils';
@@ -1300,6 +1301,26 @@ describe('LayersUtils', () => {
         expect(LayersUtils.getAuthenticationParam({
             url: 'http://url/'
         })).toEqual({});
+    });
+    describe('getAuthenticationParam with request rules', () => {
+        afterEach(() => {
+            ConfigUtils.setConfigProp('requestsConfigurationRules', null);
+        });
+        it('adds the rule parameters when the rule applies to every URL of the layer', () => {
+            ConfigUtils.setConfigProp('requestsConfigurationRules', [{ urlPattern: 'tiles\\.example\\.com/', params: { key: 'service-key' } }]);
+            expect(LayersUtils.getAuthenticationParam({
+                url: 'https://a.tiles.example.com/wms'
+            })).toEqual({ key: 'service-key' });
+            expect(LayersUtils.getAuthenticationParam({
+                url: ['https://a.tiles.example.com/wms', 'https://b.tiles.example.com/wms']
+            })).toEqual({ key: 'service-key' });
+        });
+        it('adds no parameters when one URL of the layer is on another host', () => {
+            ConfigUtils.setConfigProp('requestsConfigurationRules', [{ urlPattern: 'tiles\\.example\\.com/', params: { key: 'service-key' } }]);
+            expect(LayersUtils.getAuthenticationParam({
+                url: ['https://a.tiles.example.com/wms', 'https://maps.example.net/wms']
+            })).toEqual({});
+        });
     });
     it('getURLs', () => {
         expect(LayersUtils.getURLs(['http://url/?delete=param'])).toEqual(['http://url/']);
