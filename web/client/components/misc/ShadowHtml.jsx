@@ -17,6 +17,9 @@ const CONTAINED_LAYOUT = { contain: 'paint', overflow: 'auto' };
  * of leaking into the whole document, and the application theme does not override
  * the server-provided styling. The host also contains the layout: the fragment is
  * painted and positioned inside the host box, and content wider than it scrolls.
+ * The fragment has a shadow root of its own, nested in the one of the host: the rules
+ * it writes for its host (`:host`, `@scope`) style the box of the fragment, and the
+ * layout of the host stays the one set here.
  *
  * @param {string} html - untrusted HTML string
  */
@@ -28,7 +31,9 @@ const ShadowHtml = ({ html, id, style = { color: '#000000' } }) => {
             return;
         }
         const root = host.shadowRoot || host.attachShadow({ mode: 'open' });
-        root.innerHTML = sanitizeHtml(html);
+        const fragment = root.firstElementChild || root.appendChild(document.createElement('div'));
+        const fragmentRoot = fragment.shadowRoot || fragment.attachShadow({ mode: 'open' });
+        fragmentRoot.innerHTML = sanitizeHtml(html);
     }, [html]);
     // inherited properties (color, font) cross the shadow boundary from the host,
     // so the default text color is preserved for the injected content.

@@ -44,11 +44,11 @@ describe('Identity Viewers', () => {
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-        // content is rendered inside a shadow root, so it is not reachable via the
-        // host's normal DOM queries — query the shadow root instead.
+        // content is rendered inside a shadow root nested in the one of the host, so it is
+        // not reachable via the host's normal DOM queries — query that shadow root instead.
         expect(cmpDom.getElementsByClassName("testclass").length).toBe(0);
         expect(cmpDom.shadowRoot).toExist();
-        expect(cmpDom.shadowRoot.querySelectorAll(".testclass").length).toBe(1);
+        expect(cmpDom.shadowRoot.firstElementChild.shadowRoot.querySelectorAll(".testclass").length).toBe(1);
     });
 
     it('HTMLViewer scopes the response <style> block inside the shadow root', () => {
@@ -56,9 +56,10 @@ describe('Identity Viewers', () => {
         const cmp = ReactDOM.render(<HTMLViewer response={response} />, document.getElementById("container"));
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom.shadowRoot).toExist();
+        const fragmentRoot = cmpDom.shadowRoot.firstElementChild.shadowRoot;
         // <style> preserved (regression #12618) but confined to the shadow root
-        expect(cmpDom.shadowRoot.querySelector("style")).toExist();
-        expect(cmpDom.shadowRoot.querySelector("table.featureInfo")).toExist();
+        expect(fragmentRoot.querySelector("style")).toExist();
+        expect(fragmentRoot.querySelector("table.featureInfo")).toExist();
         // and it does NOT leak into the main document (light DOM has no style,
         // and no document stylesheet carries the WMS rule)
         expect(cmpDom.querySelector("style")).toNotExist();
