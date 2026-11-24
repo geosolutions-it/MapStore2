@@ -10,6 +10,7 @@ import { isEmpty, isEqual, omit, isArray, isObject, isString, castArray, some } 
 import merge from 'lodash/fp/merge';
 import { v1 as uuid } from 'uuid';
 import MapUtils from './MapUtils';
+import { stripWidgetLayerVersions } from './LayerRefreshUtils';
 
 // ******************************************
 //              RESOURCE UTILS
@@ -294,9 +295,10 @@ export const compareDashboardDataChanges = (currentDashboardData, initialDashboa
         return false;
     }
 
-    const originalWidgets = initialDashboardData?.widgets || [];
+    const originalWidgets = (initialDashboardData?.widgets || []).map(stripWidgetLayerVersions);
     const originalLayouts = initialDashboardData?.layouts || [];
-    const widgets = currentDashboardData?.widgets || [];
+    const currentWidgets = currentDashboardData?.widgets || [];
+    const widgets = (Array.isArray(currentWidgets) ? currentWidgets : Object.values(currentWidgets)).map(stripWidgetLayerVersions);
     const layouts = currentDashboardData?.layouts || [];
 
     // Layouts that have a dashboard link

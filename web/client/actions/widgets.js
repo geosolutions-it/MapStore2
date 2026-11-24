@@ -17,6 +17,7 @@ export const INIT = "WIDGETS:INIT";
 export const UPDATE = "WIDGETS:UPDATE";
 export const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
 export const UPDATE_LAYER = "WIDGETS:UPDATE_LAYER";
+export const UPDATE_LAYER_PROPERTIES = "WIDGETS:UPDATE_LAYER_PROPERTIES";
 export const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 export const DELETE = "WIDGETS:DELETE";
 export const REPLACE = "WIDGETS:REPLACE";
@@ -150,6 +151,19 @@ export const updateWidgetLayer = (layer) => ({
     type: UPDATE_LAYER,
     layer
 });
+
+/**
+ * Patch layers at explicit widget paths, preserving widget-specific configuration.
+ * @function updateWidgetLayerProperties
+ * @param {object[]} updates Layer patches to apply in one dispatch.
+ * @param {string} [updates[].target='floating'] Widget container target.
+ * @param {string} updates[].widgetId ID of the widget containing the layer.
+ * @param {Array<string|number>} updates[].path Layer path relative to the widget.
+ * @param {object} updates[].properties Layer properties to merge; undefined values remove properties.
+ * @returns {object} UPDATE_LAYER_PROPERTIES action.
+ * @memberof actions
+ */
+export const updateWidgetLayerProperties = updates => ({ type: UPDATE_LAYER_PROPERTIES, updates });
 /**
  * Deletes a widget from the passed target
  * @param  {object} widget The widget template to start with
@@ -279,8 +293,11 @@ export const toggleConnection = (active, availableDependencies, options, target)
 export const setPage = (step) => changeEditorSetting("step", step);
 
 /**
- * ex
- * @return {[type]} [description]
+ * Export widget data as CSV.
+ * @param {object} options Export options.
+ * @param {object[]} [options.data=[]] Rows to export.
+ * @param {string} [options.title='export'] Export file title.
+ * @returns {object} EXPORT_CSV action.
  */
 export const exportCSV = ({data = [], title = "export"}) => ({
     type: EXPORT_CSV,

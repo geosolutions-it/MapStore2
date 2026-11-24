@@ -1,0 +1,251 @@
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-autorefresh-divider {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .ms-autorefresh-wrapper {
+        .border-color-var(@theme-vars[main-border-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-autorefresh-button {
+        background-color: transparent;
+        .color-var(@theme-vars[main-color]);
+
+        &:hover,
+        &:focus,
+        &:active,
+        &:active:focus {
+            .background-color-var(@theme-vars[main-hover-bg]);
+            color: inherit;
+        }
+    }
+
+    .ms-autorefresh-form-container .ms-autorefresh-form-group,
+    .ms-autorefresh-layers-summary .ms-autorefresh-layer-summary__row {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        &:hover {
+            .border-color-var(@theme-vars[focus-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
+.ms-autorefresh-wrapper {
+    display: flex;
+    gap: 0.5ch;
+    align-items: center;
+    min-height: 24px;
+    flex-wrap: wrap;
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.ms-autorefresh-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    width: 20px;
+    border: none;
+    box-shadow: none;
+    text-decoration: none;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &:active:focus {
+        box-shadow: none;
+        outline: none;
+        border: none;
+        text-decoration: none;
+    }
+}
+
+.ms-autorefresh-informations {
+    display: flex;
+    align-items: center;
+}
+
+.ms-autorefresh-form-container{
+    display: flex;
+    flex-direction: column;
+    width: 560px;
+    max-width: calc(100vw - 68px);
+    max-height: 65vh;
+
+    form {
+        &:first-of-type {
+            margin-bottom: 1ch;
+            flex-shrink: 0;
+        }
+        &:last-of-type {
+            gap: 0.5ch;
+        }
+        .form-group {
+            margin: 0;
+        }
+    }
+
+    .ms-autorefresh-selected-layers {
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+
+    .ms-autorefresh-form-group {
+        display: grid;
+        align-items: center;
+        column-gap: 0.5ch;
+        grid-template-areas:
+            "text input button"
+            "text input button";
+        grid-template-columns: 1fr 100px auto;
+
+        padding: 4px 8px;
+        transition: box-shadow, border 0.3s;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 4px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+
+        &:hover {
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.12);
+        }
+
+        &.ms-autorefresh-form-group-hidden {
+            .ms-autorefresh-form-group__title,
+            .ms-autorefresh-form-group__input,
+            .ms-autorefresh-form-group__summary {
+                opacity: 0.6;
+            }
+        }
+
+        .ms-autorefresh-form-group__button {
+            grid-area: button;
+        }
+
+        .ms-autorefresh-form-group__text {
+            grid-area: text;
+            transition: transform .2s;
+            display: flex;
+            flex-direction: column;
+
+            .glyphicon {
+                margin-right: 1ch;
+            }
+
+            .ms-autorefresh-form-group__title {
+                font-size: 12px;
+                white-space: nowrap;
+                max-width: 600px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                .glyphicon-eye-close {
+                    margin-right: 0.5ch;
+                }
+            }
+            .ms-autorefresh-form-group__summary {
+                font-size: 10px;
+            }
+        }
+
+        .ms-autorefresh-form-group__input {
+            grid-area: input;
+        }
+    }
+
+    > form {
+        display: flex;
+        flex-direction: column;
+        gap: 1ch;
+    }
+}
+
+.ms-autorefresh-layer-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+    margin: 0;
+
+    span {
+        vertical-align: sub;
+    }
+}
+
+.ms-autorefresh-layers-summary {
+    display: grid;
+    flex-direction: column;
+    gap: 0.5ch;
+    width: 560px;
+    max-width: calc(100vw - 68px);
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .ms-autorefresh-layer-summary__row{
+        display: grid;
+        grid-template-areas:
+        "title interval"
+        "refreshed interval";
+        grid-template-columns: 1fr 70px;
+        column-gap: 1ch;
+        align-items: center;
+
+        padding: 4px 8px;
+        transition: box-shadow, border 0.3s;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 4px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+
+        &:hover {
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.12);
+        }
+
+        .glyphicon {
+            margin-right: 1ch;
+        }
+
+        .ms-autorefresh-layer-summary__row__title {
+            max-width: 600px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            grid-area: title;
+        }
+
+        .ms-autorefresh-layer-summary__row__refreshed {
+            font-size: 12px;
+            grid-area: refreshed;
+        }
+
+        .ms-autorefresh-layer-summary__row__interval {
+            grid-area: interval;
+        }
+    }
+
+    .ms-autorefresh-layer-summary__row-hidden {
+        opacity: 0.6;
+    }
+
+    .ms-autorefresh-layer-summary__row-inactive {
+        .ms-autorefresh-layer-summary__row__title {
+            grid-row-end: refreshed;
+        }
+    }
+}
+
+#ms-autorefresh-selector {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}

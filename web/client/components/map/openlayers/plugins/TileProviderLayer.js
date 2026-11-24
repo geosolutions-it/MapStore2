@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import Layers from '../../../../utils/openlayers/Layers';
 import TileProvider from '../../../../utils/TileConfigProvider';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
@@ -38,7 +39,7 @@ const tileLoadFunction = options => (image, src) => {
 function tileXYZToOpenlayersOptions(options) {
     let urls = options.url.match(/(\{s\})/) ? getUrls(options) : [template(options.url, options)];
     let sourceOpt = Object.assign({}, {
-        urls: urls,
+        urls: urls.map(url => addRefreshParameter(url, options._v_)),
         attributions: options.attribution ? [options.attribution] : [],
         maxZoom: options.maxZoom ? options.maxZoom : 18,
         minZoom: options.minZoom ? options.minZoom : 0 // dosen't affect ol layer rendering UNSUPPORTED
@@ -68,7 +69,7 @@ Layers.registerType('tileprovider', {
         if (isMVT) {
             const source = new VectorTileSource({
                 format: new MVT({}),
-                url: options.url,
+                url: addRefreshParameter(options.url, options._v_),
                 maxZoom: options.maximumLevel ?? 22,
                 minZoom: options.minimumLevel ?? 0
             });
@@ -108,6 +109,10 @@ Layers.registerType('tileprovider', {
         return new TileLayer(tileXYZToOpenlayersOptions(opt));
     },
     update: (layer, newOptions, oldOptions) => {
+        if (newOptions._v_ !== oldOptions._v_) {
+            const source = layer.getSource();
+            source.setUrls(source.getUrls().map(url => addRefreshParameter(url, newOptions._v_)));
+        }
         if (oldOptions.minResolution !== newOptions.minResolution) {
             layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
         }

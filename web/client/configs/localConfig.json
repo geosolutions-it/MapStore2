@@ -1122,6 +1122,7 @@
       }
     ],
     "dashboard-embedded": [
+      { "name": "SidebarMenu", "cfg": { "containerPosition": "columns" } },
       {
         "name": "Dashboard",
         "cfg": {

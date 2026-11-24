@@ -25,6 +25,7 @@ import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
 import { customAttributesSettingsSelector } from "./featuregrid";
 import { dynamicProjectionDefsSelector } from './projections';
+import { stripWidgetsLayerVersions } from '../utils/LayerRefreshUtils';
 
 const customSaveHandlers = {};
 
@@ -45,7 +46,7 @@ export const basicMapOptionsToSaveSelector = createStructuredSelector({
         selectedService: selectedServiceSelector
     }),
     widgetsConfig: createStructuredSelector({
-        widgets: getFloatingWidgets,
+        widgets: createSelector(getFloatingWidgets, stripWidgetsLayerVersions),
         layouts: getFloatingWidgetsLayout,
         collapsed: getCollapsedState
     }),

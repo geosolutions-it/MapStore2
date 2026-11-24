@@ -9,10 +9,12 @@
 import DashboardPlugin from '../plugins/Dashboard';
 import FeedbackMaskPlugin from '../plugins/FeedbackMask';
 import CookiePlugin from '../plugins/Cookie';
+import SidebarMenuPlugin from '../plugins/SidebarMenu';
 
 export default {
     plugins: {
         CookiePlugin,
+        SidebarMenuPlugin,
         DashboardPlugin,
         FeedbackMaskPlugin
     },

@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { addRefreshParameter } from '../../../../utils/LayerRefreshUtils';
 import { get, isEqual } from 'lodash';
 import axios from 'axios';
 import XYZ from 'ol/source/XYZ';
@@ -29,7 +30,7 @@ function tileXYZToOpenlayersOptions(options = {}) {
     const { minx, miny, maxx, maxy } = get(options, "bbox.bounds", {});
     const sourceOpt = {
         projection: options.srs,
-        url: `${options.tileMapUrl}/{z}/{x}/{-y}.${options.extension}`, // TODO use resolutions
+        url: addRefreshParameter(`${options.tileMapUrl}/{z}/{x}/{-y}.${options.extension}`, options._v_), // TODO use resolutions
         attributions: options.attribution ? [options.attribution] : []
     };
     if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
@@ -79,6 +80,10 @@ Layers.registerType('tms', {
         return new TileLayer(tileXYZToOpenlayersOptions(options));
     },
     update: (layer, newOptions, oldOptions) => {
+        if (newOptions._v_ !== oldOptions._v_) {
+            const source = layer.getSource();
+            source.setUrls(source.getUrls().map(url => addRefreshParameter(url, newOptions._v_)));
+        }
         if (oldOptions.minResolution !== newOptions.minResolution) {
             layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
         }
