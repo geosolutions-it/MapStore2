@@ -1705,8 +1705,7 @@ describe('Cesium layer', () => {
         expect(cmp.layer.styledFeatures._queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
     });
-<<<<<<< HEAD
-=======
+
     ['qgis', 'no-vendor'].forEach(serverType => {
         ['all', 'bbox'].forEach(strategy => {
             it(`uses standard WFS filters for ${serverType} with the ${strategy} strategy`, async() => {
@@ -1771,7 +1770,7 @@ describe('Cesium layer', () => {
             }
         }, 500);
     });
->>>>>>> e23715799 (Fix #13213 Cesium WFS layer requests features after removal (#13214))
+
     it('recreates a wfs layer when its URL changes', () => {
         const options = {
             type: 'wfs',
