@@ -76,7 +76,7 @@ export const BackgroundSelectorAdd = connect(
 
 /**
  * Catalog plugin. Shows catalog results from supported services such as
- * CSW, COG, WMS, WMTS, TMS, WFS, 3D Tiles, IFC Model, ArcGIS and GeoNode.
+ * CSW, COG, WMS, WMTS, TMS, WFS, GeoJSON, 3D Tiles, IFC Model, ArcGIS and GeoNode.
  *
  * @class
  * @name Catalog
@@ -85,7 +85,7 @@ export const BackgroundSelectorAdd = connect(
  * @prop {boolean} [cfg.hideThumbnail=false] Global configuration for thumbnail visibility.
  * Service-specific `hideThumbnail` values take precedence over the global setting.
  * @prop {object[]} [cfg.serviceTypes] Service types available when creating a new catalog service.
- * Default: `[{ name: "csw", label: "CSW" }, { name: "cog", label: "COG" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, { name: "model", label: "IFC Model" }, { name: "arcgis", label: "ArcGIS" }, { name: "geonode", label: "GeoNode" }]`.
+ * Default: `[{ name: "csw", label: "CSW" }, { name: "cog", label: "COG" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders }, { name: "wfs", label: "WFS" }, { name: "geojson", label: "GeoJSON" }, { name: "3dtiles", label: "3D Tiles" }, { name: "model", label: "IFC Model" }, { name: "arcgis", label: "ArcGIS" }, { name: "geonode", label: "GeoNode" }]`.
  * For `tms`, `allowedProviders` is a whitelist of tile providers from `ConfigProvider.js`.
  * You can set a global `allowedProviders` entry in `localConfig.json`, or use `"ALL"`
  * to expose all configured providers.

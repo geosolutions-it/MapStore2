@@ -1909,6 +1909,7 @@
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
         "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geojson": "e.g. https://mydomain.com/filename.geojson",
         "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",

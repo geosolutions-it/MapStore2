@@ -2150,6 +2150,7 @@
         "model": "ex. https://mydomain.com/filename.ifc",
         "arcgis": "ex. https://mydomain.com/arcgis/rest/services",
         "flatgeobuf": "ex. https://mydomain.com/filename.fgb",
+        "geojson": "ex. https://mydomain.com/filename.geojson",
         "geonode": "ex. https://mydomaingeonode.com"
       },
       "type": "Tipo",

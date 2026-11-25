@@ -419,6 +419,27 @@ describe('Test Catalog panel', () => {
         expect(document.querySelector('.ms-catalog-service-editor')).toBeTruthy();
     });
 
+    it('offers GeoJSON sources with the existing title and URL inputs', () => {
+        const onChangeTitle = expect.createSpy();
+        const onChangeUrl = expect.createSpy();
+        ReactDOM.render(<Catalog
+            services={{}}
+            mode="edit"
+            service={{ type: 'geojson', title: 'Points', url: 'https://example.com/data.geojson' }}
+            onChangeTitle={onChangeTitle}
+            onChangeUrl={onChangeUrl}
+        />, document.getElementById('container'));
+
+        expect(document.querySelector('#service-type option[value="geojson"]').textContent).toBe('GeoJSON');
+        expect(document.querySelector('#service-type').value).toBe('geojson');
+        expect(document.querySelector('#service-title').value).toBe('Points');
+        expect(document.querySelector('#URL').value).toBe('https://example.com/data.geojson');
+        TestUtils.Simulate.change(document.querySelector('#service-title'), { target: { value: 'New title' } });
+        TestUtils.Simulate.change(document.querySelector('#URL'), { target: { value: 'https://example.com/other' } });
+        expect(onChangeTitle.calls[0].arguments).toEqual(['New title']);
+        expect(onChangeUrl.calls[0].arguments).toEqual(['https://example.com/other']);
+    });
+
     it('renders layer error alert in view mode', () => {
         const SERVICE = {
             type: 'csw',

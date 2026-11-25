@@ -62,7 +62,7 @@ In particular, the user can set:
 
 * The **Url** of the remote source service
 
-* The **Type** of the remote source service chooseing between *WMS*, *WFS*, *CSW*, *TMS*, *WMTS*, *3D Tiles*, *IFC Model* and *ArcGIS*
+* The **Type** of the remote source service choosing between *WMS*, *WFS*, *CSW*, *TMS*, *WMTS*, *GeoJSON*, *3D Tiles*, *IFC Model* and *ArcGIS*
 
 * The **Title** to assign to the catalog. This text will be used in the service selection dropdown menu for this service.
 
@@ -368,6 +368,12 @@ The other known services are listed as providers below "custom" and "TMS 1.0.0".
 
 <img src="../img/catalog/tms_known_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse the TMS variants</p>
+
+### GeoJSON Catalog
+
+Select **GeoJSON** as the source type, enter a **Title** and the **URL** of a reachable GeoJSON resource, then save the service. The URL does not need to end in `.geojson`; endpoints returning GeoJSON are also supported.
+
+MapStore validates the downloaded GeoJSON before saving the service. The catalog returns one record using the configured title. Add this record to the map to import its features as a vector layer in the selected group. Feature collections, individual features and geometries are supported.
 
 ### 3D Tiles Catalog
 
