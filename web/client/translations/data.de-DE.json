@@ -1984,6 +1984,7 @@
         "errorTitle": "Error",
         "errorSearchingRecords": "Einige Datensätze wurden nicht gefunden: {records} . Bitte überprüfen Sie die URL des Abfrageparameters",
         "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
+        "invalidGeoJSON": "Die angegebene URL enthält keine gültigen GeoJSON-Daten",
         "addCatalogService": "Service wurde korrekt hinzugefügt",
         "duplicatedServiceTitle": "Ein Service mit diesem Titel existiert bereits, bitte ändere den Titel",
         "serviceDeletedCorrectly": "Der Service wurde korrekt gelöscht",

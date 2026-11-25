@@ -1945,6 +1945,7 @@
         "errorTitle": "Error",
         "errorSearchingRecords": "No se han encontrado algunos registros: {records} . Por favor revise la consulta param url",
         "warningAddCatalogService": "Introduzca una url y un título válidos",
+        "invalidGeoJSON": "La URL proporcionada no contiene datos GeoJSON válidos",
         "addCatalogService": "Servicio añadido correctamente",
         "duplicatedServiceTitle": "Ya existe un servicio con ese título, Por favor, cambie el título",
         "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",

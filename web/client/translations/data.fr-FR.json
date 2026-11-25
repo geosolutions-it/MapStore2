@@ -1945,6 +1945,7 @@
         "errorTitle": "Erreur",
         "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . Veuillez vérifier l'URL de la requête et ses paramètres.",
         "warningAddCatalogService": "Insérer une URL et un titre valides",
+        "invalidGeoJSON": "L'URL fournie ne contient pas de données GeoJSON valides",
         "addCatalogService": "Service ajouté correctement",
         "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",
         "serviceDeletedCorrectly": "Le service a été correctement supprimé",
