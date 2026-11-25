@@ -3,7 +3,7 @@ import turfFlatten from '@turf/flatten';
 import omit from 'lodash/omit';
 import isArray from 'lodash/isArray';
 import { v1 as uuid } from 'uuid';
-import { getMapScaleForCesium } from '../MapUtils';
+import { getMapScaleForCesium } from './ScaleUtils';
 import { geoStylerScaleDenominatorFilter } from '../styleparser/StyleParserUtils';
 
 /**
@@ -541,7 +541,7 @@ class GeoJSONStyledFeatures {
     }
     _updateScaleVisibility() {
         if (!this._map) return;
-        const currentMapScale = getMapScaleForCesium(this._map, Cesium);
+        const currentMapScale = getMapScaleForCesium(this._map);
         this._entities.forEach(wrapper => {
             const { entity} = wrapper;
             // If no custom rules → apply default visibility
