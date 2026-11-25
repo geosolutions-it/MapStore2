@@ -58,6 +58,9 @@ import java.util.zip.ZipInputStream;
 public class UploadPluginController extends BaseMapStoreController {
 
     private static final String PLUGIN_PATH_PREFIX = "__PLUGIN__/";
+    // Fields of index.json copied to the catalog, to describe the extension and its plugins.
+    private static final String[] EXTENSION_INFO_FIELDS = {"title", "description", "version", "glyph"};
+    private static final String[] PLUGIN_INFO_FIELDS = {"name", "title", "version", "glyph"};
 
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(false);
@@ -108,6 +111,7 @@ public class UploadPluginController extends BaseMapStoreController {
                         // TODO: add support for many plugins in one single extension
                         plugin = plugins.get(0);
                         ((ObjectNode) plugin).put("extension", true);
+                        ((ObjectNode) plugin).set("extensionInfo", getExtensionInfo(json, plugins));
 
                         pluginName = plugin.get("name").asText();
                         validatePluginName(pluginName); // SECURITY: ensure folder-safe name
@@ -172,6 +176,31 @@ public class UploadPluginController extends BaseMapStoreController {
         } finally {
             FileUtils.deleteDirectory(tempDir.toFile());
         }
+    }
+
+    /**
+     * Returns the title, description, version and glyph of the extension, with the plugins it declares.
+     * A field missing at the top level of index.json is taken from the first plugin.
+     */
+    private ObjectNode getExtensionInfo(JsonNode index, JsonNode plugins) {
+        ObjectNode info = copyTextFields(plugins.get(0), EXTENSION_INFO_FIELDS);
+        info.setAll(copyTextFields(index, EXTENSION_INFO_FIELDS));
+        ArrayNode pluginsInfo = info.putArray("plugins");
+        for (JsonNode plugin : plugins) {
+            pluginsInfo.add(copyTextFields(plugin, PLUGIN_INFO_FIELDS));
+        }
+        return info;
+    }
+
+    private ObjectNode copyTextFields(JsonNode source, String[] fields) {
+        ObjectNode target = jsonNodeFactory.objectNode();
+        for (String field : fields) {
+            JsonNode value = source.get(field);
+            if (value != null && value.isTextual()) {
+                target.put(field, value.asText());
+            }
+        }
+        return target;
     }
 
     private static void validatePluginName(String pluginName) {

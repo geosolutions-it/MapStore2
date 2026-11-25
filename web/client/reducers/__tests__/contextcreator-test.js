@@ -561,6 +561,11 @@ describe('contextcreator reducer', () => {
         expect(state).toExist();
         expect(state.plugins.length).toBe(0);
     });
+    it('pluginUninstalled without plugins loaded', () => {
+        const state = contextcreator({uploadedPlugins: ['My', 'Other']}, pluginUninstalled('My'));
+        expect(state.plugins).toEqual([]);
+        expect(state.uploadedPlugins).toEqual(['Other']);
+    });
     it('addPluginToUpload', () => {
         const state = contextcreator({pluginsToUpload: []}, addPluginToUpload([{name: 'My'}]));
         expect(state).toExist();
