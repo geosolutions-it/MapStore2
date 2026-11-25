@@ -11,7 +11,6 @@ import { cloneDeep, pick } from 'lodash';
 import { hint } from '@mapbox/geojsonhint/lib/object';
 import {
     preprocess as commonPreprocess,
-    getRecordIdentifier,
     ServiceValidationError
 } from './common';
 import axios from '../../libs/ajax';
@@ -60,7 +59,7 @@ export const getCatalogRecords = (result, options) => {
             ...record,
             serviceType: 'geojson',
             isValid: true,
-            identifier: getRecordIdentifier({ url: record.url }),
+            identifier: (record.url || '').split('?')[0],
             layerOptions: {
                 ...options?.layerOptions,
                 ...record.layerOptions

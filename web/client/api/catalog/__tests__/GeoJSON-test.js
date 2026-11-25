@@ -99,14 +99,18 @@ describe('GeoJSON catalog API', () => {
         }, error => expect(error.status).toBe(404));
     });
 
-    it('provides a selectable record with a stable URL-based identifier', () => {
+    it('uses the source URL without query parameters as a stable identifier, like FlatGeobuf', () => {
         const record = { ...GEOJSON, url: URL, title: 'Points', name: 'Points' };
         const [first] = getCatalogRecords({ records: [record] });
         const [renamed] = getCatalogRecords({ records: [{ ...record, title: 'Renamed', name: 'Renamed' }] });
-        const [other] = getCatalogRecords({ records: [{ ...record, url: URL + '&other=1' }] });
+        const [otherQuery] = getCatalogRecords({ records: [{ ...record, url: URL + '&other=1' }] });
+        const [other] = getCatalogRecords({ records: [{ ...record, url: 'https://example.com/other-data' }] });
         expect(first.serviceType).toBe('geojson');
         expect(first.isValid).toBe(true);
+        expect(first.identifier).toBe('https://example.com/data');
+        expect(first.url).toBe(URL);
         expect(first.identifier).toBe(renamed.identifier);
+        expect(first.identifier).toBe(otherQuery.identifier);
         expect(first.identifier).toNotBe(other.identifier);
         expect(getCatalogRecords()).toBe(null);
     });
