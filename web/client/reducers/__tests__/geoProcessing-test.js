@@ -113,6 +113,17 @@ describe('Test Geo Processing Tools reducer', () => {
         });
     });
 
+    it('RESET, RESET_CONTROLS, LOCATION_CHANGE before INIT_PLUGIN (no cfg yet)', () => {
+        // e.g. leaving a map whose GeoProcessing panel was never opened
+        const actions = [reset(), resetControls(), {type: LOCATION_CHANGE}];
+        actions.forEach(a => {
+            const state = geoProcessing(undefined, a);
+            expect(state.cfg).toEqual(undefined);
+            expect(state.buffer).toEqual({});
+            expect(state.intersection.intersectionMode).toEqual("INTERSECTION");
+        });
+    });
+
     it('RUNNING_PROCESS', () => {
         const status = true;
         const action = runningProcess(status);
