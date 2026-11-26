@@ -627,6 +627,8 @@ By default, MapStore cleans the HTML returned by the server before showing it: s
 
 With this option selected, the Identify Tool shows the page as the server sends it, keeping its styles and scripts. The page runs separately from the map and cannot interact with it. Links and windows opened by the page open in a new browser tab.
 
+Select **Apply MapStore theme** to load the current MapStore theme in the separate page. This can style template elements that use MapStore classes. Template styles may override the theme.
+
 ### Properties format
 
 The `PROPERTIES` format displays the *Attributes* of the identified feature. The user can customize the attributes though the<img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button.

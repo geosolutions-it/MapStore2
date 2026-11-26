@@ -28,13 +28,15 @@ class HTMLViewer extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.response !== this.props.response || nextProps.layer?.featureInfo?.htmlFrame !== this.props.layer?.featureInfo?.htmlFrame;
+        return nextProps.response !== this.props.response
+            || nextProps.layer?.featureInfo?.htmlFrame !== this.props.layer?.featureInfo?.htmlFrame
+            || nextProps.layer?.featureInfo?.applyMapstoreTheme !== this.props.layer?.featureInfo?.applyMapstoreTheme;
     }
 
     render() {
         let response = this.props.response || '';
         if (isFrameRequested(this.props.layer)) {
-            return <LocalizedHtmlFrame html={response} title="identifyTitle" />;
+            return <LocalizedHtmlFrame html={response} title="identifyTitle" applyTheme={this.props.layer?.featureInfo?.applyMapstoreTheme === true} />;
         }
         // gets css rules from the response and removes which are related to body tag.
         let styleMatch = regexpStyle.exec(response);

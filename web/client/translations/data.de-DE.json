@@ -124,6 +124,8 @@
       "disableIdentify": "Identifizierung deaktivieren",
       "addIdentifyView": "Neue Identifikationsansicht hinzufügen",
       "htmlFrame": "Als eigene Seite anzeigen",
+      "htmlFrameTheme": "MapStore-Design anwenden",
+      "htmlFrameThemeHelp": "Wendet die Stile des MapStore-Designs auf die Seite an, einschließlich der Stile für Schaltflächen, Symbole und Layout. Die Seite kann weiterhin eigene Stile verwenden.",
       "htmlFrameHelp": "Zeigt die Seite so an, wie der Server sie sendet, mit ihren Stilen und Skripten. Die Seite läuft getrennt von der Karte und kann nicht mit ihr interagieren.",
       "featureInfoFormatLbl": "Antwortformat festlegen",
       "featureInfoRequestOptions": {

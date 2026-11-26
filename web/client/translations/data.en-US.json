@@ -124,6 +124,8 @@
       "disableIdentify": "Disable Identify",
       "addIdentifyView": "Add new identify view",
       "htmlFrame": "Show as a separate page",
+      "htmlFrameTheme": "Apply MapStore theme",
+      "htmlFrameThemeHelp": "Applies MapStore theme styles to the page, including styles for buttons, icons, and layout. The page can still use its own styles.",
       "htmlFrameHelp": "Shows the page as the server sends it, keeping its styles and scripts. The page runs separately from the map and cannot interact with it.",
       "featureInfoFormatLbl": "Identify response format",
       "featureInfoRequestOptions": {

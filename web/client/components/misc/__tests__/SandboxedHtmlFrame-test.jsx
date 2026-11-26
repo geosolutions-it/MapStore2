@@ -9,6 +9,8 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../../libs/ajax';
 
 import SandboxedHtmlFrame, {
     HTML_FRAME_SANDBOX,
@@ -22,12 +24,18 @@ const postHeight = (source, height, type = HTML_FRAME_HEIGHT_MESSAGE) => act(() 
 });
 
 describe('SandboxedHtmlFrame', () => {
+    let mockAxios;
+    let themeLink;
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
+        mockAxios.restore();
+        themeLink?.remove();
+        themeLink = null;
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -49,6 +57,23 @@ describe('SandboxedHtmlFrame', () => {
         expect(frame.getAttribute('srcdoc').indexOf(html)).toBe(0);
         expect(frame.style.height).toBe(`${HTML_FRAME_MIN_HEIGHT}px`);
         expect(frame.style.backgroundColor).toBe('rgb(255, 255, 255)');
+    });
+
+    it('applies the MapStore theme when enabled', async() => {
+        themeLink = document.createElement('link');
+        themeLink.id = 'theme_stylesheet';
+        themeLink.href = '/themes/default.css';
+        document.head.appendChild(themeLink);
+        mockAxios.onGet(themeLink.href).reply(200, '.ms2 .btn-success { background: green; }');
+        const html = '<button class="btn-success">Test</button>';
+        const container = document.getElementById('container');
+        await act(async() => {
+            ReactDOM.render(<SandboxedHtmlFrame html={html} title="Feature info" applyTheme />, container);
+        });
+        const frame = container.querySelector('iframe');
+        const doc = new DOMParser().parseFromString(frame.getAttribute('srcdoc'), 'text/html');
+        expect(doc.body.classList.contains('ms2')).toBe(true);
+        expect(doc.head.textContent).toContain('.ms2 .btn-success');
     });
 
     it('opaque origin: the frame document is not reachable from the application', () => {

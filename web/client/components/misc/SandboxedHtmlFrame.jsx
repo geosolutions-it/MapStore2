@@ -7,6 +7,8 @@
  */
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import ConfigUtils from '../../utils/ConfigUtils';
+import axios from '../../libs/ajax';
 
 /**
  * Sandbox flags of the frame. They are fixed and must never include allow-same-origin:
@@ -48,19 +50,85 @@ const HEIGHT_REPORTER = `<script>(function () {
 
 const clampHeight = (height) => Math.min(Math.max(Math.round(height), HTML_FRAME_MIN_HEIGHT), HTML_FRAME_MAX_HEIGHT);
 
+const getTheme = () => {
+    const links = [...document.querySelectorAll('#theme_stylesheet, link[data-ms-context-theme]')];
+    const variables = getComputedStyle(document.documentElement);
+    return {
+        links: links.map((link) => link.href),
+        prefix: __MAPSTORE_PROJECT_CONFIG__.themePrefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
+        variables: Array.from(variables).filter((name) => name.startsWith('--ms-'))
+            .map((name) => `${name}: ${variables.getPropertyValue(name)};`).join('\n')
+    };
+};
+
+const withTheme = (html, theme) => {
+    const doc = new DOMParser().parseFromString(html || '', 'text/html');
+    doc.body.classList.add(theme.prefix);
+    doc.body.setAttribute('data-ms2-container', 'ms2');
+    theme.styles.slice().reverse().forEach((css) => {
+        const style = doc.createElement('style');
+        style.textContent = css;
+        doc.head.prepend(style);
+    });
+    if (theme.variables) {
+        const style = doc.createElement('style');
+        style.textContent = `:root { ${theme.variables} }`;
+        doc.head.appendChild(style);
+    }
+    return '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+};
+
 /**
  * Renders an untrusted HTML document in a sandboxed iframe with an opaque origin.
  * The document keeps its own styles and scripts, but it cannot read or change the
  * application, its storage or the user session.
  * The frame height follows the content, within fixed limits, through a message
  * sent by the frame. Only messages from this frame are accepted.
- * The background is white, as for a page opened on its own, whatever the theme.
+ * The background is white by default, and can be styled by the applied theme.
  * @param {string} html - untrusted HTML document
  * @param {string} title - accessible title of the frame
+ * @param {boolean} applyTheme - apply the current MapStore theme inside the frame
  */
-const SandboxedHtmlFrame = ({ html, title }) => {
+const SandboxedHtmlFrame = ({ html, title, applyTheme }) => {
     const frameRef = useRef(null);
     const [height, setHeight] = useState(HTML_FRAME_MIN_HEIGHT);
+    const [theme, setTheme] = useState(null);
+    useEffect(() => {
+        if (!applyTheme) {
+            setTheme(null);
+            return () => {};
+        }
+        let active = true;
+        const loadTheme = async() => {
+            const next = getTheme();
+            try {
+                const styles = await Promise.all(next.links.map(async(href) => {
+                    const { data: css } = await axios.get(href, { responseType: 'text' });
+                    const resourceUrls = [];
+                    // Find CSS url(...) values, with or without quotes, and resolve relative paths
+                    // against the original stylesheet.
+                    const updatedCss = css.replace(/url\(\s*(['"]?)([^'"\)]+)\1\s*\)/g, (match, quote, url) => {
+                        if (/^(data:|blob:|#)/i.test(url)) {
+                            return match;
+                        }
+                        const resolvedUrl = new URL(url, href).href;
+                        resourceUrls.push({ from: url, to: resolvedUrl });
+                        return `url("${resolvedUrl}")`;
+                    });
+                    return updatedCss;
+                }));
+                if (active) {
+                    setTheme({ ...next, styles });
+                }
+            } catch (error) {
+                console.error('Unable to apply the MapStore theme in the feature info frame', error);
+            }
+        };
+        loadTheme();
+        return () => {
+            active = false;
+        };
+    }, [applyTheme]);
     useEffect(() => {
         const onMessage = (event) => {
             if (!frameRef.current || event.source !== frameRef.current.contentWindow) {
@@ -81,7 +149,7 @@ const SandboxedHtmlFrame = ({ html, title }) => {
             title={title}
             sandbox={HTML_FRAME_SANDBOX}
             referrerPolicy="no-referrer"
-            srcDoc={(html || '') + HEIGHT_REPORTER}
+            srcDoc={(applyTheme && theme ? withTheme(html, theme) : (html || '')) + HEIGHT_REPORTER}
             style={{ width: '100%', height, border: 'none', display: 'block', background: '#ffffff' }}
         />
     );
@@ -89,7 +157,8 @@ const SandboxedHtmlFrame = ({ html, title }) => {
 
 SandboxedHtmlFrame.propTypes = {
     html: PropTypes.string,
-    title: PropTypes.string
+    title: PropTypes.string,
+    applyTheme: PropTypes.bool
 };
 
 export default SandboxedHtmlFrame;

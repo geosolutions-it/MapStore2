@@ -124,6 +124,8 @@
       "disableIdentify": "Desactivar identificación",
       "addIdentifyView": "Añadir nueva vista de identificación",
       "htmlFrame": "Mostrar como página separada",
+      "htmlFrameTheme": "Aplicar el tema de MapStore",
+      "htmlFrameThemeHelp": "Aplica los estilos del tema de MapStore a la página, incluidos los estilos de botones, iconos y diseño. La página puede seguir usando sus propios estilos.",
       "htmlFrameHelp": "Muestra la página tal como la envía el servidor, manteniendo sus estilos y scripts. La página se ejecuta separada del mapa y no puede interactuar con él.",
       "featureInfoFormatLbl": "Identificar el formato de respuesta",
       "featureInfoRequestOptions": {

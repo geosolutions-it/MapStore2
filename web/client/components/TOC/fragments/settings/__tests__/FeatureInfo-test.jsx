@@ -208,6 +208,23 @@ describe("test FeatureInfo", () => {
             expect(options[0].checked).toBe(false);
             TestUtils.Simulate.change(options[0], { target: { checked: true } });
         });
+
+        it('saves the Apply MapStore theme option for an HTML view', done => {
+            getFeatureInfoInstance({
+                element: { featureInfo: { views: [{ id: 'html-view', title: 'Html', type: 'HTML', htmlFrame: true }] } },
+                formatCards,
+                defaultInfoFormat,
+                onChange: (key, value) => {
+                    expect(key).toBe('featureInfo');
+                    expect(value.views[0].applyMapstoreTheme).toBe(true);
+                    done();
+                }
+            });
+            TestUtils.Simulate.click(editButton('html-view'));
+            const option = document.querySelector('.ms-feature-info-view-apply-mapstore-theme input[type="checkbox"]');
+            expect(option.checked).toBe(false);
+            TestUtils.Simulate.change(option, { target: { checked: true } });
+        });
     });
 
     it('test rendering with supported infoFormats from layer props', () => {

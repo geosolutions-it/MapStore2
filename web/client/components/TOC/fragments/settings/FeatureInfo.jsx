@@ -352,6 +352,12 @@ export default class extends React.Component {
                             onChange={(event) => this.updateView(view.id, { htmlFrame: event.target.checked })}>
                             <Message msgId="layerProperties.htmlFrame"/>&nbsp;<InfoPopover text={<Message msgId="layerProperties.htmlFrameHelp"/>}/>
                         </Checkbox>
+                        {view.htmlFrame === true && <Checkbox
+                            className="ms-feature-info-view-apply-mapstore-theme"
+                            checked={view.applyMapstoreTheme === true}
+                            onChange={(event) => this.updateView(view.id, { applyMapstoreTheme: event.target.checked })}>
+                            <Message msgId="layerProperties.htmlFrameTheme"/>&nbsp;<InfoPopover text={<Message msgId="layerProperties.htmlFrameThemeHelp"/>}/>
+                        </Checkbox>}
                     </div>
                 ) : null}
                 {!isDisabled && this.state.editingViewId === view.id && view.type === 'PROPERTIES' ? (
