@@ -7,7 +7,8 @@
  */
 
 import { Observable } from 'rxjs';
-import { cloneDeep, pick } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import pick from 'lodash/pick';
 import { hint } from '@mapbox/geojsonhint/lib/object';
 import {
     preprocess as commonPreprocess,
