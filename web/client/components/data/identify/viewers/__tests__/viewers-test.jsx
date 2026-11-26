@@ -87,7 +87,7 @@ describe('Identity Viewers', () => {
             const host = render({ featureInfo: { format: 'HTML' } });
             expect(document.querySelector('#container iframe')).toNotExist();
             expect(host.shadowRoot.querySelector('button')).toNotExist();
-            expect(host.shadowRoot.querySelector('style').textContent.indexOf('@import')).toBe(-1);
+            expect(host.shadowRoot.innerHTML).toNotContain('@import');
         });
 
         it('requires the exact value true', () => {
