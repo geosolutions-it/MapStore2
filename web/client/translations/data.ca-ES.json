@@ -1713,6 +1713,7 @@
         "model": "p. https://mydomain.com/filename.ifc",
         "arcgis": "p. https://mydomain.com/arcgis/rest/services",
         "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geojson": "p. https://mydomain.com/filename.geojson",
         "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipus",

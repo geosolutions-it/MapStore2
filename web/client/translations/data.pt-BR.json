@@ -1717,6 +1717,7 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "geojson": "e.g. https://mydomain.com/filename.geojson",
         "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipo",

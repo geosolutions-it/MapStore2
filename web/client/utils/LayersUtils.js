@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import toBbox from 'turf-bbox';
+import toBbox from '@turf/bbox';
 import { v1 as uuidv1 } from 'uuid';
 import isString from 'lodash/isString';
 import isObject from 'lodash/isObject';
@@ -697,15 +697,17 @@ export const geoJSONToLayer = (geoJSON, id) => {
         id,
         name: geoJSON.fileName,
         hideLoading: true,
-        bbox: {
-            bounds: {
-                minx: bbox[0],
-                miny: bbox[1],
-                maxx: bbox[2],
-                maxy: bbox[3]
-            },
-            crs: "EPSG:4326"
-        },
+        ...(bbox.every(Number.isFinite) && {
+            bbox: {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: "EPSG:4326"
+            }
+        }),
         features,
         ...(['geostyler'].includes(geoJSON?.style?.format) && geoJSON?.style?.body && {
             style: geoJSON.style

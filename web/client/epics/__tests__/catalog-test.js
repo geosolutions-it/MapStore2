@@ -1584,6 +1584,35 @@ describe('catalog Epics', () => {
         });
     });
     describe('addLayersFromCatalogsEpic geojson', () => {
+        it('loads and saves a GeoJSON catalog using the configured title', (done) => {
+            const service = {
+                type: 'geojson',
+                title: 'GeoJSON source',
+                url: 'base/web/client/test-resources/geojson/example.geojson'
+            };
+            testEpic(recordSearchEpic, 6, textSearch({
+                format: service.type,
+                url: service.url,
+                text: '',
+                options: { service, isNewService: true }
+            }), actions => {
+                expect(actions.find(action => action.type === ADD_CATALOG_SERVICE).service).toEqual(service);
+                expect(actions.find(action => action.type === RECORD_LIST_LOADED).result.records[0].title).toBe(service.title);
+            }, {}, done);
+        });
+
+        it('rejects a source returning non-GeoJSON data without saving it', (done) => {
+            testEpic(recordSearchEpic, 3, textSearch({
+                format: 'geojson',
+                url: 'base/web/client/translations/data.en-US.json',
+                options: { isNewService: true }
+            }), actions => {
+                expect(actions.some(action => action.type === ADD_CATALOG_SERVICE)).toBe(false);
+                expect(actions.find(action => action.type === SHOW_NOTIFICATION).message).toBe('catalog.notification.invalidGeoJSON');
+                expect(actions[2]).toEqual({ type: SAVING_SERVICE, status: false });
+            }, {}, done);
+        });
+
         it('should add layer with title from geojson', (done) => {
             const NUM_ACTIONS = 1;
             testEpic(

@@ -69,6 +69,7 @@ const Catalog = ({
         { name: "wmts", label: "WMTS" },
         { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS },
         { name: "wfs", label: "WFS" },
+        { name: "geojson", label: "GeoJSON" },
         { name: "3dtiles", label: "3D Tiles" },
         { name: "model", label: "IFC Model" },
         { name: "arcgis", label: "ArcGIS" },

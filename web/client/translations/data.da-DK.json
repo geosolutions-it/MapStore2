@@ -1781,6 +1781,7 @@
         "model": "f.eks. https://mydomain.com/filename.ifc",
         "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services",
         "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geojson": "f.eks. https://mydomain.com/filename.geojson",
         "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",

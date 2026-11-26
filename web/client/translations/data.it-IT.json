@@ -1909,6 +1909,7 @@
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
         "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geojson": "e.g. https://mydomain.com/filename.geojson",
         "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipo",
@@ -1944,6 +1945,7 @@
         "errorTitle": "Errore",
         "errorSearchingRecords": "Alcuni record non sono stati trovati: {records} . Controlla la lista dei parametri nella barra degli indirizzi",
         "warningAddCatalogService": "Inserisci un url e titolo validi.",
+        "invalidGeoJSON": "L'URL fornito non contiene dati GeoJSON validi",
         "addCatalogService": "Servizio aggiunto corretamente.",
         "duplicatedServiceTitle": "Un servizio con quel titolo esiste già, Per favore cambia titolo",
         "serviceDeletedCorrectly": "Il servizio è stato eliminato correttamente",
