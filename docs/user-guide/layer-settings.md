@@ -598,7 +598,7 @@ The user can click on <img src="../img/button/add-new-identify-view.jpg" class="
 
 * Select a format: `TEXT`, `HTML`, `PROPERTIES`, `TEMPLATE`, or `EXTERNAL DATA`
 
-* Use the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button to configure `PROPERTIES`, `TEMPLATE`, and `EXTERNAL DATA` views
+* Use the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button to configure `PROPERTIES`, `TEMPLATE`, and `EXTERNAL DATA` views, and `HTML` views (see [Show HTML as a separate page](layer-settings.md#show-html-as-a-separate-page))
 
 * Remove a view thought the <img src="../img/button/remove-button.jpg" class="ms-docbutton"/> button
 
@@ -620,6 +620,12 @@ The `HTML` format displays the HTML content returned by the server. The image be
 
 !!! note
     Feature Info settings are available for `WMS` and `WFS` layers. The `TEXT` format is available only for `WMS` layers. For `WFS` layers, the `HTML` format requires GeoServer with the [`wfs-freemarker`](https://docs.geoserver.org/main/en/user/community/wfs-freemarker/index.html) extension installed.
+
+#### Show HTML as a separate page
+
+By default, MapStore cleans the HTML returned by the server before showing it: scripts, buttons and stylesheets loaded from other files are removed. The <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button of an `HTML` view shows the **Show as a separate page** option.
+
+With this option selected, the Identify Tool shows the page as the server sends it, keeping its styles and scripts. The page runs separately from the map and cannot interact with it. Links and windows opened by the page open in a new browser tab.
 
 ### Properties format
 

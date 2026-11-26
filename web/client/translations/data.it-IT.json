@@ -123,6 +123,8 @@
       "noIdentifyView": "Nessuna vista di identificazione configurata, verrà usato il formato configurato globalmente nelle impostazioni di mappa.",
       "disableIdentify": "Disabilita Identify",
       "addIdentifyView": "Aggiungi una nuova vista Identify",
+      "htmlFrame": "Mostra come pagina separata",
+      "htmlFrameHelp": "Mostra la pagina così come la invia il server, mantenendo stili e script. La pagina gira separata dalla mappa e non può interagire con essa.",
       "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
       "featureInfoRequestOptions": {
         "title": "Opzioni di richiesta",

@@ -123,6 +123,8 @@
       "noIdentifyView": "No identify view is configured, the format from Map Settings is used.",
       "disableIdentify": "Disable Identify",
       "addIdentifyView": "Add new identify view",
+      "htmlFrame": "Show as a separate page",
+      "htmlFrameHelp": "Shows the page as the server sends it, keeping its styles and scripts. The page runs separately from the map and cannot interact with it.",
       "featureInfoFormatLbl": "Identify response format",
       "featureInfoRequestOptions": {
         "title": "Request options",

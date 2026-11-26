@@ -32,6 +32,7 @@ import { isFeatureInfoBufferSupported } from '../../../../utils/FeatureInfoReque
 import ExternalDataEditor from './ExternalDataEditor';
 import PropertiesEditor from './PropertiesEditor';
 import { EXTERNAL_DATA, validateExternalDataConfiguration } from '../../../../utils/mapinfo/ExternalDataUtils';
+import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 const GlyphiconWithTitle = localizedProps('title')(Glyphicon);
@@ -315,14 +316,14 @@ export default class extends React.Component {
     }
 
     renderView = (view, views, index, isDisabled) => {
-        const canEdit = ['TEMPLATE', 'PROPERTIES', EXTERNAL_DATA].includes(view.type);
+        const canEdit = ['TEMPLATE', 'PROPERTIES', EXTERNAL_DATA, 'HTML'].includes(view.type);
         return (
             <div key={view.id}>
                 <DraggableFeatureInfoView
                     index={index}
                     isDisabled={isDisabled}
                     isDraggable={!isDisabled && views.length > 1}
-                    isEditing={[EXTERNAL_DATA, 'PROPERTIES'].includes(view.type)
+                    isEditing={[EXTERNAL_DATA, 'PROPERTIES', 'HTML'].includes(view.type)
                         && this.state.editingViewId === view.id}
                     isInvalid={view.type === EXTERNAL_DATA && !!validateExternalDataConfiguration(view.featuresService)}
                     view={view}
@@ -342,6 +343,16 @@ export default class extends React.Component {
                         currentLocale={this.props.currentLocale}
                         value={view.featuresService}
                         onChange={(featuresService) => this.updateView(view.id, { featuresService })}/>
+                ) : null}
+                {!isDisabled && this.state.editingViewId === view.id && view.type === 'HTML' ? (
+                    <div className="ms-html-view-editor">
+                        <Checkbox
+                            className="ms-feature-info-view-html-frame"
+                            checked={view.htmlFrame === true}
+                            onChange={(event) => this.updateView(view.id, { htmlFrame: event.target.checked })}>
+                            <Message msgId="layerProperties.htmlFrame"/>&nbsp;<InfoPopover text={<Message msgId="layerProperties.htmlFrameHelp"/>}/>
+                        </Checkbox>
+                    </div>
                 ) : null}
                 {!isDisabled && this.state.editingViewId === view.id && view.type === 'PROPERTIES' ? (
                     <PropertiesEditor

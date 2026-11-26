@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import HTMLViewer from '../HTMLViewer';
+import { HTML_FRAME_SANDBOX } from '../../../../misc/SandboxedHtmlFrame';
 import JSONViewer from '../JSONViewer';
 import TemplateViewer from '../TemplateViewer';
 import TextViewer from '../TextViewer';
@@ -65,6 +66,35 @@ describe('Identity Viewers', () => {
         const leaked = Array.from(document.querySelectorAll("style"))
             .some((s) => s.textContent.indexOf("table.featureInfo") !== -1);
         expect(leaked).toBe(false);
+    });
+
+    describe('HTMLViewer frame rendering', () => {
+        const RESPONSE = '<html><head><style>@import url("https://example.com/a.css");</style></head>'
+            + '<body><button onclick="run()">Run</button></body></html>';
+        const render = (layer) => ReactDOM.findDOMNode(ReactDOM.render(<HTMLViewer response={RESPONSE} layer={layer} />, document.getElementById("container")));
+
+        it('renders the whole response in a sandboxed frame when the view asks for it', () => {
+            render({ featureInfo: { format: 'HTML', htmlFrame: true } });
+            const frame = document.querySelector('#container iframe');
+            expect(frame).toExist();
+            expect(frame.getAttribute('sandbox')).toBe(HTML_FRAME_SANDBOX);
+            expect(frame.getAttribute('title')).toBe('identifyTitle');
+            expect(frame.getAttribute('srcdoc').indexOf(RESPONSE)).toBe(0);
+            expect(document.querySelector('#container button')).toNotExist();
+        });
+
+        it('sanitizes the response when the view does not ask for the frame', () => {
+            const host = render({ featureInfo: { format: 'HTML' } });
+            expect(document.querySelector('#container iframe')).toNotExist();
+            expect(host.shadowRoot.querySelector('button')).toNotExist();
+            expect(host.shadowRoot.querySelector('style').textContent.indexOf('@import')).toBe(-1);
+        });
+
+        it('requires the exact value true', () => {
+            const host = render({ featureInfo: { format: 'HTML', htmlFrame: 'true' } });
+            expect(document.querySelector('#container iframe')).toNotExist();
+            expect(host.shadowRoot).toExist();
+        });
     });
 
     it('test TextViewer', () => {

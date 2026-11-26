@@ -123,6 +123,8 @@
       "noIdentifyView": "Aucune vue d'identification n'est configurée, le format des Paramètres de la carte est utilisé.",
       "disableIdentify": "Désactiver l'identification",
       "addIdentifyView": "Ajouter une nouvelle vue d'identification",
+      "htmlFrame": "Afficher comme une page séparée",
+      "htmlFrameHelp": "Affiche la page telle que le serveur l'envoie, en conservant ses styles et scripts. La page s'exécute séparément de la carte et ne peut pas interagir avec elle.",
       "featureInfoFormatLbl": "Information, format de la réponse",
       "featureInfoRequestOptions": {
         "title": "Options de requête",

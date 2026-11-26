@@ -123,6 +123,8 @@
       "noIdentifyView": "No hay ninguna vista de identificación configurada, se usa el formato de la Configuración del mapa.",
       "disableIdentify": "Desactivar identificación",
       "addIdentifyView": "Añadir nueva vista de identificación",
+      "htmlFrame": "Mostrar como página separada",
+      "htmlFrameHelp": "Muestra la página tal como la envía el servidor, manteniendo sus estilos y scripts. La página se ejecuta separada del mapa y no puede interactuar con él.",
       "featureInfoFormatLbl": "Identificar el formato de respuesta",
       "featureInfoRequestOptions": {
         "title": "Opciones de solicitud",

@@ -123,6 +123,8 @@
       "noIdentifyView": "Keine Identify-Ansicht konfiguriert, es wird das Format aus den Karteneinstellungen verwendet.",
       "disableIdentify": "Identifizierung deaktivieren",
       "addIdentifyView": "Neue Identifikationsansicht hinzufügen",
+      "htmlFrame": "Als eigene Seite anzeigen",
+      "htmlFrameHelp": "Zeigt die Seite so an, wie der Server sie sendet, mit ihren Stilen und Skripten. Die Seite läuft getrennt von der Karte und kann nicht mit ihr interagieren.",
       "featureInfoFormatLbl": "Antwortformat festlegen",
       "featureInfoRequestOptions": {
         "title": "Anfrageoptionen",

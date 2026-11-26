@@ -175,6 +175,41 @@ describe("test FeatureInfo", () => {
         });
         component.updateFeatureInfo(false, component.getViews());
     });
+    describe('HTML frame option', () => {
+        const element = {
+            featureInfo: {
+                views: [
+                    { id: 'html-view', title: 'Html', type: 'HTML' },
+                    { id: 'text-view', title: 'Text', type: 'TEXT' }
+                ]
+            }
+        };
+        const editButton = (viewId) => document.querySelector(`[data-id="feature-info-view-${viewId}"] .ms-feature-info-view-edit`);
+
+        it('is edited from the pencil of HTML views and saves htmlFrame on the view', done => {
+            getFeatureInfoInstance({
+                element,
+                formatCards,
+                defaultInfoFormat,
+                onChange: (key, value) => {
+                    expect(key).toBe('featureInfo');
+                    expect(value.views).toEqual([
+                        { id: 'html-view', title: 'Html', type: 'HTML', htmlFrame: true },
+                        { id: 'text-view', title: 'Text', type: 'TEXT' }
+                    ]);
+                    done();
+                }
+            });
+            expect(editButton('text-view').disabled).toBe(true);
+            expect(document.querySelectorAll('.ms-feature-info-view-html-frame').length).toBe(0);
+            TestUtils.Simulate.click(editButton('html-view'));
+            const options = document.querySelectorAll('.ms-feature-info-view-html-frame input[type="checkbox"]');
+            expect(options.length).toBe(1);
+            expect(options[0].checked).toBe(false);
+            TestUtils.Simulate.change(options[0], { target: { checked: true } });
+        });
+    });
+
     it('test rendering with supported infoFormats from layer props', () => {
         const component = getFeatureInfoInstance({element: {infoFormats: ["text/html", "text/plain"]}, formatCards, defaultInfoFormat});
         expect(component.getTypeOptions()).toEqual(['TEXT', 'HTML']);
