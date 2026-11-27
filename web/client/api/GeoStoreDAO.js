@@ -206,9 +206,9 @@ const Api = {
             return { ...response.data, ...authData};
         });
     },
-    logout: function() {
+    logout: function(options) {
         const url = "session/logout";
-        return axios.delete(url, this.addBaseUrl({}));
+        return axios.delete(url, this.addBaseUrl({...options}));
     },
     changePassword: function(user, newPassword, options) {
         return axios.put(

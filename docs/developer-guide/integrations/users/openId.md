@@ -193,6 +193,24 @@ These values correspond to the standard fields in the discovery document and are
     }
     ```
 
+### End the login with the browser session
+
+By default MapStore keeps the login in the browser's local storage, so it survives a browser restart, and the next token refresh renews the session as long as the session at the identity provider is still valid. On shared computers you may want the login to end when the browser is closed instead. Set `loginPersistence` to `browserSession` in `localConfig.json`:
+
+```json
+{
+    "loginPersistence": "browserSession"
+}
+```
+
+With this option, a login left by an earlier browser session is not restored: MapStore starts logged out and sends the logout to the back-end with the stored access token. With `globalLogoutEnabled`, the back-end also ends the session at the identity provider, even when that access token has already expired (this needs GeoStore 2.7.1 or later). See [loginPersistence](../../local-config.md#explanation-of-some-config-properties) for the details.
+
+With this option, when the back-end refuses a token refresh (401 or 403), MapStore also sends the logout to the back-end in the same way. Network errors and server errors do not end the session on the back-end, because it may still be valid. With the default `loginPersistence`, a failed refresh only logs out in MapStore.
+
+The `ms2-login-session` cookie is a technical cookie, needed for the sign-in: if you enable this option, list it in the Cookie Policy of your installation.
+
+In both cases MapStore dispatches the `SESSION_ENDED` action (`web/client/actions/security.js`), with `reason` set to `browserSession` or `refreshFailed`, so that a project can react to it, for example by showing a notice. It is not dispatched when the user logs out.
+
 ## Multiple simultaneous providers
 
 You can run multiple OIDC providers at the same time by listing them in `oidc_providers` (comma-separated) and configuring each with its own `{provider}OAuth2Config.*` prefix. Each provider's `redirectUri` **must** include the provider name in the path.
