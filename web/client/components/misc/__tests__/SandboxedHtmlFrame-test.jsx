@@ -54,9 +54,14 @@ describe('SandboxedHtmlFrame', () => {
         expect(frame.hasAttribute('allow')).toBe(false);
         expect(frame.getAttribute('referrerpolicy')).toBe('no-referrer');
         expect(frame.getAttribute('title')).toBe('Feature info');
-        expect(frame.getAttribute('srcdoc').indexOf(html)).toBe(0);
         expect(frame.style.height).toBe(`${HTML_FRAME_MIN_HEIGHT}px`);
         expect(frame.style.backgroundColor).toBe('rgb(255, 255, 255)');
+    });
+
+    it('uses a new tab by default', () => {
+        const frame = render('<a href="https://example.com">Feature</a>');
+        const doc = new DOMParser().parseFromString(frame.getAttribute('srcdoc'), 'text/html');
+        expect(doc.querySelector('base[target]').getAttribute('target')).toBe('_blank');
     });
 
     it('applies the MapStore theme when enabled', async() => {

@@ -25,7 +25,7 @@ export const HTML_FRAME_MAX_HEIGHT = 2000;
 // does not let the parent read the frame document. It groups changes in short
 // intervals and sends a message only when the height changes. A timer is used
 // instead of requestAnimationFrame, which browsers pause in frames out of view.
-const HEIGHT_REPORTER = `<script>(function () {
+const HEIGHT_REPORTER = `(function () {
     var last = -1;
     var pending = false;
     var send = function () {
@@ -46,7 +46,7 @@ const HEIGHT_REPORTER = `<script>(function () {
         new ResizeObserver(schedule).observe(document.documentElement);
     }
     window.addEventListener('load', schedule);
-})();</script>`;
+})();`;
 
 const clampHeight = (height) => Math.min(Math.max(Math.round(height), HTML_FRAME_MIN_HEIGHT), HTML_FRAME_MAX_HEIGHT);
 
@@ -61,21 +61,30 @@ const getTheme = () => {
     };
 };
 
-const withTheme = (html, theme) => {
+const prepareHtml = (html, theme) => {
     const doc = new DOMParser().parseFromString(html || '', 'text/html');
-    doc.body.classList.add(theme.prefix);
-    doc.body.setAttribute('data-ms2-container', 'ms2');
-    theme.styles.slice().reverse().forEach((css) => {
-        const style = doc.createElement('style');
-        style.textContent = css;
-        doc.head.prepend(style);
-    });
-    if (theme.variables) {
-        const style = doc.createElement('style');
-        style.textContent = `:root { ${theme.variables} }`;
-        doc.head.appendChild(style);
+    const base = doc.createElement('base');
+    base.target = '_blank';
+    doc.head.prepend(base);
+    if (theme) {
+        doc.body.classList.add(theme.prefix);
+        doc.body.setAttribute('data-ms2-container', 'ms2');
+        theme.styles.slice().reverse().forEach((css) => {
+            const style = doc.createElement('style');
+            style.textContent = css;
+            doc.head.prepend(style);
+        });
+        if (theme.variables) {
+            const style = doc.createElement('style');
+            style.textContent = `:root { ${theme.variables} }`;
+            doc.head.appendChild(style);
+        }
     }
-    return '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+    const heightReporter = doc.createElement('script');
+    heightReporter.textContent = HEIGHT_REPORTER;
+    doc.body.appendChild(heightReporter);
+    const doctype = doc.doctype ? new XMLSerializer().serializeToString(doc.doctype) : '';
+    return doctype + doc.documentElement.outerHTML;
 };
 
 /**
@@ -94,17 +103,12 @@ const SandboxedHtmlFrame = ({ html, title, applyTheme }) => {
     const [height, setHeight] = useState(HTML_FRAME_MIN_HEIGHT);
     const [theme, setTheme] = useState(null);
     useEffect(() => {
-        if (!applyTheme) {
-            setTheme(null);
-            return () => {};
-        }
         let active = true;
         const loadTheme = async() => {
             const next = getTheme();
             try {
                 const styles = await Promise.all(next.links.map(async(href) => {
                     const { data: css } = await axios.get(href, { responseType: 'text' });
-                    const resourceUrls = [];
                     // Find CSS url(...) values, with or without quotes, and resolve relative paths
                     // against the original stylesheet.
                     const updatedCss = css.replace(/url\(\s*(['"]?)([^'"\)]+)\1\s*\)/g, (match, quote, url) => {
@@ -112,7 +116,6 @@ const SandboxedHtmlFrame = ({ html, title, applyTheme }) => {
                             return match;
                         }
                         const resolvedUrl = new URL(url, href).href;
-                        resourceUrls.push({ from: url, to: resolvedUrl });
                         return `url("${resolvedUrl}")`;
                     });
                     return updatedCss;
@@ -124,7 +127,11 @@ const SandboxedHtmlFrame = ({ html, title, applyTheme }) => {
                 console.error('Unable to apply the MapStore theme in the feature info frame', error);
             }
         };
-        loadTheme();
+        if (applyTheme) {
+            loadTheme();
+        } else {
+            setTheme(null);
+        }
         return () => {
             active = false;
         };
@@ -149,7 +156,7 @@ const SandboxedHtmlFrame = ({ html, title, applyTheme }) => {
             title={title}
             sandbox={HTML_FRAME_SANDBOX}
             referrerPolicy="no-referrer"
-            srcDoc={(applyTheme && theme ? withTheme(html, theme) : (html || '')) + HEIGHT_REPORTER}
+            srcDoc={prepareHtml(html, applyTheme ? theme : null)}
             style={{ width: '100%', height, border: 'none', display: 'block', background: '#ffffff' }}
         />
     );

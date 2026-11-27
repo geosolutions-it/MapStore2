@@ -79,7 +79,9 @@ describe('Identity Viewers', () => {
             expect(frame).toExist();
             expect(frame.getAttribute('sandbox')).toBe(HTML_FRAME_SANDBOX);
             expect(frame.getAttribute('title')).toBe('identifyTitle');
-            expect(frame.getAttribute('srcdoc').indexOf(RESPONSE)).toBe(0);
+            const doc = new DOMParser().parseFromString(frame.getAttribute('srcdoc'), 'text/html');
+            expect(doc.querySelector('style').textContent).toContain('@import');
+            expect(doc.querySelector('button').getAttribute('onclick')).toBe('run()');
             expect(document.querySelector('#container button')).toNotExist();
         });
 
