@@ -1705,6 +1705,7 @@ describe('Cesium layer', () => {
         expect(cmp.layer.styledFeatures._queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
     });
+<<<<<<< HEAD
     it('does not request features after a wfs layer with the bbox strategy is removed', (done) => {
         mockAxios.onPost('/ows').reply(200, { type: 'FeatureCollection', features: [] });
         map.camera.setView({
@@ -1734,6 +1735,41 @@ describe('Cesium layer', () => {
                 done(e);
             }
         }, 500);
+=======
+    ['qgis', 'no-vendor'].forEach(serverType => {
+        ['all', 'bbox'].forEach(strategy => {
+            it(`uses standard WFS filters for ${serverType} with the ${strategy} strategy`, async() => {
+                mockAxios.onPost('/ows').reply(200, { type: 'FeatureCollection', features: [] });
+                map.camera.setView({
+                    destination: Cesium.Cartesian3.fromDegrees(0, 0, 1000000),
+                    orientation: { heading: 0, pitch: -Math.PI / 2, roll: 0 }
+                });
+                ReactDOM.render(<CesiumLayer
+                    type="wfs"
+                    options={{
+                        type: 'wfs',
+                        url: '/ows',
+                        name: 'trees',
+                        id: 'qgis-wfs',
+                        visibility: true,
+                        serverType,
+                        strategy,
+                        layerFilter: { filters: [{ format: 'cql', body: 'height > 5' }] }
+                    }}
+                    map={map}/>, document.getElementById('container'));
+                if (strategy === 'bbox') {
+                    map.camera.moveEnd.raiseEvent();
+                }
+                await waitFor(() => expect(mockAxios.history.post.length).toBeGreaterThan(0));
+                const request = mockAxios.history.post[0];
+                expect(request.data).toContain('<wfs:GetFeature');
+                expect(request.data).toContain('<wfs:Query typeName="trees"');
+                expect(request.data).toContain('<ogc:PropertyIsGreaterThan>');
+                expect(request.data.includes('<ogc:BBOX>')).toBe(strategy === 'bbox');
+                expect(mockAxios.history.get.length).toBe(0);
+            });
+        });
+>>>>>>> cacb8452d (#13144 Support buffer value in identify requests for QGIS layer types (#13147))
     });
     it('recreates a wfs layer when its URL changes', () => {
         const options = {

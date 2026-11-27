@@ -122,6 +122,7 @@
       "serverType": "Tipus de servidor",
       "formatError": "No es va poder buscar el format i el format de fulls d'informaci\u00f3 del servei configurat. Probablement utilitzeu un servei de venedors i aix\u00f2 no \u00e9s compatible (per exemple,geonetwork)",
       "serverTypeOption": {
+        "qgis": "QGIS Server",
         "noVendor": "Sense venedor",
         "geoserver": "Geoserver"
       },
