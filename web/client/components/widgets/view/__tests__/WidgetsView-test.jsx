@@ -151,6 +151,28 @@ describe('WidgetsView component', () => {
         const el = container.querySelector('.react-grid-item');
         expect(el).toExist();
     });
+    it('remounts the grid when the layout mode changes', () => {
+        const container = document.getElementById('container');
+        let mountCount = 0;
+        class TestGrid extends React.Component {
+            componentDidMount() {
+                mountCount++;
+            }
+            render() {
+                return <div>{this.props.children}</div>;
+            }
+        }
+        const render = single => ReactDOM.render(<WidgetsView
+            gridKey={single ? 'single' : 'desktop'}
+            gridComponent={TestGrid}
+        />, container);
+        render(false);
+        expect(mountCount).toBe(1);
+        render(true);
+        expect(mountCount).toBe(2);
+        render(false);
+        expect(mountCount).toBe(3);
+    });
     it('statics widgets', () => {
         ReactDOM.render(<WidgetsView layouts={{ md: [{ i: dummyWidget.id, w: 1, h: 1, x: 1, y: 1 }] }} widgets={[{...dummyWidget, dataGrid: {"static": true, w: 1, h: 1, x: 1, y: 1 }}]} />, document.getElementById("container"));
         const container = document.getElementById('container');
