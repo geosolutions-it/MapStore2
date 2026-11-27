@@ -17,7 +17,7 @@ These tools needs to be installed (other than **Java** in versions above above):
 
 | Tool                  | Link                                                       | Minimum | Recommended | Maximum         |
 |-----------------------|------------------------------------------------------------|---------|-------------|-----------------|
-| npm                   | [link](https://www.npmjs.com/get-npm)                      | 8       | 10          |                 |
+| npm                   | [link](https://www.npmjs.com/get-npm)                      | 10      | 11          | 11<sup>5</sup>  |
 | NodeJS                | [link](https://nodejs.org/en/)                             | 22      | 24          | 26<sup>3</sup>  |
 | Java (JDK)            | [link](https://jdk.java.net/archive/) | 17      | 17          | 21              |
 | Maven                 | [link](https://maven.apache.org/download.cgi)              | 3.1.0   | 3.6         |                 |
@@ -30,6 +30,7 @@ These tools needs to be installed (other than **Java** in versions above above):
     - <sup>2</sup> Since the upgrade to Spring 7 / Jakarta EE 10, MapStore requires a servlet container supporting the Jakarta Servlet API 6.0 (`jakarta.*` namespace): Tomcat 10.1 is the minimum version, Tomcat 11 is the recommended one and the one shipped with the binary distribution. Tomcat 9 or older (based on the `javax.*` namespace) is **not** supported anymore.
     - <sup>3</sup> Latest version tested.
     - <sup>4</sup> Python is only needed for building documentation.
+    - <sup>5</sup> npm 12 is not supported yet. By default it refuses the dependencies referenced by URL or git and does not run their install scripts, so `npm install` fails (e.g. with the `EALLOWREMOTE` error). Use the npm version bundled with your NodeJS (e.g. `npm install -g npm@11`).
 
 ## Running in Production
 
