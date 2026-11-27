@@ -60,6 +60,18 @@
     }
 
 }
+// Privacy controls are portaled to the body. Keep them above the embedded dashboard's view footer.
+#container:has(#page-dashboard-embedded .view-switcher-container) {
+    & ~ .mapstore-privacy-access {
+        bottom: 48px;
+    }
+
+    & ~ .mapstore-privacy-panel {
+        bottom: 88px;
+        max-height: calc(100vh - 96px);
+    }
+}
+
 #mapstore-sidebar-menu-container {
     order: 2;
 }
