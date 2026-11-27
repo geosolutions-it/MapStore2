@@ -3,7 +3,7 @@ import turfFlatten from '@turf/flatten';
 import omit from 'lodash/omit';
 import isArray from 'lodash/isArray';
 import { v1 as uuid } from 'uuid';
-import { getMapScaleForCesium } from '../MapUtils';
+import { getMapScaleForCesium } from './ScaleUtils';
 import { geoStylerScaleDenominatorFilter } from '../styleparser/StyleParserUtils';
 
 /**
