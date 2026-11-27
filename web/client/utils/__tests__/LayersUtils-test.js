@@ -128,6 +128,26 @@ describe('legacy tile matrix placeholders', () => {
     });
 });
 
+describe('isGeoServer', () => {
+    it('preserves the GeoServer default for layers without a server type', () => {
+        expect(LayersUtils.isGeoServer()).toBe(true);
+        expect(LayersUtils.isGeoServer({})).toBe(true);
+        expect(LayersUtils.isGeoServer({ serverType: LayersUtils.ServerTypes.GEOSERVER })).toBe(true);
+    });
+    [LayersUtils.ServerTypes.QGIS, LayersUtils.ServerTypes.NO_VENDOR, 'other'].forEach(serverType => {
+        it(`does not use GeoServer extensions for ${serverType}`, () => {
+            expect(LayersUtils.isGeoServer({ serverType })).toBe(false);
+            expect(LayersUtils.getWMSVendorParams({ serverType })).toEqual({});
+        });
+    });
+    it('preserves the GeoServer tiled options', () => {
+        const layer = { serverType: LayersUtils.ServerTypes.GEOSERVER };
+        expect(LayersUtils.getWMSVendorParams(layer)).toEqual({ TILED: true });
+        expect(LayersUtils.getWMSVendorParams({ ...layer, singleTile: true })).toEqual({ TILED: false });
+        expect(LayersUtils.getWMSVendorParams({ ...layer, tiled: false })).toEqual({ TILED: false });
+    });
+});
+
 describe('getWFSLayerName', () => {
     it('uses a linked WFS type name only for WMS layers', () => {
         expect(LayersUtils.getWFSLayerName({

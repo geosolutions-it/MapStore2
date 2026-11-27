@@ -56,6 +56,25 @@ describe('LegendUtils', () => {
     });
 
     describe('getWMSLegendConfig', () => {
+        it('keeps QGIS project parameters and omits GeoServer dynamic legend extensions', () => {
+            const config = getWMSLegendConfig({
+                layer: {
+                    type: 'wms',
+                    name: 'trees',
+                    serverType: ServerTypes.QGIS,
+                    params: { MAP: 'trees.qgz' },
+                    enableDynamicLegend: true,
+                    enableInteractiveLegend: true
+                },
+                format: LEGEND_FORMAT.IMAGE,
+                mapSize: { width: 800, height: 600 },
+                projection: 'EPSG:4326',
+                legendOptions: 'fontSize:10'
+            });
+            expect(config.MAP).toBe('trees.qgz');
+            expect(config.LEGEND_OPTIONS).toBe('fontSize:10');
+            ['SRCWIDTH', 'SRCHEIGHT', 'SRS', 'CRS', 'BBOX'].forEach(key => expect(config).toExcludeKey(key));
+        });
         it('should return correct WMS legend config for non-vendor server type', () => {
             const layer = {
                 name: 'testLayer',
@@ -94,7 +113,7 @@ describe('LegendUtils', () => {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
-                serverType: 'VENDOR',
+                serverType: ServerTypes.GEOSERVER,
                 group: 'foreground'
             };
             const config = getWMSLegendConfig({
@@ -125,7 +144,7 @@ describe('LegendUtils', () => {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
-                serverType: 'VENDOR',
+                serverType: ServerTypes.GEOSERVER,
                 group: 'background',
                 enableInteractiveLegend: true
             };
@@ -162,7 +181,7 @@ describe('LegendUtils', () => {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
-                serverType: 'VENDOR',
+                serverType: ServerTypes.GEOSERVER,
                 enableInteractiveLegend: true,
                 enableLegendFilterByViewport: true
             };
@@ -199,7 +218,7 @@ describe('LegendUtils', () => {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
-                serverType: 'VENDOR',
+                serverType: ServerTypes.GEOSERVER,
                 enableDynamicLegend: false
             };
             const config = getWMSLegendConfig({
@@ -230,7 +249,7 @@ describe('LegendUtils', () => {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
-                serverType: 'VENDOR',
+                serverType: ServerTypes.GEOSERVER,
                 enableInteractiveLegend: false
             };
             const config = getWMSLegendConfig({
@@ -261,7 +280,7 @@ describe('LegendUtils', () => {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
-                serverType: 'VENDOR',
+                serverType: ServerTypes.GEOSERVER,
                 enableDynamicLegend: true
             };
             const config = getWMSLegendConfig({
