@@ -43,6 +43,7 @@ export default pure(({
     compactMode,
     useDefaultWidthProvider = true,
     gridComponent: GridComponent = ResponsiveReactGridLayout,
+    gridKey = '',
     draggableCancel = DRAG_CANCEL,
     measureBeforeMount,
     width,
@@ -75,7 +76,7 @@ export default pure(({
     const getEnableColumnFilters = w => w.widgetType  === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(w.id) !== -1).length > 0 ).length > 0;
 
     return (<GridComponent
-        key={`${id || "widgets-view"}${isMaximized ? "-maximized" : ""}`}
+        key={`${id || "widgets-view"}${isMaximized ? "-maximized" : ""}-${gridKey}`}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
         width={!useDefaultWidthProvider ? width : undefined}

@@ -91,6 +91,7 @@ compose(
             return {
                 backgroundSelectorOffset,
                 isSingleWidgetLayout,
+                gridKey: isSingleWidgetLayout ? 'single' : 'desktop',
                 viewWidth,
                 rightOffset,
                 leftOffset,
@@ -275,6 +276,7 @@ compose(
                                     ...(layouts.xxs.map(el => ({...el, h: 1, w: 1, x: 0, y: 0})))
                                 ]
                             },
+                            onLayoutChange: () => {},
                             widgets: [widget]
                         };
                     }
